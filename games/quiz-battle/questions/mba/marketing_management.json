@@ -1,0 +1,17 @@
+[
+    { "q": "Which of the following is NOT part of the traditional 4Ps of marketing?", "options": ["Product", "Price", "Process", "Promotion"], "a": 2 },
+    { "q": "In a SWOT analysis, what does the 'O' stand for?", "options": ["Operations", "Objectives", "Opportunities", "Outcomes"], "a": 2 },
+    { "q": "The process of dividing a market into distinct groups of buyers is known as:", "options": ["Market Targeting", "Market Segmentation", "Market Positioning", "Market Penetration"], "a": 1 },
+    { "q": "Which stage of the Product Life Cycle is characterized by rapid sales growth?", "options": ["Introduction", "Growth", "Maturity", "Decline"], "a": 1 },
+    { "q": "B2B marketing stands for:", "options": ["Business to Buyer", "Buyer to Business", "Business to Business", "Brand to Brand"], "a": 2 },
+    { "q": "Setting a high initial price to skim maximum revenues layer by layer from the segments willing to pay the high price is called:", "options": ["Penetration pricing", "Market-skimming pricing", "Value-based pricing", "Cost-plus pricing"], "a": 1 },
+    { "q": "The total combined customer lifetime values of all the company's customers is called:", "options": ["Brand equity", "Customer equity", "Market share", "Profitability"], "a": 1 },
+    { "q": "Which marketing concept focuses on the needs of the seller rather than the buyer?", "options": ["Production concept", "Selling concept", "Marketing concept", "Societal marketing concept"], "a": 1 },
+    { "q": "A brand's ________ is the set of benefits or values it promises to deliver to consumers.", "options": ["Value proposition", "Mission statement", "Vision", "Core competency"], "a": 0 },
+    { "q": "Search Engine Optimization (SEO) falls under which marketing category?", "options": ["Traditional Marketing", "Public Relations", "Digital Marketing", "Direct Sales"], "a": 2 },
+    { "q": "What is the primary focus of the Societal Marketing Concept?", "options": ["Maximizing profits only", "Meeting consumer needs while preserving societal well-being", "Aggressive selling techniques", "Mass production at low cost"], "a": 1 },
+    { "q": "Which of these is a psychographic segmentation variable?", "options": ["Age", "Income", "Lifestyle", "Region"], "a": 2 },
+    { "q": "What term describes the practice of tailoring products and marketing programs to the needs of specific individuals?", "options": ["Mass marketing", "Niche marketing", "Micromarketing", "Differentiated marketing"], "a": 2 },
+    { "q": "Which pricing strategy sets a low initial price to penetrate the market deeply and quickly?", "options": ["Skimming", "Penetration pricing", "Premium pricing", "Bundle pricing"], "a": 1 },
+    { "q": "A channel consisting of one or more independent producers, wholesalers, and retailers is a(n):", "options": ["Conventional distribution channel", "Vertical marketing system", "Horizontal marketing system", "Multichannel distribution system"], "a": 0 }
+]

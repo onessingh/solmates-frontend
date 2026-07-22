@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPG to PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="image"></i> JPG to PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="image"></i>
+        <h2>Select Images</h2>
+        <p>or drag and drop JPG, PNG, or HEIC files here</p>
+        <input type="file" id="fileInput" accept="image/*,.heic" multiple hidden>
+        <div id="fileList" style="margin-top: 2rem; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;"></div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button id="convertBtn" class="btn-primary" disabled>
+            <i data-lucide="play"></i> Convert to PDF
+        </button>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Your images have been converted to PDF.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download PDF
+        </button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Creating PDF...</p>
+    </div>
+</div>
+
+<script>
+    const { jsPDF } = window.jspdf;
+    lucide.createIcons();
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const convertBtn = document.getElementById('convertBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let selectedFiles = [];
+    let processedPdfUrl = null;
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => { handleFiles(Array.from(e.target.files)); };
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--primary)'; };
+    dropZone.ondragleave = () => { dropZone.style.borderColor = 'var(--border)'; };
+    dropZone.ondrop = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--border)'; handleFiles(Array.from(e.dataTransfer.files)); };
+
+    function handleFiles(files) {
+        selectedFiles = [...selectedFiles, ...files];
+        updateFileList();
+        convertBtn.disabled = selectedFiles.length === 0;
+    }
+
+    function updateFileList() {
+        fileList.innerHTML = selectedFiles.map((f, i) => `
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: #fff; margin-bottom: 0.5rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px;">${f.name}</span>
+                <span style="color: #ef4444; cursor: pointer;" onclick="event.stopPropagation(); removeFile(${i})">Remove</span>
+            </div>
+        `).join('');
+    }
+
+    window.removeFile = (index) => {
+        selectedFiles.splice(index, 1);
+        updateFileList();
+        convertBtn.disabled = selectedFiles.length === 0;
+    };
+
+    convertBtn.onclick = async () => {
+        convertBtn.disabled = true;
+        const originalText = convertBtn.innerHTML;
+        convertBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> Processing...';
+        lucide.createIcons();
+
+        try {
+            const pdf = new jsPDF();
+            for (let i = 0; i < selectedFiles.length; i++) {
+                let file = selectedFiles[i];
+                
+                // HEIC Decoding
+                if (file.name.toLowerCase().endsWith('.heic') || file.type.includes('heic')) {
+                    convertBtn.innerHTML = `<i data-lucide="loader" class="spin"></i> Decoding HEIC...`;
+                    lucide.createIcons();
+                    try {
+                        const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.8 });
+                        file = Array.isArray(converted) ? converted[0] : converted;
+                    } catch (e) {
+                        console.error("HEIC decoding failed", e);
+                    }
+                }
+
+                const imgData = await readFileAsDataURL(file);
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                if (i > 0) pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            }
+
+            const blob = pdf.output('blob');
+            processedPdfUrl = URL.createObjectURL(blob);
+
+            resultArea.style.display = 'block';
+            convertBtn.innerHTML = '<i data-lucide="check"></i> Done!';
+            lucide.createIcons();
+        } catch (err) {
+            console.error(err);
+            alert('Error converting images');
+            convertBtn.innerHTML = originalText;
+            convertBtn.disabled = false;
+        }
+    };
+
+    function readFileAsDataURL(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = processedPdfUrl;
+        link.download = `converted.pdf`;
+        link.click();
+    };
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

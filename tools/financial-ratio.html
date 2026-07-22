@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Ratio Calculator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary:#0f2b46; --accent:#0071e3; --bg:#f5f5f7; --card:#fff;
+      --text:#1d1d1f; --light:#86868b; --border:#e5e5ea;
+      --success:#34c759; --warning:#ff9f0a; --danger:#ff3b30;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);padding-top:60px;min-height:100vh;}
+    .top-nav{position:fixed;top:0;width:100%;height:60px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);display:flex;justify-content:space-between;align-items:center;padding:0 24px;z-index:1000;border-bottom:1px solid var(--border);}
+    .nav-logo{font-weight:700;font-size:1.2rem;color:var(--primary);cursor:pointer;}
+    .back-link{background:var(--primary);color:white;padding:8px 18px;border-radius:20px;text-decoration:none;font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+    .container{max-width:860px;margin:0 auto;padding:28px 20px 80px;}
+    .hero{text-align:center;margin-bottom:24px;}
+    .hero-icon{width:62px;height:62px;background:linear-gradient(135deg,#059669,#047857);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 24px rgba(5,150,105,0.3);}
+    .hero-icon i{font-size:1.8rem;color:white;}
+    .hero h1{font-size:1.8rem;font-weight:700;color:var(--primary);letter-spacing:-0.5px;}
+    @media(max-width:500px){.hero h1{font-size:1.45rem;}}
+
+    /* Category Tabs */
+    .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+    .ctab{padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--light);display:flex;align-items:center;gap:6px;}
+    .ctab:hover{border-color:var(--accent);color:var(--accent);}
+    .ctab.active{background:var(--primary);color:white;border-color:var(--primary);}
+    .ctab i{font-size:0.8rem;}
+
+    /* Ratio Cards Grid */
+    .ratios-grid{display:grid;gap:16px;}
+
+    .ratio-card{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:22px;box-shadow:0 4px 16px rgba(0,0,0,0.04);transition:box-shadow 0.2s;}
+    .ratio-card:hover{box-shadow:0 8px 28px rgba(0,0,0,0.08);}
+
+    .rc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+    .rc-info{flex:1;}
+    .rc-name{font-size:1rem;font-weight:700;color:var(--primary);}
+    .rc-formula{font-size:0.78rem;color:var(--accent);font-family:monospace;background:rgba(0,113,227,0.07);padding:3px 8px;border-radius:6px;display:inline-block;margin-top:4px;}
+    .rc-desc{font-size:0.78rem;color:var(--light);margin-top:5px;line-height:1.4;}
+
+    .rc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+    @media(max-width:480px){.rc-inputs{grid-template-columns:1fr;}}
+    .rc-inputs.single{grid-template-columns:1fr;}
+    .inp-group{display:flex;flex-direction:column;gap:5px;}
+    .inp-group label{font-size:0.78rem;font-weight:600;color:var(--primary);}
+    .rc-inp{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font-size:0.93rem;font-family:inherit;outline:none;background:#fafafa;color:var(--text);transition:all 0.2s;}
+    .rc-inp:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(0,113,227,0.1);}
+
+    .btn-calc{width:fit-content;padding:10px 22px;border-radius:10px;background:var(--primary);color:white;border:none;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:7px;}
+    .btn-calc:hover{background:#1a3c5e;transform:translateY(-1px);}
+
+    .result-box{display:none;margin-top:14px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#f0fdf9,#e8f5e9);border:1px solid #a7f3d0;animation:fadeUp 0.3s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .res-main{font-size:1.6rem;font-weight:800;color:var(--primary);margin-bottom:4px;}
+    .res-label{font-size:0.82rem;color:var(--light);font-weight:500;}
+    .res-interp{font-size:0.83rem;margin-top:10px;padding:10px 12px;border-radius:10px;font-weight:600;line-height:1.4;}
+    .res-good{background:rgba(52,199,89,0.1);color:#16a34a;border:1px solid rgba(52,199,89,0.2);}
+    .res-warn{background:rgba(255,159,10,0.1);color:#b45309;border:1px solid rgba(255,159,10,0.2);}
+    .res-bad{background:rgba(255,59,48,0.1);color:#dc2626;border:1px solid rgba(255,59,48,0.2);}
+    .res-neutral{background:rgba(0,113,227,0.07);color:#2563eb;border:1px solid rgba(0,113,227,0.15);}
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-percentage"></i> Financial Ratio Calculator</h1>
+    </div>
+
+
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-percentage"></i></div>
+    
+  </div>
+
+  <div class="cat-tabs">
+    <button class="ctab active" onclick="showCat(this,'liquidity')"><i class="fas fa-tint"></i> Liquidity</button>
+    <button class="ctab" onclick="showCat(this,'profitability')"><i class="fas fa-chart-line"></i> Profitability</button>
+    <button class="ctab" onclick="showCat(this,'leverage')"><i class="fas fa-balance-scale"></i> Leverage</button>
+    <button class="ctab" onclick="showCat(this,'efficiency')"><i class="fas fa-cogs"></i> Efficiency</button>
+    <button class="ctab" onclick="showCat(this,'market')"><i class="fas fa-tags"></i> Market</button>
+  </div>
+
+  <div class="ratios-grid" id="ratiosGrid"></div>
+</div>
+
+<script>
+const RATIOS = {
+  liquidity: [
+    {
+      name: 'Current Ratio',
+      formula: 'Current Assets ÷ Current Liabilities',
+      desc: 'Measures ability to pay short-term obligations. Ideal: 2:1',
+      inputs: [{id:'ca', label:'Current Assets (₹)'}, {id:'cl', label:'Current Liabilities (₹)'}],
+      calc: (v) => v.ca / v.cl,
+      fmt: (r) => r.toFixed(2) + ' : 1',
+      interp: (r) => r >= 2 ? ['good','✅ Good. Company can comfortably pay short-term debts.'] : r >= 1 ? ['warn','⚠️ Acceptable but tight. Monitor cash flow carefully.'] : ['bad','🔴 Poor. Company may struggle to meet short-term obligations.']
+    },
+    {
+      name: 'Quick Ratio (Acid Test)',
+      formula: '(Current Assets − Inventory) ÷ Current Liabilities',
+      desc: 'Stricter liquidity measure excluding inventory. Ideal: ≥ 1',
+      inputs: [{id:'ca', label:'Current Assets (₹)'}, {id:'inv', label:'Inventory (₹)'}, {id:'cl', label:'Current Liabilities (₹)'}],
+      calc: (v) => (v.ca - v.inv) / v.cl,
+      fmt: (r) => r.toFixed(2) + ' : 1',
+      interp: (r) => r >= 1 ? ['good','✅ Strong quick ratio. Liquid assets cover short-term liabilities.'] : r >= 0.7 ? ['warn','⚠️ Below ideal. Company relies on inventory for liquidity.'] : ['bad','🔴 Weak. Business is highly dependent on inventory sales.']
+    },
+    {
+      name: 'Cash Ratio',
+      formula: 'Cash & Equivalents ÷ Current Liabilities',
+      desc: 'Most conservative liquidity ratio — only cash counts. Ideal: 0.5–1',
+      inputs: [{id:'cash', label:'Cash & Equivalents (₹)'}, {id:'cl', label:'Current Liabilities (₹)'}],
+      calc: (v) => v.cash / v.cl,
+      fmt: (r) => r.toFixed(2),
+      interp: (r) => r >= 0.5 ? ['good','✅ Healthy cash position.'] : r >= 0.2 ? ['warn','⚠️ Low cash reserve. May need external funding for emergencies.'] : ['bad','🔴 Very low cash ratio. High liquidity risk.']
+    },
+  ],
+  profitability: [
+    {
+      name: 'Gross Profit Margin',
+      formula: '(Revenue − COGS) ÷ Revenue × 100',
+      desc: 'Profitability after direct production costs. Ideal: Industry-specific',
+      inputs: [{id:'rev', label:'Revenue (₹)'}, {id:'cogs', label:'Cost of Goods Sold (₹)'}],
+      calc: (v) => ((v.rev - v.cogs) / v.rev) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 40 ? ['good','✅ Strong gross margin. Good pricing or low production cost.'] : r >= 20 ? ['warn','⚠️ Moderate margin. Keep a close eye on COGS.'] : ['bad','🔴 Low gross margin. High production costs may be a concern.']
+    },
+    {
+      name: 'Net Profit Margin',
+      formula: 'Net Profit ÷ Revenue × 100',
+      desc: 'Percentage of revenue that becomes profit after all expenses.',
+      inputs: [{id:'np', label:'Net Profit (₹)'}, {id:'rev', label:'Revenue (₹)'}],
+      calc: (v) => (v.np / v.rev) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 15 ? ['good','✅ Excellent profitability.'] : r >= 5 ? ['warn','⚠️ Moderate. Room for cost optimization.'] : r >= 0 ? ['warn','⚠️ Thin margin. Very sensitive to revenue drops.'] : ['bad','🔴 Negative margin. Company is losing money.']
+    },
+    {
+      name: 'Return on Investment (ROI)',
+      formula: '(Net Gain ÷ Cost of Investment) × 100',
+      desc: 'Measures efficiency of an investment. Higher is better.',
+      inputs: [{id:'gain', label:'Net Gain / Profit (₹)'}, {id:'cost', label:'Cost of Investment (₹)'}],
+      calc: (v) => (v.gain / v.cost) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 20 ? ['good','✅ Excellent ROI. Investment is highly efficient.'] : r >= 10 ? ['warn','⚠️ Decent ROI. Better than most fixed deposits.'] : r >= 0 ? ['warn','⚠️ Low but positive. Consider alternatives.'] : ['bad','🔴 Negative ROI. Loss-making investment.']
+    },
+    {
+      name: 'Return on Equity (ROE)',
+      formula: 'Net Income ÷ Shareholders\' Equity × 100',
+      desc: 'How effectively the company generates profit from shareholders\' equity.',
+      inputs: [{id:'ni', label:'Net Income (₹)'}, {id:'eq', label:"Shareholders' Equity (₹)"}],
+      calc: (v) => (v.ni / v.eq) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 15 ? ['good','✅ Strong ROE. Shareholders are getting good returns.'] : r >= 8 ? ['warn','⚠️ Average ROE. Reasonable but could be better.'] : ['bad','🔴 Low ROE. Shareholders may not be getting enough returns.']
+    },
+    {
+      name: 'Return on Assets (ROA)',
+      formula: 'Net Income ÷ Total Assets × 100',
+      desc: 'How profitably a company uses its assets to generate earnings.',
+      inputs: [{id:'ni', label:'Net Income (₹)'}, {id:'ta', label:'Total Assets (₹)'}],
+      calc: (v) => (v.ni / v.ta) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 10 ? ['good','✅ High ROA. Assets are being used very efficiently.'] : r >= 5 ? ['warn','⚠️ Moderate ROA. Average asset utilization.'] : ['bad','🔴 Low ROA. Assets may be underutilized or over-invested.']
+    },
+    {
+      name: 'EBITDA Margin',
+      formula: 'EBITDA ÷ Revenue × 100',
+      desc: 'Operating profitability before non-cash and financing charges.',
+      inputs: [{id:'ebitda', label:'EBITDA (₹)'}, {id:'rev', label:'Revenue (₹)'}],
+      calc: (v) => (v.ebitda / v.rev) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 25 ? ['good','✅ Excellent EBITDA margin. Highly efficient operations.'] : r >= 10 ? ['warn','⚠️ Healthy EBITDA. Operational costs are manageable.'] : ['bad','🔴 Low EBITDA margin. Operations may be inefficient.']
+    },
+  ],
+  leverage: [
+    {
+      name: 'Debt-to-Equity (D/E) Ratio',
+      formula: 'Total Debt ÷ Shareholders\' Equity',
+      desc: 'Measures financial leverage. Lower D/E = less risky. Ideal: < 1',
+      inputs: [{id:'debt', label:'Total Debt (₹)'}, {id:'eq', label:"Shareholders' Equity (₹)"}],
+      calc: (v) => v.debt / v.eq,
+      fmt: (r) => r.toFixed(2),
+      interp: (r) => r <= 0.5 ? ['good','✅ Low leverage. Company is mostly equity-funded — conservative & stable.'] : r <= 1 ? ['warn','⚠️ Moderate leverage. Manageable debt load.'] : r <= 2 ? ['warn','⚠️ High leverage. May become risky if earnings drop.'] : ['bad','🔴 Very high D/E. Potential debt servicing difficulties.']
+    },
+    {
+      name: 'Debt-to-Assets Ratio',
+      formula: 'Total Debt ÷ Total Assets',
+      desc: 'Proportion of assets financed by debt. Ideal: < 0.5',
+      inputs: [{id:'debt', label:'Total Debt (₹)'}, {id:'ta', label:'Total Assets (₹)'}],
+      calc: (v) => v.debt / v.ta,
+      fmt: (r) => r.toFixed(2),
+      interp: (r) => r <= 0.3 ? ['good','✅ Healthy. Most assets are equity-funded.'] : r <= 0.5 ? ['warn','⚠️ Moderate. Watch debt growth against asset growth.'] : ['bad','🔴 High ratio. More than half of assets funded by debt — risky.']
+    },
+    {
+      name: 'Interest Coverage Ratio',
+      formula: 'EBIT ÷ Interest Expense',
+      desc: 'Ability to pay interest on outstanding debt. Ideal: > 3',
+      inputs: [{id:'ebit', label:'EBIT (₹)'}, {id:'int', label:'Interest Expense (₹)'}],
+      calc: (v) => v.ebit / v.int,
+      fmt: (r) => r.toFixed(2) + 'x',
+      interp: (r) => r >= 3 ? ['good','✅ Strong. Company can easily cover interest payments.'] : r >= 1.5 ? ['warn','⚠️ Adequate but tight. Small earnings drop could be risky.'] : ['bad','🔴 Danger zone. Company may struggle to service debt.']
+    },
+  ],
+  efficiency: [
+    {
+      name: 'Asset Turnover Ratio',
+      formula: 'Net Revenue ÷ Average Total Assets',
+      desc: 'Efficiency of using assets to generate revenue. Higher is better.',
+      inputs: [{id:'rev', label:'Net Revenue (₹)'}, {id:'ta', label:'Average Total Assets (₹)'}],
+      calc: (v) => v.rev / v.ta,
+      fmt: (r) => r.toFixed(2) + 'x',
+      interp: (r) => r >= 1 ? ['good','✅ Good asset utilization. Each ₹ of assets generates ₹' + r.toFixed(2) + ' revenue.'] : ['warn','⚠️ Low asset turnover. Assets may be underperforming.']
+    },
+    {
+      name: 'Inventory Turnover Ratio',
+      formula: 'COGS ÷ Average Inventory',
+      desc: 'How many times inventory is sold/replaced in a period. Higher = efficient.',
+      inputs: [{id:'cogs', label:'COGS (₹)'}, {id:'inv', label:'Average Inventory (₹)'}],
+      calc: (v) => v.cogs / v.inv,
+      fmt: (r) => r.toFixed(2) + 'x',
+      interp: (r) => r >= 6 ? ['good','✅ High turnover. Inventory is being sold quickly.'] : r >= 3 ? ['warn','⚠️ Moderate. Inventory moves at a reasonable pace.'] : ['bad','🔴 Low turnover. Risk of obsolete or overstocked inventory.']
+    },
+    {
+      name: 'Receivables Turnover Ratio',
+      formula: 'Net Credit Sales ÷ Average Accounts Receivable',
+      desc: 'How efficiently the company collects its credit sales.',
+      inputs: [{id:'sales', label:'Net Credit Sales (₹)'}, {id:'ar', label:'Avg Accounts Receivable (₹)'}],
+      calc: (v) => v.sales / v.ar,
+      fmt: (r) => r.toFixed(2) + 'x',
+      interp: (r) => r >= 10 ? ['good','✅ Excellent. Company collects receivables very quickly.'] : r >= 5 ? ['warn','⚠️ Moderate. Collections could be improved.'] : ['bad','🔴 Poor. Slow collections may indicate bad debts or weak credit policy.']
+    },
+    {
+      name: 'Days Sales Outstanding (DSO)',
+      formula: '(Accounts Receivable ÷ Net Sales) × 365',
+      desc: 'Average days to collect payment after a sale. Lower = better.',
+      inputs: [{id:'ar', label:'Accounts Receivable (₹)'}, {id:'sales', label:'Net Sales (₹)'}],
+      calc: (v) => (v.ar / v.sales) * 365,
+      fmt: (r) => r.toFixed(1) + ' days',
+      interp: (r) => r <= 30 ? ['good','✅ Excellent. Payments collected very quickly.'] : r <= 60 ? ['warn','⚠️ Acceptable. Monitor to prevent late payments from rising.'] : ['bad','🔴 High DSO. Customers are slow to pay — cash flow risk.']
+    },
+  ],
+  market: [
+    {
+      name: 'Earnings Per Share (EPS)',
+      formula: 'Net Income ÷ Total Shares Outstanding',
+      desc: 'Profit allocated to each outstanding share. Higher is better.',
+      inputs: [{id:'ni', label:'Net Income (₹)'}, {id:'shares', label:'Total Shares Outstanding'}],
+      calc: (v) => v.ni / v.shares,
+      fmt: (r) => '₹' + r.toFixed(2),
+      interp: (r) => r > 0 ? ['good','✅ Positive EPS. Company is profitable per share.'] : ['bad','🔴 Negative EPS. Company is loss-making on a per-share basis.']
+    },
+    {
+      name: 'Price-to-Earnings (P/E) Ratio',
+      formula: 'Market Price per Share ÷ EPS',
+      desc: 'Valuation multiple. Higher P/E = investors expect higher growth.',
+      inputs: [{id:'price', label:'Market Price per Share (₹)'}, {id:'eps', label:'EPS (₹)'}],
+      calc: (v) => v.price / v.eps,
+      fmt: (r) => r.toFixed(2) + 'x',
+      interp: (r) => r <= 15 ? ['warn','⚠️ Low P/E. May be undervalued or low growth expected.'] : r <= 30 ? ['good','✅ Typical market range. Fair valuation.'] : ['warn','⚠️ High P/E. Market expects strong future growth — risky if not delivered.']
+    },
+    {
+      name: 'Dividend Yield',
+      formula: 'Annual Dividend per Share ÷ Market Price per Share × 100',
+      desc: 'Return from dividends relative to share price.',
+      inputs: [{id:'div', label:'Annual Dividend per Share (₹)'}, {id:'price', label:'Market Price per Share (₹)'}],
+      calc: (v) => (v.div / v.price) * 100,
+      fmt: (r) => r.toFixed(2) + '%',
+      interp: (r) => r >= 4 ? ['good','✅ High dividend yield. Good income-generating stock.'] : r >= 1 ? ['warn','⚠️ Moderate yield. Acceptable for growth stocks.'] : ['warn','⚠️ Very low yield. Company retains most profits for reinvestment.']
+    },
+    {
+      name: 'Book Value per Share',
+      formula: "Shareholders' Equity ÷ Total Shares Outstanding",
+      desc: 'Net asset value per share. Compare with market price for valuation.',
+      inputs: [{id:'eq', label:"Shareholders' Equity (₹)"}, {id:'shares', label:'Total Shares Outstanding'}],
+      calc: (v) => v.eq / v.shares,
+      fmt: (r) => '₹' + r.toFixed(2),
+      interp: () => ['neutral', 'ℹ️ Compare with Market Price. If Price < Book Value, stock may be undervalued.']
+    },
+  ]
+};
+
+let currentCat = 'liquidity';
+
+function showCat(btn, cat) {
+  document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = cat;
+  renderRatios();
+}
+
+function renderRatios() {
+  const grid = document.getElementById('ratiosGrid');
+  grid.innerHTML = RATIOS[currentCat].map((ratio, idx) => {
+    const inputsHTML = ratio.inputs.map(inp => `
+      <div class="inp-group">
+        <label>${inp.label}</label>
+        <input class="rc-inp" type="number" id="${currentCat}_${idx}_${inp.id}" placeholder="0" min="0" step="any">
+      </div>
+    `).join('');
+
+    return `
+      <div class="ratio-card">
+        <div class="rc-head">
+          <div class="rc-info">
+            <div class="rc-name">${ratio.name}</div>
+            <div class="rc-formula">${ratio.formula}</div>
+            <div class="rc-desc">${ratio.desc}</div>
+          </div>
+        </div>
+        <div class="rc-inputs ${ratio.inputs.length === 1 ? 'single' : ''}">${inputsHTML}</div>
+        <button class="btn-calc" onclick="calculate('${currentCat}', ${idx})">
+          <i class="fas fa-calculator"></i> Calculate
+        </button>
+        <div class="result-box" id="res_${currentCat}_${idx}"></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function calculate(cat, idx) {
+  const ratio = RATIOS[cat][idx];
+  const values = {};
+  let hasEmpty = false;
+
+  ratio.inputs.forEach(inp => {
+    const el = document.getElementById(`${cat}_${idx}_${inp.id}`);
+    const val = parseFloat(el.value);
+    if (isNaN(val)) { hasEmpty = true; }
+    values[inp.id] = val;
+  });
+
+  if (hasEmpty) { alert('Please fill in all fields.'); return; }
+
+  let result;
+  try { result = ratio.calc(values); }
+  catch(e) { alert('Invalid values. Check for zero denominators.'); return; }
+
+  if (!isFinite(result)) { alert('Cannot divide by zero. Please check your inputs.'); return; }
+
+  const formatted = ratio.fmt(result);
+  const [interpClass, interpText] = ratio.interp(result);
+
+  const box = document.getElementById(`res_${cat}_${idx}`);
+  box.style.display = 'block';
+  box.innerHTML = `
+    <div class="res-main">${formatted}</div>
+    <div class="res-label">${ratio.name}</div>
+    <div class="res-interp res-${interpClass}">${interpText}</div>
+  `;
+}
+
+renderRatios();
+</script>
+</body>
+</html>

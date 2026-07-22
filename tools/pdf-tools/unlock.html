@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="unlock"></i> Unlock PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="unlock"></i>
+        <h2>Select PDF file</h2>
+        <p>or drag and drop a PDF here</p>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div id="unlockArea" style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1.25rem; padding: 2rem; margin-top: 2rem;">
+        <div class="known-panel" id="knownPanel">
+            <div style="text-align:center;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">This PDF is password protected</label>
+                    <input type="password" id="password" placeholder="Enter PDF Password" style="width: 100%; max-width: 400px; padding: 1rem; border-radius: 1rem; border: 1px solid var(--border);">
+                </div>
+                <button id="unlockBtn" class="btn-primary">
+                    <i data-lucide="unlock"></i> Remove Password & Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result area -->
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Password security removed from your PDF.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download Unlocked PDF
+        </button>
+    </div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Unlocking PDF...</p>
+    </div>
+</div>
+
+<script type="module">
+import { decryptPDF } from 'https://esm.sh/@pdfsmaller/pdf-decrypt-lite';
+
+lucide.createIcons();
+
+const dropZone       = document.getElementById('dropZone');
+const fileInput      = document.getElementById('fileInput');
+const fileName       = document.getElementById('fileName');
+const unlockArea     = document.getElementById('unlockArea');
+const unlockBtn      = document.getElementById('unlockBtn');
+const resultArea     = document.getElementById('resultArea');
+const downloadBtn    = document.getElementById('downloadBtn');
+const loadingOverlay = document.getElementById('loadingOverlay');
+
+let selectedFile     = null;
+let processedPdfBytes = null;
+let pdfArrayBuffer   = null;
+
+// ── File handling ──
+dropZone.onclick     = () => fileInput.click();
+dropZone.ondragover  = (e) => { e.preventDefault(); dropZone.style.borderColor='var(--primary)'; };
+dropZone.ondragleave = () => { dropZone.style.borderColor=''; };
+dropZone.ondrop      = (e) => { e.preventDefault(); dropZone.style.borderColor=''; if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); };
+fileInput.onchange   = (e) => { if(e.target.files[0]) handleFile(e.target.files[0]); };
+
+async function handleFile(file) {
+    if (file.type !== 'application/pdf') return;
+    selectedFile = file;
+    fileName.textContent = file.name;
+    const arrayBuffer = await file.arrayBuffer();
+    pdfArrayBuffer = arrayBuffer;
+
+    loadingOverlay.style.display = 'flex';
+    document.getElementById('loadingText').textContent = 'Analyzing PDF...';
+    
+    try {
+        // QUICK CHECK: Is it actually locked?
+        // We use pdf-lib for this as it's reliable for meta-checks
+        const doc = await PDFLib.PDFDocument.load(arrayBuffer.slice(0));
+        processedPdfBytes = await doc.save();
+        showResult('<strong>✅ 100% Unlocked!</strong> This PDF had only permission restrictions or no security — removed instantly.');
+    } catch(e) {
+        // Locked with Open Password
+        loadingOverlay.style.display = 'none';
+        dropZone.style.display = 'none';
+        unlockArea.style.display = 'block';
+    }
+}
+
+function showResult(message) {
+    loadingOverlay.style.display = 'none';
+    dropZone.style.display = 'none';
+    unlockArea.style.display = 'none';
+    resultArea.style.display = 'block';
+    document.querySelector('#resultArea div p').innerHTML = message;
+}
+
+// ── Unlock Logic ──
+unlockBtn.onclick = async () => {
+    const pass = document.getElementById('password').value;
+    if (!pass) return;
+    loadingOverlay.style.display = 'flex';
+    unlockBtn.disabled = true;
+    try {
+        const buf = new Uint8Array(pdfArrayBuffer);
+        processedPdfBytes = await decryptPDF(buf, pass);
+        showResult('<strong>Success!</strong> Password security removed from your PDF.');
+    } catch(e) {
+        console.error(e);
+        alert('Incorrect password or error unlocking PDF. Make sure the password is correct.');
+        unlockBtn.disabled = false;
+    } finally { 
+        loadingOverlay.style.display = 'none'; 
+    }
+};
+
+downloadBtn.onclick = () => {
+    const blob = new Blob([processedPdfBytes], { type: 'application/pdf' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'unlocked_' + selectedFile.name;
+    a.click();
+};
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <style>
+        #signatureCanvas {
+            border: 2px dashed var(--border);
+            border-radius: 1rem;
+            background: #fff;
+            cursor: crosshair;
+            touch-action: none;
+        }
+    </style>
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> Sign PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="signature"></i>
+        <h2>Select PDF file</h2>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div id="signArea" style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1.5rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+            <div style="flex: 1; min-width: 0; max-width: 100%;">
+                <h3 style="margin-bottom: 1rem;">1. Draw Signature</h3>
+                <div style="width: 100%; overflow-x: auto;">
+                    <canvas id="signatureCanvas" width="400" height="200" style="max-width: 100%; touch-action: none;"></canvas>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button id="clearBtn" class="btn-secondary">Clear</button>
+                    <button id="prepareBtn" class="btn-primary">Use This Signature</button>
+                </div>
+            </div>
+            <div id="placementStep" style="flex: 1.5; min-width: 0; max-width: 100%; display: none;">
+                <h3 style="margin-bottom: 1rem;">2. Click to Place on Document</h3>
+                <div style="width: 100%; overflow-x: auto; background: #f8fafc; padding: 10px; border-radius: 12px;">
+                    <div style="position: relative; display: inline-block; border: 1px solid var(--border); box-shadow: var(--shadow);">
+                        <canvas id="pdfCanvas"></canvas>
+                        <div id="pdfOverlay" style="position: absolute; top:0; left:0; width:100%; height:100%; cursor: crosshair;"></div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button id="applySignBtn" class="btn-primary" disabled>
+                        <i data-lucide="check"></i> Finalize & Sign
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Your document has been digitally signed.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download Signed PDF
+        </button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Applying Signature...</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    
+    const dropZone = document.getElementById('dropZone');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const fileInput = document.getElementById('fileInput');
+    const signArea = document.getElementById('signArea');
+    const canvas = document.getElementById('signatureCanvas');
+    const ctx = canvas.getContext('2d');
+    const clearBtn = document.getElementById('clearBtn');
+    const prepareBtn = document.getElementById('prepareBtn');
+    const placementStep = document.getElementById('placementStep');
+    const pdfCanvas = document.getElementById('pdfCanvas');
+    const pdfOverlay = document.getElementById('pdfOverlay');
+    const applySignBtn = document.getElementById('applySignBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let selectedFile = null;
+    let processedPdfUrl = null;
+    let signaturePad = null;
+    let clickPos = null;
+    let pdfPageSize = { width: 0, height: 0 };
+
+    // Initialize Signature Pad
+    signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        penColor: 'rgb(0, 0, 0)'
+    });
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+
+    async function handleFile(file) {
+        if (file.type !== 'application/pdf') return;
+        selectedFile = file;
+        loadingOverlay.style.display = 'flex';
+        
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            let pdf;
+            
+            try {
+                pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            } catch (e) {
+                if (e.name === 'PasswordException') {
+                    const password = prompt(`The file "${file.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    pdf = await pdfjsLib.getDocument({ data: arrayBuffer, password }).promise;
+                } else {
+                    throw e;
+                }
+            }
+
+            const page = await pdf.getPage(pdf.numPages); // Sign last page by default
+            const viewport = page.getViewport({ scale: 1.0 });
+            const scale = 500 / viewport.width;
+            const scaledViewport = page.getViewport({ scale });
+            
+            pdfCanvas.width = scaledViewport.width;
+            pdfCanvas.height = scaledViewport.height;
+            pdfPageSize = { width: scaledViewport.width, height: scaledViewport.height };
+
+            await page.render({
+                canvasContext: pdfCanvas.getContext('2d'),
+                viewport: scaledViewport
+            }).promise;
+            
+            dropZone.style.display = 'none';
+            signArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error loading PDF');
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    // Signature Drawing Controls
+    clearBtn.onclick = () => { signaturePad.clear(); };
+
+    prepareBtn.onclick = () => {
+        if (signaturePad.isEmpty()) {
+            alert("Please provide a signature first.");
+            return;
+        }
+        placementStep.style.display = 'block';
+    };
+
+    pdfOverlay.onclick = (e) => {
+        clickPos = { x: e.offsetX, y: e.offsetY };
+        applySignBtn.disabled = false;
+        
+        // Visual indicator on preview
+        const marker = document.createElement('div');
+        marker.style.position = 'absolute';
+        marker.style.left = (clickPos.x - 50) + 'px';
+        marker.style.top = (clickPos.y - 25) + 'px';
+        marker.style.width = '100px';
+        marker.style.height = '50px';
+        marker.style.border = '2px dashed #3b82f6';
+        marker.style.background = 'rgba(59, 130, 246, 0.1)';
+        marker.style.pointerEvents = 'none';
+        
+        pdfOverlay.innerHTML = '';
+        pdfOverlay.appendChild(marker);
+    };
+
+    applySignBtn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        applySignBtn.disabled = true;
+
+        try {
+            const arrayBuffer = await selectedFile.arrayBuffer();
+            let pdfDoc;
+
+            try {
+                pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+            } catch (e) {
+                if (e.message.includes('encrypted')) {
+                    const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { password });
+                } else {
+                    throw e;
+                }
+            }
+            
+            const sigDataUrl = signaturePad.toDataURL();
+            const sigBytes = await fetch(sigDataUrl).then(res => res.arrayBuffer());
+            const sigEmbed = await pdfDoc.embedPng(sigBytes);
+            
+            const lastPage = pdfDoc.getPages()[pdfDoc.getPageCount() - 1];
+            const { width, height } = lastPage.getSize();
+            
+            const scaleX = width / pdfPageSize.width;
+            const scaleY = height / pdfPageSize.height;
+            
+            lastPage.drawImage(sigEmbed, {
+                x: (clickPos.x - 50) * scaleX,
+                y: height - ((clickPos.y + 25) * scaleY),
+                width: 100 * scaleX,
+                height: 50 * scaleY,
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            processedPdfUrl = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
+
+            signArea.style.display = 'none';
+            resultArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error signing document');
+            applySignBtn.disabled = false;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = processedPdfUrl;
+        link.download = `signed_${selectedFile.name}`;
+        link.click();
+    };
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

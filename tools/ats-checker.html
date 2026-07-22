@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Checker | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --secondary: #c0962d;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #eeeeee;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; }
+    
+    /* Navbar */
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 1000; border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .nav-logo { font-weight: 700; font-size: 1.25rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease; }
+    .back-link:hover { background: #1a3c5e; transform: translateY(-1px); }
+
+    .container { max-width: 1200px; margin: 25px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
+    @media (min-width: 900px) { .container { grid-template-columns: 1fr 1fr; } }
+
+    .header-section { text-align: center; margin-bottom: 25px; grid-column: 1 / -1; }
+    .header-section h1 { font-size: 1.8rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 12px; letter-spacing: -0.5px; }
+    @media (max-width: 600px) { .header-section h1 { font-size: 1.4rem; } }
+    .header-section h1 i { color: var(--accent); background: rgba(0,113,227,0.1); padding: 10px; border-radius: 12px; font-size: 1.2rem; }
+
+    .card { background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    
+    /* Input Form */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+    .form-control { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.95rem; font-family: inherit; resize: vertical; outline: none; transition: all 0.3s; background: #fafafa; }
+    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+    
+    .file-drop-area { border: 2px dashed var(--accent); border-radius: 15px; padding: 30px 20px; text-align: center; background: rgba(0,113,227,0.05); cursor: pointer; transition: all 0.3s; margin-bottom: 15px; position: relative; }
+    .file-drop-area:hover, .file-drop-area.dragover { background: rgba(0,113,227,0.1); border-color: #005bb5; }
+    .file-drop-area i { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; }
+    .file-drop-area p { color: var(--primary); font-weight: 600; margin-bottom: 5px; }
+    .file-drop-area span { color: var(--text-light); font-size: 0.85rem; }
+    .file-drop-area input { position: absolute; left: 0; top: 0; height: 100%; width: 100%; opacity: 0; cursor: pointer; }
+
+    .divider { display: flex; align-items: center; text-align: center; color: var(--text-light); font-size: 0.85rem; margin: 20px 0; font-weight: 600; text-transform: uppercase; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #ddd; }
+    .divider::before { margin-right: .5em; }
+    .divider::after { margin-left: .5em; }
+
+    .btn-scan { width: fit-content; min-width: 250px; padding: 14px 30px; border-radius: 12px; background: linear-gradient(135deg, var(--primary, #0f2b46), #1a3c5e); color: white; border: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; box-shadow: 0 6px 15px rgba(15,43,70,0.2); margin: 25px auto 0; }
+    .btn-scan:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(15,43,70,0.3); }
+    .btn-scan:active { transform: translateY(0); }
+
+    /* Results Area */
+    .results-area { display: none; flex-direction: column; gap: 25px; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .score-circle-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #f9f9fb; border-radius: 15px; border: 1px dashed #ddd; }
+    .circular-chart { display: block; margin: 0 auto; max-width: 150px; max-height: 150px; }
+    .circle-bg { fill: none; stroke: #eee; stroke-width: 3.8; }
+    .circle { fill: none; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 1s ease-out; }
+    .percentage { fill: var(--primary); font-family: inherit; font-size: 0.5em; text-anchor: middle; font-weight: 700; }
+    .score-label { margin-top: 15px; font-weight: 600; font-size: 1.2rem; color: var(--primary); }
+    .score-desc { font-size: 0.9rem; color: var(--text-light); text-align: center; margin-top: 5px; }
+
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .metric-card { background: #f9f9fb; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
+    .metric-title { font-size: 0.85rem; color: var(--text-light); margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-val { font-size: 1.4rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .metric-val i { font-size: 1.1rem; }
+
+    .feedback-section { margin-top: 10px; }
+    .feedback-section h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    .feedback-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .feedback-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; line-height: 1.4; padding: 12px; border-radius: 10px; background: #fff; border: 1px solid #eee; }
+    .fi-good { border-left: 4px solid var(--success); }
+    .fi-warn { border-left: 4px solid var(--warning); }
+    .fi-bad { border-left: 4px solid var(--danger); }
+    .feedback-item i.fa-check-circle { color: var(--success); }
+    .feedback-item i.fa-exclamation-triangle { color: var(--warning); }
+    .feedback-item i.fa-times-circle { color: var(--danger); }
+    .feedback-text strong { display: block; font-weight: 600; margin-bottom: 3px; color: var(--primary); }
+
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-light); text-align: center; padding: 40px 20px; }
+    .empty-state i { font-size: 4rem; color: #e0e0e0; margin-bottom: 15px; }
+
+    /* Loading overlay */
+    .loader { display: none; text-align: center; padding: 40px; }
+    .spinner { width: 50px; height: 50px; border: 4px solid rgba(0,113,227,0.1); border-left-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-file-alt"></i> ATS Resume Checker</h1>
+    </div>
+
+
+  
+
+  <div class="container">
+    
+
+    <!-- Input Area -->
+    <div class="card">
+      <div class="form-group">
+        <label><i class="fas fa-file-pdf"></i> Upload Resume (PDF)</label>
+        <div class="file-drop-area" id="dropArea">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p id="fileNameDisplay">Drag &amp; Drop your PDF here or Click to Browse</p>
+          <span>Maximum file size: 5MB</span>
+          <input type="file" id="pdfUpload" accept="application/pdf">
+        </div>
+      </div>
+      
+      <div class="divider">OR</div>
+
+      <div class="form-group">
+        <label for="resumeText"><i class="fas fa-file-alt"></i> Paste Resume Text</label>
+        <textarea id="resumeText" class="form-control" rows="8" placeholder="If your PDF can't be read, copy and paste the text of your resume here..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="jdText"><i class="fas fa-briefcase"></i> Target Job Description (Optional but recommended)</label>
+        <textarea id="jdText" class="form-control" rows="6" placeholder="Paste the job description here to check keyword match..."></textarea>
+      </div>
+      <button class="btn-scan" onclick="analyzeResume()" id="scanBtn">
+        <i class="fas fa-search-plus"></i> Analyze My Resume
+      </button>
+    </div>
+
+    <!-- Results Area -->
+    <div class="card" style="position: relative; min-height: 400px;">
+      
+      <div class="empty-state" id="emptyState">
+        <i class="fas fa-robot"></i>
+        <h3>Awaiting Resume</h3>
+        <p>Paste your resume text and job description on the left to get a detailed ATS score and improvement tips.</p>
+      </div>
+
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p style="color: var(--primary); font-weight: 500;">Scanning through ATS parsers...</p>
+      </div>
+
+      <div class="results-area" id="resultsArea">
+        <div class="score-circle-container">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="circle" id="scoreCircle" stroke="#0071e3" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <text x="18" y="20.35" class="percentage" id="scoreText">0</text>
+          </svg>
+          <div class="score-label" id="scoreLabel">Needs Improvement</div>
+          <div class="score-desc" id="scoreDesc">Your resume might get filtered out by standard ATS.</div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-title">Word Count</div>
+            <div class="metric-val" id="valWordCount"><i class="fas fa-font"></i> 0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Action Verbs</div>
+            <div class="metric-val" id="valVerbs"><i class="fas fa-bolt"></i> 0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Measurable Metrics</div>
+            <div class="metric-val" id="valNumbers"><i class="fas fa-chart-bar"></i> 0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Keyword Match</div>
+            <div class="metric-val" id="valKeywords"><i class="fas fa-key"></i> N/A</div>
+          </div>
+        </div>
+
+        <div class="feedback-section">
+          <h3><i class="fas fa-clipboard-list"></i> Actionable Feedback</h3>
+          <ul class="feedback-list" id="feedbackList">
+            <!-- Dynamically injected -->
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ATS Analysis Logic
+    const actionVerbs = ['managed', 'led', 'developed', 'created', 'designed', 'improved', 'increased', 'decreased', 'resolved', 'achieved', 'launched', 'spearheaded', 'coordinated', 'implemented', 'optimized', 'negotiated', 'analyzed', 'generated', 'built', 'transformed'];
+    
+    // Stop words to ignore during keyword extraction
+    const stopWords = ['and','the','to','of','in','a','for','on','with','is','as','an','by','that','at','this','from','be','are','or','it','your','you','will','we','our','can','all','has','have'];
+
+    function extractKeywords(text) {
+      if(!text) return [];
+      let words = text.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+      let keywordCounts = {};
+      words.forEach(w => {
+        if(w.length > 3 && !stopWords.includes(w)) {
+          keywordCounts[w] = (keywordCounts[w] || 0) + 1;
+        }
+      });
+      // Sort by frequency
+      return Object.keys(keywordCounts).sort((a,b) => keywordCounts[b] - keywordCounts[a]).slice(0, 15);
+    }
+
+    // --- PDF Parsing Logic ---
+    const pdfInput = document.getElementById('pdfUpload');
+    const dropArea = document.getElementById('dropArea');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const resumeTextElement = document.getElementById('resumeText');
+    const scanBtn = document.getElementById('scanBtn');
+
+    // Configure PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    // Handle Drag & Drop styles
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+    function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'), false);
+    });
+
+    // Handle file drop
+    dropArea.addEventListener('drop', (e) => {
+      let dt = e.dataTransfer;
+      let files = dt.files;
+      if(files.length > 0) handleFile(files[0]);
+    });
+
+    // Handle file input selection
+    pdfInput.addEventListener('change', function() {
+      if(this.files.length > 0) handleFile(this.files[0]);
+    });
+
+    async function handleFile(file) {
+      if (file.type !== 'application/pdf') {
+        alert('Please upload a valid PDF file.');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size exceeds 5MB limit.');
+        return;
+      }
+
+      fileNameDisplay.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Reading ${file.name}...`;
+      resumeTextElement.value = ''; // clear old text
+      
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        
+        let extractedText = "";
+        // Loop through all pages
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageStrings = textContent.items.map(item => item.str);
+          extractedText += pageStrings.join(' ') + " \n";
+        }
+        
+        resumeTextElement.value = extractedText.trim();
+        fileNameDisplay.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> ${file.name} loaded successfully!`;
+        
+        // Auto-trigger scan
+        analyzeResume();
+
+      } catch (error) {
+        console.error("PDF Parsing Error:", error);
+        fileNameDisplay.innerHTML = `Drag & Drop your PDF here or Click to Browse`;
+        alert("Could not extract text from this PDF. It might be an image-based PDF. Please copy-paste your text manually.");
+      }
+    }
+    // -----------------------
+
+    function analyzeResume() {
+      const resume = document.getElementById('resumeText').value.trim();
+      const jd = document.getElementById('jdText').value.trim();
+
+      if (!resume) {
+        alert("Please paste your resume text first.");
+        document.getElementById('resumeText').focus();
+        return;
+      }
+
+      // UI States
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultsArea').style.display = 'none';
+      document.getElementById('loader').style.display = 'block';
+      const btn = document.getElementById('scanBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
+      btn.disabled = true;
+
+      // Simulate network delay for "scanning" effect
+      setTimeout(() => {
+        performAnalysis(resume, jd);
+        
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('resultsArea').style.display = 'flex';
+        btn.innerHTML = '<i class="fas fa-search-plus"></i> Analyze My Resume';
+        btn.disabled = false;
+        
+        // Mobile scroll to results
+        if(window.innerWidth < 900) {
+          document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 1500);
+    }
+
+    function performAnalysis(resume, jd) {
+      let score = 100;
+      let feedback = [];
+      let rText = resume.toLowerCase();
+      let wordCount = resume.split(/\s+/).length;
+
+      // 1. Length Check (Ideal: 400 - 800 words for 1-2 pages)
+      if (wordCount < 200) {
+        score -= 15;
+        feedback.push({ type: 'bad', title: 'Resume is too short', desc: 'Aim for at least 300-400 words to provide enough detail for ATS to parse your skills.' });
+      } else if (wordCount > 1000) {
+        score -= 10;
+        feedback.push({ type: 'warn', title: 'Resume is too long', desc: 'ATS parsers and recruiters prefer concise resumes. Try to keep it under 800 words (1-2 pages).' });
+      } else {
+        feedback.push({ type: 'good', title: 'Perfect Length', desc: `Your resume is ${wordCount} words, which is the optimal length.` });
+      }
+      document.getElementById('valWordCount').innerHTML = `<i class="fas fa-font"></i> ${wordCount}`;
+
+      // 2. Action Verbs Check
+      let verbsFound = actionVerbs.filter(v => rText.includes(v));
+      if (verbsFound.length < 5) {
+        score -= 15;
+        feedback.push({ type: 'bad', title: 'Weak Impact Words', desc: 'Start bullet points with strong action verbs (e.g., Led, Developed, Improved). You only used ' + verbsFound.length + '.' });
+      } else {
+        feedback.push({ type: 'good', title: 'Strong Action Verbs', desc: `Great job! You used ${verbsFound.length} strong action verbs to describe your experience.` });
+      }
+      document.getElementById('valVerbs').innerHTML = `<i class="fas fa-bolt"></i> ${verbsFound.length}`;
+
+      // 3. Measurable Metrics (Numbers, %, $)
+      let numbersFound = resume.match(/\d+|%|\$/g) || [];
+      if (numbersFound.length < 3) {
+        score -= 15;
+        feedback.push({ type: 'bad', title: 'Missing Quantifiable Results', desc: 'Recruiters want to see impact. Add numbers, percentages, or dollar amounts to your achievements.' });
+      } else if (numbersFound.length < 7) {
+        score -= 5;
+        feedback.push({ type: 'warn', title: 'Could Use More Metrics', desc: 'You have some numbers, but adding more data-driven results will significantly boost your profile.' });
+      } else {
+        feedback.push({ type: 'good', title: 'Data-Driven Results', desc: 'Excellent! Your resume is backed by solid numbers and measurable metrics.' });
+      }
+      document.getElementById('valNumbers').innerHTML = `<i class="fas fa-chart-bar"></i> ${numbersFound.length}`;
+
+      // 4. Essential Contact Info
+      let hasEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(rText);
+      // Improved phone regex to handle spaces like +91 98765 43210 or (123) 456-7890
+      let hasPhone = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?|(\+?\d{1,3}[\s-]?\d{3,}[\s-]?\d{3,})/i.test(resume.replace(/\s+/g, ' '));
+      let hasLinkedIn = /linkedin\.com/i.test(rText);
+      
+      if(!hasEmail || !hasPhone) {
+        score -= 20;
+        feedback.push({ type: 'bad', title: 'Missing Contact Info', desc: 'ATS could not detect an email or phone number. Make sure they are standard text, not inside headers/footers.' });
+      }
+      if(!hasLinkedIn) {
+        score -= 5;
+        feedback.push({ type: 'warn', title: 'Add LinkedIn URL', desc: 'Over 90% of recruiters will check your LinkedIn. Add the URL to your contact section.' });
+      }
+
+      // 5. Keyword Match (if JD provided)
+      if (jd) {
+        let jdKeywords = extractKeywords(jd);
+        let matchCount = 0;
+        jdKeywords.forEach(kw => {
+          if(rText.includes(kw)) matchCount++;
+        });
+        
+        let matchPercent = Math.round((matchCount / jdKeywords.length) * 100);
+        document.getElementById('valKeywords').innerHTML = `<i class="fas fa-key"></i> ${matchPercent}%`;
+        
+        if (matchPercent < 40) {
+          score -= 15;
+          feedback.push({ type: 'bad', title: 'Low Keyword Match', desc: `Your resume only matches ${matchPercent}% of the job description keywords. Add specific skills mentioned in the JD.` });
+        } else if (matchPercent < 70) {
+          score -= 5;
+          feedback.push({ type: 'warn', title: 'Moderate Keyword Match', desc: `You matched ${matchPercent}% of JD keywords. Try to naturally weave in a few more core requirements.` });
+        } else {
+          feedback.push({ type: 'good', title: 'Excellent Keyword Match', desc: `You matched ${matchPercent}% of the JD keywords! High chance of passing ATS filters.` });
+        }
+      } else {
+        document.getElementById('valKeywords').innerHTML = `<i class="fas fa-key"></i> N/A`;
+        feedback.push({ type: 'warn', title: 'No Job Description', desc: 'Paste a target job description to see how well your resume matches the specific role.' });
+      }
+
+      // Finalize Score
+      score = Math.max(0, Math.min(100, score)); // clamp 0-100
+      
+      // Update UI
+      let circle = document.getElementById('scoreCircle');
+      let text = document.getElementById('scoreText');
+      let label = document.getElementById('scoreLabel');
+      let desc = document.getElementById('scoreDesc');
+      
+      // Color logic
+      let strokeColor = "#dc3545"; // bad
+      if (score >= 80) strokeColor = "#28a745"; // good
+      else if (score >= 60) strokeColor = "#ffc107"; // warn
+
+      circle.setAttribute("stroke", strokeColor);
+      circle.setAttribute("stroke-dasharray", `${score}, 100`);
+      text.textContent = score;
+      text.style.fill = strokeColor;
+
+      if (score >= 80) {
+        label.textContent = "Excellent!";
+        label.style.color = "#28a745";
+        desc.textContent = "Your resume is highly optimized for ATS and recruiters.";
+      } else if (score >= 60) {
+        label.textContent = "Good, but needs tweaks";
+        label.style.color = "#ffc107";
+        desc.textContent = "You'll pass some filters, but fixing the issues below will help.";
+      } else {
+        label.textContent = "Needs Improvement";
+        label.style.color = "#dc3545";
+        desc.textContent = "High risk of getting filtered out. Apply the feedback below immediately.";
+      }
+
+      // Render Feedback
+      let fbHtml = "";
+      // Sort feedback so bad is first
+      feedback.sort((a,b) => {
+        const ranks = { 'bad': 0, 'warn': 1, 'good': 2 };
+        return ranks[a.type] - ranks[b.type];
+      });
+
+      feedback.forEach(f => {
+        let icon = f.type === 'good' ? 'fa-check-circle' : (f.type === 'warn' ? 'fa-exclamation-triangle' : 'fa-times-circle');
+        fbHtml += `
+          <li class="feedback-item fi-${f.type}">
+            <i class="fas ${icon}"></i>
+            <div class="feedback-text">
+              <strong>${f.title}</strong>
+              ${f.desc}
+            </div>
+          </li>
+        `;
+      });
+      document.getElementById('feedbackList').innerHTML = fbHtml;
+    }
+  </script>
+</body>
+</html>

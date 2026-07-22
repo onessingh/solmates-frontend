@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Online PDF Tools | Merge, Compress & Convert PDF Files</title>
+    <meta name="description" content="Access a complete suite of free online PDF tools. Merge, Compress, Split, Convert (Word, JPG, Excel) and Edit PDFs securely in your browser with SOLMATES.">
+    <meta name="keywords" content="PDF tools, free PDF editor, merge PDF, compress PDF, convert PDF to Word, online PDF tools for students, SOLMATES tools">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <style>
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+            background: #fff;
+        }
+
+        .icon-container {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            color: #fff;
+        }
+
+        .tool-card h3 {
+            font-size: 1.25rem;
+        }
+
+        .tool-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            min-height: 4.05rem;
+        }
+
+        .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .color-blue { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .color-red { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .color-green { background: linear-gradient(135deg, #10b981, #34d399); }
+        .color-orange { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .color-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .color-pink { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .color-indigo { background: linear-gradient(135deg, #6366f1, #818cf8); }
+    </style>
+  <script src="/js/webview-fix.js?v=104.6"></script>
+  <script src="/js/sol-cache.js?v=104.6"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> All-in-One Online PDF Tools</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="tools-grid" id="toolsGrid"></div>
+</div>
+
+<script>
+    const tools = [
+        { id: "merge", title: "Merge PDF", icon: "combine", color: "color-blue", desc: "Combine PDFs in the order you want with the easiest PDF merger available." },
+        { id: "split", title: "Split PDF", icon: "scissors", color: "color-red", desc: "Separate one page or a whole set for easy conversion into independent PDF files." },
+        { id: "zip-creator", title: "Zip Converter", icon: "archive", color: "color-indigo", desc: "Bundle any number of files of any format into a single, compressed ZIP archive instantly." },
+        { id: "compress", title: "Compress PDF", icon: "minimize-2", color: "color-green", desc: "Reduce file size while optimizing for maximal PDF quality." },
+        { id: "pdf-to-word", title: "PDF to Word", icon: "file-text", color: "color-blue", desc: "Advanced Font-Aware Paragraph Clustering engine that preserves styles and layout perfectly." },
+        { id: "pdf-to-ppt", title: "PDF to PowerPoint", icon: "presentation", color: "color-orange", desc: "High-fidelity conversion of PDF pages into editable PowerPoint slides." },
+        { id: "word-to-pdf", title: "Word to PDF", icon: "file-up", color: "color-blue", desc: "Convert any DOCX file to a pixel-perfect PDF while preserving internal structures." },
+        { id: "excel-to-pdf", title: "Excel to PDF", icon: "file-up", color: "color-green", desc: "Flatten complex spreadsheets into readable, printable PDF documents." },
+        { id: "pdf-to-jpg", title: "PDF to JPG", icon: "image", color: "color-pink", desc: "Render high-resolution JPG images from any PDF document page-by-page." },
+        { id: "jpg-to-pdf", title: "JPG to PDF", icon: "file-image", color: "color-orange", desc: "Combine multiple images into a single professional PDF with auto-alignment." },
+        { id: "watermark", title: "Watermark", icon: "stamp", color: "color-red", desc: "Stamp persistent watermarks with adjustable opacity and rotation for security." },
+        { id: "rotate", title: "Rotate PDF", icon: "rotate-cw", color: "color-purple", desc: "Individual or batch rotation of PDF pages with instant structural saving." },
+        { id: "html-to-pdf", title: "HTML to PDF", icon: "code-2", color: "color-green", desc: "Convert live webpages into high-fidelity PDF documents using modern CSS rendering." },
+        { id: "unlock", title: "Unlock PDF", icon: "unlock", color: "color-blue", desc: "Standard decryption engine for removing password restrictions from PDF files." },
+        { id: "protect", title: "Protect PDF", icon: "lock", color: "color-indigo", desc: "Secure your documents with industrial-grade password encryption." },
+        { id: "organize", title: "Organize PDF", icon: "layout-list", color: "color-red", desc: "Visual drag-and-drop page management to merge, reorder, or remove pages." },
+        { id: "page-numbers", title: "Page numbers", icon: "list-ordered", color: "color-purple", desc: "Add dynamic, styled page numbering to any position in your document." },
+        { id: "scan", title: "Scan to PDF", icon: "smartphone", color: "color-green", desc: "Mobile-optimized browser scanning engine for instant document digitization." },
+        { id: "ocr", title: "OCR PDF", icon: "eye", color: "color-blue", desc: "Deep Learning text recognition to turn scans into 100% searchable documents." },
+
+        { id: "ai-summarizer", title: "AI Summarizer", icon: "zap", color: "color-indigo", desc: "GPT-powered contextual analysis to extract key insights from long PDF reports." },
+        { id: "translate", title: "Translate PDF", icon: "languages", color: "color-indigo", desc: "Cloud-powered neural translation that preserves your layout and formatting." },
+        { id: "delete-pages", title: "Delete Pages", icon: "file-minus", color: "color-red", desc: "Remove unwanted pages from your PDF documents instantly.", isNew: true },
+        { id: "add-pages", title: "Add Pages", icon: "file-plus", color: "color-green", desc: "Insert new pages or entire PDFs anywhere in your document.", isNew: true },
+        { id: "favicon-generator", title: "Favicon Generator", icon: "image", color: "color-pink", desc: "Generate multi-size favicons (ICO, PNG) for your website from any image.", isNew: true }
+    ];
+
+    const grid = document.getElementById('toolsGrid');
+
+    tools.forEach(tool => {
+        const card = document.createElement('a');
+        card.href = `/tools/pdf-tools/${tool.id}`;
+        card.className = 'tool-card';
+        
+        let badgeHtml = '';
+        if (tool.isNew) {
+            badgeHtml = '<span class="badge">New!</span>';
+        }
+
+        card.innerHTML = `
+            ${badgeHtml}
+            <div class="icon-container ${tool.color}">
+                <i data-lucide="${tool.icon}"></i>
+            </div>
+            <h3>${tool.title}</h3>
+            <p>${tool.desc}</p>
+        `;
+
+        grid.appendChild(card);
+    });
+
+    lucide.createIcons();
+</script>
+
+</body>
+</html>

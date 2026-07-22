@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator | Create Icons for Websites</title>
+    <meta name="description" content="Generate perfect favicons for your website instantly. Create ICO, PNG, and Apple Touch Icons from any image.">
+    <link rel="stylesheet" href="/css/global-lockdown.css">
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+    <style>
+        .icon-card { transition: all 0.2s; }
+        .icon-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        canvas { display: none; }
+        .header-bar {
+            background: var(--surface, #ffffff);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-bar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary, #0f2b46);
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 12px;
+            width: 100%;
+        }
+        body { padding-top: 0 !important; }
+        
+        #cropper-modal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.8); flex-direction: column; align-items: center; justify-content: center;
+        }
+        .cropper-content {
+            background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 600px;
+        }
+        .cropper-img-container {
+            max-height: 60vh; overflow: hidden; background: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 font-sans">
+    <div class="header-bar">
+        <h1><i data-lucide="image"></i> Favicon Generator</h1>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-2 gap-8">
+            <div id="upload-section" class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 h-fit">
+                <h2 class="text-xl font-bold text-slate-900 mb-6">Upload Image</h2>
+                <input type="file" id="image-upload" accept="image/png, image/jpeg, image/jpg, image/svg+xml" class="hidden" />
+                <label for="image-upload" id="drop-zone" class="cursor-pointer flex flex-col items-center justify-center gap-4 p-12 border-2 border-dashed border-slate-300 rounded-xl hover:bg-slate-50 transition-colors">
+                    <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-pink-600">
+                        <i data-lucide="image-plus" class="w-8 h-8"></i>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-slate-900 font-medium">Click to upload or drag & drop</p>
+                        <p class="text-slate-500 text-sm mt-1">SVG, PNG, JPG (We will help you crop it!)</p>
+                    </div>
+                </label>
+
+                <div id="preview-container" class="hidden mt-6">
+                    <h3 class="text-sm font-medium text-slate-700 mb-3">Selected Image Preview</h3>
+                    <div class="flex flex-col items-center justify-center p-4 bg-slate-100 rounded-lg border border-slate-200">
+                        <img id="original-preview" class="max-w-[200px] max-h-[200px] object-contain shadow-sm rounded bg-white mb-4" />
+                        <button onclick="reCrop()" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                            <i data-lucide="crop" class="w-4 h-4 inline-block mr-1"></i> Edit Crop
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="results-section" class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 opacity-50 pointer-events-none transition-opacity">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-slate-900">Generated Icons</h2>
+                    <button id="btn-download-all" class="px-4 py-2 text-sm font-medium text-white bg-pink-600 rounded-lg shadow-sm hover:bg-pink-700 transition-colors flex items-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i> Download ZIP
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="icons-grid">
+                    <!-- Icons will be injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cropper Modal -->
+    <div id="cropper-modal">
+        <div class="cropper-content">
+            <div class="text-lg font-bold text-slate-900 mb-4">Crop Icon (Square)</div>
+            <div class="cropper-img-container">
+                <img id="cropper-image" src="" style="max-width:100%; display:block;">
+            </div>
+            <div class="mt-6 flex justify-end gap-3">
+                <button onclick="cancelCrop()" class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">Cancel</button>
+                <button onclick="applyCrop()" class="px-4 py-2 text-sm font-medium text-white bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors">Apply & Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="process-canvas"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script>
+        lucide.createIcons();
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('image-upload');
+        const previewContainer = document.getElementById('preview-container');
+        const originalPreview = document.getElementById('original-preview');
+        const resultsSection = document.getElementById('results-section');
+        const iconsGrid = document.getElementById('icons-grid');
+        const btnDownloadAll = document.getElementById('btn-download-all');
+        const processCanvas = document.getElementById('process-canvas');
+        const ctx = processCanvas.getContext('2d');
+
+        const cropperModal = document.getElementById('cropper-modal');
+        const cropperImage = document.getElementById('cropper-image');
+        let cropper = null;
+        let originalFileBase64 = null;
+
+        const sizes = [
+            { name: 'favicon-16x16.png', size: 16, type: 'image/png' },
+            { name: 'favicon-32x32.png', size: 32, type: 'image/png' },
+            { name: 'favicon.ico', size: 48, type: 'image/x-icon' },
+            { name: 'apple-touch-icon.png', size: 180, type: 'image/png' },
+            { name: 'android-chrome-192x192.png', size: 192, type: 'image/png' },
+            { name: 'android-chrome-512x512.png', size: 512, type: 'image/png' }
+        ];
+
+        let generatedFiles = {};
+
+        // Drag and Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('border-pink-500', 'bg-pink-50'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-pink-500', 'bg-pink-50'), false);
+        });
+
+        dropZone.addEventListener('drop', e => {
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) handleFile(file);
+        });
+
+        fileInput.addEventListener('change', e => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalFileBase64 = e.target.result;
+                openCropper(originalFileBase64);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openCropper(src) {
+            cropperImage.src = src;
+            cropperModal.style.display = 'flex';
+            if(cropper) { cropper.destroy(); }
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                background: false
+            });
+        }
+
+        function reCrop() {
+            if(originalFileBase64) openCropper(originalFileBase64);
+        }
+
+        function cancelCrop() {
+            cropperModal.style.display = 'none';
+            if(cropper) { cropper.destroy(); cropper = null; }
+            fileInput.value = '';
+        }
+
+        function applyCrop() {
+            if (!cropper) return;
+            const canvas = cropper.getCroppedCanvas({
+                width: 512,
+                height: 512,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+            
+            const croppedBase64 = canvas.toDataURL('image/png');
+            originalPreview.src = croppedBase64;
+            previewContainer.classList.remove('hidden');
+            
+            cropperModal.style.display = 'none';
+            if(cropper) { cropper.destroy(); cropper = null; }
+            
+            // Pass the canvas directly since originalPreview needs time to load
+            generateIcons(canvas);
+        }
+
+        async function generateIcons(img) {
+            resultsSection.classList.remove('opacity-50', 'pointer-events-none');
+            iconsGrid.innerHTML = '';
+            generatedFiles = {};
+
+            for (const item of sizes) {
+                const size = img.width; // Image is already a square from cropper
+
+                processCanvas.width = item.size;
+                processCanvas.height = item.size;
+                ctx.clearRect(0, 0, item.size, item.size);
+                
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+
+                ctx.drawImage(img, 0, 0, size, size, 0, 0, item.size, item.size);
+
+                const dataUrl = processCanvas.toDataURL(item.type === 'image/x-icon' ? 'image/png' : item.type);
+                generatedFiles[item.name] = dataUrl;
+
+                const card = document.createElement('div');
+                card.className = 'icon-card bg-white border border-slate-200 p-4 rounded-xl flex flex-col items-center justify-between text-center gap-3';
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-center flex-1 w-full bg-slate-50 rounded-lg p-2 min-h-[80px]">
+                        <img src="${dataUrl}" alt="${item.name}" style="width:${Math.min(item.size, 64)}px; height:${Math.min(item.size, 64)}px;" class="shadow-sm bg-white" />
+                    </div>
+                    <div class="text-xs font-medium text-slate-700 w-full truncate" title="${item.name}">${item.name}</div>
+                    <div class="text-[10px] text-slate-500">${item.size}x${item.size}</div>
+                    <a href="${dataUrl}" download="${item.name}" class="w-full py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1">
+                        <i data-lucide="download" class="w-3 h-3"></i> Get
+                    </a>
+                `;
+                iconsGrid.appendChild(card);
+            }
+            lucide.createIcons();
+        }
+
+        btnDownloadAll.addEventListener('click', () => {
+            const zip = new JSZip();
+            for (const [name, dataUrl] of Object.entries(generatedFiles)) {
+                const base64Data = dataUrl.split(',')[1];
+                zip.file(name, base64Data, { base64: true });
+            }
+            
+            // Add HTML tags text file to the zip
+            const htmlTags = `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\n<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\n<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">\n<link rel="manifest" href="/site.webmanifest">`;
+            zip.file("html-tags.txt", htmlTags);
+
+            zip.generateAsync({ type: 'blob' }).then(content => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = 'favicons.zip';
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html>

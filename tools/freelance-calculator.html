@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Rate Calculator | SOLMATES</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #34c759; /* Green for money/finance */
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-top: 0 !important; }
+
+    .header-bar { background: var(--card); padding: 15px 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
+    .header-bar h1 { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary); display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 768px) { .container { grid-template-columns: 1fr 1fr; } }
+    
+    .card { background: var(--card); border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+    
+    /* Tabs */
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+    .tab-btn { flex: 1; text-align: center; padding: 12px; font-weight: 600; color: var(--light); cursor: pointer; transition: 0.2s; border-bottom: 3px solid transparent; margin-bottom: -2px; font-size: 0.95rem; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--accent); }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
+    
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-prefix { position: absolute; left: 15px; color: var(--light); font-weight: 600; }
+    .input-suffix { position: absolute; right: 15px; color: var(--light); font-weight: 600; font-size: 0.85rem; }
+    
+    .form-control { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: #fafafa; transition: all 0.2s; outline: none; }
+    .form-control.with-prefix { padding-left: 35px; }
+    .form-control.with-suffix { padding-right: 50px; }
+    .form-control:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.15); }
+    
+    .btn-main { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-main:hover { background: #1a3c5e; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(15, 43, 70, 0.2); }
+
+    /* Result Panel */
+    .result-panel { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; text-align: center; margin-top: 25px; display: none; animation: scaleIn 0.3s; }
+    .result-label { font-size: 0.85rem; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block; }
+    .result-value { font-size: 2.5rem; font-weight: 800; color: var(--primary); }
+    .result-subtext { font-size: 0.9rem; color: #15803d; margin-top: 10px; font-style: italic; }
+
+    .breakdown-box { background: white; border-radius: 10px; padding: 15px; margin-top: 20px; text-align: left; border: 1px solid var(--border); }
+    .breakdown-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+    .breakdown-item strong { color: var(--primary); }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h1><i class="fas fa-wallet" style="color: var(--accent);"></i> Freelance Rate Calculator</h1>
+  </div>
+
+  <div class="container">
+    
+    <div class="card" style="grid-column: 1 / -1; padding-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none;">
+      <div class="tabs">
+        <div class="tab-btn active" onclick="switchTab('tab-market', this)">Market Estimator (Project Rate)</div>
+        <div class="tab-btn" onclick="switchTab('tab-hourly', this)">Target Income (Hourly Rate)</div>
+      </div>
+    </div>
+
+    <!-- TAB 1: Hourly Rate Calculator -->
+    <div id="tab-hourly" class="tab-content" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr; gap: 20px; @media(min-width: 768px){ grid-template-columns: 1fr 1fr; }">
+      <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 900px; margin: 0 auto; flex-flow: wrap;">
+        <div class="card" style="flex: 1; min-width: 300px; border-top-left-radius: 0; border-top-right-radius: 0;">
+          <h3 style="color: var(--primary); margin-bottom: 10px;">Reverse Engineer Your Rate</h3>
+          <p style="color: var(--light); font-size: 0.9rem; margin-bottom: 20px;">Calculate exactly how much you need to charge per hour to hit your monthly financial goals.</p>
+          
+          <div class="form-group">
+            <label>Target Monthly Income</label>
+            <div class="input-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="hr-income" class="form-control with-prefix" placeholder="e.g., 20000" value="20000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Monthly Expenses (Software, WiFi, etc.)</label>
+            <div class="input-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="hr-expenses" class="form-control with-prefix" placeholder="e.g., 2000" value="2000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Hours you can work per week</label>
+            <div class="input-wrapper">
+              <input type="number" id="hr-hours" class="form-control with-suffix" placeholder="e.g., 15" value="15">
+              <span class="input-suffix">hrs/wk</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Billable Efficiency (%)</label>
+            <p style="font-size: 0.75rem; color: var(--light); margin-bottom: 8px;">(Not all hours are paid. Some go to marketing/admin. 70% is standard.)</p>
+            <div class="input-wrapper">
+              <input type="number" id="hr-efficiency" class="form-control with-suffix" placeholder="70" value="70" max="100">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <button class="btn-main" onclick="calculateHourly()">Calculate Minimum Rate</button>
+        </div>
+
+        <div class="card" style="flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center;">
+          <div id="hr-empty" style="text-align: center; color: var(--light); font-style: italic;">
+            Fill details and calculate to see your results.
+          </div>
+          
+          <div class="result-panel" id="hr-result-panel">
+            <span class="result-label">Your Minimum Hourly Rate</span>
+            <div class="result-value" id="hr-rate-out">₹0</div>
+            <div class="result-subtext">Never charge below this amount!</div>
+
+            <div class="breakdown-box">
+              <h4 style="margin-bottom: 10px; color: #166534;">The Math:</h4>
+              <div class="breakdown-item">
+                <span>Total Monthly Goal (Income + Exp):</span>
+                <strong id="hr-math-total">₹0</strong>
+              </div>
+              <div class="breakdown-item">
+                <span>Total Work Hours per Month:</span>
+                <strong id="hr-math-hours">0 hrs</strong>
+              </div>
+              <div class="breakdown-item">
+                <span>Actual Billable Hours:</span>
+                <strong id="hr-math-billable">0 hrs</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Market Estimator -->
+    <div id="tab-market" class="tab-content active" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr; gap: 20px; @media(min-width: 768px){ grid-template-columns: 1fr 1fr; }">
+      <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 900px; margin: 0 auto; flex-flow: wrap;">
+        <div class="card" style="flex: 1; min-width: 300px; border-top-left-radius: 0; border-top-right-radius: 0;">
+          <h3 style="color: var(--primary); margin-bottom: 10px;">Market Rate Estimator</h3>
+          <p style="color: var(--light); font-size: 0.9rem; margin-bottom: 20px;">Find out what the industry standard pricing is for common freelance projects in India.</p>
+          
+          <div class="form-group">
+            <label>Service Category</label>
+            <select id="me-service" class="form-control" onchange="updateAddons()">
+              <option value="web">Website Design & Dev</option>
+              <option value="logo">Logo & Branding Design</option>
+              <option value="video">Video Editing (Per Reel/Short)</option>
+              <option value="content">Content/Copywriting (Per 1000 words)</option>
+              <option value="social">Social Media Management (Per Month)</option>
+              <option value="ppt">PPT/Pitch Deck Presentation</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Client Type & Complexity</label>
+            <select id="me-complexity" class="form-control">
+              <option value="basic">Basic (Student/Small local shop) - Low Budget</option>
+              <option value="standard" selected>Standard (Startup/SME) - Mid Budget</option>
+              <option value="premium">Premium (Funded Startup/Corporate) - High Budget</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="addons-group" style="display: none; background: #fafafa; padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+            <label style="color: var(--primary); margin-bottom: 5px;">Extra Requirements (Add-ons)</label>
+            <p style="font-size: 0.75rem; color: var(--light); margin-bottom: 12px;">Select specific features to get a more accurate quote.</p>
+            <div id="addons-container" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Addons injected via JS -->
+            </div>
+          </div>
+          
+          <button class="btn-main" onclick="estimateMarket()">Get Price Estimate</button>
+        </div>
+
+        <div class="card" style="flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center;">
+          <div id="me-empty" style="text-align: center; color: var(--light); font-style: italic;">
+            Select service and complexity to see market rates.
+          </div>
+          
+          <div class="result-panel" id="me-result-panel" style="background: #f4f8fc; border-color: #d1e1f0;">
+            <span class="result-label" style="color: #0071e3;">Recommended Project Price</span>
+            <div class="result-value" id="me-rate-out" style="color: var(--primary); font-size: 2rem;">₹0 - ₹0</div>
+            
+            <div class="breakdown-box" style="margin-top: 25px;">
+              <h4 style="margin-bottom: 10px; color: #0071e3;">Pro Tip for this Service:</h4>
+              <p id="me-tip" style="font-size: 0.9rem; color: #333; line-height: 1.5;">...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab Switching
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => {
+        c.classList.remove('active');
+        c.style.display = 'none'; // Ensure CSS takes over properly
+      });
+      
+      btn.classList.add('active');
+      const target = document.getElementById(tabId);
+      target.classList.add('active');
+      target.style.display = 'grid'; // Grid is used for layouts
+    }
+    // Initialize correct display
+    document.getElementById('tab-hourly').style.display = 'none';
+
+    // Logic for Tab 1: Hourly Rate
+    function calculateHourly() {
+      const income = parseFloat(document.getElementById('hr-income').value) || 0;
+      const expenses = parseFloat(document.getElementById('hr-expenses').value) || 0;
+      const hoursPerWeek = parseFloat(document.getElementById('hr-hours').value) || 0;
+      let efficiency = parseFloat(document.getElementById('hr-efficiency').value) || 0;
+
+      if(income <= 0 || hoursPerWeek <= 0) {
+        alert("Please enter valid income and hours.");
+        return;
+      }
+
+      if(efficiency > 100) efficiency = 100;
+      if(efficiency < 1) efficiency = 1;
+
+      // Calculations
+      const totalGoal = income + expenses;
+      const hoursPerMonth = hoursPerWeek * 4.33; // Avg weeks in a month
+      const billableHours = hoursPerMonth * (efficiency / 100);
+      
+      const hourlyRate = totalGoal / billableHours;
+
+      // DOM Updates
+      document.getElementById('hr-empty').style.display = 'none';
+      document.getElementById('hr-result-panel').style.display = 'block';
+
+      document.getElementById('hr-rate-out').innerText = `₹${Math.ceil(hourlyRate).toLocaleString('en-IN')}`;
+      document.getElementById('hr-math-total').innerText = `₹${Math.ceil(totalGoal).toLocaleString('en-IN')}`;
+      document.getElementById('hr-math-hours').innerText = `${Math.round(hoursPerMonth)} hrs`;
+      document.getElementById('hr-math-billable').innerText = `${Math.round(billableHours)} hrs`;
+    }
+
+    // Logic for Tab 2: Market Estimator
+    const marketRates = {
+      web: {
+        basic: { min: 5000, max: 10000, tip: "Use WordPress or Framer templates to save time. Focus on speed of delivery." },
+        standard: { min: 15000, max: 30000, tip: "Include custom UI design, responsive layouts, and basic SEO setup." },
+        premium: { min: 40000, max: 80000, tip: "Charge for deep strategy, custom React/Next.js code, animations, and high-end performance." }
+      },
+      logo: {
+        basic: { min: 1500, max: 3000, tip: "Provide 2 options based on free fonts/icons. Keep revisions to a maximum of 1." },
+        standard: { min: 5000, max: 12000, tip: "Provide a full brand kit (Logo, Typography, Colors) and 3 initial concepts." },
+        premium: { min: 20000, max: 50000, tip: "Conduct brand strategy workshops, competitor analysis, and deliver extensive brand guidelines." }
+      },
+      video: {
+        basic: { min: 500, max: 1000, tip: "Basic cuts, auto-captions, and simple background music. Max 60 seconds." },
+        standard: { min: 1500, max: 3000, tip: "Alex Hormozi style animated captions, sound effects, B-rolls, and color grading." },
+        premium: { min: 4000, max: 8000, tip: "High-end motion graphics, script consultation, viral hooks structuring, and premium stock footage." }
+      },
+      content: {
+        basic: { min: 500, max: 1000, tip: "Basic AI-assisted structuring. 50-100 Paisa per word." },
+        standard: { min: 1500, max: 3000, tip: "SEO optimized, plagiarism-free, well-researched human written content." },
+        premium: { min: 4000, max: 10000, tip: "Thought leadership, expert interviews, high-converting copywriting. Charge per project, not per word." }
+      },
+      social: {
+        basic: { min: 5000, max: 8000, tip: "Managing 1 platform, 3 posts/week using Canva templates. No custom video." },
+        standard: { min: 12000, max: 25000, tip: "Managing 2 platforms, 5 posts/week, basic community engagement, and monthly reports." },
+        premium: { min: 35000, max: 70000, tip: "Full social strategy, daily posting, influencer outreach, ad management, and dedicated account management." }
+      },
+      ppt: {
+        basic: { min: 2000, max: 4000, tip: "Cleanup of an existing 10-slide deck. Basic formatting and alignment." },
+        standard: { min: 5000, max: 12000, tip: "Custom template design, infographic creation, and data visualization for 10-15 slides." },
+        premium: { min: 20000, max: 50000, tip: "High-stakes investor pitch decks. Focus heavily on narrative structure, storytelling, and premium bespoke graphics." }
+      }
+    };
+
+    const addonsData = {
+      web: [
+        { id: 'web-login', label: 'User Login & Authentication', price: 5000 },
+        { id: 'web-ecom', label: 'E-Commerce / Payment Gateway', price: 12000 },
+        { id: 'web-admin', label: 'Custom Admin Dashboard', price: 8000 },
+        { id: 'web-seo', label: 'Advanced SEO & Analytics', price: 4000 }
+      ],
+      video: [
+        { id: 'vid-thumb', label: 'Custom YouTube Thumbnail', price: 500 },
+        { id: 'vid-4k', label: '4K Export & Color Grading', price: 1000 },
+        { id: 'vid-source', label: 'Handover Source Files (Premiere Pro)', price: 2000 }
+      ],
+      logo: [
+        { id: 'logo-brand', label: 'Full Brand Guidelines (PDF)', price: 3000 },
+        { id: 'logo-social', label: 'Social Media Kit (Banners/DPs)', price: 2000 },
+        { id: 'logo-source', label: 'Vector Source Files (.AI/.EPS)', price: 1500 }
+      ]
+    };
+
+    function updateAddons() {
+      const service = document.getElementById('me-service').value;
+      const addonsGroup = document.getElementById('addons-group');
+      const addonsContainer = document.getElementById('addons-container');
+      
+      if(addonsData[service]) {
+        addonsGroup.style.display = 'block';
+        let html = '';
+        addonsData[service].forEach(addon => {
+          html += `
+            <label style="font-weight: normal; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" class="me-addon-checkbox" data-price="${addon.price}">
+              <span>${addon.label} <strong style="color:var(--accent);">+₹${addon.price.toLocaleString('en-IN')}</strong></span>
+            </label>
+          `;
+        });
+        addonsContainer.innerHTML = html;
+      } else {
+        addonsGroup.style.display = 'none';
+        addonsContainer.innerHTML = '';
+      }
+    }
+
+    // Call it on initialization
+    updateAddons();
+
+    function estimateMarket() {
+      const service = document.getElementById('me-service').value;
+      const complexity = document.getElementById('me-complexity').value;
+
+      const result = marketRates[service][complexity];
+      
+      let addonTotal = 0;
+      const checkboxes = document.querySelectorAll('.me-addon-checkbox:checked');
+      checkboxes.forEach(cb => {
+        addonTotal += parseInt(cb.getAttribute('data-price')) || 0;
+      });
+
+      const finalMin = result.min + addonTotal;
+      const finalMax = result.max + addonTotal;
+      const rangeText = `₹${finalMin.toLocaleString('en-IN')} - ₹${finalMax.toLocaleString('en-IN')}`;
+
+      document.getElementById('me-empty').style.display = 'none';
+      document.getElementById('me-result-panel').style.display = 'block';
+
+      document.getElementById('me-rate-out').innerText = rangeText;
+      document.getElementById('me-tip').innerText = result.tip;
+    }
+  </script>
+</body>
+</html>

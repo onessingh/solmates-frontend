@@ -1,0 +1,4833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOLMATES – DU SOL MBA Student Community, Study Material & Notes</title>
+  <script src="/config.js?v=113.8" defer></script>
+  <script src="/js/sol-cache.js?v=113.3" defer></script>
+  <script src="/js/api-client.js?v=113.3" defer></script>
+  <script src="/js/webview-fix.js?v=113.3" defer></script>
+  <script src="/js/prefetch-helper.js?v=113.3" defer></script>
+  <!-- socket.io loaded dynamically -->
+  <!-- Primary Meta Tags -->
+
+<meta name="google-site-verification" content="aBPtE7_VOQAI9sLomw1m-V2rZ4fRoZoYSzgVZW2mEHw" />
+  <meta name="description"
+    content="SOLMATES is the premier Delhi University (DU) SOL MBA student community hub. Download free Study Material, MBA Notes, PYQs, and use our AI Resume Builder.">
+  <meta name="keywords"
+    content="SOLMATES, Soulmate, Solmate, Sol-mate, Soulmates, DU SOL, MBA notes, DU SOL study material, MBA study material, free MBA notes download, Delhi University SOL, distance learning tools, online MBA classes, DU SOL Results 2024, online degree community, students portal">
+  <meta name="author" content="SOLMATES">
+  <meta name="robots" content="index, follow">
+  <!-- [v111.9] GOOGLE SUPPRESSION: Disables intrusive Touch-to-Search popups -->
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <!-- 🔥 Favicon (All sizes) -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+
+  <!-- Apple PWA -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SOLMATES">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Android / Chrome -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+
+  <!-- Manifest -->
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- 🔥 OG (Link Preview) -->
+  <meta property="og:title" content="Solmates - Learn, Lead, Belong" />
+  <meta property="og:description" content="School of Open Learning | University of Delhi" />
+  <meta property="og:image" content="https://solmates.in/preview.png" />
+  <meta property="og:url" content="https://solmates.in" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Solmates - Learn, Lead, Belong" />
+  <meta name="twitter:description" content="School of Open Learning | University of Delhi" />
+  <meta name="twitter:image" content="https://solmates.in/preview.png" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://solmates.in/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://solmates.in/">
+  <meta property="og:title" content="SOLMATES – Connect • Learn • Belong">
+  <meta property="og:description"
+    content="Premier MBA student community platform with comprehensive study materials, tools, and resources.">
+  <meta property="og:image" content="https://solmates.in/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://solmates.in/">
+  <meta name="twitter:title" content="SOLMATES – Connect • Learn • Belong">
+  <meta name="twitter:description"
+    content="Premier MBA student community platform with comprehensive study materials, tools, and resources.">
+  <meta name="twitter:image" content="https://solmates.in/og-image.png">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SOLMATES",
+    "url": "https://solmates.in/",
+    "description": "MBA student community platform with comprehensive study materials and resources",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://solmates.in/database?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SOLMATES",
+    "url": "https://solmates.in/",
+    "description": "MBA Student Community Platform",
+    "foundingDate": "2024"
+  }
+  </script>
+
+
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    /* [v111.9] GLOBAL TOUCH-FREE NAVIGATION: Prevents accidental Google Search popups */
+    header, nav, footer, button, .icon-box, .tab-btn, .nav-left, .logo-mark, .coming-soon-badge {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #ffffff;
+      color: #111;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      zoom: 0.90;
+    }
+
+    /* ========== Navbar ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px 0 15px;
+      padding-right: 30px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .nav-left {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      color: #0f2b46;
+    }
+
+    /* NAVBAR OPTIONS - CENTERED */
+    .nav-center {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-center a {
+      text-decoration: none;
+      color: #333;
+      font-size: 12px;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      will-change: transform;
+    }
+
+    .nav-center a:hover {
+      color: #0071e3;
+      background: transparent;
+    }
+
+    .nav-center a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Admin button on right */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-login-btn {
+      display: none;
+    }
+
+    /* Notification Bell Icon */
+    .notification-btn {
+      background: rgba(15, 43, 70, 0.05);
+      color: #0f2b46;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      text-decoration: none;
+    }
+
+    .notification-btn:hover {
+      background: rgba(15, 43, 70, 0.1);
+      transform: translateY(-1px);
+      color: #0071e3;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #ff3b30;
+      color: white;
+      font-size: 8px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 2px solid white;
+    }
+
+
+    .admin-login-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    /* Admin Logout Button */
+    .admin-logout-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      display: none;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .admin-logout-btn:hover {
+      background: #ff5252;
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #333;
+      cursor: pointer;
+      padding: 5px;
+      will-change: transform;
+    }
+
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 999;
+      padding: 20px;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .mobile-nav-overlay.active {
+      display: flex;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-nav-overlay a {
+      padding: 15px;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+      transform: translateZ(0);
+    }
+
+    .mobile-nav-overlay a:active {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .mobile-nav-overlay a i {
+      width: 24px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* ========== Hero Section ========== */
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 70px 15px 20px;
+      background: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      text-align: center;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    /* LOGO */
+    .logo-mark {
+      width: 120px !important;
+      height: 120px !important;
+      margin: 0 auto;
+      transform: translateZ(0);
+    }
+
+    .logo-wrapper h1 {
+      font-size: 28px !important;
+      font-weight: 700;
+      margin-top: 15px;
+      letter-spacing: 2px;
+    }
+
+    .tagline {
+      font-size: 13px !important;
+      color: #666;
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+
+    /* ========== Logo Styling ========== */
+    .svg-stroke {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transform: translateZ(0);
+    }
+
+    .stroke-primary {
+      stroke: #0f2b46;
+      stroke-width: 3;
+    }
+
+    .stroke-accent {
+      stroke: #c0962d;
+      stroke-width: 2.5;
+    }
+
+    .stroke-thin {
+      stroke: #0f2b46;
+      stroke-width: 1.5;
+    }
+
+    .node.gold {
+      fill: #c0962d;
+    }
+
+    .node.blue {
+      fill: #0f2b46;
+    }
+
+    /* ========== Page Content ========== */
+    .page-content {
+      min-height: calc(100vh - 60px);
+      padding-top: 60px;
+      width: 100%;
+      overflow-x: hidden;
+      transform: translateZ(0);
+    }
+
+    /* ========== Main Options Grid ========== */
+    .main-options-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      transform: translateZ(0);
+    }
+
+    .main-options-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .main-options-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .main-option-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px 25px;
+      border: 1px solid #eee;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      will-change: transform;
+      transform: translateZ(0);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-option-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #0f2b46, #c0962d);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .main-option-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .main-option-card:hover {
+      background: #f9f9fb;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-color: #0071e3;
+    }
+
+    .main-option-card i {
+      font-size: 40px;
+      margin-bottom: 15px;
+      color: #0f2b46;
+      display: block;
+    }
+
+    .main-option-card h2 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #0f2b46;
+      position: relative;
+      padding-bottom: 8px;
+    }
+
+    .main-option-card h2::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, #0f2b46, #c0962d);
+      border-radius: 2px;
+      transform: translateX(-50%);
+    }
+
+    .main-option-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    /* Coming Soon Badge */
+    .coming-soon-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, #c0962d, #a07a23);
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(192, 150, 45, 0.3);
+      animation: pulse-badge 2s infinite;
+      z-index: 1;
+    }
+
+    @keyframes pulse-badge {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* ========== AI Chatbot Floating Icon ========== */
+    .ai-chatbot-icon {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #0f2b46, #1a3c5e);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(15, 43, 70, 0.3);
+      z-index: 1001;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transform: translateZ(0);
+    }
+
+    .ai-chatbot-icon:hover {
+      transform: scale(1.1) translateY(-3px);
+      box-shadow: 0 10px 25px rgba(15, 43, 70, 0.4);
+      background: linear-gradient(135deg, #1a3c5e, #0f2b46);
+    }
+
+    .ai-chatbot-icon:active {
+      transform: scale(0.95) translateY(0);
+    }
+
+    .ai-chatbot-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: #c0962d;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ========== AI CHATBOX SMALL ========== */
+    .ai-chatbox-small {
+      position: fixed;
+      bottom: 150px;
+      right: 20px;
+      width: 350px;
+      height: 450px;
+      max-height: calc(100vh - 170px);
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      z-index: 1002;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateZ(0);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .ai-chatbox-small.open {
+      display: flex;
+      animation: slideUpSmall 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes slideUpSmall {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .ai-chatbox-header {
+      background: linear-gradient(to right, #0071e3, #00a0fe);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    .ai-chatbox-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ai-chatbox-header h3 i {
+      color: white;
+      font-size: 18px;
+    }
+
+    @media (min-width: 768px) {
+      .ai-chatbox-header {
+        padding: 10px 15px;
+        height: 45px;
+        background: #fff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .ai-chatbox-header h3 {
+        font-size: 0.95rem;
+        color: #1a1a1a;
+      }
+
+      .ai-chatbox-header h3 i {
+        color: #c0962d;
+      }
+    }
+
+    .ai-status-small {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .status-dot-small {
+      width: 8px;
+      height: 8px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    /* Add Notice FAB */
+    .add-notice-fab {
+      position: fixed;
+      bottom: 160px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+      z-index: 1001;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .add-notice-fab:hover {
+      transform: scale(1.1) translateY(-3px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .add-notice-fab:active {
+      transform: scale(0.95) translateY(0);
+    }
+
+    .close-chatbox-small {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .close-chatbox-small:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: rotate(90deg);
+    }
+
+    .ai-chatbox-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      background: #f9f9fb;
+      overflow: hidden;
+      min-height: 0;
+      height: calc(100% - 60px);
+      /* Account for header */
+    }
+
+    .ai-chatbox-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 8px;
+      margin-bottom: 12px;
+      min-height: 0;
+      scrollbar-width: thin;
+      scrollbar-color: #c0962d rgba(0, 0, 0, 0.05);
+    }
+
+    .ai-chatbox-messages::-webkit-scrollbar {
+      width: 8px;
+      display: block !important;
+    }
+
+    .ai-chatbox-messages::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+    }
+
+    .ai-chatbox-messages::-webkit-scrollbar-thumb {
+      background: #c0962d;
+      border-radius: 10px;
+      border: 2px solid #f9f9fb;
+    }
+
+    .ai-chatbox-messages::-webkit-scrollbar-thumb:hover {
+      background: #a07d25;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .message-ai {
+      flex-direction: row;
+    }
+
+    .message-user {
+      flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .message-ai .message-avatar {
+      background: #0f2b46;
+      color: white;
+    }
+
+    .message-user .message-avatar {
+      background: #0071e3;
+      color: white;
+    }
+
+    .message-content {
+      max-width: 85%;
+      padding: 10px 15px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.4;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .message-ai .message-content {
+      background: white;
+      color: #333;
+      border: 1px solid #eee;
+      border-top-left-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .message-user .message-content {
+      background: #0071e3;
+      color: white;
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0, 113, 227, 0.2);
+    }
+
+    .message-typing .message-content {
+      color: #666;
+    }
+
+    .typing-dots span {
+      animation: typingDot 1.4s infinite;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typingDot {
+
+      0%,
+      60%,
+      100% {
+        opacity: 0.3;
+      }
+
+      30% {
+        opacity: 1;
+      }
+    }
+
+    .ai-chatbox-input {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border-top: 1px solid #eee;
+      background: white;
+      padding: 12px 15px;
+      flex-shrink: 0;
+    }
+
+    .ai-chatbox-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 20px;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .ai-chatbox-input button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0071e3;
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+
+    .ai-chatbox-input button:active {
+      transform: translateY(0);
+    }
+
+    /* Quick Questions - Small */
+    .quick-questions-small {
+      margin-top: 15px;
+      flex-shrink: 0;
+    }
+
+    .quick-questions-small h4 {
+      text-align: center;
+      margin-bottom: 12px;
+      color: #0f2b46;
+      font-size: 13px;
+    }
+
+    .question-buttons-small {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .question-btn-small {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 6px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .question-btn-small:hover {
+      background: #0f2b46;
+      color: white;
+      border-color: #0f2b46;
+      transform: translateY(-1px);
+    }
+
+    /* Loading State */
+    .loading-small {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 30px 15px;
+    }
+
+    .spinner-small {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #0f2b46;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 30px 20px 20px;
+      background: #fff;
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      width: 100%;
+      overflow-x: hidden;
+      transform: translateZ(0);
+    }
+
+    .footer p {
+      padding: 0 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* SOCIAL ICONS - COMPACT */
+    .social {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding: 0 10px;
+      transform: translateZ(0);
+    }
+
+    .social a {
+      font-size: 16px;
+      color: #0071e3;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: rgba(0, 113, 227, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ========== WhatsApp Dropdown ========== */
+    .whatsapp-container {
+      position: relative;
+      display: inline-block;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 113, 227, 0.05);
+      color: #0071e3;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1003;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: scale(1.05);
+    }
+
+    .whatsapp-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px) scale(0.95);
+      background: white;
+      width: 120px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+      z-index: 1004;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .whatsapp-dropdown::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent white transparent;
+    }
+
+    .whatsapp-options {
+      display: flex;
+      gap: 6px;
+    }
+
+    .whatsapp-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 6px;
+      color: #333;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+      background: #f8f9fa;
+      min-width: 0;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-option:hover {
+      background: #25D366;
+      color: white;
+      transform: translateY(-2px);
+      border-color: #25D366;
+    }
+
+    .whatsapp-option:hover i {
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .whatsapp-option i {
+      font-size: 18px;
+      color: #25D366;
+      transition: all 0.25s ease;
+      margin-bottom: 4px;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-option .option-text {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .whatsapp-option .option-desc {
+      font-size: 9px;
+      color: #666;
+      line-height: 1.2;
+    }
+
+    .whatsapp-option:hover .option-desc {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ========== Admin Login Modal ========== */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transform: translateZ(0);
+    }
+
+    .admin-modal.active {
+      display: flex;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .admin-modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      animation: modalSlide 0.3s ease;
+      transform: translateZ(0);
+    }
+
+    .admin-modal h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #0f2b46;
+      font-size: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      transform: translateZ(0);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0071e3;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: default;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .login-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #666;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      transform: translateZ(0);
+    }
+
+    .close-modal:hover {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .error-message {
+      color: #ff3b30;
+      font-size: 13px;
+      margin-top: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* ========== Desktop Styles ========== */
+    @media (min-width: 769px) {
+      .top-nav {
+        padding: 0 20px;
+      }
+
+      .nav-center {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .nav-center a {
+        font-size: 13px;
+        padding: 6px 12px;
+      }
+
+      .admin-login-btn,
+      .admin-logout-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+
+      .hero {
+        min-height: 60vh;
+        padding: 80px 15px 30px;
+      }
+
+      /* LOGO DESKTOP पर और बड़ा */
+      .logo-mark {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      .logo-wrapper h1 {
+        font-size: 34px !important;
+        margin-top: 20px;
+      }
+
+      .tagline {
+        font-size: 15px !important;
+        margin-top: 8px;
+      }
+
+      .main-options-container {
+        padding: 50px 20px;
+      }
+
+      .social a,
+      .whatsapp-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      .whatsapp-dropdown {
+        width: 120px;
+        padding: 12px;
+      }
+
+      .whatsapp-option {
+        padding: 12px 8px;
+      }
+
+      .whatsapp-option i {
+        font-size: 20px;
+      }
+
+      .whatsapp-option .option-text {
+        font-size: 12px;
+      }
+
+      .whatsapp-option .option-desc {
+        font-size: 10px;
+      }
+
+      /* AI Chatbot Icon Desktop */
+      .ai-chatbot-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        bottom: 120px;
+        right: 30px;
+      }
+
+      /* Scaling Down internal elements for Laptop */
+      .ai-chatbox-header {
+        padding: 10px 15px;
+        height: 45px;
+        background: #fff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .ai-chatbox-header h3 {
+        font-size: 0.95rem;
+        color: #1a1a1a;
+      }
+
+      .ai-chatbox-header h3 i {
+        color: #c0962d;
+      }
+
+      .ai-chatbox-messages {
+        height: 285px !important;
+        max-height: 285px !important;
+        font-size: 0.85rem;
+      }
+
+      .ai-chatbox-input {
+        padding: 8px 12px !important;
+        height: 48px !important;
+      }
+
+      .ai-chatbox-input input {
+        padding: 6px 12px !important;
+        font-size: 0.85rem !important;
+      }
+
+      .ai-chatbox-input button {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+        background: #0071e3 !important;
+      }
+
+      .ai-chatbox-small {
+        width: 360px;
+        height: 400px;
+        max-height: 75vh;
+        bottom: 25px;
+        right: 25px;
+      }
+    }
+
+    /* ========== Mobile Menu Show/Hide ========== */
+    @media (max-width: 768px) {
+      .nav-center {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-left {
+        font-size: 16px;
+      }
+
+      /* Phone view me logo upar se aur niche se chhota */
+      .hero {
+        min-height: 50vh;
+        padding: 60px 15px 20px;
+      }
+
+      /* Phone view में logo थोड़ा छोटा */
+      .logo-mark {
+        width: 90px !important;
+        height: 90px !important;
+      }
+
+      .logo-wrapper h1 {
+        font-size: 24px !important;
+        margin-top: 10px;
+        padding: 0 10px;
+      }
+
+      .tagline {
+        font-size: 11px !important;
+        margin-top: 4px;
+        padding: 0 10px;
+      }
+
+      .main-options-container {
+        padding: 30px 15px;
+      }
+
+      .main-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .main-option-card {
+        padding: 25px 20px;
+      }
+
+      .main-option-card i {
+        font-size: 35px;
+      }
+
+      .main-option-card h2 {
+        font-size: 20px;
+      }
+
+      /* WhatsApp dropdown mobile के लिए optimize */
+      .whatsapp-dropdown {
+        width: 100px;
+        padding: 8px;
+      }
+
+      .whatsapp-options {
+        gap: 4px;
+      }
+
+      .whatsapp-option {
+        padding: 6px 4px;
+      }
+
+      .whatsapp-option i {
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+
+      .whatsapp-option .option-text {
+        font-size: 9px;
+      }
+
+      .whatsapp-option .option-desc {
+        font-size: 7px;
+      }
+
+      /* AI Chatbot Icon Mobile */
+      .ai-chatbot-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+        bottom: 90px;
+        right: 15px;
+      }
+
+      /* AI Chatbox Mobile */
+      .ai-chatbox-small {
+        width: 320px;
+        height: 450px;
+        max-height: calc(100vh - 100px);
+        bottom: 50px;
+        right: 15px;
+        left: auto;
+        transform-origin: bottom right;
+      }
+
+      .ai-chatbox-header h3 {
+        font-size: 15px;
+      }
+
+      .message-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+      }
+
+      .message-content {
+        font-size: 12px;
+        padding: 8px 12px;
+      }
+
+      .ai-chatbox-input input {
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      .ai-chatbox-input button {
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
+      }
+
+      .question-btn-small {
+        padding: 5px 10px;
+        font-size: 10px;
+      }
+    }
+
+    /* Small phones */
+    @media (max-width: 480px) {
+      .main-options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-chatbox-small {
+        width: 300px;
+        height: 420px;
+        bottom: 140px;
+        right: 10px;
+      }
+
+      .ai-chatbox-body {
+        padding: 12px;
+      }
+
+      .ai-chatbox-messages {
+        max-height: 220px;
+      }
+
+      .message-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+      }
+
+      .message-content {
+        font-size: 11px;
+        padding: 7px 10px;
+      }
+
+      .question-btn-small {
+        padding: 4px 8px;
+        font-size: 9px;
+      }
+
+      .ai-chatbox-input {
+        padding: 10px 12px;
+      }
+    }
+
+    /* Very small phones */
+    @media (max-width: 360px) {
+      .ai-chatbox-small {
+        width: 280px;
+        height: 400px;
+        right: 10px;
+      }
+
+      .ai-chatbox-header {
+        padding: 12px 15px;
+      }
+
+      .ai-chatbox-header h3 {
+        font-size: 14px;
+      }
+
+      .message-avatar {
+        width: 26px;
+        height: 26px;
+        font-size: 10px;
+      }
+
+      .message-content {
+        font-size: 10px;
+        padding: 6px 9px;
+      }
+
+      .question-buttons-small {
+        gap: 4px;
+      }
+
+      .question-btn-small {
+        padding: 3px 6px;
+        font-size: 8px;
+      }
+    }
+
+    .logo-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px;
+      /* Ab ye search bar ko nahi rokega */
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-search-wrapper {
+      margin-top: 35px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .greeting-text {
+      position: relative;
+      font-size: 16px;
+      /* Slightly smaller for better fit */
+      font-weight: 600;
+      color: #0f2b46;
+      text-align: center;
+      margin-bottom: 12px;
+      min-height: 24px;
+      letter-spacing: 0.3px;
+      opacity: 0.9;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+      /* Prevent 2-line wrapping */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 90vw;
+      /* Safety for mobile */
+    }
+
+    .search-container {
+      width: 88%;
+      /* Thoda aur chota mobile me */
+      max-width: 650px;
+      /* Thoda aur compact web me */
+      margin: 0 auto;
+      margin-top: 5px;
+      position: relative;
+      z-index: 12;
+      transition: all 0.3s ease;
+    }
+
+    .premium-search-bar {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      /* Purana transparent background */
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(15, 43, 70, 0.1);
+      /* Purana border */
+      padding: 15px 25px 15px 55px;
+      /* Purana padding */
+      border-radius: 30px;
+      /* Purana roundedness */
+      font-size: 16px;
+      /* Purana font size */
+      color: #0f2b46;
+      outline: none;
+      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      /* Purana shadow */
+    }
+
+    .premium-search-bar:focus {
+      background: rgba(255, 255, 255, 0.4);
+      border-color: rgba(15, 43, 70, 0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .premium-search-bar::placeholder {
+      color: rgba(15, 43, 70, 0.35);
+      /* Ghost grey */
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.1px;
+      /* Tighter for better fit */
+      transition: all 0.4s ease;
+    }
+
+    .premium-search-bar:focus::placeholder {
+      opacity: 0.2;
+      transform: translateX(10px);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #0f2b46;
+      font-size: 20px;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+      z-index: 13;
+    }
+
+    .premium-search-bar:focus~.search-icon {
+      color: #c0962d;
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    /* Auto-hide greeting when typing or focused */
+    .premium-search-bar:focus~.greeting-text,
+    .premium-search-bar:not(:placeholder-shown)~.greeting-text {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Typewriter Cursor */
+    .typewriter-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 16px;
+      background: #c0962d;
+      margin-left: 2px;
+      animation: blinkCursor 0.8s infinite;
+      vertical-align: middle;
+      opacity: 0.6;
+    }
+
+    @keyframes blinkCursor {
+
+      0%,
+      100% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    /* ========== ChatGPT Style Chat Modal ========== */
+    .ai-chat-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2005;
+      display: none;
+      flex-direction: column;
+      animation: modalFadeIn 0.3s ease;
+      background: rgba(255, 255, 255, 0.15);
+      /* Very transparent glass */
+      backdrop-filter: blur(8px);
+      /* Lower blur so elements are visible */
+      -webkit-backdrop-filter: blur(8px);
+      color: #333;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(1.02);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .ai-chat-modal.active {
+      display: flex;
+    }
+
+    .chat-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.4);
+      /* Extra Glass Layer */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-header-info i {
+      font-size: 24px;
+      color: #0f2b46;
+    }
+
+    .chat-header-info h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f2b46;
+    }
+
+    .close-chat {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #666;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .close-chat:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: #333;
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: transparent;
+      /* Changed from #fcfcfd */
+      scroll-behavior: smooth;
+    }
+
+    .chat-welcome {
+      text-align: center;
+      max-width: 600px;
+      margin: 40px auto;
+    }
+
+    .chat-welcome h3 {
+      font-size: 20px;
+      color: #0f2b46;
+      margin-bottom: 30px;
+    }
+
+    .search-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .suggestion-group h4 {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+      padding-left: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .clear-history {
+      font-size: 11px;
+      color: #0071e3;
+      cursor: pointer;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: opacity 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .clear-history:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* ========== Premium Expansion v3.0 (Cleaned) ========== */
+    /* ========== Chat History Sidebar ========== */
+    .ai-chat-modal.active {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .chat-sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: rgba(15, 43, 70, 0.95);
+      /* Keep sidebar dark and highly legible */
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-x: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .chat-sidebar.collapsed {
+      width: 0;
+      min-width: 0;
+      opacity: 0;
+    }
+
+    .sidebar-header {
+      padding: 20px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .new-chat-btn {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .new-chat-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar-history {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .sidebar-history::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-history::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.4);
+      padding: 10px 8px 5px;
+      font-weight: 600;
+    }
+
+    .history-item {
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .history-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .history-item.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .history-item .history-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-item .history-delete {
+      opacity: 0;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 2px 5px;
+      transition: all 0.2s;
+    }
+
+    .history-item:hover .history-delete {
+      opacity: 1;
+    }
+
+    .history-delete:hover {
+      color: #ff3b30 !important;
+    }
+
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .sidebar-toggle {
+      display: inline-block;
+      background: none;
+      border: none;
+      color: #0f2b46;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px;
+      margin-right: 10px;
+    }
+
+    .mobile-sidebar-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2009;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .mobile-sidebar-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 768px) {
+      .ai-chat-modal {
+        overflow-x: hidden;
+      }
+
+      .chat-sidebar {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4) !important;
+        width: 280px !important;
+        min-width: 280px !important;
+        flex-shrink: 0 !important;
+        opacity: 1 !important;
+        margin-left: -280px;
+        transform: none !important;
+        transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 2010;
+      }
+
+      .chat-sidebar.open {
+        margin-left: 0;
+      }
+
+      .chat-main {
+        min-width: 100vw;
+        width: 100vw;
+        flex-shrink: 0;
+      }
+
+      .mobile-sidebar-overlay {
+        display: block !important;
+      }
+
+      .sidebar-toggle {
+        display: inline-block;
+      }
+
+      .mobile-sidebar-close {
+        display: block !important;
+      }
+    }
+
+    .chat-header-wrapper {
+      background: transparent;
+      position: sticky;
+      top: 0;
+      z-index: 2006;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ========== Smart Study v4.0 - Mode Dropdown ========== */
+    .mode-selector-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .mode-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(15, 43, 70, 0.2);
+    }
+
+    .mode-trigger:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(15, 43, 70, 0.3);
+    }
+
+    .mode-trigger .fa-chevron-down {
+      font-size: 9px;
+      transition: transform 0.3s ease;
+    }
+
+    .mode-trigger.open .fa-chevron-down {
+      transform: rotate(180deg);
+    }
+
+    .mode-dropdown {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      padding: 8px;
+      min-width: 200px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+      z-index: 2010;
+    }
+
+    .mode-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .mode-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .mode-option:hover {
+      background: #f5f5f7;
+    }
+
+    .mode-option.active {
+      background: #0f2b46;
+      color: white;
+    }
+
+    .mode-option i {
+      width: 20px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .mode-option .mode-desc {
+      font-size: 10px;
+      opacity: 0.6;
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .mode-option.active .mode-desc {
+      opacity: 0.7;
+    }
+
+    /* Quiz Me styling */
+    .quiz-trigger {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #eef6ff;
+      color: #0071e3;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #d0e4ff;
+      transition: all 0.3s ease;
+    }
+
+    .quiz-trigger:hover {
+      background: #0071e3;
+      color: white;
+    }
+
+    /* Share Button on AI Replies */
+    .msg-actions {
+      display: flex;
+      flex-wrap: wrap;
+      /* Ensure buttons wrap on mobile */
+      gap: 5px;
+      margin-top: 8px;
+      opacity: 1;
+      /* Always visible per user request */
+      transition: opacity 0.3s ease;
+    }
+
+    .msg-action-btn {
+      padding: 3px 6px;
+      /* Even smaller */
+      border-radius: 8px;
+      font-size: 9px;
+      /* Extra small for horizontal fit */
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid rgba(15, 43, 70, 0.1);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      color: #333;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .msg-action-btn:hover {
+      background: rgba(15, 43, 70, 0.1);
+      color: #0f2b46;
+      border-color: rgba(15, 43, 70, 0.2);
+    }
+
+    .msg-action-btn.copied {
+      background: #34c759;
+      color: white;
+      border-color: #34c759;
+    }
+
+    /* Confetti Canvas */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Suggested Resources Styling */
+    .suggested-resources {
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    .res-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .res-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .res-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .res-link:hover {
+      background: #c0962d;
+      border-color: #c0962d;
+      color: #0f2b46;
+      transform: translateY(-2px);
+    }
+
+    /* PDF Preview Overlay */
+    .pdf-preview-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .pdf-preview-overlay.active {
+      display: flex;
+    }
+
+    .pdf-container {
+      width: 90%;
+      height: 85%;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pdf-header {
+      width: 100%;
+      padding: 15px 20px;
+      background: #f8f8f8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .pdf-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .close-pdf {
+      cursor: pointer;
+      font-size: 20px;
+      color: #666;
+      transition: color 0.3s;
+    }
+
+    .close-pdf:hover {
+      color: #ff3b30;
+    }
+
+    iframe#pdfFrame {
+      width: 100%;
+      height: calc(100% - 50px);
+      border: none;
+    }
+
+    @keyframes shimmer {
+      from {
+        background-position: -200% 0;
+      }
+
+      to {
+        background-position: 200% 0;
+      }
+    }
+
+    /* Voice Search Mic */
+    .mic-btn {
+      background: #f5f5f7;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .mic-btn.active {
+      background: #ff3b30;
+      color: white;
+      animation: pulseMic 1.2s infinite;
+    }
+
+    @keyframes pulseMic {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4);
+      }
+
+      70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(255, 59, 48, 0);
+      }
+
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+      }
+    }
+
+    /* Interactive AI Cards */
+    .ai-result-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 10px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.3s ease;
+      border-left: 5px solid #0f2b46;
+    }
+
+    .ai-result-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      border-color: #0f2b46;
+    }
+
+    .card-header-icon {
+      font-size: 24px;
+      color: #0f2b46;
+      margin-bottom: 5px;
+    }
+
+    .btn-card-action {
+      background: #0f2b46;
+      color: white !important;
+      text-decoration: none !important;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 13px;
+      text-align: center;
+      display: block;
+      transition: all 0.3s ease;
+    }
+
+    .btn-card-action:hover {
+      background: #c0962d;
+      color: #0f2b46 !important;
+    }
+
+    .suggestion-tag {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .suggestion-tag:hover {
+      background: rgba(255, 255, 255, 0.8);
+      color: #0f2b46;
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .chat-messages {
+      max-width: 100%;
+      /* Wider width */
+      width: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .chat-message {
+      display: flex;
+      gap: 16px;
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .chat-message.user-message {
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .ai-avatar {
+      background: #0f2b46;
+      color: white;
+    }
+
+    .user-avatar {
+      background: #0071e3;
+      color: white;
+    }
+
+    .content {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 98%;
+      /* More horizontal space for both laptop/phone */
+      width: fit-content;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: #222;
+    }
+
+    .user-message .content {
+      background: rgba(0, 113, 227, 0.85);
+      color: white;
+      border-color: rgba(0, 113, 227, 0.5);
+    }
+
+    .chat-footer {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.4);
+      /* Transparent glass footer */
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .chat-input-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      color: #333;
+      padding: 15px 20px;
+      padding-right: 60px;
+      border-radius: 15px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .chat-input::placeholder {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .chat-input:focus {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(0, 113, 227, 0.5);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), inset 0 2px 5px rgba(0, 0, 0, 0.01);
+    }
+
+    .send-btn {
+      position: absolute;
+      right: 10px;
+      width: 40px;
+      height: 40px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .send-btn:hover {
+      background: #0071e3;
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Mobile Responsive For Chat */
+    @media (max-width: 768px) {
+      .chat-welcome h3 {
+        font-size: 18px;
+      }
+
+      .content {
+        max-width: 90%;
+        font-size: 14px;
+        padding: 12px 15px;
+      }
+
+      .suggestion-tag {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+    }
+
+    /* PDF EXPORT FIXES */
+    @media print {
+      .chat-message {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin-bottom: 10px !important;
+        display: block !important;
+        /* Block instead of flex for PDF safety */
+      }
+
+      .content {
+        background: #ffffff !important;
+        color: #000000 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        font-family: Arial, sans-serif !important;
+        /* Standard font for PDF safety */
+        line-height: 1.5 !important;
+        font-size: 14px !important;
+      }
+
+      .user-message .content {
+        background: #f0f0f0 !important;
+        color: #000 !important;
+      }
+
+      .avatar {
+        display: none !important;
+      }
+
+      /* Avatars can cause alignment issues in PDF */
+    }
+
+    /* ADDITIONAL MOBILE FIXES */
+    @media (max-width: 768px) {
+      .chat-message {
+        gap: 0;
+        /* Remove gap when avatars are hidden */
+      }
+
+      .avatar {
+        display: none !important;
+        /* Save horizontal space on mobile */
+      }
+
+      .content {
+        max-width: 100% !important;
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+      }
+
+      .msg-actions {
+        gap: 3px !important;
+        /* Tight gap for mobile */
+      }
+
+      .chat-footer {
+        padding: 10px;
+      }
+
+      .chat-input-wrapper {
+        gap: 5px;
+      }
+
+      .mode-trigger span {
+        display: none;
+        /* Hide 'Teacher' text on small phones to keep mic/input visible */
+      }
+
+      .chat-header-info h2 {
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .chat-header i {
+        font-size: 18px !important;
+      }
+
+      .chat-typing-indicator .content {
+        max-width: 100px !important;
+        padding: 8px 12px !important;
+      }
+
+      .chat-input::placeholder {
+        font-size: 13px !important;
+        /* Smaller on mobile to prevent cutting */
+      }
+
+      .chat-input {
+        padding: 12px 15px !important;
+        padding-right: 50px !important;
+        font-size: 14px !important;
+      }
+    }
+  </style>
+  <!-- Font Awesome: Non-blocking load via media swap trick -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+  <!-- config.js loaded once at top (deferred), no need to repeat here -->
+  <script>
+    // [v116.4] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // Bug: previous sync version fired reload(true) after 500ms without awaiting
+    // cache.delete() and sw.unregister() — on slow devices these weren't done yet
+    // causing an infinite reload loop (version still mismatched after reload).
+    (async function() {
+      try {
+        var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
+        if (!_store) return;
+        const currentVersion = '116.4';
+        const savedVersion = _store.getItem('sol_app_version');
+
+        if (savedVersion && savedVersion !== currentVersion) {
+          // Loop-guard: sessionStorage is cleared on hard reload, not on soft navigation
+          // If this flag is set, a reload is already in progress — don't trigger another
+          if (sessionStorage.getItem('sol_update_in_progress')) return;
+          sessionStorage.setItem('sol_update_in_progress', '1');
+
+          _store.setItem('sol_app_version', currentVersion);
+
+          // Properly AWAIT cache clearing before reloading
+          if ('caches' in window) {
+            const names = await caches.keys();
+            await Promise.all(names.map(function(n) { return caches.delete(n); }));
+          }
+          // Properly AWAIT SW unregistration before reloading
+          // SW unregister removed to preserve Push Subscriptions
+          if ("serviceWorker" in navigator) { console.log("Updating SW caches..."); }
+          location.reload();
+        } else {
+          try { localStorage.setItem('sol_app_version', currentVersion); } catch(e) {}
+          // Clear the in-progress flag on clean load
+          sessionStorage.removeItem('sol_update_in_progress');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <script src="/js/uptime-helper.js?v=101.0" defer></script>
+</head>
+
+<body>
+
+  <!-- Admin Login Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="adminId">Admin ID</label>
+          <input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off" required>
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter password" autocomplete="new-password" required>
+        </div>
+        <div class="error-message" id="loginError">Invalid credentials. Please try again.</div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- AI Chat Interface Modal -->
+  <div class="ai-chat-modal" id="aiChatModal">
+
+    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="toggleChatSidebar(true)"></div>
+
+    <!-- Left Sidebar (Chat History) -->
+    <div class="chat-sidebar" id="chatSidebar">
+      <div class="sidebar-header" style="display: flex; gap: 10px; align-items: center;">
+        <button class="new-chat-btn" onclick="startNewChat()">
+          <i class="fas fa-plus"></i> New Chat
+        </button>
+        <button class="mobile-sidebar-close" onclick="toggleChatSidebar()"
+          style="display: none; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="sidebar-history" id="sidebarHistory">
+        <div class="sidebar-label">Recent Chats</div>
+        <!-- History items load here dynamically -->
+      </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-main">
+      <div class="chat-header-wrapper">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <button class="sidebar-toggle" onclick="toggleChatSidebar()">
+              <i class="fas fa-bars"></i>
+            </button>
+            <i class="fas fa-robot"></i>
+            <h2>Mate AI Assistant</h2>
+          </div>
+          <div class="chat-header-actions" style="display: flex; gap: 10px; align-items: center;">
+            <button class="close-chat" onclick="closeChatModal()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-container" id="chatContainer">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-welcome" id="chatWelcome">
+            <i class="fas fa-sparkles" style="font-size: 40px; color: #c0962d; margin-bottom: 20px;"></i>
+            <h2>What can I help with?</h2>
+
+            <div class="search-suggestions">
+              <div class="suggestion-group">
+                <div class="suggestion-tags">
+                  <div class="suggestion-tag" onclick="useQuickQuestion('MBA 1st Sem Notes')">MBA 1st Sem Notes</div>
+                  <div class="suggestion-tag" onclick="useQuickQuestion('Syllabus for Semester 2')">Syllabus for
+                    Semester 2</div>
+                  <div class="suggestion-tag" onclick="useQuickQuestion('How to build a Resume?')">How to build a
+                    Resume?</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-footer">
+        <div class="chat-input-wrapper">
+          <div class="mode-selector-wrapper">
+            <button class="mode-trigger" id="modeTrigger" onclick="toggleModeDropdown()">
+              <i class="fas fa-graduation-cap" id="modeIcon"></i>
+              <span id="modeLabel">Teacher</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="mode-dropdown" id="modeDropdown">
+              <div class="mode-option active" id="opt-teacher" onclick="selectStudyMode('teacher')">
+                <i class="fas fa-graduation-cap"></i>
+                <div>
+                  Teacher Mode
+                  <span class="mode-desc">Explains with examples</span>
+                </div>
+              </div>
+              <div class="mode-option" id="opt-exam" onclick="selectStudyMode('exam')">
+                <i class="fas fa-bolt"></i>
+                <div>
+                  Exam Mode
+                  <span class="mode-desc">Quick bullet points</span>
+                </div>
+              </div>
+              <div class="mode-option" id="opt-speed" onclick="selectStudyMode('speed')">
+                <i class="fas fa-tachometer-alt"></i>
+                <div>
+                  Speed Mode
+                  <span class="mode-desc">Direct links & answers</span>
+                </div>
+              </div>
+              <div class="mode-option" id="opt-planner" onclick="selectStudyMode('planner')">
+                <i class="fas fa-calendar-alt"></i>
+                <div>
+                  Study Planner
+                  <span class="mode-desc">Custom daily schedule</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form class="chat-input-form" onsubmit="event.preventDefault(); sendChatHubMessage();"
+            style="flex: 1; position: relative; display: flex; align-items: center;">
+            <input type="search" class="chat-input" id="chatInput" placeholder="Ask me anything..." autocomplete="off"
+              enterkeyhint="search">
+            <button type="submit" class="send-btn" id="chatSendBtn">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div> <!-- end chat-main -->
+  </div>
+
+  <!-- PDF Preview Overlay -->
+  <div class="pdf-preview-overlay" id="pdfOverlay">
+    <div class="pdf-container">
+      <div class="pdf-header">
+        <h3 id="pdfTitle">Document Preview</h3>
+        <i class="fas fa-times close-pdf" onclick="closePdfPreview()"></i>
+      </div>
+      <iframe id="pdfFrame" src=""></iframe>
+    </div>
+  </div>
+
+  <header class="top-nav">
+    <div class="nav-left" onclick="window.location.reload()" style="cursor: pointer;">SOLMATES</div>
+
+    <!-- Desktop Nav Center - Tools and Skills both disabled -->
+    <div class="nav-center">
+      <a href="/database" title="Database">Database</a>
+      <a href="/tools" title="Tools">Tools</a>
+      <a href="/skills" title="Skills & Development">Skills & Development</a>
+      <a href="/games" title="Games">Games</a>
+                  <a href="/journey">Journey</a>
+<a href="/feedback?from=Home" title="Feedback">Feedback</a>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-right">
+      <button class="admin-login-btn" id="adminLoginBtn" style="display: none;">Admin</button>
+      <div class="notification-btn" id="notificationBtn" onclick="goToNotifications()">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" style="display: none;">0</span>
+      </div>
+      <button class="admin-logout-btn" id="adminLogoutBtn" onclick="logoutAdmin()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Overlay - Tools and Skills both disabled -->
+  <div class="mobile-nav-overlay" id="mobileNav">
+
+    <a href="/database">
+      <i class="fas fa-database"></i> Database
+    </a>
+    <a href="/tools">
+      <i class="fas fa-tools"></i> Tools
+    </a>
+    <a href="/skills">
+      <i class="fas fa-chart-line"></i> Skills &amp; Development
+    </a>
+    <a href="/games">
+      <i class="fas fa-gamepad"></i> Games
+    </a>
+              <a href="/journey"><i class="fas fa-road"></i> Journey</a>
+<a href="/feedback?from=Home">
+      <i class="fas fa-comment-dots"></i> Feedback
+    </a>
+  </div>
+
+  <!-- HOME PAGE CONTENT -->
+  <div class="page-content">
+    <section class="hero">
+      <div class="logo-wrapper">
+        <svg class="logo-mark" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="90" class="svg-stroke stroke-primary anim-path" />
+          <circle cx="100" cy="100" r="78" class="svg-stroke stroke-accent anim-path" />
+          <path d="M45 125 Q45 145,100 155 Q155 145,155 125 
+                 V95 Q155 115,100 125 Q45 115,45 95 Z
+                 M100 155 V125" class="svg-stroke stroke-primary anim-path" />
+          <path d="M100 115 L100 65" class="svg-stroke stroke-thin anim-path" />
+          <path d="M100 85 L65 95" class="svg-stroke stroke-thin anim-path" />
+          <path d="M100 85 L135 95" class="svg-stroke stroke-thin anim-path" />
+          <circle cx="100" cy="60" r="5" class="node gold fade-element" />
+          <circle cx="60" cy="95" r="5" class="node blue fade-element" />
+          <circle cx="140" cy="95" r="5" class="node blue fade-element" />
+        </svg>
+
+        <h1>SOLMATES</h1>
+        <p class="tagline">Connect • Learn • Belong</p>
+
+        <!-- Integrated Search Bar Back Inside but with Wide Container -->
+        <div class="hero-search-wrapper">
+          <div class="greeting-text" id="dynamicGreeting">Welcome to SOLMATES! 🚀</div>
+          <form class="search-container" id="heroSearchForm" onsubmit="event.preventDefault(); triggerHeroSearch();">
+            <i class="fas fa-search search-icon" onclick="triggerHeroSearch()" title="Open Mate AI"
+              style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 13; cursor: pointer; color: #0f2b46;"></i>
+            <input type="search" class="premium-search-bar" id="heroSearchTrigger" placeholder=" " autocomplete="off"
+              enterkeyhint="search">
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN OPTIONS SECTION - Tools and Skills both with Coming Soon -->
+    <div class="main-options-container">
+      <div class="main-options-grid">
+        <a href="/database" class="main-option-card">
+          <i class="fas fa-database"></i>
+          <h2>SOL Database</h2>
+          <p>All Semester organized resources, notes, PPT, assignments, case studies.</p>
+        </a>
+
+        <a href="/tools" class="main-option-card">
+          <i class="fas fa-tools"></i>
+          <h2>Tools</h2>
+          <p>Resume builder, career tests, interview prep, study planner and other essential tools.</p>
+        </a>
+
+        <a href="/skills" class="main-option-card">
+          <i class="fas fa-chart-line"></i>
+          <h2>Skills &amp; Development</h2>
+          <p>Skill assessment, learning paths, certifications, and personal development resources.</p>
+        </a>
+
+        <a href="/games/" class="main-option-card">
+          <i class="fas fa-gamepad"></i>
+          <h2>Solmates Arena</h2>
+          <p>Multiplayer Study Hub - Gamify your learning, compete, and grow.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="social">
+      <div class="whatsapp-container">
+        <div class="whatsapp-icon" id="whatsappIcon">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="whatsapp-dropdown" id="whatsappDropdown">
+          <div class="whatsapp-options">
+            <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
+              <i class="fas fa-users"></i>
+              <span class="option-text">Community</span>
+              <span class="option-desc">Join Group</span>
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb6iO1GKmCPIg5fdUv0Z" target="_blank" class="whatsapp-option">
+              <i class="fas fa-broadcast-tower"></i>
+              <span class="option-text">Channel</span>
+              <span class="option-desc">Updates</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="https://twitter.com/teamsolmates" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://facebook.com/teamsolmates" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://t.me/solmates_channelbot" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+      <a href="https://instagram.com/teamsolmates" target="_blank" title="Instagram"><i
+          class="fab fa-instagram"></i></a>
+      <a href="https://youtube.com/@teamsolmates" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.linkedin.com/company/teamsomates/" target="_blank" title="LinkedIn"><i
+          class="fab fa-linkedin"></i></a>
+      <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
+    </div>
+    <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+  </footer>
+
+  <script>
+    // Safe JSON parser helper
+    function safeJSONParse(str, fallback = []) {
+      try {
+        const parsed = JSON.parse(str);
+        return parsed !== null && parsed !== undefined ? parsed : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    // ========== PERFORMANCE OPTIMIZATIONS ==========
+    let isAnimating = false;
+    let lastAnimationTime = 0;
+    const ANIMATION_THROTTLE = 16; // ~60fps
+
+    function throttleAnimation(callback) {
+      const now = Date.now();
+      if (now - lastAnimationTime >= ANIMATION_THROTTLE) {
+        callback();
+        lastAnimationTime = now;
+      }
+    }
+
+    // ========== MOBILE MENU ==========
+    let menuOpen = false;
+
+    function toggleMobileMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      if (!mobileNav) return;
+
+      menuOpen = !menuOpen;
+
+      if (menuOpen) {
+        mobileNav.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Close other things if open
+        if (typeof whatsappOpen !== 'undefined' && whatsappOpen) closeWhatsappDropdown();
+        if (typeof aiChatboxOpen !== 'undefined' && aiChatboxOpen) closeAIChatbox();
+
+        // Add listener to close on click outside
+        document.addEventListener('click', closeMenuOnClickOutside);
+      } else {
+        forceCloseMobileMenu();
+      }
+    }
+
+    function forceCloseMobileMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      if (!mobileNav) return;
+
+      menuOpen = false;
+      mobileNav.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('click', closeMenuOnClickOutside);
+    }
+
+    function closeMenuOnClickOutside(e) {
+      const mobileNav = document.getElementById('mobileNav');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      if (menuOpen && mobileNav && (e.target === mobileNav || (!mobileNav.contains(e.target) && !menuBtn.contains(e.target)))) {
+        forceCloseMobileMenu();
+      }
+    }
+
+    // ========== WHATSAPP DROPDOWN ==========
+    const whatsappIcon = document.getElementById('whatsappIcon');
+    const whatsappDropdown = document.getElementById('whatsappDropdown');
+    let whatsappOpen = false;
+    let whatsappTimeout;
+
+    whatsappIcon.addEventListener('click', function (e) {
+      e.stopPropagation();
+
+      throttleAnimation(() => {
+        if (!whatsappOpen) {
+          whatsappDropdown.classList.add('show');
+          whatsappOpen = true;
+
+          document.addEventListener('click', closeWhatsappOnClickOutside);
+
+          clearTimeout(whatsappTimeout);
+          whatsappTimeout = setTimeout(() => {
+            if (whatsappOpen) {
+              closeWhatsappDropdown();
+            }
+          }, 5000);
+        } else {
+          closeWhatsappDropdown();
+        }
+      });
+    });
+
+    function closeWhatsappDropdown() {
+      throttleAnimation(() => {
+        whatsappDropdown.classList.remove('show');
+        whatsappOpen = false;
+        document.removeEventListener('click', closeWhatsappOnClickOutside);
+        clearTimeout(whatsappTimeout);
+      });
+    }
+
+    function closeWhatsappOnClickOutside(e) {
+      if (!whatsappIcon.contains(e.target) && !whatsappDropdown.contains(e.target)) {
+        closeWhatsappDropdown();
+      }
+    }
+
+    // ========== ADMIN LOGIN ==========
+    const adminModal = document.getElementById('adminModal');
+    const loginError = document.getElementById('loginError');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+
+    // Check if admin is already logged in when page loads
+    document.addEventListener('DOMContentLoaded', function () {
+      requestAnimationFrame(() => {
+        checkAdminStatus();
+        initAnimations();
+      });
+    });
+
+    // ========== CHECK ADMIN STATUS - SERVER-SIDE VERIFICATION ==========
+    async function checkAdminStatus() {
+      const isLoggedIn = solmatesAPI.isAdminLoggedIn();
+
+      if (isLoggedIn) {
+        try {
+          const verification = await solmatesAPI.verifyAdminToken();
+
+          if (verification.valid || verification.networkError) {
+            // Token valid OR backend temporarily unreachable
+            localStorage.setItem('solmates_admin_logged_in', 'true');
+          } else {
+            // Server explicitly said token invalid
+            localStorage.removeItem('solmates_admin_token');
+            localStorage.removeItem('solmates_admin_logged_in');
+          }
+        } catch (error) {
+          // Network error - keep status (user is still logged in)
+          console.warn('Auth verification skipped due to network error');
+        }
+      } else {
+        localStorage.removeItem('solmates_admin_logged_in');
+      }
+
+      updateAuthUI();
+    }
+
+    // ========== v7.0 NAVIGATION HISTORY HANDLING (BACK BUTTON) ==========
+    function handlePopState(event) {
+      // If user clicks browser back, close all modals
+      if (!event.state || !event.state.modalOpen) {
+        if (aiChatboxOpen || (typeof aiChatModal !== 'undefined' && document.getElementById('aiChatModal').classList.contains('active'))) {
+          closeChatModal(true); // true means don't call history.back()
+        }
+        if (document.getElementById('adminModal').classList.contains('active')) {
+          closeAdminModal(true);
+        }
+        // Also handle notification modal if it exists
+        const notifModal = document.getElementById('notificationModal');
+        if (notifModal && notifModal.classList.contains('active')) {
+          if (typeof closeNotificationModal === 'function') closeNotificationModal(true);
+        }
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState);
+
+
+
+    function openAdminModal() {
+      // Reset animating flag to prevent deadlocks
+      isAnimating = false;
+
+      throttleAnimation(() => {
+        // Push history state so back button closes modal
+        history.pushState({ modalOpen: 'admin' }, '', window.location.pathname);
+
+        adminModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        if (menuOpen) toggleMobileMenu();
+        if (aiChatboxOpen) closeAIChatbox();
+      });
+    }
+
+    // ========== ADMIN LONG PRESS LOGIC (15 SECONDS) ON BELL ICON ==========
+    let adminLongPressTimer;
+    let isLongPressActive = false;
+    const notificationBtnElement = document.getElementById('notificationBtn');
+
+    if (notificationBtnElement) {
+      const startLongPress = (e) => {
+        // Only trigger if NOT already logged in as admin
+        if (localStorage.getItem('solmates_admin_logged_in') !== 'true') {
+          isLongPressActive = false;
+          adminLongPressTimer = setTimeout(() => {
+            isLongPressActive = true;
+            openAdminModal();
+          }, 10000); // 10 seconds
+        }
+      };
+
+      const endLongPress = () => {
+        clearTimeout(adminLongPressTimer);
+      };
+
+      notificationBtnElement.addEventListener('mousedown', startLongPress);
+      notificationBtnElement.addEventListener('touchstart', startLongPress);
+      notificationBtnElement.addEventListener('mouseup', endLongPress);
+      notificationBtnElement.addEventListener('mouseleave', endLongPress);
+      notificationBtnElement.addEventListener('touchend', endLongPress);
+    }
+
+    function closeAdminModal(fromPopState = false) {
+      // Reset animating flag to prevent deadlocks
+      isAnimating = false;
+
+      throttleAnimation(() => {
+        adminModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        loginError.classList.remove('show');
+        document.getElementById('adminLoginForm').reset();
+
+        // If closed manually (not via back button), sync history
+        if (!fromPopState && history.state && history.state.modalOpen === 'admin') {
+          history.back();
+        }
+      });
+    }
+
+    // ========== SECURE ADMIN LOGIN - SERVER-SIDE AUTHENTICATION ==========
+    document.getElementById('adminLoginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const adminId = document.getElementById('adminId').value;
+      const adminPassword = document.getElementById('adminPassword').value;
+      const submitButton = this.querySelector('button[type="submit"]');
+      const loginError = document.getElementById('loginError');
+
+      // Validate both fields are filled
+      if (!adminId || !adminPassword) {
+        loginError.textContent = 'Please enter both Admin ID and password';
+        loginError.classList.add('show');
+        return;
+      }
+
+      // Disable form during submission
+      submitButton.disabled = true;
+      submitButton.textContent = 'Logging in...';
+
+      try {
+        // Call secure backend API for authentication - NOW WITH BOTH PARAMETERS
+        const response = await solmatesAPI.adminLogin(adminId, adminPassword);
+
+        if (response.success) {
+          // Store admin status flag for UI
+          localStorage.setItem('solmates_admin_logged_in', 'true');
+
+          // Close modal and swap Login → Logout button, stay on home page
+          closeAdminModal();
+          adminLoginBtn.style.display = 'none';
+          adminLogoutBtn.style.display = 'flex';
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        loginError.textContent = error.message || 'Invalid credentials. Please try again.';
+        loginError.classList.add('show');
+
+        // Clear password on error
+        document.getElementById('adminPassword').value = '';
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Login';
+      }
+    });
+
+    async function logoutAdmin() {
+      if (confirm('Are you sure you want to logout as admin?')) {
+        try {
+          await solmatesAPI.adminLogout();
+        } catch (error) {
+          console.error('Logout error:', error);
+        } finally {
+          localStorage.removeItem('solmates_admin_token');
+          localStorage.removeItem('solmates_admin_logged_in');
+          localStorage.removeItem('homepage_admin_login');
+          sessionStorage.removeItem('admin_session');
+          adminLoginBtn.style.display = 'flex';
+          adminLogoutBtn.style.display = 'none';
+        }
+      }
+    }
+
+    adminModal.addEventListener('click', function (e) {
+      if (e.target === adminModal) {
+        closeAdminModal();
+      }
+    });
+
+    // ========== PREMIUM SEARCH & AI INTEGRATION (Smart Study v4.0) ==========
+    let chatHistoryHub = [];
+    let currentStudyMode = 'teacher';
+    let currentSessionId = null;
+    const CHAT_SESSIONS_KEY = 'solmates_chat_sessions';
+
+    const GREETINGS_MORNING = [
+      "Good Morning! Aaj kya crack karein? 🎯",
+      "Shubh Prabhat! Chalo padhte hain. ☕",
+      "Morning! Aaj ka goal kya hai? 📚",
+      "Rise and shine! I'm ready to help. ✨",
+      "Hey buddy! Padhai shuru karein? 🚀",
+      "Good Morning! Ready to dominate the day? 🔥",
+      "Start your morning with some fresh learning! 📖"
+    ];
+    const GREETINGS_EVENING = [
+      "Good Evening! Chai aur revision? ☕📚",
+      "Evening buddy! Kuch naya seekhein? 🌟",
+      "Hey! Aaj ka din kaisa raha? 🤝",
+      "Ready for evening sessions? 📖",
+      "Good Evening! What's on your mind tonight? 📝",
+      "Success is 1% luck, 99% preparation! 🏆"
+    ];
+    const GREETINGS_NIGHT = [
+      "Raat gayi, par padhai nahi! 🦉💡",
+      "Still up? Let's finish this. 💪",
+      "Night owl mode ON! 🌙",
+      "Late night study session? 💻",
+      "Good Night buddy! Sona kab hai? 🚀",
+      "Dream big, study bigger! ✨",
+      "Finish strong before you sleep! 🏁"
+    ];
+    const GREETINGS_AFTERNOON = [
+      "Good Afternoon! Padhai kaisi hai? 🧠",
+      "Hey! Chalo brain workout karein. ⚡",
+      "Afternoon! Taiyari kaisi chal rahi? 📝",
+      "Lunch break done? Back to work! 🏗️",
+      "Check out today's market news! 📉",
+      "Good Afternoon! Need a study boost? 🚀",
+      "Keep moving forward! 🧗"
+    ];
+
+    const SEARCH_SUGGESTIONS_MOBILE = [
+      "Try: MBA 2nd Sem Marketing & HR Docs...",
+      "Search: Economics PPTs & Easy Guide...",
+      "Find: Assignments 1st Year Exam Prep...",
+      "Ask: Finance Prep in Next 30 Days...",
+      "Try: Placement Prep & Mock Interview...",
+      "Search: Law Case Studies Best Guide...",
+      "Ask: Create a Fast 4-week Study Plan..."
+    ];
+
+    const SEARCH_SUGGESTIONS_WEB = [
+      "Try: MBA 2nd Sem Marketing and Human Resource Management Notes...",
+      "Search: Access Latest Managerial Economics PPTs and Case Studies...",
+      "Find: Solved Assignments for 1st Year and Semester Exam Papers...",
+      "Ask: How to prepare for Finance and Accounting exams in 30 days?...",
+      "Try: Access Selection Placement Material and Industry Guides...",
+      "Search: Explore Case Studies for Business Law and Management...",
+      "Ask: Create a Personalized Study Plan for next 4 weeks of study..."
+    ];
+
+    let typewriterTimeout;
+    let currentGreetingIndex = 0;
+    let isMobileView = window.innerWidth <= 768;
+
+    function initPremiumSearch() {
+      startTypewriterLoop();
+      initParallaxEffect();
+      initHeroSearchInteraction();
+      initVoiceSearch();
+
+      // v89.0: Auto-detect resize to switch suggestions instantly
+      window.addEventListener('resize', () => {
+        const nowMobile = window.innerWidth <= 768;
+        if (nowMobile !== isMobileView) {
+          isMobileView = nowMobile;
+          // Restart loop immediately on mode change
+          clearTimeout(typewriterLoopTimeout);
+          startTypewriterLoop();
+        }
+      });
+    }
+
+    function selectStudyMode(mode) {
+      currentStudyMode = mode;
+
+      // Update UI
+      const label = document.getElementById('modeLabel');
+      const icon = document.getElementById('modeIcon');
+      const dropdown = document.getElementById('modeDropdown');
+
+      if (mode === 'teacher') {
+        label.innerText = 'Teacher';
+        icon.className = 'fas fa-graduation-cap';
+      } else if (mode === 'exam') {
+        label.innerText = 'Exam';
+        icon.className = 'fas fa-bolt';
+      } else if (mode === 'speed') {
+        label.innerText = 'Speed';
+        icon.className = 'fas fa-tachometer-alt';
+      } else if (mode === 'planner') {
+        label.innerText = 'Planner';
+        icon.className = 'fas fa-calendar-alt';
+      }
+
+      // Update active class
+      document.querySelectorAll('.mode-option').forEach(opt => opt.classList.remove('active'));
+      document.getElementById(`opt-${mode}`).classList.add('active');
+
+      // Close dropdown
+      toggleModeDropdown(true);
+    }
+
+    function toggleModeDropdown(forceClose) {
+      const dropdown = document.getElementById('modeDropdown');
+      const trigger = document.getElementById('modeTrigger');
+
+      if (forceClose === true || dropdown.classList.contains('active')) {
+        dropdown.classList.remove('active');
+        trigger.classList.remove('open');
+      } else {
+        dropdown.classList.add('active');
+        trigger.classList.add('open');
+      }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const wrapper = document.querySelector('.mode-selector-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        toggleModeDropdown(true);
+      }
+    });
+
+    function initVoiceSearch() {
+      const micBtn = document.getElementById('micBtn');
+      const chatInput = document.getElementById('chatInput');
+
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        if (micBtn) micBtn.style.display = 'none';
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.interimResults = false;
+      recognition.lang = 'en-IN'; // Indian English/Hinglish optimization
+
+      recognition.onstart = () => micBtn.classList.add('active');
+      recognition.onend = () => micBtn.classList.remove('active');
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        chatInput.value = transcript;
+        setTimeout(() => sendChatHubMessage(), 500);
+      };
+
+      window.toggleVoiceSearch = function () {
+        if (micBtn.classList.contains('active')) {
+          recognition.stop();
+        } else {
+          recognition.start();
+        }
+      };
+    }
+
+    function triggerHeroSearch() {
+      const heroInput = document.getElementById('heroSearchTrigger');
+      const greetingEl = document.getElementById('dynamicGreeting');
+      const query = heroInput.value.trim();
+      if (query) {
+        openChatModalBySearch(query);
+        heroInput.value = '';
+        if (greetingEl) greetingEl.style.opacity = '1';
+        heroInput.blur(); // Hide keyboard after search
+      } else {
+        openChatModal();
+      }
+    }
+
+    function initHeroSearchInteraction() {
+      const heroInput = document.getElementById('heroSearchTrigger');
+      const greetingEl = document.getElementById('dynamicGreeting');
+
+      if (!heroInput) return;
+
+      heroInput.addEventListener('input', () => {
+        if (greetingEl) {
+          if (heroInput.value.length > 0) {
+            greetingEl.style.opacity = '0';
+            clearTimeout(typewriterTimeout);
+          } else {
+            greetingEl.style.opacity = '1';
+            startTypewriterLoop();
+          }
+        }
+      });
+
+      const chatInput = document.getElementById('chatInput');
+      if (chatInput) {
+        chatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            sendChatHubMessage();
+          }
+        });
+      }
+    }
+
+    let typewriterLoopTimeout;
+    function startTypewriterLoop() {
+      const hour = new Date().getHours();
+      let list = GREETINGS_MORNING;
+      if (hour >= 12 && hour < 17) list = GREETINGS_AFTERNOON;
+      else if (hour >= 17 && hour < 21) list = GREETINGS_EVENING;
+      else if (hour >= 21 || hour < 5) list = GREETINGS_NIGHT;
+
+      const greeting = list[Math.floor(Math.random() * list.length)];
+      const list_sug = window.innerWidth <= 768 ? SEARCH_SUGGESTIONS_MOBILE : SEARCH_SUGGESTIONS_WEB;
+      const suggestion = list_sug[Math.floor(Math.random() * list_sug.length)];
+
+      typeText(greeting, 'dynamicGreeting');
+      typeText(suggestion, 'heroSearchTrigger', true);
+
+      // Change greeting every 12 seconds for a more relaxed feel
+      clearTimeout(typewriterLoopTimeout);
+      typewriterLoopTimeout = setTimeout(startTypewriterLoop, 12000);
+    }
+
+    function typeText(text, targetId, isPlaceholder = false) {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+
+      // Stop existing typing on this specific element if any
+      if (!isPlaceholder) {
+        clearTimeout(window._typewriterTimer);
+      } else {
+        clearTimeout(window._placeholderTimer);
+      }
+
+      let i = 0;
+      if (!isPlaceholder) el.innerHTML = '';
+      else el.placeholder = '';
+
+      // If it's the search input, stop typing if focused
+      if (isPlaceholder) {
+        el.addEventListener('focus', () => { el.placeholder = text; i = text.length + 1; }, { once: true });
+      }
+
+      function type() {
+        if (i < text.length) {
+          const current = text.substring(0, i + 1);
+          if (isPlaceholder) {
+            el.placeholder = current;
+            window._placeholderTimer = setTimeout(type, 40);
+          } else {
+            el.textContent = current;
+            window._typewriterTimer = setTimeout(type, 40);
+          }
+          i++;
+        }
+      }
+      type();
+    }
+
+    // Subtle 3D Tilt Effect (Parallax)
+    function initParallaxEffect() {
+      const hero = document.querySelector('.hero');
+      const logo = document.querySelector('.logo-wrapper');
+
+      if (!hero || !logo) return;
+
+      document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.pageX) / 40;
+        const y = (window.innerHeight / 2 - e.pageY) / 40;
+
+        requestAnimationFrame(() => {
+          logo.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+        });
+      });
+    }
+
+    function openChatModal() {
+      // Push history state so back button closes modal
+      history.pushState({ modalOpen: 'ai' }, '', window.location.pathname);
+
+      const modal = document.getElementById('aiChatModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      loadChatSessions();
+      setTimeout(() => document.getElementById('chatInput').focus(), 100);
+    }
+
+    function closeChatModal(fromPopState = false) {
+      saveCurrentSession(); // Save chat before closing
+      const modal = document.getElementById('aiChatModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+
+      // If closed manually (not via back button), sync history
+      if (!fromPopState && history.state && history.state.modalOpen === 'ai') {
+        history.back();
+      }
+    }
+
+    function openChatModalBySearch(initialQuery) {
+      // Push history state for back button
+      history.pushState({ modalOpen: 'ai' }, '', window.location.pathname);
+
+      const modal = document.getElementById('aiChatModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      // Removed non-existent loadRecentSearches call
+
+      const chatInput = document.getElementById('chatInput');
+      if (chatInput) {
+        chatInput.value = initialQuery;
+      }
+
+      // AI Assistant ko modal khulte hi signal bhejo
+      setTimeout(() => {
+        sendChatHubMessage();
+        if (chatInput) chatInput.focus();
+      }, 150); // Slightly increased delay for stability
+    }
+
+    // Global popstate listener to close modals
+    window.addEventListener('popstate', (event) => {
+      if (event.state && event.state.modalOpen === 'ai') {
+        // Do nothing, modal is already open
+      } else {
+        // Close any open modals
+        const aiModal = document.getElementById('aiChatModal');
+        if (aiModal && aiModal.classList.contains('active')) {
+          closeChatModal(true);
+        }
+        // Add similar logic for admin/notification modals if they exist
+      }
+    });
+
+    function saveSearchHistory(query) {
+      let searches = safeJSONParse(localStorage.getItem('solmates_recent_searches'), []);
+      searches = [query, ...searches.filter(s => s !== query)].slice(0, 5);
+      localStorage.setItem('solmates_recent_searches', JSON.stringify(searches));
+    }
+
+    // ========== CHAT SESSION MANAGEMENT ==========
+    function getChatSessions() {
+      return safeJSONParse(localStorage.getItem(CHAT_SESSIONS_KEY), []);
+    }
+
+    function saveChatSessions(sessions) {
+      localStorage.setItem(CHAT_SESSIONS_KEY, JSON.stringify(sessions));
+    }
+
+    function startNewChat() {
+      // Save current session first
+      saveCurrentSession();
+
+      // Reset everything
+      currentSessionId = 'chat_' + Date.now();
+      chatHistoryHub = [];
+
+      const messagesDiv = document.getElementById('chatMessages');
+      const welcome = document.getElementById('chatWelcome');
+
+      // Clear messages but keep welcome
+      messagesDiv.innerHTML = '';
+      if (welcome) {
+        welcome.style.display = '';
+        messagesDiv.appendChild(welcome);
+      }
+
+      loadChatSessions();
+      document.getElementById('chatInput').focus();
+
+      // Auto-close sidebar on mobile
+      if (window.innerWidth <= 768) {
+        toggleChatSidebar(true);
+      }
+    }
+
+    function saveCurrentSession() {
+      if (!currentSessionId || chatHistoryHub.length === 0) return;
+
+      let sessions = getChatSessions();
+      const existingIndex = sessions.findIndex(s => s.id === currentSessionId);
+
+      const sessionData = {
+        id: currentSessionId,
+        title: chatHistoryHub[0]?.content?.substring(0, 40) || 'New Chat',
+        messages: chatHistoryHub,
+        timestamp: Date.now()
+      };
+
+      if (existingIndex >= 0) {
+        sessions[existingIndex] = sessionData;
+      } else {
+        sessions.unshift(sessionData);
+      }
+
+      // Max 20 sessions save karo
+      sessions = sessions.slice(0, 20);
+      saveChatSessions(sessions);
+    }
+
+    function loadChatSessions() {
+      const sessions = getChatSessions();
+      const sidebar = document.getElementById('sidebarHistory');
+      if (!sidebar) return;
+
+      sidebar.innerHTML = '<div class="sidebar-label">Recent Chats</div>';
+
+      if (sessions.length === 0) {
+        sidebar.innerHTML += '<div style="padding: 15px; color: rgba(255,255,255,0.3); font-size: 12px; text-align: center;">No chat history yet</div>';
+        return;
+      }
+
+      sessions.forEach(session => {
+        const item = document.createElement('div');
+        item.className = `history-item ${session.id === currentSessionId ? 'active' : ''}`;
+        item.innerHTML = `
+      <span class="history-title" onclick="loadChatSession('${session.id}')">
+        <i class="fas fa-comment" style="margin-right: 8px; font-size: 11px;"></i>
+        ${session.title}
+      </span>
+      <span class="history-delete" onclick="event.stopPropagation(); deleteChatSession('${session.id}')">
+        <i class="fas fa-trash-alt"></i>
+      </span>
+    `;
+        sidebar.appendChild(item);
+      });
+    }
+
+    function loadChatSession(sessionId) {
+      // Save current first
+      saveCurrentSession();
+
+      const sessions = getChatSessions();
+      const session = sessions.find(s => s.id === sessionId);
+      if (!session) return;
+
+      currentSessionId = session.id;
+      chatHistoryHub = session.messages || [];
+
+      // Clear and rebuild messages
+      const messagesDiv = document.getElementById('chatMessages');
+      const welcome = document.getElementById('chatWelcome');
+      messagesDiv.innerHTML = '';
+      if (welcome) {
+        welcome.style.display = 'none';
+        messagesDiv.appendChild(welcome);
+      }
+
+      // Replay all messages (without typewriter for speed)
+      chatHistoryHub.forEach(msg => {
+        addChatMessage(msg.content, msg.role === 'user' ? 'user' : 'ai', msg.role !== 'user', true);
+      });
+
+      scrollToBottom();
+      loadChatSessions(); // Refresh sidebar highlights
+
+      // Auto-close sidebar on mobile
+      if (window.innerWidth <= 768) {
+        toggleChatSidebar(true);
+      }
+    }
+
+    function deleteChatSession(sessionId) {
+      let sessions = getChatSessions();
+      sessions = sessions.filter(s => s.id !== sessionId);
+      saveChatSessions(sessions);
+
+      // Agar current session delete kiya toh naya chat shuru karo
+      if (sessionId === currentSessionId) {
+        currentSessionId = null;
+        chatHistoryHub = [];
+        startNewChat();
+      } else {
+        loadChatSessions();
+      }
+    }
+
+    function toggleChatSidebar(forceClose) {
+      const sidebar = document.getElementById('chatSidebar');
+      const overlay = document.getElementById('mobileSidebarOverlay');
+
+      if (window.innerWidth <= 768) {
+        if (forceClose === true) {
+          sidebar.classList.remove('open');
+          if (overlay) overlay.classList.remove('active');
+        } else {
+          sidebar.classList.toggle('open');
+          if (overlay) overlay.classList.toggle('active');
+        }
+      } else {
+        // Desktop Mode
+        if (forceClose === true) {
+          sidebar.classList.add('collapsed');
+        } else {
+          sidebar.classList.toggle('collapsed');
+        }
+      }
+    }
+
+    function useQuickQuestion(question) {
+      const input = document.getElementById('chatInput');
+      input.value = question;
+      sendChatHubMessage();
+    }
+
+    let currentChatController = null;
+
+    async function sendChatHubMessage() {
+      const sendBtn = document.getElementById('chatSendBtn');
+      const input = document.getElementById('chatInput');
+
+      // If currently generating or typing, abort it
+      if (currentChatController) {
+        currentChatController.abort();
+        return;
+      }
+
+      let query = input.value.trim();
+      if (!query) return;
+
+      const chatWelcome = document.getElementById('chatWelcome');
+      chatWelcome.style.display = 'none';
+
+      addChatMessage(query, 'user');
+      saveSearchHistory(query);
+      input.value = '';
+
+      // Ensure we have a session ID
+      if (!currentSessionId) {
+        currentSessionId = 'chat_' + Date.now();
+      }
+
+      // Change button to Stop
+      currentChatController = new AbortController();
+      sendBtn.innerHTML = '<i class="fas fa-stop"></i>';
+      sendBtn.style.background = '#dc3545';
+      sendBtn.disabled = false; // Ensure it's clickable to stop
+
+      const typingId = addChatTypingIndicator();
+
+      // v4.0 Mode Prompt Injection
+      let modeInstruction = "";
+      if (currentStudyMode === 'exam') modeInstruction = "[EXAM MODE: Give very short, bulleted points. Be quick.] ";
+      else if (currentStudyMode === 'speed') modeInstruction = "[SPEED MODE: Just give me direct links and 1-line answers.] ";
+      else if (currentStudyMode === 'teacher') modeInstruction = "[TEACHER MODE: Explain simply with examples like a tutor.] ";
+      else if (currentStudyMode === 'planner') modeInstruction = "[PLANNER MODE: Act as a study advisor. Create a detailed day-by-day study schedule/timetable using markdown tables for the topic mentioned.] ";
+
+      // Add user query immediately so it saves even if API fails
+      chatHistoryHub.push({ role: 'user', content: query });
+      saveCurrentSession();
+      loadChatSessions();
+
+      try {
+        const apiBase = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+        const res = await fetch(apiBase + '/chatbot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: modeInstruction + query,
+            history: chatHistoryHub.slice(0, -1).slice(-20) // exclude the current query from history Context
+          }),
+          signal: currentChatController.signal
+        });
+        const data = await res.json();
+        removeChatTypingIndicator(typingId);
+
+        const reply = (data.success && data.message) ? data.message : 'I encountered an error. Please try again or ask about "Database" or "Tools".';
+        chatHistoryHub.push({ role: 'assistant', content: reply });
+        await addChatMessage(reply, 'ai', true, false, currentChatController ? currentChatController.signal : null);
+
+        // Add Quiz Trigger for suitable content
+        if (reply.length > 100 && currentStudyMode !== 'speed') {
+          setTimeout(() => addQuizTrigger(), 500);
+        }
+      } catch (e) {
+        removeChatTypingIndicator(typingId);
+        if (e.name === 'AbortError') {
+          const stopMsg = 'Generation stopped by user.';
+          chatHistoryHub.push({ role: 'assistant', content: stopMsg });
+          addChatMessage(stopMsg, 'ai', false);
+        } else {
+          const errorMsg = 'I am currently experiencing connectivity issues. You can direct access your resources from the **Database** section on the home page.';
+          chatHistoryHub.push({ role: 'assistant', content: errorMsg });
+          addChatMessage(errorMsg, 'ai', true);
+        }
+      } finally {
+        currentChatController = null;
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+        sendBtn.style.background = '';
+        saveCurrentSession(); // Auto-save after each exchange
+        loadChatSessions(); // Refresh sidebar
+      }
+    }
+
+    function addQuizTrigger() {
+      const messagesDiv = document.getElementById('chatMessages');
+      const quizDiv = document.createElement('div');
+      quizDiv.style.textAlign = 'right';
+      quizDiv.innerHTML = `<span class="quiz-trigger" onclick="handleQuizRequest(this)"><i class="fas fa-lightbulb"></i> Test my knowledge (Quiz Me)</span>`;
+      messagesDiv.appendChild(quizDiv);
+      scrollToBottom();
+    }
+
+    function handleQuizRequest(btn) {
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating Quiz...`;
+      btn.onclick = null;
+
+      // Simulated Quiz based on pattern (Can be made dynamic with AI call)
+      setTimeout(() => {
+        addChatMessage("Theek hai! Chalo check karte hain aapne kitna samjha. 🧠\n\n1. What is the core concept of this topic?\n2. Can you name one advantage of this?\n3. How would you apply this in a real scenario?", 'ai', false);
+        btn.parentElement.remove();
+      }, 1000);
+    }
+
+    function openPdfPreview(url, title) {
+      const overlay = document.getElementById('pdfOverlay');
+      const frame = document.getElementById('pdfFrame');
+      const pdfTitle = document.getElementById('pdfTitle');
+
+      pdfTitle.innerText = title || "Document Preview";
+      frame.src = url;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePdfPreview() {
+      const overlay = document.getElementById('pdfOverlay');
+      const frame = document.getElementById('pdfFrame');
+      overlay.classList.remove('active');
+      frame.src = "";
+      document.body.style.overflow = 'auto';
+    }
+
+    function addChatMessage(text, sender, isFormatted, skipAnimation = false, abortSignal = null) {
+      return new Promise((resolve) => {
+        const messagesDiv = document.getElementById('chatMessages');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `chat-message ${sender}-message`;
+
+        const avatar = `<div class="avatar ${sender}-avatar">${sender === 'ai' ? 'AI' : 'You'}</div>`;
+        const content = document.createElement('div');
+        content.className = 'content';
+
+        if (sender === 'ai' && isFormatted) {
+          const bodyWrapper = document.createElement('div');
+          bodyWrapper.style.display = 'flex';
+          bodyWrapper.style.flexDirection = 'column';
+          bodyWrapper.style.flex = '1';
+          bodyWrapper.style.minWidth = '0'; // Prevent overflow
+
+          msgDiv.innerHTML = avatar;
+          bodyWrapper.appendChild(content);
+
+          // Share & Listen actions for AI replies
+          const actions = document.createElement('div');
+          actions.className = 'msg-actions';
+          actions.style.marginTop = '10px';
+          actions.innerHTML = `
+        <span class="msg-action-btn" onclick="summarizeAiMessage(this)"><i class="fas fa-magic"></i> Summarize</span>
+        <span class="msg-action-btn" onclick="playAiAudio(this)"><i class="fas fa-play"></i> Listen</span>
+        <span class="msg-action-btn" onclick="copyAnswer(this)"><i class="fas fa-copy"></i> Copy</span>
+        <span class="msg-action-btn" onclick="shareWhatsApp(this)"><i class="fab fa-whatsapp"></i> Share</span>
+      `;
+          actions.setAttribute('data-raw', text);
+
+          bodyWrapper.appendChild(actions);
+          msgDiv.appendChild(bodyWrapper);
+          messagesDiv.appendChild(msgDiv);
+
+          let animPromise;
+          if (skipAnimation) {
+            content.innerHTML = formatHubReply(text);
+            animPromise = Promise.resolve();
+          } else {
+            animPromise = typeWriterHub(formatHubReply(text), content, abortSignal);
+          }
+
+          animPromise.then(() => {
+            // ========== v6.0 RESOURCE LINKER ==========
+            const RESOURCE_MAP = {
+              'marketing': { name: 'Marketing Management Notes', url: '/database?subject=marketing' },
+              'finance': { name: 'Financial Accounting Notes', url: '/database?subject=finance' },
+              'economics': { name: 'Managerial Economics', url: '/database?subject=economics' },
+              'statistics': { name: 'Business Statistics', url: '/database?subject=statistics' },
+              'resume': { name: 'Resume Builder Tool', url: '/tools' },
+              'placement': { name: 'Placement Prep Hub', url: '/database' }
+            };
+
+            let relatedLinks = [];
+            const lowerText = text.toLowerCase();
+            for (let key in RESOURCE_MAP) {
+              if (lowerText.includes(key)) {
+                relatedLinks.push(RESOURCE_MAP[key]);
+              }
+            }
+
+            if (relatedLinks.length > 0) {
+              const resDiv = document.createElement('div');
+              resDiv.className = 'suggested-resources';
+              resDiv.innerHTML = `<span class="res-label">📚 Related Resources</span><div class="res-links"></div>`;
+              const linksCont = resDiv.querySelector('.res-links');
+              relatedLinks.forEach(link => {
+                linksCont.innerHTML += `<a href="${link.url}" class="res-link"><i class="fas fa-external-link-alt"></i> ${link.name}</a>`;
+              });
+              content.appendChild(resDiv);
+            }
+            msgDiv.appendChild(bodyWrapper);
+            resolve();
+          });
+        } else {
+          content.innerHTML = isFormatted ? formatHubReply(text) : text;
+          msgDiv.innerHTML = sender === 'ai' ? avatar : '';
+          msgDiv.appendChild(content);
+          if (sender !== 'ai') msgDiv.innerHTML += avatar;
+          messagesDiv.appendChild(msgDiv);
+          scrollToBottom();
+          resolve();
+        }
+      });
+    }
+
+    function copyAnswer(btn) {
+      const rawText = btn.parentElement.getAttribute('data-raw');
+      navigator.clipboard.writeText(rawText).then(() => {
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function shareWhatsApp(btn) {
+      const rawText = btn.parentElement.getAttribute('data-raw');
+      const shareText = `*Solmates AI says:*\n\n${rawText}\n\n_Shared via Solmates - Your MBA Study Buddy_ 🎓`;
+      const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      window.open(url, '_blank');
+    }
+
+    // ========== PODCAST / READ ALOUD MODE ==========
+    let isPlayingAudio = false;
+
+    function playAiAudio(btn) {
+      const rawText = btn.parentElement.getAttribute('data-raw');
+
+      // Clean text before reading (remove markdown asterisks)
+      const cleanText = rawText.replace(/[*#_]/g, '');
+
+      if (isPlayingAudio && btn.classList.contains('playing')) {
+        window.speechSynthesis.cancel();
+        isPlayingAudio = false;
+        btn.innerHTML = '<i class="fas fa-play"></i> Listen';
+        btn.classList.remove('playing');
+        return;
+      }
+
+      window.speechSynthesis.cancel(); // Stop any other playing audio
+
+      // Reset all other listen buttons
+      document.querySelectorAll('.msg-action-btn.playing').forEach(b => {
+        b.innerHTML = '<i class="fas fa-play"></i> Listen';
+        b.classList.remove('playing');
+        b.style.color = '';
+      });
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+
+      // Try to use a nice female/Indian voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v => v.lang.includes('IN') || v.name.includes('Google UK English Female'));
+      if (preferredVoice) utterance.voice = preferredVoice;
+
+      utterance.onend = () => {
+        isPlayingAudio = false;
+        btn.innerHTML = '<i class="fas fa-play"></i> Listen';
+        btn.classList.remove('playing');
+        btn.style.color = '';
+      };
+
+      utterance.onerror = () => {
+        isPlayingAudio = false;
+        btn.innerHTML = '<i class="fas fa-play"></i> Listen';
+        btn.classList.remove('playing');
+        btn.style.color = '';
+      };
+
+      btn.innerHTML = '<i class="fas fa-stop"></i> Stop';
+      btn.classList.add('playing');
+      btn.style.color = '#ff3b30'; // Red when playing
+      isPlayingAudio = true;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // ========== VOICE INPUT (SPEECH TO TEXT) ==========
+    let recognition;
+    let isListening = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-IN'; // Optimized for Indian English
+
+      recognition.onstart = () => {
+        isListening = true;
+        const micBtn = document.getElementById('micBtn');
+        const chatInput = document.getElementById('chatInput');
+        micBtn.classList.add('active');
+        chatInput.placeholder = 'Listening...';
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const chatInput = document.getElementById('chatInput');
+        chatInput.value = transcript;
+        // Auto send after voice input
+        setTimeout(() => sendChatHubMessage(), 500);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        stopListening();
+      };
+
+      recognition.onend = () => {
+        stopListening();
+      };
+    }
+
+    function stopListening() {
+      isListening = false;
+      const micBtn = document.getElementById('micBtn');
+      const chatInput = document.getElementById('chatInput');
+      if (micBtn) micBtn.classList.remove('active');
+      if (chatInput) chatInput.placeholder = 'Type a message or ask something...';
+    }
+
+    function toggleVoiceSearch() {
+      if (!recognition) {
+        alert("Speech recognition is not supported in your browser. Please use Chrome or Edge.");
+        return;
+      }
+
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    }
+
+    // ========== EXPORT CHAT TO PDF ==========
+    function exportChatToPDF() {
+      const element = document.getElementById('chatMessages');
+      const chatContainer = document.getElementById('chatContainer');
+      const exportBtn = document.querySelector('.export-pdf-btn');
+
+      if (!element || element.children.length <= 2) { // 2 because welcome message is always there
+        alert("No chat messages to export!");
+        return;
+      }
+
+      // 1. Prepare UI for clean export
+      exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+      exportBtn.disabled = true;
+
+      // Temporarily hide parts and fix styles
+      const originalOverlay = document.getElementById('chatWelcome');
+      if (originalOverlay) originalOverlay.style.display = 'none';
+
+      const actionButtons = document.querySelectorAll('.msg-actions');
+      actionButtons.forEach(btn => btn.style.display = 'none');
+
+      // Configuration for html2pdf
+      const opt = {
+        margin: [15, 10, 15, 10], // Increased top/bottom margins
+        filename: `Solmates_AI_StudyNotes_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          windowWidth: 1024, // Wider buffer for text wrapping
+          scrollX: 0,
+          logging: false // Keep it clean
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
+      };
+
+      // Generate PDF from the element
+      html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+        // Optional: Add footer or page numbers if needed
+      }).save().then(() => {
+        // 2. Restore UI
+        exportBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Export';
+        exportBtn.disabled = false;
+        actionButtons.forEach(btn => btn.style.display = 'flex');
+        if (originalOverlay && element.children.length <= 1) originalOverlay.style.display = 'block';
+
+        // Success feedback
+        launchConfetti();
+      }).catch(err => {
+        console.error("PDF Export Error:", err);
+        alert("Failed to export PDF. Please try again.");
+        exportBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Export';
+        exportBtn.disabled = false;
+        actionButtons.forEach(btn => btn.style.display = 'flex');
+      });
+    }
+
+    // ========== SMART SUMMARIZER ==========
+    async function summarizeAiMessage(btn) {
+      const rawText = btn.parentElement.getAttribute('data-raw');
+      const input = document.getElementById('chatInput');
+
+      // Visual feedback on button
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Summarizing...';
+      btn.style.pointerEvents = 'none';
+
+      input.value = `Summarize this in 3 concise bullet points: ${rawText}`;
+      await sendChatHubMessage();
+
+      btn.innerHTML = originalHtml;
+      btn.style.pointerEvents = 'auto';
+    }
+
+    function launchConfetti() {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'confettiCanvas';
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#c0962d', '#0f2b46', '#ff3b30', '#34c759', '#0071e3', '#ff9500'];
+      const pieces = [];
+
+      for (let i = 0; i < 120; i++) {
+        pieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          w: Math.random() * 10 + 5,
+          h: Math.random() * 6 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vy: Math.random() * 4 + 2,
+          vx: Math.random() * 2 - 1,
+          rot: Math.random() * 360,
+          rotSpeed: Math.random() * 8 - 4
+        });
+      }
+
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          p.rot += p.rotSpeed;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot * Math.PI / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 150) {
+          requestAnimationFrame(animate);
+        } else {
+          canvas.remove();
+        }
+      }
+      animate();
+    }
+
+    function typeWriterHub(html, element, abortSignal = null) {
+      return new Promise((resolve) => {
+        let i = 0;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        const nodes = Array.from(tempDiv.childNodes);
+        element.innerHTML = '';
+
+        function type() {
+          if (abortSignal && abortSignal.aborted) {
+            element.innerHTML = html;
+            scrollToBottom();
+            return resolve();
+          }
+
+          if (i < nodes.length) {
+            const node = nodes[i];
+            if (node.nodeType === Node.TEXT_NODE) {
+              let charIndex = 0;
+              const text = node.textContent;
+              const textNode = document.createTextNode('');
+              element.appendChild(textNode);
+
+              function typeChar() {
+                if (abortSignal && abortSignal.aborted) {
+                  element.innerHTML = html;
+                  scrollToBottom();
+                  return resolve();
+                }
+
+                if (charIndex < text.length) {
+                  textNode.textContent += text[charIndex];
+                  charIndex++;
+                  scrollToBottom();
+                  setTimeout(typeChar, 10);
+                } else {
+                  i++;
+                  setTimeout(type, 5);
+                }
+              }
+              typeChar();
+            } else {
+              element.appendChild(node.cloneNode(true));
+              i++;
+              scrollToBottom();
+              setTimeout(type, 10);
+            }
+          } else {
+            resolve();
+          }
+        }
+        type();
+      });
+    }
+
+    function scrollToBottom() {
+      const messagesDiv = document.getElementById('chatMessages');
+      const container = document.getElementById('chatContainer');
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function addChatTypingIndicator() {
+      const messagesDiv = document.getElementById('chatMessages');
+      const id = 'typing-' + Date.now();
+      const msgDiv = document.createElement('div');
+      msgDiv.id = id;
+      msgDiv.className = 'chat-message ai-message';
+      msgDiv.innerHTML = `
+    <div class="avatar ai-avatar">AI</div>
+    <div class="skeleton-chat-item"></div>
+  `;
+      messagesDiv.appendChild(msgDiv);
+      scrollToBottom();
+      return id;
+    }
+
+    function removeChatTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function formatHubReply(text) {
+      if (!text || typeof text !== 'string') return '';
+
+      // Custom Card Patterns for v3.0
+      if (text.includes("Notes") || text.includes("MBA") || text.includes("Study")) {
+        return `<div class="ai-result-card">
+        <i class="fas fa-book-reader card-header-icon"></i>
+        <strong>Study Resources Detected</strong>
+        <p>${text.replace(/\n/g, '<br>')}</p>
+        <a href="/database" class="btn-card-action">View Full Database</a>
+     </div>`;
+      }
+
+      if (text.includes(".pdf") || text.includes("Download")) {
+        const pdfUrl = "https://sol.du.ac.in/sites/default/files/2021-03/MBA_Syllabus.pdf"; // Fallback/Extract from link
+        return `<div class="ai-result-card">
+       <i class="fas fa-file-pdf card-header-icon" style="color: #ff3b30;"></i>
+       <strong>Document Reference Found</strong>
+       <p>${text.replace(/\n/g, '<br>')}</p>
+       <div style="display: flex; gap: 10px;">
+         <a href="javascript:void(0)" onclick="openPdfPreview('${pdfUrl}', 'Course Document')" class="btn-card-action" style="flex: 1;">Quick View</a>
+         <a href="${pdfUrl}" target="_blank" class="btn-card-action" style="flex: 1; background: #666;">Download</a>
+       </div>
+    </div>`;
+      }
+
+      const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return escaped
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" style="color: #0071e3; text-decoration: underline; font-weight: 600;">$1</a>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // ========== ANIMATIONS ==========
+    function initAnimations() {
+      const paths = document.querySelectorAll(".anim-path");
+      const fadeElements = document.querySelectorAll(".fade-element");
+
+      if (paths.length > 0) {
+        requestAnimationFrame(() => {
+          paths.forEach(path => {
+            const length = path.getTotalLength();
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+            path.getBoundingClientRect();
+            path.style.transition = "stroke-dashoffset 1.8s ease-in-out";
+          });
+
+          fadeElements.forEach(el => {
+            el.style.opacity = "0";
+            el.style.transition = "opacity 1s ease-in-out";
+          });
+
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              paths.forEach(path => path.style.strokeDashoffset = "0");
+              setTimeout(() => {
+                requestAnimationFrame(() => {
+                  fadeElements.forEach(el => el.style.opacity = "1");
+                });
+              }, 800);
+            });
+          }, 200);
+        });
+      }
+    }
+
+    // ========== NOTIFICATIONS ==========
+    /**
+     * Fetch notification count from all MBA semesters (1-4)
+     * Filters count based on last time the user viewed notifications.
+     */
+    /**
+     * Fetch notification count from all MBA semesters (1-4)
+     * Synchronized with "NEW" badges on notification.html (v74.8)
+     */
+    async function fetchNotificationCount() {
+      const badge = document.querySelector('.notification-badge');
+      if (!badge) return;
+
+      const seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
+      const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
+
+      try {
+        let newCount = 0;
+
+        // v74.8: Identical date parsing logic to notification.html
+        const parseNoticeDate = (dateStr, title = '') => {
+          let ds = dateStr;
+          if (!ds || ds === 'None' || ds === 'null' || isNaN(new Date(ds).getTime())) {
+            const titleMatch = String(title).match(/\[(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\]/);
+            if (titleMatch) ds = titleMatch[1].replace(/\//g, '-');
+            else if (!ds || ds === 'None' || ds === 'null') return new Date(NaN);
+          }
+          if (ds.includes('-')) {
+            const parts = ds.split('-');
+            if (parts[0].length === 4) return new Date(ds);
+            if (parts[2].length === 4) return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+          }
+          return new Date(ds);
+        };
+
+        // v74.8: Identical unique key normalization
+        const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\s+/g, ' ').trim();
+
+        // [v116.4] 8s timeout so Render cold-start never freezes mobile tab
+        const _nc = new AbortController();
+        const _nt = setTimeout(() => _nc.abort(), 8000);
+        const res = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all`, { cache: 'no-store', signal: _nc.signal }).then(res => res.json()).catch(() => ({ success: false }));
+        clearTimeout(_nt);
+        if (res.success && res.data) {
+          const unreadItems = res.data.filter(item => {
+            const itemLink = (item.link || '').trim();
+            const uniqueKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(item.title)}`;
+            const dateObj = parseNoticeDate(item.date, item.title);
+            const itemTime = dateObj.getTime();
+
+            // "NEW" logic: Less than 24h old AND never seen before
+            const isNewBadgeShown = !isNaN(itemTime) && (Date.now() - itemTime < 24 * 60 * 60 * 1000);
+            const isUnseen = !seenIds.includes(uniqueKey);
+
+            return isNewBadgeShown && isUnseen;
+          });
+          newCount = unreadItems.length;
+        }
+
+        if (newCount > 0) {
+          badge.textContent = newCount;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      } catch (error) {
+        console.error('[NOTIFICATIONS] Count sync error:', error);
+        badge.style.display = 'none';
+      }
+    }
+
+    /**
+     * Mark all as read and navigate
+     */
+    function goToNotifications() {
+      if (isLongPressActive) {
+        isLongPressActive = false;
+        return;
+      }
+      localStorage.setItem('last_read_notifications', Date.now());
+      window.location.href = '/notification';
+    }
+
+    /**
+     * Highlight active nav link
+     */
+    function setNavbarActive() {
+      const path = window.location.pathname;
+      document.querySelectorAll('.nav-center a, .mobile-nav-overlay a').forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    /**
+     * Update UI based on auth status
+     */
+    function updateAuthUI() {
+      const isLoggedIn = localStorage.getItem('solmates_admin_logged_in') === 'true';
+      const loginBtn = document.getElementById('adminLoginBtn');
+      const logoutBtn = document.getElementById('adminLogoutBtn');
+      if (loginBtn && logoutBtn) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = isLoggedIn ? 'flex' : 'none';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setNavbarActive();
+      updateAuthUI();
+      initPremiumSearch();
+      initAnimations();
+      initMainOptionAnimations();
+      // [v116.4] Delay notification fetch by 3s so it never blocks first paint
+      // On slow mobile networks this was the #1 cause of the loading freeze
+      setTimeout(fetchNotificationCount, 3000);
+      // Init socket/realtime after page is idle
+      setTimeout(initRealtimeNotificationSync, 4000);
+    });
+
+    /**
+     * [v104.7] Real-time Notification Sync
+     */
+    function initRealtimeNotificationSync() {
+      if (typeof io === 'undefined') { const s=document.createElement('script'); s.src='https://cdn.socket.io/4.7.5/socket.io.min.js'; s.onload=initRealtimeNotificationSync; document.body.appendChild(s); return; }
+      try {
+        const base = (window.PRODUCTION_API_URL || 'http://localhost:3000/api').replace(/\/api$/, '');
+        const socket = io(base, {
+          transports: ['polling', 'websocket'],
+        });
+
+        socket.on('sol:updated', (data) => {
+          if (data.category === 'notifications' || data.category === 'live-classes') {
+            fetchNotificationCount();
+          }
+        });
+
+        socket.on('content:updated', (data) => {
+          if (data.type === 'notifications' || data.type === 'classes') {
+            fetchNotificationCount();
+          }
+        });
+      } catch (e) {
+        console.warn('[REALTIME] Notification sync failed:', e);
+      }
+    }
+
+    // Force refresh notification count on BFCache restore — with 1s delay
+    window.addEventListener('pageshow', (event) => {
+      setTimeout(fetchNotificationCount, 1000);
+    });
+
+    function initMainOptionAnimations() {
+      const cards = document.querySelectorAll(".main-option-card");
+      if (cards.length > 0) {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              requestAnimationFrame(() => {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = "translateY(0)";
+              });
+            }
+          });
+        }, observerOptions);
+
+        cards.forEach(card => {
+          card.style.opacity = 0;
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "all 0.4s ease";
+          observer.observe(card);
+        });
+      }
+    }
+
+    // ========== KEYBOARD SHORTCUTS ==========
+    document.addEventListener('keydown', function (e) {
+      // Escape key closes modals
+      const aiModal = document.getElementById('aiChatModal');
+      const adminModal = document.getElementById('adminModal');
+
+      if (e.key === 'Escape') {
+        if (adminModal && adminModal.classList.contains('active')) {
+          closeAdminModal();
+        }
+        if (typeof menuOpen !== 'undefined' && menuOpen) {
+          toggleMobileMenu();
+        }
+        if (aiModal && aiModal.classList.contains('active')) {
+          closeChatModal();
+        }
+      }
+
+      // Ctrl/Cmd + K or / opens Search AI
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === '/')) {
+        e.preventDefault();
+        openChatModal();
+      }
+    });
+
+    // ========== TOUCH EVENT OPTIMIZATIONS ==========
+    document.addEventListener('touchstart', function (e) {
+      if (e.touches.length > 1) {
+        // Multi-touch handling if needed
+      }
+    }, { passive: true });
+
+    // v116.4: Run initHomePush AFTER window fully loads + 5s idle delay
+    // Previously ran on DOMContentLoaded which blocked initial render on mobile
+    async function initHomePush() {
+      try {
+        if (window.isWebView && window.isWebView()) {
+          return; // Use native bridge instead
+        }
+
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+        const swUrl = './sw.js?v=113.3';
+        const registration = await navigator.serviceWorker.register(swUrl);
+        
+        // [v116.4] controllerchange guard — 'refreshed' flag prevents infinite reload loop
+        // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
+        // controllerchange fires AFTER nuclear reload, triggering a second reload → infinite loop.
+        let _swRefreshed = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (_swRefreshed) return; // already reloaded once, don't loop
+          _swRefreshed = true;
+          // Only reload if page has been open >30s (not during initial load)
+          if (Date.now() - pageOpenTime > 30000) {
+            window.location.reload();
+          }
+        });
+
+        // Do NOT await serviceWorker.ready — it can block indefinitely on first load
+        // Subscription happens in background after 5s
+        setTimeout(async () => {
+          if (typeof Notification === 'undefined' || typeof Notification.requestPermission !== 'function') return;
+          if (Notification.permission !== 'granted') {
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') return;
+          }
+
+          if (window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+            const manual = localStorage.getItem('sol_subscribed_sems');
+            const browsing = localStorage.getItem('solmates_active_semester');
+            let semesters = ['all'];
+            if (manual) { try { semesters = JSON.parse(manual); } catch (e) { } }
+            else if (browsing) { semesters = [browsing]; }
+
+            const currentSemestersStr = JSON.stringify(semesters);
+            const lastSubscribedStr = localStorage.getItem('solmates_push_last_subscribed_list');
+            if (lastSubscribedStr === currentSemestersStr && localStorage.getItem('sol_notif_enabled') === 'true') return;
+
+            await window.solmatesAPI.subscribeToPush(semesters)
+              .then(() => {
+                localStorage.setItem('solmates_push_last_subscribed_list', currentSemestersStr);
+                localStorage.setItem('sol_notif_enabled', 'true');
+              })
+              .catch(() => {});
+          }
+        }, 5000);
+      } catch (e) {
+        console.warn('[Push Home] Failed:', e);
+      }
+    }
+    // v116.4: Run after window load + 3s idle, NOT on DOMContentLoaded
+    window.addEventListener('load', () => setTimeout(initHomePush, 3000));
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Word - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.2.2/build/index.iife.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file-text"></i> PDF to Word</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="file-text"></i>
+        <h2>Select PDF file</h2>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button id="convertBtn" class="btn-primary" disabled>
+            <i data-lucide="play"></i> Convert to Word (.docx)
+        </button>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Your document has been converted to a real .docx file.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download Word Docx
+        </button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Converting to Word...</p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("PDF to Word initialized");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    
+    // Check for docx global
+    const docxLib = window.docx || docx;
+    if (!docxLib) {
+        console.error("docx.js library not loaded properly");
+        return;
+    }
+    const { Document, Packer, Paragraph, TextRun } = docxLib;
+    
+    const dropZone = document.getElementById('dropZone');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const convertBtn = document.getElementById('convertBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let selectedFile = null;
+    let docxBlob = null;
+
+    dropZone.onclick = () => {
+        console.log("Dropzone clicked");
+        fileInput.click();
+    };
+    
+    fileInput.onchange = (e) => { 
+        if (e.target.files[0]) handleFile(e.target.files[0]); 
+    };
+    
+    function handleFile(file) {
+        if (file.type !== 'application/pdf') return;
+        selectedFile = file;
+        fileName.textContent = file.name;
+        convertBtn.disabled = false;
+        console.log("File selected:", file.name);
+    }
+
+    convertBtn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        convertBtn.disabled = true;
+
+        try {
+            const arrayBuffer = await selectedFile.arrayBuffer();
+            let pdf;
+            
+            try {
+                pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            } catch (e) {
+                if (e.name === 'PasswordException') {
+                    const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    pdf = await pdfjsLib.getDocument({ data: arrayBuffer, password }).promise;
+                } else {
+                    throw e;
+                }
+            }
+
+            const sections = [];
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageChildren = [];
+
+                // Group by Y coordinate
+                const lines = {};
+                textContent.items.forEach(item => {
+                    const y = Math.round(item.transform[5]);
+                    if (!lines[y]) lines[y] = [];
+                    lines[y].push(item);
+                });
+
+                const sortedY = Object.keys(lines).sort((a, b) => b - a);
+                
+                sortedY.forEach(y => {
+                    const sortedX = lines[y].sort((a, b) => a.transform[4] - b.transform[4]);
+                    const runs = [];
+                    
+                    sortedX.forEach(it => {
+                        const fontSize = Math.round(it.transform[0]);
+                        const isBold = it.fontName && (it.fontName.toLowerCase().includes('bold') || it.fontName.toLowerCase().includes('g_d0_f2'));
+                        const isItalic = it.fontName && (it.fontName.toLowerCase().includes('italic') || it.fontName.toLowerCase().includes('oblique'));
+                        
+                        runs.push(new TextRun({
+                            text: it.str + " ",
+                            size: fontSize * 2,
+                            bold: isBold,
+                            italics: isItalic
+                        }));
+                    });
+
+                    if (runs.length > 0) {
+                        pageChildren.push(new Paragraph({
+                            children: runs,
+                            spacing: { after: 120 }
+                        }));
+                    }
+                });
+
+                sections.push({
+                    properties: { type: docx.SectionType.NEXT_PAGE },
+                    children: pageChildren
+                });
+            }
+
+            const doc = new Document({ sections });
+            docxBlob = await Packer.toBlob(doc);
+            
+            resultArea.style.display = 'block';
+            convertBtn.innerHTML = '<i data-lucide="check"></i> Done!';
+            lucide.createIcons();
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error converting document');
+            convertBtn.disabled = false;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(docxBlob);
+        link.download = `${selectedFile.name.replace(/\.pdf$/i, '')}.docx`;
+        link.click();
+    };
+});
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

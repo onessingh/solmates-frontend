@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Calculator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; min-height: 100vh; }
+
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .back-link:hover { background: #1a3c5e; }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 30px 20px 60px; }
+
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 32px; }
+    .hero-icon { width: 62px; height: 62px; background: linear-gradient(135deg, #0071e3, #005bb5); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(0,113,227,0.25); }
+    .hero-icon i { font-size: 1.8rem; color: white; }
+    .hero h1 { font-size: 1.8rem; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
+    @media (max-width: 500px) { .hero h1 { font-size: 1.4rem; } }
+
+    /* Input Card */
+    .card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-weight: 600; font-size: 0.9rem; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+    .form-group label i { color: var(--accent); font-size: 0.85rem; }
+    .input-wrap { position: relative; }
+    .form-control { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 1.05rem; font-weight: 600; font-family: inherit; outline: none; transition: all 0.25s; background: #fafafa; color: var(--primary); text-align: center; }
+    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+
+    .target-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+    .target-label { font-weight: 600; font-size: 0.9rem; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+    .target-label i { color: var(--accent); }
+    .target-options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .target-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: #fafafa; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--primary); }
+    .target-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .btn-calculate { width: fit-content; min-width: 240px; padding: 14px 30px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #1a3c5e); color: white; border: none; font-size: 1.05rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; box-shadow: 0 6px 16px rgba(15,43,70,0.2); margin: 24px auto 0; }
+    .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15,43,70,0.28); }
+
+    /* Result */
+    .result-card { display: none; animation: slideUp 0.4s ease; }
+    @keyframes slideUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+
+    .pct-banner { border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 20px; position: relative; overflow: hidden; }
+    .pct-banner.safe { background: linear-gradient(135deg, #34c759, #1aab44); }
+    .pct-banner.warning { background: linear-gradient(135deg, #ff9f0a, #e67e00); }
+    .pct-banner.danger { background: linear-gradient(135deg, #ff3b30, #cc2a20); }
+    .pct-value { font-size: 4rem; font-weight: 800; color: white; line-height: 1; }
+    .pct-label { font-size: 1rem; color: rgba(255,255,255,0.85); margin-top: 6px; font-weight: 500; }
+    .pct-status { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; margin-top: 12px; }
+
+    /* Arc Chart */
+    .arc-wrap { display: flex; justify-content: center; margin: -10px 0 10px; }
+    .arc-svg { width: 160px; height: 90px; }
+
+    /* Info Grid */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    @media (max-width: 500px) { .info-grid { grid-template-columns: 1fr; } }
+    .info-tile { background: var(--card); border-radius: 16px; border: 1px solid var(--border); padding: 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+    .tile-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .tile-val { font-size: 1.6rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .tile-desc { font-size: 0.8rem; color: var(--light); margin-top: 4px; line-height: 1.3; }
+    .tile-val.good { color: var(--success); }
+    .tile-val.warn { color: var(--warning); }
+    .tile-val.bad { color: var(--danger); }
+
+    /* Advice box */
+    .advice-box { border-radius: 16px; padding: 20px 22px; display: flex; gap: 14px; align-items: flex-start; }
+    .advice-box.safe { background: rgba(52,199,89,0.08); border: 1px solid rgba(52,199,89,0.2); }
+    .advice-box.warning { background: rgba(255,159,10,0.08); border: 1px solid rgba(255,159,10,0.2); }
+    .advice-box.danger { background: rgba(255,59,48,0.08); border: 1px solid rgba(255,59,48,0.2); }
+    .advice-icon { font-size: 1.5rem; margin-top: 2px; }
+    .advice-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .advice-text { font-size: 0.88rem; color: var(--light); line-height: 1.5; }
+
+    .reset-btn { display: block; margin: 24px auto 0; width: fit-content; padding: 10px 24px; border-radius: 20px; background: transparent; border: 1.5px solid var(--border); color: var(--light); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-clipboard-user"></i> Attendance Calculator</h1>
+    </div>
+
+
+
+
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-calendar-check"></i></div>
+    
+  </div>
+
+  <!-- Input Card -->
+  <div class="card">
+    <div class="form-grid">
+      <div class="form-group">
+        <label><i class="fas fa-check-circle"></i> Classes Attended</label>
+        <div class="input-wrap">
+          <input type="number" id="attended" class="form-control" placeholder="e.g. 42" min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-layer-group"></i> Total Classes Held</label>
+        <div class="input-wrap">
+          <input type="number" id="total" class="form-control" placeholder="e.g. 56" min="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="target-row" style="margin-top: 20px;">
+      <span class="target-label"><i class="fas fa-bullseye"></i> Attendance Target</span>
+      <div class="target-options">
+        <button class="target-btn" onclick="setTarget(this, 75)">75%</button>
+        <button class="target-btn active" onclick="setTarget(this, 80)">80%</button>
+        <button class="target-btn" onclick="setTarget(this, 85)">85%</button>
+        <button class="target-btn" onclick="setTarget(this, 90)">90%</button>
+      </div>
+    </div>
+
+    <button class="btn-calculate" onclick="calculate()">
+      <i class="fas fa-calculator"></i> Calculate
+    </button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+
+    <!-- Percentage Banner -->
+    <div class="pct-banner" id="pctBanner">
+      <div class="pct-value" id="pctValue">0%</div>
+      <div class="pct-label">Current Attendance</div>
+      <div class="pct-status" id="pctStatus">—</div>
+    </div>
+
+    <!-- Info Grid -->
+    <div class="info-grid" id="infoGrid"></div>
+
+    <!-- Advice -->
+    <div class="advice-box" id="adviceBox">
+      <div class="advice-icon" id="adviceIcon">💡</div>
+      <div>
+        <div class="advice-title" id="adviceTitle">Analysis</div>
+        <div class="advice-text" id="adviceText"></div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetCalc()"><i class="fas fa-redo"></i> Calculate Again</button>
+  </div>
+
+</div>
+
+<script>
+  let targetPct = 80;
+
+  function setTarget(btn, val) {
+    document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    targetPct = val;
+  }
+
+  function calculate() {
+    const attended = parseInt(document.getElementById('attended').value);
+    const total = parseInt(document.getElementById('total').value);
+
+    if (isNaN(attended) || isNaN(total) || total <= 0 || attended < 0 || attended > total) {
+      alert('Please enter valid values. Classes attended cannot exceed total classes.');
+      return;
+    }
+
+    const pct = (attended / total) * 100;
+    const rounded = pct.toFixed(1);
+
+    // Determine state
+    let state = pct >= targetPct ? 'safe' : pct >= targetPct - 10 ? 'warning' : 'danger';
+
+    // Banner
+    const banner = document.getElementById('pctBanner');
+    banner.className = 'pct-banner ' + state;
+    document.getElementById('pctValue').textContent = rounded + '%';
+    document.getElementById('pctStatus').textContent =
+      state === 'safe' ? '✅ Target Met' :
+      state === 'warning' ? '⚠️ At Risk' : '❌ Below Target';
+
+    // Info tiles
+    let tilesHtml = '';
+
+    if (pct >= targetPct) {
+      // Can bunk
+      // attended - x / total + future ≥ targetPct/100
+      // If we skip x classes (no new classes), find max x where (attended)/(total+x) >= target/100
+      // Wait — bunking means attended stays same, total increases
+      // (attended) / (total + x) >= target/100
+      // x <= (attended * 100/target) - total
+      const canSkip = Math.floor((attended * 100 / targetPct) - total);
+      tilesHtml += tile('🎉', canSkip >= 0 ? canSkip : 0, 'Classes you can skip<br>& still meet target', canSkip > 0 ? 'good' : 'warn');
+    } else {
+      // Need to attend
+      // (attended + x) / (total + x) >= target/100
+      // 100*(attended+x) >= target*(total+x)
+      // 100*attended + 100x >= target*total + target*x
+      // x*(100-target) >= target*total - 100*attended
+      // x >= (target*total - 100*attended) / (100 - target)
+      const needAttend = Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
+      tilesHtml += tile('📚', needAttend, 'Consecutive classes<br>needed to hit target', 'bad');
+    }
+
+    // Extra stats
+    const absent = total - attended;
+    tilesHtml += tile('📅', total, 'Total Classes Held', '');
+    tilesHtml += tile('✅', attended, 'Classes Attended', '');
+    tilesHtml += tile('❌', absent, 'Classes Missed', absent === 0 ? 'good' : absent / total > 0.25 ? 'bad' : 'warn');
+
+    document.getElementById('infoGrid').innerHTML = tilesHtml;
+
+    // Advice
+    const adviceBox = document.getElementById('adviceBox');
+    adviceBox.className = 'advice-box ' + state;
+    document.getElementById('adviceIcon').textContent = state === 'safe' ? '🎉' : state === 'warning' ? '⚠️' : '🚨';
+
+    if (state === 'safe') {
+      const canSkip = Math.max(0, Math.floor((attended * 100 / targetPct) - total));
+      document.getElementById('adviceTitle').textContent = 'You\'re on track!';
+      document.getElementById('adviceText').textContent =
+        `Your attendance is ${rounded}% which is above your ${targetPct}% target. You can afford to skip up to ${canSkip} more classes before falling below the limit. Stay consistent!`;
+    } else if (state === 'warning') {
+      const needAttend = Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
+      document.getElementById('adviceTitle').textContent = 'Close to the limit!';
+      document.getElementById('adviceText').textContent =
+        `Your attendance is ${rounded}% — just ${(targetPct - pct).toFixed(1)}% below your ${targetPct}% target. Attend the next ${needAttend} classes consecutively to get back on track. Don't skip any more!`;
+    } else {
+      const needAttend = Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
+      document.getElementById('adviceTitle').textContent = 'Danger Zone!';
+      document.getElementById('adviceText').textContent =
+        `Your attendance is dangerously low at ${rounded}%. You need to attend the next ${needAttend} classes in a row to reach ${targetPct}%. Skipping even one more class will make recovery harder. Talk to your teacher if needed.`;
+    }
+
+    // Show result
+    document.getElementById('resultCard').style.display = 'block';
+    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function tile(icon, val, desc, cls) {
+    return `
+      <div class="info-tile">
+        <div class="tile-icon">${icon}</div>
+        <div class="tile-val ${cls}">${val}</div>
+        <div class="tile-desc">${desc}</div>
+      </div>`;
+  }
+
+  function resetCalc() {
+    document.getElementById('attended').value = '';
+    document.getElementById('total').value = '';
+    document.getElementById('resultCard').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

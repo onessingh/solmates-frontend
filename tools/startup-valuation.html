@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Startup Valuation Calculator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --purple: #af52de;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; min-height: 100vh; }
+
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .back-link:hover { background: #1a3c5e; }
+
+    .container { max-width: 950px; margin: 0 auto; padding: 30px 20px 80px; }
+
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero-icon { width: 68px; height: 68px; background: linear-gradient(135deg, #af52de, #5856d6); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 10px 30px rgba(88,86,214,0.3); }
+    .hero-icon i { font-size: 2rem; color: white; }
+    .hero h1 { font-size: 1.9rem; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero p { font-size: 0.95rem; color: var(--light); max-width: 550px; margin: 0 auto; line-height: 1.5; }
+    @media (max-width: 500px) { .hero h1 { font-size: 1.5rem; } }
+
+    .grid-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; }
+    @media (max-width: 800px) { .grid-container { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card); border-radius: 24px; border: 1px solid var(--border); padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
+    @media (max-width: 500px) { .card { padding: 20px; } }
+    
+    .card-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .card-title i { color: var(--purple); }
+
+    /* Inputs */
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-wrapper i, .input-wrapper span.sym { position: absolute; left: 14px; color: var(--light); font-size: 1rem; font-weight: 600; }
+    .input-wrapper span.sym.right { left: auto; right: 14px; }
+    
+    .input-field { width: 100%; padding: 14px 14px 14px 40px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 1rem; background: #fafafa; color: var(--text); outline: none; transition: all 0.2s; font-family: inherit; }
+    .input-field.pr { padding-right: 40px; padding-left: 14px; }
+    .input-field:focus { border-color: var(--purple); background: #fff; box-shadow: 0 0 0 3px rgba(175,82,222,0.1); }
+    .input-hint { font-size: 0.8rem; color: var(--light); margin-top: 6px; }
+
+    /* Multiples Grid */
+    .mult-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .mult-grid .input-group { margin-bottom: 0; }
+    .mult-grid .input-field { padding-left: 14px; padding-right: 36px; }
+
+    /* Results */
+    .results-area { display: flex; flex-direction: column; gap: 20px; height: 100%; }
+    .val-main { background: linear-gradient(135deg, var(--primary), #1a3c5e); border-radius: 20px; padding: 30px 20px; text-align: center; color: white; box-shadow: 0 12px 30px rgba(15,43,70,0.25); }
+    .val-label { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 8px; }
+    .val-number { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
+    @media (max-width: 500px) { .val-number { font-size: 2rem; } }
+
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-box { background: #f9f9fb; border-radius: 16px; padding: 20px; border: 1px solid var(--border); text-align: center; position: relative; overflow: hidden; }
+    .stat-val { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; position: relative; z-index: 2; }
+    .stat-label { font-size: 0.85rem; color: var(--light); font-weight: 600; position: relative; z-index: 2; }
+    .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
+    .stat-box.ebitda::before { background: var(--success); }
+
+    .chart-container { background: #fff; border-radius: 20px; border: 1px solid var(--border); padding: 20px; flex: 1; min-height: 280px; display: flex; flex-direction: column; }
+    .chart-title { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 16px; text-align: center; }
+    .chart-wrapper { position: relative; flex: 1; width: 100%; }
+    canvas { width: 100% !important; height: 100% !important; }
+
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-rocket"></i> Startup Valuation</h1>
+    </div>
+
+
+
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-rocket"></i></div>
+    <h1>Startup Valuation Calculator</h1>
+    <p>Estimate the worth of your company based on Annual Run Rate (ARR), projected growth, and industry multiples.</p>
+  </div>
+
+  <div class="grid-container">
+    <!-- Input Section -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-sliders-h"></i> Financial Metrics</div>
+      
+      <div class="input-group">
+        <label>Current Annual Revenue (ARR)</label>
+        <div class="input-wrapper">
+          <i class="fas fa-rupee-sign"></i>
+          <input type="number" id="inpRev" class="input-field" placeholder="e.g. 5000000" value="5000000" min="0" step="any" oninput="calculate()">
+        </div>
+        <div class="input-hint">Your company's total revenue for the last 12 months.</div>
+      </div>
+      
+      <div class="input-group">
+        <label>Profit / EBITDA Margin (%)</label>
+        <div class="input-wrapper">
+          <input type="number" id="inpMargin" class="input-field pr" placeholder="e.g. 20" value="20" min="-100" max="100" step="any" oninput="calculate()">
+          <span class="sym right">%</span>
+        </div>
+        <div class="input-hint">Net profit percentage. Can be negative for early-stage startups.</div>
+      </div>
+      
+      <div class="input-group">
+        <label>Expected YoY Growth Rate (%)</label>
+        <div class="input-wrapper">
+          <input type="number" id="inpGrowth" class="input-field pr" placeholder="e.g. 50" value="50" min="0" step="any" oninput="calculate()">
+          <span class="sym right">%</span>
+        </div>
+        <div class="input-hint">How much you expect revenue to grow next year.</div>
+      </div>
+
+      <div class="card-title" style="margin-top: 30px;"><i class="fas fa-building"></i> Industry Multiples</div>
+      
+      <div class="mult-grid">
+        <div class="input-group">
+          <label>Revenue Multiple</label>
+          <div class="input-wrapper">
+            <input type="number" id="inpRevMult" class="input-field pr" placeholder="e.g. 3" value="3.5" min="0" step="any" oninput="calculate()">
+            <span class="sym right">x</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>EBITDA Multiple</label>
+          <div class="input-wrapper">
+            <input type="number" id="inpEbitdaMult" class="input-field pr" placeholder="e.g. 8" value="10" min="0" step="any" oninput="calculate()">
+            <span class="sym right">x</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-hint">Tech startups usually have 3x-10x revenue multiples. Traditional businesses rely more on EBITDA multiples (5x-15x).</div>
+
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-area">
+      
+      <div class="val-main">
+        <div class="val-label">Estimated Blended Valuation</div>
+        <div class="val-number" id="resAvgVal">₹0</div>
+        <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 8px;">(Average of Revenue & EBITDA Methods)</div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="stat-box">
+          <div class="stat-val" id="resRevVal">₹0</div>
+          <div class="stat-label">Valuation (by Revenue)</div>
+        </div>
+        <div class="stat-box ebitda">
+          <div class="stat-val" id="resEbitdaVal">₹0</div>
+          <div class="stat-label">Valuation (by EBITDA)</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">5-Year Revenue Projection</div>
+        <div class="chart-wrapper">
+          <canvas id="growthChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Format Currency (Indian format)
+  function formatMoney(num) {
+    if (num < 0) return '-₹' + Math.abs(num).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    return '₹' + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+  }
+
+  // Format Large Currency (Cr/Lakh)
+  function formatLargeMoney(num) {
+    if (num < 0) return '-₹' + formatLargeNum(Math.abs(num));
+    return '₹' + formatLargeNum(num);
+  }
+
+  function formatLargeNum(num) {
+    if (num >= 10000000) return (num / 10000000).toFixed(2) + ' Cr';
+    if (num >= 100000) return (num / 100000).toFixed(2) + ' Lakh';
+    return num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+  }
+
+  // Initialize Chart
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  let growthChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Current', 'Year 1', 'Year 2', 'Year 3', 'Year 4'],
+      datasets: [{
+        label: 'Projected Revenue',
+        data: [0, 0, 0, 0, 0],
+        backgroundColor: '#af52de',
+        borderRadius: 6,
+        barPercentage: 0.6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 43, 70, 0.9)',
+          titleFont: { size: 13 },
+          bodyFont: { size: 13 },
+          callbacks: {
+            label: function(context) { return formatLargeMoney(context.parsed.y); }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11, family: '-apple-system, sans-serif' }, color: '#86868b' } },
+        y: { 
+          grid: { color: '#f0f0f2', borderDash: [5, 5] },
+          ticks: { 
+            font: { size: 11, family: '-apple-system, sans-serif' },
+            color: '#86868b',
+            callback: function(value) { return formatLargeMoney(value); } 
+          }
+        }
+      }
+    }
+  });
+
+  function calculate() {
+    const rev = parseFloat(document.getElementById('inpRev').value) || 0;
+    const margin = parseFloat(document.getElementById('inpMargin').value) || 0;
+    const growth = parseFloat(document.getElementById('inpGrowth').value) || 0;
+    
+    const revMult = parseFloat(document.getElementById('inpRevMult').value) || 0;
+    const ebitdaMult = parseFloat(document.getElementById('inpEbitdaMult').value) || 0;
+
+    // Calculations
+    const ebitda = rev * (margin / 100);
+    
+    // Using Forward 1-Year Revenue for standard VC valuation if growth > 0
+    const forwardRev = rev * (1 + (growth / 100));
+    const forwardEbitda = forwardRev * (margin / 100);
+
+    const valByRev = forwardRev * revMult;
+    const valByEbitda = forwardEbitda > 0 ? forwardEbitda * ebitdaMult : 0; // Don't value negative EBITDA
+
+    // Blended (if EBITDA is negative, rely 100% on Revenue multiple, otherwise average)
+    let avgVal = 0;
+    if (valByEbitda <= 0) {
+      avgVal = valByRev;
+      document.getElementById('resEbitdaVal').textContent = 'N/A';
+      document.querySelector('.stat-box.ebitda .stat-label').textContent = 'EBITDA is Negative';
+    } else {
+      avgVal = (valByRev + valByEbitda) / 2;
+      document.getElementById('resEbitdaVal').textContent = formatLargeMoney(valByEbitda);
+      document.querySelector('.stat-box.ebitda .stat-label').textContent = 'Valuation (by EBITDA)';
+    }
+
+    // Update UI
+    document.getElementById('resRevVal').textContent = formatLargeMoney(valByRev);
+    document.getElementById('resAvgVal').textContent = formatLargeMoney(avgVal);
+
+    // Update Chart (5 year projection based on decay of growth rate)
+    let chartData = [rev];
+    let currentRev = rev;
+    let currentGrowth = growth / 100;
+
+    for (let i = 1; i <= 4; i++) {
+      currentRev = currentRev * (1 + currentGrowth);
+      chartData.push(currentRev);
+      // Growth rate usually decays as company gets larger (conservative estimate: drops by 15% relative each year)
+      currentGrowth = currentGrowth * 0.85; 
+    }
+
+    growthChart.data.datasets[0].data = chartData;
+    growthChart.update();
+  }
+
+  // Initial render
+  calculate();
+</script>
+</body>
+</html>

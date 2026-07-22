@@ -1,0 +1,17 @@
+[
+    { "q": "Who is known as the father of scientific management?", "options": ["Henry Fayol", "F.W. Taylor", "Elton Mayo", "Max Weber"], "a": 1 },
+    { "q": "The Hawthorne experiments were conducted by which theorist?", "options": ["F.W. Taylor", "Henry Fayol", "Elton Mayo", "Peter Drucker"], "a": 2 },
+    { "q": "According to Maslow's hierarchy, which is the highest level of need?", "options": ["Safety needs", "Social needs", "Self-actualization", "Esteem needs"], "a": 2 },
+    { "q": "Which theory assumes workers are inherently lazy and require strict supervision?", "options": ["Theory Y", "Theory X", "Theory Z", "Expectancy Theory"], "a": 1 },
+    { "q": "Which leadership style involves employees in decision making?", "options": ["Autocratic", "Laissez-faire", "Democratic", "Paternalistic"], "a": 2 },
+    { "q": "Cognitive dissonance theory was proposed by:", "options": ["Leon Festinger", "Abraham Maslow", "Douglas McGregor", "Frederick Herzberg"], "a": 0 },
+    { "q": "In the Big Five personality traits, 'OCEAN' stands for Openness, Conscientiousness, Extraversion, Agreeableness, and:", "options": ["Neuroticism", "Narcissism", "Nurture", "Necessity"], "a": 0 },
+    { "q": "Which of the following is NOT a stage in Tuckman's model of group development?", "options": ["Forming", "Storming", "Performing", "Transforming"], "a": 3 },
+    { "q": "A strong organizational culture can lead to:", "options": ["High employee turnover", "Reduced organizational commitment", "Increased cohesion and loyalty", "Lack of direction"], "a": 2 },
+    { "q": "The belief that one's own culture is superior to others is called:", "options": ["Stereotyping", "Ethnocentrism", "Halo effect", "Prejudice"], "a": 1 },
+    { "q": "According to Herzberg's Two-Factor Theory, which of the following is a hygiene factor?", "options": ["Achievement", "Recognition", "Salary", "Responsibility"], "a": 2 },
+    { "q": "Which bias occurs when we judge someone based on our perception of the group to which they belong?", "options": ["Halo Effect", "Contrast Effect", "Stereotyping", "Projection"], "a": 2 },
+    { "q": "The tendency for individuals to expend less effort when working collectively than when working individually is known as:", "options": ["Social facilitation", "Social loafing", "Groupthink", "Groupshift"], "a": 1 },
+    { "q": "Vroom's Expectancy Theory states that motivation is a product of Expectancy, Instrumentality, and:", "options": ["Valence", "Value", "Variance", "Validity"], "a": 0 },
+    { "q": "Which model of organizational behavior focuses on power and authority?", "options": ["Autocratic Model", "Custodial Model", "Supportive Model", "Collegial Model"], "a": 0 }
+]

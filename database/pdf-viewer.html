@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <script src="/config.js?v=113.8"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Viewer | SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #c0962d;
+      --bg: #f8fafc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+    
+    body { 
+      background: #333; 
+      color: white; 
+      height: 100vh; 
+      height: 100dvh; /* Dynamic viewport height for mobile browser safety */
+      overflow: hidden; 
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Premium Modern Header - Refined Glass v114.5 */
+    .viewer-header {
+      height: 64px;
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(8px) saturate(180%);
+      -webkit-backdrop-filter: blur(8px) saturate(180%);
+      display: grid;
+      grid-template-columns: 60px 1fr 60px;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Standardized Glass Button Style (Back & Download) */
+    .back-btn, .download-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .back-btn:hover, .download-btn:hover { 
+      background: rgba(255,255,255,0.15); 
+      border-color: rgba(255,255,255,0.6);
+      transform: scale(1.05);
+    }
+
+    .header-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 0 10px;
+    }
+
+    .file-title {
+      font-size: 15px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #fff;
+      /* Dual shadow for maximum legibility on any background */
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .header-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .download-btn {
+      padding: 0; /* Reset for grid-centered layout on mobile */
+      font-size: 16px;
+    }
+    
+    .download-btn span { display: none; } /* Focus on the Icon for premium look */
+
+    /* v104.9: Clean header on small devices */
+    @media (max-width: 480px) {
+      .viewer-header { grid-template-columns: 50px 1fr 60px; }
+    }
+
+    /* Main Viewer Area */
+    .viewer-container {
+      flex: 1;
+      position: relative;
+      background: #525659;
+      overflow: hidden; /* Important for cropping */
+    }
+
+    .iframe-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      border: none;
+      background: white;
+    }
+
+    iframe.drive-preview {
+      height: 100%;
+      margin-top: 0px;
+    }
+
+    iframe.docs-viewer {
+      height: 100%;
+      margin-top: 0px;
+    }
+
+    /* Secure Transparent Blocker to prevent clicking Google Drive's pop-out [↗] button */
+    .iframe-blocker {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 64px;
+      height: 64px;
+      background: transparent; /* 100% transparent so no PDF content behind it is covered! */
+      z-index: 99;
+      pointer-events: auto; /* Intercepts and blocks all click/tap events securely! */
+      display: none; /* Dynamically toggled in init() */
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      color: var(--primary);
+      transition: opacity 0.5s ease;
+    }
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(15, 43, 70, 0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Empty/Error State */
+    .error-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 40px;
+      text-align: center;
+      color: #94a3b8;
+    }
+    .error-state i { font-size: 50px; margin-bottom: 20px; }
+    /* Premium Toast System */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      background: rgba(15, 43, 70, 0.95);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: auto;
+    }
+    .toast.success { border-color: #10b981; }
+    .toast i { font-size: 16px; }
+    .toast .drive-btn {
+      background: var(--accent);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-left: 10px;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <header class="viewer-header">
+    <div class="header-left">
+      <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+    <div class="header-center">
+      <span class="file-title" id="fileTitle">Loading document...</span>
+    </div>
+    <div class="header-right">
+      <button class="download-btn" id="dlBtn" onclick="handleDownload()" style="background: rgba(255,255,255,0.08); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;">
+        <i class="fas fa-download" style="font-size: 14px;"></i> <span>Download</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="viewer-container">
+    <div id="loading" class="loading-overlay">
+      <div class="loader"></div>
+      <p style="font-weight: 600; font-size: 14px; color: var(--primary);">Preparing Secure View...</p>
+    </div>
+
+    <div id="errorState" class="error-state">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Unable to load document</h3>
+      <p id="errorMsg">The link might be broken or private.</p>
+      <button class="back-btn" style="margin-top:20px; width:auto; padding: 0 20px; border-radius: 20px;" onclick="goBack()">Go Back</button>
+    </div>
+
+    <div class="iframe-wrapper">
+        <div id="iframeBlocker" class="iframe-blocker"></div>
+        <iframe id="pdfFrame" src="about:blank"></iframe>
+    </div>
+  </main>
+
+  <script>
+    function showToast(msg, type = 'info', duration = 3000, action = null) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      let icon = 'fa-info-circle';
+      if (type === 'success') icon = 'fa-check-circle';
+      if (type === 'downloading') icon = 'fa-spinner fa-spin';
+
+      toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${msg}</span>
+        ${action ? `<a href="${action.url}" target="_blank" class="drive-btn">${action.text}</a>` : ''}
+      `;
+      
+      container.appendChild(toast);
+      if (duration > 0) {
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-20px)';
+          setTimeout(() => toast.remove(), 500);
+        }, duration);
+      }
+      return toast;
+    }
+
+    function goBack() {
+      if (document.referrer && document.referrer.includes(window.location.hostname)) {
+        window.history.back();
+      } else {
+        window.location.href = '/database';
+      }
+    }
+
+    async function handleDownload() {
+      const params = new URLSearchParams(window.location.search);
+      const rawUrl = params.get('file');
+      const title = params.get('title') || 'Document';
+      
+      if (!rawUrl) return;
+
+      const btn = document.getElementById('dlBtn');
+      const original = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Downloading...</span>';
+      btn.style.pointerEvents = 'none';
+
+      // Detect extension based on rawUrl and title
+      let isSlides = false;
+      let extension = 'pdf';
+      let downloadUrl = '';
+
+      const lowerUrl = rawUrl.toLowerCase();
+      const lowerTitle = title.toLowerCase();
+
+      if (lowerUrl.includes('docs.google.com/presentation/d/')) {
+        isSlides = true;
+        extension = 'pptx';
+        const pptMatch = rawUrl.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
+        if (pptMatch && pptMatch[1]) {
+          downloadUrl = `https://docs.google.com/presentation/d/${pptMatch[1]}/export/pptx`;
+        }
+      } else if (lowerUrl.includes('drive.google.com') && (lowerUrl.includes('.ppt') || lowerUrl.includes('.pptx') || lowerTitle.includes('.ppt') || lowerTitle.includes('.pptx'))) {
+        isSlides = true;
+        extension = lowerUrl.includes('.ppt') ? 'ppt' : 'pptx';
+        if (lowerTitle.includes('.pptx')) extension = 'pptx';
+        else if (lowerTitle.includes('.ppt')) extension = 'ppt';
+
+        const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (driveMatch && driveMatch[1]) {
+          downloadUrl = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+        }
+      } else if (lowerUrl.endsWith('.ppt') || lowerUrl.endsWith('.pptx')) {
+        isSlides = true;
+        extension = lowerUrl.endsWith('.ppt') ? 'ppt' : 'pptx';
+        downloadUrl = rawUrl;
+      }
+
+      if (isSlides) {
+        const loadingToast = showToast("Downloading PowerPoint...", "downloading", 0);
+        
+        // Direct anchor download for PowerPoint to bypass CORS limitations gracefully
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        // Removed target='_blank' to prevent the screen from flashing black on mobile during download
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        setTimeout(() => {
+          btn.innerHTML = original;
+          btn.style.pointerEvents = 'auto';
+          loadingToast.remove();
+          showToast("PowerPoint Downloaded!", "success", 6000);
+        }, 1500);
+        return;
+      }
+
+      const loadingToast = showToast("Downloading PDF...", "downloading", 0);
+
+      try {
+        const config = window.solmatesConfig || { BACKEND_URL: 'https://solmates-backend-w27e.onrender.com' };
+        let proxyDownloadUrl = `${config.BACKEND_URL}/api/media/download/pdf?url=${encodeURIComponent(rawUrl)}&title=${encodeURIComponent(title)}`;
+        
+        // Use Fetch to verify the stream and track completion
+        const response = await fetch(proxyDownloadUrl);
+        if (!response.ok) throw new Error("Server error");
+
+        const blob = await response.blob();
+        const bUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = bUrl;
+        a.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        
+        loadingToast.remove();
+        
+        // Finalized PDF view URL for "Open with Drive"
+        const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
+
+        showToast("PDF Downloaded!", "success", 6000, {
+          text: "OPEN WITH DRIVE",
+          url: driveUrl
+        });
+
+      } catch (err) {
+        console.warn("Direct fetch failing, using fallback", err);
+        loadingToast.remove();
+        
+        // Absolute Fallback: Send user directly to raw URL if proxy fails
+        const fallbackA = document.createElement('a');
+        fallbackA.href = rawUrl;
+        fallbackA.target = '_blank'; // For raw URLs, open in new tab to let native handlers take over
+        document.body.appendChild(fallbackA);
+        fallbackA.click();
+        document.body.removeChild(fallbackA);
+        
+        const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
+        showToast("Download Initialized!", "success", 6000, {
+          text: "OPEN WITH DRIVE",
+          url: driveUrl
+        });
+      } finally {
+        setTimeout(() => {
+          btn.innerHTML = original;
+          btn.style.pointerEvents = 'auto';
+        }, 3000);
+      }
+    }
+
+    function init() {
+      const params = new URLSearchParams(window.location.search);
+      const rawUrl = params.get('file');
+      const title = params.get('title') || 'Document View';
+      
+      document.getElementById('fileTitle').innerText = title;
+      document.title = title + ' | SOLMATES';
+
+      if (!rawUrl) {
+        showError('No file link provided.');
+        return;
+      }
+
+      const finalUrl = transformDriveLink(decodeURIComponent(rawUrl));
+      const frame = document.getElementById('pdfFrame');
+      
+      // Dynamically apply cropping class and toggle secure transparent blocker based on final URL type
+      if (finalUrl.includes('drive.google.com') || finalUrl.includes('docs.google.com/presentation')) {
+        frame.className = 'drive-preview';
+        document.getElementById('iframeBlocker').style.display = 'block';
+      } else {
+        frame.className = 'docs-viewer';
+        document.getElementById('iframeBlocker').style.display = 'none';
+      }
+      
+      frame.onload = function() {
+        document.getElementById('loading').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('loading').style.display = 'none';
+        }, 500);
+      };
+
+      // Fallback for load detection - extended for large files
+      setTimeout(() => {
+        if (document.getElementById('loading').style.display !== 'none') {
+          document.getElementById('loading').style.opacity = '0';
+          setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
+        }
+      }, 8000);
+
+      frame.src = finalUrl;
+    }
+
+
+
+    function transformDriveLink(url) {
+      // 1. If it's already a docs viewer, leave it
+      if (url.includes('docs.google.com/viewer')) return url;
+
+      // 2. Extract Google Slides / Presentation links and render in the 100% stable native Google Drive Preview format (Never Edit View!)
+      if (url.includes('docs.google.com/presentation/d/')) {
+        const pptMatch = url.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
+        if (pptMatch && pptMatch[1]) {
+          return `https://drive.google.com/file/d/${pptMatch[1]}/preview`;
+        }
+      }
+
+      // 3. Extract File ID for standard Drive Links (PDF, binary .ppt/.pptx, etc.)
+      const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        const fileId = driveMatch[1];
+        // Render Google Drive files using native Drive Preview format for absolute stability
+        return `https://drive.google.com/file/d/${fileId}/preview`;
+      }
+
+      // 4. Fallback: Google Docs Viewer for other documents
+      return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true&chrome=false`;
+    }
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('pdfFrame').style.display = 'none';
+      document.getElementById('errorState').style.display = 'flex';
+      document.getElementById('errorMsg').innerText = msg;
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

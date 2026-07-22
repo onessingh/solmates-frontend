@@ -1,0 +1,115 @@
+/* SOL Database Styles */
+.sol-content-area { padding: 20px 0; }
+.sol-semester-title { font-size: 22px; color: #0f2b46; margin-bottom: 20px; }
+.sol-loading { padding: 40px; text-align: center; color: #666; font-size: 16px; }
+.sol-error   { padding: 40px; text-align: center; color: #dc3545; font-size: 16px; }
+.sol-empty   { padding: 40px; text-align: center; color: #999; font-size: 15px; }
+
+.sol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.sol-card-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.sol-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sol-card h3 { font-size: 16px; font-weight: 700; color: #111; margin: 0; }
+.sol-meta     { font-size: 13px; color: #555; margin: 0; }
+.sol-subtitle { font-size: 14px; color: #444; margin: 0; font-style: italic; }
+.sol-desc     { font-size: 13px; color: #666; margin: 0; line-height: 1.5; }
+.sol-text     { font-size: 14px; color: #333; white-space: pre-wrap; line-height: 1.6; }
+.sol-thumb    { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; display: block; }
+
+.sol-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+.sol-attach-link {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 13px;
+}
+.sol-attach-link:hover { text-decoration: underline; }
+
+/* Buttons */
+.sol-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  align-self: flex-start;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+.sol-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.sol-btn--add    { background: #28a745; color: #fff; margin-bottom: 16px; }
+.sol-btn--edit   { background: #ffc107; color: #111; }
+.sol-btn--delete { background: #dc3545; color: #fff; }
+.sol-btn--save   { background: #28a745; color: #fff; }
+.sol-btn--cancel { background: #6c757d; color: #fff; }
+
+/* Admin controls row */
+.sol-admin-controls {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0 0;
+  flex-wrap: wrap;
+}
+
+/* Form */
+.sol-form-wrap {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.sol-form-title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  color: #111;
+  font-weight: 700;
+}
+.sol-form { display: flex; flex-direction: column; gap: 14px; }
+.sol-form-group { display: flex; flex-direction: column; gap: 5px; }
+.sol-form-label { font-size: 13px; font-weight: 600; color: #444; }
+.sol-form-input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border 0.2s;
+  resize: vertical;
+}
+.sol-form-input:focus { outline: none; border-color: #667eea; }
+.sol-form-error { color: #dc3545; font-size: 13px; min-height: 18px; }
+.sol-form-btns  { display: flex; gap: 10px; margin-top: 8px; }

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Market Trends — SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1c1f;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #0071e3;
+      font-weight: 500;
+    }
+
+    .page-content {
+      padding: 92px 24px 48px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 15px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .stats-flex {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: #f9f9fb;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      border-left: 5px solid #0f2b46;
+    }
+
+    .stat-box h4 {
+      margin-bottom: 5px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .stat-box div {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0071e3;
+    }
+
+    .list-sec {
+      margin-bottom: 20px;
+    }
+
+    .list-sec h3 {
+      margin-bottom: 10px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+    }
+
+    .list-sec ul {
+      padding-left: 20px;
+      color: #444;
+    }
+
+    .market-summary {
+      background: #e8f4fd;
+      padding: 20px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <header class="top-nav" style="justify-content: center;">
+    <span class="nav-logo" style="cursor: default;">Job Market Trends</span>
+  </header>
+
+  <div class="page-content">
+    <div class="container">
+      <div id="setupStep" class="card">
+        <h1><i class="fas fa-chart-bar"></i> Job Market Trends</h1>
+        <p>Analyze current hiring demand, growth rates, and required skills for any role.</p>
+
+        <label>Target Role</label>
+        <input type="text" id="targetRole" placeholder="e.g. Product Manager, DevOps Engineer">
+
+        <label>Location / Region</label>
+        <input type="text" id="targetLoc" placeholder="e.g. Remote, Europe, New York">
+
+        <button class="btn-primary" id="startBtn">Analyze Market</button>
+      </div>
+
+      <div id="loadingStep" class="card hidden" style="text-align: center;">
+        <h3>Scanning the global labor market via AI...</h3>
+      </div>
+
+      <div id="resultStep" class="card hidden">
+        <h1 style="text-align: center;" id="rRole"></h1>
+        <p style="text-align: center; color: #666; margin-bottom: 25px;"><i class="fas fa-map-marker-alt"></i> <span
+            id="rLoc"></span></p>
+
+        <div class="stats-flex" id="statsContainer">
+          <div class="stat-box">
+            <h4>Current Demand</h4>
+            <div id="dLevel"></div>
+          </div>
+          <div class="stat-box">
+            <h4>5-Yr Growth Rate</h4>
+            <div id="gRate"></div>
+          </div>
+        </div>
+
+        <div class="list-sec">
+          <h3><i class="fas fa-building"></i> Top Hiring Sectors/Companies</h3>
+          <ul id="companiesList"></ul>
+        </div>
+
+        <div class="list-sec">
+          <h3><i class="fas fa-star"></i> Most In-Demand Skills</h3>
+          <ul id="skillsList"></ul>
+        </div>
+
+        <div class="market-summary" id="summTxt"></div>
+
+        <button class="btn-primary" onclick="location.reload()" style="margin-top: 30px;">Analyze Another Role</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startBtn').onclick = async () => {
+        const role = document.getElementById('targetRole').value;
+        const loc = document.getElementById('targetLoc').value;
+        if (!role) return alert("Please enter a role.");
+
+        document.getElementById('setupStep').classList.add('hidden');
+        document.getElementById('loadingStep').classList.remove('hidden');
+
+        try {
+          const res = await window.solmatesAPI.generateAIToolData('job-market', {
+            role: role,
+            location: loc
+          });
+          if (!res.success) throw new Error();
+
+          const { role: rName, location, demandLevel, growthRate, topHiringCompanies, inDemandSkills, marketSummary } = res.data;
+
+          document.getElementById('rRole').textContent = rName;
+          document.getElementById('rLoc').textContent = location;
+          document.getElementById('dLevel').textContent = demandLevel;
+          document.getElementById('gRate').textContent = growthRate;
+
+          document.getElementById('companiesList').innerHTML = topHiringCompanies.map(c => `<li>${c}</li>`).join('');
+          document.getElementById('skillsList').innerHTML = inDemandSkills.map(s => `<li>${s}</li>`).join('');
+          document.getElementById('summTxt').textContent = marketSummary;
+
+          document.getElementById('loadingStep').classList.add('hidden');
+          document.getElementById('resultStep').classList.remove('hidden');
+        } catch (e) {
+          alert("Error generating API data"); location.reload();
+        }
+      };
+    });
+  </script>
+</body>
+
+</html>

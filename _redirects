@@ -1,0 +1,104 @@
+# Netlify Redirects for SOLMATES
+# PRODUCTION-READY with Security Fixes
+
+# ============================================================================
+# FIX ISSUE #14: API Proxy Configuration
+# Route all /api/* requests to the backend server
+# This prevents exposing backend URLs in client JavaScript
+# Change this URL based on your deployment environment
+# ============================================================================
+/api/*  https://solmates-backend-w27e.onrender.com/api/:splat  200
+
+# For staging environment, use:
+# /api/*  https://solmates-backend-staging.onrender.com/api/:splat  200
+
+# ============================================================================
+# Clean URL routing for SPA behavior
+# ============================================================================
+/database           /database/index.html            200
+/journey            /journey/index.html             200
+/skills             /skills/index.html              200
+/tools              /tools/index.html               200
+/notification       /notification.html              200
+
+# Legacy compatibility for old HTML files
+/database/database.html   /database/index.html      200
+/journey/journey.html     /journey/index.html        200
+/skills/skills.html       /skills/index.html        200
+/tools/tools.html         /tools/index.html          200
+
+# [SEO v104.6] Clean Aliases for Search Landing
+/resume-builder     /tools/resumebuilder/index.html               200
+/pdf-tools          /tools/pdf-tools/index.html     200
+/mba-notes          /database/index.html            200
+/study-material     /database/index.html            200
+/sol-notes          /database/index.html            200
+/mba-live-classes    /database/classes/index.html    200
+/online-classes      /database/classes/index.html    200
+/mba-pyqs            /database/view.html?category=pyqs  200
+/professor-materials /database/view.html?category=professor  200
+/mba-one-shot        /database/view.html?category=oneshot  200
+/du-sol-results      /notification.html              200
+/distance-learning   /database/index.html            200
+
+
+# Database sub-routes
+/database/notes     /database/view.html?category=notes  200
+/database/pyqs      /database/view.html?category=pyqs  200
+/database/pyq       /database/view.html?category=pyqs  200
+/database/oneshot   /database/view.html?category=oneshot  200
+/database/professor /database/view.html?category=professor 200
+/database/view              /database/view.html             200
+/database/youtube           /database/view.html?category=youtube  200
+/database/youtube-browse    /database/youtube-browse.html   200
+/database/youtube-content   /database/youtube-content.html  200
+/database/classes           /database/classes/index.html    200
+/database/elearning/subjects  /database/elearning-subjects.html 200
+/database/elearning-subjects  /database/elearning-subjects.html 200
+/database/elearning         /database/view.html?category=elearning 200
+/database/folder-content    /database/folder-content.html       200
+
+# Legacy compatibility for classes and planner html
+/database/classes/classes.html  /database/classes/index.html  200
+/tools/planner/planner.html      /tools/planner/index.html      200
+/tools/resumebuilder/resumebuilder.html  /tools/resumebuilder/index.html 200
+
+# Tools sub-routes
+/tools/resume       /tools/resumebuilder/index.html         200
+/tools/planner      /tools/planner/index.html       200
+/tools/background   /tools/background-remover/background-remover.html 200
+/tools/career-test  /tools/careertest.html          200
+/tools/compressor   /tools/compressor.html          200
+/tools/converter    /tools/converter.html           200
+/tools/interview    /tools/interview.html           200
+
+# Skills sub-routes
+/skills/personality-test      /skills/personality-test.html      200
+/skills/aptitude-test         /skills/aptitude-test.html         200
+/skills/skill-gap             /skills/skill-gap.html             200
+/skills/learning-path          /skills/learning-path.html          200
+/skills/certification-guide   /skills/certification-guide.html   200
+/skills/salary-insights       /skills/salary-insights.html       200
+/skills/interest-inventory    /skills/interest-inventory.html    200
+/skills/project-ideas         /skills/project-ideas.html         200
+/skills/job-market            /skills/job-market.html            200
+/skills/company-culture       /skills/company-culture.html       200
+/skills/growth-opportunities  /skills/growth-opportunities.html  200
+/skills/skill-tracker         /skills/skill-tracker.html         200
+
+# ============================================================================
+# NOTE ON ISSUE #16: Admin Page Protection
+# Admin pages are currently protected by client-side JavaScript auth checks
+# The pages will redirect to home if not authenticated
+# For maximum security in production, consider these options:
+# 1. Use Netlify Identity with role-based access control
+# 2. Serve admin pages from the backend with server-side auth
+# 3. Use Netlify Functions to gate admin page access
+# ============================================================================
+
+# Admin dashboard removed - redirect to home
+/admin-dashboard    /     302
+
+# Fallback for any other route - serve index
+/*                  /index.html                     200
+

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Jargon Translator | SOLMATES</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-top: 0 !important; }
+
+    .header-bar { background: var(--card); padding: 15px 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
+    .header-bar h1 { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+
+    .container { max-width: 700px; margin: 30px auto; padding: 0 15px; }
+    
+    .card { background: var(--card); border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 20px; }
+    
+    .translator-area { display: flex; flex-direction: column; gap: 15px; }
+    .text-box { position: relative; }
+    .text-box label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; background: #fafafa; transition: all 0.2s; outline: none; resize: vertical; min-height: 120px; }
+    .form-control:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1); }
+    
+    .btn-translate { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-translate:hover { background: #1a3c5e; transform: translateY(-2px); }
+
+    .result-box { display: none; background: #f0f4f8; border: 1px solid #d1e1f0; border-radius: 12px; padding: 20px; margin-top: 20px; animation: fadeIn 0.3s; position: relative; }
+    .result-text { font-size: 1.1rem; color: var(--primary); font-weight: 500; line-height: 1.5; font-style: italic; }
+    
+    .copy-btn { position: absolute; right: 15px; top: 15px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: 0.85rem; color: var(--primary); font-weight: 600; transition: 0.2s; }
+    .copy-btn:hover { background: var(--primary); color: white; }
+
+    .loader { display: none; text-align: center; margin: 20px 0; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+    .loader i { animation: spin 1s linear infinite; margin-right: 5px; }
+
+    .examples { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+    .chip { background: white; border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+    .chip:hover { background: #f0f4f8; border-color: var(--primary); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h1><i class="fas fa-user-tie"></i> Corporate Translator</h1>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <p style="color: var(--light); font-size: 0.95rem; margin-bottom: 20px;">
+        Don't say something that will get you fired. Type your casual or frustrated thought below, and we'll translate it into diplomatic corporate jargon.
+      </p>
+
+      <div class="translator-area">
+        <div class="text-box">
+          <label>Select Tone:</label>
+          <select id="in-tone" class="form-control" style="margin-bottom: 15px; min-height: auto; padding: 10px;">
+            <option value="simple" selected>Simple Professional (Easy & Natural)</option>
+            <option value="corporate">Corporate (Formal & Diplomatic)</option>
+            <option value="executive">Executive / Buzzword (High-level Jargon)</option>
+          </select>
+
+          <label>What you actually want to say:</label>
+          <textarea id="in-casual" class="form-control" placeholder="e.g., I don't know how to do this, ask someone else."></textarea>
+          
+          <div class="examples">
+            <span class="chip" onclick="setExample('I forgot to do it')">I forgot to do it</span>
+            <span class="chip" onclick="setExample('Stop bothering me')">Stop bothering me</span>
+            <span class="chip" onclick="setExample('This idea is stupid')">This idea is stupid</span>
+          </div>
+        </div>
+
+        <button class="btn-translate" onclick="translateText()">
+          <i class="fas fa-magic"></i> Professionalize It
+        </button>
+
+        <div class="loader" id="loader"><i class="fas fa-circle-notch"></i> Consulting with HR...</div>
+
+        <div id="results-container" style="display: flex; flex-direction: column; gap: 15px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dictionary = [
+      { trigger: ['don\'t know', 'not my job', 'someone else', 'no idea', 'kisi aur ko', 'nahi pata'], 
+        simple: "I'm not the best person to handle this, let me find someone who can help.", 
+        corporate: "I believe this task falls outside my current domain expertise. It might be more efficient to route this to the appropriate stakeholder.",
+        executive: "My current strategic bandwidth does not encompass this paradigm. Let's pivot this to a synergetic resource." },
+      
+      { trigger: ['forgot', 'missed it', 'slipped', 'bhool gaya'], 
+        simple: "Thanks for the reminder! I missed this but I'm working on it now.",
+        corporate: "Thank you for the reminder. This item had temporarily slipped off my radar, but I am prioritizing it now.",
+        executive: "I appreciate the bump. This action item was deprioritized due to shifting OKRs, but I am expediting its delivery." },
+      
+      { trigger: ['stop bothering', 'leave me alone', 'too busy', 'annoying', 'dimag kharab', 'dimak kharab', 'pareshan'], 
+        simple: "I'm feeling overwhelmed with my current tasks and can't take this on right now.",
+        corporate: "I am currently at capacity with high-priority deliverables. Let's touch base on this later when my bandwidth frees up.",
+        executive: "I am currently mitigating critical path bottlenecks. Let's table this discussion until my operational bandwidth is restored." },
+      
+      { trigger: ['stupid', 'bad idea', 'dumb', 'makes no sense', 'bakwas', 'faltu'], 
+        simple: "I don't think this is the best approach. Can we try something else?",
+        corporate: "I have some reservations about the current strategic approach. Let's explore some alternative paradigms that might better align with our objectives.",
+        executive: "This initiative lacks synergetic potential and ROI visibility. We need to pivot to a more scalable go-to-market strategy." },
+      
+      { trigger: ['im late', 'running late', 'wont make it', 'late ho gaya'], 
+        simple: "I'm running a bit behind schedule. Please start without me.",
+        corporate: "I am navigating some unexpected scheduling conflicts and will be joining shortly. Please proceed without me for now.",
+        executive: "Due to a compounded calendar bottleneck, my ETA is delayed. Please initiate the sync asynchronously." },
+      
+      { trigger: ['did you read', 'read the email', 'i already said', 'bata diya tha', 'padh lo'], 
+        simple: "As I mentioned in my previous email, the details are already documented.",
+        corporate: "As per my previous correspondence regarding this matter, please refer to the outlined documentation for clarification.",
+        executive: "To avoid duplicated cycles, I recommend reviewing the previously circulated brief which addresses these precise variables." },
+      
+      { trigger: ['hurry up', 'do it now', 'waiting on you', 'jaldi karo', 'kitna time'], 
+        simple: "Just checking in to see if you need any help finishing this?",
+        corporate: "Just circling back on this to see if there are any roadblocks I can help clear to expedite the process.",
+        executive: "I'm pinging you to ensure we maintain momentum on this deliverable. Let me know if we need to escalate any blockers." },
+      
+      { trigger: ['nahi karni', 'chhodna hai', 'quit', 'resign', 'leaving', 'resign karna', 'job chhod'], 
+        simple: "I don't think this role is the right fit for me anymore, and I'd like to explore other options.",
+        corporate: "I am currently evaluating my professional trajectory and exploring opportunities that better align with my long-term career objectives.",
+        executive: "I am currently reassessing my professional direction and considering opportunities that better align with my long-term strategic goals." },
+      
+      { trigger: ['salary', 'paisa', 'hike', 'appraisal', 'paise badhao'], 
+        simple: "I'd like to discuss my salary to make sure it matches my current responsibilities.",
+        corporate: "I would like to initiate a dialogue regarding compensation adjustments to ensure it reflects current market benchmarks and my expanded responsibilities.",
+        executive: "I am requesting a recalibration of my compensation package to accurately reflect the value I drive and the current market equilibrium." },
+      
+      { trigger: ['gali', 'chutiya', 'mc', 'bc', 'behanchod', 'bhadwe', 'gandu', 'madarchod'], 
+        simple: "I think we need to speak to each other with more respect going forward.",
+        corporate: "I strongly suggest we revisit our interpersonal communication frameworks to foster a more synergistic and mutually respectful environment.",
+        executive: "In order to maintain a psychologically safe operational environment, we must strictly adhere to professional communication protocols." },
+      
+      { trigger: ['i made a mistake', 'screwed up', 'my bad', 'galti ho gayi'], 
+        simple: "I made a mistake here, but I'm fixing it right now.",
+        corporate: "I've identified an oversight in the recent deliverable and am proactively implementing a corrective action plan.",
+        executive: "We have detected a minor operational discrepancy. A robust remediation strategy is already in motion to mitigate downstream impact." }
+    ];
+
+    function setExample(text) {
+      document.getElementById('in-casual').value = text;
+    }
+
+    function translateText() {
+      const input = document.getElementById('in-casual').value.toLowerCase().trim();
+      const selectedTone = document.getElementById('in-tone').value;
+      const container = document.getElementById('results-container');
+      const loader = document.getElementById('loader');
+      
+      if(!input) return;
+
+      container.innerHTML = '';
+      loader.style.display = 'block';
+
+      setTimeout(() => {
+        let corporateResponses = [];
+        
+        for(let item of dictionary) {
+          if(item.trigger.some(t => input.includes(t))) {
+            corporateResponses.push(item[selectedTone]);
+          }
+        }
+
+        if (corporateResponses.length === 0) {
+          if (selectedTone === 'simple') corporateResponses.push("I am looking into this and will get back to you shortly.");
+          else if (selectedTone === 'executive') corporateResponses.push("I am currently analyzing this vector and will synergize a response shortly.");
+          else corporateResponses.push("I am currently reviewing this matter and will circle back with a comprehensive update shortly.");
+        }
+
+        let htmlOutput = corporateResponses.map(resp => `
+          <div class="result-box" style="display: block; margin-top: 0;">
+            <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">What you should say:</label>
+            <div class="result-text">"${resp}"</div>
+          </div>
+        `).join('');
+
+        container.innerHTML = htmlOutput;
+        loader.style.display = 'none';
+      }, 1200);
+    }
+
+    function copyText(btn) {
+      const text = btn.parentElement.querySelector('.result-text').innerText.replace(/"/g, '');
+      navigator.clipboard.writeText(text);
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+      setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy', 2000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "in.solmates.app",
+      "sha256_cert_fingerprints": ["90:6D:E8:BB:AA:84:A1:5C:CD:2A:04:AB:73:DE:CB:44:F2:EF:29:A0:65:41:7F:1C:04:C4:7B:C8:53:B2:05:6F"]
+    }
+  }
+]

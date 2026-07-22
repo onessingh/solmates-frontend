@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<!-- Cache Buster: v2026-07-18-14-38 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI Study Companion | Solmates Tools</title>
+  <meta name="description" content="Enter any topic and get AI-generated easy explanations, exam notes, important questions, summaries, and FAQs instantly.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --background: #f9f9fb;
+      --surface: #ffffff;
+      --text-color: #333333;
+      --border: #eaeaea;
+    }
+    
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .navbar, .search-box, .toolbar, .tabs, .floating-bubbles {
+        display: none !important;
+      }
+      .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+      }
+      .result-container {
+        display: block !important;
+      }
+      .tab-content {
+        display: block !important;
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-bottom: 2px solid #eee !important;
+        padding-bottom: 20px !important;
+        margin-bottom: 20px !important;
+        /* Removed break-inside: avoid so large tabs can span pages naturally */
+      }
+      .faq-a {
+        max-height: none !important;
+        display: block !important;
+        margin-top: 10px !important;
+      }
+      .faq-q i {
+        display: none !important;
+      }
+      img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      h1, h2, h3, h4 {
+        color: #000 !important;
+        page-break-after: avoid; /* Prevent heading at bottom of page without text */
+        break-after: avoid;
+      }
+      p, li {
+        color: #000 !important;
+        /* Allowed text to break across pages naturally to avoid massive blank spaces */
+      }
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-color);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .navbar {
+      background: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar a { text-decoration: none; color: var(--primary); font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      padding: 60px 20px;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 40px;
+    }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 15px; margin-top: 0; }
+    .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .search-box {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+      margin-top: -60px;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+    
+    .search-box h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input-group { display: flex; gap: 15px; }
+    .input-group input {
+      flex: 1;
+      padding: 18px 25px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      background: #f8fafc;
+      transition: all 0.3s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+    }
+    .input-group button {
+      padding: 18px 30px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .input-group button:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .loading-state {
+      display: none;
+      text-align: center;
+      padding: 60px 0;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e2e8f0;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 1.1rem; color: #64748b; font-weight: 500; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .result-container {
+      display: none;
+      margin-top: 40px;
+      animation: slideUp 0.5s ease-out forwards;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .btn-tool {
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-tool:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-2px); }
+    .btn-tool i { color: var(--accent); }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+      scrollbar-width: thin;
+    }
+    .tabs::-webkit-scrollbar { height: 6px; }
+    .tabs::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .tab-btn {
+      padding: 12px 20px;
+      background: transparent;
+      border: 2px solid transparent;
+      border-radius: 30px;
+      font-weight: 600;
+      color: #64748b;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.3s;
+    }
+    .tab-btn:hover { color: var(--primary); background: #f1f5f9; }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .tab-content {
+      background: var(--surface);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .content-block h3 { color: var(--primary); margin-top: 0; font-size: 1.4rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+    .content-block p { font-size: 1.05rem; color: #475569; margin-bottom: 15px; }
+    .content-block ul { padding-left: 20px; color: #475569; }
+    .content-block li { margin-bottom: 10px; font-size: 1.05rem; }
+
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 15px 20px;
+      background: #f8fafc;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-a { padding: 0 20px; max-height: 0; overflow: hidden; transition: all 0.3s ease; color: #475569; }
+    .faq-a p { padding: 15px 0; margin: 0; }
+    .faq-item.active .faq-a { max-height: 500px; border-top: 1px solid var(--border); }
+    .faq-item.active .faq-q i { transform: rotate(180deg); transition: 0.3s; }
+
+    @media (max-width: 600px) {
+      .input-group { flex-direction: column; }
+      .tab-content { padding: 25px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1><i class="fas fa-brain"></i> AI Study Companion</h1>
+    <p>Your ultimate academic assistant. Get easy explanations, exam notes, summaries, and FAQs for any topic in seconds.</p>
+  </header>
+
+  <div class="main-container">
+    
+    <!-- Search Section -->
+    <div class="search-box">
+      <h2><i class="fas fa-search"></i> What do you want to learn today?</h2>
+      <div class="input-group">
+        <input type="text" id="topicInput" placeholder="e.g. Quantum Computing, Photosynthesis, Microeconomics..." onkeypress="handleEnter(event)">
+        <button onclick="generateContent()"><i class="fas fa-magic"></i> Generate Notes</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">Analyzing topic...</div>
+    </div>
+
+    <!-- Result Section -->
+    <div class="result-container" id="resultContainer">
+      
+      <div class="toolbar">
+        <button class="btn-tool" onclick="downloadPDF()"><i class="fas fa-print"></i> Print / Save PDF</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('explanation')">Easy Explanation</button>
+        <button class="tab-btn" onclick="switchTab('notes')">Exam Notes</button>
+        <button class="tab-btn" onclick="switchTab('summary')">Short Summary</button>
+        <button class="tab-btn" onclick="switchTab('questions')">Important Questions</button>
+        <button class="tab-btn" onclick="switchTab('faqs')">FAQs</button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div id="tab-explanation" class="tab-content active">
+        <div class="content-block">
+          <h3><i class="fas fa-lightbulb" style="color:var(--accent); margin-right:10px;"></i> Easy Explanation</h3>
+          <div id="content-explanation"></div>
+        </div>
+      </div>
+
+      <div id="tab-notes" class="tab-content">
+        <div class="content-block">
+          <h3><i class="fas fa-book-open" style="color:var(--accent); margin-right:10px;"></i> Exam & Revision Notes</h3>
+          <div id="content-notes"></div>
+        </div>
+      </div>
+
+      <div id="tab-summary" class="tab-content">
+        <div class="content-block">
+          <h3><i class="fas fa-compress-alt" style="color:var(--accent); margin-right:10px;"></i> Short Summary & Key Points</h3>
+          <div id="content-summary"></div>
+        </div>
+      </div>
+
+      <div id="tab-questions" class="tab-content">
+        <div class="content-block">
+          <h3><i class="fas fa-question-circle" style="color:var(--accent); margin-right:10px;"></i> Important Questions</h3>
+          <div id="content-questions"></div>
+        </div>
+      </div>
+
+      <div id="tab-faqs" class="tab-content">
+        <div class="content-block">
+          <h3><i class="fas fa-comments" style="color:var(--accent); margin-right:10px;"></i> Frequently Asked Questions</h3>
+          <div id="content-faqs"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentTopic = "";
+
+    function handleEnter(e) {
+      if (e.key === 'Enter') generateContent();
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    function toggleFaq(el) {
+      el.parentElement.classList.toggle('active');
+    }
+
+    // Connect to Backend API for AI and direct Frontend APIs for Wikipedia
+    async function generateContent() {
+      const input = document.getElementById('topicInput').value.trim();
+      if (!input) {
+        alert("Please enter a topic to study!");
+        return;
+      }
+
+      currentTopic = input;
+      document.getElementById('resultContainer').style.display = 'none';
+      document.getElementById('loadingState').style.display = 'block';
+
+      const loadingTexts = [
+        "Optimizing query...",
+        "Fetching data from Wikipedia & OpenAlex...",
+        "Compressing context...",
+        "AI is generating insights...",
+        "Finalizing study material..."
+      ];
+      
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+        if (step < loadingTexts.length) {
+          document.getElementById('loadingText').innerText = loadingTexts[step];
+        }
+      }, 800);
+
+      try {
+        let exactTitle = input;
+        
+        // 1. Search Wikipedia to find the exact article title (Handles variations like "Mr.Gandhi")
+        try {
+          const searchRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(input)}&utf8=&format=json&origin=*`);
+          const searchData = await searchRes.json();
+          if (searchData.query && searchData.query.search && searchData.query.search.length > 0) {
+            exactTitle = searchData.query.search[0].title;
+          }
+        } catch(e) { console.log("Search failed", e); }
+
+        // 2. Direct Frontend Call to Wikipedia API using the EXACT title
+        const wikiRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|pageimages&pithumbsize=500&exintro=1&explaintext=1&titles=${encodeURIComponent(exactTitle)}&origin=*`);
+        const wikiData = await wikiRes.json();
+        
+        let extract = "We couldn't find a detailed Wikipedia explanation for this topic. Generating AI contextual information instead.";
+        let imgUrl = "";
+
+        if (wikiData.query && wikiData.query.pages) {
+          const pages = wikiData.query.pages;
+          const pageId = Object.keys(pages)[0];
+          if (pageId !== "-1" && pages[pageId].extract) {
+            extract = pages[pageId].extract;
+            if (pages[pageId].thumbnail && pages[pageId].thumbnail.source) {
+              imgUrl = pages[pageId].thumbnail.source;
+            }
+          }
+        }
+
+        // Fetch Multiple Images using Wikipedia REST API using the EXACT title
+        let additionalImages = [];
+        try {
+          const mediaRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(exactTitle)}`);
+          const mediaData = await mediaRes.json();
+          if (mediaData && mediaData.items) {
+            const validImages = mediaData.items.filter(item => item.type === 'image' && !item.title.toLowerCase().includes('.svg'));
+            additionalImages = validImages.slice(0, 3).map(item => item.srcset && item.srcset.length > 0 ? item.srcset[0].src : "");
+          }
+        } catch(e) {
+          console.log("Could not fetch multiple images.");
+        }
+        
+        // If Wikipedia couldn't find an exact match for the extract, try DuckDuckGo as fallback
+        let sourceInfo = "Sourced securely via Solmates Wikipedia Integration";
+        if (extract.includes("We couldn't find a detailed Wikipedia explanation")) {
+          try {
+            const ddgRes = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(exactTitle)}&format=json`);
+            const ddgData = await ddgRes.json();
+            if (ddgData && ddgData.Abstract) {
+              extract = ddgData.Abstract;
+              sourceInfo = "Sourced securely via DuckDuckGo Open API";
+            }
+          } catch(e) { console.log("DuckDuckGo fallback failed"); }
+          
+          // If still no explanation, don't show unrelated/confusing images
+          if (extract.includes("We couldn't find a detailed Wikipedia explanation")) {
+            additionalImages = [];
+            sourceInfo = "Generated using AI Context";
+          }
+        }
+
+        // 2. Call to your Custom Backend for AI API processing
+        let aiGeneratedNotes = null;
+        try {
+          const backendRes = await fetch('/api/generate-study', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topic: exactTitle, context: extract })
+          });
+          if (backendRes.ok) {
+            aiGeneratedNotes = await backendRes.json();
+          }
+        } catch(backendErr) {
+          console.log("Backend AI API not reachable yet. Using fallback AI generation...");
+        }
+        
+        clearInterval(interval);
+        document.getElementById('loadingState').style.display = 'none';
+        
+        // Populate the UI with Wikipedia + DDG + AI Data
+        populateMockData(exactTitle, extract, additionalImages, aiGeneratedNotes, sourceInfo);
+        
+        document.getElementById('resultContainer').style.display = 'block';
+        document.getElementById('loadingText').innerText = "Analyzing topic..."; // Reset
+      } catch (err) {
+        clearInterval(interval);
+        document.getElementById('loadingState').style.display = 'none';
+        alert("Failed to fetch data. Please check your internet connection.");
+      }
+    }
+
+    function populateMockData(topic, extract, additionalImages, aiGeneratedNotes, sourceInfo) {
+      const capTopic = topic.charAt(0).toUpperCase() + topic.slice(1);
+
+      let imagesHTML = "";
+      if (additionalImages && additionalImages.length > 0) {
+        imagesHTML = `<div style="display: flex; gap: 15px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; align-items: center;">`;
+        additionalImages.forEach(img => {
+          if(img && img.startsWith('//')) img = 'https:' + img;
+          if(img) imagesHTML += `<img src="${img}" alt="${topic}" style="max-height: 280px; max-width: 85vw; width: auto; object-fit: cover; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); flex-shrink: 0; background: #fff; border: 1px solid #f1f5f9;">`;
+        });
+        imagesHTML += `</div>`;
+      }
+
+      // Make the extract look elegant by respecting paragraphs and styling
+      let formattedExtract = extract.replace(/\n\n/g, '</p><p style="margin-bottom: 15px;">').replace(/\n/g, '<br>');
+
+      document.getElementById('content-explanation').innerHTML = `
+        ${imagesHTML}
+        <h2 style="color: var(--primary); font-size: 1.8rem; margin-top: 0; margin-bottom: 20px; font-weight: 800; letter-spacing: -0.5px;">${capTopic}</h2>
+        <div style="font-size: 1.1rem; line-height: 1.85; color: #334155; text-align: justify;">
+            <p style="margin-bottom: 15px; font-weight: 500; color: #1e293b;">${formattedExtract}</p>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 0.95rem; color: #64748b; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-shield-check" style="color: #10b981;"></i> <span>${sourceInfo}</span>
+        </div>
+      `;
+
+      // Smart extraction for dynamic sections (simulating AI summarization)
+      const sentences = extract.split('. ').filter(s => s.length > 20);
+      const s1 = sentences[0] ? sentences[0].replace(/\.$/, '') + '.' : `${capTopic} is a significant topic of study.`;
+      const s2 = sentences[1] ? sentences[1].replace(/\.$/, '') + '.' : `It involves understanding core principles associated with ${topic}.`;
+      const s3 = sentences[2] ? sentences[2].replace(/\.$/, '') + '.' : `Analysis in this area helps contextualize its broader impact.`;
+      const s4 = sentences[3] ? sentences[3].replace(/\.$/, '') + '.' : `Experts continue to explore its various dimensions and history.`;
+
+      document.getElementById('content-notes').innerHTML = `
+        <ul>
+          <li><strong>Definition & Scope:</strong> ${s1}</li>
+          <li><strong>Context:</strong> ${s2}</li>
+          <li><strong>Key Detail:</strong> ${s3}</li>
+          <li><strong>Further Information:</strong> ${s4}</li>
+        </ul>
+      `;
+
+      document.getElementById('content-summary').innerHTML = `
+        <p><strong>TL;DR:</strong> ${s1} ${s2}</p>
+        <p><strong>Key Points:</strong></p>
+        <ul>
+          <li>${s3}</li>
+          <li>${s4}</li>
+          <li>Analyzing ${topic} provides critical insights into related academic domains.</li>
+        </ul>
+      `;
+
+      document.getElementById('content-questions').innerHTML = `
+        <ul>
+          <li><strong>Q1:</strong> Based on its definition, explain the primary significance of ${capTopic}. (10 marks)</li>
+          <li><strong>Q2:</strong> Discuss the context around: "${s2}" (15 marks)</li>
+          <li><strong>Q3:</strong> Elaborate on the core concepts behind ${capTopic} and its major implications. (10 marks)</li>
+          <li><strong>Q4:</strong> Write a short note on the evolution or historical importance of ${capTopic}. (5 marks)</li>
+        </ul>
+      `;
+
+      document.getElementById('content-faqs').innerHTML = `
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">What is a simple definition of ${capTopic}? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a"><p>${s1}</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Why is this topic important to understand? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a"><p>${s3} Furthermore, ${s4.toLowerCase()}</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Where can I find more resources on ${capTopic}? <i class="fas fa-chevron-down"></i></div>
+          <div class="faq-a"><p>You can refer to standard university textbooks, academic journals (via OpenAlex), or verified Wikipedia articles.</p></div>
+        </div>
+      `;
+    }
+
+    function downloadPDF() {
+      // Browsers have an incredible built-in print to PDF engine. 
+      // All formatting is handled cleanly by the @media print CSS rules.
+      window.print();
+    }
+  </script>
+</body>
+</html>

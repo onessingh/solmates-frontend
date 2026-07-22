@@ -1,0 +1,92 @@
+<!-- ai-chatbot-small.html -->
+<!-- Small chatbot for compact chatbox -->
+
+<div class="ai-chatbox-header">
+  <div>
+    <h3><i class="fas fa-robot"></i> Mate AI</h3>
+    <div class="ai-status-small">
+      <div class="status-dot-small"></div>
+      <span>Online</span>
+    </div>
+  </div>
+  <button class="close-chatbox-small" onclick="closeAIChatbox()">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
+<div class="ai-chatbox-body">
+  <div class="ai-chatbox-messages" id="aiChatMessages">
+    <div class="message message-ai">
+      <div class="message-avatar">AI</div>
+      <div class="message-content">
+        Hello! 👋 I'm **Mate**, your SOLMATES AI Assistant. I can help you with:
+        <br><br>
+        📚 <strong>SOL Database</strong><br>
+        🛠️ <strong>Tools & Resources</strong><br>
+        💼 <strong>Career Guidance</strong><br>
+        🤝 <strong>Community</strong>
+      </div>
+    </div>
+    <div class="quick-questions-small">
+      <h4>Quick Questions:</h4>
+      <div class="question-buttons-small">
+        <button class="question-btn-small" data-question="How to use SOL Database?">SOL Database?</button>
+        <button class="question-btn-small" data-question="Resume building tips">Resume tips</button>
+        <button class="question-btn-small" data-question="MBA career opportunities">MBA careers</button>
+        <button class="question-btn-small" data-question="Important subjects for placements">Placements</button>
+        <button class="question-btn-small" data-question="Connect with SOLMATES community">Community</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="ai-chatbox-input">
+    <input type="text" id="aiChatInput" placeholder="Ask me anything..." autocomplete="off">
+    <button id="sendAIBtn">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+// AI Chatbot Logic for small chatbox
+(function() {
+  // This will run when the external file is loaded
+  
+  // Wait for DOM to be ready
+  setTimeout(() => {
+    // Set up event listeners
+    const sendBtn = document.getElementById('sendAIBtn');
+    const input = document.getElementById('aiChatInput');
+    
+    if (sendBtn) {
+      sendBtn.addEventListener('click', function() {
+        if (window.sendAIMessage) {
+          window.sendAIMessage();
+        }
+      });
+    }
+    
+    if (input) {
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          if (window.sendAIMessage) {
+            window.sendAIMessage();
+          }
+        }
+      });
+    }
+    
+    // Quick question buttons
+    document.querySelectorAll('.question-btn-small').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const question = this.getAttribute('data-question') || this.textContent;
+        if (window.askQuestion) {
+          window.askQuestion(question);
+        }
+      });
+    });
+    
+    console.log('Small chatbot loaded successfully');
+  }, 100);
+})();
+</script>

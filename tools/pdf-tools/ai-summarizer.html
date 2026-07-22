@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarizer - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> PDF Tool</h1>
+    </div>
+    
+
+    
+
+    <div class="container">
+        <header class="tool-header">
+            <h1>AI Summarizer <span
+                    style="font-size: 0.8rem; background: var(--secondary); color: #fff; padding: 0.25rem 0.5rem; border-radius: 99px; vertical-align: middle;">NEW</span>
+            </h1>
+            <p>AI-powered instant summary. Extract key points and overview from your documents.</p>
+        </header>
+
+        <div class="upload-card" id="dropZone">
+            <i data-lucide="zap"></i>
+            <h2>Select PDF file</h2>
+            <p>AI will analyze and summarize its content</p>
+            <input type="file" id="fileInput" accept=".pdf" hidden>
+            <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button id="sumBtn" class="btn-primary" disabled>
+                <i data-lucide="sparkles"></i> Generate AI Summary
+            </button>
+        </div>
+
+        <div id="resultArea"
+            style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: left;">
+            <h3 style="margin-bottom: 1rem;"><i data-lucide="list"></i> Document Insight:</h3>
+            <p id="summaryText" style="color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem;"></p>
+
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem;">
+                <p style="font-size: 0.8rem; color: #94a3b8;">* This is an AI-generated preview based on extracted
+                    document text.</p>
+            </div>
+        </div>
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="spinner"></div>
+            <p id="loadingText" style="color: var(--primary); font-weight: 600;">Analyzing Document...</p>
+        </div>
+    </div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        lucide.createIcons();
+
+        const dropZone = document.getElementById('dropZone');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const sumBtn = document.getElementById('sumBtn');
+        const resultArea = document.getElementById('resultArea');
+        const summaryText = document.getElementById('summaryText');
+
+        let selectedFile = null;
+
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => {
+            if (e.target.files[0]) handleFile(e.target.files[0]);
+        };
+
+        function handleFile(file) {
+            if (file.type !== 'application/pdf') return;
+            selectedFile = file;
+            fileName.textContent = file.name;
+            sumBtn.disabled = false;
+        }
+
+        sumBtn.onclick = async () => {
+            loadingOverlay.style.display = 'flex';
+            sumBtn.disabled = true;
+
+            try {
+                const arrayBuffer = await selectedFile.arrayBuffer();
+                let pdf;
+
+                try {
+                    pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                } catch (e) {
+                    if (e.name === 'PasswordException') {
+                        const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
+                        if (password === null) throw new Error('User cancelled password entry');
+                        pdf = await pdfjsLib.getDocument({ data: arrayBuffer, password }).promise;
+                    } else {
+                        throw e;
+                    }
+                }
+
+                // Extract text from the first 5 pages to avoid payload limits
+                const pagesToRead = Math.min(pdf.numPages, 5);
+                let fullText = "";
+                for (let i = 1; i <= pagesToRead; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    fullText += content.items.map(item => item.str).join(" ") + "\n";
+                }
+
+                // Determine API URL (default to remote if running on file:// or deployed)
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiUrl = isLocal ? 'http://localhost:3000/api/ai-tools/generate' : 'https://solmates-backend-w27e.onrender.com/api/ai-tools/generate';
+
+                // Send to Backend
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        toolType: 'pdf-summarizer',
+                        title: selectedFile.name,
+                        text: fullText
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate summary from AI backend.');
+                }
+
+                const resData = await response.json();
+                if (!resData.success) {
+                    throw new Error(resData.error || 'AI engine failed to process the document.');
+                }
+
+                const summary = resData.data;
+
+                let summaryHtml = `
+                <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <strong style="color: var(--primary);">Format:</strong> PDF Document | <strong>Pages:</strong> ${pdf.numPages}<br>
+                        <strong style="color: var(--primary);">Analysis:</strong> First ${pagesToRead} pages processed.
+                    </div>
+                </div>
+                <div style="background: var(--bg-light); border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--primary);">Overview</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted); line-height: 1.6;">${summary.overview || 'No overview available.'}</p>
+                    
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">Key Findings:</h4>
+                    <ul style="padding-left: 1.5rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                        ${(summary.keyFindings || []).map(p => `<li style="margin-bottom: 0.5rem;">${p}</li>`).join('')}
+                    </ul>
+                    
+                    ${summary.actionItems && summary.actionItems.length > 0 ? `
+                    <h4 style="margin-bottom: 0.5rem; color: var(--accent);">Action Items:</h4>
+                    <ul style="padding-left: 1.5rem; color: var(--text-muted);">
+                        ${summary.actionItems.map(p => `<li style="margin-bottom: 0.5rem;">${p}</li>`).join('')}
+                    </ul>` : ''}
+                    
+                    <div style="margin-top: 1rem; font-size: 0.8rem; color: #94a3b8; font-style: italic;">
+                        Note: ${summary.confidenceNote || 'AI generated response.'}
+                    </div>
+                </div>
+            `;
+
+                summaryText.innerHTML = summaryHtml;
+                resultArea.style.display = 'block';
+                sumBtn.innerHTML = '<i data-lucide="check"></i> Analysis Complete';
+                lucide.createIcons();
+            } catch (err) {
+                console.error(err);
+                alert(err.message || 'Error generating summary');
+                sumBtn.disabled = false;
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        };
+    </script>
+
+    <style>
+        .spin {
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</body>
+
+</html>

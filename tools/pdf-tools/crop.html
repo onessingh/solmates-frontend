@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> Crop PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="crop"></i>
+        <h2>Select PDF file</h2>
+        <p>or drag and drop a PDF here</p>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div id="cropArea" style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1.5rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+        <div style="margin-bottom: 1.5rem;">
+            <p><strong>Step 1:</strong> Drag to select the area you want to keep. The outside will be trimmed.</p>
+            <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                <button id="prevPage" class="nav-btn"><i data-lucide="chevron-left"></i></button>
+                <span id="pageInfo" style="font-weight: 600; color: var(--primary);">Page 1 of 1</span>
+                <button id="nextPage" class="nav-btn"><i data-lucide="chevron-right"></i></button>
+            </div>
+            <div style="position: relative; display: inline-block; border: 1px solid #e2e8f0; margin-top: 1rem; box-shadow: var(--shadow); background: #f8fafc;">
+                <canvas id="pdfCanvas"></canvas>
+                <div id="cropOverlay" style="position: absolute; top:0; left:0; width:100%; height:100%; cursor: crosshair;"></div>
+                <div id="selectionBox" style="position: absolute; border: 2px dashed #3b82f6; background: rgba(59, 130, 246, 0.1); display: none; pointer-events: none;">
+                    <div style="position: absolute; top: 0; left: 0; padding: 2px 6px; background: #3b82f6; color: #fff; font-size: 10px; font-weight: 700; border-bottom-right-radius: 4px;">CROP AREA</div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button id="resetCropBtn" class="btn-secondary">Reset Selection</button>
+            <button id="applyCropBtn" class="btn-primary" disabled>
+                <i data-lucide="crop"></i> Apply Crop to All Pages
+            </button>
+        </div>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Your document has been precisely cropped.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download Cropped PDF
+        </button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Processing Crop...</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    const dropZone = document.getElementById('dropZone');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const fileInput = document.getElementById('fileInput');
+    const cropArea = document.getElementById('cropArea');
+    const pdfCanvas = document.getElementById('pdfCanvas');
+    const cropOverlay = document.getElementById('cropOverlay');
+    const selectionBox = document.getElementById('selectionBox');
+    const resetCropBtn = document.getElementById('resetCropBtn');
+    const applyCropBtn = document.getElementById('applyCropBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    // Pagination Elements
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+    const pageInfo = document.getElementById('pageInfo');
+
+    let selectedFile = null;
+    let processedPdfUrl = null;
+    let isSelecting = false;
+    let startX, startY;
+    let rect = { x: 0, y: 0, w: 0, h: 0 };
+    let pdfPageSize = { width: 0, height: 0 };
+    
+    let currentPdf = null;
+    let currentPageNum = 1;
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+
+    async function handleFile(file) {
+        if (file.type !== 'application/pdf') return;
+        selectedFile = file;
+        loadingOverlay.style.display = 'flex';
+        
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            
+            try {
+                currentPdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            } catch (e) {
+                if (e.name === 'PasswordException') {
+                    const password = prompt(`The file "${file.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    currentPdf = await pdfjsLib.getDocument({ data: arrayBuffer, password }).promise;
+                } else {
+                    throw e;
+                }
+            }
+
+            currentPageNum = 1;
+            await renderPage(1);
+            
+            dropZone.style.display = 'none';
+            cropArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error loading PDF');
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    async function renderPage(num) {
+        if (!currentPdf) return;
+        loadingOverlay.style.display = 'flex';
+        try {
+            const page = await currentPdf.getPage(num);
+            const viewport = page.getViewport({ scale: 1.0 });
+            // Dynamic scale for mobile
+            const containerW = Math.min(window.innerWidth * 0.9, 600);
+            const scale = Math.min(containerW / viewport.width, 800 / viewport.height);
+            const scaledViewport = page.getViewport({ scale });
+            
+            pdfCanvas.width = scaledViewport.width;
+            pdfCanvas.height = scaledViewport.height;
+            pdfPageSize = { width: scaledViewport.width, height: scaledViewport.height };
+
+            await page.render({
+                canvasContext: pdfCanvas.getContext('2d'),
+                viewport: scaledViewport
+            }).promise;
+
+            pageInfo.textContent = `Page ${num} of ${currentPdf.numPages}`;
+            currentPageNum = num;
+            
+            // Keep selection box visible if it exists
+            if (rect.w !== 0 || rect.h !== 0) {
+                selectionBox.style.display = 'block';
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    prevPageBtn.onclick = () => {
+        if (currentPageNum > 1) renderPage(currentPageNum - 1);
+    };
+
+    nextPageBtn.onclick = () => {
+        if (currentPageNum < currentPdf.numPages) renderPage(currentPageNum + 1);
+    };
+
+    function getCoords(e) {
+        if (e.touches && e.touches[0]) {
+            const rect = cropOverlay.getBoundingClientRect();
+            return {
+                x: e.touches[0].clientX - rect.left,
+                y: e.touches[0].clientY - rect.top
+            };
+        }
+        return { x: e.offsetX, y: e.offsetY };
+    }
+
+    function startSelection(e) {
+        isSelecting = true;
+        const coords = getCoords(e);
+        startX = coords.x;
+        startY = coords.y;
+        selectionBox.style.display = 'block';
+        selectionBox.style.left = startX + 'px';
+        selectionBox.style.top = startY + 'px';
+        selectionBox.style.width = '0px';
+        selectionBox.style.height = '0px';
+        if (e.type === 'touchstart') e.preventDefault();
+    }
+
+    function moveSelection(e) {
+        if (!isSelecting) return;
+        const coords = getCoords(e);
+        rect.w = coords.x - startX;
+        rect.h = coords.y - startY;
+        rect.x = rect.w < 0 ? coords.x : startX;
+        rect.y = rect.h < 0 ? coords.y : startY;
+
+        selectionBox.style.width = Math.abs(rect.w) + 'px';
+        selectionBox.style.height = Math.abs(rect.h) + 'px';
+        selectionBox.style.left = rect.x + 'px';
+        selectionBox.style.top = rect.y + 'px';
+        if (e.type === 'touchmove') e.preventDefault();
+    }
+
+    function endSelection() {
+        isSelecting = false;
+        if (Math.abs(rect.w) > 5 && Math.abs(rect.h) > 5) {
+            applyCropBtn.disabled = false;
+        }
+    }
+
+    cropOverlay.onmousedown = startSelection;
+    cropOverlay.onmousemove = moveSelection;
+    cropOverlay.onmouseup = endSelection;
+
+    cropOverlay.addEventListener('touchstart', startSelection, { passive: false });
+    cropOverlay.addEventListener('touchmove', moveSelection, { passive: false });
+    cropOverlay.addEventListener('touchend', endSelection);
+
+    resetCropBtn.onclick = () => {
+        selectionBox.style.display = 'none';
+        applyCropBtn.disabled = true;
+        rect = { x: 0, y: 0, w: 0, h: 0 };
+    };
+
+    applyCropBtn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        applyCropBtn.disabled = true;
+
+        try {
+            const arrayBuffer = await selectedFile.arrayBuffer();
+            let pdfDoc;
+
+            try {
+                pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+            } catch (e) {
+                if (e.message.includes('encrypted')) {
+                    const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { password });
+                } else {
+                    throw e;
+                }
+            }
+
+            const { width, height } = pdfDoc.getPages()[0].getSize();
+
+            const scaleX = width / pdfPageSize.width;
+            const scaleY = height / pdfPageSize.height;
+
+            const pdfX = rect.x * scaleX;
+            const pdfY = height - (rect.y * scaleY) - (Math.abs(rect.h) * scaleY);
+            const pdfWidth = Math.abs(rect.w) * scaleX;
+            const pdfHeight = Math.abs(rect.h) * scaleY;
+
+            pdfDoc.getPages().forEach(page => {
+                page.setCropBox(pdfX, pdfY, pdfWidth, pdfHeight);
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            processedPdfUrl = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
+
+            cropArea.style.display = 'none';
+            resultArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error cropping PDF');
+            applyCropBtn.disabled = false;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = processedPdfUrl;
+        link.download = `cropped_${selectedFile.name}`;
+        link.click();
+    };
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

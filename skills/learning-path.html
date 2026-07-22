@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Path Generator — SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1c1f;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #0071e3;
+      font-weight: 500;
+    }
+
+    .page-content {
+      padding: 92px 24px 48px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 15px 0 5px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .module-box {
+      background: #f9f9fb;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      border-left: 5px solid #0071e3;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <header class="top-nav" style="justify-content: center;">
+    <span class="nav-logo" style="cursor: default;">Learning Path Generator</span>
+  </header>
+
+  <div class="page-content">
+    <div class="container">
+      <div id="setupStep" class="card">
+        <h1><i class="fas fa-route"></i> Learning Path Generator</h1>
+        <p>Tell us what you want to learn, and AI will build a step-by-step roadmap for you.</p>
+
+        <label>What do you want to learn?</label>
+        <input type="text" id="learnGoal" placeholder="e.g. Machine Learning, React Native, UI Design">
+
+        <label>Current Knowledge Level</label>
+        <select id="curLevel">
+          <option value="Complete Beginner">Complete Beginner</option>
+          <option value="Some Knowledge">Some Knowledge</option>
+          <option value="Intermediate">Intermediate</option>
+        </select>
+
+        <label>Time Commitment</label>
+        <select id="timeCommit">
+          <option value="1-2 hours a week">1-2 hours a week</option>
+          <option value="5-10 hours a week">5-10 hours a week</option>
+          <option value="Full-time study">Full-time study</option>
+        </select>
+
+        <button class="btn-primary" id="startBtn">Generate Roadmap</button>
+      </div>
+
+      <div id="loadingStep" class="card hidden" style="text-align: center;">
+        <h3>Curating your personalized learning path...</h3>
+      </div>
+
+      <div id="resultStep" class="card hidden">
+        <h1 id="pathTitle" style="text-align: center; margin-bottom: 5px;"></h1>
+        <p id="pathDuration" style="text-align: center; color: #666; margin-bottom: 25px; font-weight: bold;"></p>
+
+        <div id="modulesContainer"></div>
+
+        <div style="margin-top:20px; padding:15px; background:#e8f4fd; border-radius:10px; color:#0f2b46;">
+          <b>💡 AI Advice:</b> <span id="adviceText"></span>
+        </div>
+
+        <button class="btn-primary" onclick="location.reload()">Create Another Path</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startBtn').onclick = async () => {
+        const gl = document.getElementById('learnGoal').value;
+        if (!gl) return alert("Please enter what you want to learn.");
+
+        document.getElementById('setupStep').classList.add('hidden');
+        document.getElementById('loadingStep').classList.remove('hidden');
+
+        try {
+          const res = await window.solmatesAPI.generateAIToolData('learning-path', {
+            goal: gl,
+            level: document.getElementById('curLevel').value,
+            time: document.getElementById('timeCommit').value
+          });
+          if (!res.success) throw new Error();
+
+          const { title, estimatedDuration, modules, advice } = res.data;
+
+          document.getElementById('pathTitle').textContent = title;
+          document.getElementById('pathDuration').textContent = `Estimated Time: ${estimatedDuration}`;
+          document.getElementById('adviceText').textContent = advice;
+
+          document.getElementById('modulesContainer').innerHTML = modules.map(m => `
+        <div class="module-box">
+          <h3>${m.moduleName}</h3>
+          <div style="margin: 10px 0;"><b>Key Topics:</b><br> ${m.topics.map(t => `• ${t}`).join('<br>')}</div>
+          <div><b>Suggested Resources:</b><br> ${m.resources.map(r => `• <i>${r}</i>`).join('<br>')}</div>
+        </div>
+      `).join('');
+
+          document.getElementById('loadingStep').classList.add('hidden');
+          document.getElementById('resultStep').classList.remove('hidden');
+        } catch (e) {
+          alert("Error generating API data"); location.reload();
+        }
+      };
+    });
+  </script>
+</body>
+
+</html>

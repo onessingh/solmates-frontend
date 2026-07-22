@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter Generator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --secondary: #c0962d;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #eeeeee;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; }
+    
+    /* Navbar */
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 1000; border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .nav-logo { font-weight: 700; font-size: 1.25rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease; }
+    .back-link:hover { background: #1a3c5e; transform: translateY(-1px); }
+
+    .container { max-width: 1200px; margin: 25px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
+    @media (min-width: 900px) { .container { grid-template-columns: 1fr 1fr; } }
+
+    .header-section { text-align: center; margin-bottom: 25px; grid-column: 1 / -1; }
+    .header-section h1 { font-size: 1.8rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 12px; letter-spacing: -0.5px; }
+    @media (max-width: 600px) { .header-section h1 { font-size: 1.4rem; } }
+    .header-section h1 i { color: var(--accent); background: rgba(0,113,227,0.1); padding: 10px; border-radius: 12px; font-size: 1.2rem; }
+
+    .card { background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    
+    .form-group { margin-bottom: 22px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 0.95rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .form-control { width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid #c0cedb; font-size: 1rem; font-family: inherit; outline: none; transition: all 0.3s; background: #fbfdff; color: var(--text); }
+    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(0,113,227,0.1); }
+    .form-control::placeholder { color: #aaa; }
+    textarea.form-control { width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid #c0cedb; font-size: 1rem; font-family: inherit; outline: none; transition: all 0.3s; background: #fbfdff; color: var(--text); }
+    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    @media (min-width: 600px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+    
+    .btn-generate { width: fit-content; min-width: 250px; padding: 14px 30px; border-radius: 12px; background: linear-gradient(135deg, var(--primary, #0f2b46), #1a3c5e); color: white; border: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; box-shadow: 0 6px 15px rgba(15,43,70,0.2); margin: 25px auto 0; }
+    .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(15,43,70,0.3); }
+
+    /* Preview Area */
+    .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+    .preview-header h3 { color: var(--primary); font-size: 1.25rem; margin: 0; }
+    .action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-sm { padding: 10px 18px; border-radius: 8px; border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-outline { background: #fff; border: 1.5px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: rgba(15,43,70,0.05); }
+    .btn-solid { background: var(--primary); color: white; border: 1.5px solid var(--primary); }
+    .btn-solid:hover { background: #1a3c5e; border-color: #1a3c5e; box-shadow: 0 4px 12px rgba(15,43,70,0.2); }
+
+    .letter-container { background: #fff; padding: 50px 40px; border: 1px solid #e1e4e8; border-radius: 12px; min-height: 600px; font-family: 'Georgia', 'Times New Roman', serif; font-size: 15px; line-height: 1.7; color: #222; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; }
+    @media (max-width: 600px) { .letter-container { padding: 30px 20px; font-size: 14px; } }
+    .letter-container.modern { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    
+    .letter-content p { margin-bottom: 15px; }
+    
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-light); text-align: center; }
+    .empty-state i { font-size: 4rem; color: #e0e0e0; margin-bottom: 15px; }
+
+    /* Print Styles */
+    @media print {
+      body * { visibility: hidden; }
+      .letter-container, .letter-container * { visibility: visible; }
+      .letter-container { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; padding: 0; }
+    }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-envelope-open-text"></i> Cover Letter Generator</h1>
+    </div>
+
+
+  
+
+  <div class="container">
+    
+
+    <!-- Input Form -->
+    <div class="card">
+      <form id="clForm">
+        
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Your Details</label>
+          <div class="grid-2">
+            <input type="text" id="myName" class="form-control" placeholder="Full Name" required>
+            <input type="email" id="myEmail" class="form-control" placeholder="Email Address" required>
+            <input type="tel" id="myPhone" class="form-control" placeholder="Phone Number" required>
+            <input type="text" id="myLinkedin" class="form-control" placeholder="LinkedIn URL (Optional)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-building"></i> Target Job & Company</label>
+          <div class="grid-2">
+            <input type="text" id="jobTitle" class="form-control" placeholder="Job Title (e.g., Marketing Analyst)" required>
+            <input type="text" id="companyName" class="form-control" placeholder="Company Name" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-user-tie"></i> Recruiter Details (Optional)</label>
+          <input type="text" id="recruiterName" class="form-control" placeholder="Hiring Manager's Name (Leave blank for 'Hiring Manager')">
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-star"></i> Key Skills & Experience</label>
+          <textarea id="keySkills" class="form-control" placeholder="e.g., 2 years experience in digital marketing, proficient in SEO and Google Analytics, improved conversion by 15%..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-comment-dots"></i> Letter Tone</label>
+          <select id="tone" class="form-control">
+            <option value="professional">Professional & Formal (Best for Corporate)</option>
+            <option value="enthusiastic">Enthusiastic & Modern (Best for Startups/Tech)</option>
+            <option value="confident">Confident & Direct (Best for Management)</option>
+          </select>
+        </div>
+
+        <button type="button" class="btn-generate" onclick="generateLetter()">
+          <i class="fas fa-magic"></i> Generate Cover Letter
+        </button>
+      </form>
+    </div>
+
+    <!-- Preview Area -->
+    <div class="card" style="padding: 20px;">
+      <div class="preview-header">
+        <h3><i class="fas fa-eye"></i> Live Preview</h3>
+        <div class="action-btns">
+          <button class="btn-sm btn-outline" onclick="toggleFont()" id="fontBtn" title="Switch Font Style"><i class="fas fa-font"></i> Modern Font</button>
+          <button class="btn-sm btn-outline" onclick="copyLetter()" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
+          <button class="btn-sm btn-solid" onclick="window.print()"><i class="fas fa-download"></i> Save as PDF</button>
+        </div>
+      </div>
+
+      <div class="letter-container modern" id="letterOutput">
+        <div class="empty-state">
+          <i class="fas fa-file-signature"></i>
+          <h3>Your Cover Letter</h3>
+          <p>Fill out the form on the left to generate your personalized letter.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateLetter() {
+      // Get Values
+      const myName = document.getElementById('myName').value.trim() || '[Your Name]';
+      const myEmail = document.getElementById('myEmail').value.trim() || '[Your Email]';
+      const myPhone = document.getElementById('myPhone').value.trim() || '[Your Phone]';
+      const myLinkedin = document.getElementById('myLinkedin').value.trim();
+      const jobTitle = document.getElementById('jobTitle').value.trim() || '[Job Title]';
+      const companyName = document.getElementById('companyName').value.trim() || '[Company Name]';
+      let recruiterName = document.getElementById('recruiterName').value.trim();
+      if (!recruiterName) recruiterName = "Hiring Manager";
+      const keySkills = document.getElementById('keySkills').value.trim() || '[Your Key Skills and Experience]';
+      const tone = document.getElementById('tone').value;
+
+      // Current Date
+      const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      // Build Header
+      let headerHtml = `
+        <div style="margin-bottom: 30px;">
+          <h2 style="margin-bottom: 5px; font-size: 24px;">${myName}</h2>
+          <p style="color: #555; font-size: 14px;">${myEmail} | ${myPhone} ${myLinkedin ? '| ' + myLinkedin : ''}</p>
+        </div>
+        <div style="margin-bottom: 30px;">
+          <p>${date}</p>
+        </div>
+        <div style="margin-bottom: 30px;">
+          <p>${recruiterName}<br>${companyName}</p>
+        </div>
+        <p>Dear ${recruiterName},</p>
+      `;
+
+      // Generate Body based on Tone
+      let bodyHtml = "";
+      
+      if (tone === "professional") {
+        bodyHtml = `
+          <p>Please accept this letter as an expression of my interest in the ${jobTitle} position at ${companyName}. With a proven track record of success and a strong foundation in my field, I am confident in my ability to contribute effectively to your team.</p>
+          <p>In my previous experience, I have developed expertise in ${keySkills}. My commitment to excellence and ability to navigate complex challenges have consistently allowed me to deliver results that align with organizational objectives.</p>
+          <p>What draws me to ${companyName} is your commitment to industry excellence and innovation. I am eager to bring my analytical skills and dedication to your esteemed organization.</p>
+          <p>I would welcome the opportunity to discuss how my background, skills, and certifications will be beneficial to ${companyName}. Thank you for your time and consideration.</p>
+        `;
+      } 
+      else if (tone === "enthusiastic") {
+        bodyHtml = `
+          <p>I was thrilled to see the opening for the ${jobTitle} role at ${companyName}. I have been following your company's growth and innovative projects for some time, and I am excited about the possibility of bringing my passion and skills to your dynamic team.</p>
+          <p>Throughout my career, I have prided myself on being proactive and impact-driven. Specifically, my background includes ${keySkills}. I thrive in collaborative environments and am always eager to take on new challenges.</p>
+          <p>I am particularly drawn to ${companyName}'s mission and culture. I am confident that my blend of experience and enthusiasm would make me a valuable addition to your team.</p>
+          <p>I would love the chance to further discuss how I can contribute to the continued success of ${companyName}. Thank you so much for considering my application.</p>
+        `;
+      }
+      else if (tone === "confident") {
+        bodyHtml = `
+          <p>I am writing to express my strong interest in the ${jobTitle} position at ${companyName}. As a results-driven professional with extensive experience, I possess the strategic mindset and execution skills required to drive impact in this role.</p>
+          <p>My career has been defined by delivering measurable outcomes. My expertise is highlighted by ${keySkills}. I am adept at identifying opportunities for improvement and implementing solutions that drive efficiency and growth.</p>
+          <p>I recognize the ambitious goals ${companyName} has set, and I am prepared to step in and make an immediate contribution. My ability to lead initiatives and collaborate across functions positions me well to support your strategic objectives.</p>
+          <p>I look forward to discussing how my targeted skills and robust background will translate into success for ${companyName}. Thank you for reviewing my application.</p>
+        `;
+      }
+
+      let footerHtml = `
+        <div style="margin-top: 40px;">
+          <p>Sincerely,</p>
+          <p style="margin-top: 20px; font-weight: bold;">${myName}</p>
+        </div>
+      `;
+
+      // Inject into Preview
+      const outputArea = document.getElementById('letterOutput');
+      outputArea.innerHTML = `<div class="letter-content" id="letterContentToCopy">${headerHtml}${bodyHtml}${footerHtml}</div>`;
+      
+      // Scroll to preview on mobile
+      if(window.innerWidth < 900) {
+        outputArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function toggleFont() {
+      const outputArea = document.getElementById('letterOutput');
+      const fontBtn = document.getElementById('fontBtn');
+      
+      outputArea.classList.toggle('modern');
+      
+      if (outputArea.classList.contains('modern')) {
+        fontBtn.innerHTML = '<i class="fas fa-font"></i> Classic Font';
+      } else {
+        fontBtn.innerHTML = '<i class="fas fa-font"></i> Modern Font';
+      }
+    }
+
+    function copyLetter() {
+      const content = document.getElementById('letterContentToCopy');
+      if (!content) {
+        alert("Please generate a letter first.");
+        return;
+      }
+      
+      const copyBtn = document.getElementById('copyBtn');
+      
+      // Extract text with newlines
+      let textToCopy = "";
+      const elements = content.querySelectorAll('p, h2');
+      elements.forEach(el => {
+        // Handle <br> tags properly
+        let text = el.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
+        textToCopy += text + "\n\n";
+      });
+
+      navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        copyBtn.classList.replace('btn-outline', 'btn-solid');
+        setTimeout(() => {
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+          copyBtn.classList.replace('btn-solid', 'btn-outline');
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert("Failed to copy. Please try manually selecting the text.");
+      });
+    }
+  </script>
+</body>
+</html>

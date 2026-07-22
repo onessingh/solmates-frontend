@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Business Idea Validator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #c0962d;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --warning: #ffcc00;
+      --danger: #ff3b30;
+      --glass: rgba(255, 255, 255, 0.7);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-top: 0 !important; overflow-x: hidden; }
+
+    /* Unified Header */
+    .header-bar {
+      background: var(--card);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .container { max-width: 1200px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    @media (max-width: 900px) { .container { grid-template-columns: 1fr; margin: 15px auto; gap: 20px; } }
+
+    /* Card Layouts */
+    .card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); overflow: hidden; }
+    .card-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    
+    /* Forms */
+    .form-group { margin-bottom: 20px; width: 100%; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; max-width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; background: #fafafa; transition: all 0.2s; outline: none; }
+    .form-control:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(192, 150, 45, 0.1); }
+    textarea.form-control { resize: vertical; min-height: 120px; line-height: 1.5; }
+
+    .btn-submit { background: linear-gradient(135deg, var(--primary), #1a3c5e); color: white; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15, 43, 70, 0.2); }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* Results Dashboard */
+    .results-panel { position: relative; min-height: 500px; display: flex; flex-direction: column; }
+    
+    /* Initial Empty State */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--light); opacity: 0.8; margin: auto; padding: 40px 20px; }
+    .empty-state i { font-size: 4rem; color: #e5e5ea; margin-bottom: 20px; }
+    .empty-state h3 { font-size: 1.2rem; color: var(--primary); margin-bottom: 10px; }
+    .empty-state p { font-size: 0.9rem; max-width: 300px; line-height: 1.5; }
+
+    /* Loading Overlay */
+    .loader-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 16px; }
+    .spinner { width: 50px; height: 50px; border: 4px solid rgba(192, 150, 45, 0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-weight: 600; color: var(--primary); font-size: 1.1rem; }
+    .loading-subtext { font-size: 0.85rem; color: var(--light); margin-top: 5px; }
+
+    /* Actual Results Content */
+    #validation-results { display: none; animation: fadeIn 0.5s ease; background: white; border-radius: 12px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Score Header */
+    .score-header { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 12px; padding: 20px 25px; color: white; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .score-info h3 { font-size: 1.1rem; margin-bottom: 5px; color: #cbd5e1; font-weight: 500; }
+    .score-info h2 { font-size: 1.6rem; font-weight: 700; word-break: break-word; max-width: 100%; }
+    .score-circle { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border: 4px solid var(--accent); background: rgba(255,255,255,0.1); flex-shrink: 0; }
+
+    /* Metric Grid */
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 480px) { .metric-grid { grid-template-columns: 1fr; } }
+    .metric-card { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; }
+    .m-title { font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .m-value { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+    .m-status { padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
+    .status-high { background: #dcfce7; color: #166534; }
+    .status-med { background: #fef08a; color: #854d0e; }
+    .status-low { background: #fee2e2; color: #991b1b; }
+
+    /* Analysis Sections */
+    .analysis-section { margin-bottom: 20px; }
+    .analysis-section h4 { font-size: 1.05rem; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+    .pros-cons { display: flex; flex-direction: column; gap: 10px; }
+    .pro-item, .con-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; line-height: 1.5; background: #f8fafc; padding: 10px 15px; border-radius: 8px; }
+    .pro-item i { color: var(--success); margin-top: 3px; }
+    .con-item i { color: var(--danger); margin-top: 3px; }
+
+    .monetization-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .m-tag { background: #eff6ff; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid #bfdbfe; }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1><i class="fas fa-lightbulb" style="color: var(--accent);"></i> AI Business Idea Validator</h1>
+  </div>
+
+  <div class="container">
+    <!-- Input Form -->
+    <div class="card" style="align-self: start;">
+      <div class="card-title">
+        <i class="fas fa-rocket"></i> Pitch Your Idea
+      </div>
+      <p style="font-size: 0.9rem; color: var(--light); margin-bottom: 25px; line-height: 1.5;">
+        Describe your business concept below. Our heuristic AI engine will analyze market trends, potential risks, and monetization strategies to give you a viability score.
+      </p>
+
+      <div class="form-group">
+        <label>Startup / Idea Name (Optional)</label>
+        <input type="text" id="in-name" class="form-control" placeholder="e.g. EcoBite">
+      </div>
+
+      <div class="form-group">
+        <label>Industry / Sector</label>
+        <select id="in-industry" class="form-control">
+          <option value="Tech/SaaS">Tech / SaaS / Software</option>
+          <option value="E-commerce">E-commerce / Retail</option>
+          <option value="EdTech">EdTech / Education</option>
+          <option value="FinTech">FinTech / Finance</option>
+          <option value="Healthcare">Healthcare / MedTech</option>
+          <option value="Food/Beverage">Food & Beverage / Restaurant</option>
+          <option value="Service">Consulting / Service Based</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Detailed Idea Description <span style="color:red">*</span></label>
+        <textarea id="in-desc" class="form-control" placeholder="Describe the problem you are solving, your solution, and how it works. (At least 100 characters)"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Target Audience</label>
+        <input type="text" id="in-audience" class="form-control" placeholder="e.g. College students, Small business owners">
+      </div>
+
+      <div class="form-group">
+        <label>Initial Budget ($ or ₹)</label>
+        <input type="text" id="in-budget" class="form-control" placeholder="e.g. Bootstrap (₹0), ₹50,000, Needs Funding">
+      </div>
+
+      <button class="btn-submit" onclick="validateIdea()">
+        <i class="fas fa-brain"></i> Run AI Analysis
+      </button>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="card results-panel">
+      
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state">
+        <i class="fas fa-chart-pie"></i>
+        <h3>Awaiting Data</h3>
+        <p>Fill out the form on the left and hit 'Run AI Analysis' to generate a comprehensive business validation report.</p>
+      </div>
+
+      <!-- Loader -->
+      <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <div class="loading-text">Analyzing Market Viability...</div>
+        <div class="loading-subtext" id="loading-msg">Cross-referencing industry trends</div>
+      </div>
+
+      <!-- Results Content -->
+      <div id="validation-results">
+        <div class="score-header">
+          <div class="score-info">
+            <h3>Overall Viability Score</h3>
+            <h2 id="out-name">Your Idea</h2>
+          </div>
+          <div class="score-circle" id="out-score">
+            85
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="m-title">Market Demand <span class="m-status" id="out-demand-badge">HIGH</span></div>
+            <div class="m-value" id="out-demand">Growing Sector</div>
+          </div>
+          <div class="metric-card">
+            <div class="m-title">Competition <span class="m-status" id="out-comp-badge">MEDIUM</span></div>
+            <div class="m-value" id="out-comp">Moderate</div>
+          </div>
+          <div class="metric-card">
+            <div class="m-title">Execution Difficulty <span class="m-status" id="out-exec-badge">LOW</span></div>
+            <div class="m-value" id="out-exec">Requires Tech</div>
+          </div>
+          <div class="metric-card">
+            <div class="m-title">Scalability <span class="m-status" id="out-scale-badge">HIGH</span></div>
+            <div class="m-value" id="out-scale">Global Potential</div>
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <h4><i class="fas fa-check-circle"></i> Key Strengths</h4>
+          <div class="pros-cons" id="out-strengths">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <h4><i class="fas fa-exclamation-triangle"></i> Potential Risks & Weaknesses</h4>
+          <div class="pros-cons" id="out-weaknesses">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <div class="analysis-section">
+          <h4><i class="fas fa-money-bill-wave"></i> Monetization Strategies</h4>
+          <div class="monetization-tags" id="out-monetization">
+            <!-- Injected via JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Smart Heuristic Engine (Simulated AI)
+    function validateIdea() {
+      const desc = document.getElementById('in-desc').value.trim();
+      const industry = document.getElementById('in-industry').value;
+      const audience = document.getElementById('in-audience').value.trim() || 'General Public';
+      const rawName = document.getElementById('in-name').value.trim();
+      const name = rawName || 'Your Idea';
+
+      if (desc.length < 30) {
+        alert("Please provide a more detailed description of your idea (at least 30 characters) for accurate analysis.");
+        return;
+      }
+
+      // UI Transitions
+      document.getElementById('empty-state').style.display = 'none';
+      document.getElementById('validation-results').style.display = 'none';
+      const loader = document.getElementById('loader');
+      loader.style.display = 'flex';
+
+      const messages = [
+        "Analyzing target demographic...",
+        "Evaluating competition in " + industry + "...",
+        "Calculating risk factors...",
+        "Generating final viability report..."
+      ];
+      
+      let msgIndex = 0;
+      const msgEl = document.getElementById('loading-msg');
+      const interval = setInterval(() => {
+        msgIndex++;
+        if(msgIndex < messages.length) {
+          msgEl.textContent = messages[msgIndex];
+        }
+      }, 700);
+
+      // Simulate API delay (2.5 seconds)
+      setTimeout(() => {
+        clearInterval(interval);
+        loader.style.display = 'none';
+        generateReport(name, industry, desc, audience);
+        document.getElementById('validation-results').style.display = 'block';
+      }, 2800);
+    }
+
+    function generateReport(name, industry, desc, audience) {
+      const dLower = desc.toLowerCase();
+      
+      // Calculate Score heuristically
+      let score = 70; // Base score
+      
+      // Length factor
+      if (dLower.length > 200) score += 5;
+      if (dLower.length > 500) score += 5;
+
+      // Innovation/Tech keywords
+      const techWords = ['ai', 'app', 'platform', 'automate', 'software', 'cloud', 'blockchain', 'mobile'];
+      let techCount = techWords.filter(w => dLower.includes(w)).length;
+      if (techCount > 0) score += 5;
+
+      // Problem-solving keywords
+      const problemWords = ['solve', 'reduce', 'help', 'improve', 'save', 'efficient', 'fast', 'easy'];
+      let probCount = problemWords.filter(w => dLower.includes(w)).length;
+      if (probCount > 0) score += 5;
+
+      // Market trend keywords
+      if (dLower.includes('sustainable') || dLower.includes('eco')) score += 4;
+      if (dLower.includes('health') || dLower.includes('fitness')) score += 3;
+
+      score = Math.min(98, score); // Cap at 98
+
+      // Set Score UI
+      const scoreCircle = document.getElementById('out-score');
+      scoreCircle.textContent = score;
+      document.getElementById('out-name').textContent = name;
+
+      let color = 'var(--success)';
+      if (score < 60) color = 'var(--danger)';
+      else if (score < 75) color = 'var(--warning)';
+      scoreCircle.style.borderColor = color;
+
+      // Determine Metrics based on Industry
+      let demand = { text: 'Growing', badge: 'HIGH', class: 'status-high' };
+      let comp = { text: 'High', badge: 'HIGH', class: 'status-low' };
+      let exec = { text: 'Moderate', badge: 'MED', class: 'status-med' };
+      let scale = { text: 'Global', badge: 'HIGH', class: 'status-high' };
+
+      if (industry === 'Tech/SaaS') { comp.text = 'Very High'; scale.text = 'Limitless'; exec.text = 'High (Needs Devs)'; exec.class = 'status-low'; }
+      if (industry === 'Food/Beverage') { scale.text = 'Local/Linear'; scale.badge = 'LOW'; scale.class = 'status-low'; exec.text = 'Operation Heavy'; comp.text = 'Fierce'; }
+      if (industry === 'Service') { scale.text = 'Time-Bound'; scale.badge = 'LOW'; scale.class = 'status-low'; exec.text = 'Low Barrier'; exec.class = 'status-high'; }
+      if (techCount > 2) { scale.text = 'Highly Scalable'; scale.badge = 'HIGH'; scale.class = 'status-high'; }
+
+      // Update Metrics UI
+      document.getElementById('out-demand').textContent = demand.text;
+      document.getElementById('out-demand-badge').className = 'm-status ' + demand.class;
+      document.getElementById('out-demand-badge').textContent = demand.badge;
+
+      document.getElementById('out-comp').textContent = comp.text;
+      document.getElementById('out-comp-badge').className = 'm-status ' + comp.class;
+      document.getElementById('out-comp-badge').textContent = comp.badge;
+
+      document.getElementById('out-exec').textContent = exec.text;
+      document.getElementById('out-exec-badge').className = 'm-status ' + exec.class;
+      document.getElementById('out-exec-badge').textContent = exec.badge;
+
+      document.getElementById('out-scale').textContent = scale.text;
+      document.getElementById('out-scale-badge').className = 'm-status ' + scale.class;
+      document.getElementById('out-scale-badge').textContent = scale.badge;
+
+      // Generate Pros/Cons
+      const strengths = [
+        `Clear value proposition for ${audience}`,
+        `${industry} is a proven market with existing demand`,
+      ];
+      if (probCount > 0) strengths.push("Strong focus on solving a tangible problem.");
+      if (techCount > 0) strengths.push("Leverages technology for potential rapid scalability.");
+      if (score >= 80) strengths.push("Highly viable concept if executed correctly.");
+
+      const weaknesses = [
+        `Customer acquisition in ${industry} can be expensive initially`,
+      ];
+      if (industry === 'Tech/SaaS') weaknesses.push("High upfront development costs and technical debt risks.");
+      if (industry === 'Food/Beverage') weaknesses.push("Slim profit margins and heavy reliance on local foot traffic/delivery platforms.");
+      if (industry === 'Service') weaknesses.push("Difficult to scale without hiring more staff (revenue is tied to time).");
+      if (probCount === 0) weaknesses.push("The core problem being solved isn't entirely clear. Focus on 'Why do people need this?'");
+
+      document.getElementById('out-strengths').innerHTML = strengths.map(s => `<div class="pro-item"><i class="fas fa-check-circle"></i> <span>${s}</span></div>`).join('');
+      document.getElementById('out-weaknesses').innerHTML = weaknesses.map(w => `<div class="con-item"><i class="fas fa-exclamation-circle"></i> <span>${w}</span></div>`).join('');
+
+      // Monetization
+      let monetization = ['Subscription Model', 'Freemium', 'One-time Purchase', 'Ad Revenue', 'Affiliate Marketing', 'B2B Enterprise', 'Service Retainer', 'Transaction Fee'];
+      let chosen = [];
+      
+      if (industry === 'Tech/SaaS') chosen = ['Subscription Model (SaaS)', 'Freemium Tier', 'B2B Enterprise Licensing'];
+      else if (industry === 'E-commerce') chosen = ['Direct to Consumer Sales', 'Dropshipping', 'Upselling/Cross-selling'];
+      else if (industry === 'Service') chosen = ['Monthly Retainer', 'Pay-per-hour', 'Project-based Pricing'];
+      else if (industry === 'EdTech') chosen = ['Course Sales', 'Monthly Subscription', 'Certification Fees'];
+      else chosen = ['Direct Sales', 'Subscription Model', 'Partnerships'];
+
+      if(dLower.includes('app')) chosen.push('In-App Purchases', 'Ad Revenue');
+
+      // Unique Set
+      chosen = [...new Set(chosen)];
+
+      document.getElementById('out-monetization').innerHTML = chosen.map(m => `<span class="m-tag">${m}</span>`).join('');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <style>
+        .text-block-detect {
+            position: absolute;
+            cursor: pointer;
+            background: rgba(0, 134, 181, 0.05);
+            border: 1px dashed transparent;
+            transition: all 0.2s;
+        }
+        .text-block-detect:hover {
+            background: rgba(0, 134, 181, 0.2);
+            border-color: var(--primary);
+            z-index: 100;
+        }
+        .tool-btn {
+            width: 45px; height: 45px; border-radius: 12px; border: 1px solid var(--border);
+            background: #fff; color: var(--text-main); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .tool-btn:hover { background: var(--bg-light); border-color: var(--primary); }
+        .tool-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .nav-btn { background: #fff; border: 1px solid var(--border); padding: 5px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 500; }
+        .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+        @media (max-width: 768px) {
+            .edit-layout { flex-direction: column !important; align-items: center !important; }
+            .toolbar-left { width: 100% !important; flex-direction: row !important; overflow-x: auto; justify-content: center; position: sticky; top: 0; z-index: 1000; padding: 0.5rem !important; }
+            .canvas-container { min-width: 0 !important; width: 100% !important; overflow-x: auto; }
+            .tool-btn { width: 40px !important; height: 40px !important; }
+        }
+    </style>
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> Advanced PDF Editor</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="edit-3"></i>
+        <h2>Select PDF file</h2>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div id="editArea" style="display: none; background: #f8fafc; border: 1px solid var(--border); border-radius: 1.5rem; padding: 1rem; margin-top: 2rem; text-align: center;">
+        <div class="edit-layout" style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+            <!-- Left Toolbar -->
+            <div class="toolbar-left" style="width: 70px; display: flex; flex-direction: column; gap: 0.75rem; background: #fff; padding: 1rem; border-radius: 1rem; border: 1px solid var(--border); box-shadow: var(--shadow); transition: all 0.3s;">
+                <button class="tool-btn active" id="toolSelect" title="Select & Edit Text"><i data-lucide="mouse-pointer-2"></i></button>
+                <button class="tool-btn" id="toolText" title="Add New Text"><i data-lucide="type"></i></button>
+                <button class="tool-btn" id="toolImage" title="Add/Replace Image"><i data-lucide="image"></i></button>
+                <button class="tool-btn" id="toolRect" title="Draw Rectangle"><i data-lucide="square"></i></button>
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 0.5rem 0;">
+                <button class="tool-btn" id="undoBtn" title="Undo"><i data-lucide="undo-2"></i></button>
+            </div>
+
+            <!-- Main Canvas View -->
+            <div class="canvas-container" style="flex: 2; min-width: 400px; display: flex; flex-direction: column; align-items: center; max-width: 100%;">
+                <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: #fff; padding: 0.75rem 1.5rem; border-radius: 1rem; border: 1px solid var(--border); position: sticky; top: 0; z-index: 999;">
+                    <button id="prevPage" class="nav-btn"><i data-lucide="chevron-left"></i></button>
+                    <span id="pageInfo" style="font-weight: 700; color: var(--primary);">Page 1 / 1</span>
+                    <button id="nextPage" class="nav-btn"><i data-lucide="chevron-right"></i></button>
+                </div>
+
+                <div style="position: relative; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.1); background: #fff; line-height: 0; overflow: auto; max-width: 100%;">
+                    <canvas id="pdfCanvas"></canvas>
+                    <div id="pdfOverlay" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button id="applyEditBtn" class="btn-primary" disabled>
+                        <i data-lucide="save"></i> Save Changes & Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Inputs -->
+    <input type="file" id="imageInput" accept="image/*" hidden>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Your PDF has been updated successfully.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download Edited PDF
+        </button>
+    </div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Processing PDF...</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    
+    const dropZone = document.getElementById('dropZone');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const fileInput = document.getElementById('fileInput');
+    const editArea = document.getElementById('editArea');
+    const pdfCanvas = document.getElementById('pdfCanvas');
+    const pdfOverlay = document.getElementById('pdfOverlay');
+    const applyEditBtn = document.getElementById('applyEditBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const imageInput = document.getElementById('imageInput');
+
+    let selectedFile = null;
+    let processedPdfUrl = null;
+    let pdfDocJs = null;
+    let totalPages = 1;
+    let currentPage = 1;
+    let annotations = {}; // { pageNumber: [{ type, x, y, w, h, text, size, color, dataUrl }] }
+    let currentTool = 'select';
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+
+    // Tool switching
+    document.querySelectorAll('.tool-btn:not(#undoBtn)').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTool = btn.id.replace('tool', '').toLowerCase();
+        };
+    });
+
+    document.getElementById('undoBtn').onclick = () => {
+        if (annotations[currentPage] && annotations[currentPage].length > 0) {
+            annotations[currentPage].pop();
+            renderCurrentPage();
+        }
+    };
+
+    async function handleFile(file) {
+        if (file.type !== 'application/pdf') return;
+        selectedFile = file;
+        loadingOverlay.style.display = 'flex';
+        document.getElementById('loadingText').textContent = 'Opening Editor...';
+        
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Check for encryption with pdf.js
+            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+            loadingTask.onPassword = (updatePassword, reason) => {
+                loadingOverlay.style.display = 'none';
+                alert('This PDF is password protected. Please use the "Unlock PDF" tool first to edit this file.');
+                location.reload(); 
+            };
+            
+            pdfDocJs = await loadingTask.promise;
+            totalPages = pdfDocJs.numPages;
+            currentPage = 1;
+            await renderCurrentPage();
+            dropZone.style.display = 'none';
+            editArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            if (err.name === 'PasswordException') {
+                alert('This PDF is encrypted. Please unlock it first.');
+            } else {
+                alert('Error loading PDF: ' + err.message);
+            }
+            location.reload();
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    async function renderCurrentPage() {
+        if (!pdfDocJs) return;
+        loadingOverlay.style.display = 'flex';
+        pdfOverlay.innerHTML = '';
+        try {
+            const page = await pdfDocJs.getPage(currentPage);
+            const containerWidth = document.querySelector('.canvas-container').clientWidth - 40;
+            const singleViewport = page.getViewport({ scale: 1.0 });
+            const dynamicScale = Math.min(1.5, containerWidth / singleViewport.width);
+            
+            const viewport = page.getViewport({ scale: dynamicScale });
+            pdfCanvas.width = viewport.width;
+            pdfCanvas.height = viewport.height;
+
+            await page.render({
+                canvasContext: pdfCanvas.getContext('2d'),
+                viewport: viewport
+            }).promise;
+
+            // ── IMAGE DETECTION (Smart Guess) ──
+            const opList = await page.getOperatorList();
+            const transformStack = [viewport.transform];
+            
+            for (let i = 0; i < opList.fnArray.length; i++) {
+                const fn = opList.fnArray[i];
+                const args = opList.argsArray[i];
+
+                if (fn === pdfjsLib.OPS.save) {
+                    transformStack.push([...transformStack[transformStack.length - 1]]);
+                } else if (fn === pdfjsLib.OPS.restore) {
+                    transformStack.pop();
+                } else if (fn === pdfjsLib.OPS.transform) {
+                    const currentT = transformStack[transformStack.length - 1];
+                    transformStack[transformStack.length - 1] = pdfjsLib.Util.transform(currentT, args);
+                } else if (fn === pdfjsLib.OPS.paintImageXObject || fn === pdfjsLib.OPS.paintInlineImageXObject) {
+                    const tx = transformStack[transformStack.length - 1];
+                    // tx is [scaleX, skewY, skewX, scaleY, transX, transY]
+                    // In PDF, an image is painted in a unit square [0,1]x[0,1]
+                    // So tx[0] is width, tx[3] is height (negative usually if flipped)
+                    const w = Math.abs(tx[0]);
+                    const h = Math.abs(tx[3]);
+                    const x = tx[4];
+                    const y = tx[5] - h; // Normalize to top-left
+
+                    const imgBox = document.createElement('div');
+                    imgBox.className = 'text-block-detect'; // Reuse same style
+                    imgBox.style.left = x + 'px';
+                    imgBox.style.top = y + 'px';
+                    imgBox.style.width = w + 'px';
+                    imgBox.style.height = h + 'px';
+                    imgBox.style.backgroundColor = 'rgba(255, 107, 107, 0.1)';
+                    imgBox.title = "Click to Replace Image";
+                    
+                    imgBox.onclick = (e) => {
+                        if (currentTool !== 'select') return;
+                        e.stopPropagation();
+                        // Trigger image replacement
+                        currentTool = 'image';
+                        // Mock the click event to reuse the logic
+                        pdfOverlay.onclick({ offsetX: x + w/2, offsetY: y + h/2, target: pdfOverlay });
+                    };
+                    pdfOverlay.appendChild(imgBox);
+                }
+            }
+
+            // ── TEXT LAYER DETECTION ──
+            const textContent = await page.getTextContent();
+            textContent.items.forEach(item => {
+                const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+                const itemWidth = item.width * viewport.scale;
+                const itemHeight = Math.abs(item.transform[0]) || 12;
+                
+                const div = document.createElement('div');
+                div.className = 'text-block-detect';
+                div.style.left = tx[4] + 'px';
+                div.style.top = (tx[5] - itemHeight) + 'px';
+                div.style.width = itemWidth + 'px';
+                div.style.height = itemHeight + 'px';
+                div.title = "Click to Edit Text";
+                
+                div.onclick = (e) => {
+                    if (currentTool !== 'select') return;
+                    e.stopPropagation();
+                    const newText = prompt("Edit text:", item.str);
+                    if (newText !== null && newText !== item.str) {
+                        applyTextEdit(tx[4], tx[5], itemWidth, itemHeight, newText);
+                    }
+                };
+                pdfOverlay.appendChild(div);
+            });
+
+            // ── MANUAL IMAGE PLACEMENT ──
+            // We'll also allow clicking anywhere to place. 
+            // The user asked to "guess" where image is. 
+            // Since real-time image extraction is heavy, I'll add a "Add Image" helper.
+
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} / ${totalPages}`;
+            if (annotations[currentPage]) {
+                annotations[currentPage].forEach(ann => renderAnnotationOnOverlay(ann));
+            }
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    function applyTextEdit(x, y, w, h, text) {
+        if (!annotations[currentPage]) annotations[currentPage] = [];
+        // Block out old text with white rect
+        annotations[currentPage].push({ type: 'rect', x, y: y-h, w, h: h*1.2, color: '#ffffff' });
+        annotations[currentPage].push({ type: 'text', x, y, text, size: h*0.9, color: '#000000' });
+        renderCurrentPage();
+        applyEditBtn.disabled = false;
+    }
+
+    function renderAnnotationOnOverlay(ann) {
+        const div = document.createElement('div');
+        div.style.position = 'absolute';
+        div.style.left = ann.x + 'px';
+        div.style.top = (ann.type === 'text' ? ann.y - ann.size : ann.y) + 'px';
+        div.style.pointerEvents = 'none';
+        
+        if (ann.type === 'text') {
+            div.textContent = ann.text;
+            div.style.fontSize = ann.size + 'px';
+            div.style.fontWeight = 'bold';
+            div.style.color = ann.color;
+            div.style.fontFamily = 'Helvetica, sans-serif';
+        } else if (ann.type === 'rect') {
+            div.style.width = ann.w + 'px';
+            div.style.height = ann.h + 'px';
+            div.style.background = ann.color;
+        } else if (ann.type === 'image') {
+            const img = document.createElement('img');
+            img.src = ann.dataUrl;
+            img.style.width = ann.w + 'px';
+            img.style.height = ann.h + 'px';
+            img.style.display = 'block';
+            div.appendChild(img);
+        }
+        pdfOverlay.appendChild(div);
+    }
+
+    // Capture click for tools
+    pdfOverlay.onclick = (e) => {
+        if (e.target !== pdfOverlay && !e.target.className.includes('detect')) return;
+        const x = e.offsetX;
+        const y = e.offsetY;
+
+        if (currentTool === 'text') {
+            const txt = prompt("Add text at this location:");
+            if (txt) {
+                if (!annotations[currentPage]) annotations[currentPage] = [];
+                annotations[currentPage].push({ type: 'text', x, y, text: txt, size: 16, color: '#000' });
+                renderCurrentPage(); applyEditBtn.disabled = false;
+            }
+        } else if (currentTool === 'image') {
+            imageInput.onchange = async (ie) => {
+                let file = ie.target.files[0];
+                if (!file) return;
+                loadingOverlay.style.display = 'flex';
+                
+                if (file.name.toLowerCase().endsWith('.heic') || file.type.includes('heic')) {
+                    try {
+                        const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.8 });
+                        file = Array.isArray(converted) ? converted[0] : converted;
+                    } catch (e) { console.error(e); }
+                }
+
+                const reader = new FileReader();
+                reader.onload = (re) => {
+                    if (!annotations[currentPage]) annotations[currentPage] = [];
+                    // We'll ask for size or use default
+                    annotations[currentPage].push({ type: 'image', x, y, w: 200, h: 150, dataUrl: re.target.result });
+                    renderCurrentPage(); applyEditBtn.disabled = false;
+                    loadingOverlay.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            };
+            imageInput.click();
+        } else if (currentTool === 'rect') {
+            if (!annotations[currentPage]) annotations[currentPage] = [];
+            annotations[currentPage].push({ type: 'rect', x, y, w: 100, h: 50, color: 'rgba(0,0,0,0.2)' });
+            renderCurrentPage(); applyEditBtn.disabled = false;
+        }
+    };
+
+    applyEditBtn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        loadingOverlay.querySelector('p').textContent = "Saving final PDF...";
+        try {
+            const arrayBuffer = await selectedFile.arrayBuffer();
+            let pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+            const pages = pdfDoc.getPages();
+            const standardFont = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+
+            for (const pageNum in annotations) {
+                const page = pages[parseInt(pageNum) - 1];
+                const { width, height } = page.getSize();
+                const scaleX = width / pdfCanvas.width;
+                const scaleY = height / pdfCanvas.height;
+
+                for (const ann of annotations[pageNum]) {
+                    const pdfX = ann.x * scaleX;
+                    const pdfY = height - (ann.y * scaleY);
+                    
+                    if (ann.type === 'text') {
+                        // Offset by size to account for bottom-left baseline in PDF
+                        const fontSize = ann.size * scaleX;
+                        page.drawText(ann.text, { x: pdfX, y: pdfY - fontSize, size: fontSize, font: standardFont, color: PDFLib.rgb(0,0,0) });
+                    } else if (ann.type === 'rect') {
+                        page.drawRectangle({ 
+                            x: pdfX, 
+                            y: height - ((ann.y + ann.h) * scaleY), 
+                            width: ann.w * scaleX, 
+                            height: ann.h * scaleY, 
+                            color: ann.color === '#ffffff' ? PDFLib.rgb(1,1,1) : PDFLib.rgb(0,0,0,0.3) 
+                        });
+                    } else if (ann.type === 'image') {
+                        const imgBytes = await fetch(ann.dataUrl).then(res => res.arrayBuffer());
+                        const isPng = ann.dataUrl.includes('png');
+                        const embeddedImg = isPng ? await pdfDoc.embedPng(imgBytes) : await pdfDoc.embedJpg(imgBytes);
+                        page.drawImage(embeddedImg, { 
+                            x: pdfX, 
+                            y: height - ((ann.y + ann.h) * scaleY), 
+                            width: ann.w * scaleX, 
+                            height: ann.h * scaleY 
+                        });
+                    }
+                }
+            }
+
+            const pdfBytes = await pdfDoc.save();
+            processedPdfUrl = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
+            editArea.style.display = 'none'; 
+            resultArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            alert('Error saving PDF: ' + err.message);
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const a = document.createElement('a');
+        a.href = processedPdfUrl; a.download = `edited_${selectedFile.name}`; a.click();
+    };
+
+    document.getElementById('prevPage').onclick = () => { if (currentPage > 1) { currentPage--; renderCurrentPage(); } };
+    document.getElementById('nextPage').onclick = () => { if (currentPage < totalPages) { currentPage++; renderCurrentPage(); } };
+</script>
+
+</body>
+</html>

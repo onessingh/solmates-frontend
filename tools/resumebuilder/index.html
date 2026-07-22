@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=900" />
+  <meta name="description"
+    content="Create free, professional, ATS-friendly resumes with the SOLMATES AI Resume Builder. Designed for students and MBA graduates, featuring live preview, scoring, and recruiter-ready templates." />
+  <meta name="keywords"
+    content="free resume builder for students, MBA resume templates, ATS resume maker, professional CV builder, Delhi University resume tool, SOLMATES tools" />
+  <meta name="author" content="SOLMATES" />
+  <meta name="robots" content="index, follow" />
+  <title>AI Resume Builder for Students | ATS-Friendly MBA CV Templates</title>
+  <!-- Force No-Cache for HTML itself -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <link rel="icon" href="/tools/resumebuilder/favicon.ico" sizes="any" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/tools/resumebuilder/style.css?v=105.0" />
+  <link rel="stylesheet" href="/tools/resumebuilder/wizard.css?v=105.2" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+  <script src="/js/webview-fix.js?v=104.6"></script>
+  <script src="/js/uptime-helper.js?v=104.6"></script>
+
+  <script src="/js/sol-cache.js?v=104.6"></script>
+</head>
+
+<body>
+
+  <main id="home" class="page">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="eyebrow">Build faster. Stand out. Get hired.</p>
+        <h1 id="hero-title">AI Resume Builder for Students</h1>
+        <p class="hero-subtitle">
+          Create recruiter-ready resumes with live preview, ATS scoring, smart templates, and JD-enhanced wording.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button" id="start-building-btn">Start Building</button>
+        </div>
+        <div class="hero-metrics" aria-label="Product highlights">
+          <div class="metric">
+            <span class="metric-value">10+</span>
+            <span class="metric-label">ATS-Ready Templates</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">90%</span>
+            <span class="metric-label">Resume Match Score</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">A4</span>
+            <span class="metric-label">Print-Ready Export</span>
+          </div>
+        </div>
+      </div>
+      <figure class="hero-visual" aria-label="Resume builder preview illustration">
+        <img class="hero-image" src="/tools/resumebuilder/hero-banner.png" alt="Resume preview card illustration" />
+      </figure>
+    </section>
+
+    
+    <!-- TABS NAVIGATION -->
+    <div class="rb-tabs">
+        <button class="rb-tab active" data-tab="builder">Resume Builder</button>
+        <button class="rb-tab" data-tab="jd">JD Match</button>
+        <button class="rb-tab" data-tab="templates">Templates</button>
+    </div>
+
+    
+
+
+
+    <div class="rb-tab-content active" id="tab-builder">
+    
+    <div class="wizard-header">
+      <div class="wizard-progress-bar"><div class="wizard-progress-fill" id="wizard-fill"></div></div>
+      <p class="wizard-step-text" id="wizard-step-text">Step 1 of 8: Personal Info</p>
+      <div class="autosave-indicator" id="autosave-indicator"></div>
+    </div>
+
+
+    <section id="builder" class="builder-layout" aria-label="Resume builder">
+      <div class="builder-columns">
+        <aside class="form-panel" aria-label="Resume form">
+          <article class="panel-section" data-section-form="personalInfo" aria-labelledby="personal-info-title">
+            <header class="section-header">
+              <h2 id="personal-info-title">Personal Information</h2>
+            </header>
+            <div class="profile-upload">
+              <div class="profile-photo" aria-hidden="true">
+                <img class="profile-photo-img" alt="" />
+                <span class="profile-photo-initials">JS</span>
+              </div>
+              <div class="profile-actions">
+                <label for="profile-photo" class="btn btn-ghost" id="upload-photo-btn">Upload Photo</label>
+                <input type="file" id="profile-photo" name="profile-photo" accept="image/*"
+                  aria-label="Upload profile photo" hidden />
+                <p class="field-hint">Optional. ATS friendly resumes can omit photos.</p>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="full-name">Full Name<span aria-hidden="true">*</span></label>
+                <input type="text" id="full-name" name="full-name" required autocomplete="name"
+                  placeholder="Full name" />
+              </div>
+              <div class="field">
+                <label for="headline">Resume Headline</label>
+                <input type="text" id="headline" name="headline"
+                  placeholder="HR Executive | Talent Acquisition | HRIS" />
+              </div>
+              <div class="field">
+                <label for="email">Email<span aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" required autocomplete="email"
+                  placeholder="name@email.com" />
+              </div>
+              <div class="field">
+                <label for="phone">Phone<span aria-hidden="true">*</span></label>
+                <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="+1 555 123 4567" />
+              </div>
+              <div class="field">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" autocomplete="address-level2" placeholder="City" />
+              </div>
+              <div class="field">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" autocomplete="address-level1" placeholder="State" />
+              </div>
+              <div class="field">
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" autocomplete="country-name" placeholder="Country" />
+              </div>
+              <div class="field">
+                <label for="linkedin">LinkedIn URL</label>
+                <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/" />
+              </div>
+              <div class="field">
+                <label for="portfolio">Portfolio URL</label>
+                <input type="url" id="portfolio" name="portfolio" placeholder="https://" />
+              </div>
+            </div>
+          </article>
+
+          <article class="panel-section" data-section-form="summary" aria-labelledby="summary-title">
+            <header class="section-header">
+              <h2 id="summary-title">Professional Summary</h2>
+            </header>
+            <div class="field">
+              <label for="summary">Summary</label>
+              <textarea id="summary" name="summary" rows="5" aria-describedby="summary-hint"
+                placeholder="Highlight your impact, strengths, and focus."></textarea>
+              <p id="summary-hint" class="field-hint">Aim for 2-4 concise lines. 0/300 characters.</p>
+            </div>
+          </article>
+
+          <article class="panel-section" data-section-form="objective" aria-labelledby="objective-title">
+            <header class="section-header">
+              <h2 id="objective-title">Career Objective</h2>
+            </header>
+            <div class="field">
+              <textarea id="objective" name="objective" rows="3"
+                placeholder="To obtain a challenging position..."></textarea>
+            </div>
+          </article>
+
+          <article class="panel-section" data-section-form="highlights" aria-labelledby="highlights-title">
+            <header class="section-header">
+              <h2 id="highlights-title">Key Highlights</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="highlights">Add
+                Highlight</button>
+            </header>
+            <div class="repeater" data-repeater="highlights" data-template="single-line-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="coreCompetencies" aria-labelledby="competencies-title">
+            <header class="section-header">
+              <h2 id="competencies-title">Core Competencies</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="coreCompetencies">Add
+                Competency</button>
+            </header>
+            <div class="repeater" data-repeater="coreCompetencies" data-template="single-line-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="experience" aria-labelledby="experience-title">
+            <header class="section-header">
+              <h2 id="experience-title">Work Experience</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="experience">Add
+                Experience</button>
+            </header>
+            <div class="repeater" data-repeater="experience" data-template="experience-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="education" aria-labelledby="education-title">
+            <header class="section-header">
+              <h2 id="education-title">Education</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="education">Add
+                Education</button>
+            </header>
+            <div class="repeater" data-repeater="education" data-template="education-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="skills" aria-labelledby="skills-title">
+            <header class="section-header">
+              <h2 id="skills-title">Skills</h2>
+            </header>
+            <div class="field">
+              <label for="skill-hard">Hard Skills (comma separated)</label>
+              <input type="text" id="skill-hard" name="skill-hard"
+                placeholder="SQL, Data Analysis, Stakeholder Management" />
+            </div>
+            <div class="field">
+              <label for="skill-tools">Tools / Technologies (comma separated)</label>
+              <input type="text" id="skill-tools" name="skill-tools" placeholder="Excel, Tableau, Jira" />
+            </div>
+            <div class="field">
+              <label for="skill-domain">Domain Skills (comma separated)</label>
+              <input type="text" id="skill-domain" name="skill-domain" placeholder="Fintech, HRIS, SaaS" />
+            </div>
+          </article>
+
+          <article class="panel-section" data-section-form="certifications" aria-labelledby="certifications-title">
+            <header class="section-header">
+              <h2 id="certifications-title">Certifications</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="certifications">Add
+                Certification</button>
+            </header>
+            <div class="repeater" data-repeater="certifications" data-template="certification-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="projects" aria-labelledby="projects-title">
+            <header class="section-header">
+              <h2 id="projects-title">Projects</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="projects">Add
+                Project</button>
+            </header>
+            <div class="repeater" data-repeater="projects" data-template="project-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="internships" aria-labelledby="internships-title">
+            <header class="section-header">
+              <h2 id="internships-title">Internships / Training</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="internships">Add
+                Internship</button>
+            </header>
+            <div class="repeater" data-repeater="internships" data-template="internship-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="awards" aria-labelledby="awards-title">
+            <header class="section-header">
+              <h2 id="awards-title">Achievements & Awards</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="awards">Add Award</button>
+            </header>
+            <div class="repeater" data-repeater="awards" data-template="award-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="publications" aria-labelledby="publications-title">
+            <header class="section-header">
+              <h2 id="publications-title">Publications / Research</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="publications">Add
+                Publication</button>
+            </header>
+            <div class="repeater" data-repeater="publications" data-template="publication-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="volunteer" aria-labelledby="volunteer-title">
+            <header class="section-header">
+              <h2 id="volunteer-title">Volunteer Experience</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="volunteer">Add
+                Volunteer</button>
+            </header>
+            <div class="repeater" data-repeater="volunteer" data-template="volunteer-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="leadership" aria-labelledby="leadership-title">
+            <header class="section-header">
+              <h2 id="leadership-title">Leadership Experience</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="leadership">Add
+                Leadership</button>
+            </header>
+            <div class="repeater" data-repeater="leadership" data-template="leadership-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="technicalStack" aria-labelledby="tech-stack-title">
+            <header class="section-header">
+              <h2 id="tech-stack-title">Technical Stack</h2>
+            </header>
+            <div class="form-grid">
+              <div class="field">
+                <label>Languages (comma separated)</label>
+                <input type="text" id="tech-stack-languages" data-field="languages" placeholder="Java, Python, C++" />
+              </div>
+              <div class="field">
+                <label>Frameworks (comma separated)</label>
+                <input type="text" id="tech-stack-frameworks" data-field="frameworks"
+                  placeholder="React, Spring Boot, Django" />
+              </div>
+              <div class="field">
+                <label>Tools (comma separated)</label>
+                <input type="text" id="tech-stack-tools" data-field="tools" placeholder="Docker, Kubernetes, Git" />
+              </div>
+            </div>
+          </article>
+
+          <article class="panel-section" data-section-form="languages" aria-labelledby="languages-title">
+            <header class="section-header">
+              <h2 id="languages-title">Languages</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="languages">Add
+                Language</button>
+            </header>
+            <div class="repeater" data-repeater="languages" data-template="language-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="references" aria-labelledby="references-title">
+            <header class="section-header">
+              <h2 id="references-title">References</h2>
+              <button class="btn btn-ghost" type="button" data-action="add-item" data-target="references">Add
+                Reference</button>
+            </header>
+            <div class="repeater" data-repeater="references" data-template="reference-template"></div>
+          </article>
+
+          <article class="panel-section" data-section-form="personalDetails" aria-labelledby="personal-details-title">
+            <header class="section-header">
+              <h2 id="personal-details-title">Personal Details</h2>
+            </header>
+            <div class="form-grid">
+              <div class="field">
+                <label for="personal-dob">Date of Birth</label>
+                <input type="text" id="personal-dob" name="personal-dob" placeholder="27 July 2002" />
+              </div>
+              <div class="field">
+                <label for="personal-gender">Gender</label>
+                <input type="text" id="personal-gender" name="personal-gender" placeholder="Female" />
+              </div>
+              <div class="field">
+                <label for="personal-father">Father's Name</label>
+                <input type="text" id="personal-father" name="personal-father" placeholder="Raghuram" />
+              </div>
+              <div class="field">
+                <label for="personal-marital">Marital Status</label>
+                <input type="text" id="personal-marital" name="personal-marital" placeholder="Unmarried" />
+              </div>
+              <div class="field">
+                <label for="personal-hobbies">Hobbies</label>
+                <input type="text" id="personal-hobbies" name="personal-hobbies"
+                  placeholder="Reading books, Gardening" />
+              </div>
+            </div>
+          </article>
+
+          <article class="panel-section" aria-labelledby="section-manager-title">
+            <header class="section-header">
+              <h2 id="section-manager-title">Section Manager</h2>
+            </header>
+            <p class="field-hint">Enable/disable sections and reorder how they appear in preview and export.</p>
+            <div class="section-manager" id="section-manager"></div>
+          </article>
+        
+    <div class="wizard-nav">
+        <button type="button" class="btn btn-ghost" id="wizard-prev">Previous</button>
+        <button type="button" class="btn btn-secondary" id="wizard-print" style="display: none;"><i class="fas fa-file-pdf"></i> Download PDF</button>
+        <button type="button" class="btn btn-primary" id="wizard-next">Next</button>
+    </div>
+
+        </aside>
+<section class="jd-match rb-tab-content" id="jd-match" style="display: none;" aria-labelledby="jd-match-title">
+      <div class="jd-header">
+        <div>
+          <h2 id="jd-match-title">JD Match &amp; Resume Evaluation</h2>
+          <p>Paste a job description to measure fit, spot gaps, and improve your resume with clear recommendations.</p>
+        </div>
+        <button class="jd-toggle" type="button" aria-expanded="true" aria-controls="jd-match-body">
+          Hide Evaluation
+        </button>
+      </div>
+      <div class="jd-body" id="jd-match-body">
+        <div class="jd-input-panel">
+          <div class="field">
+            <label for="jd-input">Job Description</label>
+            <textarea id="jd-input" name="jd-input" rows="6" maxlength="10000" required
+              placeholder="Paste the Job Description here…"></textarea>
+            <p class="field-hint">Plain text or bullet points. 10,000 characters max.</p>
+          </div>
+          <button class="btn btn-primary" type="button" id="jd-evaluate-btn">Evaluate Resume</button>
+          <p class="jd-error" id="jd-error" role="alert" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="jd-output" id="jd-output" aria-live="polite">
+        <details class="jd-panel" open>
+          <summary>
+            <span>Match Score &amp; Gap Analysis</span>
+            <span class="jd-panel-meta">Score + skills coverage</span>
+          </summary>
+          <div class="jd-panel-content">
+            <div class="jd-score-card">
+              <div class="jd-score-display" role="img" aria-label="JD match score 0 out of 100">
+                <span class="jd-score-value">0</span>
+                <span class="jd-score-total">/100</span>
+              </div>
+              <div class="jd-score-text">
+                <p class="jd-score-label">No evaluation yet</p>
+                <p class="jd-score-feedback">Add a job description and click “Evaluate Resume”.</p>
+              </div>
+            </div>
+            <div class="jd-gap">
+              <div class="jd-gap-group">
+                <h3>Missing Skills</h3>
+                <ul id="jd-missing-list" class="jd-list">
+                  <li>Awaiting evaluation.</li>
+                </ul>
+              </div>
+              <div class="jd-gap-group">
+                <h3>Weakly Matched Skills</h3>
+                <ul id="jd-weak-list" class="jd-list">
+                  <li>Awaiting evaluation.</li>
+                </ul>
+              </div>
+              <div class="jd-gap-group">
+                <h3>Strong Matches</h3>
+                <ul id="jd-strong-list" class="jd-list">
+                  <li>Awaiting evaluation.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="jd-suggestions">
+              <h3>Actionable Suggestions</h3>
+              <ul id="jd-suggestions-list" class="jd-list">
+                <li>Paste a job description to generate suggestions.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details class="jd-panel">
+          <summary>
+            <span>Resume Rewriting Suggestions</span>
+            <span class="jd-panel-meta">Section-level guidance</span>
+          </summary>
+          <div class="jd-panel-content">
+            <div class="jd-rewrite">
+              <div class="jd-rewrite-group">
+                <h3>Summary</h3>
+                <ul id="jd-rewrite-summary" class="jd-list">
+                  <li>Awaiting evaluation.</li>
+                </ul>
+              </div>
+              <div class="jd-rewrite-group">
+                <h3>Experience</h3>
+                <ul id="jd-rewrite-experience" class="jd-list">
+                  <li>Awaiting evaluation.</li>
+                </ul>
+              </div>
+              <div class="jd-rewrite-group">
+                <h3>Skills</h3>
+                <ul id="jd-rewrite-skills" class="jd-list">
+                  <li>Awaiting evaluation.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="jd-panel">
+          <summary>
+            <span>ATS Keyword Density Heatmap</span>
+            <span class="jd-panel-meta">Frequency per section</span>
+          </summary>
+          <div class="jd-panel-content">
+            <div class="jd-heatmap">
+              <table class="jd-heatmap-table" aria-label="Keyword density heatmap">
+                <thead>
+                  <tr>
+                    <th scope="col">Keyword</th>
+                    <th scope="col">Summary</th>
+                    <th scope="col">Experience</th>
+                    <th scope="col">Skills</th>
+                    <th scope="col">Education</th>
+                  </tr>
+                </thead>
+                <tbody id="jd-heatmap-body">
+                  <tr>
+                    <td>Awaiting evaluation.</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="jd-panel">
+          <summary>
+            <span>Recruiter Rejection Simulation</span>
+            <span class="jd-panel-meta">Likely rejection reasons</span>
+          </summary>
+          <div class="jd-panel-content">
+            <ul id="jd-rejection-list" class="jd-list">
+              <li>Awaiting evaluation.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="jd-panel">
+          <summary>
+            <span>JD-Specific Template Recommendations</span>
+            <span class="jd-panel-meta">Best-fit layouts</span>
+          </summary>
+          <div class="jd-panel-content">
+            <div id="jd-template-list" class="jd-templates">
+              <p class="jd-empty">Paste a job description to see recommendations.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+<section class="templates rb-tab-content" id="templates" style="display: none;" aria-labelledby="templates-title">
+      <header class="templates-header section-header" id="templates-accordion-header" style="cursor:pointer; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+        <h2 id="templates-title">Professional Template Gallery <i class="fas fa-chevron-down accordion-icon" style="float:right; margin-top:5px; transition: transform 0.3s;"></i></h2>
+        <p>Choose a layout optimized for ATS parsing and recruiter readability. Click to instantly switch.</p>
+      </header>
+      <div class="accordion-content" id="template-accordion-content" style="display:none;"><div class="template-grid" id="template-grid">
+        <article class="template-card" data-template="ats">
+          <div class="template-preview preview-ats" role="img" aria-label="ATS Optimized preview">
+            <span class="template-badge badge-blue">HIGH SCORE</span>
+          </div>
+          <div class="template-info">
+            <h3>ATS Optimized</h3>
+            <p>Clean · Reliable · Standard</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="software">
+          <div class="template-preview preview-software" role="img" aria-label="Software Engineer preview">
+            <span class="template-badge badge-green">TECH CHOICE</span>
+          </div>
+          <div class="template-info">
+            <h3>Software Engineer</h3>
+            <p>IT · Tech · Monospace</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="marketing">
+          <div class="template-preview preview-marketing" role="img" aria-label="Marketing & Sales preview">
+            <span class="template-badge badge-gray">MODERN</span>
+          </div>
+          <div class="template-info">
+            <h3>Marketing & Sales</h3>
+            <p>Creative · Bold · Results</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="finance">
+          <div class="template-preview preview-finance" role="img" aria-label="Banking & Finance preview">
+            <span class="template-badge badge-gray">PROFESSIONAL</span>
+          </div>
+          <div class="template-info">
+            <h3>Banking & Finance</h3>
+            <p>Traditional · Elegant · Trust</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="hr">
+          <div class="template-preview preview-hr" role="img" aria-label="Human Resources preview">
+            <span class="template-badge badge-gray">HR CHOICE</span>
+          </div>
+          <div class="template-info">
+            <h3>Human Resources</h3>
+            <p>Friendly · Structured</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="executive">
+          <div class="template-preview preview-executive" role="img" aria-label="Executive Leader preview">
+            <span class="template-badge badge-gold">PREMIUM</span>
+          </div>
+          <div class="template-info">
+            <h3>Executive Leader</h3>
+            <p>Elite · Luxury · Gold</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="creative">
+          <div class="template-preview preview-creative" role="img" aria-label="Creative Designer preview">
+            <span class="template-badge badge-purple">TRENDING</span>
+          </div>
+          <div class="template-info">
+            <h3>Creative Designer</h3>
+            <p>Modern · Artistic · Gradient</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="academic">
+          <div class="template-preview preview-academic" role="img" aria-label="Academic CV preview">
+            <span class="template-badge badge-gray">EDUCATION</span>
+          </div>
+          <div class="template-info">
+            <h3>Academic CV</h3>
+            <p>Scholarly · Research</p>
+          </div>
+        </article>
+
+        <article class="template-card active" data-template="social">
+          <div class="template-preview preview-social" role="img" aria-label="Teacher Template preview">
+            <span class="template-badge badge-primary">RECOMMENDED</span>
+          </div>
+          <div class="template-info">
+            <h3>Teacher</h3>
+            <p>Top Rated · Blue Accent</p>
+          </div>
+        </article>
+
+        <article class="template-card" data-template="modernSidebar">
+          <div class="template-preview preview-modernSidebar" role="img" aria-label="Modern Sidebar preview">
+            <span class="template-badge badge-blue">NEW</span>
+          </div>
+          <div class="template-info">
+            <h3>Modern Sidebar</h3>
+            <p>Pro · High Contrast · Dual Column</p>
+          </div>
+        </article>
+      </div>
+    </div></section>
+
+        <section class="preview-panel" aria-label="Resume preview">
+          <div class="preview-header">
+            <div>
+              <h2>Live Preview</h2>
+              <p>Preview is the single source of truth for export.</p>
+            </div>
+            <div class="preview-actions">
+              <button class="btn btn-ghost" type="button" data-action="clear-form" title="Clear All">Clear</button>
+              <button class="btn btn-ghost" type="button" data-action="save-form">Save</button>
+              <button class="btn btn-ghost" type="button" data-action="print-form"><i class="fas fa-file-pdf"></i> Download</button>
+            </div>
+          </div>
+          <div class="score-card" aria-label="Resume score">
+            <div class="score-display">
+              <span class="score-value">0</span>
+              <span class="score-total">/100</span>
+            </div>
+            <p class="score-feedback">Complete more sections to increase your score.</p>
+          </div>
+          <div id="resume-preview" class="resume-preview" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+    </div>
+
+    <!-- TEMPLATE GALLERY -->
+    
+  </main>
+
+
+
+  <template id="experience-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Experience</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Job Title</label>
+          <input type="text" data-field="jobTitle" placeholder="Senior HR Executive" />
+        </div>
+        <div class="field">
+          <label>Company Name</label>
+          <input type="text" data-field="company" placeholder="SOLMATES" />
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" data-field="location" placeholder="City, State" />
+        </div>
+        <div class="field">
+          <label>Start Date</label>
+          <input type="text" data-field="startDate" placeholder="Jan 2022" />
+        </div>
+        <div class="field">
+          <label>End Date</label>
+          <input type="text" data-field="endDate" placeholder="Present" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea rows="3" data-field="description" placeholder="Role focus and scope."></textarea>
+      </div>
+      <div class="field">
+        <label>Achievements (one per line)</label>
+        <textarea rows="4" data-field="bullets" placeholder="Reduced hiring time by 20%"></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="education-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Education</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Degree</label>
+          <input type="text" data-field="degree" placeholder="MBA, Human Resources" />
+        </div>
+        <div class="field">
+          <label>Institution</label>
+          <input type="text" data-field="institution" placeholder="Delhi University" />
+        </div>
+        <div class="field">
+          <label>Specialization</label>
+          <input type="text" data-field="specialization" placeholder="Talent Management" />
+        </div>
+        <div class="field">
+          <label>Start Year</label>
+          <input type="text" data-field="startYear" placeholder="2019" />
+        </div>
+        <div class="field">
+          <label>End Year</label>
+          <input type="text" data-field="endYear" placeholder="2021" />
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" data-field="location" placeholder="City, Country" />
+        </div>
+        <div class="field">
+          <label>Marks / Percentage</label>
+          <input type="text" data-field="marks" placeholder="9.2 CGPA or 85%" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea rows="3" data-field="description" placeholder="Relevant coursework or accomplishments."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="certification-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Certification</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Certification Name</label>
+          <input type="text" data-field="name" placeholder="SHRM-CP" />
+        </div>
+        <div class="field">
+          <label>Issuing Authority</label>
+          <input type="text" data-field="authority" placeholder="SHRM" />
+        </div>
+        <div class="field">
+          <label>Year / Credential ID</label>
+          <input type="text" data-field="year" placeholder="2023 • ID 12345" />
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="project-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Project</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Project Title</label>
+          <input type="text" data-field="title" placeholder="HRIS Implementation" />
+        </div>
+        <div class="field">
+          <label>Tools / Skills</label>
+          <input type="text" data-field="tools" placeholder="Workday, Change Management" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea rows="3" data-field="description" placeholder="Project scope and role."></textarea>
+      </div>
+      <div class="field">
+        <label>Outcome / Impact</label>
+        <textarea rows="2" data-field="outcome" placeholder="Reduced onboarding time by 30%."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="internship-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Internship / Training</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Organization</label>
+          <input type="text" data-field="organization" placeholder="TCS" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <input type="text" data-field="role" placeholder="Trainee" />
+        </div>
+        <div class="field">
+          <label>Duration</label>
+          <input type="text" data-field="duration" placeholder="Jun 2021 - Aug 2021" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Learnings (one per line)</label>
+        <textarea rows="3" data-field="learnings" placeholder="Learned SDLC..."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="award-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Award / Achievement</h3>
+        <button class="btn btn-ghost btn-sm" type="button" data-action="remove-item">Remove</button>
+      </div>
+      <div class="field">
+        <input type="text" data-field="award" placeholder="Best Employee of the Month" />
+      </div>
+    </div>
+  </template>
+
+  <template id="single-line-template">
+    <div class="repeater-item">
+      <div class="field">
+        <input type="text" data-field="value" placeholder="Type here..." />
+        <button class="btn btn-ghost btn-sm" type="button" data-action="remove-item">&times;</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="publication-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Publication</h3>
+        <button class="btn btn-ghost btn-sm" type="button" data-action="remove-item">Remove</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Title</label>
+          <input type="text" data-field="title" placeholder="AI in Recruitment" />
+        </div>
+        <div class="field">
+          <label>Platform/Journal</label>
+          <input type="text" data-field="platform" placeholder="IEEE" />
+        </div>
+        <div class="field">
+          <label>Year</label>
+          <input type="text" data-field="year" placeholder="2023" />
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="volunteer-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Volunteer Experience</h3>
+        <button class="btn btn-ghost btn-sm" type="button" data-action="remove-item">Remove</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Organization</label>
+          <input type="text" data-field="organization" placeholder="NGO Name" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <input type="text" data-field="role" placeholder="Volunteer Coordinator" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Impact Description</label>
+        <textarea rows="2" data-field="impact" placeholder="Managed 50 volunteers..."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="leadership-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Leadership Role</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Organization</label>
+          <input type="text" data-field="organization" placeholder="College Club" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <input type="text" data-field="role" placeholder="President" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Responsibilities</label>
+        <textarea rows="2" data-field="responsibilities" placeholder="Led a team of 10..."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="language-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Language</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Language</label>
+          <input type="text" data-field="language" placeholder="English" />
+        </div>
+        <div class="field">
+          <label>Proficiency</label>
+          <input type="text" data-field="level" placeholder="Fluent" />
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <div id="field-suggestion-tooltip" class="field-suggestion-box" hidden aria-live="polite">
+    <div class="suggestion-header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 16v-4M12 8h.01"></path>
+      </svg>
+      <strong>Smart Tip</strong>
+    </div>
+    <p class="suggestion-text"></p>
+  </div>
+
+  <div id="crop-modal" class="modal" hidden>
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Professional Photo Crop</h3>
+        <button type="button" class="modal-close" data-action="close-crop">&times;</button>
+      </div>
+      <div class="cropper-body">
+        <div class="cropper-canvas-wrap">
+          <img id="cropper-image" src="" alt="To be cropped" style="max-width: 100%; display: block;" />
+        </div>
+        <div class="cropper-controls">
+          <p class="field-hint">Drag to move, scroll to zoom. Aim for a clear headshot.</p>
+        </div>
+        <div class="cropper-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-crop">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-crop-btn">Apply Crop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div id="error-modal" class="modal" hidden aria-modal="true" role="dialog">
+    <div class="modal-overlay" data-action="close-error"></div>
+    <div class="modal-content" style="border-top: 5px solid var(--color-danger);">
+      <header class="modal-header">
+        <h3 style="color: var(--color-danger); display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.5rem;">⚠️</span> Validation Failed
+        </h3>
+        <button class="modal-close" type="button" data-action="close-error" aria-label="Close">&times;</button>
+      </header>
+      <div class="modal-body">
+        <p>Please fill in the following mandatory fields before downloading:</p>
+        <ul id="error-list" style="color: var(--color-danger); font-weight: 600; margin-top: 15px;"></ul>
+      </div>
+      <div class="modal-footer" style="margin-top: 20px; text-align: right;">
+        <button class="btn btn-primary" type="button" data-action="close-error">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Selection Modal (REMOVED as per user request to use grid directly) -->
+
+  <template id="single-line-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="field">
+        <input type="text" data-field="value" placeholder="Enter detail..." />
+      </div>
+    </div>
+  </template>
+
+  <template id="award-template">
+    <div class="repeater-item">
+      <div class="repeater-header">
+        <h3>Award / Achievement</h3>
+        <div class="repeater-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-up" title="Move Up"><i
+              class="fas fa-chevron-up"></i></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-action="move-item-down" title="Move Down"><i
+              class="fas fa-chevron-down"></i></button>
+          <button class="btn btn-ghost btn-danger btn-sm" type="button" data-action="remove-item">Remove</button>
+        </div>
+      </div>
+      <div class="field">
+        <input type="text" data-field="award" placeholder="Best Employee of the Month" />
+      </div>
+    </div>
+  </template>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+  <script src="/tools/resumebuilder/script.js?v=90.3"></script>
+  <template id="reference-template">
+    <div class="repeater-item">
+      <div class="repeater-grid">
+        <div class="field">
+          <label>Name</label>
+          <input type="text" data-field="name" placeholder="Harumi Kobayashi" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <input type="text" data-field="role" placeholder="Wardiere Inc. / CEO" />
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="text" data-field="phone" placeholder="123-456-7890" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" data-field="email" placeholder="hello@reallygreatsite.com" />
+        </div>
+      </div>
+      <div class="repeater-actions">
+        <button class="btn btn-ghost" type="button" data-action="move-up-item" title="Move Up">↑</button>
+        <button class="btn btn-ghost" type="button" data-action="move-down-item" title="Move Down">↓</button>
+        <button class="btn btn-danger" type="button" data-action="remove-item">Remove</button>
+      </div>
+    </div>
+  </template>
+<script src="/tools/resumebuilder/wizard.js?v=2.1"></script>
+</body>
+
+</html>

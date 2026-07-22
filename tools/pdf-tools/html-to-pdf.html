@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML to PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> HTML to PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="inputArea">
+        <i data-lucide="code-2"></i>
+        <h2>Paste HTML Content</h2>
+        <textarea id="htmlInput" placeholder="<html><body><h1>Hello World</h1></body></html>" style="width: 100%; height: 200px; padding: 1rem; border-radius: 1rem; border: 1px solid var(--border); margin-top: 1rem; font-family: monospace;"></textarea>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button id="convertBtn" class="btn-primary">
+            <i data-lucide="play"></i> Convert HTML to PDF
+        </button>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Your PDF is ready for download.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download PDF
+        </button>
+    </div>
+    
+    <div id="hiddenPreview" style="display: none;"></div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Generating PDF...</p>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+    const convertBtn = document.getElementById('convertBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const htmlInput = document.getElementById('htmlInput');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const preview = document.getElementById('hiddenPreview');
+
+    let pdfBlob = null;
+
+    convertBtn.onclick = async () => {
+        const content = htmlInput.value;
+        if (!content) { alert('Please paste some HTML content'); return; }
+
+        loadingOverlay.style.display = 'flex';
+        convertBtn.disabled = true;
+
+        try {
+            preview.innerHTML = content;
+            preview.style.display = 'block'; // Make visible for html2canvas to render
+            
+            const opt = {
+                margin: 1,
+                filename: 'converted.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Generate PDF safely by getting the jsPDF instance
+            html2pdf().set(opt).from(preview).toPdf().get('pdf').then(function(pdfInstance) {
+                pdfBlob = pdfInstance.output('blob');
+                preview.style.display = 'none'; // Hide again
+                
+                resultArea.style.display = 'block';
+                convertBtn.innerHTML = '<i data-lucide="check"></i> Done!';
+                convertBtn.disabled = false;
+                lucide.createIcons();
+                loadingOverlay.style.display = 'none';
+            }).catch(function(err) {
+                console.error(err);
+                alert('Error converting HTML');
+                convertBtn.disabled = false;
+                loadingOverlay.style.display = 'none';
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Error converting HTML');
+            convertBtn.disabled = false;
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(pdfBlob);
+        link.download = `html_converted.pdf`;
+        link.click();
+    };
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
+    #hiddenPreview {
+        max-width: 100% !important;
+        overflow-x: hidden;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        padding: 20px;
+        background: white;
+        color: black;
+    }
+    #hiddenPreview img, #hiddenPreview table, #hiddenPreview iframe, #hiddenPreview pre {
+        max-width: 100% !important;
+        height: auto !important;
+        white-space: pre-wrap !important;
+    }
+    #hiddenPreview table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    #hiddenPreview td, #hiddenPreview th {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        border: 1px solid #ccc;
+    }
+</style>
+
+</body>
+</html>

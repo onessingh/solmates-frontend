@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Numbers - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> Page Numbers</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="list-ordered"></i>
+        <h2>Select PDF file</h2>
+        <p>or drag and drop a PDF here</p>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div id="settingsArea" style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+        <div style="margin-bottom: 2rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Position</label>
+            <select id="position" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); width: 100%; max-width: 300px;">
+                <option value="bottom-center">Bottom Center</option>
+                <option value="bottom-right">Bottom Right</option>
+                <option value="top-center">Top Center</option>
+            </select>
+        </div>
+        <button id="addBtn" class="btn-primary">
+            <i data-lucide="play"></i> Add Page Numbers
+        </button>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Page numbers added successfully.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download PDF
+        </button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Adding Numbers...</p>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+    const dropZone = document.getElementById('dropZone');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const settingsArea = document.getElementById('settingsArea');
+    const addBtn = document.getElementById('addBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let selectedFile = null;
+    let processedPdfUrl = null;
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--primary)'; };
+    dropZone.ondragleave = () => { dropZone.style.borderColor = 'var(--border)'; };
+    dropZone.ondrop = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--border)'; if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); };
+
+    function handleFile(file) {
+        if (file.type !== 'application/pdf') return;
+        selectedFile = file;
+        fileName.textContent = file.name;
+        dropZone.style.display = 'none';
+        settingsArea.style.display = 'block';
+    }
+
+    addBtn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        addBtn.disabled = true;
+
+        try {
+            const arrayBuffer = await selectedFile.arrayBuffer();
+            let pdfDoc;
+
+            try {
+                pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+            } catch (e) {
+                if (e.message.includes('encrypted')) {
+                    const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { password });
+                } else {
+                    throw e;
+                }
+            }
+
+            const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+            const pages = pdfDoc.getPages();
+            const pos = document.getElementById('position').value;
+
+            pages.forEach((page, i) => {
+                const { width, height } = page.getSize();
+                const text = `${i + 1} / ${pages.length}`;
+                const fontSize = 12;
+                const textWidth = font.widthOfTextAtSize(text, fontSize);
+                
+                let x = width / 2 - textWidth / 2;
+                let y = 20;
+
+                if (pos === 'bottom-right') x = width - textWidth - 20;
+                if (pos === 'top-center') y = height - 30;
+
+                page.drawText(text, { x, y, size: fontSize, font, color: PDFLib.rgb(0, 0, 0) });
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            processedPdfUrl = URL.createObjectURL(blob);
+
+            settingsArea.style.display = 'none';
+            resultArea.style.display = 'block';
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error adding page numbers');
+            addBtn.disabled = false;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = processedPdfUrl;
+        link.download = 
+umbered_${selectedFile.name}`;
+        link.click();
+    };
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

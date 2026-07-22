@@ -1,0 +1,17 @@
+[
+    { "q": "What is the primary focus of Managerial Economics?", "options": ["Macroeconomic policy", "Application of economic theory to managerial practice", "Accounting principles", "Human resource management"], "a": 1 },
+    { "q": "The law of demand states that, other things equal, price and quantity demanded are:", "options": ["Positively related", "Inversely related", "Unrelated", "Equally related"], "a": 1 },
+    { "q": "If the price elasticity of demand is greater than 1, demand is considered:", "options": ["Inelastic", "Unitary elastic", "Elastic", "Perfectly inelastic"], "a": 2 },
+    { "q": "Opportunity cost is defined as:", "options": ["The monetary cost of a good", "The value of the next best alternative forgone", "The total cost of production", "The marginal cost of an additional unit"], "a": 1 },
+    { "q": "In a perfectly competitive market, individual firms are:", "options": ["Price makers", "Price takers", "Monopolists", "Oligopolists"], "a": 1 },
+    { "q": "A market structure characterized by a single seller is called a:", "options": ["Monopoly", "Monopolistic competition", "Oligopoly", "Perfect competition"], "a": 0 },
+    { "q": "Which of the following describes a situation where a few large firms dominate the market?", "options": ["Perfect competition", "Monopolistic competition", "Monopsony", "Oligopoly"], "a": 3 },
+    { "q": "Marginal Revenue (MR) is the:", "options": ["Total revenue divided by total quantity", "Change in total revenue from selling one additional unit", "Revenue minus total costs", "Price per unit"], "a": 1 },
+    { "q": "Profits are maximized when:", "options": ["Marginal Cost = Marginal Revenue", "Total Revenue is highest", "Average Cost is lowest", "Price equals Marginal Cost"], "a": 0 },
+    { "q": "Which of the following is a fixed cost?", "options": ["Raw materials", "Direct labor", "Rent for the factory", "Electricity used in production"], "a": 2 },
+    { "q": "Economies of scale occur when:", "options": ["Long-run average cost decreases as output increases", "Long-run average cost increases as output increases", "Short-run marginal cost increases", "Total cost decreases as output decreases"], "a": 0 },
+    { "q": "Cross elasticity of demand measures the responsiveness of demand for good X to a change in the:", "options": ["Price of good X", "Income of the consumer", "Price of related good Y", "Taste and preferences"], "a": 2 },
+    { "q": "If two goods are substitutes, their cross elasticity of demand will be:", "options": ["Negative", "Zero", "Positive", "Infinite"], "a": 2 },
+    { "q": "The concept of 'bounded rationality' was introduced by:", "options": ["Adam Smith", "John Maynard Keynes", "Herbert Simon", "Milton Friedman"], "a": 2 },
+    { "q": "Price discrimination is most likely to occur in which market structure?", "options": ["Perfect competition", "Monopoly", "Monopolistic competition", "Oligopoly"], "a": 1 }
+]

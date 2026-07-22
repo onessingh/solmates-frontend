@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>In-Hand Salary Calculator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --secondary: #c0962d;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #eeeeee;
+      --success: #28a745;
+      --danger: #dc3545;
+      --info: #17a2b8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; }
+    
+    /* Navbar */
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 1000; border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .nav-logo { font-weight: 700; font-size: 1.25rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease; }
+    .back-link:hover { background: #1a3c5e; transform: translateY(-1px); }
+
+    .container { max-width: 1200px; margin: 25px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
+    @media (min-width: 900px) { .container { grid-template-columns: 1fr 1.2fr; } }
+
+    .header-section { text-align: center; margin-bottom: 25px; grid-column: 1 / -1; }
+    .header-section h1 { font-size: 1.8rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 12px; letter-spacing: -0.5px; }
+    @media (max-width: 600px) { .header-section h1 { font-size: 1.4rem; } }
+    .header-section h1 i { color: var(--accent); background: rgba(0,113,227,0.1); padding: 10px; border-radius: 12px; font-size: 1.2rem; }
+
+    .card { background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    @media (max-width: 600px) { .card { padding: 25px 20px; } }
+    
+    .form-group { margin-bottom: 22px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 0.95rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-wrapper i { position: absolute; left: 15px; color: var(--text-light); font-size: 1.1rem; }
+    .form-control { width: 100%; padding: 14px 16px 14px 45px; border-radius: 12px; border: 1.5px solid #e1e4e8; font-size: 1.05rem; font-weight: 500; font-family: inherit; outline: none; transition: all 0.3s; background: #fafafa; color: var(--primary); }
+    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(0,113,227,0.1); }
+    
+    .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: #f9f9fb; border-radius: 12px; border: 1px solid #eee; margin-bottom: 15px; }
+    .toggle-label { font-weight: 600; font-size: 0.95rem; color: var(--primary); display: flex; flex-direction: column; }
+    .toggle-desc { font-size: 0.8rem; color: var(--text-light); font-weight: 400; margin-top: 3px; }
+    
+    /* Toggle Switch */
+    .switch { position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    input:checked + .slider { background-color: var(--accent); }
+    input:checked + .slider:before { transform: translateX(24px); }
+    
+    .btn-calculate { width: fit-content; min-width: 250px; padding: 14px 30px; border-radius: 12px; background: linear-gradient(135deg, var(--primary, #0f2b46), #1a3c5e); color: white; border: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; box-shadow: 0 6px 15px rgba(15,43,70,0.2); margin: 25px auto 0; }
+    .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(15,43,70,0.3); }
+
+    /* Results Area */
+    .results-area { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .highlight-card { background: linear-gradient(135deg, #0071e3, #005bb5); border-radius: 15px; padding: 25px; color: white; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 10px 25px rgba(0,113,227,0.3); }
+    .highlight-title { font-size: 1rem; opacity: 0.9; margin-bottom: 5px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+    .highlight-value { font-size: 2.8rem; font-weight: 700; margin-bottom: 10px; }
+    .highlight-sub { font-size: 0.95rem; opacity: 0.8; background: rgba(255,255,255,0.15); padding: 5px 15px; border-radius: 20px; }
+    
+    .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .b-card { background: #f9f9fb; padding: 20px; border-radius: 12px; border: 1px solid #eee; text-align: center; }
+    .b-card.gross { border-top: 4px solid var(--info); }
+    .b-card.deduction { border-top: 4px solid var(--danger); }
+    .b-title { font-size: 0.9rem; color: var(--text-light); font-weight: 600; margin-bottom: 5px; }
+    .b-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    
+    .table-container { margin-top: 10px; overflow-x: auto; border-radius: 12px; border: 1px solid #eee; }
+    table { width: 100%; border-collapse: collapse; text-align: left; background: #fff; }
+    th, td { padding: 15px; border-bottom: 1px solid #eee; }
+    th { background: #f9f9fb; font-weight: 600; color: var(--primary); font-size: 0.95rem; }
+    td { font-size: 0.95rem; font-weight: 500; }
+    .row-deduction { color: var(--danger); }
+    .row-net { font-weight: 700; color: var(--success); background: rgba(40, 167, 69, 0.05); }
+    .text-right { text-align: right; }
+    
+    .chart-bar { height: 12px; width: 100%; background: #eee; border-radius: 6px; margin: 25px 0 10px; display: flex; overflow: hidden; }
+    .bar-net { background: var(--success); transition: width 1s ease; }
+    .bar-deduction { background: var(--danger); transition: width 1s ease; }
+    .chart-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-light); font-weight: 600; }
+
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-light); text-align: center; padding: 40px 20px; }
+    .empty-state i { font-size: 4rem; color: #e0e0e0; margin-bottom: 15px; }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-money-bill-wave"></i> Salary Calculator</h1>
+    </div>
+
+
+  
+
+  <div class="container">
+    
+
+    <!-- Input Area -->
+    <div class="card">
+      <div class="form-group">
+        <label>Total Yearly CTC (Cost to Company)</label>
+        <div class="input-wrapper">
+          <i class="fas fa-rupee-sign"></i>
+          <input type="number" id="ctcInput" class="form-control" placeholder="e.g. 600000" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Expected Annual Bonus (Variable Pay)</label>
+        <div class="input-wrapper">
+          <i class="fas fa-rupee-sign"></i>
+          <input type="number" id="bonusInput" class="form-control" placeholder="e.g. 50000 (Leave 0 if none)">
+        </div>
+      </div>
+
+      <div class="toggle-group">
+        <div class="toggle-label">
+          Deduct EPF (Provident Fund)
+          <span class="toggle-desc">Standard 12% of Basic Pay (Applies to both Emp. & Employer)</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="epfToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-group">
+        <div class="toggle-label">
+          Deduct Professional Tax
+          <span class="toggle-desc">Avg ₹200/month (Depends on state)</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="ptToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
+
+      <h3 style="color: var(--primary); font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-shopping-cart"></i> Monthly Expenses (Optional)</h3>
+      
+      <div class="form-group">
+        <label>Rent & EMIs</label>
+        <div class="input-wrapper">
+          <i class="fas fa-home"></i>
+          <input type="number" id="expRent" class="form-control" placeholder="e.g. 15000">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Groceries & Food</label>
+        <div class="input-wrapper">
+          <i class="fas fa-utensils"></i>
+          <input type="number" id="expFood" class="form-control" placeholder="e.g. 5000">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Shopping, Movies & Entertainment</label>
+        <div class="input-wrapper">
+          <i class="fas fa-film"></i>
+          <input type="number" id="expEntertainment" class="form-control" placeholder="e.g. 3000">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Other Expenses (Transport, Bills, etc.)</label>
+        <div class="input-wrapper">
+          <i class="fas fa-receipt"></i>
+          <input type="number" id="expOther" class="form-control" placeholder="e.g. 2000">
+        </div>
+      </div>
+
+      <div id="customExpensesContainer"></div>
+
+      <button type="button" class="btn-outline btn-sm" onclick="addCustomExpense()" style="width: 100%; border: 1.5px dashed var(--accent); color: var(--accent); padding: 12px; background: transparent; justify-content: center; margin-bottom: 20px;">
+        <i class="fas fa-plus"></i> Add Custom Expense
+      </button>
+
+      <button class="btn-calculate" onclick="calculateSalary()">
+        <i class="fas fa-calculator"></i> Calculate In-Hand Salary
+      </button>
+    </div>
+
+    <!-- Results Area -->
+    <div class="card" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
+      
+      <div class="empty-state" id="emptyState">
+        <i class="fas fa-chart-pie"></i>
+        <h3>Awaiting Calculation</h3>
+        <p>Enter your CTC details on the left to see your detailed salary breakdown.</p>
+      </div>
+
+      <div class="results-area" id="resultsArea">
+        
+        <div class="highlight-card">
+          <div class="highlight-title">Estimated Monthly Savings</div>
+          <div class="highlight-value" id="monthlySavings">₹0</div>
+          <div class="highlight-sub" id="monthlyNetSub">In-Hand Salary: ₹0</div>
+        </div>
+        
+        <div class="chart-bar">
+          <div class="bar-net" id="barSavings" style="width: 0%; background: var(--success);" title="Savings"></div>
+          <div class="bar-net" id="barExp" style="width: 0%; background: var(--info);" title="Expenses"></div>
+          <div class="bar-deduction" id="barDed" style="width: 0%;" title="Taxes & PF"></div>
+        </div>
+        <div class="chart-labels">
+          <span style="color: var(--success)"><i class="fas fa-circle"></i> Savings (<span id="pctSavings">0%</span>)</span>
+          <span style="color: var(--info)"><i class="fas fa-circle"></i> Expenses (<span id="pctExp">0%</span>)</span>
+          <span style="color: var(--danger)"><i class="fas fa-circle"></i> Deductions (<span id="pctDed">0%</span>)</span>
+        </div>
+
+        <div class="breakdown-grid" style="margin-top: 15px;">
+          <div class="b-card gross">
+            <div class="b-title">Monthly Gross</div>
+            <div class="b-value" id="monthlyGross">₹0</div>
+          </div>
+          <div class="b-card deduction">
+            <div class="b-title">Total Outflow</div>
+            <div class="b-value" id="monthlyOutflow">₹0</div>
+            <div style="font-size:0.75rem; color:#888; margin-top:3px;">(Taxes + Expenses)</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th class="text-right">Monthly</th>
+                <th class="text-right">Yearly</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fixed Gross Salary</td>
+                <td class="text-right" id="tGrossM">₹0</td>
+                <td class="text-right" id="tGrossY">₹0</td>
+              </tr>
+              <tr class="row-deduction">
+                <td>Provident Fund (EPF)</td>
+                <td class="text-right" id="tEpfM">-₹0</td>
+                <td class="text-right" id="tEpfY">-₹0</td>
+              </tr>
+              <tr class="row-deduction">
+                <td>Professional Tax (PT)</td>
+                <td class="text-right" id="tPtM">-₹0</td>
+                <td class="text-right" id="tPtY">-₹0</td>
+              </tr>
+              <tr class="row-deduction">
+                <td>Est. Income Tax (TDS) <br><small style="color:#888;">*Old regime approx.</small></td>
+                <td class="text-right" id="tTaxM">-₹0</td>
+                <td class="text-right" id="tTaxY">-₹0</td>
+              </tr>
+              <tr class="row-net" style="background: rgba(0, 113, 227, 0.05); color: var(--primary);">
+                <td>Net Take-Home Salary</td>
+                <td class="text-right" id="tNetM">₹0</td>
+                <td class="text-right" id="tNetY">₹0</td>
+              </tr>
+              <tr class="row-deduction" style="color: var(--info);">
+                <td>Total Living Expenses</td>
+                <td class="text-right" id="tExpM">-₹0</td>
+                <td class="text-right" id="tExpY">-₹0</td>
+              </tr>
+              <tr class="row-net" style="font-size: 1.05rem;">
+                <td>Final Savings (Remaining)</td>
+                <td class="text-right" id="tSavM">₹0</td>
+                <td class="text-right" id="tSavY">₹0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function formatCurrency(num) {
+      return '₹' + Math.round(num).toLocaleString('en-IN');
+    }
+
+    function calculateTax(taxableIncome) {
+      // Very basic old tax regime approximation for generic calculation
+      let tax = 0;
+      if (taxableIncome > 500000) {
+        if (taxableIncome <= 1000000) {
+          tax = (taxableIncome - 500000) * 0.20 + 12500;
+        } else {
+          tax = (taxableIncome - 1000000) * 0.30 + 112500;
+        }
+        // Add 4% cess
+        tax = tax * 1.04;
+      }
+      return tax;
+    }
+
+    function calculateSalary() {
+      const ctcInput = parseFloat(document.getElementById('ctcInput').value);
+      const bonusInput = parseFloat(document.getElementById('bonusInput').value) || 0;
+      const deductEpf = document.getElementById('epfToggle').checked;
+      const deductPt = document.getElementById('ptToggle').checked;
+
+      if (!ctcInput || isNaN(ctcInput) || ctcInput < 0) {
+        alert("Please enter a valid Yearly CTC amount.");
+        return;
+      }
+
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultsArea').style.display = 'flex';
+
+      // Basic India Salary Logic Breakdown
+      // Fixed CTC = Total CTC - Variable Bonus
+      let fixedCtc = ctcInput - bonusInput;
+      if (fixedCtc < 0) fixedCtc = 0;
+
+      // Employer PF is part of CTC (usually 12% of Basic)
+      // Assume Basic is 50% of Fixed CTC
+      let basicYearly = fixedCtc * 0.50;
+      
+      let epfYearly = 0;
+      let employerEpfYearly = 0;
+
+      if (deductEpf) {
+        // Capping Basic at 15000/month (1,80,000/year) for EPF is common, but let's assume uncapped for simplicity or standard 12%
+        // Using standard 12% of Basic
+        epfYearly = basicYearly * 0.12; 
+        employerEpfYearly = basicYearly * 0.12; // Employer contribution is deducted from CTC
+      }
+
+      // Gross Salary (Yearly) = Fixed CTC - Employer PF
+      let grossYearly = fixedCtc - employerEpfYearly;
+      let grossMonthly = grossYearly / 12;
+
+      // Deductions
+      let ptYearly = deductPt ? 2400 : 0; // ₹200 * 12
+      let ptMonthly = ptYearly / 12;
+
+      let epfMonthly = epfYearly / 12;
+
+      // Standard Deduction for Tax
+      let standardDeduction = 50000;
+      let taxableIncome = grossYearly - epfYearly - ptYearly - standardDeduction;
+      if (taxableIncome < 0) taxableIncome = 0;
+
+      let taxYearly = calculateTax(taxableIncome);
+      let taxMonthly = taxYearly / 12;
+
+      // Total Deductions (Employee side)
+      let totalDedYearly = epfYearly + ptYearly + taxYearly;
+      let totalDedMonthly = epfMonthly + ptMonthly + taxMonthly;
+
+      // Net Salary
+      let netYearly = grossYearly - totalDedYearly;
+      let netMonthly = grossMonthly - totalDedMonthly;
+
+      // Expenses
+      let expRent = parseFloat(document.getElementById('expRent').value) || 0;
+      let expFood = parseFloat(document.getElementById('expFood').value) || 0;
+      let expEntertainment = parseFloat(document.getElementById('expEntertainment').value) || 0;
+      let expOther = parseFloat(document.getElementById('expOther').value) || 0;
+      
+      let customExpTotal = 0;
+      document.querySelectorAll('.custom-expense-val').forEach(input => {
+        customExpTotal += parseFloat(input.value) || 0;
+      });
+
+      let totalExpMonthly = expRent + expFood + expEntertainment + expOther + customExpTotal;
+      let totalExpYearly = totalExpMonthly * 12;
+
+      // Savings
+      let savingsMonthly = netMonthly - totalExpMonthly;
+      let savingsYearly = netYearly - totalExpYearly;
+      
+      let totalOutflowMonthly = totalDedMonthly + totalExpMonthly;
+
+      // Update UI Highlights
+      document.getElementById('monthlySavings').textContent = formatCurrency(savingsMonthly);
+      document.getElementById('monthlyNetSub').textContent = `In-Hand Salary: ${formatCurrency(netMonthly)}`;
+      
+      document.getElementById('monthlyGross').textContent = formatCurrency(grossMonthly);
+      document.getElementById('monthlyOutflow').textContent = formatCurrency(totalOutflowMonthly);
+
+      // Update Chart (Base is Gross)
+      let pctSavings = Math.max(0, Math.round((savingsYearly / grossYearly) * 100));
+      let pctExp = Math.max(0, Math.round((totalExpYearly / grossYearly) * 100));
+      let pctDed = Math.max(0, Math.round((totalDedYearly / grossYearly) * 100));
+      
+      // Fix rounding issues
+      if (pctSavings + pctExp + pctDed > 100) {
+        if(pctSavings > 0) pctSavings -= (pctSavings + pctExp + pctDed - 100);
+      }
+      if (savingsYearly < 0) { pctSavings = 0; }
+
+      setTimeout(() => {
+        document.getElementById('barSavings').style.width = pctSavings + '%';
+        document.getElementById('barExp').style.width = pctExp + '%';
+        document.getElementById('barDed').style.width = pctDed + '%';
+      }, 100);
+      
+      document.getElementById('pctSavings').textContent = pctSavings + '%';
+      document.getElementById('pctExp').textContent = pctExp + '%';
+      document.getElementById('pctDed').textContent = pctDed + '%';
+
+      // Update Table
+      document.getElementById('tGrossM').textContent = formatCurrency(grossMonthly);
+      document.getElementById('tGrossY').textContent = formatCurrency(grossYearly);
+      
+      document.getElementById('tEpfM').textContent = '-' + formatCurrency(epfMonthly);
+      document.getElementById('tEpfY').textContent = '-' + formatCurrency(epfYearly);
+      
+      document.getElementById('tPtM').textContent = '-' + formatCurrency(ptMonthly);
+      document.getElementById('tPtY').textContent = '-' + formatCurrency(ptYearly);
+
+      document.getElementById('tTaxM').textContent = '-' + formatCurrency(taxMonthly);
+      document.getElementById('tTaxY').textContent = '-' + formatCurrency(taxYearly);
+      
+      document.getElementById('tNetM').textContent = formatCurrency(netMonthly);
+      document.getElementById('tNetY').textContent = formatCurrency(netYearly);
+
+      document.getElementById('tExpM').textContent = '-' + formatCurrency(totalExpMonthly);
+      document.getElementById('tExpY').textContent = '-' + formatCurrency(totalExpYearly);
+
+      document.getElementById('tSavM').textContent = formatCurrency(savingsMonthly);
+      document.getElementById('tSavY').textContent = formatCurrency(savingsYearly);
+
+      if (savingsMonthly < 0) {
+        document.getElementById('monthlySavings').style.color = 'var(--danger)';
+        document.getElementById('tSavM').style.color = 'var(--danger)';
+      } else {
+        document.getElementById('monthlySavings').style.color = 'white';
+        document.getElementById('tSavM').style.color = '';
+      }
+
+      // Mobile scroll
+      if(window.innerWidth < 900) {
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    let customExpCount = 0;
+    function addCustomExpense() {
+      customExpCount++;
+      const container = document.getElementById('customExpensesContainer');
+      const div = document.createElement('div');
+      div.className = 'form-group custom-expense-row';
+      div.style.display = 'flex';
+      div.style.gap = '10px';
+      
+      div.innerHTML = `
+        <div style="flex: 1;">
+          <input type="text" class="form-control" placeholder="Expense Name (e.g. Gym)" style="padding-left: 15px;">
+        </div>
+        <div class="input-wrapper" style="flex: 1;">
+          <i class="fas fa-rupee-sign"></i>
+          <input type="number" class="form-control custom-expense-val" placeholder="Amount">
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" style="background:transparent; border:none; color:var(--danger); font-size:1.2rem; cursor:pointer; padding:0 10px;"><i class="fas fa-times-circle"></i></button>
+      `;
+      container.appendChild(div);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,465 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://solmates-backend-w27e.onrender.com/api/:path*"
+    },
+    {
+      "source": "/database/database.html",
+      "destination": "/database"
+    },
+    {
+      "source": "/journey/journey.html",
+      "destination": "/journey"
+    },
+    {
+      "source": "/skills/skills.html",
+      "destination": "/skills"
+    },
+    {
+      "source": "/tools/tools.html",
+      "destination": "/tools"
+    },
+    {
+      "source": "/database/classes/classes.html",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/tools/planner/planner.html",
+      "destination": "/tools/planner"
+    },
+    {
+      "source": "/tools/resumebuilder/resumebuilder.html",
+      "destination": "/tools/resumebuilder"
+    },
+    {
+      "source": "/database",
+      "destination": "/database/index.html"
+    },
+    {
+      "source": "/database/",
+      "destination": "/database/index.html"
+    },
+    {
+      "source": "/journey",
+      "destination": "/journey/index.html"
+    },
+    {
+      "source": "/journey/",
+      "destination": "/journey/index.html"
+    },
+    {
+      "source": "/skills",
+      "destination": "/skills/index.html"
+    },
+    {
+      "source": "/skills/",
+      "destination": "/skills/index.html"
+    },
+    {
+      "source": "/tools",
+      "destination": "/tools/index.html"
+    },
+    {
+      "source": "/tools/",
+      "destination": "/tools/index.html"
+    },
+    {
+      "source": "/notification",
+      "destination": "/notification"
+    },
+    {
+      "source": "/notification/",
+      "destination": "/notification"
+    },
+    {
+      "source": "/resume-builder",
+      "destination": "/tools/resumebuilder"
+    },
+    {
+      "source": "/resume-builder/",
+      "destination": "/tools/resumebuilder"
+    },
+    {
+      "source": "/pdf-tools",
+      "destination": "/tools/pdf-tools"
+    },
+    {
+      "source": "/pdf-tools/",
+      "destination": "/tools/pdf-tools"
+    },
+    {
+      "source": "/mba-notes",
+      "destination": "/database"
+    },
+    {
+      "source": "/mba-notes/",
+      "destination": "/database"
+    },
+    {
+      "source": "/study-material",
+      "destination": "/database"
+    },
+    {
+      "source": "/study-material/",
+      "destination": "/database"
+    },
+    {
+      "source": "/sol-notes",
+      "destination": "/database"
+    },
+    {
+      "source": "/sol-notes/",
+      "destination": "/database"
+    },
+    {
+      "source": "/mba-live-classes",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/mba-live-classes/",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/online-classes",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/online-classes/",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/mba-pyqs",
+      "destination": "/database/view?category=pyqs"
+    },
+    {
+      "source": "/mba-pyqs/",
+      "destination": "/database/view?category=pyqs"
+    },
+    {
+      "source": "/professor-materials",
+      "destination": "/database/view?category=professor"
+    },
+    {
+      "source": "/professor-materials/",
+      "destination": "/database/view?category=professor"
+    },
+    {
+      "source": "/mba-one-shot",
+      "destination": "/database/view?category=oneshot"
+    },
+    {
+      "source": "/mba-one-shot/",
+      "destination": "/database/view?category=oneshot"
+    },
+    {
+      "source": "/du-sol-results",
+      "destination": "/notification"
+    },
+    {
+      "source": "/du-sol-results/",
+      "destination": "/notification"
+    },
+    {
+      "source": "/distance-learning",
+      "destination": "/database"
+    },
+    {
+      "source": "/distance-learning/",
+      "destination": "/database"
+    },
+    {
+      "source": "/database/notes",
+      "destination": "/database/view?category=notes"
+    },
+    {
+      "source": "/database/notes/",
+      "destination": "/database/view?category=notes"
+    },
+    {
+      "source": "/database/pyqs",
+      "destination": "/database/view?category=pyqs"
+    },
+    {
+      "source": "/database/pyqs/",
+      "destination": "/database/view?category=pyqs"
+    },
+    {
+      "source": "/database/pyq",
+      "destination": "/database/view?category=pyqs"
+    },
+    {
+      "source": "/database/pyq/",
+      "destination": "/database/view?category=pyqs"
+    },
+    {
+      "source": "/database/oneshot",
+      "destination": "/database/view?category=oneshot"
+    },
+    {
+      "source": "/database/oneshot/",
+      "destination": "/database/view?category=oneshot"
+    },
+    {
+      "source": "/database/professor",
+      "destination": "/database/view?category=professor"
+    },
+    {
+      "source": "/database/professor/",
+      "destination": "/database/view?category=professor"
+    },
+    {
+      "source": "/database/view",
+      "destination": "/database/view"
+    },
+    {
+      "source": "/database/view/",
+      "destination": "/database/view"
+    },
+    {
+      "source": "/database/youtube",
+      "destination": "/database/view?category=youtube"
+    },
+    {
+      "source": "/database/youtube/",
+      "destination": "/database/view?category=youtube"
+    },
+    {
+      "source": "/database/youtube-browse",
+      "destination": "/database/youtube-browse"
+    },
+    {
+      "source": "/database/youtube-browse/",
+      "destination": "/database/youtube-browse"
+    },
+    {
+      "source": "/database/youtube-content",
+      "destination": "/database/youtube-content"
+    },
+    {
+      "source": "/database/youtube-content/",
+      "destination": "/database/youtube-content"
+    },
+    {
+      "source": "/database/classes",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/database/classes/",
+      "destination": "/database/classes"
+    },
+    {
+      "source": "/database/elearning/subjects",
+      "destination": "/database/elearning-subjects"
+    },
+    {
+      "source": "/database/elearning/subjects/",
+      "destination": "/database/elearning-subjects"
+    },
+    {
+      "source": "/database/elearning-subjects",
+      "destination": "/database/elearning-subjects"
+    },
+    {
+      "source": "/database/elearning-subjects/",
+      "destination": "/database/elearning-subjects"
+    },
+    {
+      "source": "/database/elearning",
+      "destination": "/database/view?category=elearning"
+    },
+    {
+      "source": "/database/elearning/",
+      "destination": "/database/view?category=elearning"
+    },
+    {
+      "source": "/database/folder-content",
+      "destination": "/database/folder-content"
+    },
+    {
+      "source": "/database/folder-content/",
+      "destination": "/database/folder-content"
+    },
+    {
+      "source": "/tools/resume",
+      "destination": "/tools/resumebuilder"
+    },
+    {
+      "source": "/tools/resume/",
+      "destination": "/tools/resumebuilder"
+    },
+    {
+      "source": "/tools/planner",
+      "destination": "/tools/planner"
+    },
+    {
+      "source": "/tools/planner/",
+      "destination": "/tools/planner"
+    },
+    {
+      "source": "/tools/background",
+      "destination": "/tools/background-remover/background-remover.html"
+    },
+    {
+      "source": "/tools/background/",
+      "destination": "/tools/background-remover/background-remover.html"
+    },
+    {
+      "source": "/tools/career-test",
+      "destination": "/tools/careertest"
+    },
+    {
+      "source": "/tools/career-test/",
+      "destination": "/tools/careertest"
+    },
+    {
+      "source": "/tools/compressor",
+      "destination": "/tools/compressor"
+    },
+    {
+      "source": "/tools/coverpage",
+      "destination": "/tools/coverpage.html"
+    },
+    {
+      "source": "/tools/coverpage/",
+      "destination": "/tools/coverpage.html"
+    },
+    {
+      "source": "/tools/email-generator",
+      "destination": "/tools/email-generator.html"
+    },
+    {
+      "source": "/tools/email-generator/",
+      "destination": "/tools/email-generator.html"
+    },
+    {
+      "source": "/tools/compressor/",
+      "destination": "/tools/compressor"
+    },
+    {
+      "source": "/tools/converter",
+      "destination": "/tools/converter"
+    },
+    {
+      "source": "/tools/converter/",
+      "destination": "/tools/converter"
+    },
+    {
+      "source": "/tools/interview",
+      "destination": "/tools/interview"
+    },
+    {
+      "source": "/tools/interview/",
+      "destination": "/tools/interview"
+    },
+    {
+      "source": "/skills/personality-test",
+      "destination": "/skills/personality-test"
+    },
+    {
+      "source": "/skills/personality-test/",
+      "destination": "/skills/personality-test"
+    },
+    {
+      "source": "/skills/aptitude-test",
+      "destination": "/skills/aptitude-test"
+    },
+    {
+      "source": "/skills/aptitude-test/",
+      "destination": "/skills/aptitude-test"
+    },
+    {
+      "source": "/skills/skill-gap",
+      "destination": "/skills/skill-gap"
+    },
+    {
+      "source": "/skills/skill-gap/",
+      "destination": "/skills/skill-gap"
+    },
+    {
+      "source": "/skills/learning-path",
+      "destination": "/skills/learning-path"
+    },
+    {
+      "source": "/skills/learning-path/",
+      "destination": "/skills/learning-path"
+    },
+    {
+      "source": "/skills/certification-guide",
+      "destination": "/skills/certification-guide"
+    },
+    {
+      "source": "/skills/certification-guide/",
+      "destination": "/skills/certification-guide"
+    },
+    {
+      "source": "/skills/salary-insights",
+      "destination": "/skills/salary-insights"
+    },
+    {
+      "source": "/skills/salary-insights/",
+      "destination": "/skills/salary-insights"
+    },
+    {
+      "source": "/skills/interest-inventory",
+      "destination": "/skills/interest-inventory"
+    },
+    {
+      "source": "/skills/interest-inventory/",
+      "destination": "/skills/interest-inventory"
+    },
+    {
+      "source": "/skills/project-ideas",
+      "destination": "/skills/project-ideas"
+    },
+    {
+      "source": "/skills/project-ideas/",
+      "destination": "/skills/project-ideas"
+    },
+    {
+      "source": "/skills/job-market",
+      "destination": "/skills/job-market"
+    },
+    {
+      "source": "/skills/job-market/",
+      "destination": "/skills/job-market"
+    },
+    {
+      "source": "/skills/company-culture",
+      "destination": "/skills/company-culture"
+    },
+    {
+      "source": "/skills/company-culture/",
+      "destination": "/skills/company-culture"
+    },
+    {
+      "source": "/skills/growth-opportunities",
+      "destination": "/skills/growth-opportunities"
+    },
+    {
+      "source": "/skills/growth-opportunities/",
+      "destination": "/skills/growth-opportunities"
+    },
+    {
+      "source": "/skills/skill-tracker",
+      "destination": "/skills/skill-tracker"
+    },
+    {
+      "source": "/skills/skill-tracker/",
+      "destination": "/skills/skill-tracker"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/admin-dashboard",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CGPA & Academic Calculator | SOLMATES</title>
+  
+  <meta name="description" content="Calculate your CGPA to Percentage, SGPA, and academic honors using the standard DU/SOL conversion formulas.">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      background: #f9f9fb;
+      color: #111;
+      padding-top: 80px;
+      min-height: 100vh;
+    }
+
+    /* ========== Navbar ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-left {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f2b46;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      background: #0f2b46;
+      color: white;
+      text-decoration: none;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    /* ========== Main Container ========== */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 16px;
+    }
+
+    /* ========== Calculator Grid ========== */
+    .calc-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+      transition: transform 0.3s;
+    }
+
+    .calc-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-title {
+      font-size: 20px;
+      color: #0f2b46;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-title i {
+      color: #c0962d;
+    }
+
+    /* ========== Form Elements ========== */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #eee;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: #0071e3;
+      background: #fdfdfd;
+    }
+
+    /* ========== Result Display ========== */
+    .result-box {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 20px;
+      border: 2px dashed #eee;
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-val {
+      font-size: 36px;
+      font-weight: 700;
+      color: #0071e3;
+    }
+
+    .result-label {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .formula-tag {
+      font-size: 11px;
+      color: #999;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    /* Dynamic Semester Button */
+    .add-sem-btn {
+      width: 100%;
+      padding: 12px;
+      background: #f1f5f9;
+      color: #0f2b46;
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .add-sem-btn:hover {
+      background: #e2e8f0;
+      border-color: #0f2b46;
+      transform: translateY(-2px);
+    }
+
+    .sem-row {
+      position: relative;
+    }
+
+    .remove-sem-btn {
+      position: absolute;
+      right: 15px;
+      top: 36px;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 14px;
+      opacity: 0.7;
+      transition: 0.2s;
+    }
+
+    .remove-sem-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .header h1 { 
+        font-size: 26px; 
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header h1 i { font-size: 32px; }
+      .calc-card { padding: 20px; }
+      .result-val { font-size: 28px; }
+      .card-title {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+      }
+    }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-graduation-cap"></i> Academic Calculator</h1>
+    </div>
+
+
+  
+
+  <div class="container">
+    <div class="header">
+      
+      <p>Standard DU/SOL CGPA to Percentage & GPA Tools</p>
+    </div>
+
+    <!-- CGPA to Percentage -->
+    <div class="calc-card">
+      <h2 class="card-title"><i class="fas fa-percent"></i> CGPA to Percentage Converter</h2>
+      <div class="input-group">
+        <label>Enter your CGPA (e.g., 8.5):</label>
+        <input type="number" id="cgpaInput" class="input-field" placeholder="0.00" step="0.01" min="0" max="10" oninput="calculatePercentage()">
+      </div>
+      
+      <div id="percentageResult" class="result-box">
+        <div class="result-val" id="percentVal">--</div>
+        <div class="result-label">Aggregated Percentage</div>
+        <div class="formula-tag">Formula: CGPA × 9.5 (DU Standard)</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <h2 class="card-title"><i class="fas fa-list-ol"></i> Subject-wise SGPA Calculator (By Grade)</h2>
+      
+      <div id="subjectInputs">
+        <!-- Default 4 subjects -->
+        <div class="subject-row" style="display:flex; gap:10px; margin-bottom:15px; align-items:center; position:relative;">
+          <input type="text" class="input-field" placeholder="Subject Name (Opt)" style="flex:2">
+          <input type="number" class="input-field cred-input" placeholder="Credits (e.g. 4.5, NOT Credit Points)" style="flex:1" min="0.5" max="10" step="0.5" oninput="calculateSubjectSGPA()">
+          <select class="input-field grade-input" style="flex:1; padding:12px;" onchange="calculateSubjectSGPA()">
+            <option value="">Grade</option>
+            <option value="10">O (10)</option>
+            <option value="9">A+ (9)</option>
+            <option value="8">A (8)</option>
+            <option value="7">B+ (7)</option>
+            <option value="6">B (6)</option>
+            <option value="5">C (5)</option>
+            <option value="4">P (4)</option>
+            <option value="0">F (0)</option>
+          </select>
+        </div>
+        <div class="subject-row" style="display:flex; gap:10px; margin-bottom:15px; align-items:center; position:relative;">
+          <input type="text" class="input-field" placeholder="Subject Name (Opt)" style="flex:2">
+          <input type="number" class="input-field cred-input" placeholder="Credits (e.g. 4.5, NOT Credit Points)" style="flex:1" min="0.5" max="10" step="0.5" oninput="calculateSubjectSGPA()">
+          <select class="input-field grade-input" style="flex:1; padding:12px;" onchange="calculateSubjectSGPA()">
+            <option value="">Grade</option>
+            <option value="10">O (10)</option>
+            <option value="9">A+ (9)</option>
+            <option value="8">A (8)</option>
+            <option value="7">B+ (7)</option>
+            <option value="6">B (6)</option>
+            <option value="5">C (5)</option>
+            <option value="4">P (4)</option>
+            <option value="0">F (0)</option>
+          </select>
+        </div>
+        <div class="subject-row" style="display:flex; gap:10px; margin-bottom:15px; align-items:center; position:relative;">
+          <input type="text" class="input-field" placeholder="Subject Name (Opt)" style="flex:2">
+          <input type="number" class="input-field cred-input" placeholder="Credits (e.g. 4.5, NOT Credit Points)" style="flex:1" min="0.5" max="10" step="0.5" oninput="calculateSubjectSGPA()">
+          <select class="input-field grade-input" style="flex:1; padding:12px;" onchange="calculateSubjectSGPA()">
+            <option value="">Grade</option>
+            <option value="10">O (10)</option>
+            <option value="9">A+ (9)</option>
+            <option value="8">A (8)</option>
+            <option value="7">B+ (7)</option>
+            <option value="6">B (6)</option>
+            <option value="5">C (5)</option>
+            <option value="4">P (4)</option>
+            <option value="0">F (0)</option>
+          </select>
+        </div>
+        <div class="subject-row" style="display:flex; gap:10px; margin-bottom:15px; align-items:center; position:relative;">
+          <input type="text" class="input-field" placeholder="Subject Name (Opt)" style="flex:2">
+          <input type="number" class="input-field cred-input" placeholder="Credits (e.g. 4.5, NOT Credit Points)" style="flex:1" min="0.5" max="10" step="0.5" oninput="calculateSubjectSGPA()">
+          <select class="input-field grade-input" style="flex:1; padding:12px;" onchange="calculateSubjectSGPA()">
+            <option value="">Grade</option>
+            <option value="10">O (10)</option>
+            <option value="9">A+ (9)</option>
+            <option value="8">A (8)</option>
+            <option value="7">B+ (7)</option>
+            <option value="6">B (6)</option>
+            <option value="5">C (5)</option>
+            <option value="4">P (4)</option>
+            <option value="0">F (0)</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="add-sem-btn" onclick="addSubject()">
+        <i class="fas fa-plus"></i> Add Subject
+      </button>
+
+      <div id="subjectResult" class="result-box">
+        <div class="result-val" id="subjectSgpaVal">--</div>
+        <div class="result-label">Calculated SGPA</div>
+        <div class="formula-tag">Formula: Σ(Credits × Grade Points) / Σ(Credits)</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <h2 class="card-title"><i class="fas fa-graduation-cap"></i> SGPA to CGPA Estimator</h2>
+      
+      <div id="sgpaInputs">
+        <div class="input-group">
+          <label>Enter SGPA (Sem 1):</label>
+          <input type="number" class="input-field sgpa-input" placeholder="0.00" step="0.01" min="0" max="10" oninput="calculateCGPA()">
+        </div>
+        <div class="input-group">
+          <label>Enter SGPA (Sem 2):</label>
+          <input type="number" class="input-field sgpa-input" placeholder="0.00" step="0.01" min="0" max="10" oninput="calculateCGPA()">
+        </div>
+        <div class="input-group">
+          <label>Enter SGPA (Sem 3):</label>
+          <input type="number" class="input-field sgpa-input" placeholder="0.00" step="0.01" min="0" max="10" oninput="calculateCGPA()">
+        </div>
+        <div class="input-group">
+          <label>Enter SGPA (Sem 4):</label>
+          <input type="number" class="input-field sgpa-input" placeholder="0.00" step="0.01" min="0" max="10" oninput="calculateCGPA()">
+        </div>
+      </div>
+
+      <button class="add-sem-btn" onclick="addSemester()">
+        <i class="fas fa-plus"></i> Add Semester
+      </button>
+
+      <div id="cgpaResult" class="result-box">
+        <div class="result-val" id="cgpaVal">--</div>
+        <div class="result-label">Estimated Cumulative CGPA</div>
+        <div class="formula-tag">Note: This is an arithmetic average. Actual CGPA may vary based on credits.</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>2026 SOLMATES • Accurate to DU/SOL Grading Norms</p>
+    </div>
+  </div>
+
+  <script>
+    function calculateSubjectSGPA() {
+      const rows = document.querySelectorAll('.subject-row');
+      let totalCredits = 0;
+      let totalPoints = 0;
+      let hasValidData = false;
+
+      rows.forEach(row => {
+        const credInput = row.querySelector('.cred-input').value;
+        const gradeInput = row.querySelector('.grade-input').value;
+        
+        if (credInput && gradeInput !== "") {
+          const credits = parseFloat(credInput);
+          const points = parseFloat(gradeInput);
+          totalCredits += credits;
+          totalPoints += (credits * points);
+          hasValidData = true;
+        }
+      });
+
+      const box = document.getElementById('subjectResult');
+      const val = document.getElementById('subjectSgpaVal');
+
+      if (hasValidData && totalCredits > 0) {
+        const sgpa = (totalPoints / totalCredits).toFixed(2);
+        val.innerText = sgpa;
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
+    function addSubject() {
+      const container = document.getElementById('subjectInputs');
+      const newRow = document.createElement('div');
+      newRow.className = 'subject-row';
+      newRow.style.cssText = 'display:flex; gap:10px; margin-bottom:15px; align-items:center; position:relative;';
+      newRow.innerHTML = `
+        <input type="text" class="input-field" placeholder="Subject Name (Opt)" style="flex:2">
+        <input type="number" class="input-field cred-input" placeholder="Credits (e.g. 4.5, NOT Credit Points)" style="flex:1" min="0.5" max="10" step="0.5" oninput="calculateSubjectSGPA()">
+        <select class="input-field grade-input" style="flex:1; padding:12px;" onchange="calculateSubjectSGPA()">
+          <option value="">Grade</option>
+          <option value="10">O (10)</option>
+          <option value="9">A+ (9)</option>
+          <option value="8">A (8)</option>
+          <option value="7">B+ (7)</option>
+          <option value="6">B (6)</option>
+          <option value="5">C (5)</option>
+          <option value="4">P (4)</option>
+          <option value="0">F (0)</option>
+        </select>
+        <i class="fas fa-times" style="color:#ef4444; cursor:pointer; font-size:16px; margin-left:5px;" onclick="removeSubject(this)" title="Remove Subject"></i>
+      `;
+      container.appendChild(newRow);
+    }
+
+    function removeSubject(btn) {
+      btn.parentElement.remove();
+      calculateSubjectSGPA();
+    }
+
+    function calculatePercentage() {
+      const input = document.getElementById('cgpaInput');
+      const box = document.getElementById('percentageResult');
+      const val = document.getElementById('percentVal');
+      
+      const cgpa = parseFloat(input.value);
+      if (cgpa > 0 && cgpa <= 10) {
+        const percentage = (cgpa * 9.5).toFixed(1);
+        val.innerText = percentage + '%';
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
+    function calculateCGPA() {
+      const inputs = document.querySelectorAll('.sgpa-input');
+      const box = document.getElementById('cgpaResult');
+      const val = document.getElementById('cgpaVal');
+      
+      let sum = 0;
+      let count = 0;
+      
+      inputs.forEach(input => {
+        const v = parseFloat(input.value);
+        if (v > 0 && v <= 10) {
+          sum += v;
+          count++;
+        }
+      });
+
+      if (count > 0) {
+        const finalCGPA = (sum / count).toFixed(2);
+        val.innerText = finalCGPA;
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
+
+    function addSemester() {
+      const container = document.getElementById('sgpaInputs');
+      const semCount = container.querySelectorAll('.input-group').length + 1;
+      
+      const newRow = document.createElement('div');
+      newRow.className = 'input-group sem-row';
+      newRow.innerHTML = `
+        <label>Enter SGPA (Sem ${semCount}):</label>
+        <input type="number" class="input-field sgpa-input" placeholder="0.00" step="0.01" min="0" max="10" oninput="calculateCGPA()">
+        <i class="fas fa-times remove-sem-btn" onclick="removeSemester(this)" title="Remove Semester"></i>
+      `;
+      
+      container.appendChild(newRow);
+    }
+
+    function removeSemester(btn) {
+      btn.parentElement.remove();
+      
+      // Update labels for all remaining semesters for consistency
+      const container = document.getElementById('sgpaInputs');
+      const labels = container.querySelectorAll('label');
+      labels.forEach((label, index) => {
+        label.innerText = `Enter SGPA (Sem ${index + 1}):`;
+      });
+      
+      calculateCGPA();
+    }
+  </script>
+</body>
+</html>

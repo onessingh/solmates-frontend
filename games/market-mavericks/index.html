@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Mavericks | Virtual Trading Game</title>
+    <link rel="stylesheet" href="/css/global-lockdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root { --primary: #f8fafc; --card-bg: rgba(255,255,255,0.8); --glass-border: rgba(0,0,0,0.05); --text-main: #0f172a; --text-muted: #64748b; }
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; background: var(--primary); color: var(--text-main);
+            background-image: radial-gradient(circle at 15% 50%, rgba(34,197,94,0.05), transparent 25%), radial-gradient(circle at 85% 30%, rgba(239,68,68,0.05), transparent 25%);
+            margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        .header-bar { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); padding: 16px; text-align: center; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
+        .header-bar h1 { margin: 0; font-size: 1.25rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
+        .gradient-text { background: linear-gradient(45deg, #22c55e, #0ea5e9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .hidden { display: none !important; }
+        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; box-sizing: border-box; }
+        .input-box:focus { outline: none; border-color: #22c55e; }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(15,23,42,0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .trade-btn { padding: 12px 8px; border-radius: 12px; border: none; font-size: clamp(0.85rem, 3.5vw, 1.1rem); font-weight: 800; cursor: pointer; transition: all 0.2s; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+        .buy-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
+        .buy-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
+        .sell-btn { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .sell-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
+        .hold-btn { background: linear-gradient(135deg, #64748b, #475569); color: white; }
+        .hold-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(100,116,139,0.4); }
+        .trade-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .market-value { font-size: 2rem; font-weight: 800; }
+        .positive { color: #22c55e; }
+        .negative { color: #ef4444; }
+        .neutral { color: #64748b; }
+        .portfolio-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
+        .ticker { font-family: 'Courier New', monospace; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div class="header-bar"><h1><i data-lucide="trending-up"></i> Market Mavericks</h1></div>
+
+<div class="main-container">
+
+<!-- Screen 1: Welcome -->
+<div id="screen-welcome" class="w-full max-w-md glass-card p-6 md:p-8 text-center">
+    <h1 class="text-2xl md:text-3xl font-bold mb-2">Market <span class="gradient-text">Mavericks</span></h1>
+    <p class="text-slate-500 mb-2 text-sm">Virtual trading game. React to AI-generated news. Highest portfolio wins!</p>
+    <p class="text-xs text-green-600 font-semibold mb-6">Up to 4 players • ₹10,000 virtual budget</p>
+    <div class="flex items-center justify-center gap-3 mb-8 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+        <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg" id="welcome-avatar">?</div>
+        <div class="text-left">
+            <p class="text-xs text-slate-500 font-medium">Playing as</p>
+            <p class="font-bold text-slate-800" id="welcome-name">Player</p>
+        </div>
+        <a href="/games/" class="ml-auto text-xs font-semibold text-sky-600 hover:text-sky-800">Change</a>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="uiShowCreateRoom()" class="btn-primary p-4 font-semibold shadow-sm">Create Room</button>
+        <button onclick="uiShowJoinRoom()" class="btn-secondary p-4 font-semibold">Join Room</button>
+    </div>
+    <div id="url-join-box" class="hidden mt-4">
+        <button onclick="joinViaUrl()" class="w-full btn-primary p-4 font-semibold shadow-sm">Join Room</button>
+    </div>
+</div>
+
+<!-- Screen 2: Create Room -->
+<div id="screen-create" class="hidden w-full max-w-lg glass-card p-8">
+    <button onclick="uiShowWelcome()" class="text-slate-500 hover:text-slate-800 mb-6 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+    <h2 class="text-2xl font-bold mb-6">Room Settings</h2>
+    <div class="space-y-4">
+        <div>
+            <label class="block text-sm text-slate-500 mb-2 font-medium">Market Theme</label>
+            <select id="select-topic" class="input-box">
+                <option value="tech">Indian Tech & Startup</option>
+                <option value="fmcg">FMCG & Consumer</option>
+                <option value="finance">Banking & Finance</option>
+                <option value="global">Global Markets</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm text-slate-500 mb-2 font-medium">Number of Events</label>
+            <select id="select-rounds" class="input-box">
+                <option value="5">5 events</option>
+                <option value="7" selected>7 events</option>
+                <option value="10">10 events</option>
+            </select>
+        </div>
+    </div>
+    <button id="btn-create-room" onclick="createRoom()" class="w-full btn-primary p-4 font-semibold shadow-sm mt-6">Generate Room</button>
+</div>
+
+<!-- Screen 3: Join Room -->
+<div id="screen-join" class="hidden w-full max-w-md glass-card p-8">
+    <button onclick="uiShowWelcome()" class="text-slate-500 hover:text-slate-800 mb-6 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+    <h2 class="text-2xl font-bold mb-6">Join Room</h2>
+    <input type="text" id="room-code-input" placeholder="Paste Invite Link or Room ID" class="input-box" />
+    <button onclick="manualJoinRoom()" class="w-full btn-primary p-4 font-semibold shadow-sm">Connect</button>
+    <p id="join-status" class="text-center mt-4 text-green-600 text-sm hidden font-medium">Connecting...</p>
+</div>
+
+<!-- Screen 4: Lobby -->
+<div id="screen-lobby" class="hidden w-full max-w-lg glass-card p-8 text-center">
+    <h2 class="text-2xl font-bold mb-2">Waiting Room</h2>
+    <p id="lobby-topic" class="text-green-600 text-sm mb-6 font-semibold">Market</p>
+    <div id="invite-box" class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-8 flex items-center justify-between">
+        <div class="text-left overflow-hidden">
+            <p class="text-xs text-slate-500 mb-1 font-medium">Invite Link</p>
+            <p id="invite-link" class="text-sm font-mono text-slate-700 truncate">generating...</p>
+        </div>
+        <button onclick="copyInviteLink()" class="btn-secondary p-2 ml-4"><i data-lucide="copy" class="w-5 h-5"></i></button>
+    </div>
+    <h3 class="text-left text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Players (<span id="player-count">1</span>/4)</h3>
+    <div id="players-list" class="flex flex-col gap-3 mb-8"></div>
+    <button id="btn-start-game" onclick="startGame()" class="hidden w-full btn-primary p-4 font-semibold shadow-sm">Start Trading</button>
+    <p id="wait-host-msg" class="text-slate-500 text-sm hidden font-medium">Waiting for host to start...</p>
+</div>
+
+<!-- Screen 5: Trading Floor -->
+<div id="screen-game" class="hidden w-full max-w-2xl glass-card p-6 md:p-8">
+    <div class="flex justify-between items-center mb-4">
+        <span id="game-event-num" class="bg-slate-100 px-4 py-1.5 rounded-full text-sm font-bold border border-slate-200">Event 1/7</span>
+        <div id="timer-display" class="text-lg font-mono font-bold text-slate-700">15s</div>
+    </div>
+    
+    <!-- Portfolio Bar -->
+    <div class="grid grid-cols-2 gap-3 mb-4" id="portfolio-bar"></div>
+
+    <!-- News Event -->
+    <div class="bg-slate-900 text-white rounded-2xl p-4 mb-4">
+        <div class="flex items-center gap-2 mb-2">
+            <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Breaking News</span>
+        </div>
+        <p id="event-headline" class="font-bold text-lg leading-tight mb-1">Loading event...</p>
+        <p id="event-detail" class="text-slate-400 text-sm">Loading...</p>
+    </div>
+
+    <!-- Market indicator -->
+    <div class="text-center mb-4">
+        <p class="text-sm text-slate-500 font-medium mb-1">Expected market impact</p>
+        <div id="market-indicator" class="text-2xl font-bold">📈</div>
+        <p id="impact-text" class="text-sm font-semibold mt-1"></p>
+    </div>
+
+    <!-- Trading buttons -->
+    <div id="trade-buttons" class="flex gap-3">
+        <button class="trade-btn buy-btn" onclick="placeTrade('buy')">📈 Invest</button>
+        <button class="trade-btn hold-btn" onclick="placeTrade('hold')">⏸ Hold</button>
+        <button class="trade-btn sell-btn" onclick="placeTrade('sell')">📉 Withdraw</button>
+    </div>
+    <div id="trade-submitted" class="hidden text-center text-green-600 font-semibold mt-4">✅ Trade placed! Waiting for others...</div>
+    <div id="waiting-count" class="text-center text-slate-500 text-sm mt-2"></div>
+</div>
+
+<!-- Screen 6: Event Result -->
+<div id="screen-event-result" class="hidden w-full max-w-2xl glass-card p-6 md:p-8">
+    <h2 class="text-xl font-bold mb-2 text-center" id="result-title">Market Moved!</h2>
+    <p id="result-change" class="text-center text-3xl font-black mb-4"></p>
+    <div id="result-players" class="flex flex-col gap-3 mb-6"></div>
+    <div id="next-event-btn" class="hidden">
+        <button onclick="hostNextEvent()" class="w-full btn-primary p-4 font-semibold">Next Event →</button>
+    </div>
+    <p id="waiting-next-event" class="hidden text-center text-slate-500 text-sm font-medium">Waiting for host...</p>
+</div>
+
+<!-- Screen 7: Leaderboard -->
+<div id="screen-leaderboard" class="hidden w-full max-w-md glass-card p-8 text-center">
+    <i data-lucide="trophy" class="w-16 h-16 text-yellow-500 mx-auto mb-4"></i>
+    <h2 class="text-3xl font-bold mb-2">Market Closed!</h2>
+    <p class="text-slate-500 text-sm mb-8">Final portfolio values</p>
+    <div id="leaderboard-list" class="flex flex-col gap-3 mb-8"></div>
+    <button onclick="safeExit()" class="w-full btn-secondary p-4 font-bold">Leave Game</button>
+</div>
+
+</div>
+
+<script src="/games/ai-game-connector.js"></script>
+<script src="/games/market-mavericks/game.js"></script>
+<script>
+    lucide.createIcons();
+    const savedName = localStorage.getItem('solmates_nickname');
+    if(savedName) {
+        document.getElementById('welcome-name').textContent = savedName;
+        document.getElementById('welcome-avatar').textContent = savedName.charAt(0).toUpperCase();
+    }
+</script>
+    <script>
+        // Prevent long-press context menu on mobile
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+        });
+    </script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Firebase Multiplayer Engine (Mock PeerJS) -->
+    <script src="/games/firebase-multiplayer.js?v=2"></script>
+</body>
+</html>

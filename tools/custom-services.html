@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customised Services | SOLMATES</title>
+  <meta name="description" content="Request customized PPTs, websites, applications, and academic projects tailored to your requirements.">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      background: #f9f9fb;
+      color: #111;
+      min-height: 100vh;
+      padding-top: 0 !important;
+    }
+
+    /* ========== Navbar ========== */
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+    /* ========== Main Container ========== */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .header h1 i {
+        color: #c0962d;
+        font-size: 40px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 16px;
+    }
+
+    /* ========== Features Section ========== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .feature-item {
+      background: white;
+      padding: 15px 5px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid #eee;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 90px;
+    }
+
+    .feature-item i {
+      color: #c0962d;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .feature-item h4 {
+      font-size: 11px;
+      color: #0f2b46;
+      line-height: 1.2;
+    }
+
+    /* ========== Form Card ========== */
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
+    }
+
+    .card-title {
+      font-size: 20px;
+      color: #0f2b46;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-title i {
+      color: #c0962d;
+    }
+
+    /* ========== Form Elements ========== */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .input-field, .select-field, .textarea-field {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #eee;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+      outline: none;
+      background: #fdfdfd;
+    }
+
+    .input-field:focus, .select-field:focus, .textarea-field:focus {
+      border-color: #0071e3;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.05);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      background: #f8f9fb;
+      border: 2px dashed #ddd;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .file-input-wrapper:hover {
+      background: #f1f4f8;
+      border-color: #0071e3;
+    }
+
+    .file-input-wrapper input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-indicator {
+      font-size: 14px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ========== Submit Button ========== */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(15, 43, 70, 0.2);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .submit-btn.loading .spinner {
+      display: block;
+    }
+    
+    .submit-btn.loading i {
+        display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 26px; }
+      .header h1 i { font-size: 32px; }
+      .form-card { padding: 20px; }
+      .submit-btn { padding: 14px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header-bar">
+    <h1><i class="fas fa-wand-magic-sparkles"></i> Customised Services</h1>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div style="display: inline-block; background: #fff3cd; color: #856404; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 700; margin-bottom: 10px; border: 1px solid #ffeeba;">
+        <i class="fas fa-crown"></i> PREMIUM PAID SERVICE
+      </div>
+      <p>Professional PPTs, Projects, Websites & Apps tailored to your needs</p>
+      <p style="font-size: 13px; color: #d946ef; font-weight: 500; margin-top: 5px;">(Charges applicable as per project complexity)</p>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="fas fa-file-powerpoint"></i>
+        <h4>PPTs & Presentations</h4>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-code"></i>
+        <h4>Websites & Apps</h4>
+      </div>
+      <div class="feature-item">
+        <i class="fas fa-flask"></i>
+        <h4>Academic Projects</h4>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h2 class="card-title"><i class="fas fa-paper-plane"></i> Request Form</h2>
+      <p style="font-size: 12px; color: #666; margin: -15px 0 20px 0; padding-left: 36px;">Fill details to get a price quotation within 24 hours.</p>
+      <form id="customRequestForm" onsubmit="handleRequestSubmit(event)">
+        <div class="form-group">
+          <label for="userName">Full Name *</label>
+          <input type="text" id="userName" name="userName" class="input-field" placeholder="Enter your business/full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="userContact">WhatsApp No / Contact *</label>
+          <input type="text" id="userContact" name="userContact" class="input-field" placeholder="+91 XXXX XXXX" required>
+        </div>
+
+        <div class="form-group">
+          <label for="serviceType">Requirement For *</label>
+          <select id="serviceType" name="serviceType" class="select-field" required>
+            <option value="" disabled selected>Select service type</option>
+            <option value="PPT">PPT & Presentation</option>
+            <option value="Website">Website Development</option>
+            <option value="App">Mobile Application</option>
+            <option value="Project">Academic Project</option>
+            <option value="AI-Tool">AI-Based Tool</option>
+            <option value="Other">Other Customized Tool</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="userRequirement">Requirement Details *</label>
+          <textarea id="userRequirement" name="userRequirement" class="textarea-field" rows="5" placeholder="Please describe what you are looking for in detail..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Attach Reference File (Optional)</label>
+          <div class="file-input-wrapper">
+            <input type="file" id="requestFile" name="file" onchange="updateFileInfo(this)">
+            <span class="file-indicator" id="fileInfo">
+              <i class="fas fa-cloud-upload-alt"></i> Choose PDF, Doc or Image
+            </span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <i class="fas fa-paper-plane"></i> Send Request
+          <div class="spinner"></div>
+        </button>
+      </form>
+    </div>
+
+    <div class="footer">
+      <p>2026 SOLMATES • TAILORED SOLUTIONS FOR STUDENTS</p>
+    </div>
+  </div>
+
+  <script>
+    const TG_BOT_TOKEN = '8766916471:AAEHJB1z3CGZFzJD4ceAER_pxS6TkNut7Jc';
+    const TG_CHAT_ID = '1772865405';
+
+    function updateFileInfo(input) {
+      const info = document.getElementById('fileInfo');
+      if (input.files && input.files[0]) {
+        info.innerHTML = `<i class="fas fa-file"></i> ${input.files[0].name}`;
+      } else {
+        info.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> Choose PDF, Doc or Image`;
+      }
+    }
+
+    async function handleRequestSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('submitBtn');
+      const formData = new FormData(form);
+      const file = formData.get('file');
+
+      // Profanity Filter
+      const badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father'];
+      const containsProfanity = (text) => {
+          if (!text) return false;
+          let lowerText = text.toLowerCase()
+              .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a')
+              .replace(/5/g, 's').replace(/@/g, 'a').replace(/\$/g, 's').replace(/!/g, 'i')
+              .replace(/[^a-z]/g, '');
+          return badWords.some(word => {
+              if (word.length <= 3) {
+                  const origClean = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+                  return new RegExp(`\\b${word}\\b`).test(origClean);
+              }
+              return lowerText.includes(word);
+          });
+      };
+
+      const hasInvalidChars = (text) => /[*#¥€¢%×@₹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
+
+      if (hasInvalidChars(formData.get('userName')) || hasInvalidChars(formData.get('userRequirement'))) {
+          alert('Special characters like * # ¥ € ¢ % × @ ₹ & are not allowed in the form.');
+          return;
+      }
+
+      if (containsProfanity(formData.get('userName')) || containsProfanity(formData.get('userRequirement'))) {
+          alert('Please keep your language clean and appropriate. Profanity is not allowed.');
+          return;
+      }
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      try {
+        // 1. Prepare Message Text
+        const text = `🚀 *New Custom Service Request*\n\n` +
+                     `👤 *Name:* ${formData.get('userName')}\n` +
+                     `📞 *Contact:* ${formData.get('userContact')}\n` +
+                     `🛠 *Service:* ${formData.get('serviceType')}\n\n` +
+                     `📝 *Requirements:*\n${formData.get('userRequirement')}`;
+
+        // 2. Send Text Message
+        const msgResponse = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TG_CHAT_ID,
+            text: text,
+            parse_mode: 'Markdown'
+          })
+        });
+
+        if (!msgResponse.ok) throw new Error('Failed to send details');
+
+        // 3. Send File (if exists)
+        if (file && file.size > 0) {
+          const fileForm = new FormData();
+          fileForm.append('chat_id', TG_CHAT_ID);
+          fileForm.append('document', file);
+          fileForm.append('caption', `📁 Reference file from ${formData.get('userName')}`);
+
+          await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument`, {
+            method: 'POST',
+            body: fileForm
+          });
+        }
+
+        alert('✅ Your request has been sent! We will get back to you soon on WhatsApp/Email.');
+        form.reset();
+        updateFileInfo({files: []});
+
+      } catch (error) {
+        console.error(error);
+        alert('❌ Error sending request. Please try again or contact us via WhatsApp directly.');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

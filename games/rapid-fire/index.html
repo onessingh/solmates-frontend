@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Fire | Multiplayer</title>
+    <link rel="stylesheet" href="/css/global-lockdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --primary: #f8fafc; --accent: #0ea5e9; --card-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.05); --text-main: #0f172a; --text-muted: #64748b;
+        }
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--primary); color: var(--text-main);
+            background-image: radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%), radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.05), transparent 25%);
+            margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+        }
+        .header-bar { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 16px; text-align: center; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
+        .header-bar h1 { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--text-main); display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
+        .gradient-text { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .hidden { display: none !important; }
+        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; transition: border-color 0.2s; }
+        .input-box:focus { outline: none; border-color: #0ea5e9; }
+        .option-btn { border: 1px solid #e2e8f0; background: #fff; color: var(--text-main); transition: all 0.2s; border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .option-btn:hover:not(:disabled) { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
+        .option-btn.selected { background: #0f172a; border-color: #0f172a; color: white; }
+        .option-btn.correct { background: #22c55e; border-color: #22c55e; color:white; }
+        .option-btn.wrong { background: #ef4444; border-color: #ef4444; color:white; }
+        #timer-bar { transition: width 0.1s linear; }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(15, 23, 42, 0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); backdrop-filter: blur(8px); opacity: 0; transform: translateY(-20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .toast.show { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <div class="header-bar"><h1><i data-lucide="zap"></i> Rapid Fire</h1></div>
+
+    <div class="main-container">
+    <!-- Screen 1: Welcome -->
+    <div id="screen-welcome" class="w-full max-w-md glass-card p-6 md:p-8 text-center">
+        <h1 class="text-2xl md:text-3xl font-bold mb-2">Rapid <span class="gradient-text">Fire</span></h1>
+        <p class="text-slate-500 mb-6 md:mb-8 text-sm md:text-base">Simultaneous speed-quiz. Fastest correct answer wins.</p>
+
+        <div class="flex items-center justify-center gap-3 mb-8 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-lg" id="welcome-avatar">?</div>
+            <div class="text-left">
+                <p class="text-xs text-slate-500 font-medium">Playing as</p>
+                <p class="font-bold text-slate-800" id="welcome-name">Player</p>
+            </div>
+            <a href="/games/" class="ml-auto text-xs font-semibold text-sky-600 hover:text-sky-800">Change</a>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="uiShowCreateRoom()" class="btn-primary p-4 font-semibold shadow-sm">Create Room</button>
+            <button onclick="uiShowJoinRoom()" class="btn-secondary p-4 font-semibold">Join Room</button>
+        </div>
+
+        <div id="url-join-box" class="hidden mt-4">
+            <p class="text-sm text-sky-600 mb-2 font-medium">You were invited to a room!</p>
+            <button onclick="joinViaUrl()" class="w-full btn-primary p-4 font-semibold shadow-sm">Join Invite Link Room</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Create Room -->
+    <div id="screen-create" class="hidden w-full max-w-lg glass-card p-8">
+        <button onclick="uiShowWelcome()" class="text-slate-500 hover:text-slate-800 mb-6 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+        <h2 class="text-2xl font-bold mb-6">Room Settings</h2>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm text-slate-500 mb-2 font-medium">Select Course</label>
+                <select id="select-course" class="input-box" onchange="updateCourseSelection()">
+                    <option value="MBA" selected>MBA (Master of Business Administration)</option>
+                    <option value="BBA">BBA (Bachelor of Business Administration)</option>
+                    <option value="B.Tech">B.Tech / Engineering</option>
+                    <option value="B.Com">B.Com / M.Com</option>
+                    <option value="CA">CA (Chartered Accountancy)</option>
+                    <option value="Law">Law (LLB / LLM)</option>
+                    <option value="Medical">Medical (MBBS / NEET)</option>
+                    <option value="UPSC">UPSC / Civil Services</option>
+                    <option value="GK">General Knowledge / Trivia</option>
+                </select>
+            </div>
+            <div id="semester-container">
+                <label class="block text-sm text-slate-500 mb-2 font-medium">Select Semester</label>
+                <select id="select-semester" class="input-box" onchange="updateSubjects()">
+                    <option value="">Choose Semester...</option>
+                </select>
+            </div>
+            <div id="subject-container" class="hidden">
+                <label class="block text-sm text-slate-500 mb-2 font-medium">Select Subject</label>
+                <select id="select-subject" class="input-box">
+                    <option value="All">All MBA Subjects (Mixed)</option>
+                    <option value="Organisational Behavior">Organisational Behavior</option>
+                    <option value="Managerial Economics">Managerial Economics</option>
+                    <option value="Marketing Management">Marketing Management</option>
+                    <option value="Accounting for Managers">Accounting for Managers</option>
+                    <option value="Corporate Finance">Corporate Finance</option>
+                    <option value="Production and Operations Management">Production and Operations Management</option>
+                </select>
+            </div>
+            
+            <div id="difficulty-container" class="hidden">
+                <label class="block text-sm text-slate-500 mb-2 font-medium">Select Difficulty</label>
+                <select id="select-difficulty" class="input-box">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm text-slate-500 mb-2 font-medium">Questions per Game</label>
+                <select id="select-q-count" class="input-box">
+                    <option value="10">10 Questions</option>
+                    <option value="15">15 Questions</option>
+                    <option value="20">20 Questions</option>
+                </select>
+            </div>
+        </div>
+        <button id="btn-create-room" onclick="createRoom()" class="w-full btn-primary p-4 font-semibold shadow-sm mt-6">Generate Room</button>
+    </div>
+
+    <!-- Screen 3: Join Room -->
+    <div id="screen-join" class="hidden w-full max-w-md glass-card p-8">
+        <button onclick="uiShowWelcome()" class="text-slate-500 hover:text-slate-800 mb-6 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+        <h2 class="text-2xl font-bold mb-6">Join Room</h2>
+        <input type="text" id="room-code-input" placeholder="Paste Invite Link or Room ID" class="input-box" />
+        <button onclick="manualJoinRoom()" class="w-full btn-primary p-4 font-semibold shadow-sm">Connect</button>
+        <p id="join-status" class="text-center mt-4 text-sky-600 text-sm hidden font-medium">Connecting...</p>
+    </div>
+
+    <!-- Screen 4: Lobby -->
+    <div id="screen-lobby" class="hidden w-full max-w-lg glass-card p-8 text-center">
+        <h2 class="text-2xl font-bold mb-2">Waiting Room</h2>
+        <p id="lobby-topic" class="text-sky-600 text-sm mb-6 font-semibold">Course / Subject</p>
+        <div id="invite-box" class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-8 flex items-center justify-between">
+            <div class="text-left overflow-hidden">
+                <p class="text-xs text-slate-500 mb-1 font-medium">Invite Link</p>
+                <p id="invite-link" class="text-sm font-mono text-slate-700 truncate">generating...</p>
+            </div>
+            <button onclick="copyInviteLink()" class="btn-secondary p-2 ml-4"><i data-lucide="copy" class="w-5 h-5"></i></button>
+        </div>
+        <h3 class="text-left text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Players (<span id="player-count">1</span>/4)</h3>
+        <div id="players-list" class="flex flex-col gap-3 mb-8"></div>
+        <button id="btn-start-game" onclick="startGame()" class="hidden w-full btn-primary p-4 font-semibold shadow-sm">Start Game</button>
+        <p id="wait-host-msg" class="text-slate-500 text-sm hidden font-medium">Waiting for host to start...</p>
+    </div>
+
+    <!-- Screen 5: Game Active -->
+    <div id="screen-game" class="hidden w-full max-w-3xl glass-card p-6 md:p-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-slate-100">
+            <div id="timer-bar" class="h-full bg-amber-500 w-full"></div>
+        </div>
+        <div class="flex justify-between items-center mb-6">
+            <span id="game-q-num" class="bg-slate-100 px-4 py-1.5 rounded-full text-sm font-bold border border-slate-200 text-slate-700">Q 1/10</span>
+            <div id="live-scores-container" class="flex flex-wrap gap-2 justify-end"></div>
+        </div>
+
+        <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-8 text-center leading-tight">Question goes here?</h2>
+
+        <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button class="option-btn p-4 text-left font-semibold text-lg" onclick="selectOption(0)">A. Option 1</button>
+            <button class="option-btn p-4 text-left font-semibold text-lg" onclick="selectOption(1)">B. Option 2</button>
+            <button class="option-btn p-4 text-left font-semibold text-lg" onclick="selectOption(2)">C. Option 3</button>
+            <button class="option-btn p-4 text-left font-semibold text-lg" onclick="selectOption(3)">D. Option 4</button>
+        </div>
+
+        <div id="answer-feedback" class="mt-8 text-center hidden">
+            <p id="feedback-text" class="text-xl font-bold text-slate-500">Waiting for others...</p>
+        </div>
+    </div>
+
+    <!-- Screen 6: Leaderboard -->
+    <div id="screen-leaderboard" class="hidden w-full max-w-md glass-card p-8 text-center">
+        <i data-lucide="trophy" class="w-16 h-16 text-yellow-500 mx-auto mb-4"></i>
+        <h2 class="text-3xl font-bold mb-8 text-slate-900">Final Results</h2>
+        <div id="leaderboard-list" class="flex flex-col gap-3 mb-8"></div>
+        <button onclick="safeExit()" class="w-full btn-secondary p-4 font-bold">Leave Game</button>
+    </div>
+
+    </div>
+
+    <script src="/games/ai-game-connector.js"></script>
+    <script src="/games/rapid-fire/data.js"></script>
+    <script src="/games/rapid-fire/game.js"></script>
+    <script>
+        lucide.createIcons();
+        const savedName = localStorage.getItem('solmates_nickname');
+        if(savedName) {
+            document.getElementById('welcome-name').textContent = savedName;
+            document.getElementById('welcome-avatar').textContent = savedName.charAt(0).toUpperCase();
+        }
+    </script>
+    <script>
+        // Prevent long-press context menu on mobile
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+        });
+    </script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Firebase Multiplayer Engine (Mock PeerJS) -->
+    <script src="/games/firebase-multiplayer.js?v=2"></script>
+</body>
+</html>

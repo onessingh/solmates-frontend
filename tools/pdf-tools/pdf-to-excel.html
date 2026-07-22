@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to Excel - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file-spreadsheet"></i> PDF to Excel</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="file-spreadsheet"></i>
+        <h2>Select PDF file</h2>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button id="convertBtn" class="btn-primary" disabled>
+            <i data-lucide="play"></i> Convert to Excel (.xlsx)
+        </button>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <p><strong>Success!</strong> Data extracted to a real .xlsx workbook.</p>
+        </div>
+        <button id="downloadBtn" class="btn-primary">
+            <i data-lucide="download"></i> Download Excel Workbook
+        </button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Extracting Data...</p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("PDF to Excel initialized");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    
+    const dropZone = document.getElementById('dropZone');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const convertBtn = document.getElementById('convertBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let selectedFile = null;
+    let excelBlob = null;
+
+    dropZone.onclick = () => {
+        console.log("Dropzone clicked");
+        fileInput.click();
+    };
+    fileInput.onchange = (e) => { 
+        if (e.target.files[0]) handleFile(e.target.files[0]); 
+    };
+    
+    function handleFile(file) {
+        if (file.type !== 'application/pdf') return;
+        selectedFile = file;
+        fileName.textContent = file.name;
+        convertBtn.disabled = false;
+        console.log("File selected:", file.name);
+    }
+
+    convertBtn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        convertBtn.disabled = true;
+
+        try {
+            const arrayBuffer = await selectedFile.arrayBuffer();
+            let pdf;
+            
+            try {
+                pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            } catch (e) {
+                if (e.name === 'PasswordException') {
+                    const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
+                    if (password === null) throw new Error('User cancelled password entry');
+                    pdf = await pdfjsLib.getDocument({ data: arrayBuffer, password }).promise;
+                } else {
+                    throw e;
+                }
+            }
+
+            const wb = XLSX.utils.book_new();
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const items = content.items.map(item => ({
+                    x: item.transform[4],
+                    y: Math.round(item.transform[5]),
+                    w: item.width,
+                    str: item.str
+                }));
+
+                if (items.length === 0) continue;
+
+                // GRID MAPPING ALGORITHM
+                // 1. Identify unique Y coordinates (Rows)
+                const yCoords = Array.from(new Set(items.map(it => it.y))).sort((a, b) => b - a);
+                // 2. Identify unique X coordinates (Columns) with proximity threshold
+                const xCoords = Array.from(new Set(items.map(it => Math.round(it.x / 5) * 5))).sort((a, b) => a - b);
+                
+                // Refine X boundaries (Cluster nearby X values)
+                const columns = [];
+                if (xCoords.length > 0) {
+                    let currentX = xCoords[0];
+                    columns.push(currentX);
+                    for (let j = 1; j < xCoords.length; j++) {
+                        if (xCoords[j] - currentX > 15) { // 15 unit gap threshold for new column
+                            currentX = xCoords[j];
+                            columns.push(currentX);
+                        }
+                    }
+                }
+
+                const sheetData = Array.from({ length: yCoords.length }, () => Array(columns.length).fill(""));
+
+                items.forEach(item => {
+                    const rowIndex = yCoords.indexOf(item.y);
+                    // Find the best column index
+                    let colIndex = 0;
+                    for (let c = 0; c < columns.length; c++) {
+                        if (item.x >= columns[c] - 10) colIndex = c;
+                    }
+                    
+                    if (sheetData[rowIndex][colIndex]) {
+                        sheetData[rowIndex][colIndex] += " " + item.str;
+                    } else {
+                        sheetData[rowIndex][colIndex] = item.str;
+                    }
+                });
+
+                const ws = XLSX.utils.aoa_to_sheet(sheetData);
+                XLSX.utils.book_append_sheet(wb, ws, `Page ${i}`);
+            }
+
+            const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            excelBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            
+            resultArea.style.display = 'block';
+            convertBtn.innerHTML = '<i data-lucide="check"></i> Done!';
+            lucide.createIcons();
+        } catch (err) {
+            console.error(err);
+            alert(err.message || 'Error converting document');
+            convertBtn.disabled = false;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(excelBlob);
+        link.download = `${selectedFile.name.replace(/\.pdf$/i, '')}.xlsx`;
+        link.click();
+    };
+});
+</script>
+
+<style>
+    .spin { animation: rotate 2s linear infinite; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

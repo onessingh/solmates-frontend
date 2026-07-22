@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero Size PDF Converter | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Load required libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; min-height: 100vh; }
+
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .back-link:hover { background: #1a3c5e; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 30px 20px 80px; }
+
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero-icon { width: 68px; height: 68px; background: linear-gradient(135deg, #0071e3, #00a0dc); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 10px 30px rgba(0,113,227,0.3); }
+    .hero-icon i { font-size: 2rem; color: white; }
+    .hero h1 { font-size: 1.9rem; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero p { font-size: 0.95rem; color: var(--light); max-width: 500px; margin: 0 auto; line-height: 1.5; }
+    @media (max-width: 500px) { .hero h1 { font-size: 1.5rem; } }
+
+    .card { background: var(--card); border-radius: 24px; border: 1px solid var(--border); padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); margin-bottom: 24px; }
+    @media (max-width: 500px) { .card { padding: 20px; } }
+
+    /* Drop Zone */
+    .drop-zone { border: 2.5px dashed #c0cedb; border-radius: 20px; padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: #fdfdfd; position: relative; overflow: hidden; }
+    .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: rgba(0,113,227,0.04); }
+    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .drop-icon { font-size: 3rem; color: var(--accent); margin-bottom: 12px; opacity: 0.8; }
+    .drop-text { font-size: 1.1rem; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+    .drop-sub { font-size: 0.85rem; color: var(--light); }
+
+    /* File List */
+    .file-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; }
+    .file-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f9f9fb; border-radius: 12px; border: 1px solid var(--border); }
+    .file-info { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+    .file-icon { font-size: 1.2rem; color: #ff3b30; }
+    .file-name { font-size: 0.9rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .file-size { font-size: 0.8rem; color: var(--light); }
+    .btn-remove { background: none; border: none; color: var(--light); cursor: pointer; padding: 4px; font-size: 1rem; transition: color 0.2s; }
+    .btn-remove:hover { color: var(--danger); }
+
+    /* Options */
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px; }
+    @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+    .opt-group { display: flex; flex-direction: column; gap: 10px; }
+    .opt-label { font-weight: 600; font-size: 0.95rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .opt-label i { color: var(--accent); font-size: 0.9rem; }
+    
+    .layout-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .layout-btn { padding: 12px 8px; border-radius: 12px; border: 1.5px solid var(--border); background: #fafafa; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .layout-btn:hover { border-color: var(--accent); }
+    .layout-btn.active { border-color: var(--accent); background: rgba(0,113,227,0.06); color: var(--accent); }
+    .layout-vis { display: grid; gap: 2px; width: 32px; height: 32px; margin: 0 auto 6px; background: #ddd; padding: 2px; border-radius: 4px; }
+    .layout-vis div { background: white; border-radius: 1px; }
+    .layout-btn.active .layout-vis { background: var(--accent); }
+    .l-2x2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .l-3x3 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
+    .l-4x4 { grid-template-columns: 1fr 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr 1fr; }
+    .layout-text { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+    .layout-btn.active .layout-text { color: var(--accent); }
+
+    .slider-wrap { background: #fafafa; border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; }
+    .slider-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: var(--primary); }
+    input[type=range] { width: 100%; accent-color: var(--accent); }
+    
+    .btn-convert { width: fit-content; min-width: 250px; padding: 16px 30px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), #1a3c5e); color: white; border: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(15,43,70,0.25); transition: all 0.3s; margin: 30px auto 0; }
+    .btn-convert:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(15,43,70,0.3); }
+    .btn-convert:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
+
+    /* Progress Overlay */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; }
+    .loader { width: 50px; height: 50px; border: 4px solid #e5e5ea; border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .progress-text { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .progress-sub { font-size: 0.9rem; color: var(--light); }
+
+    /* Result Area (Inline) */
+    .result-area { display: none; margin-top: 30px; background: rgba(52,199,89,0.05); border-radius: 20px; border: 1px solid rgba(52,199,89,0.2); padding: 30px; text-align: center; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .res-icon { width: 60px; height: 60px; background: rgba(52,199,89,0.1); color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 15px; }
+    .result-area h2 { font-size: 1.4rem; color: var(--primary); margin-bottom: 8px; }
+    .res-stats { display: flex; justify-content: center; gap: 30px; margin: 20px 0; }
+    .rs-col { display: flex; flex-direction: column; gap: 4px; }
+    .rs-val { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+    .rs-lbl { font-size: 0.75rem; color: var(--light); font-weight: 600; text-transform: uppercase; }
+    .btn-download { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 30px; border-radius: 12px; background: var(--success); color: white; text-decoration: none; font-weight: 600; font-size: 1.05rem; box-shadow: 0 6px 20px rgba(52,199,89,0.25); transition: all 0.2s; }
+    .btn-download:hover { background: #28a745; transform: translateY(-2px); }
+
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-file-pdf"></i> Zero Size PDF Converter</h1>
+    </div>
+
+
+
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-compress-arrows-alt"></i></div>
+    
+    <p>Dramatically reduce PDF file size and save paper by combining multiple pages (up to 16) into a single A4 sheet.</p>
+  </div>
+
+  <div class="card">
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png">
+      <i class="fas fa-cloud-upload-alt drop-icon"></i>
+      <div class="drop-text">Drag & Drop PDFs or Images</div>
+      <div class="drop-sub">or click to browse files</div>
+    </div>
+    
+    <div class="file-list" id="fileList"></div>
+
+    <div class="options-grid">
+      <div class="opt-group">
+        <div class="opt-label"><i class="fas fa-th"></i> Grid Layout</div>
+        <div class="layout-grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="layout-btn active" onclick="setLayout(this, 4)">
+            <div class="layout-vis l-2x2"><div></div><div></div><div></div><div></div></div>
+            <div class="layout-text">2x2 (Large Text)</div>
+          </div>
+          <div class="layout-btn" onclick="setLayout(this, 9)">
+            <div class="layout-vis l-3x3"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="layout-text">3x3 (Small Text)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-label"><i class="fas fa-star" style="color:var(--accent);"></i> Quality</div>
+        <div class="slider-wrap" style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-weight: 700; font-size: 0.95rem; color: var(--primary);">MAX <span style="color: var(--accent);">(Ultra-Crisp)</span></span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--light); line-height: 1.5;">Rendering at 20x resolution — print-grade quality. Text will be sharp even when zoomed in on your PDF viewer.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-convert" id="convertBtn" onclick="processFiles()" disabled>
+      <i class="fas fa-magic"></i> Generate Zero Size PDF
+    </button>
+
+    <div class="result-area" id="resultArea">
+      <div class="res-icon"><i class="fas fa-check"></i></div>
+      <h2>Conversion Success!</h2>
+      <p style="color: var(--light); font-size: 0.95rem;">Your highly compressed PDF is ready to download.</p>
+      
+      <div class="res-stats">
+        <div class="rs-col"><div class="rs-val" id="rsPages">0</div><div class="rs-lbl">Pages Generated</div></div>
+        <div class="rs-col"><div class="rs-val" id="rsSize">0 KB</div><div class="rs-lbl">Est. Size</div></div>
+      </div>
+
+      <a href="#" class="btn-download" id="downloadBtn" download="ZeroSize_Optimized.pdf">
+        <i class="fas fa-download"></i> Download PDF
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <div class="loader"></div>
+  <div class="progress-text">Processing Pages...</div>
+  <div class="progress-sub" id="progressSub">Reading file 1 of 1</div>
+</div>
+
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  
+  let files = [];
+  let layout = 4; // Default 2x2
+  const fileInput = document.getElementById('fileInput');
+  const dropZone = document.getElementById('dropZone');
+  
+  // Drag Events
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, preventDefaults, false));
+  function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+  ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('dragover'), false));
+  ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('dragover'), false));
+  
+  dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+  fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+  function handleFiles(newFiles) {
+    for(let f of newFiles) {
+      if(f.type === 'application/pdf' || f.type.startsWith('image/')) {
+        files.push(f);
+      }
+    }
+    renderFileList();
+  }
+
+  function renderFileList() {
+    const list = document.getElementById('fileList');
+    list.innerHTML = files.map((f, i) => `
+      <div class="file-item">
+        <div class="file-info">
+          <i class="fas ${f.type==='application/pdf' ? 'fa-file-pdf' : 'fa-image'} file-icon"></i>
+          <div>
+            <div class="file-name">${f.name}</div>
+            <div class="file-size">${(f.size/1024/1024).toFixed(2)} MB</div>
+          </div>
+        </div>
+        <button class="btn-remove" onclick="removeFile(${i})"><i class="fas fa-times"></i></button>
+      </div>
+    `).join('');
+    document.getElementById('convertBtn').disabled = files.length === 0;
+  }
+
+  function removeFile(idx) {
+    files.splice(idx, 1);
+    renderFileList();
+  }
+
+  function setLayout(btn, val) {
+    document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    layout = val;
+  }
+
+  async function processFiles() {
+    if(files.length === 0) return;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('convertBtn').disabled = true;
+    
+    try {
+      const PRINT_SCALE = 20; // MAX quality — 20x (browser canvas limit)
+      
+      const cols = Math.sqrt(layout);
+      const rows = cols;
+      const A4_W = 595 * PRINT_SCALE, A4_H = 842 * PRINT_SCALE;
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ format: 'a4', unit: 'pt', compress: true });
+      doc.deletePage(1);
+      
+      let finalPages = 0;
+      let allSrcPages = [];
+
+      // Step 1: Collect all pages
+      document.getElementById('progressSub').textContent = `Reading files...`;
+      for(let f=0; f<files.length; f++) {
+        const file = files[f];
+        if (file.type === 'application/pdf') {
+          const arr = new Uint8Array(await file.arrayBuffer());
+          const pdf = await pdfjsLib.getDocument({ data: arr }).promise;
+          for (let p=1; p<=pdf.numPages; p++) {
+            allSrcPages.push({ type: 'pdf', pdf, pageNum: p });
+          }
+        } else {
+          const dataUrl = await new Promise(r => {
+            const reader = new FileReader();
+            reader.onload = e => r(e.target.result);
+            reader.readAsDataURL(file);
+          });
+          allSrcPages.push({ type: 'img', url: dataUrl });
+        }
+      }
+
+      // Step 2: Render into master sheets
+      const numSheets = Math.ceil(allSrcPages.length / layout);
+      
+      for (let s = 0; s < numSheets; s++) {
+        document.getElementById('progressSub').textContent = `Rendering sheet ${s+1} of ${numSheets}...`;
+        
+        const master = document.createElement('canvas');
+        master.width = A4_W; 
+        master.height = A4_H;
+        const mCtx = master.getContext('2d');
+        mCtx.fillStyle = '#ffffff'; 
+        mCtx.fillRect(0, 0, A4_W, A4_H);
+        
+        const pad = 10 * PRINT_SCALE;
+        const cellW = (A4_W - (cols + 1) * pad) / cols;
+        const cellH = (A4_H - (rows + 1) * pad) / rows;
+        
+        const startIdx = s * layout;
+        const endIdx = Math.min(startIdx + layout, allSrcPages.length);
+        
+        for (let i = startIdx; i < endIdx; i++) {
+          const src = allSrcPages[i];
+          const idx = i - startIdx;
+          const x = pad + (idx % cols) * (cellW + pad);
+          const y = pad + Math.floor(idx / cols) * (cellH + pad);
+          
+          if (src.type === 'pdf') {
+            const p = await src.pdf.getPage(src.pageNum);
+            const origV = p.getViewport({ scale: 1.0 });
+            
+            // Render page at exact cell resolution
+            const scaleForCell = cellW / origV.width;
+            const v = p.getViewport({ scale: scaleForCell });
+            
+            const tmp = document.createElement('canvas');
+            tmp.width = Math.round(v.width); 
+            tmp.height = Math.round(v.height);
+            const tmpCtx = tmp.getContext('2d');
+            tmpCtx.fillStyle = '#ffffff';
+            tmpCtx.fillRect(0, 0, tmp.width, tmp.height);
+            await p.render({ canvasContext: tmpCtx, viewport: v }).promise;
+            
+            // Draw directly — no zoom/crop
+            mCtx.drawImage(tmp, 0, 0, tmp.width, tmp.height, x, y, cellW, cellH);
+            
+          } else {
+            // Image
+            const img = new Image();
+            img.src = src.url;
+            await new Promise(r => img.onload = r);
+            
+            // Draw image scaled to fit cell (contain)
+            const imgRatio = img.width / img.height;
+            const cellRatio = cellW / cellH;
+            let drawW = cellW, drawH = cellH;
+            if (imgRatio > cellRatio) { drawH = cellW / imgRatio; } 
+            else { drawW = cellH * imgRatio; }
+            
+            const tmp = document.createElement('canvas');
+            tmp.width = cellW; tmp.height = cellH;
+            const tmpCtx = tmp.getContext('2d');
+            tmpCtx.fillStyle = '#ffffff';
+            tmpCtx.fillRect(0,0,cellW,cellH);
+            tmpCtx.drawImage(img, (cellW-drawW)/2, (cellH-drawH)/2, drawW, drawH);
+            
+            mCtx.drawImage(tmp, x, y, cellW, cellH);
+          }
+          
+          // Draw thin border around cell
+          mCtx.strokeStyle = '#cccccc'; 
+          mCtx.lineWidth = 1 * PRINT_SCALE;
+          mCtx.strokeRect(x, y, cellW, cellH);
+        }
+        
+        document.getElementById('progressSub').textContent = `Compressing sheet ${s+1}...`;
+        const data = master.toDataURL('image/jpeg', 0.85); // High quality JPEG
+        doc.addPage([595, 842], 'p');
+        doc.addImage(data, 'JPEG', 0, 0, 595, 842, undefined, 'FAST');
+        finalPages++;
+      }
+      
+      document.getElementById('progressSub').textContent = `Finalizing PDF...`;
+      const blob = doc.output('blob');
+      const url = URL.createObjectURL(blob);
+      const sizeKb = Math.round(blob.size / 1024);
+      
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('convertBtn').disabled = false;
+      document.getElementById('rsPages').textContent = finalPages;
+      document.getElementById('rsSize').textContent = sizeKb > 1024 ? (sizeKb/1024).toFixed(2) + ' MB' : sizeKb + ' KB';
+      document.getElementById('downloadBtn').href = url;
+      document.getElementById('resultArea').style.display = 'block';
+
+    } catch(err) {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('convertBtn').disabled = false;
+      alert('An error occurred during conversion. Ensure files are valid PDFs/Images.');
+      console.error(err);
+    }
+  }
+</script>
+</body>
+</html>

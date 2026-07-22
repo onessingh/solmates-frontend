@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice Period Calculator | SOLMATES</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --primary-light: #1a3c5e;
+      --accent: #0071e3;
+      --bg: #f9f9fb;
+      --text: #333;
+      --border: #eaeaea;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+    .navbar {
+      background: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar a { text-decoration: none; color: var(--primary); font-weight: 700; font-size: 1.2rem; }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    @media(max-width: 768px) {
+      .container { grid-template-columns: 1fr; margin: 20px auto; }
+    }
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+      border: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: #f0f0f0;
+      padding: 5px;
+      border-radius: 10px;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+    .tab.active {
+      background: #fff;
+      color: var(--accent);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--primary-light); transform: translateY(-2px); }
+    .btn-secondary { background: #f0f0f0; color: #333; }
+    .btn-secondary:hover { background: #e0e0e0; }
+    
+    .result-box {
+      text-align: center;
+      padding: 25px;
+      background: linear-gradient(135deg, #f8faff, #eaf2ff);
+      border-radius: 12px;
+      border: 1px dashed rgba(0, 113, 227, 0.3);
+      margin-bottom: 20px;
+    }
+    .result-date {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 10px 0;
+    }
+    .result-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .stat-item {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.8rem; color: #666; margin-top: 5px; }
+    
+    .timeline {
+      margin-top: 20px;
+      border-left: 2px solid var(--border);
+      padding-left: 20px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -27px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .timeline-date { font-weight: 600; color: var(--primary); }
+    .timeline-desc { font-size: 0.9rem; color: #666; }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar" style="justify-content: center;">
+    <div style="font-weight: 700; font-size: 1.4rem; color: #0f2b46;">Notice Period Calculator</div>
+  </div>
+
+  <div class="container">
+    <!-- Input Section -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-keyboard"></i> Details</div>
+      
+      <div class="tabs">
+        <div class="tab active" onclick="switchMode('lwd')" id="tab-lwd">Find Last Working Day</div>
+        <div class="tab" onclick="switchMode('notice')" id="tab-notice">Find Notice Period</div>
+      </div>
+
+      <div id="mode-lwd">
+        <div class="form-group">
+          <label>Resignation Date</label>
+          <input type="date" id="resignation-date" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Notice Period (Days)</label>
+          <input type="number" id="notice-days" class="form-control" value="90" />
+        </div>
+      </div>
+
+      <div id="mode-notice" style="display: none;">
+        <div class="form-group">
+          <label>Resignation Date</label>
+          <input type="date" id="resig-date-2" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Expected Last Working Day</label>
+          <input type="date" id="lwd-date-2" class="form-control" />
+        </div>
+      </div>
+
+      <hr style="border:0; border-top:1px solid #eaeaea; margin: 20px 0;">
+
+      <div class="form-group">
+        <label>Current Monthly Salary (₹) - For Buyout/Earnings</label>
+        <input type="number" id="monthly-salary" class="form-control" placeholder="e.g. 50000" />
+      </div>
+      
+      <div class="form-group" style="display:flex; align-items:center; gap: 10px;">
+        <input type="checkbox" id="exclude-weekends" style="width:18px;height:18px;cursor:pointer;">
+        <label for="exclude-weekends" style="margin:0;cursor:pointer;">Exclude Weekends (Sat/Sun) from calculation</label>
+      </div>
+
+      <button class="btn" onclick="calculate()"><i class="fas fa-calculator"></i> Calculate</button>
+    </div>
+
+    <!-- Output Section -->
+    <div class="card" id="print-area">
+      <div class="card-title"><i class="fas fa-chart-pie"></i> Result</div>
+      
+      <div class="result-box">
+        <div id="main-result-label" style="font-weight: 600; color: #555;">Last Working Day</div>
+        <div class="result-date" id="main-result-value">-</div>
+      </div>
+
+      <div class="result-stats">
+        <div class="stat-item">
+          <div class="stat-value" id="stat-days">0</div>
+          <div class="stat-label">Total Days</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-working">0</div>
+          <div class="stat-label">Working Days</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-earnings">₹0</div>
+          <div class="stat-label">Est. Earnings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-buyout">₹0</div>
+          <div class="stat-label">1 Month Buyout</div>
+        </div>
+      </div>
+
+      <div class="timeline" id="timeline-box" style="display: none;">
+        <div class="timeline-item">
+          <div class="timeline-date" id="tl-resig">Jan 01, 2026</div>
+          <div class="timeline-desc">Resignation Date</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date" id="tl-lwd">Mar 31, 2026</div>
+          <div class="timeline-desc">Last Working Day</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="copyResult()"><i class="fas fa-copy"></i> Copy</button>
+        <button class="btn btn-secondary" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Set today's date
+    document.getElementById('resignation-date').valueAsDate = new Date();
+    document.getElementById('resig-date-2').valueAsDate = new Date();
+    
+    let currentMode = 'lwd';
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.getElementById('tab-lwd').classList.remove('active');
+      document.getElementById('tab-notice').classList.remove('active');
+      document.getElementById('tab-' + mode).classList.add('active');
+      
+      document.getElementById('mode-lwd').style.display = mode === 'lwd' ? 'block' : 'none';
+      document.getElementById('mode-notice').style.display = mode === 'notice' ? 'block' : 'none';
+    }
+
+    function isWeekend(date) {
+      const day = date.getDay();
+      return day === 0 || day === 6; // Sunday or Saturday
+    }
+
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
+    }
+
+    function calculate() {
+      let resigDate, lwdDate, totalDays, workingDays = 0;
+      const excludeWeekends = document.getElementById('exclude-weekends').checked;
+      const salary = parseFloat(document.getElementById('monthly-salary').value) || 0;
+
+      if (currentMode === 'lwd') {
+        resigDate = new Date(document.getElementById('resignation-date').value);
+        totalDays = parseInt(document.getElementById('notice-days').value) || 0;
+        
+        if (isNaN(resigDate)) return alert('Select a valid resignation date.');
+        
+        lwdDate = new Date(resigDate);
+        
+        if (excludeWeekends) {
+          let addedDays = 0;
+          while (addedDays < totalDays) {
+            lwdDate.setDate(lwdDate.getDate() + 1);
+            if (!isWeekend(lwdDate)) {
+              addedDays++;
+            }
+          }
+        } else {
+          lwdDate.setDate(lwdDate.getDate() + totalDays);
+        }
+
+      } else {
+        resigDate = new Date(document.getElementById('resig-date-2').value);
+        lwdDate = new Date(document.getElementById('lwd-date-2').value);
+        
+        if (isNaN(resigDate) || isNaN(lwdDate)) return alert('Select valid dates.');
+        if (lwdDate < resigDate) return alert('Last working day cannot be before resignation date.');
+        
+        const diffTime = Math.abs(lwdDate - resigDate);
+        totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      }
+
+      // Calculate working days
+      let tempDate = new Date(resigDate);
+      tempDate.setDate(tempDate.getDate() + 1); // start from next day
+      for (let i = 0; i < totalDays; i++) {
+        if (!isWeekend(tempDate)) workingDays++;
+        tempDate.setDate(tempDate.getDate() + 1);
+      }
+
+      // Financials
+      const perDaySalary = salary / 30;
+      const earnings = perDaySalary * totalDays;
+      const buyout = salary; // 1 month buyout assumption
+
+      // Update UI
+      const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      
+      if (currentMode === 'lwd') {
+        document.getElementById('main-result-label').innerText = 'Last Working Day';
+        document.getElementById('main-result-value').innerText = lwdDate.toLocaleDateString('en-US', dateOptions);
+      } else {
+        document.getElementById('main-result-label').innerText = 'Notice Period';
+        document.getElementById('main-result-value').innerText = totalDays + ' Days';
+      }
+
+      document.getElementById('stat-days').innerText = totalDays;
+      document.getElementById('stat-working').innerText = excludeWeekends ? workingDays : totalDays;
+      document.getElementById('stat-earnings').innerText = formatCurrency(earnings);
+      document.getElementById('stat-buyout').innerText = formatCurrency(buyout);
+
+      document.getElementById('tl-resig').innerText = resigDate.toLocaleDateString('en-US', dateOptions);
+      document.getElementById('tl-lwd').innerText = lwdDate.toLocaleDateString('en-US', dateOptions);
+      document.getElementById('timeline-box').style.display = 'block';
+    }
+
+    function copyResult() {
+      const res = document.getElementById('main-result-value').innerText;
+      const text = `Notice Period Result: ${res}\nCalculated via SOLMATES`;
+      navigator.clipboard.writeText(text).then(() => alert('Result copied!'));
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById('print-area');
+      const opt = {
+        margin:       0.5,
+        filename:     'Notice-Period-Calculation.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+  </script>
+</body>
+</html>

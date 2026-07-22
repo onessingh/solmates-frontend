@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Videos - SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js?v=116.2"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #c0962d;
+      --bg: #f8fafc;
+      --bg2: #ffffff;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --border: #eeeeee;
+      --border-hover: #0f2b46;
+      --text: #1e293b;
+      --sub: #64748b;
+      --red: #ef4444;
+      --red2: #dc2626;
+      --accent2: #38bdf8;
+
+      /* Aliases for backup compatibility */
+      --yt-red: var(--red);
+      --yt-text: var(--text);
+      --yt-sub: var(--sub);
+      --yt-card: var(--card);
+      --yt-border: var(--border);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Roboto", -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-top: 64px;
+      opacity: 0;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    body.fade-in {
+      opacity: 1;
+    }
+
+    /* ── Navbar ─────────────────────────────────────────── */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .nav-logo .yt-icon {
+      color: var(--red);
+      font-size: 26px;
+    }
+
+    .back-btn {
+      background: #f1f5f9;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: var(--border);
+    }
+
+    .database-btn {
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .database-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    .database-btn i {
+      font-size: 14px;
+      color: #c0962d;
+    }
+
+    /* ── Modern Breadcrumb ────────────────────────────── */
+    .breadcrumb {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 13px;
+      position: sticky;
+      top: 56px;
+      z-index: 900;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .breadcrumb::-webkit-scrollbar {
+      display: none;
+    }
+
+    .bc-item {
+      display: flex;
+      align-items: center;
+      color: var(--yt-sub);
+      text-decoration: none;
+      transition: 0.2s;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .bc-item:hover {
+      color: var(--yt-primary);
+      background: rgba(15, 43, 70, 0.05);
+    }
+
+    .bc-item i {
+      font-size: 14px;
+      margin-right: 6px;
+    }
+
+    .bc-item.home i {
+      color: var(--yt-primary);
+    }
+
+    .bc-item.current {
+      color: var(--yt-primary);
+      font-weight: 700;
+      cursor: default;
+      background: none;
+    }
+
+    .bc-sep {
+      color: #cbd5e1;
+      margin: 0 4px;
+      font-size: 10px;
+    }
+
+    /* ── Premium Page header ────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 25px 20px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 15px;
+    }
+
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--yt-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      letter-spacing: -0.3px;
+      line-height: 1.3;
+    }
+
+    .header-left h1 i {
+      color: var(--yt-red);
+    }
+
+    .header-left p {
+      color: var(--yt-sub);
+      font-size: 14px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    /* ── Admin Bar ──────────────────────────────────────── */
+    .admin-bar {
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 9px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: 0.2s;
+    }
+
+    .btn-yt {
+      background: var(--yt-red);
+      color: white;
+    }
+
+    .btn-yt:hover {
+      background: #cc0000;
+    }
+
+    .btn-dark {
+      background: var(--yt-card);
+      color: var(--yt-text);
+      border: 1px solid var(--yt-border);
+    }
+
+    .btn-dark:hover {
+      background: #333;
+    }
+
+    /* ── Section heading ────────────────────────────────── */
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--yt-sub);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--yt-border);
+    }
+
+    /* ── Folder cards (Playlist-style) ─────────────────── */
+    .folders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .folder-card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    /* ── Recursive Subject Card Styles (Centered Layout) ── */
+    .folder-card.centered-folder {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 15px;
+      text-align: center;
+      gap: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      min-height: 180px;
+      position: relative;
+    }
+
+    .folder-card.centered-folder:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .folder-card.centered-folder i.main-icon {
+      font-size: 50px;
+      color: var(--accent);
+      opacity: 0.9;
+    }
+
+    .folder-card.centered-folder h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .folder-card.centered-folder .del-btn {
+      opacity: 0;
+    }
+
+    .folder-card.centered-folder:hover .del-btn {
+      opacity: 1;
+    }
+
+    .folder-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .folder-thumb {
+      background: linear-gradient(135deg, #1a1540, #2d1b6b);
+      height: 126px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      color: #a78bfa;
+      position: relative;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .playlist-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #a78bfa;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .folder-info {
+      padding: 12px 14px;
+    }
+
+    .folder-info h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .folder-info p {
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    /* ── Video / Link cards ─────────────────────────────── */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .video-card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .video-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .video-thumb {
+      height: 168px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .video-thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
+
+    .video-card:hover .video-thumb img {
+      transform: scale(1.1);
+    }
+
+    .video-thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.6) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .play-circle {
+      width: 58px;
+      height: 58px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+      transition: 0.3s;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .video-card:hover .play-circle {
+      background: var(--red);
+      border-color: var(--red);
+      transform: scale(1.1);
+      box-shadow: 0 0 25px var(--red);
+    }
+
+    .video-info {
+      padding: 18px;
+    }
+
+    .video-info h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-clamp: 2;
+      min-height: 45px;
+    }
+
+    .watch-btn {
+      background: linear-gradient(135deg, var(--red), #b91c1c);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s;
+      width: 100%;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .watch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .watch-btn.playlist-btn {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .watch-btn.playlist-btn:hover {
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ── Playlist Fallback ─────────────────────────────── */
+    .playlist-thumb-overlay {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      transition: 0.3s;
+    }
+
+    .playlist-icon {
+      font-size: 48px;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+    }
+
+    .playlist-label {
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(139, 92, 246, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── Card Stack Effect ────────────────────────────── */
+    .video-thumb.is-playlist::before,
+    .video-thumb.is-playlist::after {
+      content: '';
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      z-index: -1;
+      transition: 0.3s;
+    }
+
+    .video-thumb.is-playlist::before {
+      top: -6px;
+      opacity: 0.6;
+    }
+
+    .video-thumb.is-playlist::after {
+      top: -12px;
+      opacity: 0.3;
+    }
+
+    .video-card:hover .video-thumb.is-playlist::before {
+      top: -10px;
+    }
+
+    .video-card:hover .video-thumb.is-playlist::after {
+      top: -18px;
+    }
+
+    /* ── Delete btn ─────────────────────────────────────── */
+    .del-btn,
+    .edit-btn {
+      position: absolute;
+      top: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    .del-btn {
+      right: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+    }
+
+    .edit-btn {
+      left: 10px;
+      background: rgba(15, 43, 70, 0.9);
+      color: white;
+    }
+
+    .del-btn:hover {
+      background: #ef4444;
+    }
+
+    .edit-btn:hover {
+      background: #2563eb;
+    }
+
+    .magic-btn {
+      position: absolute;
+      top: 10px;
+      right: 58px; /* Offset from del-btn */
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(16, 185, 129, 0.9); /* Emerald Green */
+      color: white;
+      backdrop-filter: blur(4px);
+    }
+
+    .video-card:hover .magic-btn {
+      opacity: 1;
+    }
+
+    .magic-btn:hover {
+      background: #10b981;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .hide-btn,
+    .move-btn {
+      position: absolute;
+      top: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4px);
+      color: white;
+    }
+
+    .hide-btn {
+      left: 58px;
+    }
+
+    .move-btn {
+      left: 106px;
+      background: rgba(16, 185, 129, 0.9);
+    }
+
+    .move-btn:hover {
+      background: #10b981;
+    }
+
+    .folder-card:hover .del-btn,
+    .folder-card:hover .edit-btn,
+    .folder-card:hover .hide-btn,
+    .folder-card:hover .move-btn,
+    .video-card:hover .del-btn,
+    .video-card:hover .edit-btn,
+    .video-card:hover .hide-btn,
+    .video-card:hover .move-btn {
+      opacity: 1;
+    }
+
+    /* Mobile standard: always show admin icons if small screen */
+    @media (max-width: 768px) {
+
+      .del-btn,
+      .edit-btn,
+      .hide-btn,
+      .move-btn {
+        opacity: 1;
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    /* ── Empty ──────────────────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--yt-sub);
+    }
+
+    .empty i {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 16px;
+      color: var(--yt-border);
+    }
+
+    .empty strong {
+      display: block;
+      font-size: 18px;
+      color: var(--yt-text);
+      margin-bottom: 8px;
+    }
+
+    /* ── Modal ──────────────────────────────────────────── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--yt-card);
+      border: 1px solid var(--yt-border);
+      border-radius: 16px;
+      padding: 28px;
+      width: 90%;
+      max-width: 420px;
+    }
+
+    .modal h2 {
+      font-size: 18px;
+      color: var(--yt-text);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal h2 i {
+      color: var(--yt-red);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--yt-sub);
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: var(--yt-red);
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-btns .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-cancel {
+      background: var(--border);
+      color: var(--yt-text);
+      border: 1px solid var(--yt-border);
+    }
+
+
+
+    /* Premium Polish */
+    .watch-btn {
+      font-family: 'Roboto', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .folder-card.navigating {
+      opacity: 0.6;
+      pointer-events: none;
+      transform: scale(0.98) !important;
+    }
+
+    .header-left h1 {
+      letter-spacing: -0.5px;
+    }
+    /* Organize Bar Premium Styling */
+    .organize-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 600px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 16px 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      font-size: 14px;
+      animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { transform: translate(-50%, 100px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .organize-bar-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+    .organize-bar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .organize-bar-actions .btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    
+    /* Active States */
+    body.organize-mode-active .folder-card,
+    body.organize-mode-active .video-card {
+      border: 2px dashed rgba(245, 158, 11, 0.6) !important;
+      background: rgba(245, 158, 11, 0.02) !important;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transform: none !important;
+    }
+    body.organize-mode-active .folder-card:hover,
+    body.organize-mode-active .video-card:hover {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+    }
+    
+    /* Selected Card Glowing style */
+    body.organize-mode-active .folder-card.selected-glowing,
+    body.organize-mode-active .video-card.selected-glowing {
+      border: 2px solid #10b981 !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.7) !important;
+      animation: glowPulse 1.5s infinite alternate;
+    }
+    
+    /* Overlay for destination targets */
+    .move-here-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(16, 185, 129, 0.95);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      border-radius: inherit;
+    }
+    
+    /* Only show overlay when we have a selected card and it's not the card itself */
+    body.organize-mode-active.has-selection .folder-card:not(.selected-glowing) .move-here-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .move-here-btn-overlay {
+      background: #fff;
+      color: #10b981;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .move-here-btn-overlay:hover {
+      transform: scale(1.05);
+      background: #f0fdf4;
+    }
+    @media (max-width: 768px) {
+      .page-header {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 15px;
+      }
+      .admin-bar {
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .admin-bar .btn {
+        flex: 1;
+        justify-content: center;
+        padding: 10px 12px;
+        font-size: 12px;
+        min-width: 120px;
+      }
+      #youtubeSearchInput {
+        font-size: 14px;
+        height: 46px;
+      }
+      .search-input-wrapper {
+        padding: 0 12px;
+        border-radius: 10px;
+      }
+      .search-icon {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+      .clear-search-btn {
+        font-size: 16px;
+        padding: 6px;
+      }
+    }
+    .folder-card.centered-folder.premium-topic-folder {
+      position: relative;
+      background: var(--tf-bg, linear-gradient(135deg, var(--card) 0%, rgba(192, 150, 45, 0.08) 50%, rgba(218, 165, 32, 0.12) 100%));
+      border: 1px solid var(--tf-border, rgba(192, 150, 45, 0.4));
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px var(--tf-glow, rgba(192, 150, 45, 0.05)), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .folder-card.centered-folder.premium-topic-folder::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--tf-top-ribbon, linear-gradient(90deg, #c0962d, #dfb750, #c0962d));
+      z-index: 3;
+    }
+    .folder-card.centered-folder.premium-topic-folder:hover {
+      border-color: var(--tf-hover-border, #c0962d);
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 16px 36px var(--tf-hover-glow, rgba(192, 150, 45, 0.22)), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    }
+    .folder-card.centered-folder.premium-topic-folder .folder-glow-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, var(--tf-glow, rgba(192, 150, 45, 0.08)) 0%, transparent 70%);
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, background 0.3s;
+      opacity: 0.8;
+      z-index: 1;
+    }
+    .folder-card.centered-folder.premium-topic-folder:hover .folder-glow-bg {
+      opacity: 1;
+      background: radial-gradient(circle at center, var(--tf-hover-glow, rgba(192, 150, 45, 0.2)) 0%, transparent 70%);
+    }
+    .folder-card.centered-folder.premium-topic-folder .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--tf-glow, rgba(192, 150, 45, 0.15)) 0%, rgba(255, 255, 255, 0.02) 100%);
+      border: 1.5px solid var(--tf-border, rgba(192, 150, 45, 0.35));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .folder-card.centered-folder.premium-topic-folder:hover .icon-wrapper {
+      background: radial-gradient(circle, var(--tf-hover-glow, rgba(192, 150, 45, 0.25)) 0%, rgba(255, 255, 255, 0.05) 100%);
+      border-color: var(--tf-hover-border, #c0962d);
+      transform: scale(1.1) rotate(8deg);
+      box-shadow: 0 6px 20px var(--tf-hover-glow, rgba(192, 150, 45, 0.35));
+    }
+    .folder-card.centered-folder.premium-topic-folder .icon-wrapper i {
+      font-size: 34px;
+      color: var(--tf-primary, #c0962d) !important;
+      filter: drop-shadow(0 2px 6px var(--tf-glow, rgba(192, 150, 45, 0.4)));
+      transition: transform 0.3s;
+    }
+    .folder-card.centered-folder.premium-topic-folder:hover .icon-wrapper i {
+      transform: scale(1.05);
+    }
+    .folder-card.centered-folder.premium-topic-folder h3 {
+      font-size: 15.5px;
+      font-weight: 750;
+      color: var(--text);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      z-index: 2;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Search Bar Styles */
+    .search-container {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    .search-input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 4px 20px rgba(15, 43, 70, 0.15);
+      transform: translateY(-1px);
+    }
+    .search-icon {
+      color: var(--sub);
+      font-size: 18px;
+      margin-right: 12px;
+      pointer-events: none;
+    }
+    #youtubeSearchInput {
+      width: 100%;
+      height: 52px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 500;
+    }
+    #youtubeSearchInput::placeholder {
+      color: var(--sub);
+      opacity: 0.7;
+    }
+    .clear-search-btn {
+      background: transparent;
+      border: none;
+      color: var(--sub);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 8px;
+      margin-left: 8px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .clear-search-btn:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    /* Result Path / Location Badge */
+    .result-path {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(192, 150, 45, 0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <header class="top-nav">
+    <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
+      SOLMATES
+    </div>
+    <a href="/database" class="database-btn">
+      <i class="fas fa-database"></i> Database
+    </a>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <!-- Main -->
+  <div class="container">
+    <div class="page-header">
+      <div class="header-left">
+        <h1><i class="fab fa-youtube"></i> <span id="pageTitle">Videos</span></h1>
+        <p id="pageSub"></p>
+      </div>
+      <div class="admin-bar" id="adminBar">
+        <button class="btn btn-dark" id="organizeToggleBtn" onclick="toggleOrganizeMode()" style="background: #f59e0b; border-color: #f59e0b; font-weight: 600; display: none;">
+          <i class="fas fa-sitemap"></i> Organise
+        </button>
+        <button class="btn btn-dark" id="resortBtn" onclick="openResortModal()" style="background: #3b82f6; border-color: #3b82f6; font-weight: 600; display: none;">
+          <i class="fas fa-sort-amount-down"></i> Fix Sequence
+        </button>
+        <button class="btn btn-dark" onclick="openModal('folderModal', 'subject')">
+          <i class="fas fa-play-circle"></i> Add Subject
+        </button>
+        <button class="btn btn-dark" onclick="openModal('folderModal', 'folder')">
+          <i class="fas fa-folder-plus"></i> New Playlist Folder
+        </button>
+        <button class="btn btn-dark" id="btnNewTopicFolder" onclick="openModal('folderModal', 'topic_folder')" style="display: none; background: linear-gradient(135deg, #c0962d, #dfb750); color: #0f2b46; border: none; font-weight: 600;">
+          <i class="fas fa-folder-open"></i> Add Topic Folder
+        </button>
+        <button class="btn btn-yt" onclick="openModal('linkModal')">
+          <i class="fas fa-plus"></i> Add Video / Playlist
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Organize Mode Floating Bar -->
+    <div class="organize-bar" id="organizeBar">
+      <div class="organize-bar-content">
+        <div class="organize-bar-header">
+          <i class="fas fa-sitemap" style="color: #f59e0b; font-size: 16px;"></i>
+          <span id="organizeStatusText"><strong>Organise Mode:</strong> Tap any playlist folder or video card to select it.</span>
+        </div>
+        <div class="organize-bar-actions" id="organizeActions">
+          <button class="btn btn-cancel btn-sm" onclick="exitOrganizeMode()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="youtubeSearchInput" placeholder="Search subjects, playlist folders, or videos..." autocomplete="off">
+        <button id="clearSearchBtn" class="clear-search-btn" style="display: none;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Folders -->
+    <div id="foldersSection" style="display:none;">
+      <div class="section-label"><i class="fas fa-list"></i> Playlists &amp; Folders</div>
+      <div class="folders-grid" id="foldersGrid"></div>
+    </div>
+
+    <!-- Subjects -->
+    <div id="subjectsSection" style="display:none;">
+      <div class="section-label"><i class="fas fa-graduation-cap"></i> Subjects &amp; Topics</div>
+      <div class="folders-grid" id="subjectsGrid"></div>
+    </div>
+
+    <!-- Videos -->
+    <div id="videosSection" style="display:none;">
+      <div class="section-label"><i class="fab fa-youtube"></i> Videos &amp; Playlists</div>
+      <div class="videos-grid" id="videosGrid"></div>
+    </div>
+
+    <!-- Empty -->
+    <div id="emptyState" style="display:none;">
+      <div class="empty">
+        <i class="fab fa-youtube"></i>
+        <strong id="emptyTitle">No Videos Yet</strong>
+        <span id="emptyMsg">No content has been uploaded for this subject yet.</span>
+      </div>
+    </div>
+
+
+    <!-- Loading -->
+    <div id="loadingState" style="text-align:center;padding:80px;color:var(--yt-sub);">
+      <i class="fas fa-spinner fa-spin" style="font-size:36px;color:var(--yt-red)"></i>
+      <p style="margin-top:12px;">Loading...</p>
+    </div>
+  </div>
+
+  <!-- Folder Modal -->
+  <div class="overlay" id="folderModal">
+    <div class="modal">
+      <h2><i class="fas fa-list"></i> New Playlist Folder</h2>
+      <div class="field">
+        <label>Folder Name</label>
+        <input type="text" id="folderName" placeholder="e.g. Unit 1 Videos">
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-yt" onclick="createFolder()">Create</button>
+        <button class="btn btn-cancel" onclick="closeModal('folderModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Move Modal -->
+  <div class="overlay" id="moveModal">
+    <div class="modal" style="max-width: 400px; width: 90%;">
+      <h2><i class="fas fa-arrows-alt"></i> Move Content</h2>
+      <div class="field">
+        <label>Destination Semester</label>
+        <select id="moveSemester" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; background: #fff;" onchange="loadDestFolders()">
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Destination Subject / Folder</label>
+        <select id="moveFolder" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; background: #fff;">
+          <option value="">Semester Root (No Folder)</option>
+        </select>
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-yt" onclick="submitMove()">Move</button>
+        <button class="btn btn-cancel" onclick="closeModal('moveModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Modal -->
+  <div class="overlay" id="linkModal">
+    <div class="modal">
+      <h2><i class="fab fa-youtube"></i> Add Video / Playlist</h2>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="linkTitle" placeholder="e.g. Accounting Basics - Full Playlist">
+      </div>
+      <div class="field">
+        <label>YouTube URL</label>
+        <input type="text" id="linkUrl" placeholder="https://youtube.com/playlist?list=... or video URL">
+      </div>
+      <div class="modal-btns" style="flex-direction: column; gap: 10px;">
+        <button class="btn btn-yt" style="width: 100%;" onclick="addLink()">
+          <i class="fas fa-plus"></i> Add Single Video / Item
+        </button>
+        <button class="btn btn-dark" style="width: 100%; background: #22c55e; border-color: #22c55e;" onclick="importPlaylist()">
+          <i class="fas fa-file-import"></i> IMPORT ENTIRE PLAYLIST
+        </button>
+        <button class="btn btn-cancel" style="width: 100%;" onclick="closeModal('linkModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resort Playlist Modal -->
+  <div class="overlay" id="resortModal">
+    <div class="modal">
+      <h2><i class="fas fa-sort-amount-down"></i> Fix Shuffled Playlist</h2>
+      <p style="font-size: 13px; color: var(--yt-sub); margin-bottom: 15px; line-height: 1.5;">Paste the YouTube Playlist URL. The system will connect to YouTube, fetch the correct sequence of videos, and automatically re-sort all existing videos in this section to match that exact sequence!</p>
+      <div class="field">
+        <label>YouTube Playlist URL</label>
+        <input type="text" id="resortPlaylistUrl" placeholder="https://youtube.com/playlist?list=...">
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-yt" style="background: #3b82f6; border-color: #3b82f6;" onclick="submitResortPlaylist()">
+          <i class="fas fa-magic"></i> Auto-Sort Now
+        </button>
+        <button class="btn btn-cancel" onclick="closeModal('resortModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const p = new URLSearchParams(window.location.search);
+    let CATEGORY = 'youtube';
+    let SEMESTER = parseInt(p.get('semester')) || 1;
+    let FOLDER_ID = p.get('folderId') || null;
+    let FOLDER_NAME = p.get('name') || 'Videos';
+    let PARENT_NAME = p.get('parentName') || null;
+    let NO_CONTENT = p.get('noContent') === 'true';
+    let isNavigating = false;
+    let searchDebounceTimeout = null;
+
+    // Smooth Page redirection
+    function smoothRedirect(url) {
+      document.body.style.transition = 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+      document.body.style.opacity = '0';
+      document.body.style.transform = 'scale(0.99)';
+      setTimeout(() => {
+        window.location.href = url;
+      }, 150);
+    }
+
+    // Dynamic Navigation without page reload (SPA mode)
+    async function navigateToFolder(semester, folderId, name, parentName) {
+      if (isNavigating) return;
+      isNavigating = true;
+
+      SEMESTER = parseInt(semester) || 1;
+      FOLDER_ID = folderId || null;
+      FOLDER_NAME = name || 'Videos';
+      PARENT_NAME = parentName || null;
+
+      const newUrl = `/database/youtube-content?semester=${SEMESTER}` +
+                     (FOLDER_ID ? `&folderId=${FOLDER_ID}` : '') +
+                     `&name=${encodeURIComponent(FOLDER_NAME)}` +
+                     (PARENT_NAME ? `&parentName=${encodeURIComponent(PARENT_NAME)}` : '');
+
+      history.pushState({ semester: SEMESTER, folderId: FOLDER_ID, name: FOLDER_NAME, parentName: PARENT_NAME }, '', newUrl);
+
+      // Smooth fade-out of current grid contents
+      const grids = document.querySelectorAll('.folders-grid, .videos-grid');
+      grids.forEach(grid => {
+        grid.style.transition = 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+        grid.style.opacity = '0';
+        grid.style.transform = 'translateY(10px)';
+      });
+
+      // Update title, sub and breadcrumbs
+      const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
+      document.getElementById('pageTitle').innerText = displayPageName;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      buildBreadcrumb();
+
+      // Reset Search Input on Navigation
+      const searchInput = document.getElementById('youtubeSearchInput');
+      if (searchInput) searchInput.value = '';
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+
+      try {
+        await loadContent();
+      } catch (err) {
+        console.error('Content load failed during navigation:', err);
+      } finally {
+        // Smooth fade-in of fresh grid contents
+        setTimeout(() => {
+          const freshGrids = document.querySelectorAll('.folders-grid, .videos-grid');
+          freshGrids.forEach(grid => {
+            grid.style.opacity = '1';
+            grid.style.transform = 'translateY(0)';
+          });
+          isNavigating = false;
+        }, 50);
+      }
+    }
+
+    window.addEventListener('popstate', async (e) => {
+      isNavigating = false;
+      const stateParams = new URLSearchParams(window.location.search);
+      SEMESTER = parseInt(stateParams.get('semester')) || 1;
+      FOLDER_ID = stateParams.get('folderId') || null;
+      FOLDER_NAME = stateParams.get('name') || 'Videos';
+      PARENT_NAME = stateParams.get('parentName') || null;
+
+      // Update title, sub and breadcrumbs
+      const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
+      document.getElementById('pageTitle').innerText = displayPageName;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      buildBreadcrumb();
+
+      try {
+        await loadContent();
+      } catch (err) {
+        console.error('Content load failed during back/forward navigation:', err);
+      }
+    });
+
+    const CAT_LABEL = 'YouTube Videos';
+    const ordinal = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
+
+    // ── Breadcrumb ──────────────────────────────────────────────────────────
+    function buildBreadcrumb() {
+      const bc = document.getElementById('breadcrumb');
+      let html = `
+      <a href="/database" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item home"><i class="fas fa-home"></i> Database</a>
+      <i class="fas fa-chevron-right bc-sep"></i>
+      <a href="/database/youtube-browse" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
+      <i class="fas fa-chevron-right bc-sep"></i>
+      <a href="/database/youtube-browse?semester=${SEMESTER}" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item"><i class="fas fa-layer-group"></i> Sem ${SEMESTER}</a>
+    `;
+
+      if (PARENT_NAME) {
+        // We are inside a folder, show the parent subject/folder link
+        const cleanParent = PARENT_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
+        html += `
+        <i class="fas fa-chevron-right bc-sep"></i>
+        <a href="javascript:void(0)" onclick="history.back()" class="bc-item">
+          <i class="fas fa-folder-open"></i> ${cleanParent}
+        </a>
+      `;
+      }
+
+      const currentLabel = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+      html += `
+      <i class="fas fa-chevron-right bc-sep"></i>
+      <span class="bc-item current"><i class="fas fa-book"></i> ${currentLabel}</span>
+    `;
+
+      bc.innerHTML = html;
+    }
+
+    // ── Init ────────────────────────────────────────────────────────────────
+    async function init() {
+      isNavigating = false;
+
+      // 🏁 WAIT for API status to be fully determined
+      let retry = 0;
+      while (retry < 5 && (!window.solmatesAPI || !window.solmatesAPI.isReady())) {
+        await new Promise(r => setTimeout(r, 100));
+        retry++;
+      }
+      await new Promise(r => setTimeout(r, 100)); // Final buffer
+
+      const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+      document.getElementById('pageTitle').innerText = displayPageName;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      buildBreadcrumb();
+
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (isAdmin) {
+        document.getElementById('adminBar').style.display = 'flex';
+        document.getElementById('organizeToggleBtn').style.display = 'inline-block';
+        document.getElementById('resortBtn').style.display = 'inline-block';
+        if (SEMESTER === 3 || SEMESTER === 4) {
+          const btn = document.getElementById('btnNewTopicFolder');
+          if (btn) btn.style.display = 'inline-block';
+        }
+      }
+
+      if (NO_CONTENT && !isAdmin) {
+        showEmpty('No Videos Available', 'No videos have been uploaded for this subject yet. Check back later!');
+        return;
+      }
+
+      if (NO_CONTENT && isAdmin) {
+        showEmpty('Empty — Add Content', 'Use the buttons above to add playlist folders or video links.');
+        return;
+      }
+
+      // Setup Search Listeners
+      const searchInput = document.getElementById('youtubeSearchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', handleSearchInput);
+        
+        // Responsive placeholder text to fit small mobile screens cleanly
+        const updatePlaceholder = () => {
+          const w = window.innerWidth;
+          if (w < 410) {
+            searchInput.placeholder = "Search folders & videos...";
+          } else if (w < 600) {
+            searchInput.placeholder = "Search subjects, folders & videos...";
+          } else {
+            searchInput.placeholder = "Search subjects, playlist folders, or videos...";
+          }
+        };
+        updatePlaceholder();
+        window.addEventListener('resize', updatePlaceholder);
+      }
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', clearSearch);
+      }
+
+      loadContent();
+    }
+
+    async function handleSearchInput() {
+      const q = document.getElementById('youtubeSearchInput').value.trim();
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) {
+        clearBtn.style.display = q ? 'flex' : 'none';
+      }
+
+      if (searchDebounceTimeout) clearTimeout(searchDebounceTimeout);
+
+      searchDebounceTimeout = setTimeout(async () => {
+        if (!q) {
+          // Restore original state
+          const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
+          document.getElementById('pageTitle').innerText = displayPageName;
+          document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+          buildBreadcrumb();
+          
+          document.getElementById('loadingState').style.display = 'block';
+          document.getElementById('emptyState').style.display = 'none';
+          
+          // Clear grids
+          const grids = ['subjectsGrid', 'foldersGrid', 'videosGrid'];
+          grids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.replaceChildren();
+          });
+          
+          loadContent();
+          return;
+        }
+
+        // Perform Search
+        document.getElementById('loadingState').style.display = 'block';
+        document.getElementById('emptyState').style.display = 'none';
+        
+        // Hide sections temporarily
+        const sections = ['subjectsSection', 'foldersSection', 'videosSection'];
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
+        
+        // Clear grids
+        const grids = ['subjectsGrid', 'foldersGrid', 'videosGrid'];
+        grids.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.replaceChildren();
+        });
+
+        try {
+          const res = await window.solmatesAPI.searchYouTubeContent(q);
+          const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+          
+          document.getElementById('pageTitle').innerText = "Search Results";
+          document.getElementById('pageSub').innerText = `Found ${res.folders ? res.folders.length : 0} folder(s) and ${res.videos ? res.videos.length : 0} video(s) matching "${q}"`;
+          
+          // Breadcrumb path for search
+          const bc = document.getElementById('breadcrumb');
+          if (bc) {
+            bc.innerHTML = `<span onclick="navigateToFolder(SEMESTER, null, 'Videos')" style="cursor:pointer;color:var(--accent);">Videos</span> <i class="fas fa-chevron-right separator"></i> <span class="active">Search: "${q}"</span>`;
+          }
+
+          if (res.success && ((res.folders && res.folders.length > 0) || (res.videos && res.videos.length > 0))) {
+            renderContentSafe(res.folders || [], res.videos || [], isAdmin, false);
+          } else {
+            showEmpty("No Results Found", `We couldn't find any subjects, folders, or videos matching "${q}".`);
+          }
+        } catch (err) {
+          console.error("Search failed:", err);
+          showEmpty("Search Failed", "An error occurred while performing search. Please try again.");
+        } finally {
+          document.getElementById('loadingState').style.display = 'none';
+        }
+      }, 300);
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('youtubeSearchInput');
+      if (input) {
+        input.value = '';
+        handleSearchInput();
+      }
+    }
+
+    function showEmpty(title, msg) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('emptyTitle').innerText = title;
+      document.getElementById('emptyMsg').innerText = msg;
+      document.getElementById('emptyState').style.display = 'block';
+
+      // Clear grids and hide sections to prevent stale elements from showing
+      const sGrid = document.getElementById('subjectsGrid');
+      const fGrid = document.getElementById('foldersGrid');
+      const vGrid = document.getElementById('videosGrid');
+      const sSec = document.getElementById('subjectsSection');
+      const fSec = document.getElementById('foldersSection');
+      const vSec = document.getElementById('videosSection');
+
+      if (sGrid) sGrid.replaceChildren();
+      if (fGrid) fGrid.replaceChildren();
+      if (vGrid) vGrid.replaceChildren();
+
+      if (sSec) sSec.style.display = 'none';
+      if (fSec) fSec.style.display = 'none';
+      if (vSec) vSec.style.display = 'none';
+    }
+
+    // ── Load content ────────────────────────────────────────────────────────
+    async function loadContent() {
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+
+      // Step 1: Cache Render
+      const fKey = `folders_${CATEGORY}_${SEMESTER}_${FOLDER_ID || 'root'}_false`;
+      const iKey = `content_${CATEGORY}_${SEMESTER}_${FOLDER_ID || 'root'}`;
+      const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(fKey) : null;
+      const cItems = window.solmatesAPI ? window.solmatesAPI.getCache(iKey) : null;
+
+      if (cFolders || cItems) {
+        renderContentSafe(cFolders?.data || [], cItems?.data || [], isAdmin, true);
+        const freshGrids = document.querySelectorAll('.folders-grid, .videos-grid');
+        freshGrids.forEach(grid => {
+          grid.style.opacity = '1';
+          grid.style.transform = 'translateY(0)';
+        });
+        isNavigating = false;
+      } else {
+        document.getElementById('loadingState').style.display = 'block';
+      }
+
+      // Step 2: Fresh Render
+      try {
+        const [fRes, iRes] = await Promise.all([
+          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null),
+          window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null)
+        ]);
+
+        const folders = (fRes && fRes.data) ? fRes.data : [];
+        const items = (iRes && iRes.data) ? iRes.data : [];
+
+        // ✅ PROTECTION: If both are empty and request failed, keep stale.
+        // But if request succeeded and it is genuinely empty, proceed to show empty state!
+        const fSuccess = fRes && fRes.success;
+        const iSuccess = iRes && iRes.success;
+        if (folders.length === 0 && items.length === 0) {
+          if (!fSuccess || !iSuccess) {
+            const subjectsGrid = document.getElementById('subjectsGrid');
+            const foldersGrid = document.getElementById('foldersGrid');
+            const videosGrid = document.getElementById('videosGrid');
+            const hasStale = (subjectsGrid && subjectsGrid.children.length > 0) || (foldersGrid && foldersGrid.children.length > 0) || (videosGrid && videosGrid.children.length > 0);
+            if (hasStale) return; // Keep stale if fresh is empty/fail
+          }
+        }
+
+        renderContentSafe(folders, items, isAdmin, false);
+      } catch (e) {
+        console.error('Refresh failed:', e);
+      } finally {
+        document.getElementById('loadingState').style.display = 'none';
+        isNavigating = false;
+      }
+    }
+
+    function getSubjectIcon(name) {
+      const n = name.toLowerCase();
+      if (n.includes('finance') || n.includes('financial') || n.includes('investment') || n.includes('tax') || n.includes('accounting') || n.includes('wealth')) {
+        return 'fas fa-file-invoice-dollar';
+      }
+      if (n.includes('marketing') || n.includes('brand') || n.includes('consumer') || n.includes('advertising') || n.includes('retail')) {
+        return 'fas fa-bullhorn';
+      }
+      if (n.includes('human resource') || n.includes('hr') || n.includes('talent') || n.includes('organization') || n.includes('behaviour') || n.includes('people')) {
+        return 'fas fa-users-cog';
+      }
+      if (n.includes('operation') || n.includes('supply chain') || n.includes('logistics') || n.includes('project') || n.includes('production') || n.includes('operations')) {
+        return 'fas fa-cogs';
+      }
+      if (n.includes('it') || n.includes('system') || n.includes('digital') || n.includes('technology') || n.includes('e-commerce') || n.includes('computer')) {
+        return 'fas fa-laptop-code';
+      }
+      if (n.includes('strategy') || n.includes('strategic') || n.includes('business') || n.includes('management') || n.includes('corporate') || n.includes('law') || n.includes('legal') || n.includes('ethics') || n.includes('governance')) {
+        return 'fas fa-briefcase';
+      }
+      if (n.includes('economics') || n.includes('economic') || n.includes('micro') || n.includes('macro')) {
+        return 'fas fa-chart-bar';
+      }
+      if (n.includes('research') || n.includes('analytics') || n.includes('statistics') || n.includes('quantitative') || n.includes('math')) {
+        return 'fas fa-chart-pie';
+      }
+      return 'fas fa-graduation-cap'; // Premium subject fallback icon
+    }
+
+    const TOPIC_FOLDER_PALETTES = [
+      { // Gold / Amber
+        bg: 'linear-gradient(135deg, var(--card) 0%, rgba(192, 150, 45, 0.08) 50%, rgba(218, 165, 32, 0.12) 100%)',
+        border: 'rgba(192, 150, 45, 0.4)',
+        hoverBorder: '#c0962d',
+        glow: 'rgba(192, 150, 45, 0.08)',
+        hoverGlow: 'rgba(192, 150, 45, 0.25)',
+        primary: '#c0962d',
+        topRibbon: 'linear-gradient(90deg, #c0962d, #dfb750, #c0962d)'
+      },
+      { // Blue / Indigo
+        bg: 'linear-gradient(135deg, var(--card) 0%, rgba(59, 130, 246, 0.08) 50%, rgba(99, 102, 241, 0.12) 100%)',
+        border: 'rgba(59, 130, 246, 0.4)',
+        hoverBorder: '#3b82f6',
+        glow: 'rgba(59, 130, 246, 0.08)',
+        hoverGlow: 'rgba(59, 130, 246, 0.25)',
+        primary: '#3b82f6',
+        topRibbon: 'linear-gradient(90deg, #3b82f6, #6366f1, #3b82f6)'
+      },
+      { // Emerald / Teal
+        bg: 'linear-gradient(135deg, var(--card) 0%, rgba(16, 185, 129, 0.08) 50%, rgba(20, 184, 166, 0.12) 100%)',
+        border: 'rgba(16, 185, 129, 0.4)',
+        hoverBorder: '#10b981',
+        glow: 'rgba(16, 185, 129, 0.08)',
+        hoverGlow: 'rgba(16, 185, 129, 0.25)',
+        primary: '#10b981',
+        topRibbon: 'linear-gradient(90deg, #10b981, #14b8a6, #10b981)'
+      },
+      { // Violet / Purple
+        bg: 'linear-gradient(135deg, var(--card) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(167, 139, 250, 0.12) 100%)',
+        border: 'rgba(139, 92, 246, 0.4)',
+        hoverBorder: '#8b5cf6',
+        glow: 'rgba(139, 92, 246, 0.08)',
+        hoverGlow: 'rgba(139, 92, 246, 0.25)',
+        primary: '#8b5cf6',
+        topRibbon: 'linear-gradient(90deg, #8b5cf6, #a78bfa, #8b5cf6)'
+      },
+      { // Orange / Tangerine
+        bg: 'linear-gradient(135deg, var(--card) 0%, rgba(249, 115, 22, 0.08) 50%, rgba(251, 146, 60, 0.12) 100%)',
+        border: 'rgba(249, 115, 22, 0.4)',
+        hoverBorder: '#f97316',
+        glow: 'rgba(249, 115, 22, 0.08)',
+        hoverGlow: 'rgba(249, 115, 22, 0.25)',
+        primary: '#f97316',
+        topRibbon: 'linear-gradient(90deg, #f97316, #fb923c, #f97316)'
+      },
+      { // Crimson / Rose
+        bg: 'linear-gradient(135deg, var(--card) 0%, rgba(244, 63, 94, 0.08) 50%, rgba(251, 113, 133, 0.12) 100%)',
+        border: 'rgba(244, 63, 94, 0.4)',
+        hoverBorder: '#f43f5e',
+        glow: 'rgba(244, 63, 94, 0.08)',
+        hoverGlow: 'rgba(244, 63, 94, 0.25)',
+        primary: '#f43f5e',
+        topRibbon: 'linear-gradient(90deg, #f43f5e, #fb7185, #f43f5e)'
+      }
+    ];
+
+    function renderContentSafe(folders, items, isAdmin, isStale = false) {
+      try {
+        if (folders.length === 0 && items.length === 0) {
+          if (isStale) return; // Wait for fresh
+          showEmpty(
+            isAdmin ? 'Empty — Add Content' : 'No Videos Available',
+            isAdmin ? 'Use buttons above to add playlist folders or video links.' : 'No videos uploaded yet. Check back later!'
+          );
+          return;
+        }
+        document.getElementById('emptyState').style.display = 'none';
+
+        const sGrid = document.getElementById('subjectsGrid');
+        const fGrid = document.getElementById('foldersGrid');
+        const vGrid = document.getElementById('videosGrid');
+        const sSec = document.getElementById('subjectsSection');
+        const fSec = document.getElementById('foldersSection');
+        const vSec = document.getElementById('videosSection');
+
+        const sFrag = document.createDocumentFragment();
+        const fFrag = document.createDocumentFragment();
+        const vFrag = document.createDocumentFragment();
+
+        // Render folders
+        const seenFolders = new Set();
+        let topicFolderCount = 0;
+
+        folders.forEach(f => {
+          try {
+            const n = (f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[FOLDER\]/gi, '').toUpperCase().trim();
+            if (seenFolders.has(n)) return;
+            seenFolders.add(n);
+
+            const isTopicFolder = (f.name || '').includes('[TOPIC_FOLDER]');
+            const isGeneric = !isTopicFolder && (f.name || '').includes('[FOLDER]');
+            const isPremiumSubject = isTopicFolder || !isGeneric;
+            const isHidden = (f.name || '').includes('[HIDDEN]');
+            if (isHidden && !isAdmin) return;
+
+            const displayName = f.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+            const card = document.createElement('div');
+            if (isHidden) card.style.opacity = '0.5';
+
+            if (isTopicFolder) {
+              const iconClass = getSubjectIcon(displayName);
+              card.className = 'folder-card centered-folder premium-topic-folder';
+              card.innerHTML = `
+                <div class="folder-glow-bg"></div>
+                <div class="icon-wrapper">
+                  <i class="${iconClass}"></i>
+                </div>
+                <h3>${displayName}</h3>
+              `;
+
+              // Apply alternating color palette variables
+              const palette = TOPIC_FOLDER_PALETTES[topicFolderCount % TOPIC_FOLDER_PALETTES.length];
+              topicFolderCount++;
+              card.style.setProperty('--tf-bg', palette.bg);
+              card.style.setProperty('--tf-border', palette.border);
+              card.style.setProperty('--tf-hover-border', palette.hoverBorder);
+              card.style.setProperty('--tf-glow', palette.glow);
+              card.style.setProperty('--tf-hover-glow', palette.hoverGlow);
+              card.style.setProperty('--tf-primary', palette.primary);
+              card.style.setProperty('--tf-top-ribbon', palette.topRibbon);
+
+            } else if (!isGeneric) {
+              card.className = 'folder-card centered-folder';
+              card.innerHTML = `<i class="fas fa-play-circle main-icon"></i><h3>${displayName}</h3>`;
+            } else {
+              card.className = 'folder-card';
+              card.innerHTML = `
+                <div class="folder-thumb"><i class="fas fa-list-ul"></i><div class="playlist-badge"><i class="fas fa-play"></i> Playlist Folder</div></div>
+                <div class="folder-info"><h3>${displayName}</h3><p>Click to view videos</p></div>
+              `;
+            }
+
+            // If folder has a location (search result), append it
+            if (f.location) {
+              const locBadge = document.createElement('div');
+              locBadge.className = 'result-path';
+              locBadge.innerHTML = `<i class="fas fa-folder"></i> ${f.location}`;
+              card.querySelector('.folder-info')?.appendChild(locBadge) || card.appendChild(locBadge);
+            }
+
+            if (isAdmin) {
+              const del = document.createElement('button');
+              del.className = 'del-btn'; del.innerHTML = '<i class="fas fa-trash"></i>';
+              del.onclick = e => { e.stopPropagation(); deleteFolder(f.id, f.name); };
+              card.appendChild(del);
+
+              const edit = document.createElement('button');
+              edit.className = 'edit-btn'; edit.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+              edit.onclick = e => { e.stopPropagation(); editFolderName(f.id, f.name); };
+              card.appendChild(edit);
+
+              const hide = document.createElement('button');
+              hide.className = 'hide-btn';
+              hide.style.background = isHidden ? 'rgba(100, 116, 139, 0.9)' : 'rgba(100, 116, 139, 0.1)';
+              hide.style.color = isHidden ? '#fff' : '#64748b';
+              hide.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+              hide.onclick = e => { e.stopPropagation(); toggleHide('folder', f); };
+              card.appendChild(hide);
+
+              const move = document.createElement('button');
+              move.className = 'move-btn';
+              move.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+              move.onclick = e => { e.stopPropagation(); openMoveModal('folder', f); };
+              
+              // Append Move Here Overlay for Organize Mode
+              const targetOverlay = document.createElement('div');
+              targetOverlay.className = 'move-here-overlay';
+              targetOverlay.innerHTML = `<button class="move-here-btn-overlay" onclick="event.stopPropagation(); executeOrganizeMove('${f.id}')"><i class="fas fa-chevron-circle-down"></i> Move Here</button>`;
+              card.appendChild(targetOverlay);
+              card.appendChild(move);
+            }
+            card.onclick = () => {
+              if (typeof isOrganizeMode !== 'undefined' && isOrganizeMode) {
+                selectOrganizeEntity('folder', f, card);
+                return;
+              }
+              if (f.name.includes('[HIDDEN]') && !isAdmin) {
+                return;
+              }
+              navigateToFolder(SEMESTER, f.id, f.name, FOLDER_NAME);
+            };
+
+            if (isPremiumSubject) {
+              sFrag.appendChild(card);
+            } else {
+              fFrag.appendChild(card);
+            }
+          } catch(err) { console.error('Folder render item fail', err); }
+        });
+
+        // Render videos
+        const seenItems = new Set();
+        items.forEach(item => {
+          try {
+            const n = (item.title || item.subject || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim();
+            if (seenItems.has(n)) return;
+            seenItems.add(n);
+
+            const rawTitle = item.title || item.subject || 'Untitled Video';
+            const isHidden = rawTitle.includes('[HIDDEN]');
+            if (isHidden && !isAdmin) return;
+
+            const title = rawTitle.replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+            const url = item.videoUrl || item.link || item.url || item.pdf;
+            const card = document.createElement('div');
+            if (isHidden) card.style.opacity = '0.5';
+            card.className = 'video-card';
+            const { videoId, playlistId } = extractYouTubeId(url);
+            const isPlaylist = !!playlistId;
+
+            let thumbHtml = '';
+            if (videoId) {
+              thumbHtml = `
+              <div class="video-thumb ${isPlaylist ? 'is-playlist' : ''}">
+                <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="${title}" onerror="this.style.display='none'; this.parentElement.querySelector('.playlist-thumb-overlay').style.display='flex';">
+                <div class="playlist-thumb-overlay" style="display:none;"><i class="fab fa-youtube playlist-icon"></i><span class="playlist-label">Video</span></div>
+                <div class="video-thumb-overlay"><div class="play-circle"><i class="fas fa-play"></i></div></div>
+              </div>`;
+            } else {
+              thumbHtml = `<div class="video-thumb is-playlist" style="background:#000"><div class="playlist-thumb-overlay"><i class="fas fa-list-ul playlist-icon"></i><span class="playlist-label">Playlist</span></div><div class="video-thumb-overlay"><div class="play-circle"><i class="fas fa-play"></i></div></div></div>`;
+            }
+
+            // Check for watched progress in localStorage
+            let progressHtml = '';
+            const keyId = videoId || playlistId;
+            if (keyId) {
+              const savedTime = parseInt(localStorage.getItem('yt_pos_' + keyId)) || 0;
+              const duration = parseInt(localStorage.getItem('yt_pos_' + keyId + '_dur')) || 0;
+              if (savedTime > 0) {
+                const pct = duration > 0 ? Math.min((savedTime / duration) * 100, 100) : 10;
+                progressHtml = `
+                  <div class="video-progress-wrapper" style="margin-top: 8px; margin-bottom: 8px; width: 100%;">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-bottom: 4px;">
+                      <span>Watched Progress</span>
+                      <span>${Math.round(pct)}%</span>
+                    </div>
+                    <div class="video-progress-container" style="width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; position: relative;">
+                      <div class="video-progress-bar" style="width: ${pct}%; height: 100%; background: #ef4444; box-shadow: 0 0 6px #ef4444; border-radius: 4px; transition: width 0.3s ease;"></div>
+                    </div>
+                  </div>
+                `;
+              }
+            }
+
+            card.innerHTML = `${thumbHtml}<div class="video-info"><h3>${title}</h3>${progressHtml}<button class="watch-btn ${isPlaylist ? 'playlist-btn' : ''}" onclick="event.stopPropagation(); openViewer('${esc(url)}', '${esc(title)}')">${isPlaylist ? '<i class="fas fa-list-ul"></i> Open Playlist' : '<i class="fab fa-youtube"></i> Watch Now'}</button></div>`;
+
+            // If item has a location (search result), append it
+            if (item.location) {
+              const locBadge = document.createElement('div');
+              locBadge.className = 'result-path';
+              locBadge.innerHTML = `<i class="fas fa-folder"></i> ${item.location}`;
+              const infoDiv = card.querySelector('.video-info');
+              const watchBtn = infoDiv?.querySelector('.watch-btn');
+              if (infoDiv && watchBtn) {
+                infoDiv.insertBefore(locBadge, watchBtn);
+              } else if (infoDiv) {
+                infoDiv.appendChild(locBadge);
+              }
+            }
+
+            if (isAdmin) {
+              const del = document.createElement('button');
+              del.className = 'del-btn'; del.innerHTML = '<i class="fas fa-trash"></i>';
+              del.onclick = e => { e.stopPropagation(); deleteItem(item.id); };
+              card.appendChild(del);
+
+              const edit = document.createElement('button');
+              edit.className = 'edit-btn'; edit.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+              edit.onclick = e => { e.stopPropagation(); editItem(item); };
+              card.appendChild(edit);
+
+              const hide = document.createElement('button');
+              hide.className = 'hide-btn';
+              hide.style.background = isHidden ? 'rgba(100, 116, 139, 0.9)' : 'rgba(100, 116, 139, 0.1)';
+              hide.style.color = isHidden ? '#fff' : '#64748b';
+              hide.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+              hide.onclick = e => { e.stopPropagation(); toggleHide('item', item); };
+              card.appendChild(hide);
+
+              const move = document.createElement('button');
+              move.className = 'move-btn';
+              move.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+              move.onclick = e => { e.stopPropagation(); openMoveModal('item', item); };
+              card.appendChild(move);
+
+              if (isPlaylist) {
+                const magic = document.createElement('button');
+                magic.className = 'magic-btn'; magic.innerHTML = '<i class="fas fa-magic"></i>';
+                magic.title = "Expand into Folder";
+                magic.onclick = e => { e.stopPropagation(); expandPlaylistToFolder(item); };
+                card.appendChild(magic);
+              }
+            }
+            card.onclick = () => {
+              if (typeof isOrganizeMode !== 'undefined' && isOrganizeMode) {
+                selectOrganizeEntity('item', item, card);
+              }
+            };
+            vFrag.appendChild(card);
+          } catch(err) { console.error('Video render item fail', err); }
+        });
+
+        const subjectsCount = folders.filter(f => (f.name || '').includes('[TOPIC_FOLDER]') || !(f.name || '').includes('[FOLDER]')).length;
+        const playlistFoldersCount = folders.filter(f => !(f.name || '').includes('[TOPIC_FOLDER]') && (f.name || '').includes('[FOLDER]')).length;
+
+        if (sSec) sSec.style.display = subjectsCount > 0 ? 'block' : 'none';
+        if (fSec) fSec.style.display = playlistFoldersCount > 0 ? 'block' : 'none';
+        if (vSec) vSec.style.display = items.length > 0 ? 'block' : 'none';
+
+        if (sGrid) sGrid.replaceChildren(sFrag);
+        if (fGrid) fGrid.replaceChildren(fFrag);
+        if (vGrid) vGrid.replaceChildren(vFrag);
+      } catch (e) {
+        console.error('CRITICAL: renderContentSafe failed entirely', e);
+        showEmpty('Rendering Error', 'A technical issue occurred while displaying the videos.');
+      }
+    }
+
+    // ── Extract YouTube video ID from any YouTube URL ────────────────────────
+    function extractYouTubeId(url) {
+      if (!url) return { videoId: null, playlistId: null };
+      let cleanUrl = url.trim();
+      if (!cleanUrl.match(/^[a-zA-Z]+:\/\//)) cleanUrl = 'https://' + cleanUrl;
+
+      let videoId = null;
+      let playlistId = null;
+
+      try {
+        const urlObj = new URL(cleanUrl);
+        const host = urlObj.hostname.replace('www.', '');
+
+        if (host === 'youtu.be') {
+          videoId = urlObj.pathname.slice(1).split(/[?#]/)[0];
+        } else if (host === 'youtube.com' || host === 'm.youtube.com') {
+          videoId = urlObj.searchParams.get('v');
+          playlistId = urlObj.searchParams.get('list');
+
+          if (!videoId) {
+            const pathParts = urlObj.pathname.split('/');
+            const keywords = ['shorts', 'embed', 'v'];
+            for (const kw of keywords) {
+              const idx = pathParts.indexOf(kw);
+              if (idx !== -1 && pathParts[idx + 1]) {
+                videoId = pathParts[idx + 1].split(/[?#]/)[0];
+                break;
+              }
+            }
+          }
+        }
+      } catch (e) {
+        // Basic regex fallback
+        const vMatch = cleanUrl.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+        const lMatch = cleanUrl.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+        if (vMatch) videoId = vMatch[1];
+        if (lMatch) playlistId = lMatch[1];
+      }
+
+      return { videoId, playlistId };
+    }
+
+    async function editFolderName(id, oldName) {
+      const cleanOldName = oldName.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[OTHER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').trim();
+      const newName = prompt('Enter new folder name:', cleanOldName);
+      if (!newName || newName.trim() === cleanOldName) return;
+
+      try {
+        // Preserve markers
+        let finalName = newName.trim();
+        if (oldName.includes('[FOLDER]')) finalName += ' [FOLDER]';
+        if (oldName.includes('[OTHER]')) finalName += ' [OTHER]';
+        if (oldName.includes('[LOCKED]')) finalName += ' [LOCKED]';
+        if (oldName.includes('[HIDDEN]')) finalName += ' [HIDDEN]';
+        if (oldName.includes('[TOPIC_FOLDER]')) finalName += ' [TOPIC_FOLDER]';
+
+        await window.solmatesAPI.updateSOLFolder(id, { name: finalName });
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        loadContent(); // Refresh
+      } catch (e) { alert('Rename failed: ' + e.message); }
+    }
+
+    let activeFolderType = 'folder';
+    function openModal(id, type = 'folder') {
+      activeFolderType = type;
+      if (id === 'folderModal') {
+        const h2 = document.querySelector('#folderModal h2');
+        if (type === 'subject') h2.innerHTML = '<i class="fas fa-play-circle"></i> New Subject';
+        else if (type === 'topic_folder') h2.innerHTML = '<i class="fas fa-folder-open"></i> New Topic Folder';
+        else h2.innerHTML = '<i class="fas fa-folder-plus"></i> New Playlist Folder';
+      }
+      document.getElementById(id).classList.add('open');
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    async function createFolder() {
+      let name = document.getElementById('folderName').value.trim();
+      if (!name) return alert('Enter a folder name.');
+
+      if (activeFolderType === 'folder' && !name.includes('[FOLDER]')) {
+        name += ' [FOLDER]';
+      } else if (activeFolderType === 'topic_folder' && !name.includes('[TOPIC_FOLDER]')) {
+        name += ' [TOPIC_FOLDER]';
+      }
+
+      try {
+        await window.solmatesAPI.addSOLFolder({
+          name,
+          category: CATEGORY,
+          semester: SEMESTER,
+          parentId: FOLDER_ID
+        });
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        closeModal('folderModal');
+        document.getElementById('folderName').value = '';
+        window.location.reload();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function addLink() {
+      const title = document.getElementById('linkTitle').value.trim();
+      const url = document.getElementById('linkUrl').value.trim();
+      if (!title || !url) return alert('Please fill in both fields.');
+      try {
+        await window.solmatesAPI.addSOLItem(CATEGORY, SEMESTER, {
+          title, subject: title, videoUrl: url, link: url, folderId: FOLDER_ID
+        });
+        closeModal('linkModal');
+        document.getElementById('linkTitle').value = '';
+        document.getElementById('linkUrl').value = '';
+        window.location.reload();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function deleteFolder(id, name) {
+      if (!confirm(`Delete "${name}" and all its videos?`)) return;
+      try { await window.solmatesAPI.deleteSOLFolder(id); resetAndLoad(); }
+      catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function deleteItem(id) {
+      if (!confirm('Remove this video?')) return;
+      try { await window.solmatesAPI.deleteSOLItem(CATEGORY, SEMESTER, id); resetAndLoad(); }
+      catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function editItem(item) {
+      const oldTitle = item.title || item.subject || '';
+      const oldUrl = item.videoUrl || item.link || '';
+
+      const newTitle = prompt('New Title:', oldTitle);
+      if (newTitle === null) return;
+
+      const newUrl = prompt('New YouTube URL:', oldUrl);
+      if (newUrl === null) return;
+
+      if (newTitle.trim() === oldTitle && newUrl.trim() === oldUrl) return;
+
+      try {
+        await window.solmatesAPI.updateSOLItem(CATEGORY, SEMESTER, item.id, {
+          title: newTitle.trim() || oldTitle,
+          subject: newTitle.trim() || oldTitle,
+          videoUrl: newUrl.trim() || oldUrl,
+          link: newUrl.trim() || oldUrl
+        });
+        resetAndLoad();
+      } catch (e) { alert('Edit failed: ' + e.message); }
+    }
+
+    function showLockedPopup() {
+      alert('This content is locked by admin.');
+    }
+
+    function resetAndLoad() {
+      loadContent();
+    }
+
+    // ── Auto-Capitalize Inputs ──────────────────────────────────────────────
+    function capitalizeFirstLetter(input) {
+      if (!input.value) return;
+      input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
+    }
+
+    ['folderName', 'linkTitle'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('blur', () => capitalizeFirstLetter(el));
+      }
+    });
+
+    // ── Helpers ─────────────────────────────────────────────────────────────
+    function initLongPress(el, onLongPress) {
+      let timer;
+      const start = (e) => {
+        if (e.button !== undefined && e.button !== 0) return;
+        timer = setTimeout(() => onLongPress(e), 700);
+      };
+      const cancel = () => clearTimeout(timer);
+      el.addEventListener('mousedown', start, { passive: true });
+      el.addEventListener('touchstart', start, { passive: true });
+      ['mouseup', 'mouseleave', 'touchend', 'touchmove'].forEach(ev => el.addEventListener(ev, cancel, { passive: true }));
+    }
+
+    function showContextMenu(e, options) {
+      if (e.preventDefault) e.preventDefault();
+      let menu = document.getElementById('customContextMenu');
+      if (!menu) {
+        menu = document.createElement('div');
+        menu.id = 'customContextMenu';
+        menu.className = 'ctx-menu';
+        document.body.appendChild(menu);
+      }
+      menu.innerHTML = '';
+      options.forEach(opt => {
+        const item = document.createElement('div');
+        item.className = `ctx-item ${opt.className || ''}`;
+        item.innerHTML = `<i class="${opt.icon}"></i> <span>${opt.label}</span>`;
+        item.onclick = (ev) => {
+          ev.stopPropagation();
+          menu.style.display = 'none';
+          opt.onClick();
+        };
+        menu.appendChild(item);
+      });
+      menu.style.display = 'flex';
+      const x = (e.touches && e.touches.length) ? e.touches[0].pageX : (e.pageX || e.clientX);
+      const y = (e.touches && e.touches.length) ? e.touches[0].pageY : (e.pageY || e.clientY);
+      menu.style.left = Math.min(x, window.innerWidth - 200) + 'px';
+      menu.style.top = y + 'px';
+      const closeMenu = () => {
+        menu.style.display = 'none';
+        document.removeEventListener('mousedown', closeMenu);
+      };
+      setTimeout(() => document.addEventListener('mousedown', closeMenu), 50);
+    }
+
+    function esc(s) {
+      return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // ── Real-time refresh (Socket.io) ────────────────────────────────────────
+    (function () {
+      if (typeof io === 'undefined') return;
+      try {
+        const base = window.RENDER_BACKEND_URL || (window.PRODUCTION_API_URL || 'http://localhost:3000/api').replace(/\/api$/, '');
+        const sock = io(base, { transports: ['polling', 'websocket'], reconnection: true, reconnectionDelay: 3000 });
+        sock.on('connect', () => sock.emit('sol:subscribe', { category: CATEGORY, semester: SEMESTER }));
+        sock.on('sol:updated', (d) => {
+          if (!d || d.category === CATEGORY) {
+            if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+            resetAndLoad();
+          }
+        });
+        
+        // Progress Listener for Admins
+        sock.on('sol:import_progress', (data) => {
+          const statusText = document.getElementById('scrapingStatusText');
+          if (statusText && data && data.message) {
+            statusText.innerText = data.message;
+            statusText.style.color = '#10b981'; // Emerald Green
+            setTimeout(() => { if(statusText) statusText.style.color = 'var(--yt-sub)'; }, 1000);
+          }
+        });
+      } catch (e) { console.warn('Socket init failed:', e); }
+    })();
+
+    function triggerFadeIn() {
+      document.body.style.opacity = '';
+      document.body.style.transform = '';
+      document.body.classList.add('fade-in');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => { triggerFadeIn(); init(); });
+    } else {
+      triggerFadeIn();
+      init();
+    }
+
+    window.addEventListener('pageshow', (event) => {
+      isNavigating = false;
+      document.body.style.transition = '';
+      document.body.style.opacity = '';
+      document.body.style.transform = '';
+      document.body.classList.add('fade-in');
+      document.querySelectorAll('.folder-card, .video-card').forEach(c => c.classList.remove('navigating'));
+      const grids = document.querySelectorAll('.folders-grid, .videos-grid');
+      grids.forEach(grid => {
+        grid.style.transition = '';
+        grid.style.opacity = '';
+        grid.style.transform = '';
+      });
+      if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        resetAndLoad();
+      }
+    });
+    async function importPlaylist() {
+      const url = document.getElementById('linkUrl').value.trim();
+      if (!url || !url.includes('list=')) {
+        alert("Please enter a valid YouTube Playlist URL (must contain ?list=).");
+        return;
+      }
+
+      if (!confirm("This will import ALL videos from this playlist as individual cards. Continue?")) return;
+
+      const overlay = document.getElementById('scrapingOverlay');
+      overlay.style.display = 'flex';
+      closeModal('linkModal');
+
+      try {
+        localStorage.setItem('last_playlist_url_' + (FOLDER_ID || 'root'), url);
+        const res = await window.solmatesAPI.importYouTubePlaylist(url, CATEGORY, SEMESTER, FOLDER_ID);
+        if (res.success) {
+          alert('Import Successful!');
+          resetAndLoad(); // Force refresh
+        } else {
+          alert('Import Failed: ' + (res.error || 'Unknown Error'));
+        }
+      } catch (err) {
+        console.error('Import error:', err);
+        alert('Technical Error: ' + err.message);
+      } finally {
+        overlay.style.display = 'none';
+      }
+    }
+
+    async function expandPlaylistToFolder(item) {
+      const url = item.videoUrl || item.link || item.url || item.pdf;
+      const title = item.title || item.subject || 'Playlist Folder';
+
+      if (!confirm(`Do you want to convert "${title}" into a Folder?\n\nThis will fetch all videos from YouTube and put them inside a new folder with this same name.`)) return;
+
+      const overlay = document.getElementById('scrapingOverlay');
+      overlay.style.display = 'flex';
+
+      try {
+        let res;
+        try {
+          localStorage.setItem('last_playlist_url_' + (FOLDER_ID || 'root'), url);
+          res = await window.solmatesAPI.importYouTubePlaylist(url, CATEGORY, SEMESTER, FOLDER_ID, true, title, item.id);
+        } catch (apiErr) {
+          res = { success: false, error: apiErr.message };
+        }
+
+        if (res && res.success) {
+          alert(`Success! ${res.count || ''} videos imported into folder.`);
+          resetAndLoad();
+          overlay.style.display = 'none';
+        } else {
+          alert('Expansion Failed: ' + (res.error || 'Unknown Error'));
+          const stText = document.getElementById('scrapingStatusText');
+          if (stText) {
+            stText.innerText = '⚠️ Expansion Failed: ' + (res.error || 'Unknown server error');
+            stText.style.color = 'var(--yt-red)';
+          }
+          // Hide overlay after 4 seconds so the user can read the error on the dark screen
+          setTimeout(() => {
+            overlay.style.display = 'none';
+          }, 4000);
+        }
+      } catch (err) {
+        console.error('Expansion error:', err);
+        const stText = document.getElementById('scrapingStatusText');
+        if (stText) {
+          stText.innerText = '⚠️ Technical Error: ' + err.message;
+          stText.style.color = 'var(--yt-red)';
+        }
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 4000);
+      }
+    }
+
+    // ── Hide & Move Override Functions ──────────────────────────────────────
+    async function toggleHide(type, entity) {
+      const isHidden = (type === 'folder' ? entity.name : entity.title).includes('[HIDDEN]');
+      let newName = (type === 'folder' ? entity.name : entity.title);
+      if (isHidden) newName = newName.replace('[HIDDEN]', '').trim();
+      else newName = newName.trim() + ' [HIDDEN]';
+
+      try {
+        if (type === 'folder') {
+          await window.solmatesAPI.updateSOLFolder(entity.id, { name: newName });
+        } else {
+          await window.solmatesAPI.updateSOLItem(CATEGORY, SEMESTER, entity.id, {
+            title: newName,
+            subject: newName,
+            videoUrl: entity.videoUrl || entity.link || entity.pdf,
+            thumbnail: entity.thumbnail || '',
+            description: entity.description || '',
+            folderId: entity.folderId || null
+          });
+        }
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        resetAndLoad();
+      } catch (e) { alert('Error toggling hide: ' + e.message); }
+    }
+
+    let movingType = null;
+    let movingEntity = null;
+
+    function openMoveModal(type, entity) {
+      movingType = type;
+      movingEntity = entity;
+      
+      document.getElementById('moveSemester').value = String(SEMESTER || 1);
+      openModal('moveModal');
+      loadDestFolders();
+    }
+
+        async function loadDestFolders() {
+      const sem = parseInt(document.getElementById('moveSemester').value);
+      const folderSelect = document.getElementById('moveFolder');
+      folderSelect.innerHTML = '<option value="">Semester Root (No Folder)</option>';
+      
+      try {
+        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true, true);
+        const folders = (res && res.data) ? res.data : [];
+        
+        function buildFolderTree(list, parentId = null, depth = 0) {
+          let optionsHtml = '';
+          const children = list.filter(f => (f.parentId || null) === parentId);
+          
+          children.forEach(c => {
+            if (movingType === 'folder' && c.id === movingEntity.id) return;
+            const cleanName = c.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '├─ ' : '');
+            optionsHtml += `<option value="${c.id}">${prefix}${cleanName}</option>`;
+            optionsHtml += buildFolderTree(list, c.id, depth + 1);
+          });
+          
+          return optionsHtml;
+        }
+        
+        folderSelect.innerHTML += buildFolderTree(folders, null, 0);
+      } catch (e) {
+        console.error('Error loading destination folders:', e);
+      }
+    }
+
+    async function submitMove() {
+      const targetSem = document.getElementById('moveSemester').value;
+      const targetFolderId = document.getElementById('moveFolder').value || null;
+      
+      if (!confirm('Are you sure you want to move this item?')) return;
+      
+      try {
+        if (movingType === 'folder') {
+          await window.solmatesAPI.updateSOLFolder(movingEntity.id, {
+            semester: parseInt(targetSem),
+            parentId: targetFolderId
+          });
+        } else {
+          let updatedItem = Object.assign({}, movingEntity);
+          updatedItem.semester = parseInt(targetSem);
+          updatedItem.folderId = targetFolderId;
+          delete updatedItem.id;
+          delete updatedItem._id;
+          await window.solmatesAPI.updateSOLItem(CATEGORY, SEMESTER, movingEntity.id, updatedItem);
+        }
+        
+        closeModal('moveModal');
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        resetAndLoad();
+      } catch (e) {
+        alert('Move failed: ' + e.message);
+      }
+    }
+
+    function openViewer(link, title) {
+      if (!link) return;
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (title.includes('[HIDDEN]') && !isAdmin) {
+        return;
+      }
+      const l = link.toLowerCase();
+      // v101.0: Redirect to appropriate internal viewer
+      if (l.includes('drive.google.com') || l.includes('docs.google.com/presentation') || l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('youtube.com') || l.includes('youtu.be') || l.includes('photos.app.goo.gl')) {
+        const viewer = (l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('docs.google.com/presentation') || (l.includes('drive.google.com') && !l.includes('VIDEO') && !l.includes('MP4')))
+          ? 'pdf-viewer' 
+          : 'video-viewer';
+        smoothRedirect(`/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}`);
+      } else {
+        window.open(link, '_blank');
+      }
+    }
+
+    // ── Resort Shuffled Playlist Logic ───────────────────────────────────────
+    async function openResortModal() {
+      document.getElementById('resortPlaylistUrl').value = '';
+      
+      // 1. Try LocalStorage cached URL first for instant feedback
+      const cachedUrl = localStorage.getItem('last_playlist_url_' + (FOLDER_ID || 'root'));
+      if (cachedUrl) {
+        document.getElementById('resortPlaylistUrl').value = cachedUrl;
+      }
+      
+      openModal('resortModal');
+      
+      // 2. Query folder metadata from database for absolute correctness
+      if (FOLDER_ID) {
+        try {
+          const res = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+          const allFolders = (res && res.data) ? res.data : [];
+          const activeFolder = allFolders.find(f => f.id === FOLDER_ID);
+          if (activeFolder && activeFolder.playlistUrl) {
+            document.getElementById('resortPlaylistUrl').value = activeFolder.playlistUrl;
+          }
+        } catch (e) {
+          console.error('Error auto-detecting folder playlistUrl:', e);
+        }
+      }
+    }
+
+    async function submitResortPlaylist() {
+      const playlistUrl = document.getElementById('resortPlaylistUrl').value.trim();
+      if (!playlistUrl || !playlistUrl.includes('list=')) {
+        alert("Please enter a valid YouTube Playlist URL containing ?list=.");
+        return;
+      }
+
+      if (!confirm("This will connect to YouTube, fetch the playlist's exact sequence, and update all existing videos in this section to match it. Continue?")) return;
+
+      const overlay = document.getElementById('scrapingOverlay');
+      const stText = document.getElementById('scrapingStatusText');
+      if (stText) {
+        stText.innerText = "Connecting to YouTube to fetch correct sequence...";
+        stText.style.color = "";
+      }
+      overlay.style.display = 'flex';
+      closeModal('resortModal');
+
+      try {
+        const res = await window.solmatesAPI.resortYouTubePlaylist(playlistUrl, CATEGORY, SEMESTER, FOLDER_ID);
+        if (res.success) {
+          alert(res.message || 'Auto-Sort completed successfully!');
+          resetAndLoad();
+        } else {
+          alert('Auto-Sort Failed: ' + (res.error || 'Unknown Error'));
+        }
+      } catch (err) {
+        console.error('Resort playlist error:', err);
+        alert('Technical Error: ' + err.message);
+      } finally {
+        overlay.style.display = 'none';
+      }
+    }
+
+    // ── Organize Mode Controller Logic ───────────────────────────────────────
+    let isOrganizeMode = false;
+    let selectedOrganizeEntity = null;
+
+    function toggleOrganizeMode() {
+      isOrganizeMode = !isOrganizeMode;
+      const body = document.body;
+      const bar = document.getElementById('organizeBar');
+      const toggleBtn = document.getElementById('organizeToggleBtn');
+      
+      if (isOrganizeMode) {
+        body.classList.add('organize-mode-active');
+        bar.style.display = 'flex';
+        toggleBtn.innerHTML = '<i class="fas fa-times"></i> Stop Organizing';
+        toggleBtn.style.background = '#ef4444';
+        toggleBtn.style.borderColor = '#ef4444';
+        
+        // Reset selection
+        selectedOrganizeEntity = null;
+        body.classList.remove('has-selection');
+        document.querySelectorAll('.selected-glowing').forEach(c => c.classList.remove('selected-glowing'));
+        updateOrganizeBar();
+      } else {
+        exitOrganizeMode();
+      }
+    }
+
+    function exitOrganizeMode() {
+      isOrganizeMode = false;
+      const body = document.body;
+      const bar = document.getElementById('organizeBar');
+      const toggleBtn = document.getElementById('organizeToggleBtn');
+      
+      body.classList.remove('organize-mode-active');
+      body.classList.remove('has-selection');
+      bar.style.display = 'none';
+      if (toggleBtn) {
+        toggleBtn.innerHTML = '<i class="fas fa-sitemap"></i> Organise';
+        toggleBtn.style.background = '';
+        toggleBtn.style.borderColor = '';
+      }
+      document.querySelectorAll('.selected-glowing').forEach(c => c.classList.remove('selected-glowing'));
+      selectedOrganizeEntity = null;
+    }
+
+    function selectOrganizeEntity(type, entity, cardElement) {
+      document.querySelectorAll('.selected-glowing').forEach(c => c.classList.remove('selected-glowing'));
+      
+      selectedOrganizeEntity = {
+        type: type,
+        id: entity.id,
+        name: entity.name || entity.title || entity.subject,
+        videoUrl: entity.videoUrl || entity.link || entity.url || entity.pdf
+      };
+      
+      cardElement.classList.add('selected-glowing');
+      document.body.classList.add('has-selection');
+      updateOrganizeBar();
+    }
+
+    function updateOrganizeBar() {
+      const textEl = document.getElementById('organizeStatusText');
+      const actionsEl = document.getElementById('organizeActions');
+      
+      if (!selectedOrganizeEntity) {
+        textEl.innerHTML = '<i class="fas fa-info-circle"></i> <strong>Organise Mode:</strong> Tap any card (playlist or video) to select it.';
+        actionsEl.innerHTML = `
+          <button class="btn btn-cancel btn-sm" onclick="exitOrganizeMode()">Cancel</button>
+        `;
+      } else {
+        const cleanName = selectedOrganizeEntity.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').trim();
+        textEl.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Selected <strong>"${cleanName}"</strong>. Tap <strong>"Move Here"</strong> on any folder card, or use the shortcuts below:`;
+        
+        let shortcutsHtml = '';
+        // If we are inside a subfolder, add shortcut to move to the parent subject
+        if (FOLDER_ID) {
+          const parentLabel = PARENT_NAME ? decodeURIComponent(PARENT_NAME).replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').trim() : 'Parent Subject';
+          shortcutsHtml += `
+            <button class="btn btn-dark btn-sm" style="background:#6366f1; border-color:#6366f1;" onclick="executeOrganizeMoveToParent()"><i class="fas fa-arrow-up"></i> Move to "${parentLabel}"</button>
+          `;
+        }
+        
+        // Shortcut to move to Semester Root
+        shortcutsHtml += `
+          <button class="btn btn-dark btn-sm" style="background:#10b981; border-color:#10b981;" onclick="executeOrganizeMove(null)"><i class="fas fa-home"></i> Move to Semester Root</button>
+        `;
+        
+        actionsEl.innerHTML = `
+          ${shortcutsHtml}
+          <button class="btn btn-cancel btn-sm" onclick="exitOrganizeMode()">Cancel</button>
+        `;
+      }
+    }
+
+    async function executeOrganizeMove(destFolderId) {
+      if (!selectedOrganizeEntity) return;
+      
+      try {
+        if (selectedOrganizeEntity.type === 'folder') {
+          if (destFolderId === selectedOrganizeEntity.id) {
+            alert('Cannot move a folder inside itself.');
+            return;
+          }
+          await window.solmatesAPI.updateSOLFolder(selectedOrganizeEntity.id, {
+            semester: SEMESTER,
+            parentId: destFolderId
+          });
+        } else {
+          await window.solmatesAPI.updateSOLItem(CATEGORY, SEMESTER, selectedOrganizeEntity.id, {
+            semester: SEMESTER,
+            folderId: destFolderId,
+            title: selectedOrganizeEntity.name,
+            videoUrl: selectedOrganizeEntity.videoUrl
+          });
+        }
+        
+        exitOrganizeMode();
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        resetAndLoad();
+      } catch (e) {
+        alert('Move failed: ' + e.message);
+      }
+    }
+
+    async function executeOrganizeMoveToParent() {
+      try {
+        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+        const folders = (semRes && semRes.data) ? semRes.data : [];
+        const currentFolder = folders.find(f => f.id === FOLDER_ID);
+        
+        const parentId = currentFolder ? currentFolder.parentId : null;
+        await executeOrganizeMove(parentId);
+      } catch (e) {
+        console.error('Error determining parent subject:', e);
+        await executeOrganizeMove(null);
+      }
+    }
+  </script>
+
+  <!-- Scraping Mode -->
+  <div id="scrapingOverlay" class="overlay" style="z-index: 10000; background: rgba(0,0,0,0.85); display: none; flex-direction: column; align-items: center; justify-content: center; position: fixed; inset: 0; width: 100vw; height: 100vh;">
+    <div class="loader"></div>
+    <h2 style="color: white; margin-top: 20px;">Fetching Playlist Items</h2>
+    <p id="scrapingStatusText" style="color: var(--yt-sub); margin-top: 10px; font-weight: 500; min-height: 1.5em; text-align: center;">Starting scraper engine...</p>
+    <p style="color: var(--yt-sub); font-size: 0.8em; opacity: 0.6; margin-top: 5px;">(We only store links, never the actual video files)</p>
+  </div>
+</body>
+</html>

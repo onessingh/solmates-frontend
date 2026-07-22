@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@v4.0.1/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> OCR PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div class="upload-card" id="dropZone">
+        <i data-lucide="eye"></i>
+        <h2>Select PDF file</h2>
+        <input type="file" id="fileInput" accept=".pdf" hidden>
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Recognition Language</label>
+            <select id="ocrLang" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); font-size: 1rem; width: 250px;">
+                <option value="eng">English</option>
+                <option value="hin">Hindi</option>
+                <option value="spa">Spanish</option>
+                <option value="fra">French</option>
+                <option value="deu">German</option>
+                <option value="ara">Arabic</option>
+                <option value="ben">Bengali</option>
+                <option value="chi_sim">Chinese (Simplified)</option>
+                <option value="chi_tra">Chinese (Traditional)</option>
+                <option value="ita">Italian</option>
+                <option value="jpn">Japanese</option>
+                <option value="kor">Korean</option>
+                <option value="por">Portuguese</option>
+                <option value="rus">Russian</option>
+                <option value="tur">Turkish</option>
+                <option value="urd">Urdu</option>
+                <option value="vie">Vietnamese</option>
+                <option value="swe">Swedish</option>
+                <option value="nld">Dutch</option>
+                <option value="pol">Polish</option>
+                <option value="ind">Indonesian</option>
+            </select>
+        </div>
+        <button id="ocrBtn" class="btn-primary" disabled>
+            <i data-lucide="zap"></i> Start OCR
+        </button>
+    </div>
+
+    <div id="progressArea" style="display: none; margin-top: 2rem; text-align: center;">
+        <div style="width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin-bottom: 1rem;">
+            <div id="progressBar" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.3s;"></div>
+        </div>
+        <p id="statusMsg" style="color: var(--text-muted); font-size: 0.9rem;">Initializing OCR Engine...</p>
+    </div>
+
+    <div id="resultArea" style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: left;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem; text-align: center;">
+            <p><strong>Success!</strong> Text has been recognized from the document.</p>
+        </div>
+        <h3 style="margin-bottom: 1rem;"><i data-lucide="file-text"></i> Recognized Text:</h3>
+        <textarea id="ocrResultText" style="width: 100%; height: 200px; padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border); font-family: monospace; margin-bottom: 2rem;"></textarea>
+        
+        <div style="text-align: center;">
+            <button id="downloadTextBtn" class="btn-primary">
+                <i data-lucide="download"></i> Download as Text (.txt)
+            </button>
+        </div>
+    </div>
+    
+    <canvas id="renderCanvas" style="display: none;"></canvas>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Processing OCR...</p>
+    </div>
+</div>
+
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const ocrBtn = document.getElementById('ocrBtn');
+    const progressArea = document.getElementById('progressArea');
+    const progressBar = document.getElementById('progressBar');
+    const statusMsg = document.getElementById('statusMsg');
+    const resultArea = document.getElementById('resultArea');
+    const ocrResultText = document.getElementById('ocrResultText');
+    const downloadTextBtn = document.getElementById('downloadTextBtn');
+    const canvas = document.getElementById('renderCanvas');
+
+    let selectedFile = null;
+
+    dropZone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+    
+    function handleFile(file) {
+        // Check if the file type is PDF, an image, or HEIC
+        if (file.type === 'application/pdf' || file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.heic')) {
+            selectedFile = file;
+            fileName.textContent = file.name;
+            ocrBtn.disabled = false;
+        } else {
+            alert('Please select a PDF, image, or HEIC file.');
+            selectedFile = null;
+            fileName.textContent = '';
+            ocrBtn.disabled = true;
+        }
+    }
+
+    ocrBtn.onclick = async () => {
+        ocrBtn.disabled = true;
+        progressArea.style.display = 'block';
+        ocrResultText.value = "";
+        
+        let worker = null;
+        const isPDF = selectedFile.type === 'application/pdf';
+        let pagesToOCR = 1; 
+        let currentProcessingPage = 0;
+
+        try {
+            const lang = document.getElementById('ocrLang').value;
+            statusMsg.textContent = `Initializing OCR Engine (${lang})...`;
+            
+            worker = await Tesseract.createWorker({
+                logger: m => {
+                    if (m.status === 'recognizing text') {
+                        const pageProgress = m.progress;
+                        const totalUnits = isPDF ? pagesToOCR : 1;
+                        const unitsDone = isPDF ? Math.max(0, currentProcessingPage - 1) : 0;
+                        const totalProgress = (unitsDone / totalUnits) + (pageProgress / totalUnits);
+                        progressBar.style.width = `${Math.round(totalProgress * 100)}%`;
+                        statusMsg.textContent = isPDF ? `Page ${currentProcessingPage}/${pagesToOCR}: Recognizing (${Math.round(pageProgress * 100)}%)` : `Recognizing (${Math.round(pageProgress * 100)}%)`;
+                    }
+                }
+            });
+
+            await worker.loadLanguage(lang);
+            await worker.initialize(lang);
+
+            let fullText = "";
+
+            if (isPDF) {
+                const arrayBuffer = await selectedFile.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                pagesToOCR = Math.min(pdf.numPages, 20);
+                currentProcessingPage = 0;
+
+                for (let i = 1; i <= pagesToOCR; i++) {
+                    currentProcessingPage = i;
+                    statusMsg.textContent = `Rendering Page ${i}/${pagesToOCR}...`;
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: 2.5 });
+                    canvas.width = viewport.width; canvas.height = viewport.height;
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                    
+                    const { data: { text } } = await worker.recognize(canvas.toDataURL('image/png'));
+                    fullText += `--- Page ${i} ---\n\n${text}\n\n`;
+                    ocrResultText.value = fullText;
+                }
+            } else {
+                // Direct Image or HEIC
+                let imgFile = selectedFile;
+                if (imgFile.name.toLowerCase().endsWith('.heic') || imgFile.type.includes('heic')) {
+                    statusMsg.textContent = "Decoding HEIC image...";
+                    const converted = await heic2any({ blob: imgFile, toType: "image/jpeg", quality: 0.8 });
+                    imgFile = Array.isArray(converted) ? converted[0] : converted;
+                }
+
+                statusMsg.textContent = "Processing image...";
+                const { data: { text } } = await worker.recognize(imgFile);
+                fullText = text;
+                ocrResultText.value = fullText;
+                progressBar.style.width = '100%';
+            }
+
+            resultArea.style.display = 'block';
+            ocrBtn.innerHTML = '<i data-lucide="check"></i> OCR Complete';
+            lucide.createIcons();
+        } catch (err) {
+            console.error(err);
+            alert('Error performing OCR: ' + (err.message || 'Check if file is valid.'));
+            ocrBtn.disabled = false;
+        } finally {
+            if (worker) await worker.terminate();
+            progressArea.style.display = 'none';
+        }
+    };
+
+    downloadTextBtn.onclick = () => {
+        const blob = new Blob([ocrResultText.value], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${selectedFile.name.split('.')[0]}_ocr.txt`;
+        link.click();
+    };
+</script>
+
+</body>
+</html>

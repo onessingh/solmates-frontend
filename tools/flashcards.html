@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Flashcards | SOLMATES Tools</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #5e5ce6;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --danger: #ff3b30;
+      --glass: rgba(255, 255, 255, 0.7);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-top: 0 !important; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Unified Header */
+    .header-bar {
+      background: var(--card);
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .back-btn { position: absolute; left: 20px; text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; background: #f0f4f8; padding: 8px 16px; border-radius: 20px; transition: 0.2s; }
+    .back-btn:hover { background: #e1e8f0; }
+    @media (max-width: 600px) { .back-btn { padding: 8px; font-size: 0; } .back-btn i { margin: 0; font-size: 1rem; } }
+
+    .container { max-width: 800px; margin: 30px auto; padding: 0 15px; width: 100%; flex: 1; display: flex; flex-direction: column; }
+
+    /* VIEW 1: SETUP MODE */
+    #setup-mode { display: block; animation: fadeIn 0.3s; }
+    
+    .input-card { background: var(--card); border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: #fafafa; transition: all 0.2s; outline: none; resize: vertical; }
+    .form-control:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.1); }
+    
+    .btn-main { background: var(--accent); color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(94, 92, 230, 0.3); }
+
+    .deck-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 5px; }
+    .deck-list::-webkit-scrollbar { width: 5px; }
+    .deck-list::-webkit-scrollbar-thumb { background: #d1d1d6; border-radius: 10px; }
+    .deck-item { background: white; border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .deck-item .content { flex: 1; margin-right: 15px; }
+    .deck-item strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+    .deck-item span { color: var(--light); font-size: 0.85rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px; }
+    .del-btn { color: var(--danger); background: #ffebee; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .del-btn:hover { background: #ffcdd2; }
+
+    .start-banner { background: linear-gradient(135deg, var(--primary), #1a3c5e); padding: 25px; border-radius: 16px; color: white; text-align: center; margin-top: 30px; box-shadow: 0 10px 30px rgba(15,43,70,0.2); }
+
+    /* VIEW 2: STUDY MODE */
+    #study-mode { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; animation: fadeIn 0.3s; padding-bottom: 40px; }
+    
+    .study-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .card-counter { background: rgba(94, 92, 230, 0.1); color: var(--accent); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
+    .quit-btn { color: var(--light); background: transparent; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+
+    /* The Flip Card */
+    .flashcard-container { width: 100%; max-width: 400px; height: 450px; perspective: 1000px; margin-bottom: 30px; cursor: pointer; }
+    .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+
+    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: white; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; border: 1px solid var(--border); }
+    .card-front { z-index: 2; transform: rotateY(0deg); }
+    .card-back { transform: rotateY(180deg); background: #fafafa; border: 2px solid var(--accent); }
+
+    .card-label { position: absolute; top: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--light); letter-spacing: 1px; }
+    .card-content { font-size: 1.5rem; font-weight: 600; color: var(--primary); line-height: 1.4; word-wrap: break-word; max-width: 100%; max-height: 80%; overflow-y: auto; }
+    .card-back .card-content { font-size: 1.2rem; font-weight: 500; color: var(--text); }
+    .tap-hint { position: absolute; bottom: 20px; font-size: 0.85rem; color: #a1a1aa; display: flex; align-items: center; gap: 5px; animation: pulse 2s infinite; }
+
+    /* Action Buttons (Swipe Logic) */
+    .action-controls { display: flex; gap: 12px; width: 100%; max-width: 400px; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.3s; }
+    .action-controls.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    
+    .action-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+    .btn-forgot { background: #fee2e2; color: #b91c1c; }
+    .btn-forgot:hover { background: #fca5a5; }
+    .btn-remember { background: #dcfce7; color: #15803d; }
+    .btn-remember:hover { background: #bbf7d0; }
+
+    /* Empty State */
+    .done-state { text-align: center; display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+    .done-state i { font-size: 5rem; color: var(--success); margin-bottom: 20px; }
+    .done-state h2 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1><i class="fas fa-layer-group" style="color: var(--accent);"></i> Smart Flashcards</h1>
+  </div>
+
+  <div class="container">
+    
+    <!-- SETUP MODE -->
+    <div id="setup-mode">
+      <div class="input-card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-plus-circle"></i> Create New Card</h3>
+        <div class="form-group">
+          <label>Front (Question / Topic)</label>
+          <textarea id="card-front" class="form-control" rows="2" placeholder="e.g. What is the powerhouse of the cell?"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Back (Answer / Explanation)</label>
+          <textarea id="card-back" class="form-control" rows="3" placeholder="e.g. Mitochondria. It generates most of the chemical energy needed..."></textarea>
+        </div>
+        <button class="btn-main" onclick="addCard()">Add to Deck</button>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+        <h3 style="color: var(--primary);">Your Deck (<span id="deck-count">0</span>)</h3>
+        <button onclick="clearDeck()" style="background:transparent; border:none; color:var(--danger); cursor:pointer; font-weight:600; font-size:0.9rem;">Clear All</button>
+      </div>
+
+      <div class="deck-list" id="deck-list">
+        <div style="text-align: center; color: var(--light); padding: 20px; font-style: italic;">No cards added yet.</div>
+      </div>
+
+      <div class="start-banner" id="start-banner" style="display: none;">
+        <h3 style="margin-bottom: 10px;">Ready to Master These?</h3>
+        <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px;">Use Active Recall to permanently store this in your brain.</p>
+        <button onclick="startStudy()" style="background: white; color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
+          Start Swipe Study <i class="fas fa-play" style="margin-left: 5px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- STUDY MODE -->
+    <div id="study-mode">
+      
+      <!-- Done State -->
+      <div class="done-state" id="done-state">
+        <i class="fas fa-trophy"></i>
+        <h2>Deck Mastered!</h2>
+        <p style="color: var(--light); margin-bottom: 30px;">You've successfully recalled all cards.</p>
+        <button class="btn-main" style="max-width: 250px;" onclick="quitStudy()">Back to Deck</button>
+      </div>
+
+      <!-- Active Study -->
+      <div id="active-study" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="study-header">
+          <button class="quit-btn" onclick="quitStudy()"><i class="fas fa-times"></i> End Session</button>
+          <div class="card-counter"><i class="fas fa-layer-group"></i> <span id="study-counter">5</span> Left</div>
+        </div>
+
+        <div class="flashcard-container" onclick="flipCard()">
+          <div class="flashcard" id="active-card">
+            <div class="card-face card-front">
+              <span class="card-label">Question</span>
+              <div class="card-content" id="study-front">...</div>
+              <div class="tap-hint"><i class="fas fa-hand-pointer"></i> Tap to flip</div>
+            </div>
+            <div class="card-face card-back">
+              <span class="card-label" style="color: var(--accent);">Answer</span>
+              <div class="card-content" id="study-back">...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-controls" id="action-controls">
+          <button class="action-btn btn-forgot" onclick="markCard(false)">
+            <i class="fas fa-times-circle"></i> Forgot (Review)
+          </button>
+          <button class="action-btn btn-remember" onclick="markCard(true)">
+            <i class="fas fa-check-circle"></i> Got It
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // State
+    let deck = [];
+    let studyQueue = [];
+    let currentCardIndex = 0; // Index in studyQueue
+    let isFlipped = false;
+
+    // Load from local storage on init
+    window.onload = () => {
+      const saved = localStorage.getItem('solmates_flashcards');
+      if (saved) {
+        try {
+          deck = JSON.parse(saved);
+          renderDeck();
+        } catch(e) { console.error(e); }
+      }
+    };
+
+    function saveDeck() {
+      localStorage.setItem('solmates_flashcards', JSON.stringify(deck));
+      renderDeck();
+    }
+
+    function addCard() {
+      const front = document.getElementById('card-front').value.trim();
+      const back = document.getElementById('card-back').value.trim();
+
+      if (!front || !back) {
+        alert("Please fill both Question and Answer fields.");
+        return;
+      }
+
+      deck.push({ id: Date.now(), front, back });
+      document.getElementById('card-front').value = '';
+      document.getElementById('card-back').value = '';
+      saveDeck();
+    }
+
+    function deleteCard(id) {
+      deck = deck.filter(c => c.id !== id);
+      saveDeck();
+    }
+
+    function clearDeck() {
+      const btn = document.querySelector('button[onclick="clearDeck()"]');
+      if(btn.innerText === "Clear All") {
+        btn.innerText = "Sure?";
+        btn.style.color = "white";
+        btn.style.background = "var(--danger)";
+        btn.style.padding = "4px 10px";
+        btn.style.borderRadius = "6px";
+        setTimeout(() => {
+          btn.innerText = "Clear All";
+          btn.style.color = "var(--danger)";
+          btn.style.background = "transparent";
+          btn.style.padding = "0";
+        }, 3000);
+      } else {
+        deck = [];
+        saveDeck();
+        btn.innerText = "Clear All";
+        btn.style.color = "var(--danger)";
+        btn.style.background = "transparent";
+        btn.style.padding = "0";
+      }
+    }
+
+    function renderDeck() {
+      const list = document.getElementById('deck-list');
+      document.getElementById('deck-count').textContent = deck.length;
+      
+      if (deck.length === 0) {
+        list.innerHTML = `<div style="text-align: center; color: var(--light); padding: 20px; font-style: italic;">No cards added yet. Start typing above!</div>`;
+        document.getElementById('start-banner').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('start-banner').style.display = 'block';
+      
+      list.innerHTML = deck.map(card => `
+        <div class="deck-item">
+          <div class="content">
+            <strong>${card.front}</strong>
+            <span>${card.back}</span>
+          </div>
+          <button class="del-btn" onclick="deleteCard(${card.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      `).reverse().join('');
+    }
+
+    // STUDY LOGIC
+    function startStudy() {
+      if(deck.length === 0) return;
+      
+      // Copy deck to study queue
+      studyQueue = [...deck];
+      // Shuffle queue for better recall
+      studyQueue.sort(() => Math.random() - 0.5);
+      
+      document.getElementById('setup-mode').style.display = 'none';
+      document.getElementById('study-mode').style.display = 'flex';
+      document.getElementById('done-state').style.display = 'none';
+      document.getElementById('active-study').style.display = 'flex';
+      
+      loadNextCard();
+    }
+
+    function quitStudy() {
+      document.getElementById('study-mode').style.display = 'none';
+      document.getElementById('setup-mode').style.display = 'block';
+      // Reset card state
+      const cardEl = document.getElementById('active-card');
+      cardEl.classList.remove('flipped');
+      document.getElementById('action-controls').classList.remove('visible');
+      isFlipped = false;
+    }
+
+    function loadNextCard() {
+      if (studyQueue.length === 0) {
+        // Deck finished
+        document.getElementById('active-study').style.display = 'none';
+        document.getElementById('done-state').style.display = 'flex';
+        return;
+      }
+
+      document.getElementById('study-counter').textContent = studyQueue.length;
+      
+      const currentCard = studyQueue[0];
+      document.getElementById('study-front').innerHTML = currentCard.front.replace(/\n/g, '<br>');
+      document.getElementById('study-back').innerHTML = currentCard.back.replace(/\n/g, '<br>');
+
+      // Reset flip and buttons
+      isFlipped = false;
+      document.getElementById('active-card').classList.remove('flipped');
+      document.getElementById('action-controls').classList.remove('visible');
+    }
+
+    function flipCard() {
+      if (isFlipped) return; // Only flip once to reveal
+      
+      isFlipped = true;
+      document.getElementById('active-card').classList.add('flipped');
+      
+      // Show action buttons after flip animation
+      setTimeout(() => {
+        document.getElementById('action-controls').classList.add('visible');
+      }, 300);
+    }
+
+    function markCard(remembered) {
+      if (!isFlipped) return;
+
+      const card = studyQueue.shift(); // Remove from front
+      
+      if (!remembered) {
+        // Put it at the back of the queue to review again
+        studyQueue.push(card);
+      }
+
+      // Hide buttons immediately
+      document.getElementById('action-controls').classList.remove('visible');
+      
+      // Briefly animate card out (optional, simple flip back for now)
+      document.getElementById('active-card').classList.remove('flipped');
+      isFlipped = false;
+
+      setTimeout(() => {
+        loadNextCard();
+      }, 200);
+    }
+  </script>
+</body>
+</html>

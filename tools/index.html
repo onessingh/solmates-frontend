@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Tools & Career Resources | SOLMATES</title>
+  <meta name="description" content="Access essential student tools including AI Resume Builder, Job Search Aggregator, Career Tests, and a full PDF PDF Suite. All-in-one productivity hub for MBA students at SOLMATES.">
+  <meta name="keywords" content="student tools, MBA resources, AI resume builder, career guidance, PDF editor, job search, SOLMATES tools, tools">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://solmates.netlify.app/tools">
+  <meta property="og:title" content="Productivity Tools - Work Smarter | SOLMATES">
+  <meta property="og:description"
+    content="Access MBA productivity tools including resume builders, planners, and career development resources.">
+  <meta property="og:url" content="https://solmates.netlify.app/tools">
+  <meta name="twitter:title" content="Productivity Tools - Work Smarter | SOLMATES">
+  <meta name="twitter:description"
+    content="Access MBA productivity tools including resume builders, planners, and career development resources.">
+
+
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #ffffff;
+      color: #111;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    
+    .category-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+      border-color: #0071e3;
+    }
+    .category-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #0f2b46, #1a3c5e);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+    }
+    .category-card h2 {
+      font-size: 1.3rem;
+      color: #0f2b46;
+      margin-bottom: 5px;
+    }
+    .category-card p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .sub-grid {
+      display: none !important;
+      animation: fadeInGrid 0.4s ease;
+    }
+    .sub-grid.active {
+      display: grid !important;
+    }
+    #back-to-categories {
+      display: none;
+      margin-bottom: 25px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      transition: all 0.3s;
+    }
+    #back-to-categories:hover {
+      background: #1a3c5e;
+      transform: translateX(-3px);
+    }
+    @keyframes fadeInGrid {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== Navbar ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px 0 15px;
+      padding-right: 30px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .nav-left {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      color: #0f2b46;
+    }
+
+    /* NAVBAR OPTIONS - CENTERED */
+    .nav-center {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-center a {
+      text-decoration: none;
+      color: #333;
+      font-size: 12px;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      will-change: transform;
+    }
+
+    .nav-center a:hover {
+      color: #0071e3;
+      background: rgba(0, 113, 227, 0.05);
+    }
+
+    /* Active page indicator */
+    .nav-center a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Back button */
+    .back-btn {
+      background: #0f2b46;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      will-change: transform;
+      transform: translateZ(0);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #333;
+      cursor: pointer;
+      padding: 5px;
+      will-change: transform;
+    }
+
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 999;
+      padding: 20px;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .mobile-nav-overlay.active {
+      display: flex;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-nav-overlay a {
+      padding: 15px;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+      transform: translateZ(0);
+    }
+
+    .mobile-nav-overlay a:active {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .mobile-nav-overlay a i {
+      width: 24px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* Active page indicator in mobile */
+    .mobile-nav-overlay a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* ========== Page Content ========== */
+    .page-content {
+      min-height: calc(100vh - 60px);
+      padding-top: 60px;
+      width: 100%;
+      overflow-x: hidden;
+      transform: translateZ(0);
+    }
+
+    /* ========== Tools Section ========== */
+    .tools-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      transform: translateZ(0);
+    }
+
+    .tools-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .tools-header h1 {
+      font-size: 32px;
+      color: #0f2b46;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      line-height: 1.2;
+    }
+
+    .tools-header h1 i {
+      color: #c0962d;
+      font-size: 40px;
+    }
+
+    .tools-header p {
+      color: #666;
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 25px;
+    }
+
+    @media (min-width: 768px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .tool-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      border: 1px solid #eee;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      will-change: transform;
+      transform: translateZ(0);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #0f2b46, #c0962d);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .tool-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .tool-card:hover {
+      background: #f9f9fb;
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      border-color: #0071e3;
+    }
+
+    .tool-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0f2b46, #1a3c5e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: white;
+      font-size: 32px;
+      transition: all 0.3s ease;
+    }
+
+    .tool-card:hover .tool-icon {
+      transform: scale(1.1) rotate(5deg);
+      background: linear-gradient(135deg, #1a3c5e, #0f2b46);
+    }
+
+    
+    /* Color coding for different categories */
+    #grid-job .tool-icon { background: linear-gradient(135deg, #4338ca, #6366f1); }
+    #grid-job .tool-card:hover .tool-icon { background: linear-gradient(135deg, #6366f1, #4338ca); }
+    #grid-job .tool-card h2::after { background: linear-gradient(90deg, #4338ca, #6366f1); }
+
+    #grid-academic .tool-icon { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+    #grid-academic .tool-card:hover .tool-icon { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+    #grid-academic .tool-card h2::after { background: linear-gradient(90deg, #0f766e, #14b8a6); }
+
+    #grid-business .tool-icon { background: linear-gradient(135deg, #b45309, #f59e0b); }
+    #grid-business .tool-card:hover .tool-icon { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    #grid-business .tool-card h2::after { background: linear-gradient(90deg, #b45309, #f59e0b); }
+
+    #grid-pdf .tool-icon { background: linear-gradient(135deg, #be123c, #f43f5e); }
+    #grid-pdf .tool-card:hover .tool-icon { background: linear-gradient(135deg, #f43f5e, #be123c); }
+    #grid-pdf .tool-card h2::after { background: linear-gradient(90deg, #be123c, #f43f5e); }
+
+    .tool-card h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: #0f2b46;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .tool-card h2::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, #0f2b46, #c0962d);
+      border-radius: 2px;
+      transform: translateX(-50%);
+    }
+
+    .tool-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .tool-features {
+      text-align: left;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .tool-features h4 {
+      font-size: 14px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-features ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .tool-features li {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .tool-features li i {
+      color: #c0962d;
+      font-size: 12px;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .tool-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #0f2b46;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .tool-cta:hover {
+      background: #1a3c5e;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(15, 43, 70, 0.2);
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 30px 20px 20px;
+      background: #fff;
+      margin-top: 60px;
+      border-top: 1px solid #eee;
+      width: 100%;
+      overflow-x: hidden;
+      transform: translateZ(0);
+    }
+
+    .footer p {
+      padding: 0 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* SOCIAL ICONS - COMPACT */
+    .social {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding: 0 10px;
+      transform: translateZ(0);
+    }
+
+    .social a {
+      font-size: 16px;
+      color: #0071e3;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: rgba(0, 113, 227, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ========== WhatsApp Dropdown ========== */
+    .whatsapp-container {
+      position: relative;
+      display: inline-block;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 113, 227, 0.05);
+      color: #0071e3;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1003;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: scale(1.05);
+    }
+
+    .whatsapp-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px) scale(0.95);
+      background: white;
+      width: 120px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+      z-index: 1004;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .whatsapp-dropdown::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+padding-bottom: 10px;
+    }
+
+    .tool-card h2::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, #0f2b46, #c0962d);
+      border-radius: 2px;
+      transform: translateX(-50%);
+    }
+
+    .tool-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .tool-features {
+      text-align: left;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .tool-features h4 {
+      font-size: 14px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-features ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .tool-features li {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .tool-features li i {
+      color: #c0962d;
+      font-size: 12px;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .tool-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #0f2b46;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .tool-cta:hover {
+      background: #1a3c5e;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(15, 43, 70, 0.2);
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 30px 20px 20px;
+      background: #fff;
+      margin-top: 60px;
+      border-top: 1px solid #eee;
+      width: 100%;
+      overflow-x: hidden;
+      transform: translateZ(0);
+    }
+
+    .footer p {
+      padding: 0 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* SOCIAL ICONS - COMPACT */
+    .social {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding: 0 10px;
+      transform: translateZ(0);
+    }
+
+    .social a {
+      font-size: 16px;
+      color: #0071e3;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: rgba(0, 113, 227, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ========== WhatsApp Dropdown ========== */
+    .whatsapp-container {
+      position: relative;
+      display: inline-block;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 113, 227, 0.05);
+      color: #0071e3;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1003;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: scale(1.05);
+    }
+
+    .whatsapp-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px) scale(0.95);
+      background: white;
+      width: 120px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+      z-index: 1004;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .whatsapp-dropdown::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent white transparent;
+    }
+
+    .whatsapp-options {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* ========== Mobile Responsive ========== */
+    @media (max-width: 768px) {
+      .nav-center { display: none !important; }
+      .mobile-menu-btn { display: block !important; }
+      .tools-container { padding: 20px 12px; }
+      .tools-header { margin-bottom: 30px; }
+      .tools-header h1 { font-size: 22px; }
+      .tools-header p { font-size: 14px; }
+      .category-card { padding: 18px 14px; gap: 10px; }
+      .category-icon { width: 52px; height: 52px; font-size: 22px; border-radius: 14px; }
+      .category-card h2 { font-size: 1rem; }
+      .category-card p { font-size: 0.8rem; }
+      .tool-card { padding: 18px 14px; }
+      .tool-icon { width: 56px; height: 56px; font-size: 22px; margin-bottom: 14px; }
+      
+    /* Color coding for different categories */
+    #grid-job .tool-icon { background: linear-gradient(135deg, #4338ca, #6366f1); }
+    #grid-job .tool-card:hover .tool-icon { background: linear-gradient(135deg, #6366f1, #4338ca); }
+    #grid-job .tool-card h2::after { background: linear-gradient(90deg, #4338ca, #6366f1); }
+
+    #grid-academic .tool-icon { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+    #grid-academic .tool-card:hover .tool-icon { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+    #grid-academic .tool-card h2::after { background: linear-gradient(90deg, #0f766e, #14b8a6); }
+
+    #grid-business .tool-icon { background: linear-gradient(135deg, #b45309, #f59e0b); }
+    #grid-business .tool-card:hover .tool-icon { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    #grid-business .tool-card h2::after { background: linear-gradient(90deg, #b45309, #f59e0b); }
+
+    #grid-pdf .tool-icon { background: linear-gradient(135deg, #be123c, #f43f5e); }
+    #grid-pdf .tool-card:hover .tool-icon { background: linear-gradient(135deg, #f43f5e, #be123c); }
+    #grid-pdf .tool-card h2::after { background: linear-gradient(90deg, #be123c, #f43f5e); }
+
+    .tool-card h2 { font-size: 17px; margin-bottom: 10px; }
+      .tool-card p { font-size: 13px; margin-bottom: 14px; }
+      .tool-cta { padding: 8px 16px; font-size: 13px; }
+      .tools-grid { grid-template-columns: 1fr !important; gap: 14px; }
+      .social { gap: 6px; flex-wrap: nowrap !important; }
+      .social a, .whatsapp-icon { width: 32px; height: 32px; font-size: 14px; }
+      .tool-card:hover .tool-icon { transform: none; }
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=105.3"></script>
+  <script src="/js/sol-cache.js?v=105.3"></script>
+</head>
+
+<body>
+
+  <header class="top-nav">
+    <div class="nav-left" onclick="window.location.href='/';" style="cursor: pointer;">SOLMATES</div>
+    <div class="nav-center">
+      <a href="/database">Database</a>
+      <a href="/tools" class="active">Tools</a>
+      <a href="/skills">Skills &amp; Development</a>
+      <a href="/games">Games</a>
+                  <a href="/journey">Journey</a>
+<a href="/feedback?from=Tools" title="Feedback">Feedback</a>
+    </div>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+    <div class="nav-right">
+      <a href="/" class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</a>
+      <div class="admin-indicator" id="adminIndicator" title="Admin Login Detected"></div>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay" id="mobileNav">
+    <a href="/database"><i class="fas fa-database"></i> Database</a>
+    <a href="/tools" class="active"><i class="fas fa-tools"></i> Tools</a>
+    <a href="/skills"><i class="fas fa-chart-line"></i> Skills &amp; Development</a>
+    <a href="/games">
+      <i class="fas fa-gamepad"></i> Games
+    </a>
+              <a href="/journey"><i class="fas fa-road"></i> Journey</a>
+<a href="/feedback?from=Home"><i class="fas fa-comment-dots"></i> Feedback</a>
+  </div>
+
+  <!-- TOOLS CONTENT -->
+  <div class="page-content">
+    <div class="tools-container">
+      <div class="tools-header">
+        <h1 id="tools-title"><i class="fas fa-tools"></i> Student Tools</h1>
+        <p id="tools-desc">Essential career tools and resources for your MBA journey and professional development.</p>
+      </div>
+
+      <!-- 3 Main Category Cards -->
+      <div class="tools-grid" id="main-categories">
+        <div class="category-card" onclick="openCategory('job')">
+          <div class="category-icon"><i class="fas fa-briefcase"></i></div>
+          <h2>Job &amp; Professional Tools</h2>
+          <p>Resume Builder, Job Search, Interview Prep, Email Gen</p>
+        </div>
+        <div class="category-card" onclick="openCategory('academic')">
+          <div class="category-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h2>Academic &amp; Productivity</h2>
+          <p>Calculator, Cover Page, Study Planner, Converters</p>
+        </div>
+        <div class="category-card" onclick="openCategory('pdf')">
+          <div class="category-icon"><i class="fas fa-file-pdf"></i></div>
+          <h2>PDF Tools Suite</h2>
+          <p>Merge, Split, Compress, Protect, Watermark</p>
+        </div>
+        <div class="category-card" onclick="openCategory('business')">
+          <div class="category-icon"><i class="fas fa-chart-pie"></i></div>
+          <h2>Business &amp; Finance Tools</h2>
+          <p>SWOT Maker, Business Case, Ratio Calc, Break-even</p>
+        </div>
+      </div>
+
+      <!-- Always-visible tools -->
+      <div class="tools-grid" id="always-tools" style="margin-top: 25px;">
+        <a href="/tools/custom-services" class="tool-card">
+          <div class="tool-icon"><i class="fas fa-magic"></i></div>
+          <h2>Customised Services</h2>
+          <p>Get professional PPTs, Websites, Applications, Projects, and AI Tools tailored to your specific academic requirements.</p>
+          <div class="tool-cta"><i class="fas fa-paper-plane"></i> Request Now</div>
+        </a>
+        <div class="tool-card" onclick="window.showSolmatesNotepad && window.showSolmatesNotepad()">
+          <div class="tool-icon"><i class="fas fa-edit"></i></div>
+          <h2>E-Notepad</h2>
+          <p>Quickly jot down notes, auto-save drafts, and export as PDF. Triple-tap anywhere to open.</p>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:10px;">
+            <div style="font-size:10px;color:#0f2b46;background:rgba(15,43,70,0.06);padding:5px 10px;border-radius:6px;border:1px dashed rgba(15,43,70,0.15);font-weight:500;line-height:1.4;"><i class="fas fa-info-circle"></i> Triple-tap anywhere to open</div>
+            <button class="tool-cta" style="border:none;cursor:pointer;padding:7px 16px;font-size:12px;margin-top:0;"><i class="fas fa-pencil-alt"></i> Open E-Notepad</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job & Professional Sub-Grid -->
+      <div class="tools-grid sub-grid" id="grid-job">
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-file-invoice"></i></div>
+          <h2>Resume Builder</h2>
+          <p>Create professional resumes with ATS-friendly templates tailored for MBA placements and corporate jobs.</p>
+          <a href="/tools/resumebuilder" class="tool-cta"><i class="fas fa-rocket"></i> Build Your Resume</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-briefcase"></i></div>
+          <h2>Job Search</h2>
+          <p>Find the latest opportunities across 15+ major platforms. Filter by shift, experience, and salary package.</p>
+          <a href="/tools/job-search" class="tool-cta"><i class="fas fa-search"></i> Find Jobs</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-chart-line"></i></div>
+          <h2>Career Test</h2>
+          <p>Discover your ideal career path with scientific assessments and personalized MBA specialization guidance.</p>
+          <a href="/tools/careertest" class="tool-cta"><i class="fas fa-play-circle"></i> Start Test</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-comments"></i></div>
+          <h2>Interview Preparation</h2>
+          <p>Master MBA interviews with practice questions, mock interviews, and corporate communication tips.</p>
+          <a href="/tools/interview" class="tool-cta"><i class="fas fa-microphone"></i> Practice Now</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-paper-plane"></i></div>
+          <h2>Cold Email &amp; LinkedIn Gen</h2>
+          <p>Instantly generate professional, highly-converting connection requests and cold emails for HRs.</p>
+          <a href="/tools/email-generator" class="tool-cta"><i class="fas fa-magic"></i> Try Generator</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-check-double"></i></div>
+          <h2>ATS Resume Checker</h2>
+          <p>Score your resume against ATS systems and optimize it with targeted keywords for your role.</p>
+          <a href="/tools/ats-checker" class="tool-cta"><i class="fas fa-robot"></i> Check Resume</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-envelope-open-text"></i></div>
+          <h2>Cover Letter Generator</h2>
+          <p>Create professional, job-specific cover letters in seconds with tailored MBA templates.</p>
+          <a href="/tools/cover-letter" class="tool-cta"><i class="fas fa-magic"></i> Generate Now</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <h2>Salary Calculator</h2>
+          <p>Estimate your expected salary range based on role, city, and experience level.</p>
+          <a href="/tools/salary-calculator" class="tool-cta"><i class="fas fa-calculator"></i> Calculate Salary</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fab fa-linkedin-in"></i></div>
+          <h2>LinkedIn Suite</h2>
+          <p>Score your profile, generate banners, write AI posts, and preview your profile live.</p>
+          <a href="/tools/linkedin-checklist" class="tool-cta"><i class="fas fa-tasks"></i> View Checklist</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-laptop-code"></i></div>
+          <h2>Portfolio Website Builder</h2>
+          <p>Build a professional, deployment-ready portfolio website in minutes without writing a single line of code.</p>
+          <a href="/tools/portfolio-builder" class="tool-cta"><i class="fas fa-magic"></i> Build Portfolio</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-calendar-times"></i></div>
+          <h2>Notice Period Calculator</h2>
+          <p>Calculate your exact last working day, manage notice buyouts, and track your transition timeline.</p>
+          <a href="/tools/notice-period" class="tool-cta"><i class="fas fa-calculator"></i> Open Calculator</a>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-user-tie"></i></div>
+          <h2>Corporate Translator</h2>
+          <p>Translate your casual or frustrated messages into highly professional, diplomatic corporate jargon.</p>
+          <a href="/tools/corporate-translator" class="tool-cta"><i class="fas fa-language"></i> Translate</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-file-export"></i></div>
+          <h2>Resignation & Handover</h2>
+          <p>Generate a professional resignation letter and a structured handover checklist kit in seconds.</p>
+          <a href="/tools/resignation-kit" class="tool-cta"><i class="fas fa-file-pdf"></i> Create Kit</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-wallet"></i></div>
+          <h2>Freelance Rate Calculator</h2>
+          <p>Calculate your minimum hourly rate and estimate project costs based on your target income and market rates.</p>
+          <a href="/tools/freelance-calculator" class="tool-cta"><i class="fas fa-money-check-alt"></i> Calculate Rates</a>
+        </div>
+      <!-- AI Excuse Generator -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-magic"></i></div>
+          <h2>AI Excuse Generator</h2>
+          <p>Generate professional excuses, leave requests, and apologies tailored to your recipient and tone.</p>
+          <a href="/tools/ai-excuse-generator.html" class="tool-cta"><i class="fas fa-magic"></i> Generate Excuse</a>
+        </div>
+      </div>
+
+      <!-- Academic & Productivity Sub-Grid -->
+      <div class="tools-grid sub-grid" id="grid-academic">
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-brain"></i></div>
+          <h2>AI Study Companion</h2>
+          <p>Get AI-generated easy explanations, exam notes, FAQs, and important questions for any academic topic instantly.</p>
+          <a href="/tools/ai-study-companion" class="tool-cta"><i class="fas fa-magic"></i> Explore Topic</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-layer-group"></i></div>
+          <h2>Smart Flashcards</h2>
+          <p>Master any subject with Tinder-style interactive flashcards using Active Recall learning techniques.</p>
+          <a href="/tools/flashcards" class="tool-cta"><i class="fas fa-play"></i> Start Swiping</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+          <h2>Academic Calculator</h2>
+          <p>Quickly convert your CGPA to Percentage using DU/SOL formulas and estimate your SGPA/CGPA averages.</p>
+          <a href="/tools/calculator" class="tool-cta"><i class="fas fa-percent"></i> Open Calculator</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-file-signature"></i></div>
+          <h2>Cover Page Generator</h2>
+          <p>Create professionally formatted assignment front pages for any university in seconds with live preview.</p>
+          <a href="/tools/coverpage" class="tool-cta"><i class="fas fa-magic"></i> Generate Now</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
+          <h2>Study Planner</h2>
+          <p>Plan your semester, track progress, and manage assignments with smart study scheduling tools.</p>
+          <a href="/tools/planner" class="tool-cta"><i class="fas fa-plus-circle"></i> Create Plan</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+          <h2>PDF/Image Converter</h2>
+          <p>Convert between PDF and image formats (JPG, PNG) effortlessly. Perfect for document sharing.</p>
+          <a href="/tools/converter" class="tool-cta"><i class="fas fa-sync-alt"></i> Convert Files</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-compress-alt"></i></div>
+          <h2>PDF/Image Compressor</h2>
+          <p>Reduce file sizes without compromising quality. Optimize for email and web sharing.</p>
+          <a href="/tools/compressor" class="tool-cta"><i class="fas fa-file-archive"></i> Compress Files</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-user-check"></i></div>
+          <h2>Attendance Calculator</h2>
+          <p>Calculate exactly how many more classes you can miss or need to attend to maintain minimum criteria.</p>
+          <a href="/tools/attendance" class="tool-cta"><i class="fas fa-calculator"></i> Check Attendance</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-list-alt"></i></div>
+          <h2>Assignment Tracker</h2>
+          <p>Keep track of all your ongoing assignments and deadlines with smart reminders.</p>
+          <a href="/tools/assignment-tracker" class="tool-cta"><i class="fas fa-thumbtack"></i> Open Tracker</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-compress-arrows-alt"></i></div>
+          <h2>Zero Size PDF Converter</h2>
+          <p>Dramatically reduce PDF file size and save paper by combining multiple pages into a single A4 sheet.</p>
+          <a href="/tools/zero-size-pdf" class="tool-cta"><i class="fas fa-magic"></i> Shrink PDF</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-tv"></i></div>
+          <h2>Web Teleprompter</h2>
+          <p>Read your presentation scripts like a pro with auto-scrolling text and speech time estimation.</p>
+          <a href="/tools/teleprompter" class="tool-cta"><i class="fas fa-play"></i> Open Teleprompter</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-pen-nib"></i></div>
+          <h2>Text Humanizer</h2>
+          <p>Format AI-generated text into natural, human-readable paragraphs and fix structural flaws.</p>
+          <a href="/tools/text-humanizer" class="tool-cta"><i class="fas fa-magic"></i> Format Text</a>
+        </div>
+      </div>
+
+      <!-- Business & Finance Sub-Grid -->
+      <div class="tools-grid sub-grid" id="grid-business">
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-lightbulb"></i></div>
+          <h2>AI Business Validator</h2>
+          <p>Instantly analyze your startup idea for market viability, target audience, and monetization strategies using AI.</p>
+          <a href="/tools/business-validator" class="tool-cta"><i class="fas fa-magic"></i> Validate Idea</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+          <h2>GST Invoice Calculator</h2>
+          <p>Instantly add or remove GST from prices and generate detailed CGST/SGST/IGST tax breakdowns.</p>
+          <a href="/tools/gst-calculator" class="tool-cta"><i class="fas fa-calculator"></i> Calculate GST</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-chart-bar"></i></div>
+          <h2>SWOT Analysis Maker</h2>
+          <p>Create ready-to-print structured SWOT analysis diagrams for your MBA presentations.</p>
+          <a href="/tools/swot-maker" class="tool-cta"><i class="fas fa-sitemap"></i> Create SWOT</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-briefcase"></i></div>
+          <h2>Business Case Template</h2>
+          <p>Generate professional business case structures and executive summaries for your assignments.</p>
+          <a href="/tools/business-case" class="tool-cta"><i class="fas fa-file-alt"></i> Use Template</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-percentage"></i></div>
+          <h2>Financial Ratio Calculator</h2>
+          <p>Instantly calculate ROI, Profit Margins, Current Ratios, and other key financial metrics.</p>
+          <a href="/tools/financial-ratio" class="tool-cta"><i class="fas fa-calculator"></i> Open Calculator</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-chart-line"></i></div>
+          <h2>Break-even Calculator</h2>
+          <p>Find the break-even point in units and revenue for your business models and case studies.</p>
+          <a href="/tools/break-even" class="tool-cta"><i class="fas fa-chart-area"></i> Calculate Now</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-globe-americas"></i></div>
+          <h2>PESTLE Analysis Maker</h2>
+          <p>Generate macro-environmental analysis diagrams for your business strategies and MBA cases.</p>
+          <a href="/tools/pestle-maker" class="tool-cta"><i class="fas fa-project-diagram"></i> Create PESTLE</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-rocket"></i></div>
+          <h2>Startup Valuation</h2>
+          <p>Estimate the value of your startup using common industry multipliers and DCF models.</p>
+          <a href="/tools/startup-valuation" class="tool-cta"><i class="fas fa-funnel-dollar"></i> Calculate Value</a>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-money-check-alt"></i></div>
+          <h2>EMI & Loan Schedule</h2>
+          <p>Calculate EMI payments and generate a detailed amortization schedule for personal or corporate loans.</p>
+          <a href="/tools/loan-calculator" class="tool-cta"><i class="fas fa-university"></i> Open Calculator</a>
+        </div>
+      </div>
+
+      <!-- PDF Tools Sub-Grid -->
+      <div class="tools-grid sub-grid" id="grid-pdf"></div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="social">
+      <div class="whatsapp-container">
+        <div class="whatsapp-icon" id="whatsappIcon"><i class="fab fa-whatsapp"></i></div>
+        <div class="whatsapp-dropdown" id="whatsappDropdown">
+          <div class="whatsapp-options">
+            <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
+              <i class="fas fa-users"></i><span class="option-text">Community</span><span class="option-desc">Join Group</span>
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb6iO1GKmCPIg5fdUv0Z" target="_blank" class="whatsapp-option">
+              <i class="fas fa-broadcast-tower"></i><span class="option-text">Channel</span><span class="option-desc">Updates</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="https://twitter.com/teamsolmates" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://facebook.com/teamsolmates" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://t.me/solmates_channelbot" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+      <a href="https://instagram.com/teamsolmates" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://youtube.com/@teamsolmates" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.linkedin.com/company/teamsomates/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
+    </div>
+    <p>2026 SOLMATES &bull; A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+  </footer>
+
+  <script>
+    let menuOpen = false;
+    function toggleMobileMenu() {
+      const nav = document.getElementById('mobileNav');
+      if (!nav) return;
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        nav.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('click', closeMenuOnClickOutside);
+      } else { forceCloseMobileMenu(); }
+    }
+    function forceCloseMobileMenu() {
+      const nav = document.getElementById('mobileNav');
+      if (!nav) return;
+      menuOpen = false; nav.classList.remove('active'); document.body.style.overflow = 'auto';
+      document.removeEventListener('click', closeMenuOnClickOutside);
+    }
+    function closeMenuOnClickOutside(e) {
+      const nav = document.getElementById('mobileNav');
+      const btn = document.querySelector('.mobile-menu-btn');
+      if (menuOpen && nav && !nav.contains(e.target) && !btn.contains(e.target)) forceCloseMobileMenu();
+    }
+
+    const whatsappIcon = document.getElementById('whatsappIcon');
+    const whatsappDropdown = document.getElementById('whatsappDropdown');
+    let whatsappOpen = false, whatsappTimeout;
+    whatsappIcon.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!whatsappOpen) {
+        whatsappDropdown.classList.add('show'); whatsappOpen = true;
+        document.addEventListener('click', closeWhatsappOnClickOutside);
+        clearTimeout(whatsappTimeout);
+        whatsappTimeout = setTimeout(() => { if (whatsappOpen) closeWhatsappDropdown(); }, 5000);
+      } else { closeWhatsappDropdown(); }
+    });
+    function closeWhatsappDropdown() {
+      whatsappDropdown.classList.remove('show'); whatsappOpen = false;
+      document.removeEventListener('click', closeWhatsappOnClickOutside);
+      clearTimeout(whatsappTimeout);
+    }
+    function closeWhatsappOnClickOutside(e) {
+      if (!whatsappIcon.contains(e.target) && !whatsappDropdown.contains(e.target)) closeWhatsappDropdown();
+    }
+  </script>
+
+  <script>
+    const categoryDetails = {
+      'job': { title: '<i class="fas fa-briefcase"></i> Job & Professional Tools', desc: 'Resume Builder, Job Search, Interview Prep, Email Gen' },
+      'academic': { title: '<i class="fas fa-graduation-cap"></i> Academic & Productivity', desc: 'Calculator, Cover Page, Study Planner, Converters' },
+      'business': { title: '<i class="fas fa-chart-pie"></i> Business & Finance Tools', desc: 'SWOT Maker, Business Case, Ratio Calc, Break-even' },
+      'pdf': { title: '<i class="fas fa-file-pdf"></i> PDF Tools Suite', desc: 'Process, convert, and secure your documents in the browser.' }
+    };
+
+    function checkHash() {
+      const hash = window.location.hash.substring(1);
+      if (['job', 'academic', 'business', 'pdf'].includes(hash)) {
+        openCategory(hash, false);
+      } else {
+        showCategories();
+      }
+    }
+
+    function openCategory(id, updateHash = true) {
+      document.getElementById('main-categories').style.display = 'none';
+      document.getElementById('always-tools').style.display = 'none';
+      document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active'));
+      document.getElementById('grid-' + id).classList.add('active');
+      
+      if (categoryDetails[id]) {
+        document.getElementById('tools-title').innerHTML = categoryDetails[id].title;
+        document.getElementById('tools-desc').innerHTML = categoryDetails[id].desc;
+      }
+      
+      if (updateHash) {
+        window.location.hash = id;
+      }
+    }
+
+    function showCategories() {
+      document.getElementById('main-categories').style.display = 'grid';
+      document.getElementById('always-tools').style.display = 'grid';
+      document.querySelectorAll('.sub-grid').forEach(g => g.classList.remove('active'));
+      
+      document.getElementById('tools-title').innerHTML = '<i class="fas fa-tools"></i> Student Tools';
+      document.getElementById('tools-desc').innerHTML = 'Essential career tools and resources for your MBA journey and professional development.';
+    }
+
+    document.getElementById('backBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.location.hash) {
+        window.location.hash = ''; // Wapas main tools overview pe
+      } else {
+        window.location.href = '/'; // Main home pe
+      }
+    });
+
+    window.addEventListener('hashchange', checkHash);
+    
+    // Page reload hone pe turant hash check karega (no flicker)
+    checkHash();
+
+    // Render PDF Tools dynamically
+    const pdfTools = [
+        { id: "merge", title: "Merge PDF", icon: "fa-object-group", desc: "Combine PDFs in the order you want with the easiest PDF merger available." },
+        { id: "split", title: "Split PDF", icon: "fa-cut", desc: "Separate one page or a whole set for easy conversion into independent PDF files." },
+        { id: "zip-creator", title: "Zip Converter", icon: "fa-file-archive", desc: "Bundle any number of files of any format into a single, compressed ZIP archive instantly." },
+        { id: "compress", title: "Compress PDF", icon: "fa-compress-arrows-alt", desc: "Reduce file size while optimizing for maximal PDF quality." },
+        { id: "pdf-to-word", title: "PDF to Word", icon: "fa-file-word", desc: "Advanced Font-Aware Paragraph Clustering engine that preserves styles and layout perfectly." },
+        { id: "pdf-to-ppt", title: "PDF to PowerPoint", icon: "fa-file-powerpoint", desc: "High-fidelity conversion of PDF pages into editable PowerPoint slides." },
+        { id: "word-to-pdf", title: "Word to PDF", icon: "fa-file-pdf", desc: "Convert any DOCX file to a pixel-perfect PDF while preserving internal structures." },
+        { id: "excel-to-pdf", title: "Excel to PDF", icon: "fa-file-pdf", desc: "Flatten complex spreadsheets into readable, printable PDF documents." },
+        { id: "pdf-to-jpg", title: "PDF to JPG", icon: "fa-file-image", desc: "Render high-resolution JPG images from any PDF document page-by-page." },
+        { id: "jpg-to-pdf", title: "JPG to PDF", icon: "fa-file-pdf", desc: "Combine multiple images into a single professional PDF with auto-alignment." },
+        { id: "watermark", title: "Watermark", icon: "fa-stamp", desc: "Stamp persistent watermarks with adjustable opacity and rotation for security." },
+        { id: "rotate", title: "Rotate PDF", icon: "fa-sync", desc: "Individual or batch rotation of PDF pages with instant structural saving." },
+        { id: "html-to-pdf", title: "HTML to PDF", icon: "fa-file-pdf", desc: "Convert live webpages into high-fidelity PDF documents using modern CSS rendering." },
+        { id: "unlock", title: "Unlock PDF", icon: "fa-unlock", desc: "Standard decryption engine for removing password restrictions from PDF files." },
+        { id: "protect", title: "Protect PDF", icon: "fa-lock", desc: "Secure your documents with industrial-grade password encryption." },
+        { id: "organize", title: "Organize PDF", icon: "fa-layer-group", desc: "Visual drag-and-drop page management to merge, reorder, or remove pages." },
+        { id: "page-numbers", title: "Page numbers", icon: "fa-list-ol", desc: "Add dynamic, styled page numbering to any position in your document." },
+        { id: "scan", title: "Scan to PDF", icon: "fa-mobile-alt", desc: "Mobile-optimized browser scanning engine for instant document digitization." },
+        { id: "ocr", title: "OCR PDF", icon: "fa-eye", desc: "Deep Learning text recognition to turn scans into 100% searchable documents." },
+        { id: "ai-summarizer", title: "AI Summarizer", icon: "fa-bolt", desc: "GPT-powered contextual analysis to extract key insights from long PDF reports." },
+        { id: "translate", title: "Translate PDF", icon: "fa-language", desc: "Cloud-powered neural translation that preserves your layout and formatting." },
+        { id: "delete-pages", title: "Delete Pages", icon: "fa-minus-square", desc: "Remove unwanted pages from your PDF documents instantly." },
+        { id: "add-pages", title: "Add Pages", icon: "fa-plus-square", desc: "Insert new pages or entire PDFs anywhere in your document." },
+        { id: "favicon-generator", title: "Favicon Generator", icon: "fa-image", desc: "Generate multi-size favicons (ICO, PNG) for your website from any image." }
+    ];
+
+    const pdfGrid = document.getElementById('grid-pdf');
+    pdfTools.forEach(tool => {
+        pdfGrid.innerHTML += `
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas ${tool.icon}"></i></div>
+          <h2>${tool.title}</h2>
+          <p>${tool.desc}</p>
+          <a href="/tools/pdf-tools/${tool.id}" class="tool-cta"><i class="fas fa-external-link-alt"></i> Open Tool</a>
+        </div>
+        `;
+    });
+  </script>
+</body>
+</html>
+

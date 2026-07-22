@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <style>
+        .spin { animation: rotate 2s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .nav-btn {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-light); }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        @media (max-width: 900px) {
+            .compare-grid { flex-direction: column !important; }
+            .compare-item { width: 100% !important; min-width: 0 !important; }
+        }
+    </style>
+  <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="file"></i> Compare PDF</h1>
+    </div>
+    
+
+
+
+<div class="container">
+    
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div class="upload-card" id="dropZone1">
+            <i data-lucide="file"></i>
+            <h3>Original PDF</h3>
+            <p id="name1">Select first file</p>
+            <input type="file" id="fileInput1" accept=".pdf" hidden>
+        </div>
+        <div class="upload-card" id="dropZone2">
+            <i data-lucide="file"></i>
+            <h3>Modified PDF</h3>
+            <p id="name2">Select second file</p>
+            <input type="file" id="fileInput2" accept=".pdf" hidden>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button id="compareBtn" class="btn-primary" disabled>
+            <i data-lucide="play"></i> Compare PDFs
+        </button>
+    </div>
+
+    <div id="compareArea" style="display: none; background: #fff; border: 1px solid var(--border); border-radius: 1.5rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+        <div style="margin-bottom: 2rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; background: var(--bg-light); padding: 1rem; border-radius: 1rem; position: sticky; top: 10px; z-index: 100; box-shadow: var(--shadow-sm);">
+            <button id="prevPage" class="nav-btn"><i data-lucide="chevron-left"></i> Previous</button>
+            <span id="pageInfo" style="font-weight: 700; color: var(--primary); min-width: 100px;">Page 1 / 1</span>
+            <button id="nextPage" class="nav-btn">Next <i data-lucide="chevron-right"></i></button>
+            <button id="resetBtn" class="btn-secondary" style="padding: 0.5rem 1rem; background: #fff; border: 1px solid var(--border);">
+                <i data-lucide="refresh-ccw" style="width: 14px;"></i> Reset
+            </button>
+        </div>
+        
+        <div class="compare-grid" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-bottom: 2rem;">
+            <div class="compare-item" style="flex: 1; min-width: 300px; max-width: 100%;">
+                <h4 style="margin-bottom: 0.5rem; color: #64748b; font-size: 0.75rem; text-transform: uppercase;">Original</h4>
+                <div class="scroll-sync canvas-wrapper" id="scroll1" style="height: 450px; overflow: auto; background: #f8fafc; border: 1px solid #e2e8f0;">
+                    <canvas id="canvas1"></canvas>
+                </div>
+            </div>
+            <div class="compare-item" style="flex: 1; min-width: 300px; max-width: 100%;">
+                <h4 style="margin-bottom: 0.5rem; color: #ef4444; font-size: 0.75rem; text-transform: uppercase;">Visual Diff</h4>
+                <div class="scroll-sync canvas-wrapper" id="scrollDiff" style="height: 450px; overflow: auto; background: #fef2f2; border: 1px solid #fecaca;">
+                    <canvas id="canvasDiff"></canvas>
+                </div>
+            </div>
+            <div class="compare-item" style="flex: 1; min-width: 300px; max-width: 100%;">
+                <h4 style="margin-bottom: 0.5rem; color: #64748b; font-size: 0.75rem; text-transform: uppercase;">Modified</h4>
+                <div class="scroll-sync canvas-wrapper" id="scroll2" style="height: 450px; overflow: auto; background: #f8fafc; border: 1px solid #e2e8f0;">
+                    <canvas id="canvas2"></canvas>
+                </div>
+            </div>
+        </div>
+        <p style="color: #64748b; font-size: 0.85rem; background: #fefce8; padding: 0.75rem; border-radius: 0.5rem; display: inline-block;">
+            <i data-lucide="info" style="width: 14px; height: 14px; vertical-align: middle;"></i>
+            Changes are highlighted in <span style="color: #ef4444; font-weight: 700;">Red</span>.
+        </p>
+    </div>
+    
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Processing Comparison...</p>
+    </div>
+</div>
+
+<script src="https://unpkg.com/pixelmatch@5.3.0/index.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    lucide.createIcons();
+    
+    const btn = document.getElementById('compareBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const area = document.getElementById('compareArea');
+    const file1Input = document.getElementById('fileInput1');
+    const file2Input = document.getElementById('fileInput2');
+    const canvas1 = document.getElementById('canvas1');
+    const canvas2 = document.getElementById('canvas2');
+    const canvasDiff = document.getElementById('canvasDiff');
+    const pageInfo = document.getElementById('pageInfo');
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+    
+    let pdf1 = null, pdf2 = null;
+    let currentPage = 1;
+    let maxPages = 1;
+
+    document.getElementById('dropZone1').onclick = () => file1Input.click();
+    document.getElementById('dropZone2').onclick = () => file2Input.click();
+    
+    const checkReady = () => {
+        if (file1Input.files[0] && file2Input.files[0]) {
+            btn.disabled = false;
+            document.getElementById('name1').textContent = file1Input.files[0].name;
+            document.getElementById('name2').textContent = file2Input.files[0].name;
+        }
+    };
+
+    file1Input.onchange = checkReady;
+    file2Input.onchange = checkReady;
+
+    document.getElementById('resetBtn').onclick = () => {
+        location.reload();
+    };
+
+    // Synchronized scrolling
+    const scrollContainers = [
+        document.getElementById('scroll1'),
+        document.getElementById('scrollDiff'),
+        document.getElementById('scroll2')
+    ];
+
+    let isSyncing = false;
+    scrollContainers.forEach(container => {
+        container.onscroll = () => {
+            if (isSyncing) return;
+            isSyncing = true;
+            const top = container.scrollTop;
+            const left = container.scrollLeft;
+            scrollContainers.forEach(c => {
+                if (c !== container) {
+                    c.scrollTop = top;
+                    c.scrollLeft = left;
+                }
+            });
+            isSyncing = false;
+        };
+    });
+
+    btn.onclick = async () => {
+        loadingOverlay.style.display = 'flex';
+        btn.disabled = true;
+        
+        try {
+            const [data1, data2] = await Promise.all([
+                file1Input.files[0].arrayBuffer(),
+                file2Input.files[0].arrayBuffer()
+            ]);
+
+            [pdf1, pdf2] = await Promise.all([
+                pdfjsLib.getDocument({ data: data1 }).promise,
+                pdfjsLib.getDocument({ data: data2 }).promise
+            ]);
+
+            maxPages = Math.min(pdf1.numPages, pdf2.numPages);
+            currentPage = 1;
+            await comparePages(1);
+
+            area.style.display = 'block';
+            document.querySelector('.upload-card').parentElement.style.display = 'none'; // Hide uploads
+            btn.style.display = 'none'; // Hide compare button
+            lucide.createIcons();
+        } catch (err) {
+            console.error(err);
+            alert('Error loading PDFs: ' + err.message);
+            btn.disabled = false;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    async function comparePages(pageNum) {
+        loadingOverlay.style.display = 'flex';
+        try {
+            const [p1, p2] = await Promise.all([
+                pdf1.getPage(pageNum),
+                pdf2.getPage(pageNum)
+            ]);
+
+            const v1_orig = p1.getViewport({ scale: 2.0 });
+            const v2_orig = p2.getViewport({ scale: 2.0 });
+            
+            // Unified dimensions (Floored to avoid fractional pixel mismatch)
+            const width = Math.floor(Math.max(v1_orig.width, v2_orig.width));
+            const height = Math.floor(Math.max(v1_orig.height, v2_orig.height));
+
+            canvas1.width = width; canvas1.height = height;
+            canvas2.width = width; canvas2.height = height;
+            canvasDiff.width = width; canvasDiff.height = height;
+
+            const ctx1 = canvas1.getContext('2d', { willReadFrequently: true });
+            const ctx2 = canvas2.getContext('2d', { willReadFrequently: true });
+            const diffCtx = canvasDiff.getContext('2d', { willReadFrequently: true });
+
+            // Render both to the same target width/height
+            // We use the viewport from each, but the canvas size is the max
+            await Promise.all([
+                p1.render({ canvasContext: ctx1, viewport: v1_orig }).promise,
+                p2.render({ canvasContext: ctx2, viewport: v2_orig }).promise
+            ]);
+
+            const img1 = ctx1.getImageData(0, 0, width, height);
+            const img2 = ctx2.getImageData(0, 0, width, height);
+            const diffData = diffCtx.createImageData(width, height);
+
+            pixelmatch(img1.data, img2.data, diffData.data, width, height, { threshold: 0.1 });
+            diffCtx.putImageData(diffData, 0, 0);
+
+            pageInfo.textContent = `Page ${pageNum} / ${maxPages}`;
+            currentPage = pageNum;
+            prevPageBtn.disabled = (currentPage <= 1);
+            nextPageBtn.disabled = (currentPage >= maxPages);
+            
+            // Scroll to top on page change
+            scrollContainers.forEach(c => c.scrollTop = 0);
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    prevPageBtn.onclick = () => { if (currentPage > 1) comparePages(currentPage - 1); };
+    nextPageBtn.onclick = () => { if (currentPage < maxPages) comparePages(currentPage + 1); };
+</script>
+</body>
+</html>

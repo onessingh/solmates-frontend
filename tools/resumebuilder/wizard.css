@@ -1,0 +1,535 @@
+/* TABS CSS */
+.rb-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto 40px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 1000px;
+}
+@media (max-width: 768px) {
+    .rb-tabs {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin: 20px 15px 30px;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        gap: 8px;
+    }
+    .rb-tab {
+        flex: 0 0 auto;
+        padding: 8px 16px;
+        font-size: 0.95rem;
+    }
+    
+    /* Fix Navbar on Mobile */
+    .navbar {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        padding: 15px 15px !important;
+        gap: 10px !important;
+    }
+    .navbar .logo {
+        font-size: 1.2rem;
+    }
+    #download-resume-btn {
+        padding: 8px 16px !important;
+        font-size: 0.9rem !important;
+    }
+    .nav-left, .nav-center, .nav-right {
+        width: auto !important;
+    }
+}
+
+.rb-tab {
+    padding: 12px 24px;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.rb-tab.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.wizard-header {
+    background: #fff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+.wizard-progress-bar {
+    height: 8px;
+    background: var(--color-surface-2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.wizard-progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    width: 0%;
+    transition: width 0.4s ease;
+}
+.wizard-step-text {
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--color-ink);
+}
+.autosave-indicator {
+    font-size: 0.85rem;
+    font-weight: 600;
+    position: absolute;
+    right: 25px;
+    top: 25px;
+}
+.wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 15px;
+    z-index: 100;
+    border-radius: 12px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+}
+.wizard-nav button {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+}
+
+
+/* CHIPS */
+.chip-wrapper {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.chip-input {
+    border: none !important;
+    padding: 4px !important;
+    outline: none !important;
+    flex: 1;
+    min-width: 150px;
+}
+.chip {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.chip i {
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* ACCORDIONS */
+.accordion-content {
+    display: none;
+    margin-top: 15px;
+}
+.accordion-content.open {
+    display: block;
+}
+.accordion-icon {
+    transition: transform 0.3s ease;
+    float: right;
+    margin-top: 5px;
+}
+.accordion-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+}
+
+
+/* PREMIUM UI TWEAKS */
+.panel-section {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+    margin-bottom: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.03);
+}
+
+.field input, .field textarea {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.field input:focus, .field textarea:focus {
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(15, 118, 110, 0.1);
+    border-color: var(--color-primary);
+}
+
+.field label {
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 600;
+}
+
+.btn {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.repeater-item {
+    background: #fdfdfd;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+
+/* ENLARGE BUILDER & JD MATCH OPTIONS FOR DESKTOP MODE SCALING */
+.form-panel .field input, 
+.form-panel .field textarea, 
+.form-panel .field select {
+    font-size: 1.8rem !important;
+    padding: 22px 24px !important;
+}
+
+.form-panel .field label, 
+.form-panel .section-header h2 {
+    font-size: 1.7rem !important;
+}
+
+.form-panel .btn {
+    font-size: 1.7rem !important;
+    padding: 18px 32px !important;
+}
+
+.jd-match, .jd-match .jd-panel-content, .jd-match p, .jd-match li {
+    font-size: 1.7rem !important;
+    line-height: 1.6 !important;
+}
+
+.jd-match h2 {
+    font-size: 2.2rem !important;
+}
+
+.jd-match h3, .jd-match summary span {
+    font-size: 1.9rem !important;
+}
+
+
+/* FIX MODAL FOR DESKTOP SCALING */
+.modal-content {
+    width: 850px !important;
+    max-width: 95vw !important;
+    padding: 30px !important;
+}
+
+.modal-header h2 {
+    font-size: 2rem !important;
+}
+
+.modal .btn-close {
+    font-size: 2.5rem !important;
+}
+
+.img-container {
+    height: 60vh !important;
+    max-height: 800px !important;
+}
+
+.modal-actions .btn {
+    font-size: 1.5rem !important;
+    padding: 16px 32px !important;
+}
+
+.modal-content .field-hint {
+    font-size: 1.4rem !important;
+    margin: 15px 0 !important;
+}
+
+
+/* Fix Accordion Header Layout */
+.accordion-section .section-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 15px !important;
+}
+
+.accordion-section .section-header h2,
+.accordion-section .section-header h3 {
+    margin: 0 !important;
+    flex: 1 1 auto;
+    font-size: 1.6rem !important;
+}
+
+.accordion-section .section-header .btn {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+
+.accordion-icon {
+    margin: 0 !important;
+    float: none !important;
+    flex: 0 0 auto !important;
+}
+
+.wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+#wizard-print {
+    margin: 0 auto;
+}
+
+
+/* FULLSCREEN CROP MODAL FOR MOBILE DESKTOP SCALING */
+#crop-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #000 !important;
+    z-index: 9999999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+}
+
+#crop-modal[hidden],
+#crop-modal[aria-hidden="true"] {
+    display: none !important;
+}
+
+#crop-modal .modal-content {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    padding: 40px !important;
+    background: #111 !important;
+    color: #fff !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#crop-modal .modal-header h2 { color: #fff !important; font-size: 3.5rem !important; }
+
+#crop-modal .modal-header .btn-close { color: #fff !important; font-size: 5rem !important; }
+
+#crop-modal .img-container { flex: 1 1 auto !important; height: 60vh !important; min-height: 500px !important; background: #000 !important; margin: 40px 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; }
+
+#crop-modal .field-hint { color: #aaa !important; font-size: 2.5rem !important; text-align: center !important; margin: 40px 0 !important; }
+
+#crop-modal .modal-actions {
+    padding: 20px 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+}
+
+#crop-modal .modal-actions .btn { flex: 1 !important; margin: 0 15px !important; font-size: 3rem !important; padding: 40px 0 !important; border-radius: 20px !important; }
+
+
+/* CORRECTED FULLSCREEN CROP MODAL CSS */
+#crop-modal .modal-overlay {
+    display: none !important;
+}
+#crop-modal .modal-content {
+    border: none !important;
+}
+#crop-modal .modal-header h3 {
+    color: #fff !important;
+    font-size: 3.5rem !important;
+    margin: 0 !important;
+}
+#crop-modal .modal-header .modal-close {
+    color: #fff !important;
+    font-size: 5rem !important;
+    margin: 0 !important;
+}
+#crop-modal .cropper-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+#crop-modal .cropper-canvas-wrap {
+    flex: 1 1 auto !important;
+    height: 60vh !important;
+    min-height: 500px !important;
+    background: #000 !important;
+    margin: 40px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+#crop-modal .cropper-controls .field-hint {
+    color: #aaa !important;
+    font-size: 2.5rem !important;
+    text-align: center !important;
+    margin: 40px 0 !important;
+}
+#crop-modal .cropper-actions {
+    padding: 20px 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+}
+#crop-modal .cropper-actions .btn {
+    flex: 1 !important;
+    margin: 0 15px !important;
+    font-size: 3rem !important;
+    padding: 40px 0 !important;
+    border-radius: 20px !important;
+}
+
+
+
+/* DESKTOP RESET (DO NOT TOUCH MOBILE UI) */
+@media (min-width: 900px) {
+    /* Reset Form Panel Scaling */
+    .form-panel .field input, 
+    .form-panel .field textarea, 
+    .form-panel .field select {
+        font-size: 1rem !important;
+        padding: 12px 16px !important;
+    }
+    .form-panel .field label, 
+    .form-panel .section-header h2 {
+        font-size: 1.1rem !important;
+    }
+    .form-panel .btn {
+        font-size: 1rem !important;
+        padding: 12px 24px !important;
+    }
+
+    /* Reset JD Match */
+    .jd-match, .jd-match .jd-panel-content, .jd-match p, .jd-match li {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+    }
+    .jd-match h2 {
+        font-size: 1.5rem !important;
+    }
+    .jd-match h3, .jd-match summary span {
+        font-size: 1.2rem !important;
+    }
+
+    /* Reset Modals */
+    .modal-content {
+        width: 600px !important;
+        padding: 24px !important;
+    }
+    .modal-header h2, .modal-header h3 {
+        font-size: 1.5rem !important;
+    }
+    .modal .btn-close, .modal-close {
+        font-size: 1.5rem !important;
+    }
+    .img-container, .cropper-canvas-wrap {
+        height: 50vh !important;
+        min-height: 300px !important;
+        margin: 20px 0 !important;
+    }
+    .modal-actions .btn, .cropper-actions .btn {
+        font-size: 1rem !important;
+        padding: 12px 24px !important;
+        margin: 0 10px !important;
+        border-radius: 8px !important;
+    }
+    .field-hint {
+        font-size: 0.9rem !important;
+        margin: 10px 0 !important;
+    }
+
+    /* Crop Modal Specific Fixes for Desktop */
+    #crop-modal {
+        padding: 40px !important; /* Prevents hugging the screen edge */
+        background: rgba(0,0,0,0.8) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    #crop-modal .modal-content {
+        width: 800px !important;
+        height: auto !important;
+        max-height: 90vh !important;
+        border-radius: 12px !important;
+        padding: 30px !important;
+        background: #fff !important;
+        color: #333 !important;
+        overflow-y: auto !important; /* Fixes any inner overflow */
+    }
+    #crop-modal .modal-header h3 {
+        color: #333 !important;
+        font-size: 1.5rem !important;
+    }
+    #crop-modal .modal-header .modal-close {
+        color: #333 !important;
+        font-size: 2rem !important;
+    }
+    #crop-modal .img-container,
+    #crop-modal .cropper-canvas-wrap {
+        background: transparent !important;
+        height: 40vh !important;
+        min-height: 250px !important;
+        max-height: 400px !important;
+        margin: 20px 0 !important;
+        flex: none !important;
+    }
+    #crop-modal .cropper-controls .field-hint {
+        color: #666 !important;
+        font-size: 1rem !important;
+        margin: 15px 0 !important;
+    }
+    #crop-modal .cropper-actions .btn,
+    #crop-modal .modal-actions .btn {
+        font-size: 1rem !important;
+        padding: 12px 0 !important;
+        border-radius: 8px !important;
+    }
+}

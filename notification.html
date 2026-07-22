@@ -1,0 +1,2832 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
+  <meta name="description" content="Stay updated with the latest DU SOL Results, MBA Exam Schedules, and Official Notifications. Get real-time alerts for all semester updates from SOLMATES.">
+  <meta name="keywords" content="DU SOL Results 2024, MBA exam alerts, DU SOL notifications, academic updates, SOLMATES results, alerts">
+  <meta http-equiv="Expires" content="0">
+  <!-- Apple PWA -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SOLMATES">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <!-- Google Fonts: Non-blocking -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+  <!-- Font Awesome: Non-blocking -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <script src="/config.js?v=113.8" defer></script>
+  <!-- socket.io loaded dynamically -->
+  <script src="/js/api-client.js?v=113.3" defer></script>
+  <script src="/js/webview-fix.js?v=113.3" defer></script>
+  <script src="/js/sol-cache.js?v=113.3" defer></script>
+  <script>
+    // [v116.4] NUCLEAR AUTO-UPDATE — ASYNC + LOOP-GUARD FIX
+    (async function() {
+      try {
+        var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
+        if (!_store) return;
+        window.SOL_APP_VERSION = '116.4';
+        const currentVersion = '116.4';
+        const savedVersion = _store.getItem('sol_app_version');
+
+        if (savedVersion && savedVersion !== currentVersion) {
+          if (sessionStorage.getItem('sol_update_in_progress')) return;
+          sessionStorage.setItem('sol_update_in_progress', '1');
+
+          _store.setItem('sol_app_version', currentVersion);
+          if ('caches' in window) {
+            const names = await caches.keys();
+            await Promise.all(names.map(function(n) { return caches.delete(n); }));
+          }
+          // SW unregister removed to preserve Push Subscriptions
+          if ("serviceWorker" in navigator) { console.log("Updating SW caches..."); }
+          location.reload();
+        } else {
+          try { localStorage.setItem('sol_app_version', currentVersion); } catch(e) {}
+          sessionStorage.removeItem('sol_update_in_progress');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* [v111.9] GLOBAL TOUCH-FREE RESET */
+    * { 
+      -webkit-tap-highlight-color: transparent; 
+      -webkit-touch-callout: none;
+    }
+
+    .no-select-meta, .icon-box, .view-btn, .new-badge, .tab-btn {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .subject-text {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a202c;
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(at 0% 0%, rgba(15, 43, 70, 0.03) 0, transparent 50%),
+        radial-gradient(at 50% 0%, rgba(40, 199, 111, 0.02) 0, transparent 50%);
+    }
+
+    /* ========== Navbar Premium ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px 0 24px;
+      z-index: 1000;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-left {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f2b46;
+      text-decoration: none;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .refresh-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: rgba(40, 199, 111, 0.1);
+      color: #28C76F;
+      border: 1px solid rgba(40, 199, 111, 0.2);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .refresh-btn:hover {
+      background: #28C76F;
+      color: white;
+    }
+
+    /* ========== Main Content ========== */
+    .container {
+      max-width: 850px;
+      margin: 100px auto 60px;
+      padding: 0 24px;
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header-section h1 {
+      font-size: 42px;
+      font-weight: 900;
+      color: #0f2b46;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+
+    .header-section p {
+      color: #718096;
+      font-size: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ========== Tabs Premium ========== */
+    .tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 6px;
+      margin-bottom: 35px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: none;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #4a5568;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: #0f2b46;
+      color: white;
+      box-shadow: 0 8px 20px rgba(15, 43, 70, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* Admin UI */
+    .admin-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .admin-login-btn,
+    .admin-logout-btn {
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .admin-login-btn {
+      background: transparent;
+      color: transparent;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: default;
+      transition: all 0.3s ease;
+      opacity: 0;
+      width: 60px;
+      height: 30px;
+    }
+
+    .admin-logout-btn {
+      background: #ff3b30;
+      color: white;
+      display: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .delete-notice-btn,
+    .edit-notice-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .delete-notice-btn {
+      background: rgba(255, 59, 48, 0.1);
+      color: #ff3b30;
+    }
+
+    .edit-notice-btn {
+      background: rgba(15, 43, 70, 0.05);
+      color: #0f2b46;
+    }
+
+    /* ========== Sundar Toast Popup ========== */
+    #solmatesToast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .toast-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(15, 43, 70, 0.1);
+      border-left: 4px solid #0f2b46;
+      border-radius: 12px;
+      padding: 16px;
+      width: 320px;
+      box-shadow: 0 15px 35px rgba(15, 43, 70, 0.15);
+      display: flex;
+      gap: 14px;
+      pointer-events: auto;
+      transform: translateX(120%);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      animation: toastSlideIn 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast-card.live-toast {
+        border-left-color: #28C76F;
+    }
+
+    .toast-card.removing {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+
+    @keyframes toastSlideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(15, 43, 70, 0.05);
+      color: #0f2b46;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .toast-card.live-toast .toast-icon {
+        background: rgba(40, 199, 111, 0.1);
+        color: #28C76F;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #0f2b46;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .toast-subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .toast-btn {
+      background: #0f2b46;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .toast-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .toast-close:hover {
+      color: #1e293b;
+    }
+
+    @media (max-width: 480px) {
+      #solmatesToast {
+        right: 12px;
+        left: 12px;
+        bottom: 20px;
+      }
+      .toast-card {
+        width: 100%;
+      }
+    }
+
+    /* ========== Admin Tools Premium ========== */
+    .admin-action-bar {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px; /* Increased gap */
+    }
+
+    .admin-btn {
+      padding: 7px 16px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .edit-notice-btn {
+      background: #eff6ff;
+      color: #3b82f6;
+      border: 1px solid #dbeafe;
+    }
+    .edit-notice-btn:hover {
+      background: #3b82f6;
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .delete-notice-btn {
+      background: #fff1f2;
+      color: #f43f5e;
+      border: 1px solid #ffe4e6;
+    }
+    .delete-notice-btn:hover {
+      background: #f43f5e;
+      color: white;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
+    }
+
+    .notice-select-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748b;
+      user-select: none;
+    }
+
+    /* ===== FAB Button ===== */
+    .add-notice-fab {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      width: 58px;
+      height: 58px;
+      background: #0f2b46;
+      color: white;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(15,43,70,0.35);
+      border: none;
+      z-index: 9999;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Modals */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .login-btn,
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .error-message {
+      color: #ff3b30;
+      font-size: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* ========== Notification List ========== */
+    .notification-list {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .notification-list.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .notification-card {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      gap: 16px;
+    }
+
+    .notification-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      border-color: rgba(40, 199, 111, 0.2);
+    }
+
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      position: relative;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow:
+        inset 0 0 10px rgba(255, 255, 255, 0.5),
+        0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .new-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff3b30;
+      color: white;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1.5px solid white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-box {
+      flex: 1;
+    }
+
+    .content-box h3 {
+      font-size: 16px;
+      margin-bottom: 3px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .content-box p {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .meta-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+
+    /* Status Pulse Animation */
+    @keyframes statusPulse {
+      0% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.7;
+      }
+    }
+
+    .status-pending {
+      display: none; /* Deprecated in favor of unified button */
+    }
+    
+    .view-btn.pending {
+      background: #f1f5f9;
+      color: #94a3b8;
+      border: 1px dashed #cbd5e1;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.8;
+      pointer-events: none;
+      width: fit-content;
+      min-width: 140px;
+    }
+
+    .view-btn {
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 30px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(15, 43, 70, 0.05);
+      color: #0f2b46;
+      border: 1px solid rgba(15, 43, 70, 0.1);
+      letter-spacing: 0.2px;
+    }
+
+    .view-btn:hover {
+      background: #0f2b46;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 43, 70, 0.2);
+    }
+
+    .view-btn.join-btn {
+      background: linear-gradient(135deg, #28C76F 0%, #0396FF 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 10px 25px rgba(40, 199, 111, 0.3);
+      position: relative;
+      width: fit-content;
+      min-width: 140px;
+    }
+
+    .view-btn.join-btn:hover {
+      background: linear-gradient(135deg, #21ad60 0%, #027ed6 100%);
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 15px 35px rgba(40, 199, 111, 0.45);
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(40, 199, 111, 0.15);
+      color: #28C76F;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: #28C76F;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7);
+      animation: dotPulse 1.5s infinite;
+    }
+
+    @keyframes dotPulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(40, 199, 111, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(40, 199, 111, 0);
+      }
+    }
+
+    .join-btn {
+      animation: joinPulse 3.s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+
+    /* ========== Empty State Premium ========== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 40px;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 1px dashed rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    .empty-state i {
+      font-size: 64px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+    }
+
+    .empty-state p {
+      color: #718096;
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 600px) {
+      .header-section h1 {
+        font-size: 26px;
+      }
+
+      .tab-btn {
+        font-size: 12px;
+        padding: 10px 5px;
+      }
+
+      .notification-card {
+        padding: 15px;
+      }
+
+      .icon-box {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+
+    .modal-type-picker {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .type-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .type-btn.active {
+      border-color: #0f2b46;
+    }
+
+    .magic-fill-btn {
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .magic-fill-btn:hover {
+      background: #7c3aed;
+    }
+
+    .synced-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(40, 199, 111, 0.1);
+      color: #28C76F;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .edit-notice-btn,
+    .delete-notice-btn {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .edit-notice-btn {
+      background: #0071e3;
+      color: white;
+    }
+
+    .edit-notice-btn:hover {
+      background: #0061c2;
+    }
+
+    .delete-notice-btn {
+      background: #ff3b30;
+      color: white;
+    }
+
+    .delete-notice-btn:hover {
+      background: #d32f2f;
+    }
+    /* Notification Toggle Button */
+    .notify-status-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(0, 113, 227, 0.2);
+      background: rgba(0, 113, 227, 0.05);
+      color: #0071e3;
+      white-space: nowrap;
+    }
+    .notify-status-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.15);
+    }
+    .notify-status-btn.granted {
+      background: rgba(40, 199, 111, 0.1);
+      color: #28C76F;
+      border-color: rgba(40, 199, 111, 0.2);
+    }
+    .notify-status-btn.denied {
+      background: rgba(255, 59, 48, 0.1);
+      color: #ff3b30;
+      border-color: rgba(255, 59, 48, 0.2);
+    }
+
+    @media (max-width: 480px) {
+      .top-nav { padding: 8px 12px; }
+      .nav-left { font-size: 15px; gap: 6px; }
+      .notify-status-btn { padding: 6px 10px; font-size: 10px; border-radius: 8px; }
+    }
+
+    /* ========== SOFT PROMPT & REPAIR GUIDE STYLES (v85.5) ========== */
+    .soft-prompt-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      width: 90%;
+      max-width: 500px;
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid rgba(0, 113, 227, 0.1);
+    }
+    .soft-prompt-banner.active {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .soft-prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .soft-prompt-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 113, 227, 0.1);
+      color: #0071e3;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .soft-prompt-text h4 { margin: 0; font-size: 15px; color: #1d1d1f; }
+    .soft-prompt-text p { margin: 2px 0 0; font-size: 13px; color: #64748b; line-height: 1.4; }
+    .soft-prompt-actions { display: flex; gap: 10px; margin-top: 5px; }
+    .soft-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      outline: none;
+    }
+    .soft-btn.allow { background: #0071e3; color: white; }
+    .soft-btn.later { background: #f5f5f7; color: #1d1d1f; }
+    .soft-btn:active { transform: scale(0.95); }
+
+    .repair-guide-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 11000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+    .repair-guide-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+    .repair-content { width: 100%; max-width: 400px; }
+    .repair-icon { font-size: 48px; color: #ff3b30; margin-bottom: 20px; }
+    .repair-title { font-size: 22px; font-weight: 700; color: #1d1d1f; margin-bottom: 10px; }
+    .repair-subtitle { font-size: 15px; color: #64748b; margin-bottom: 30px; line-height: 1.5; }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      text-align: left;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      background: #0071e3;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text b { display: block; color: #1d1d1f; font-size: 14px; margin-bottom: 2px; }
+    .step-text span { font-size: 13px; color: #64748b; }
+    .repair-close-btn {
+      margin-top: 30px;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      padding: 12px 30px;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+
+<body>
+
+  <header class="top-nav">
+    <a href="/" class="nav-left"><i class="fas fa-chevron-left"></i> SOLMATES</a>
+    <div id="push-toggle-container">
+      <button class="notify-status-btn" id="notifyToggleBtn" onclick="handleNotifyToggle()">
+        <i class="fas fa-bell"></i> <span>Allow Notifications</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="header-section">
+      <h1>Stay Updated</h1>
+      <p>Latest announcements and notices for MBA Students</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(1)">Sem 1</button>
+      <button class="tab-btn" onclick="showTab(2)">Sem 2</button>
+      <button class="tab-btn" onclick="showTab(3)">Sem 3</button>
+      <button class="tab-btn" onclick="showTab(4)">Sem 4</button>
+      <button class="tab-btn" onclick="showTab(0)">Gen</button>
+    </div>
+
+    <!-- Admin Bulk Actions -->
+    <div id="admin-bulk-actions" class="admin-only" style="display:none; text-align: center; margin-bottom: 20px;">
+      <button class="submit-btn" style="width:auto; padding:8px 16px; background:#0071e3; margin-right:10px;" onclick="toggleSelectAllSemNotices()">Select All</button>
+      <button class="submit-btn delete-btn" style="width:auto; padding:8px 16px; background:#ff3b30;" onclick="deleteSelectedSemNotices()">Delete Selected</button>
+    </div>
+
+    <div id="sem0" class="notification-list">
+      <div class="empty-state">
+        <i class="fas fa-bell-slash"></i>
+        <p>No general notifications found</p>
+      </div>
+    </div>
+
+    <div id="sem1" class="notification-list active">
+      <!-- Cards will be dynamically inserted here -->
+      <div class="empty-state">
+        <i class="fas fa-bell-slash"></i>
+        <p>No new notifications for Semester 1</p>
+      </div>
+    </div>
+
+    <div id="sem2" class="notification-list">
+      <div class="empty-state">
+        <i class="fas fa-bell-slash"></i>
+        <p>No new notifications for Semester 2</p>
+      </div>
+    </div>
+
+    <div id="sem3" class="notification-list">
+      <div class="empty-state">
+        <i class="fas fa-bell-slash"></i>
+        <p>No new notifications for Semester 3</p>
+      </div>
+    </div>
+
+    <div id="sem4" class="notification-list">
+      <div class="empty-state">
+        <i class="fas fa-bell-slash"></i>
+        <p>No new notifications for Semester 4</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Notice FAB -->
+  <button class="add-notice-fab" id="addNoticeFab" onclick="openAddNoticeModal()">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <!-- Admin Login Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label>Admin ID</label>
+          <input type="text" id="adminId" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPassword" required autocomplete="current-password">
+        </div>
+        <div class="error-message" id="loginError"></div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Notice Modal -->
+  <div class="admin-modal" id="addNoticeModal">
+    <div class="admin-modal-content">
+      <button class="close-modal" onclick="closeAddNoticeModal()">&times;</button>
+      <h2 id="modalTitle">Add Notification</h2>
+      <div class="modal-type-picker" id="modalTypePicker" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button type="button" class="type-btn active" id="typeNotice" onclick="setModalType('notice')">Notice</button>
+        <button type="button" class="type-btn" id="typeClass" onclick="setModalType('class')">Live Class</button>
+        <button type="button" class="type-btn" id="typeGreeting" onclick="setModalType('greeting')">Greeting</button>
+      </div>
+      <form id="addNoticeForm">
+        <div class="form-group">
+          <label>Select Semester</label>
+          <select id="noticeSem">
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="0">General/Others</option>
+            <option value="all">All Semesters (Push Only)</option>
+          </select>
+        </div>
+
+        <!-- Standard Notice Fields -->
+        <div id="noticeFields">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="noticeTitle" placeholder="e.g. Revised Exam Schedule">
+          </div>
+        </div>
+
+        <!-- Live Class Fields (Hidden by default) -->
+        <div id="classFields" style="display: none;">
+          <div class="form-group">
+            <label>Subject / Class Name</label>
+            <input type="text" id="classSubject" placeholder="e.g. Marketing Management">
+          </div>
+          <div class="form-group" style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label>Class Time</label>
+              <input type="text" id="classTime" placeholder="2:00 PM - 3:00 PM">
+            </div>
+            <div style="flex: 1;">
+              <label>Teacher (Optional)</label>
+              <input type="text" id="classTeacher" placeholder="Dr. Sharma">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Greeting Fields (v104.2) -->
+        <div id="greetingFields" style="display: none;">
+          <div class="form-group">
+            <label>Push Title (Optional)</label>
+            <input type="text" id="greetingTitle" placeholder="e.g. Happy Diwali Students!">
+          </div>
+          <div class="form-group">
+            <label>Greeting Message (Will be sent as push notification)</label>
+            <textarea id="greetingMessage" placeholder="Type your message here..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-group" id="noticeLinkGroup">
+          <label>Link (URL) - Optional, leave empty for "Coming Soon"</label>
+          <input type="url" id="noticeLink" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>Date (DD-MM-YYYY)</label>
+          <input type="text" id="noticeDate" placeholder="17-03-2026" required>
+        </div>
+        <div class="form-group">
+          <label>Description (Optional / Auto-generated)</label>
+          <textarea id="noticeDesc" placeholder="Brief details..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="addNoticeBtn">Add Notification</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- config.js is already loaded with defer in <head>, not needed here -->
+  <script>
+    // Safe JSON parser helper
+    function safeJSONParse(str, fallback = []) {
+      try {
+        const parsed = JSON.parse(str);
+        return parsed !== null && parsed !== undefined ? parsed : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    // v89.0: Persistent Selection Manager (Session-Bound)
+    const storedSelection = safeJSONParse(sessionStorage.getItem('sol_selected_notices'), []);
+    window.selectedNoticeIds = new Set(storedSelection);
+
+    function toggleIndividualSelection(id, isChecked) {
+      if (isChecked) window.selectedNoticeIds.add(id);
+      else window.selectedNoticeIds.delete(id);
+      
+      // Update session storage for persistence
+      sessionStorage.setItem('sol_selected_notices', JSON.stringify(Array.from(window.selectedNoticeIds)));
+      console.log(`[SELECTION] Updated: ${window.selectedNoticeIds.size} items selected`);
+    }
+
+    // v89.0: Request Manager to prevent 429 Too Many Requests
+    const activeRequests = new Set();
+    const lastFetchTime = {};
+    const FETCH_COOLDOWN = 5000; // 5 seconds cooldown (Optimized from 15s)
+
+    // v89.0: Force Refresh Everything (Clears all caches)
+    function forceRefreshContent() {
+      const btn = document.querySelector('.refresh-btn');
+      const icon = btn.querySelector('i');
+      icon.classList.add('fa-spin');
+      btn.style.opacity = '0.5';
+      btn.disabled = true;
+
+      // Clear all possible caches
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Also clear specific keys if someone was using custom names
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('cached_') || key.includes('solcache_'))) {
+          localStorage.removeItem(key);
+        }
+      }
+
+      console.log('🚀 Cache Purge Complete. Reloading...');
+      setTimeout(() => {
+        location.reload(true); // Force reload from server
+      }, 800);
+    }
+
+    /* ========== TOTAL CONSOLE BLACKOUT (v89.0 - Production Only) ========== */
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      const dummy = () => {};
+      console.log = dummy;
+      console.debug = dummy;
+      console.info = dummy;
+      console.warn = dummy;
+      console.error = dummy;
+      console.table = dummy;
+      console.time = dummy;
+      console.timeEnd = dummy;
+
+      /* ========== INSPECTOR BLOCKER DISABLED ========== */
+      /*
+      document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123) { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; }
+      });
+      document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+      */
+    }
+
+    let fetchAllPromise = null;
+    let lastAllFetchTime = 0;
+    const ALL_FETCH_COOLDOWN = 5000; // 5 seconds
+
+    async function fetchNotifications(semester) {
+      const cacheKey = `cached_notices_sem${semester}`;
+      const list = document.getElementById(`sem${semester}`);
+      const cached = safeJSONParse(localStorage.getItem(cacheKey), null);
+
+      const now = Date.now();
+      const needsFetch = (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
+
+      if (cached) {
+        console.log(`[NOTIFICATIONS] Sem ${semester}: Loading from cache...`);
+        renderNotices(cached, semester);
+        if (!needsFetch) {
+          console.log(`[NOTIFICATIONS] Sem ${semester}: Recently updated. Skipping API hit.`);
+          return;
+        }
+      }
+
+      // Only show spinner if we have absolutely no data to show
+      if (!cached && list.children.length === 0) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading notifications...</p></div>';
+      }
+
+      try {
+        if (!fetchAllPromise) {
+          fetchAllPromise = (async () => {
+            console.log('[NOTIFICATIONS] Fetching all notifications in bulk...');
+            // [v116.4] 8s timeout to prevent 3-4min mobile freeze on Render cold start
+            const _fc = new AbortController();
+            const _ft = setTimeout(() => _fc.abort(), 8000);
+            const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all?_t=${Date.now()}`, { signal: _fc.signal });
+            clearTimeout(_ft);
+            if (response.status === 429) {
+              throw new Error('Rate limited (429)');
+            }
+            const result = await response.json();
+            if (!result || !result.success) {
+              throw new Error(result.error || 'Failed to fetch bulk notifications');
+            }
+            return result.data || [];
+          })();
+        }
+
+        const allData = await fetchAllPromise;
+        lastAllFetchTime = Date.now();
+
+        // Group notifications by semester (0, 1, 2, 3, 4)
+        const grouped = { 0: [], 1: [], 2: [], 3: [], 4: [] };
+        allData.forEach(item => {
+          const sem = String(item.semester || '0');
+          if (grouped[sem] !== undefined) {
+            grouped[sem].push(item);
+          } else {
+            grouped[0].push(item);
+          }
+        });
+
+        // Save to cache for all semesters
+        Object.keys(grouped).forEach(sem => {
+          localStorage.setItem(`cached_notices_sem${sem}`, JSON.stringify(grouped[sem]));
+          localStorage.setItem(`cached_notices_sem${sem}_time`, Date.now().toString());
+        });
+
+        // Render current semester
+        renderNotices(grouped[semester] || [], semester);
+
+      } catch (error) {
+        console.error('Fetch bulk notifications error:', error);
+        if (cached && cached.length > 0) {
+          console.log(`[NOTIFICATIONS] 🛡️ Preservation Guard active (API Error): Keeping ${cached.length} cached items.`);
+          renderNotices(cached, semester);
+        } else {
+          renderNotices([], semester);
+        }
+      } finally {
+        fetchAllPromise = null;
+      }
+    }
+
+    function renderNotices(data, semester) {
+      const list = document.getElementById(`sem${semester}`);
+      window.lastFetchedNotices = data; // Store for editing
+
+      const parseNoticeDate = (dateStr, title = '') => {
+        let ds = dateStr;
+        const lowTitle = String(title).toLowerCase();
+
+        if (!ds || ds === 'None' || ds === 'null' || isNaN(new Date(ds).getTime())) {
+          // Detect square-bracket date: [17-04-2026]
+          const titleMatch = String(title).match(/\[(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\]/);
+          if (titleMatch) {
+            ds = titleMatch[1].replace(/\//g, '-');
+          } else if (lowTitle.includes('[live]') || lowTitle.includes('live class')) {
+            // Fallback: If it's a Live Class but no date in title, assume Today
+            return new Date();
+          } else if (!ds || ds === 'None' || ds === 'null') {
+            return new Date(NaN);
+          }
+        }
+
+        if (ds && typeof ds === 'string' && ds.includes('-')) {
+          const parts = ds.split('-');
+          if (parts[0].length === 4) return new Date(ds); // YYYY-MM-DD
+          if (parts.length === 3 && parts[2].length === 4) return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`); // DD-MM-YYYY -> YYYY-MM-DD
+        }
+        return new Date(ds);
+      };
+
+      const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+      const now = new Date();
+      const todayVal = new Date().setHours(0, 0, 0, 0);
+      const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
+
+      function extractTitleParts(title, semester, isLive = false, scheduledAt = null) {
+        if (!title) return { subject: "", date: "", time: "", expiryTime: 0 };
+        let t = String(title).trim();
+        
+        // [v108.3] ISO DATE STRIP: Remove (2026-04-20T...) patterns first
+        t = t.replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '').trim();
+
+        // 1. Extract Date from [DD-MM-YYYY]
+        const dMatch = t.match(/\[(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\]/);
+        const date = dMatch ? dMatch[1] : "";
+        
+        // 2. Extract Time from (19:00 - 21:00) - Handle spaces like (19: 00)
+        const tMatch = t.match(/\((\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}(?:\s*(?:AM|PM))?)\)/i);
+        const time = tMatch ? tMatch[1].replace(/\s*:\s*/g, ':') : ""; // Normalize 19: 00 -> 19:00
+        
+        // 3. SURGICAL STRIP: Remove metadata and reconstruct subject (VISUAL ONLY)
+        let subjectOnly = t
+           .replace(/\[.*?\]/g, '') // Remove [date]
+           .replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '') // Remove time blocks from title
+           .replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '') // Remove single time blocks
+           .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '') // Remove ISO
+           .replace(/MBA\s*SEM\s*\d+:?/gi, '') // Remove MBA SEM prefixes
+           .replace(/\s+/g, ' ')
+           .replace(/^[:\s\-]+/, '')
+           .trim();
+        
+        // [v108.7] CONDITIONAL PREFIX: Only preserve for Live Classes as per user request
+        let displaySubject = subjectOnly;
+        if (isLive && semester && semester !== "0") {
+           displaySubject = `MBA SEM ${semester}: ${subjectOnly}`;
+        }
+        
+        // [v108.9.3] FUNCTIONAL SYNC: Prioritize scheduledAt for time data
+        let finalTime = time;
+        let expiryTime = 0;
+
+        if (isLive && scheduledAt) {
+            const start = new Date(scheduledAt);
+            const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2h
+            const f = (d) => d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+            
+            // If title has no time range but we have scheduledAt, use scheduledAt
+            if (!time) {
+                finalTime = f(start) + " - " + f(end);
+            }
+            expiryTime = end.getTime();
+        }
+
+        return { subject: displaySubject, date: date || (scheduledAt ? new Date(scheduledAt).toLocaleDateString('en-IN') : ""), time: finalTime, expiryTime };
+      }
+
+      const filtered = data.filter(notice => {
+        const dateObj = parseNoticeDate(notice.date, notice.title);
+        const itemTime = dateObj.getTime();
+        
+        // Basic 30-day cleanup
+        if (!isNaN(itemTime) && itemTime < thirtyDaysAgo) return false;
+
+        // v89.1: Hardened Live Detection (Includes [LIVE] prefix and descriptive keywords)
+        const isLive = (notice.description && (notice.description.includes('MBA Live Class') || notice.description.toLowerCase().includes('live class on'))) ||
+          (notice.title && (/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/.test(notice.title) || notice.title.toLowerCase().includes('[live]'))) ||
+          (notice.link && (notice.link.includes('teams.microsoft') || notice.link.includes('vcs.php') || notice.link.includes('zoom.us') || notice.link.includes('meet.google')));
+
+        const t = (notice.title || "").toLowerCase();
+        const isTimetable = t.includes('time table') || t.includes('timetable') || t.includes('pcp class') || t.includes('[timetable]');
+
+        // [v108.9.4] REAL-TIME AUTO-HIDE: Skip if expired based on precision timestamp
+        const { expiryTime } = extractTitleParts(notice.title, notice.semester, isLive, notice.scheduledAt);
+        
+        const nowVal = Date.now();
+        // [v108.9.8] PRECISE TODAY CHECK: Prioritize scheduledAt for today-detection
+        const isToday = (notice.scheduledAt && new Date(notice.scheduledAt).setHours(0,0,0,0) === todayVal) || 
+                       (itemTime && new Date(itemTime).setHours(0,0,0,0) === todayVal);
+
+        // [v108.9.5] PROTECTION: Only hide if "Expired" AND (either not today OR past-time confirmed)
+        if (isLive && expiryTime > 0 && nowVal > expiryTime) {
+           // [v108.9.6] FORCE-VISIBLE TODAY: If it's today, we keep it visible even if expiry calculation looks old,
+           // UNLESS the title explicitly shows a past range (handled by regex)
+           const upcomingTime = String(notice.title).match(/\d{1,2}:\d{2}.*?\d{1,2}:\d{2}/);
+           if (!isToday) {
+              console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Precise expiry at ${new Date(expiryTime).toLocaleTimeString()}`);
+              return false;
+           }
+        }
+
+        if (isLive && !isNaN(itemTime)) {
+          const itemDay = new Date(itemTime).setHours(0, 0, 0, 0);
+          
+          const m = String(notice.title).match(/(?:-|to)\s*(\d{1,2}:\d{2})\s*(AM|PM)?/i);
+          if (m) {
+            let [_, time, period] = m;
+            let [hh, mm] = time.split(':').map(Number);
+            if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
+            if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
+            if (!period && hh >= 1 && hh <= 7) hh += 12;
+ 
+            // Default 2h buffer for classes without range (v89.0 sync)
+            let classEnd = new Date(itemTime + (2 * 60 * 60 * 1000));
+            classEnd.setHours(hh, mm, 0, 0);
+            
+            if (now > classEnd && !isTimetable) {
+              console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Class ended at ${classEnd.toLocaleTimeString()}`);
+              return false;
+            }
+          } else {
+            // No end-time found: ONLY hide if the date has fully passed (not today)
+            if (itemDay < todayVal && !isTimetable) {
+              console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Date ${new Date(itemDay).toLocaleDateString()} has passed.`);
+              return false;
+            }
+          }
+        }
+
+        if (!isAdmin) {
+            console.log(`[DEBUG-KEEP] ${notice.title} (Live=${isLive}, Timetable=${isTimetable})`);
+        }
+        return true;
+      });
+      console.log(`[DEBUG-SUMMARY] Final filtered count: ${filtered.length} items shown to user.`);
+
+      // v83.56: Multi-Bucket Sorting (Today Live -> Regular -> Future Live)
+      const today = new Date().setHours(0, 0, 0, 0);
+      const isLiveCheck = (n) => {
+        const type = (n.category || n.type || '').toLowerCase();
+        const lowDesc = (n.description || '').toLowerCase();
+        const lowTitle = (n.title || '').toLowerCase();
+        
+        const hasClassDesc = lowDesc.includes('mba live class') || lowDesc.includes('live class on') || type === 'live-classes';
+        const hasClassTitle = /\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/.test(lowTitle) || lowTitle.includes('[live]');
+        const hasClassLink = n.link && (n.link.includes('teams.microsoft') || n.link.includes('vcs.php') || n.link.includes('zoom.us') || n.link.includes('meet.google'));
+        
+        return hasClassDesc || hasClassTitle || hasClassLink;
+      };
+
+      const todayLive = [];
+      const futureLive = [];
+      const regularNotices = [];
+
+      filtered.forEach(n => {
+        const dateObj = parseNoticeDate(n.date, n.title);
+        const itemDay = new Date(dateObj).setHours(0, 0, 0, 0);
+        const isLive = isLiveCheck(n);
+
+        if (isLive && !isNaN(itemDay)) {
+          if (itemDay === today) todayLive.push(n);
+          else if (itemDay > today) futureLive.push(n);
+          else regularNotices.push(n);
+        } else {
+          regularNotices.push(n);
+        }
+      });
+
+      // v83.60: Deep Time Sort for Live Classes
+      const getStartTimeVal = (title) => {
+        if (!title) return 0;
+        const m = title.match(/\((\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+        if (!m) return 0;
+        let [_, hh, mm, period] = m;
+        hh = parseInt(hh);
+        mm = parseInt(mm);
+        if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
+        if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
+        // Military time fallback (15:00 -> 3:00 PM)
+        if (!period && hh >= 1 && hh <= 11 && title.toLowerCase().includes('pm')) hh += 12; 
+        return hh * 60 + mm;
+      };
+
+      // 1. Today's Live (Earliest first)
+      todayLive.sort((a, b) => {
+        const dateA = parseNoticeDate(a.date, a.title).getTime();
+        const dateB = parseNoticeDate(b.date, b.title).getTime();
+        if (dateA !== dateB) return dateA - dateB;
+        return getStartTimeVal(a.title) - getStartTimeVal(b.title);
+      });
+      
+      // 2. Regular Notices (Latest first)
+      regularNotices.sort((a, b) => {
+        const dA = parseNoticeDate(a.date, a.title).getTime();
+        const dB = parseNoticeDate(b.date, b.title).getTime();
+        return (isNaN(dB) ? -1 : dB) - (isNaN(dA) ? -1 : dA);
+      });
+      
+      // 3. Future Live (Soonest absolute first)
+      futureLive.sort((a, b) => {
+        const dateA = parseNoticeDate(a.date, a.title).getTime();
+        const dateB = parseNoticeDate(b.date, b.title).getTime();
+        if (dateA !== dateB) return dateA - dateB;
+        return getStartTimeVal(a.title) - getStartTimeVal(b.title);
+      });
+
+      const finalNoticesRaw = todayLive.concat(regularNotices, futureLive);
+      
+      // v89.0: SMART DEDUPLICATION (Keep linked version over pending version)
+      const dedupeMap = new Map();
+      const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\s+/g, ' ').trim();
+      
+      finalNoticesRaw.forEach(n => {
+        const isLive = isLiveCheck(n);
+        if (!isLive) {
+          // Regular notices use a mix of ID or title as key
+          const key = n.title ? `reg_${semester}_${normalize(n.title)}` : (n.id || n._id);
+          dedupeMap.set(key, n);
+          return;
+        }
+
+        // Live Class Key: Semester + Normalized Title + Day
+        const dateObj = parseNoticeDate(n.date, n.title);
+        const dayKey = isNaN(dateObj.getTime()) ? 'no-date' : dateObj.setHours(0,0,0,0);
+        const key = `live_${semester}_${normalize(n.title)}_${dayKey}`;
+        
+        const existing = dedupeMap.get(key);
+        const hasLink = n.link && n.link !== "#pending" && n.link !== "#";
+        
+        // Priority: If new item has a link, or if no item exists for this key yet
+        if (!existing || hasLink) {
+          dedupeMap.set(key, n);
+        }
+      });
+
+      const finalNotices = Array.from(dedupeMap.values());
+      const seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
+
+      if (finalNotices.length > 0) {
+        list.innerHTML = finalNotices.map(notice => {
+          const noticeId = notice.id || notice._id;
+          const noticeLink = (notice.link || '').trim();
+          const isPending = !noticeLink || noticeLink === '#pending' || noticeLink === '#';
+          const isLiveClass = isLiveCheck(notice);
+
+          const isTimetable = String(notice.title).includes('[Timetable]');
+          const btnText = isLiveClass ? 'Join Class <i class="fas fa-video"></i>' :
+            (isTimetable ? 'View Timetable <i class="fas fa-file-pdf"></i>' : 'View Details <i class="fas fa-arrow-right"></i>');
+          const btnClass = isLiveClass ? 'view-btn join-btn' : 'view-btn';
+          const iconClass = isLiveClass ? 'fas fa-video' : (isTimetable ? 'fas fa-file-pdf' : 'fas fa-file-alt');
+          const iconBg = isLiveClass ? 'rgba(40, 199, 111, 0.1)' : 'rgba(0, 113, 227, 0.05)';
+          const iconColor = isLiveClass ? '#28C76F' : '#0071e3';
+
+          // v74.0: Use Link or Normalized Title as a deterministic unique key
+          // This prevents re-badging even if the Mongo ID or Title-Date changes.
+          const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\s+/g, ' ').trim();
+          const itemLink = (notice.link || '').trim();
+          const uniqueKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(notice.title)}`;
+
+          const dateObj = parseNoticeDate(notice.date, notice.title);
+          const hasValidDate = !isNaN(dateObj.getTime());
+
+          // v72.9: Mark individual ID as seen when clicked
+          const clickHandler = `markAsRead('${uniqueKey}')`;
+          
+          let displayTime = notice.class_time || '';
+          if (!displayTime) {
+            const info = extractTitleParts(notice.title, notice.semester, isLiveClass, notice.scheduledAt);
+            displayTime = info.time || notice.class_time;
+          }
+          const info = extractTitleParts(notice.title, notice.semester, isLiveClass);
+          
+          const displaySubject = info.subject;
+          const displayDate = info.date || notice.date;
+
+          const dateHtml = (displayDate && displayDate !== 'None') ? `<span class="no-select-meta"><b class="no-select-meta">Date:</b> ${displayDate}</span>` : '';
+          const timeHtml = displayTime ? `<span class="no-select-meta"><b class="no-select-meta">Schedule:</b> ${displayTime}</span>` : '';
+          
+          const linkHtml = isPending 
+            ? `<button class="view-btn pending" disabled><i class="fas fa-clock"></i> Coming Soon...</button>`
+            : `<a href="${notice.link}" target="_blank" class="${btnClass}" onclick="${clickHandler}">${btnText}</a>`;
+          const isNew = hasValidDate && (Date.now() - dateObj.getTime() < 24 * 60 * 60 * 1000) && !seenIds.includes(uniqueKey);
+          const newBadge = isNew ? `<span class="new-badge">NEW</span>` : '';
+
+          // [v111.9] SURGICAL SELECTION HARDENING: Prevent Touch-to-Search on prefix labels
+          let formattedSubject = displaySubject;
+          if (displaySubject.includes(':')) {
+             const parts = displaySubject.split(':');
+             formattedSubject = `<span class="no-select-meta" translate="no">${parts[0]}:</span>${parts.slice(1).join(':')}`;
+          }
+
+          return `
+            <div class="notification-card ${isLiveClass ? 'live-class' : ''}" id="notice-${uniqueKey}" onclick="${clickHandler}">
+              <div class="icon-box" style="background: ${iconBg}; color: ${iconColor};">
+                <i class="${iconClass}"></i>
+                ${newBadge}
+              </div>
+              <div class="content-box">
+                ${isLiveClass ? `<div class="live-indicator"><span class="pulse-dot"></span> LIVE CLASS</div>` : ''}
+                <h3 class="subject-text" translate="no">${formattedSubject}</h3>
+                ${!isLiveClass ? `<p>${notice.description || 'New MBA notification found.'}</p>` : ''}
+                <div class="meta-box" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
+                  <div style="display: flex; flex-direction: column; gap: 2px; color: #64748b; font-size: 13.5px;">
+                    ${dateHtml}
+                    ${timeHtml}
+                  </div>
+                  <div style="margin-top: 8px; width: 100%;">
+                    ${linkHtml}
+                  </div>
+                </div>
+                <div class="admin-only admin-action-bar" style="display:none;">
+                  <label class="notice-select-label" onclick="event.stopPropagation();">
+                    <input type="checkbox" class="notice-checkbox" value="${noticeId}" data-semester="${semester}" 
+                      ${window.selectedNoticeIds && window.selectedNoticeIds.has(noticeId) ? 'checked' : ''}
+                      onchange="toggleIndividualSelection('${noticeId}', this.checked)">
+                    Select
+                  </label>
+                  <div style="display: flex; gap: 12px;">
+                    <button class="admin-btn edit-notice-btn" onclick="event.stopPropagation(); editNotice('${noticeId}', ${semester})">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="admin-btn delete-notice-btn" onclick="event.stopPropagation(); deleteNotice('${noticeId}', ${semester})">
+                      <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+        updateAuthUI();
+
+        // v104.8: IMMEDIATELY mark as seen for Home Page badge sync
+        finalNotices.forEach(notice => {
+          const itemLink = (notice.link || '').trim();
+          const uKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(notice.title)}`;
+          
+          let seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
+          if (!seenIds.includes(uKey)) {
+            seenIds.push(uKey);
+            if (seenIds.length > 200) seenIds.shift();
+            localStorage.setItem('seen_sol_notifications', JSON.stringify(seenIds));
+          }
+        });
+
+        // Keep the 2s timeout JUST for the visual "NEW" badge removal on this page
+        setTimeout(() => {
+          const badges = document.querySelectorAll('.new-badge');
+          badges.forEach(b => b.classList.add('fade-out'));
+          setTimeout(() => badges.forEach(b => b.remove()), 500);
+        }, 2000);
+      } else {
+        list.innerHTML = `<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No new notifications found.</p></div>`;
+      }
+    }
+
+    function showTab(sem) {
+      currentSemester = sem;
+      // v88.9.1: Persist for push notification segmentation
+      localStorage.setItem('solmates_active_semester', sem);
+      
+      // v89.1: Persistent choice logic (prioritize manual, then active, then sync)
+      const manual = localStorage.getItem('sol_subscribed_sems');
+      if (!manual && window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
+          const lastSubscribed = localStorage.getItem('solmates_push_subscribed_sem');
+          if (lastSubscribed !== String(sem)) {
+              console.log(`[PUSH] Syncing preferences for Sem ${sem}...`);
+              window.solmatesAPI.subscribeToPush([sem])
+                  .then(() => {
+                      localStorage.setItem('solmates_push_subscribed_sem', String(sem));
+                  })
+                  .catch(e => console.warn('Sync failed', e));
+          }
+      }
+      // Update Tab Buttons (Robust matching based on onclick value)
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('onclick') === `showTab(${sem})`) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      // Update Lists
+      document.querySelectorAll('.notification-list').forEach((list) => {
+        if (list.id === `sem${sem}`) {
+          list.classList.add('active');
+          fetchNotifications(sem);
+        }
+        else list.classList.remove('active');
+      });
+    }
+
+    // Initial load
+    window.addEventListener('DOMContentLoaded', async () => {
+      // [v88.9] AUTO-TAB SELECTION (Deep Link Support)
+      const params = new URLSearchParams(window.location.search);
+      const urlSem = params.get('semester');
+      let initialSem = 1;
+      
+      if (urlSem !== null && ['0','1','2','3','4'].includes(urlSem)) {
+        initialSem = parseInt(urlSem);
+      }
+      
+      showTab(initialSem);
+
+      // v88.9.1: Ensure push is aware of the current view immediately
+      localStorage.setItem('solmates_active_semester', initialSem);
+      
+      // Mark as read when viewing this page
+      localStorage.setItem('last_read_notifications', Date.now());
+
+      requestAnimationFrame(() => {
+        checkAdminStatus();
+        initRealtime();
+      });
+    });
+
+    let currentSemester = 1;
+
+    function markAsRead(id, removeFromUI = true) {
+      if (!id) return;
+      let seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
+      if (!seenIds.includes(id)) {
+        seenIds.push(id);
+        // Limit to 200 IDs to avoid bloat
+        if (seenIds.length > 200) seenIds.shift();
+        localStorage.setItem('seen_sol_notifications', JSON.stringify(seenIds));
+
+        // Immediately remove the badge from UI if requested
+        if (removeFromUI) {
+          const badge = document.querySelector(`#notice-${CSS.escape(id)} .new-badge`);
+          if (badge) badge.remove();
+        }
+      }
+    }
+
+    // ========== REAL-TIME UPDATES (Socket.io) ==========
+    function initRealtime() {
+      if (typeof io === 'undefined') { const s=document.createElement('script'); s.src='https://cdn.socket.io/4.7.5/socket.io.min.js'; s.onload=initRealtime; document.body.appendChild(s); return; }
+
+      try {
+        const base = window.getSocketBaseURL ? window.getSocketBaseURL() : (window.PRODUCTION_API_URL || 'http://localhost:3000/api').replace(/\/api$/, '');
+        const socket = io(base, {
+          transports: ['polling', 'websocket'],
+          reconnection: true,
+          reconnectionAttempts: Infinity,
+          reconnectionDelay: 1000
+        });
+
+        // Listen for bulk sync or single item updates
+        socket.on('sol:updated', (data) => {
+          console.log('[REALTIME] SOL Update detected:', data);
+          if (data.category === 'notifications' || data.category === 'live-classes') {
+            // Refresh if current tab matches
+            if (String(data.semester) === String(currentSemester)) {
+              console.log(`[REALTIME] Refreshing notices for Sem ${currentSemester}...`);
+              
+              // v83.55: SMART TOAST NOTIFICATION
+              // Capture existing IDs to detect what is actually "New" after refresh
+              const prevIds = new Set(Array.from(document.querySelectorAll('.notification-card')).map(el => el.id.replace('notice-', '')));
+              
+              fetchNotifications(currentSemester).then(() => {
+                  // After rendering, check for items that have .new-badge and weren't in prevIds
+                  setTimeout(() => {
+                      const cards = document.querySelectorAll(`.notification-list#sem${currentSemester} .notification-card`);
+                      cards.forEach(card => {
+                          const id = card.id.replace('notice-', '');
+                          const badge = card.querySelector('.new-badge');
+                          if (badge && !prevIds.has(id)) {
+                              const title = card.querySelector('h3').textContent;
+                              const isLive = card.classList.contains('live-class');
+                              showSundarToast(title, isLive ? 'Live Class' : 'New Update', isLive);
+                          }
+                      });
+                  }, 500); // Wait for list to render
+              });
+            }
+          }
+        });
+
+        socket.on('content:updated', (data) => {
+          if (data.type === 'notifications' || data.type === 'classes') {
+            fetchNotifications(currentSemester);
+          }
+        });
+
+        socket.on('connect', () => console.log('[REALTIME] Connected to status stream'));
+
+      } catch (e) {
+        console.warn('Socket.io init failed:', e);
+      }
+
+      // Polling fallback: refresh every 1 minute
+      setInterval(() => { fetchNotifications(currentSemester); }, 60000);
+    }
+
+    // ========== SUNDAR TOAST SYSTEM ==========
+    function showSundarToast(title, subtitle, isLive = false) {
+      // 1. Create or Find Toast Container
+      let container = document.getElementById('solmatesToast');
+      if (!container) {
+          container = document.createElement('div');
+          container.id = 'solmatesToast';
+          document.body.appendChild(container);
+      }
+
+      // 2. Create Toast Card
+      const toast = document.createElement('div');
+      toast.className = `toast-card ${isLive ? 'live-toast' : ''}`;
+      
+      const icon = isLive ? 'fa-video' : 'fa-bell';
+      const btnText = isLive ? 'Join Now' : 'View';
+      
+      toast.innerHTML = `
+        <i class="fas fa-times toast-close" onclick="this.parentElement.remove()"></i>
+        <div class="toast-icon"><i class="fas ${icon}"></i></div>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-subtitle">${subtitle}</div>
+          <button class="toast-btn" onclick="scrollToTopNotice()">${btnText}</button>
+        </div>
+      `;
+
+      // 3. Add to Container
+      container.appendChild(toast);
+
+      // 4. Auto Remove after 6 seconds
+      setTimeout(() => {
+          toast.classList.add('removing');
+          setTimeout(() => toast.remove(), 500);
+      }, 6000);
+    }
+
+    function scrollToTopNotice() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Close all toasts
+        const toasts = document.querySelectorAll('.toast-card');
+        toasts.forEach(t => t.remove());
+    }
+
+    // ========== ADMIN LOGIC ==========
+    async function checkAdminStatus() {
+      const isLoggedIn = solmatesAPI.isAdminLoggedIn();
+
+      if (isLoggedIn) {
+        try {
+          const verification = await solmatesAPI.verifyAdminToken();
+
+          if (verification.valid || verification.networkError) {
+            // Token valid OR backend temporarily unreachable
+            localStorage.setItem('solmates_admin_logged_in', 'true');
+          } else {
+            // Server explicitly said token invalid
+            localStorage.removeItem('solmates_admin_token');
+            localStorage.removeItem('solmates_admin_logged_in');
+          }
+        } catch (error) {
+          // Network error - keep status (user is still logged in)
+          console.warn('Auth verification skipped due to network error');
+        }
+      } else {
+        localStorage.removeItem('solmates_admin_logged_in');
+      }
+
+      updateAuthUI();
+    }
+    function updateAuthUI() {
+      const isLoggedIn = localStorage.getItem('solmates_admin_logged_in') === 'true';
+      
+      const loginBtn = document.getElementById('adminLoginBtn');
+      const logoutBtn = document.getElementById('adminLogoutBtn');
+      const addFab = document.getElementById('addNoticeFab');
+      const bulkActions = document.getElementById('admin-bulk-actions');
+
+      if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'block';
+      if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
+      if (addFab) addFab.style.display = isLoggedIn ? 'flex' : 'none';
+      if (bulkActions) bulkActions.style.display = isLoggedIn ? 'block' : 'none';
+
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.style.display = isLoggedIn ? 'block' : (el.classList.contains('flex') ? 'flex' : 'block');
+        // Actually the above is a bit messy, let's just toggle visibility
+        if (isLoggedIn) {
+          el.style.setProperty('display', (el.tagName === 'BUTTON' || el.tagName === 'DIV' && !el.classList.contains('flex')) ? 'block' : 'flex', 'important');
+        } else {
+          el.style.setProperty('display', 'none', 'important');
+        }
+      });
+    }
+
+    let currentModalType = 'notice';
+
+    function setModalType(type) {
+      currentModalType = type;
+      const noticeBtn = document.getElementById('typeNotice');
+      const classBtn = document.getElementById('typeClass');
+      const greetingBtn = document.getElementById('typeGreeting');
+      
+      const noticeFields = document.getElementById('noticeFields');
+      const classFields = document.getElementById('classFields');
+      const greetingFields = document.getElementById('greetingFields');
+      const linkGroup = document.getElementById('noticeLinkGroup');
+      const dateGroup = document.getElementById('noticeDate').parentElement;
+      const descGroup = document.getElementById('noticeDesc').parentElement;
+      
+      const submitBtn = document.getElementById('addNoticeBtn');
+      const titleInput = document.getElementById('noticeTitle');
+
+      // Reset actives
+      [noticeBtn, classBtn, greetingBtn].forEach(b => b.classList.remove('active'));
+      if (document.getElementById(`type${type.charAt(0).toUpperCase() + type.slice(1)}`)) {
+          document.getElementById(`type${type.charAt(0).toUpperCase() + type.slice(1)}`).classList.add('active');
+      }
+
+      // Toggle Fields
+      noticeFields.style.display = (type === 'notice') ? 'block' : 'none';
+      classFields.style.display = (type === 'class') ? 'block' : 'none';
+      greetingFields.style.display = (type === 'greeting') ? 'block' : 'none';
+      
+      // Secondary fields (Hidden for Greetings)
+      if (type === 'greeting') {
+          if (linkGroup) linkGroup.style.display = 'none';
+          if (dateGroup) dateGroup.style.display = 'none';
+          if (descGroup) descGroup.style.display = 'none';
+          submitBtn.textContent = 'Send Broadcast';
+          if (titleInput) titleInput.required = false;
+      } else {
+          if (linkGroup) linkGroup.style.display = 'block';
+          if (dateGroup) dateGroup.style.display = 'block';
+          if (descGroup) descGroup.style.display = 'block';
+          submitBtn.textContent = (type === 'notice') ? 'Add Notification' : 'Add Live Class';
+          if (titleInput) titleInput.required = (type === 'notice');
+      }
+    }
+
+    function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
+
+    // ========== ADMIN LONG PRESS LOGIC (10 SECONDS) ==========
+    let adminLongPressTimer;
+    // v85.4: Logo acts as the hidden trigger since header buttons are removed
+    const adminLoginBtnElement = document.querySelector('.nav-left'); 
+
+    if (adminLoginBtnElement) {
+      const startLongPress = (e) => {
+        // Check if admin is NOT already logged in
+        if (localStorage.getItem('solmates_admin_logged_in') !== 'true') {
+          adminLongPressTimer = setTimeout(() => {
+            openAdminModal();
+          }, 10000); // 10 seconds
+        }
+      };
+
+      const endLongPress = () => {
+        clearTimeout(adminLongPressTimer);
+      };
+
+      adminLoginBtnElement.addEventListener('mousedown', startLongPress);
+      adminLoginBtnElement.addEventListener('touchstart', startLongPress);
+      adminLoginBtnElement.addEventListener('mouseup', endLongPress);
+      adminLoginBtnElement.addEventListener('mouseleave', endLongPress);
+      adminLoginBtnElement.addEventListener('touchend', endLongPress);
+    }
+    function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+    function openAddNoticeModal() {
+      editingNoticeId = null;
+      document.getElementById('modalTitle').textContent = 'Add Notification';
+      document.getElementById('modalTypePicker').style.display = 'flex';
+      document.getElementById('addNoticeForm').reset();
+
+      document.getElementById('addNoticeModal').style.display = 'flex';
+      setModalType('notice');
+      // Set default date
+      const today = new Date();
+      const formatted = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+      document.getElementById('noticeDate').value = formatted;
+    }
+    function closeAddNoticeModal() { document.getElementById('addNoticeModal').style.display = 'none'; }
+
+    let editingNoticeId = null;
+    let currentSemesterData = []; // To hold current tab data for editing
+
+    async function editNotice(id, semester) {
+      editingNoticeId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Notification';
+
+      // Find notice in current list
+      const list = document.getElementById(`sem${semester}`);
+      // Since we don't have a global notifications array easily accessible, we'll fetch from server or find in DOM
+      // Better: find in the global state if we had one. Let's just fetch once more or parse from DOM.
+      // Actually, let's just make fetchNotifications store the last result.
+      const notice = lastFetchedNotices.find(n => n.id === id || n._id === id);
+
+      if (!notice) return alert('Bhai, notice nahi mila!');
+
+      const isLiveClass = (notice.description && notice.description.includes('MBA Live Class'));
+      setModalType(isLiveClass ? 'class' : 'notice');
+      document.getElementById('modalTypePicker').style.display = 'none'; // Lock type during edit
+
+      document.getElementById('noticeSem').value = semester;
+      document.getElementById('noticeLink').value = notice.link || '';
+      document.getElementById('noticeDate').value = notice.date || '';
+      document.getElementById('noticeDesc').value = notice.description || '';
+
+      if (isLiveClass) {
+        // Try to parse components from title/desc
+        // Title format: [17-03-2026] MBA Sem 1: Marketing Management (2:00 PM - 3:00 PM)
+        const titleMatch = notice.title.match(/:\s*(.*?)\s*\((.*?)\)/);
+        if (titleMatch) {
+          document.getElementById('classSubject').value = titleMatch[1];
+          document.getElementById('classTime').value = titleMatch[2];
+        }
+      } else {
+        document.getElementById('noticeTitle').value = notice.title;
+      }
+
+      document.getElementById('addNoticeModal').style.display = 'flex';
+      document.getElementById('addNoticeBtn').textContent = 'Update Notification';
+    }
+
+    // ========== MAGIC FILL LOGIC ==========
+    let sourceNoticeData = null;
+
+    async function magicFill(id, semester) {
+      const notice = lastFetchedNotices.find(n => n.id === id || n._id === id);
+      if (!notice) return alert('Bhai, notice nahi mila!');
+
+      openAddNoticeModal();
+      setModalType('class');
+
+      // Store source for sync
+      sourceNoticeData = { id, semester };
+
+      // Scraper aware parsing
+      const title = notice.title;
+      const desc = notice.description || '';
+
+      // Extracts Subject and Time
+      // Format: [17-03-2026] MBA Sem 1: Marketing Management (2:00 PM - 3:00 PM)
+      let subject = '';
+      let time = '';
+
+      const titleMatch = title.match(/:\s*(.*?)\s*\((.*?)\)/);
+      if (titleMatch) {
+        subject = titleMatch[1].trim();
+        time = titleMatch[2].trim();
+      } else {
+        // Fallback: Use everything after colon
+        const parts = title.split(':');
+        if (parts.length > 1) {
+          const subParts = parts[parts.length - 1].split('(');
+          subject = subParts[0].trim();
+          if (subParts.length > 1) time = subParts[1].replace(')', '').trim();
+        } else {
+          subject = title;
+        }
+      }
+
+      // Populate Modal
+      document.getElementById('noticeSem').value = semester;
+      document.getElementById('classSubject').value = subject;
+      document.getElementById('classTime').value = time;
+      document.getElementById('noticeLink').value = (notice.link && notice.link !== '#pending') ? notice.link : '';
+      document.getElementById('noticeDate').value = notice.date || '';
+
+      // Try to extract teacher from description
+      const teacherMatch = desc.match(/Teacher:\s*(.*)/);
+      if (teacherMatch) {
+        document.getElementById('classTeacher').value = teacherMatch[1].trim();
+      }
+
+      alert('Bhai, magic fill complete! Ek baar details check kar lo.');
+    }
+
+    async function logoutAdmin() {
+      if (confirm('Bhai, pakka logout karna hai?')) {
+        try {
+          await solmatesAPI.adminLogout();
+        } catch (err) {
+          console.error('Logout error:', err);
+        } finally {
+          localStorage.removeItem('solmates_admin_logged_in');
+          localStorage.removeItem('solmates_admin_token');
+          updateAuthUI();
+          location.reload();
+        }
+      }
+    }
+
+    // Login + Notice Form Handlers wrapped in DOMContentLoaded so modal HTML is ready
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // Login Form Handler
+      const loginForm = document.getElementById('adminLoginForm');
+      if (loginForm) loginForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const adminId = document.getElementById('adminId').value;
+        const pass = document.getElementById('adminPassword').value;
+        const errorEl = document.getElementById('loginError');
+
+        try {
+          const res = await solmatesAPI.adminLogin(adminId, pass);
+          if (res.success) {
+            localStorage.setItem('solmates_admin_logged_in', 'true');
+            closeAdminModal();
+            updateAuthUI();
+            location.reload();
+          }
+        } catch (err) {
+          errorEl.textContent = 'Invalid ID or Password';
+          errorEl.style.display = 'block';
+        }
+      };
+
+      // Add Notice Handler
+      const noticeForm = document.getElementById('addNoticeForm');
+      if (noticeForm) noticeForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('addNoticeBtn');
+      const sem = document.getElementById('noticeSem').value;
+      
+      const rawLink = document.getElementById('noticeLink').value;
+      const link = rawLink.trim() || '#pending';
+      const date = document.getElementById('noticeDate').value;
+      
+      let title, description;
+
+      // [v104.2] GREETING BROADCAST LOGIC
+      if (currentModalType === 'greeting') {
+        const gTitle = document.getElementById('greetingTitle').value.trim();
+        const gMsg = document.getElementById('greetingMessage').value.trim();
+        if (!gMsg) return alert('Bhai, message toh likho!');
+
+        submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Broadcasting...';
+
+        try {
+          const result = await solmatesAPI.broadcastGreeting(gTitle, gMsg, sem);
+          if (result.success) {
+            alert(result.message || 'Broadcast success!');
+            closeAddNoticeModal();
+          } else {
+            alert('Failed: ' + (result.error || 'Server error'));
+          }
+        } catch (err) {
+          alert('Error: ' + err.message);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+        return;
+      }
+
+      if (currentModalType === 'notice') {
+        title = document.getElementById('noticeTitle').value;
+        description = document.getElementById('noticeDesc').value;
+      } else {
+        // LIVE CLASS AUTO-FORMATTING
+        const subject = document.getElementById('classSubject').value;
+        const time = document.getElementById('classTime').value;
+        const teacher = document.getElementById('classTeacher').value;
+
+        title = `[${date}] MBA Sem ${sem}: ${subject} (${time})`;
+
+        // Determine prefix (Today/Tomorrow)
+        const [d, m, y] = date.split('-');
+        const itemDateStr = `${y}-${m}-${d}`;
+        const itemDate = new Date(itemDateStr).setHours(0, 0, 0, 0);
+        const today = new Date().setHours(0, 0, 0, 0);
+        const tomorrow = today + (24 * 60 * 60 * 1000);
+
+        let prefix = "[UPCOMING]";
+        if (itemDate === today) prefix = "[TODAY]";
+        else if (itemDate === tomorrow) prefix = "[TOMORROW]";
+
+        description = `${prefix} MBA Live Class: ${subject}. Time: ${time}. ${teacher ? 'Teacher: ' + teacher : ''}`;
+
+        // If they provided manual description, append it
+        const manualDesc = document.getElementById('noticeDesc').value;
+        if (manualDesc) description += " | " + manualDesc;
+      }
+
+      const payload = { title, link, date, description };
+
+      submitBtn.disabled = true;
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = editingNoticeId ? 'Updating...' : 'Adding...';
+
+      try {
+        let res;
+        if (editingNoticeId) {
+          console.log(`[ADMIN] Updating item ${editingNoticeId} in Sem ${sem}:`, payload);
+          res = await solmatesAPI.updateSOLItem('notifications', sem, editingNoticeId, payload);
+        } else {
+          console.log(`[ADMIN] Adding ${currentModalType} to Sem ${sem}:`, payload);
+          res = await solmatesAPI.addSOLItem('notifications', sem, payload);
+        }
+
+        if (res.success) {
+          // Backend handles push automatically now
+          localStorage.removeItem(`cached_notices_sem${sem}`);
+          alert(`${currentModalType === 'notice' ? 'Notification' : 'Live Class'} added successfully!`);
+          closeAddNoticeModal();
+          location.reload();
+        } else {
+          alert('Failed to add: ' + (res.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('[ADMIN] Error:', err);
+        alert('Error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    }); // end addNoticeForm
+
+    }); // end DOMContentLoaded form handlers
+
+    // Delete Notice Handler
+    async function deleteNotice(id, semester) {
+      if (!confirm('Bhai, pakka delete karna hai?')) return;
+      try {
+        const res = await solmatesAPI.deleteSOLItem('notifications', semester, id);
+        if (res.success) {
+          // v74.7: Clear local cache for this semester to ensure the deleted item vanishes
+          localStorage.removeItem(`cached_notices_sem${semester}`);
+          alert('Notification deleted!');
+          location.reload();
+        }
+      } catch (err) {
+        alert('Error deleting: ' + err.message);
+      }
+    }
+
+  // v83.14: Bulk Selection with Persistence
+    function toggleSelectAllSemNotices() {
+      const activeList = document.querySelector('.notification-list.active');
+      if (!activeList) return;
+      const checkboxes = activeList.querySelectorAll('.notice-checkbox');
+      if (checkboxes.length === 0) return;
+      
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      const newState = !allChecked;
+
+      checkboxes.forEach(cb => {
+        cb.checked = newState;
+        const noticeId = cb.value;
+        if (newState) window.selectedNoticeIds.add(noticeId);
+        else window.selectedNoticeIds.delete(noticeId);
+      });
+      // v83.23.1: Sync bulk toggle to session storage
+      sessionStorage.setItem('sol_selected_notices', JSON.stringify(Array.from(window.selectedNoticeIds)));
+      console.log(`[SELECTION] Bulk Toggle: ${newState ? 'Selected' : 'Deselected'} all. Total: ${window.selectedNoticeIds.size}`);
+    }
+
+
+    async function deleteSelectedSemNotices() {
+      if (window.selectedNoticeIds.size === 0) return alert('Pehle notices select karein!');
+      
+      const total = window.selectedNoticeIds.size;
+      if (!confirm(`Kya aap sach mein ${total} items delete karna chahte hain? Ye permanent hoga.`)) return;
+      
+      const btn = document.querySelector('#admin-bulk-actions .delete-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing...`;
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      let successCount = 0;
+      const idsToDelete = Array.from(window.selectedNoticeIds);
+
+      for (const noticeId of idsToDelete) {
+        try {
+          const checkbox = document.querySelector(`.notice-checkbox[value="${noticeId}"]`);
+          const semester = checkbox ? checkbox.getAttribute('data-semester') : window.currentSemester;
+          
+          const res = await solmatesAPI.deleteSOLItem('notifications', parseInt(semester), noticeId);
+          if (res && res.success !== false) {
+             successCount++;
+             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${successCount}/${total} Deleted`;
+             window.selectedNoticeIds.delete(noticeId);
+          }
+        } catch (e) {
+          console.error(`[Bulk Delete Failed] ID: ${noticeId}`, e);
+        }
+      }
+      
+      btn.innerHTML = `<i class="fas fa-check"></i> All Deleted!`;
+      
+      // v83.23.1: Clear selection from session storage after deletion
+      sessionStorage.setItem('sol_selected_notices', JSON.stringify(Array.from(window.selectedNoticeIds)));
+      
+      const semMatches = document.querySelector('.tab-btn.active').getAttribute('onclick').match(/\d+/);
+      const sem = semMatches ? parseInt(semMatches[0]) : window.currentSemester;
+      localStorage.removeItem(`cached_notices_sem${sem}`);
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        
+        // Force fetch from server
+        activeRequests.delete(sem);
+        lastFetchTime[sem] = 0;
+        showTab(sem);
+      }, 2000);
+    }
+
+    /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
+    function updateNotifyUI() {
+      const btn = document.getElementById('notifyToggleBtn');
+      if (!btn) return;
+
+      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') {
+        btn.style.display = 'none';
+        return;
+      }
+
+      const perm = Notification.permission;
+      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
+      const text = btn.querySelector('span');
+      const icon = btn.querySelector('i');
+
+      if (perm === 'granted' && localEnabled) {
+        btn.className = 'notify-status-btn granted';
+        if (text) text.innerText = 'Deny Notifications';
+        icon.className = 'fas fa-bell';
+        closeRepairGuide();
+      } else if (perm === 'denied') {
+        btn.className = 'notify-status-btn denied';
+        if (text) text.innerText = 'Notifications Blocked';
+        icon.className = 'fas fa-bell-slash';
+      } else {
+        btn.className = 'notify-status-btn';
+        if (text) text.innerText = 'Allow Notifications';
+        icon.className = 'fas fa-bell';
+        checkSoftPromptAvailability();
+      }
+    }
+
+    function checkSoftPromptAvailability() {
+      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
+      const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
+      const now = Date.now();
+      if (Notification.permission === 'default' && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
+        setTimeout(() => {
+          const banner = document.getElementById('soft-prompt-banner');
+          if (banner) banner.classList.add('active');
+        }, 3000);
+      }
+    }
+
+    function dismissSoftPrompt() {
+      localStorage.setItem('sol_soft_prompt_dismissed', Date.now().toString());
+      const banner = document.getElementById('soft-prompt-banner');
+      if (banner) banner.classList.remove('active');
+    }
+
+    async function acceptSoftPrompt() {
+      dismissSoftPrompt();
+      handleNotifyToggle();
+    }
+
+    function showRepairGuide() {
+      const overlay = document.getElementById('repair-guide-overlay');
+      const stepsContainer = document.getElementById('repair-steps-container');
+      const subtitle = document.getElementById('repair-subtitle');
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const isAPK = typeof window.isMedianApp === 'function' && window.isMedianApp();
+      
+      if (isAPK) {
+        subtitle.innerText = "SOLMATES App (APK) mein notifications setup sahi nahi hai. Ise sahi karne ke liye:";
+        stepsContainer.innerHTML = `
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>System Settings</b><span>Niche diye gaye button par click karke direct settings kholien.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Allow All</b><span>'Notifications' mein jaakar saare toggles (Show notifications, Pop on screen) ON kar dein.</span></div></div>
+          <button onclick="window.openNativeSettings()" style="margin-top:15px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
+        `;
+      } else if (isStandalone) {
+        subtitle.innerText = "Ye App (Home Screen) par band hain. Ise chalu karne ke liye:";
+        stepsContainer.innerHTML = `
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>SOLMATES App Icon</b><span>Phone ki home screen par SOLMATES icon ko long-press karein.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>App Info</b><span>"App Info" (i icon) mein jayein.</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Enable Notifications</b><span>"Notifications" mein jaakar saare toggles ON kar dein.</span></div></div>`;
+      } else {
+        subtitle.innerText = "Chrome settings mein notifications band hain. Ise chalu karne ke liye:";
+        stepsContainer.innerHTML = `
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Settings Circle</b><span>Address bar mein 'Lock' ya 'Settings' icon par click karein.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications/Site Settings' par jayein.</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow</b><span>Wahan toggle ON kar dein aur page reload karein.</span></div></div>`;
+      }
+      overlay.classList.add('active');
+    }
+
+    function closeRepairGuide() {
+      const overlay = document.getElementById('repair-guide-overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    async function handleNotifyToggle() {
+      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
+      const perm = Notification.permission;
+      if (perm === 'denied') { showRepairGuide(); return; }
+      const btn = document.getElementById('notifyToggleBtn');
+      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
+      
+      if (perm === 'granted' && localEnabled) {
+        if (confirm("Stop receiving notifications on this device?")) {
+           try {
+             if (window.solmatesAPI && window.solmatesAPI.unsubscribeFromPush) {
+               await window.solmatesAPI.unsubscribeFromPush();
+             } else {
+               const registration = await navigator.serviceWorker.ready;
+               const sub = await registration.pushManager.getSubscription();
+               if (sub) await sub.unsubscribe();
+             }
+             localStorage.setItem('sol_notif_enabled', 'false');
+             updateNotifyUI();
+           } catch (e) { updateNotifyUI(); }
+        }
+      } else {
+        // [v88.6] First request permission if not already granted
+        if (perm !== 'granted') {
+          if (!confirm("Receive instant alerts for live classes and MBA notifications on this device?")) return;
+          const status = await Notification.requestPermission();
+          if (status !== 'granted') { updateNotifyUI(); return; }
+        }
+        
+        // Always open modal to allow changing semesters even if already granted
+        openSemSelectionModal();
+      }
+    }
+
+    // ========== SEMESTER SELECTION LOGIC (v88.7) ==========
+    function openSemSelectionModal() {
+      const modal = document.getElementById('semSelectionModal');
+      modal.style.display = 'flex';
+      
+      // Load current selection from localStorage
+      const saved = localStorage.getItem('sol_subscribed_sems');
+      const sems = saved ? JSON.parse(saved) : ['all'];
+      
+      const checks = document.querySelectorAll('.sem-sub-check');
+      const allCheck = document.getElementById('sem_all');
+      
+      allCheck.checked = sems.includes('all');
+      checks.forEach(c => {
+        c.checked = sems.includes('all') || sems.includes(c.value);
+        c.disabled = allCheck.checked;
+      });
+    }
+
+    function closeSemSelectionModal() {
+      document.getElementById('semSelectionModal').style.display = 'none';
+    }
+
+    function toggleAllSemCheckboxes(checked) {
+      const checks = document.querySelectorAll('.sem-sub-check');
+      checks.forEach(c => {
+        c.checked = checked;
+        c.disabled = checked;
+      });
+    }
+
+    async function confirmSemSelection() {
+      const btn = document.getElementById('confirmSemSubBtn');
+      const allCheck = document.getElementById('sem_all');
+      const checks = document.querySelectorAll('.sem-sub-check');
+      
+      let uiSelected = [];
+      let pushSelected = [];
+      
+      if (allCheck.checked) {
+        uiSelected = ['all'];
+        pushSelected = ['all', '0', '1', '2', '3', '4'];
+      } else {
+        uiSelected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+        pushSelected = [...uiSelected];
+        // Ensure users always receive global and general announcements
+        if (!pushSelected.includes('0')) pushSelected.push('0');
+        if (!pushSelected.includes('all')) pushSelected.push('all');
+      }
+
+      if (uiSelected.length === 0) {
+        alert('Please select at least one semester!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Subscribing...';
+
+      try {
+        await window.solmatesAPI.subscribeToPush(pushSelected);
+        
+        // [v104.5] App Bridge Sync
+        if (typeof window.syncNativePushTags === 'function') {
+           window.syncNativePushTags(pushSelected);
+        }
+
+        localStorage.setItem('sol_notif_enabled', 'true');
+        localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
+        closeSemSelectionModal();
+        updateNotifyUI();
+        alert('Notification settings updated successfully! 🚀');
+      } catch (err) {
+        console.error('Subscription error:', err);
+        alert('Subscription failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Confirm Subscription';
+      }
+    }
+
+    window.addEventListener('focus', updateNotifyUI);
+
+    async function initPushUI() {
+      updateNotifyUI(); 
+      if (window.isWebView && window.isWebView()) {
+        console.log('[PUSH] WebView detected. Skipping browser push registration; using native bridge.');
+        return;
+      }
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+      try {
+        const swUrl = './sw.js?v=113.3';
+        const registration = await navigator.serviceWorker.register(swUrl);
+        
+        // [v116.4] refreshed flag + pageOpenTime guard — prevents infinite reload loop
+        const _pageOpenTime = Date.now();
+        let _swRefreshed = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (_swRefreshed) return;
+          _swRefreshed = true;
+          if (Date.now() - _pageOpenTime > 30000) {
+            window.location.reload();
+          }
+        });
+
+        await navigator.serviceWorker.ready;
+        
+        // Auto-heal push subscriptions
+        if (localStorage.getItem('sol_notif_enabled') === 'true') {
+           if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
+              let semArr = ['all'];
+              try { semArr = JSON.parse(localStorage.getItem('sol_subscribed_sems')) || ['all']; } catch(e){}
+              window.solmatesAPI.subscribeToPush(semArr).catch(e => console.warn('Auto-heal failed', e));
+           }
+        }
+
+        if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) updateNotifyUI();
+      } catch (err) { }
+    }
+
+    document.addEventListener('DOMContentLoaded', initPushUI);
+  </script>
+
+  <!-- ========== ADMIN UI COMPONENTS (RESTORED) ========== -->
+  <button id="addNoticeFab" class="add-notice-fab" onclick="openAddNoticeModal()" style="display:none;">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <div id="admin-bulk-actions" style="display:none; position:fixed; bottom:0; left:0; width:100%; background:white; padding:15px; box-shadow:0 -10px 25px rgba(0,0,0,0.1); z-index:900; border-top:1px solid #eee;">
+    <div style="max-width:850px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:14px; font-weight:600;"><i class="fas fa-check-square"></i> Bulk Selection Active</span>
+      <div style="display:flex; gap:10px;">
+        <button class="edit-notice-btn" onclick="toggleSelectAllSemNotices()">Toggle All</button>
+        <button class="delete-notice-btn delete-btn" onclick="deleteSelectedSemNotices()">Delete Selected</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="adminModal" class="admin-modal">
+    <div class="admin-modal-content">
+      <button class="toast-close" onclick="closeAdminModal()"><i class="fas fa-times"></i></button>
+      <h2 style="margin-bottom:20px; font-weight:800; color:#0f2b46;">Admin Login</h2>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label>Admin ID</label>
+          <input type="text" id="adminId" required style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPassword" required style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+        </div>
+        <p id="loginError" style="color:red; font-size:13px; display:none; margin-bottom:15px;"></p>
+        <button type="submit" style="width:100%; background:#0f2b46; color:white; padding:12px; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Notification Modal -->
+  <div id="addNoticeModal" class="admin-modal">
+    <div class="admin-modal-content" style="max-width:500px;">
+      <button class="toast-close" onclick="closeAddNoticeModal()"><i class="fas fa-times"></i></button>
+      <h2 id="modalTitle" style="margin-bottom:20px;">Add Notification</h2>
+      
+      <div id="modalTypePicker" style="display:flex; background:#f5f5f7; padding:5px; border-radius:12px; margin-bottom:20px;">
+        <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:1;">Notification</button>
+        <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:1;">Live Class</button>
+      </div>
+
+      <form id="addNoticeForm">
+        <div class="form-group">
+          <label>Semester</label>
+          <select id="noticeSem" required style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="0">General/Other</option>
+          </select>
+        </div>
+
+        <div id="noticeFields">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="noticeTitle" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+          </div>
+        </div>
+
+        <div id="classFields" style="display:none;">
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" id="classSubject" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+          </div>
+          <div class="form-group">
+            <label>Time (e.g. 2:00 PM - 3:00 PM)</label>
+            <input type="text" id="classTime" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+          </div>
+          <div class="form-group">
+            <label>Teacher Name (Optional)</label>
+            <input type="text" id="classTeacher" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Attachment Link (Optional)</label>
+          <input type="text" id="noticeLink" placeholder="Leave empty for #pending" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+        </div>
+        <div class="form-group">
+          <label>Date (DD-MM-YYYY)</label>
+          <input type="text" id="noticeDate" required style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;">
+        </div>
+        <div class="form-group">
+          <label>Description (Optional for Classes)</label>
+          <textarea id="noticeDesc" rows="3" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;"></textarea>
+        </div>
+
+        <button type="submit" id="addNoticeBtn" style="width:100%; background:#0f2b46; color:white; padding:12px; border:none; border-radius:12px; font-weight:700;">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Soft Prompt & Repair UI -->
+  <div id="soft-prompt-banner" class="soft-prompt-banner">
+    <div class="soft-prompt-header">
+      <div class="soft-prompt-icon"><i class="fas fa-bell"></i></div>
+      <div class="soft-prompt-text">
+        <h4>Stay Updated!</h4>
+        <p>Get instant alerts for live classes and MBA notifications.</p>
+      </div>
+    </div>
+    <div class="soft-prompt-actions">
+      <button class="soft-btn later" onclick="dismissSoftPrompt()">Later</button>
+      <button class="soft-btn allow" onclick="acceptSoftPrompt()">Notify Me</button>
+    </div>
+  </div>
+
+  <div id="repair-guide-overlay" class="repair-guide-overlay">
+    <div class="repair-content">
+      <div class="repair-icon"><i class="fas fa-bell-slash"></i></div>
+      <h2 class="repair-title">Notifications Blocked</h2>
+      <p id="repair-subtitle" class="repair-subtitle">Settings mein notifications band hain.</p>
+      <div id="repair-steps-container"></div>
+      <button class="repair-close-btn" onclick="closeRepairGuide()">Got it</button>
+    </div>
+  </div>
+
+  <!-- Semester Selection Modal (v88.7) -->
+  <div id="semSelectionModal" class="admin-modal">
+    <div class="admin-modal-content" style="max-width: 420px; text-align: center; border-radius: 24px; padding: 32px;">
+      <button class="toast-close" onclick="closeSemSelectionModal()"><i class="fas fa-times"></i></button>
+      <div style="width: 60px; height: 60px; background: rgba(15, 43, 70, 0.05); color: #0f2b46; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 20px;">
+        <i class="fas fa-sliders-h"></i>
+      </div>
+      <h2 style="margin-bottom: 8px; font-weight: 800; color: #0f2b46;">Choose Semesters</h2>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">Select the semesters you want to receive instant alerts for.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; text-align: left;">
+        <label style="display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 14px 18px; border-radius: 14px; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s;">
+          <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: #0f2b46;">
+          <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: #0f2b46;">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
+        </label>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="1"> <span>Sem 1</span></label>
+          <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="2"> <span>Sem 2</span></label>
+          <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="3"> <span>Sem 3</span></label>
+          <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="4"> <span>Sem 4</span></label>
+        </div>
+      </div>
+
+      <button id="confirmSemSubBtn" onclick="confirmSemSelection()" style="width: 100%; background: #0f2b46; color: white; padding: 14px; border: none; border-radius: 16px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 8px 20px rgba(15, 43, 70, 0.2); transition: all 0.3s;">
+        Confirm Subscription
+      </button>
+
+      <style>
+        .sem-check-label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: #fff;
+          padding: 12px 16px;
+          border-radius: 12px;
+          cursor: pointer;
+          border: 1px solid #e2e8f0;
+          font-weight: 600;
+          font-size: 14px;
+          color: #4a5568;
+          transition: all 0.2s;
+        }
+        .sem-check-label:has(input:checked) {
+          border-color: #0f2b46;
+          background: rgba(15, 43, 70, 0.02);
+          color: #0f2b46;
+        }
+        .sem-check-label input { width: 16px; height: 16px; accent-color: #0f2b46; cursor: pointer; }
+      </style>
+    </div>
+  </div>
+</body>
+</html>

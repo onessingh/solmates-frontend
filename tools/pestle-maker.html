@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PESTLE Analysis Maker | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      
+      --p: #2563eb; --p-bg: #eff6ff; --p-border: #bfdbfe; /* Political - Blue */
+      --e: #16a34a; --e-bg: #f0fdf4; --e-border: #bbf7d0; /* Economic - Green */
+      --s: #d97706; --s-bg: #fffbeb; --s-border: #fde68a; /* Social - Orange */
+      --t: #9333ea; --t-bg: #faf5ff; --t-border: #e9d5ff; /* Tech - Purple */
+      --l: #dc2626; --l-bg: #fff1f2; --l-border: #fecdd3; /* Legal - Red */
+      --en: #0d9488; --en-bg: #f0fdfa; --en-border: #99f6e4; /* Env - Teal */
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; min-height: 100vh; }
+
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .back-link:hover { background: #1a3c5e; }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    .hero { text-align: center; margin-bottom: 26px; }
+    .hero-icon { width: 62px; height: 62px; background: linear-gradient(135deg, #1e3a5f, #0d9488); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 8px 24px rgba(13,148,136,0.25); }
+    .hero-icon i { font-size: 1.8rem; color: white; }
+    .hero h1 { font-size: 1.8rem; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; }
+    @media (max-width: 500px) { .hero h1 { font-size: 1.45rem; } }
+
+    .meta-card { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 22px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-bottom: 20px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .meta-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 200px; }
+    .meta-group label { font-size: 0.83rem; font-weight: 600; color: var(--primary); }
+    .meta-input { padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border); font-size: 0.95rem; font-family: inherit; outline: none; background: #fafafa; color: var(--text); transition: all 0.2s; }
+    .meta-input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+
+    /* PESTLE Grid */
+    .swot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 800px) { .swot-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .swot-grid { grid-template-columns: 1fr; } }
+
+    .swot-quad { border-radius: 20px; border: 2px solid; padding: 18px; min-height: 280px; display: flex; flex-direction: column; gap: 12px; transition: all 0.2s; }
+    .swot-quad:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .q-p { background: var(--p-bg); border-color: var(--p-border); }
+    .q-e { background: var(--e-bg); border-color: var(--e-border); }
+    .q-s { background: var(--s-bg); border-color: var(--s-border); }
+    .q-t { background: var(--t-bg); border-color: var(--t-border); }
+    .q-l { background: var(--l-bg); border-color: var(--l-border); }
+    .q-en { background: var(--en-bg); border-color: var(--en-border); }
+
+    .quad-header { display: flex; align-items: center; gap: 10px; }
+    .quad-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: white; flex-shrink: 0; }
+    .q-p .quad-icon { background: var(--p); }
+    .q-e .quad-icon { background: var(--e); }
+    .q-s .quad-icon { background: var(--s); }
+    .q-t .quad-icon { background: var(--t); }
+    .q-l .quad-icon { background: var(--l); }
+    .q-en .quad-icon { background: var(--en); }
+
+    .quad-title { font-size: 0.95rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+    .q-p .quad-title { color: var(--p); }
+    .q-e .quad-title { color: var(--e); }
+    .q-s .quad-title { color: var(--s); }
+    .q-t .quad-title { color: var(--t); }
+    .q-l .quad-title { color: var(--l); }
+    .q-en .quad-title { color: var(--en); }
+    .quad-sub { font-size: 0.7rem; color: var(--light); font-weight: 500; }
+
+    .points-list { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .point-item { display: flex; align-items: flex-start; gap: 8px; background: white; border-radius: 10px; padding: 8px 10px; border: 1px solid rgba(0,0,0,0.06); animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: translateY(0); } }
+    .point-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .q-p .point-dot { background: var(--p); }
+    .q-e .point-dot { background: var(--e); }
+    .q-s .point-dot { background: var(--s); }
+    .q-t .point-dot { background: var(--t); }
+    .q-l .point-dot { background: var(--l); }
+    .q-en .point-dot { background: var(--en); }
+    
+    .point-text { font-size: 0.85rem; line-height: 1.4; color: var(--text); flex: 1; outline: none; min-width: 0; word-break: break-word; }
+    .point-text[contenteditable="true"]:focus { color: var(--primary); }
+    .del-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 0.7rem; padding: 2px; flex-shrink: 0; transition: color 0.15s; line-height: 1; margin-top: 2px; }
+    .del-btn:hover { color: #ff3b30; }
+
+    .add-row { display: flex; gap: 8px; margin-top: 4px; }
+    .add-input { flex: 1; padding: 8px 10px; border-radius: 10px; border: 1.5px dashed #ccc; font-size: 0.85rem; font-family: inherit; outline: none; background: rgba(255,255,255,0.7); transition: all 0.2s; min-width: 0;}
+    .add-input:focus { border-style: solid; background: #fff; }
+    .q-p .add-input:focus { border-color: var(--p); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .q-e .add-input:focus { border-color: var(--e); box-shadow: 0 0 0 3px rgba(22,163,74,0.1); }
+    .q-s .add-input:focus { border-color: var(--s); box-shadow: 0 0 0 3px rgba(217,119,6,0.1); }
+    .q-t .add-input:focus { border-color: var(--t); box-shadow: 0 0 0 3px rgba(147,51,234,0.1); }
+    .q-l .add-input:focus { border-color: var(--l); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+    .q-en .add-input:focus { border-color: var(--en); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+    
+    .add-btn { padding: 8px 12px; border-radius: 10px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; flex-shrink: 0; }
+    .q-p .add-btn { background: var(--p); }
+    .q-e .add-btn { background: var(--e); }
+    .q-s .add-btn { background: var(--s); }
+    .q-t .add-btn { background: var(--t); }
+    .q-l .add-btn { background: var(--l); }
+    .q-en .add-btn { background: var(--en); }
+    .add-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* Action bar */
+    .action-bar { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+    .btn-action { padding: 13px 24px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-print { background: linear-gradient(135deg, var(--primary), #1a3c5e); color: white; box-shadow: 0 6px 18px rgba(15,43,70,0.25); }
+    .btn-print:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15,43,70,0.3); }
+    .btn-clear { background: var(--card); color: var(--light); border: 1.5px solid var(--border); }
+    .btn-clear:hover { border-color: #ff3b30; color: #ff3b30; }
+    .btn-save { background: linear-gradient(135deg, #16a34a, #15803d); color: white; box-shadow: 0 6px 18px rgba(22,163,74,0.2); }
+    .btn-save:hover { transform: translateY(-2px); }
+
+    /* Print styles */
+    @media print {
+      body { background: white; padding-top: 0; }
+      .top-nav, .action-bar, .add-row, .del-btn, .meta-card { display: none !important; }
+      .container { padding: 0; max-width: 100%; }
+      .hero { margin-bottom: 16px; }
+      .hero-icon { display: none; }
+      .print-header { display: block !important; }
+      .swot-grid { gap: 10px; grid-template-columns: repeat(2, 1fr); }
+      .swot-quad { min-height: 160px; break-inside: avoid; padding: 12px; border-width: 1px; }
+    }
+    .print-header { display: none; text-align: center; margin-bottom: 12px; }
+    .print-header h2 { font-size: 1.3rem; color: var(--primary); }
+    .print-header p { font-size: 0.85rem; color: var(--light); }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-globe"></i> PESTLE Analysis Maker</h1>
+    </div>
+
+
+
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-globe-americas"></i></div>
+    
+  </div>
+
+  <!-- Meta -->
+  <div class="meta-card">
+    <div class="meta-group">
+      <label>Business / Subject Name</label>
+      <input class="meta-input" type="text" id="bizName" placeholder="e.g. Electric Vehicle Industry" oninput="autoSave()">
+    </div>
+    <div class="meta-group">
+      <label>Analyst / Team</label>
+      <input class="meta-input" type="text" id="analystName" placeholder="e.g. Section B" oninput="autoSave()">
+    </div>
+    <div class="meta-group" style="max-width:160px;">
+      <label>Date</label>
+      <input class="meta-input" type="date" id="analDate" oninput="autoSave()">
+    </div>
+  </div>
+
+  <!-- Print header (only visible on print) -->
+  <div class="print-header" id="printHeader">
+    <h2 id="phBiz"></h2>
+    <p id="phMeta"></p>
+  </div>
+
+  <!-- PESTLE Grid -->
+  <div class="swot-grid">
+
+    <!-- POLITICAL -->
+    <div class="swot-quad q-p">
+      <div class="quad-header">
+        <div class="quad-icon"><i class="fas fa-landmark"></i></div>
+        <div>
+          <div class="quad-title">Political</div>
+          <div class="quad-sub">Govt Policy, Stability, Taxes</div>
+        </div>
+      </div>
+      <div class="points-list" id="list-p"></div>
+      <div class="add-row">
+        <input class="add-input" id="inp-p" placeholder="Add factor..." onkeydown="if(event.key==='Enter') addPoint('p')">
+        <button class="add-btn" onclick="addPoint('p')"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+
+    <!-- ECONOMIC -->
+    <div class="swot-quad q-e">
+      <div class="quad-header">
+        <div class="quad-icon"><i class="fas fa-chart-line"></i></div>
+        <div>
+          <div class="quad-title">Economic</div>
+          <div class="quad-sub">Growth, Inflation, Exchange</div>
+        </div>
+      </div>
+      <div class="points-list" id="list-e"></div>
+      <div class="add-row">
+        <input class="add-input" id="inp-e" placeholder="Add factor..." onkeydown="if(event.key==='Enter') addPoint('e')">
+        <button class="add-btn" onclick="addPoint('e')"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div class="swot-quad q-s">
+      <div class="quad-header">
+        <div class="quad-icon"><i class="fas fa-users"></i></div>
+        <div>
+          <div class="quad-title">Social</div>
+          <div class="quad-sub">Demographics, Culture, Trends</div>
+        </div>
+      </div>
+      <div class="points-list" id="list-s"></div>
+      <div class="add-row">
+        <input class="add-input" id="inp-s" placeholder="Add factor..." onkeydown="if(event.key==='Enter') addPoint('s')">
+        <button class="add-btn" onclick="addPoint('s')"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+
+    <!-- TECHNOLOGICAL -->
+    <div class="swot-quad q-t">
+      <div class="quad-header">
+        <div class="quad-icon"><i class="fas fa-microchip"></i></div>
+        <div>
+          <div class="quad-title">Technological</div>
+          <div class="quad-sub">Innovation, R&D, Automation</div>
+        </div>
+      </div>
+      <div class="points-list" id="list-t"></div>
+      <div class="add-row">
+        <input class="add-input" id="inp-t" placeholder="Add factor..." onkeydown="if(event.key==='Enter') addPoint('t')">
+        <button class="add-btn" onclick="addPoint('t')"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+    
+    <!-- LEGAL -->
+    <div class="swot-quad q-l">
+      <div class="quad-header">
+        <div class="quad-icon"><i class="fas fa-balance-scale"></i></div>
+        <div>
+          <div class="quad-title">Legal</div>
+          <div class="quad-sub">Labor Laws, Safety, Consumer</div>
+        </div>
+      </div>
+      <div class="points-list" id="list-l"></div>
+      <div class="add-row">
+        <input class="add-input" id="inp-l" placeholder="Add factor..." onkeydown="if(event.key==='Enter') addPoint('l')">
+        <button class="add-btn" onclick="addPoint('l')"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+    
+    <!-- ENVIRONMENTAL -->
+    <div class="swot-quad q-en">
+      <div class="quad-header">
+        <div class="quad-icon"><i class="fas fa-leaf"></i></div>
+        <div>
+          <div class="quad-title">Environmental</div>
+          <div class="quad-sub">Climate, Carbon, Sustainability</div>
+        </div>
+      </div>
+      <div class="points-list" id="list-en"></div>
+      <div class="add-row">
+        <input class="add-input" id="inp-en" placeholder="Add factor..." onkeydown="if(event.key==='Enter') addPoint('en')">
+        <button class="add-btn" onclick="addPoint('en')"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="action-bar">
+    <button class="btn-action btn-save" onclick="saveData()"><i class="fas fa-save"></i> Save Progress</button>
+    <button class="btn-action btn-print" onclick="printSWOT()"><i class="fas fa-print"></i> Print / Save PDF</button>
+    <button class="btn-action btn-clear" onclick="clearAll()"><i class="fas fa-trash"></i> Clear All</button>
+  </div>
+</div>
+
+<script>
+  const QUADS = ['p','e','s','t','l','en'];
+  let data = {
+    biz: '', analyst: '', date: '',
+    p: [], e: [], s: [], t: [], l: [], en: []
+  };
+
+  // Load saved
+  function load() {
+    const saved = localStorage.getItem('sol_pestle');
+    if (saved) {
+      try { data = JSON.parse(saved); } catch(e) {}
+    }
+    // Set today's date if empty
+    if (!data.date) data.date = new Date().toISOString().split('T')[0];
+
+    document.getElementById('bizName').value = data.biz || '';
+    document.getElementById('analystName').value = data.analyst || '';
+    document.getElementById('analDate').value = data.date || '';
+
+    QUADS.forEach(q => {
+      const list = document.getElementById('list-' + q);
+      list.innerHTML = '';
+      (data[q] || []).forEach((text, i) => renderPoint(q, text, i));
+    });
+  }
+
+  function renderPoint(q, text, idx) {
+    const list = document.getElementById('list-' + q);
+    const div = document.createElement('div');
+    div.className = 'point-item';
+    div.innerHTML = `
+      <div class="point-dot"></div>
+      <div class="point-text" contenteditable="true" onblur="editPoint('${q}', ${idx}, this.innerText)">${text}</div>
+      <button class="del-btn" onclick="deletePoint('${q}', ${idx})"><i class="fas fa-times"></i></button>
+    `;
+    list.appendChild(div);
+  }
+
+  function addPoint(q) {
+    const inp = document.getElementById('inp-' + q);
+    const text = inp.value.trim();
+    if (!text) return;
+    if (!data[q]) data[q] = [];
+    data[q].push(text);
+    inp.value = '';
+    const idx = data[q].length - 1;
+    renderPoint(q, text, idx);
+    autoSave();
+  }
+
+  function deletePoint(q, idx) {
+    data[q].splice(idx, 1);
+    // Re-render all points in this quad
+    const list = document.getElementById('list-' + q);
+    list.innerHTML = '';
+    data[q].forEach((text, i) => renderPoint(q, text, i));
+    autoSave();
+  }
+
+  function editPoint(q, idx, newText) {
+    if (data[q] && data[q][idx] !== undefined) {
+      data[q][idx] = newText.trim();
+      autoSave();
+    }
+  }
+
+  function autoSave() {
+    data.biz = document.getElementById('bizName').value;
+    data.analyst = document.getElementById('analystName').value;
+    data.date = document.getElementById('analDate').value;
+    localStorage.setItem('sol_pestle', JSON.stringify(data));
+  }
+
+  function saveData() {
+    autoSave();
+    const btn = document.querySelector('.btn-save');
+    btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+    setTimeout(() => btn.innerHTML = '<i class="fas fa-save"></i> Save Progress', 2000);
+  }
+
+  function printSWOT() {
+    autoSave();
+    // Populate print header
+    const biz = data.biz || 'PESTLE Analysis';
+    const analyst = data.analyst || '';
+    const date = data.date ? new Date(data.date).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) : '';
+    document.getElementById('phBiz').textContent = biz;
+    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' · ');
+    window.print();
+  }
+
+  function clearAll() {
+    if (!confirm('Clear all data? This cannot be undone.')) return;
+    data = { biz:'', analyst:'', date: new Date().toISOString().split('T')[0], p:[], e:[], s:[], t:[], l:[], en:[] };
+    localStorage.removeItem('sol_pestle');
+    load();
+  }
+
+  load();
+</script>
+</body>
+</html>

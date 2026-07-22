@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salary Insights — SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1c1f;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #0071e3;
+      font-weight: 500;
+    }
+
+    .page-content {
+      padding: 92px 24px 48px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 15px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .salary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .salary-box {
+      background: #f9f9fb;
+      padding: 20px;
+      text-align: center;
+      border-radius: 15px;
+      border-top: 5px solid #0071e3;
+    }
+
+    .salary-box h4 {
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    .salary-box .amt {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f2b46;
+    }
+
+    @media(max-width: 600px) {
+      .salary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-list {
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    .info-list li {
+      margin-bottom: 8px;
+    }
+
+    .market-trend {
+      background: #e8f4fd;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <header class="top-nav" style="justify-content: center;">
+    <span class="nav-logo" style="cursor: default;">Salary Insights</span>
+  </header>
+
+  <div class="page-content">
+    <div class="container">
+      <div id="setupStep" class="card">
+        <h1><i class="fas fa-dollar-sign"></i> Salary Insights</h1>
+        <p>Get AI-powered real-time compensation estimates and market trends.</p>
+
+        <label>Target Role / Job Title</label>
+        <input type="text" id="targetRole" placeholder="e.g. Data Scientist, UX Designer">
+
+        <label>Location</label>
+        <input type="text" id="locationInp" placeholder="e.g. Remote, San Francisco, Bangalore">
+
+        <button class="btn-primary" id="startBtn">Get Insights</button>
+      </div>
+
+      <div id="loadingStep" class="card hidden" style="text-align: center;">
+        <h3>Fetching Market Data via AI...</h3>
+      </div>
+
+      <div id="resultStep" class="card hidden">
+        <h1 style="text-align: center; margin-bottom: 5px;" id="resRole"></h1>
+        <p style="text-align: center; color: #666; margin-bottom: 25px;"><i class="fas fa-map-marker-alt"></i> <span
+            id="resLoc"></span></p>
+
+        <h3>Salary Estimates</h3>
+        <div class="salary-grid">
+          <div class="salary-box">
+            <h4>Entry Level</h4>
+            <div class="amt" id="sEntry"></div>
+          </div>
+          <div class="salary-box">
+            <h4>Mid Level</h4>
+            <div class="amt" id="sMid"></div>
+          </div>
+          <div class="salary-box">
+            <h4>Senior Level</h4>
+            <div class="amt" id="sSenior"></div>
+          </div>
+        </div>
+
+        <h3>Top Paying Industries</h3>
+        <ul class="info-list" id="industriesList"></ul>
+
+        <h3>Skills That Boost Pay</h3>
+        <ul class="info-list" id="skillsList"></ul>
+
+        <div class="market-trend">
+          <b><i class="fas fa-chart-line"></i> Market Trend:</b> <br>
+          <span id="marketTrendTxt"></span>
+        </div>
+
+        <button class="btn-primary" onclick="location.reload()">Check Another Role</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startBtn').onclick = async () => {
+        const role = document.getElementById('targetRole').value;
+        const loc = document.getElementById('locationInp').value;
+
+        if (!role) return alert("Please enter a role");
+
+        document.getElementById('setupStep').classList.add('hidden');
+        document.getElementById('loadingStep').classList.remove('hidden');
+
+        try {
+          const res = await window.solmatesAPI.generateAIToolData('salary-insights', { role: role, location: loc });
+          if (!res.success) throw new Error();
+
+          const { role: rName, location, salaryRanges, topPayingIndustries, skillsThatBoostPay, marketTrend } = res.data;
+
+          document.getElementById('resRole').textContent = rName;
+          document.getElementById('resLoc').textContent = location;
+
+          document.getElementById('sEntry').textContent = salaryRanges.entryLevel;
+          document.getElementById('sMid').textContent = salaryRanges.midLevel;
+          document.getElementById('sSenior').textContent = salaryRanges.seniorLevel;
+
+          document.getElementById('industriesList').innerHTML = topPayingIndustries.map(i => `<li>${i}</li>`).join('');
+          document.getElementById('skillsList').innerHTML = skillsThatBoostPay.map(s => `<li>${s}</li>`).join('');
+          document.getElementById('marketTrendTxt').textContent = marketTrend;
+
+          document.getElementById('loadingStep').classList.add('hidden');
+          document.getElementById('resultStep').classList.remove('hidden');
+        } catch (e) {
+          alert("Error generating API data"); location.reload();
+        }
+      };
+    });
+  </script>
+</body>
+
+</html>

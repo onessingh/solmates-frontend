@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Website Builder | SOLMATES</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- JSZip for exporting website -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- Cropper.js for photo crop -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <!-- PDF.js and Mammoth for Resume Parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <!-- Load the 10 templates -->
+  <script src="/tools/portfolio-builder/templates.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --primary-light: #1a3c5e;
+      --accent: #0071e3;
+      --bg: #f9fafb;
+      --surface: #ffffff;
+      --text: #334155;
+      --border: #e2e8f0;
+      --shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .header-bar {
+      background: var(--surface);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .form-column {
+      flex: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .preview-column {
+      flex: 1;
+      width: 100%;
+    }
+    
+    @media (min-width: 1024px) {
+      .container {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .form-column {
+        flex: 0 0 50%;
+        max-width: 600px;
+        margin: 0;
+      }
+      .preview-column {
+        flex: 1;
+        position: sticky;
+        top: 100px;
+        margin-top: 0 !important;
+      }
+    }
+    
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: #475569; }
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+    .form-control:focus { outline: none; border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+    textarea.form-control { resize: vertical; min-height: 100px; }
+    
+    /* Repeater Fields */
+    .repeater-item {
+      background: #f1f5f9;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      position: relative;
+      border: 1px dashed #cbd5e1;
+    }
+    .btn-remove {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #fee2e2;
+      color: #ef4444;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-remove:hover { background: #fca5a5; }
+    .btn-add {
+      background: #e0f2fe;
+      color: var(--accent);
+      border: 1px dashed #bae6fd;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .btn-add:hover { background: #bae6fd; }
+
+    /* Templates Section */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .theme-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .theme-card {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fff;
+    }
+    .theme-card:hover { border-color: #94a3b8; }
+    .theme-card.active { border-color: var(--accent); background: rgba(0,113,227,0.03); box-shadow: 0 4px 12px rgba(0,113,227,0.15); transform: translateY(-3px); }
+    .theme-icon { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+    .theme-name { font-weight: 700; font-size: 1rem; color: var(--primary); }
+
+    .color-presets { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
+    .color-swatch { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .color-swatch.active { border-color: #334155; transform: scale(1.15); }
+
+    /* Preview Section */
+    #preview-section {
+      text-align: center;
+      margin-top: 50px;
+    }
+    
+    .iframe-wrapper {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin: 0 auto 30px;
+      border: 1px solid var(--border);
+      height: 600px;
+    }
+    #preview-frame {
+      width: 100%;
+      border: none;
+      background: #fff;
+    }
+
+    /* Device Visibility Logic */
+    @media (max-width: 768px) {
+      .header-bar h1 { font-size: 1.2rem; }
+      .iframe-wrapper {
+        width: 100%; /* Full width on phones for phone preview */
+        height: 600px;
+      }
+      #preview-frame { height: 100%; }
+    }
+    @media (min-width: 1024px) {
+      .iframe-wrapper {
+        width: 100%; /* Laptop view */
+        height: calc(100vh - 220px);
+        min-height: 500px;
+        max-height: 900px;
+      }
+      #preview-frame { height: 100%; }
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, var(--accent), #005bb5);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 20px rgba(0,113,227,0.3);
+    }
+    .export-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,113,227,0.4); }
+
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>Portfolio Website Builder</h1>
+  </div>
+
+  <div class="container">
+    <div class="form-column">
+    
+
+    <!-- 1. Personal Details -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-user-circle"></i> 1. Personal Details</div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="name" class="form-control" placeholder="E.g. Shivarn Singh" oninput="updatePreviewDebounced()">
+      </div>
+      <div class="form-group">
+        <label>Professional Title</label>
+        <input type="text" id="title" class="form-control" placeholder="E.g. Full Stack Developer" oninput="updatePreviewDebounced()">
+      </div>
+      <div class="form-group">
+        <label>Profile Photo (Optional)</label>
+        <label for="photoUpload" id="upload-label" style="display: block; padding: 25px; border: 2px dashed var(--accent); border-radius: 12px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.3s; color: #475569; font-weight: 600; margin-top: 5px;">
+          <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i><br>
+          <span id="upload-text">Click to browse or drag photo here</span>
+        </label>
+        <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)" style="display: none;">
+      </div>
+      <div class="form-group">
+        <label>About Me (Bio)</label>
+        <textarea id="about" class="form-control" placeholder="Write a short bio about yourself..." oninput="updatePreviewDebounced()"></textarea>
+      </div>
+    </div>
+
+    <!-- 2. Contact & Social -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-link"></i> 2. Contact & Social</div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" class="form-control" placeholder="hello@example.com" oninput="updatePreviewDebounced()">
+      </div>
+      <div class="form-group">
+        <label>LinkedIn URL</label>
+        <input type="url" id="linkedin" class="form-control" placeholder="https://linkedin.com/in/" oninput="updatePreviewDebounced()">
+      </div>
+      <div class="form-group">
+        <label>GitHub URL</label>
+        <input type="url" id="github" class="form-control" placeholder="https://github.com/" oninput="updatePreviewDebounced()">
+      </div>
+    </div>
+
+    <!-- 3. Skills -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-bolt"></i> 3. Top Skills</div>
+      <div class="form-group">
+        <label>Enter skills separated by commas</label>
+        <input type="text" id="skills" class="form-control" placeholder="JavaScript, React, UI/UX" oninput="updatePreviewDebounced()">
+      </div>
+    </div>
+
+    <!-- 4. Experience -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-briefcase"></i> 4. Experience</div>
+      <div id="experience-list"></div>
+      <button class="btn-add" onclick="addExperience()"><i class="fas fa-plus"></i> Add Another Experience</button>
+    </div>
+
+    <!-- 5. Projects -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-code"></i> 5. Projects</div>
+      <div id="project-list"></div>
+      <button class="btn-add" onclick="addProject()"><i class="fas fa-plus"></i> Add Another Project</button>
+    </div>
+
+    <div style="text-align: center; margin: 20px 0; font-weight: bold; color: #475569; font-size: 1.2rem;">OR</div>
+
+    <div class="card" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); border-color: #7dd3fc;">
+      <div class="card-title" style="margin-bottom: 10px; border-bottom: none;"><i class="fas fa-file-upload"></i> Auto-Fill with Resume</div>
+      <p style="font-size: 0.9rem; color: #0f2b46; margin-bottom: 15px;">Upload your PDF or DOCX resume to auto-fill the above details. (Note: Extraction might not be 100% perfect, please review after uploading.)</p>
+      <input type="file" id="resumeUpload" accept=".pdf,.docx" style="display:none;" onchange="handleResumeUpload(event)">
+      <label for="resumeUpload" style="display:block; padding: 15px; background: var(--accent); color: white; text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s;">
+        <i class="fas fa-upload"></i> Upload Resume
+      </label>
+      <div id="resume-loading" style="display:none; text-align:center; margin-top:10px; font-weight:bold; color:var(--primary);">Extracting Data...</div>
+    </div>
+
+    <!-- 6. Templates & Design -->
+    <div class="card">
+      <div class="card-title" onclick="toggleAccordion('design-accordion')" style="cursor: pointer; justify-content: space-between; border-bottom: none; margin-bottom: 0;">
+        <span><i class="fas fa-paint-brush"></i> 6. Choose Theme & Colors</span>
+        <i class="fas fa-chevron-down" id="design-accordion-icon"></i>
+      </div>
+      
+      <div id="design-accordion" style="display: none; padding-top: 20px; border-top: 2px solid var(--border); margin-top: 15px;">
+        <div class="theme-grid" id="theme-grid">
+          <!-- Rendered by JS -->
+        </div>
+        <button onclick="openTemplateModal()" style="width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 10px;"><i class="fas fa-th"></i> View All 100+ Templates</button>
+
+        <div class="card-title" style="margin-top: 30px; margin-bottom: 15px; border-bottom: none; font-size: 1.1rem; padding-bottom: 0;">
+          <i class="fas fa-palette"></i> 7. Accent Color
+        </div>
+        <div class="color-presets" id="color-presets">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+    </div> <!-- END form-column -->
+
+    <!-- 8. Preview & Export -->
+    <div id="preview-section" class="preview-column">
+      <div class="card-title" style="justify-content: center; font-size: 1.8rem;"><i class="fas fa-eye"></i> Live Preview</div>
+      <p style="color: #64748b; margin-bottom: 25px;">This is exactly how your website will look. Scroll inside the box to view the full page.</p>
+      
+      <div class="iframe-wrapper">
+        <iframe id="preview-frame" sandbox="allow-same-origin allow-scripts"></iframe>
+      </div>
+
+      <button class="export-btn" onclick="exportWebsite()"><i class="fas fa-file-archive"></i> Download Website ZIP</button>
+      <p style="color: #64748b; margin-top: 15px; font-size: 0.9rem;">Extract the ZIP and upload to GitHub Pages, Netlify, or Vercel.</p>
+    </div>
+
+  </div>
+
+  <!-- Cropper Modal -->
+  <div id="cropper-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:20px; border-radius:12px; width:90%; max-width:500px;">
+      <div style="font-size:1.2rem; font-weight:bold; margin-bottom:15px; color:var(--primary);">Crop Your Photo</div>
+      <div style="max-height:60vh; overflow:hidden;">
+        <img id="cropper-image" src="" style="max-width:100%; display:block;">
+      </div>
+      <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+        <button onclick="cancelCrop()" style="padding:10px 20px; border-radius:8px; border:1px solid #cbd5e1; background:#f1f5f9; cursor:pointer;">Cancel</button>
+        <button onclick="applyCrop()" style="padding:10px 20px; border-radius:8px; border:none; background:var(--accent); color:#fff; cursor:pointer; font-weight:bold;">Apply Crop</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Templates Modal -->
+  <div id="all-templates-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding: 20px; box-sizing: border-box;">
+    <div style="background:#fff; padding:20px; border-radius:15px; width:100%; max-width:900px; max-height: 90vh; display: flex; flex-direction: column; box-sizing: border-box;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <div style="font-size:1.5rem; font-weight:bold; color:var(--primary);"><i class="fas fa-layer-group"></i> All 100+ Templates</div>
+        <button onclick="closeTemplateModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#64748b;"><i class="fas fa-times"></i></button>
+      </div>
+      <input type="text" id="modalThemeSearch" placeholder="Search templates... (e.g. Minimal, Dark, Cyber)" class="form-control" oninput="filterModalThemes()" style="margin-bottom: 20px;">
+      <div id="modal-theme-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; overflow-y: auto; padding-right: 10px; flex: 1;">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentThemeKey = 'premium';
+    let currentColor = '#2563eb';
+    let debounceTimer;
+    let profilePhotoBase64 = '';
+    let cropper = null;
+    let showingAllThemes = false;
+    let themeSearchQuery = '';
+
+    const colors = ['#2563eb', '#0f766e', '#b45309', '#6d28d9', '#be123c', '#0f2b46', '#10b981', '#f59e0b', '#3b82f6', '#ec4899'];
+    const themeIcons = {'bento':'fa-th-large','glassmorphism':'fa-magic','neumorphism':'fa-layer-group','brutalism':'fa-cube','pinterest':'fa-columns','cyberpunk':'fa-bolt','minimal3d':'fa-box','darkgradient':'fa-moon','retropop':'fa-gamepad','premium':'fa-gem','bentopro':'fa-th-large','bentoelite':'fa-th-large','bentoplus':'fa-th-large','bentoultra':'fa-th-large','bentomax':'fa-th-large','bentolite':'fa-th-large','bentox':'fa-th-large','bentoprime':'fa-th-large','bentoneo':'fa-th-large','glassmorphismpro':'fa-magic','glassmorphismelite':'fa-magic','glassmorphismplus':'fa-magic','glassmorphismultra':'fa-magic','glassmorphismmax':'fa-magic','glassmorphismlite':'fa-magic','glassmorphismx':'fa-magic','glassmorphismprime':'fa-magic','glassmorphismneo':'fa-magic','neumorphismpro':'fa-layer-group','neumorphismelite':'fa-layer-group','neumorphismplus':'fa-layer-group','neumorphismultra':'fa-layer-group','neumorphismmax':'fa-layer-group','neumorphismlite':'fa-layer-group','neumorphismx':'fa-layer-group','neumorphismprime':'fa-layer-group','neumorphismneo':'fa-layer-group','brutalismpro':'fa-cube','brutalismelite':'fa-cube','brutalismplus':'fa-cube','brutalismultra':'fa-cube','brutalismmax':'fa-cube','brutalismlite':'fa-cube','brutalismx':'fa-cube','brutalismprime':'fa-cube','brutalismneo':'fa-cube','pinterestpro':'fa-columns','pinterestelite':'fa-columns','pinterestplus':'fa-columns','pinterestultra':'fa-columns','pinterestmax':'fa-columns','pinterestlite':'fa-columns','pinterestx':'fa-columns','pinterestprime':'fa-columns','pinterestneo':'fa-columns','cyberpunkpro':'fa-bolt','cyberpunkelite':'fa-bolt','cyberpunkplus':'fa-bolt','cyberpunkultra':'fa-bolt','cyberpunkmax':'fa-bolt','cyberpunklite':'fa-bolt','cyberpunkx':'fa-bolt','cyberpunkprime':'fa-bolt','cyberpunkneo':'fa-bolt','minimal3dpro':'fa-box','minimal3delite':'fa-box','minimal3dplus':'fa-box','minimal3dultra':'fa-box','minimal3dmax':'fa-box','minimal3dlite':'fa-box','minimal3dx':'fa-box','minimal3dprime':'fa-box','minimal3dneo':'fa-box','darkgradientpro':'fa-moon','darkgradientelite':'fa-moon','darkgradientplus':'fa-moon','darkgradientultra':'fa-moon','darkgradientmax':'fa-moon','darkgradientlite':'fa-moon','darkgradientx':'fa-moon','darkgradientprime':'fa-moon','darkgradientneo':'fa-moon','retropoppro':'fa-gamepad','retropopelite':'fa-gamepad','retropopplus':'fa-gamepad','retropopultra':'fa-gamepad','retropopmax':'fa-gamepad','retropoplite':'fa-gamepad','retropopx':'fa-gamepad','retropopprime':'fa-gamepad','retropopneo':'fa-gamepad','premiumpro':'fa-gem','premiumelite':'fa-gem','premiumplus':'fa-gem','premiumultra':'fa-gem','premiummax':'fa-gem','premiumlite':'fa-gem','premiumx':'fa-gem','premiumprime':'fa-gem','premiumneo':'fa-gem'};
+    
+    // Initial Data
+    let expData = [];
+    let projData = [];
+
+    // Initialization
+    window.onload = () => {
+      renderThemes();
+      renderColors();
+      renderExperience();
+      renderProjects();
+      updatePreview();
+    };
+
+    function toggleAccordion(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(id + '-icon');
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+      } else {
+        el.style.display = 'none';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+      }
+    }
+
+    let modalSearchQuery = '';
+
+    function renderThemes() {
+      const container = document.getElementById('theme-grid');
+      const keys = Object.keys(templates).slice(0, 5); // Show only top 5
+
+      container.innerHTML = keys.map(key => {
+        const t = templates[key];
+        const isActive = key === currentThemeKey ? 'active' : '';
+        const icon = themeIcons[key] || 'fa-pager';
+        
+        return `
+          <div class="theme-card ${isActive}" id="theme-card-${key}" onclick="setTheme('${key}')">
+            <div class="theme-icon" style="font-size: 1.5rem;"><i class="fas ${icon}"></i></div>
+            <div class="theme-name" style="font-size: 0.9rem;">${t.name}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openTemplateModal() {
+      document.getElementById('all-templates-modal').style.display = 'flex';
+      renderModalThemes();
+    }
+
+    function closeTemplateModal() {
+      document.getElementById('all-templates-modal').style.display = 'none';
+      modalSearchQuery = '';
+      document.getElementById('modalThemeSearch').value = '';
+    }
+
+    function filterModalThemes() {
+      modalSearchQuery = document.getElementById('modalThemeSearch').value;
+      renderModalThemes();
+    }
+
+    function renderModalThemes() {
+      const container = document.getElementById('modal-theme-grid');
+      let keys = Object.keys(templates);
+      
+      if (modalSearchQuery) {
+        keys = keys.filter(k => templates[k].name.toLowerCase().includes(modalSearchQuery.toLowerCase()));
+      }
+
+      container.innerHTML = keys.map(key => {
+        const t = templates[key];
+        const isActive = key === currentThemeKey ? 'active' : '';
+        const icon = themeIcons[key] || 'fa-pager';
+        
+        return `
+          <div class="theme-card ${isActive}" onclick="setTheme('${key}'); closeTemplateModal();" style="border-width: 1px;">
+            <div class="theme-icon" style="font-size: 1.5rem;"><i class="fas ${icon}"></i></div>
+            <div class="theme-name" style="font-size: 0.9rem;">${t.name}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setTheme(key) {
+      currentThemeKey = key;
+      document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+      document.getElementById('theme-card-' + key).classList.add('active');
+      updatePreview();
+    }
+
+    function renderColors() {
+      const container = document.getElementById('color-presets');
+      colors.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'color-swatch' + (c === currentColor ? ' active' : '');
+        div.style.background = c;
+        div.onclick = function() { setColor(c, this); };
+        container.appendChild(div);
+      });
+    }
+
+    function setColor(color, el) {
+      currentColor = color;
+      document.querySelectorAll('.color-swatch').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      updatePreview();
+    }
+
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      const label = document.getElementById('upload-label');
+      const text = document.getElementById('upload-text');
+      
+      if (file) {
+        text.innerText = "Selected: " + file.name;
+        label.style.borderColor = "var(--accent)";
+        label.style.background = "#e0f2fe";
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('cropper-modal').style.display = 'flex';
+          const image = document.getElementById('cropper-image');
+          image.src = e.target.result;
+          
+          if(cropper) { cropper.destroy(); }
+          cropper = new Cropper(image, {
+            aspectRatio: 1, // Square crop
+            viewMode: 1
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        text.innerText = "Click to browse or drag photo here";
+        label.style.borderColor = "var(--accent)";
+        label.style.background = "#f8fafc";
+        profilePhotoBase64 = '';
+        updatePreviewDebounced();
+      }
+    }
+
+    function cancelCrop() {
+      document.getElementById('cropper-modal').style.display = 'none';
+      document.getElementById('photoUpload').value = '';
+      if(cropper) { cropper.destroy(); cropper = null; }
+    }
+
+    function applyCrop() {
+      if (!cropper) return;
+      const canvas = cropper.getCroppedCanvas({
+        width: 300,
+        height: 300
+      });
+      profilePhotoBase64 = canvas.toDataURL('image/jpeg');
+      document.getElementById('cropper-modal').style.display = 'none';
+      if(cropper) { cropper.destroy(); cropper = null; }
+      updatePreviewDebounced();
+    }
+
+    function updatePreviewDebounced() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(updatePreview, 300);
+    }
+
+    // Dynamic Lists (Experience)
+    function renderExperience() {
+      const container = document.getElementById('experience-list');
+      container.innerHTML = '';
+      expData.forEach((exp, idx) => {
+        container.innerHTML += `
+          <div class="repeater-item">
+            <button class="btn-remove" onclick="removeExperience(${idx})" title="Remove"><i class="fas fa-trash"></i></button>
+            <div class="form-group"><label>Job Role</label><input type="text" class="form-control exp-role" value="${exp.role}" oninput="saveExperience()"></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+              <div class="form-group"><label>Company</label><input type="text" class="form-control exp-comp" value="${exp.company}" oninput="saveExperience()"></div>
+              <div class="form-group"><label>Year</label><input type="text" class="form-control exp-year" value="${exp.year}" oninput="saveExperience()"></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;"><label>Description</label><input type="text" class="form-control exp-desc" value="${exp.desc}" oninput="saveExperience()"></div>
+          </div>
+        `;
+      });
+    }
+    function addExperience() { expData.push({role:"", company:"", year:"", desc:""}); renderExperience(); updatePreview(); }
+    function removeExperience(idx) { expData.splice(idx, 1); renderExperience(); updatePreview(); }
+    function saveExperience() {
+      const items = document.querySelectorAll('#experience-list .repeater-item');
+      expData = Array.from(items).map(item => ({
+        role: item.querySelector('.exp-role').value,
+        company: item.querySelector('.exp-comp').value,
+        year: item.querySelector('.exp-year').value,
+        desc: item.querySelector('.exp-desc').value
+      }));
+      updatePreviewDebounced();
+    }
+
+    // Dynamic Lists (Projects)
+    function renderProjects() {
+      const container = document.getElementById('project-list');
+      container.innerHTML = '';
+      projData.forEach((proj, idx) => {
+        container.innerHTML += `
+          <div class="repeater-item">
+            <button class="btn-remove" onclick="removeProject(${idx})" title="Remove"><i class="fas fa-trash"></i></button>
+            <div class="form-group"><label>Project Title</label><input type="text" class="form-control proj-title" value="${proj.title}" oninput="saveProject()"></div>
+            <div class="form-group"><label>Short Description</label><input type="text" class="form-control proj-desc" value="${proj.desc}" oninput="saveProject()"></div>
+            <div class="form-group" style="margin-bottom:0;"><label>Live Link (Optional)</label><input type="text" class="form-control proj-link" value="${proj.link}" oninput="saveProject()"></div>
+          </div>
+        `;
+      });
+    }
+    function addProject() { projData.push({title:"", desc:"", link:""}); renderProjects(); updatePreview(); }
+    function removeProject(idx) { projData.splice(idx, 1); renderProjects(); updatePreview(); }
+    function saveProject() {
+      const items = document.querySelectorAll('#project-list .repeater-item');
+      projData = Array.from(items).map(item => ({
+        title: item.querySelector('.proj-title').value,
+        desc: item.querySelector('.proj-desc').value,
+        link: item.querySelector('.proj-link').value
+      }));
+      updatePreviewDebounced();
+    }
+
+    // Generator Engine
+    function generateHTML() {
+      const name = document.getElementById('name').value || 'Your Name';
+      const title = document.getElementById('title').value || 'Professional Title';
+      const about = document.getElementById('about').value;
+      const email = document.getElementById('email').value;
+      const linkedin = document.getElementById('linkedin').value;
+      const github = document.getElementById('github').value;
+      const skills = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s);
+
+      const skillsHTML = skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+      const expHTML = expData.map(e => `
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <h3>${e.role} <span class="company">@ ${e.company}</span></h3>
+          <p class="year">${e.year}</p>
+          <p>${e.desc}</p>
+        </div>
+      `).join('');
+      const projHTML = projData.map(p => `
+        <div class="project-card">
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          ${p.link ? `<a href="${p.link}" target="_blank">View Project &rarr;</a>` : ''}
+        </div>
+      `).join('');
+
+      let themeCSS = templates[currentThemeKey].css.replaceAll('{COLOR}', currentColor);
+
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${name} - Portfolio</title>
+  <style>
+    ${themeCSS}
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-direction: row;
+      text-align: left;
+    }
+    .header-content { flex: 1; max-width: 600px; }
+    .header-photo img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border: 4px solid var(--p);
+    }
+    @media (max-width: 600px) {
+      html { font-size: 14px; }
+      header { padding: 40px 15px !important; }
+      .header-container { flex-direction: column-reverse; text-align: center; gap: 20px; }
+      header h1 { font-size: 1.8rem !important; line-height: 1.2; word-break: break-word; }
+      header .title { font-size: 1rem !important; margin-top: 5px; }
+      section { padding: 30px 15px !important; }
+      section h2 { font-size: 1.5rem !important; margin-bottom: 20px !important; }
+      .container { padding: 0 10px !important; }
+      .timeline-item, .project-card { padding: 15px !important; }
+      .skill-tag { padding: 4px 10px !important; font-size: 0.8rem !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <div class="header-content">
+        <h1>${name}</h1>
+        <div class="title">${title}</div>
+        <div class="social-links" style="margin-top: 20px;">
+          ${email ? `<a href="mailto:${email}">Email</a>` : ''}
+          ${linkedin ? `<a href="${linkedin}" target="_blank">LinkedIn</a>` : ''}
+          ${github ? `<a href="${github}" target="_blank">GitHub</a>` : ''}
+        </div>
+      </div>
+      ${profilePhotoBase64 ? `
+      <div class="header-photo">
+        <img src="${profilePhotoBase64}" alt="Profile Photo">
+      </div>
+      ` : ''}
+    </div>
+  </header>
+
+  <main class="container">
+    ${about ? `
+    <section>
+      <h2>About Me</h2>
+      <p style="font-size: 1.1rem; max-width: 800px; line-height: 1.8;">${about}</p>
+    </section>` : ''}
+
+    ${skills.length ? `
+    <section>
+      <h2>Skills</h2>
+      <div>${skillsHTML}</div>
+    </section>
+    ` : ''}
+
+    ${expData.length ? `
+    <section>
+      <h2>Experience</h2>
+      <div>${expHTML}</div>
+    </section>
+    ` : ''}
+
+    ${projData.length ? `
+    <section>
+      <h2>Projects</h2>
+      <div class="projects-grid">${projHTML}</div>
+    </section>
+    ` : ''}
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; ${new Date().getFullYear()} ${name}. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>`;
+    }
+
+    function updatePreview() {
+      const html = generateHTML();
+      const iframe = document.getElementById('preview-frame');
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(html);
+      doc.close();
+    }
+
+    // ZIP EXPORT
+    function exportWebsite() {
+      const zip = new JSZip();
+      const htmlContent = generateHTML();
+      zip.file("index.html", htmlContent);
+      zip.file("README.txt", "This portfolio was generated using SOLMATES Portfolio Builder.\\n\\nTo deploy:\\n1. Drag and drop this extracted folder into Netlify (netlify.com/drop) or Vercel.\\n2. Or host it on GitHub Pages.\\n\\nHappy Coding!");
+
+      zip.generateAsync({type:"blob"}).then(function(content) {
+          const a = document.createElement("a");
+          const url = URL.createObjectURL(content);
+          a.href = url;
+          a.download = "MyPortfolio.zip";
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+          }, 0);
+      });
+    }
+
+    async function handleResumeUpload(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        
+        document.getElementById('resume-loading').style.display = 'block';
+        
+        let text = '';
+        try {
+            if (file.name.endsWith('.pdf')) {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    text += content.items.map(item => item.str).join(' ') + ' ';
+                }
+            } else if (file.name.endsWith('.docx')) {
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await mammoth.extractRawText({arrayBuffer: arrayBuffer});
+                text = result.value;
+            }
+            
+            // Simple heuristic extraction (mock AI behavior)
+            if(text) extractDataFromText(text);
+        } catch(e) {
+            console.error(e);
+            alert('Failed to extract text from file.');
+        }
+        
+        document.getElementById('resume-loading').style.display = 'none';
+        event.target.value = '';
+    }
+    
+    function extractDataFromText(text) {
+        const lines = text.split(/\n|\r/).map(l => l.trim()).filter(l => l.length > 0);
+        const allWords = text.split(/\s+/).filter(w => w.length > 0);
+        
+        // Name Logic: Try first short line, else first 2 words
+        if(lines.length > 0 && lines[0].length < 40 && lines[0].split(' ').length <= 4) {
+            document.getElementById('name').value = lines[0];
+        } else if(allWords.length >= 2) {
+            document.getElementById('name').value = allWords[0] + ' ' + allWords[1];
+        }
+        
+        // Email
+        const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        if(emailMatch) document.getElementById('email').value = emailMatch[0];
+        
+        // LinkedIn
+        const lnMatch = text.match(/linkedin\.com\/in\/[a-zA-Z0-9_-]+/i);
+        if(lnMatch) document.getElementById('linkedin').value = 'https://www.' + lnMatch[0];
+        
+        // GitHub
+        const ghMatch = text.match(/github\.com\/[a-zA-Z0-9_-]+/i);
+        if(ghMatch) document.getElementById('github').value = 'https://www.' + ghMatch[0];
+        
+        // Skills
+        const commonSkills = ['JavaScript', 'HTML', 'CSS', 'React', 'Node', 'Python', 'Java', 'C++', 'SQL', 'AWS', 'Git', 'Docker', 'Marketing', 'Excel', 'Figma', 'UI/UX', 'Management', 'Sales', 'Design', 'Communication'];
+        const foundSkills = commonSkills.filter(s => text.toLowerCase().includes(s.toLowerCase()));
+        if(foundSkills.length > 0) {
+            document.getElementById('skills').value = foundSkills.join(', ');
+        }
+        
+        // Title Guesser
+        const commonTitles = ['Software Engineer', 'Full Stack Developer', 'Frontend Developer', 'Backend Developer', 'Data Scientist', 'Product Manager', 'Marketing Manager', 'UX Designer', 'UI Designer', 'Student', 'Analyst', 'Consultant'];
+        for(let t of commonTitles) {
+            if(text.toLowerCase().includes(t.toLowerCase())) {
+                document.getElementById('title').value = t;
+                break;
+            }
+        }
+        
+        // Bio Guesser (grab a chunk of text that looks like a paragraph)
+        const summaryMatch = text.match(/(?:Summary|Profile|About Me|Objective)[\s\S]{1,300}/i);
+        if(summaryMatch) {
+            const bio = summaryMatch[0].replace(/(?:Summary|Profile|About Me|Objective)/i, '').trim().substring(0, 200);
+            document.getElementById('about').value = bio + '...';
+        } else if(lines.length > 5) {
+            document.getElementById('about').value = lines.slice(1, 4).join(' ').substring(0, 150) + '...';
+        }
+
+        // Mock Experience & Project Extraction based on dates or keywords
+        expData = [];
+        projData = [];
+        
+        // Find lines with year ranges like "2020 - 2023" or "2019-Present"
+        const expLines = lines.filter(l => /(?:201[0-9]|202[0-9])\s*[-–to]+\s*(?:20[1-2][0-9]|Present|Current)/i.test(l));
+        if(expLines.length > 0) {
+            expLines.forEach((l, i) => {
+                if(i < 3) {
+                    expData.push({
+                        role: "Role " + (i+1),
+                        company: "Company",
+                        year: l.match(/(?:201[0-9]|202[0-9])\s*[-–to]+\s*(?:20[1-2][0-9]|Present|Current)/i)[0],
+                        desc: l.substring(0, 50) + "..."
+                    });
+                }
+            });
+        } else if (text.toLowerCase().includes("experience")) {
+             expData.push({ role: "Your Job Title", company: "Company Name", year: "2021 - Present", desc: "Added from resume extraction." });
+        }
+
+        if (text.toLowerCase().includes("project")) {
+            projData.push({ title: "Portfolio Project", desc: "Developed during previous experience.", link: "https://github.com" });
+        }
+        
+        renderExperience();
+        renderProjects();
+        
+        updatePreview();
+        alert('Data extracted! We pulled as much as we could (including Experience/Projects if found). Please review and modify the details.');
+    }
+  </script>
+</body>
+</html>

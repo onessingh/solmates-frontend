@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan to PDF - Smart PDF Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/webview-fix.js?v=89.0"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <style>
+        #cameraView {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            background: #1e293b;
+            border-radius: 1.5rem;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 4px solid #fff;
+        }
+        .shutter-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff;
+            border: 6px solid rgba(15, 43, 70, 0.1);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .shutter-btn:active { transform: scale(0.9); background: #f8fafc; }
+        .shutter-btn:hover { border-color: rgba(0, 113, 227, 0.3); }
+        
+        .btn-modern {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-main);
+        }
+        .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .btn-green {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .btn-green:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+    </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+</style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1><i data-lucide="scan"></i> Scan to PDF</h1>
+    </div>
+
+<div class="container" style="max-width: 600px;">
+    
+    <div id="cameraArea">
+        <div id="cameraView">
+            <video id="video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+            <canvas id="captureCanvas" style="display: none;"></canvas>
+            <div id="cameraPlaceholder" style="position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #1e293b; color: #fff; z-index: 10;">
+                <i data-lucide="camera" style="width: 48px; height: 48px;"></i>
+                <p id="camMessage" style="margin-top: 1rem; text-align: center; padding: 0 1rem;">Starting Camera...</p>
+                <button id="retryCamBtn" class="btn-modern btn-primary" style="display: none; margin-top: 1rem; padding: 10px 20px; font-size: 0.9rem;" onclick="startCamera()">
+                    <i data-lucide="refresh-cw"></i> Allow Camera Access
+                </button>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+            <div class="shutter-btn" id="shutter"></div>
+            <p id="counter" style="color: var(--primary); font-weight: 700; font-size: 1.1rem; background: rgba(15, 43, 70, 0.05); padding: 5px 15px; border-radius: 20px; display: none;">0 pages captured</p>
+            
+            <div id="actionButtons" style="display: none; gap: 1rem; width: 100%; max-width: 400px; flex-direction: column;">
+                <button id="finishBtn" class="btn-modern btn-green" style="width: 100%;">
+                    <i data-lucide="check-circle"></i> Finish & Generate PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="previewArea" style="display: none; text-align: center; margin-top: 1rem;">
+        <h3 style="color: var(--primary); margin-bottom: 1rem;">Review Captured Page</h3>
+        <div style="background: #fff; padding: 10px; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: inline-block;">
+            <img id="capturedImage" style="max-width: 100%; max-height: 400px; border-radius: 0.5rem;">
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <button id="retakeBtn" class="btn-modern btn-outline" style="flex: 1;">
+                <i data-lucide="rotate-ccw"></i> Retake
+            </button>
+            <button id="keepBtn" class="btn-modern btn-primary" style="flex: 1;">
+                <i data-lucide="plus"></i> Keep & Add More
+            </button>
+        </div>
+    </div>
+
+    <div class="result-area" id="resultArea" style="text-align: center; display: none;">
+        <div style="background: #ecfdf5; color: #065f46; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; border: 1px solid #a7f3d0;">
+            <i data-lucide="check-circle" style="width: 48px; height: 48px; margin-bottom: 1rem;"></i>
+            <p style="font-size: 1.1rem;"><strong>Success!</strong><br>Your multi-page scan has been converted to a PDF.</p>
+        </div>
+        <button id="downloadBtn" class="btn-modern btn-primary" style="width: 100%; margin-bottom: 1rem; padding: 16px;">
+            <i data-lucide="download"></i> Download PDF (<span id="finalCount">0</span> Pages)
+        </button>
+        <button onclick="location.reload()" class="btn-modern btn-outline" style="width: 100%;">
+            <i data-lucide="refresh-ccw"></i> Start New Scan
+        </button>
+    </div>
+    
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Processing Pages...</p>
+    </div>
+</div>
+
+<script>
+    const { jsPDF } = window.jspdf;
+    lucide.createIcons();
+    const video = document.getElementById('video');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const shutter = document.getElementById('shutter');
+    const captureCanvas = document.getElementById('captureCanvas');
+    const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+    const camMessage = document.getElementById('camMessage');
+    const retryCamBtn = document.getElementById('retryCamBtn');
+    
+    const cameraArea = document.getElementById('cameraArea');
+    const previewArea = document.getElementById('previewArea');
+    const capturedImage = document.getElementById('capturedImage');
+    const keepBtn = document.getElementById('keepBtn');
+    const retakeBtn = document.getElementById('retakeBtn');
+    const finishBtn = document.getElementById('finishBtn');
+    const resultArea = document.getElementById('resultArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const counter = document.getElementById('counter');
+    const actionButtons = document.getElementById('actionButtons');
+    const finalCount = document.getElementById('finalCount');
+
+    let stream = null;
+    let capturedPages = [];
+    let pdfBlob = null;
+
+    async function startCamera() {
+        if (stream) return;
+        
+        camMessage.textContent = "Starting Camera...";
+        retryCamBtn.style.display = "none";
+        
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: 'environment',
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 }
+                } 
+            });
+            video.srcObject = stream;
+            cameraPlaceholder.style.display = 'none';
+        } catch (err) {
+            console.error(err);
+            camMessage.textContent = "Camera access denied. Please allow permissions in your browser to use the scanner.";
+            retryCamBtn.style.display = "inline-flex";
+        }
+    }
+
+    // Attempt auto-start on load
+    startCamera();
+
+    shutter.onclick = () => {
+        if (!stream) {
+            alert("Camera is not active. Please allow camera permissions first.");
+            return;
+        }
+        const ctx = captureCanvas.getContext('2d');
+        captureCanvas.width = video.videoWidth;
+        captureCanvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        
+        capturedImage.src = captureCanvas.toDataURL('image/jpeg', 0.85);
+        cameraArea.style.display = 'none';
+        previewArea.style.display = 'block';
+    };
+
+    retakeBtn.onclick = () => {
+        previewArea.style.display = 'none';
+        cameraArea.style.display = 'block';
+    };
+
+    keepBtn.onclick = () => {
+        capturedPages.push(capturedImage.src);
+        counter.textContent = `${capturedPages.length} page(s) captured`;
+        counter.style.display = 'block';
+        actionButtons.style.display = 'flex';
+        previewArea.style.display = 'none';
+        cameraArea.style.display = 'block';
+    };
+
+    finishBtn.onclick = () => {
+        if (capturedPages.length === 0) return;
+        loadingOverlay.style.display = 'flex';
+        
+        const pdf = new jsPDF();
+        capturedPages.forEach((data, index) => {
+            if (index > 0) pdf.addPage();
+            pdf.addImage(data, 'JPEG', 0, 0, 210, 297); // A4 Portrait
+        });
+
+        pdfBlob = pdf.output('blob');
+        finalCount.textContent = capturedPages.length;
+        
+        setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+            cameraArea.style.display = 'none';
+            resultArea.style.display = 'block';
+            if (stream) stream.getTracks().forEach(t => t.stop());
+        }, 1500);
+    };
+
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(pdfBlob);
+        link.download = `solmates_scan_${Date.now()}.pdf`;
+        link.click();
+    };
+</script>
+
+</body>
+</html>

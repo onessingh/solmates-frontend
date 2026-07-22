@@ -1,0 +1,29 @@
+/**
+ * [v111.9] SOLMATES GLOBAL LOCKDOWN CSS
+ * Final Suppression of Android 'Touch to Search' (Google Bar)
+ */
+
+/* 1. Remove native browser highlights and system tools */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* 2. Total Lockdown: Disable all text selection and copying site-wide */
+html, body, * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* 3. Exceptions: Allow selection/focus in text input fields and textareas */
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+/* 4. Fix for Mobile WebViews (Ensures clear interaction) */
+a, img {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+}

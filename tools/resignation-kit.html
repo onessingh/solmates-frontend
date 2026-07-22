@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resignation & Handover Kit | SOLMATES</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #ff3b30; /* Red for resignation */
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-top: 0 !important; }
+
+    .header-bar { background: var(--card); padding: 15px 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
+    .header-bar h1 { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 768px) { .container { grid-template-columns: 1fr 1.2fr; } }
+    
+    .card { background: var(--card); border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.95rem; background: #fafafa; transition: all 0.2s; outline: none; }
+    .form-control:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.1); }
+    
+    .btn-main { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-main:hover { background: #1a3c5e; transform: translateY(-2px); }
+
+    /* Tabs */
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+    .tab-btn { flex: 1; text-align: center; padding: 12px; font-weight: 600; color: var(--light); cursor: pointer; transition: 0.2s; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s; }
+
+    /* Document Styles */
+    .document-preview { background: #fafafa; border: 1px solid var(--border); border-radius: 12px; padding: 25px; font-family: 'Times New Roman', Times, serif; font-size: 1.05rem; line-height: 1.6; color: #333; position: relative; }
+    
+    .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-family: -apple-system, sans-serif; font-size: 0.95rem; }
+    .checklist-item input { margin-top: 5px; }
+
+    .action-btn { background: white; color: var(--primary); padding: 10px 15px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; margin-top: 15px; }
+    .action-btn:hover { background: var(--primary); color: white; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h1><i class="fas fa-file-export" style="color: var(--accent);"></i> Resignation & Handover Kit</h1>
+  </div>
+
+  <div class="container">
+    <div class="card" style="align-self: start;">
+      <h3 style="color: var(--primary); margin-bottom: 20px;">Exit Details</h3>
+      
+      <div class="form-group">
+        <label>Your Full Name</label>
+        <input type="text" id="in-name" class="form-control" placeholder="e.g., John Doe">
+      </div>
+      <div class="form-group">
+        <label>Manager / HR Name</label>
+        <input type="text" id="in-manager" class="form-control" placeholder="e.g., Sarah Smith">
+      </div>
+      <div class="form-group">
+        <label>Your Job Title</label>
+        <input type="text" id="in-title" class="form-control" placeholder="e.g., Marketing Executive">
+      </div>
+      <div class="form-group">
+        <label>Last Working Day (LWD)</label>
+        <input type="date" id="in-date" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Tone</label>
+        <select id="in-tone" class="form-control">
+          <option value="standard">Standard & Professional</option>
+          <option value="grateful">Highly Grateful (Good terms)</option>
+          <option value="brief">Short & Direct</option>
+        </select>
+      </div>
+
+      <button class="btn-main" onclick="generateKit()">Generate Kit</button>
+    </div>
+
+    <div class="card">
+      <div class="tabs">
+        <div class="tab-btn active" onclick="switchTab('tab-letter', this)">Resignation Letter</div>
+        <div class="tab-btn" onclick="switchTab('tab-handover', this)">Handover Checklist</div>
+      </div>
+
+      <div id="empty-state" style="text-align: center; color: var(--light); padding: 40px 20px; font-style: italic;">
+        Enter your details to generate your exit documents.
+      </div>
+
+      <!-- Letter Tab -->
+      <div id="tab-letter" class="tab-content">
+        <div class="document-preview" id="letter-doc">
+          [Your letter will appear here]
+        </div>
+        <button class="action-btn" onclick="copyLetter()"><i class="fas fa-copy"></i> Copy Email Text</button>
+      </div>
+
+      <!-- Handover Tab -->
+      <div id="tab-handover" class="tab-content">
+        <div class="document-preview" id="handover-doc" style="font-family: -apple-system, sans-serif;">
+          <h2 style="font-size: 1.2rem; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Transition Checklist - <span id="out-title">Role</span></h2>
+          
+          <div class="checklist-item">
+            <input type="checkbox"> <span><strong>Pending Tasks:</strong> Document all ongoing projects, status, and deadlines.</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox"> <span><strong>Knowledge Transfer (KT):</strong> Schedule KT sessions with the successor or team members.</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox"> <span><strong>Access & Credentials:</strong> List of software, tools, and shared drives that require access transfer.</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox"> <span><strong>Client/Stakeholder Intimation:</strong> Send introduction emails handing over points of contact.</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox"> <span><strong>Asset Return:</strong> Laptop, ID card, corporate credit cards, etc.</span>
+          </div>
+        </div>
+        <button class="action-btn" onclick="downloadHandover()"><i class="fas fa-download"></i> Save as Image</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function generateKit() {
+      const name = document.getElementById('in-name').value || '[Your Name]';
+      const manager = document.getElementById('in-manager').value || '[Manager Name]';
+      const title = document.getElementById('in-title').value || '[Job Title]';
+      const date = document.getElementById('in-date').value || '[Last Working Day]';
+      const tone = document.getElementById('in-tone').value;
+
+      let letter = '';
+      
+      if (tone === 'grateful') {
+        letter = `Dear ${manager},<br><br>Please accept this letter as formal notification that I am resigning from my position as ${title}. As per my notice period, my last day will be ${date}.<br><br>I want to express my deepest gratitude for the opportunities I've had during my time here. Working with you and the team has been incredibly rewarding, and I have grown significantly both professionally and personally.<br><br>I am fully committed to ensuring a smooth transition and will assist in wrapping up my duties and handing over my responsibilities before my departure.<br><br>Thank you again for everything.<br><br>Sincerely,<br>${name}`;
+      } else if (tone === 'brief') {
+        letter = `Dear ${manager},<br><br>Please accept this letter as formal notification of my resignation from the role of ${title}. My last working day will be ${date}.<br><br>I will ensure all my pending tasks are handed over appropriately before my departure.<br><br>Regards,<br>${name}`;
+      } else {
+        letter = `Dear ${manager},<br><br>I am writing to formally notify you of my resignation from my position as ${title}. In accordance with my notice period, my final day will be ${date}.<br><br>Thank you for the support and opportunities provided to me during my tenure. I appreciate the experience I have gained working with the team.<br><br>Over the coming weeks, I will ensure a seamless handover of my ongoing projects and responsibilities.<br><br>Wishing the company continued success.<br><br>Best regards,<br>${name}`;
+      }
+
+      document.getElementById('letter-doc').innerHTML = letter;
+      document.getElementById('out-title').innerText = title;
+      
+      document.getElementById('empty-state').style.display = 'none';
+      
+      // Force switch to letter tab
+      switchTab('tab-letter', document.querySelector('.tab-btn'));
+    }
+
+    function copyLetter() {
+      const html = document.getElementById('letter-doc').innerHTML;
+      const text = html.replace(/<br>/g, '\n');
+      navigator.clipboard.writeText(text);
+      
+      const btn = document.querySelector('#tab-letter .action-btn');
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy Email Text', 2000);
+    }
+
+    async function downloadHandover() {
+      const doc = document.getElementById('handover-doc');
+      try {
+        const canvas = await html2canvas(doc, { scale: 2, backgroundColor: '#ffffff' });
+        const link = document.createElement('a');
+        link.download = 'Handover_Checklist.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch(e) {
+        alert("Export failed.");
+      }
+    }
+  </script>
+</body>
+</html>

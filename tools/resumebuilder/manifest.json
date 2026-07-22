@@ -1,0 +1,17 @@
+{
+  "name": "SOLMATES Resume Builder",
+  "short_name": "SOLMATES",
+  "description": "Build ATS-friendly, professional resumes with live preview, templates, scoring, and AI support.",
+  "start_url": ".",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#1d4ed8",
+  "background_color": "#f5f7fb",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}

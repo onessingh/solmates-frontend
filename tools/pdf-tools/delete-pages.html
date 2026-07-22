@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Pages | Free Online PDF Editor</title>
+    <meta name="description" content="Remove unwanted pages from your PDF documents instantly. Fast, secure, and fully works in your browser.">
+    <link rel="stylesheet" href="/css/global-lockdown.css">
+    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+        .page-item.selected { border: 4px solid #ef4444; }
+        .page-item.selected .overlay { display: flex; }
+        .page-item:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .header-bar {
+            background: var(--surface, #ffffff);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-bar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary, #0f2b46);
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 12px;
+            width: 100%;
+        }
+        body { padding-top: 0 !important; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 font-sans">
+    <div class="header-bar">
+        <h1><i data-lucide="file-minus"></i> Delete Pages</h1>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div id="upload-section" class="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-slate-200 text-center">
+            <input type="file" id="pdf-upload" accept=".pdf" class="hidden" />
+            <label for="pdf-upload" class="cursor-pointer flex flex-col items-center justify-center gap-4 hover:opacity-80 transition-opacity">
+                <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                    <i data-lucide="file-minus" class="w-10 h-10"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Choose a PDF file</h2>
+                    <p class="text-slate-500 mt-2">or drag and drop it here</p>
+                </div>
+                <div class="mt-6 px-6 py-3 bg-red-600 text-white font-medium rounded-lg shadow-sm hover:bg-red-700 transition-colors">
+                    Select File
+                </div>
+            </label>
+        </div>
+
+        <div id="workspace" class="hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky top-20 z-40">
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-900">Select pages to delete</h2>
+                    <p class="text-sm text-slate-500">Click on pages to select/deselect them. <span id="selection-count">0</span> pages selected.</p>
+                </div>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <button id="btn-select-all" class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors flex-1 md:flex-none text-center">
+                        Select All
+                    </button>
+                    <button id="btn-clear" class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors flex-1 md:flex-none text-center">
+                        Clear
+                    </button>
+                    <button id="btn-delete" class="px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-lg shadow-sm hover:bg-red-700 transition-colors flex-1 md:flex-none text-center flex items-center justify-center gap-2" disabled>
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Apply Changes
+                    </button>
+                </div>
+            </div>
+
+            <div id="pages-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                <!-- Pages will be rendered here -->
+            </div>
+        </div>
+
+        <div id="result-section" class="hidden bg-white rounded-2xl p-8 shadow-sm border border-slate-200 text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 mx-auto mb-4">
+                <i data-lucide="check-circle" class="w-10 h-10"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">PDF Successfully Updated!</h2>
+            <p class="text-slate-500 mb-6">The selected pages have been removed.</p>
+            <a id="btn-download" class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-medium rounded-lg shadow-sm hover:bg-red-700 transition-colors cursor-pointer">
+                <i data-lucide="download" class="w-5 h-5"></i> Download PDF
+            </a>
+            <button onclick="location.reload()" class="block mx-auto mt-4 text-sm text-slate-500 hover:text-slate-900">Start Over</button>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const uploadSection = document.getElementById('upload-section');
+        const workspace = document.getElementById('workspace');
+        const fileInput = document.getElementById('pdf-upload');
+        const pagesGrid = document.getElementById('pages-grid');
+        const selectionCount = document.getElementById('selection-count');
+        const btnSelectAll = document.getElementById('btn-select-all');
+        const btnClear = document.getElementById('btn-clear');
+        const btnDelete = document.getElementById('btn-delete');
+
+        let currentFile = null;
+        let pdfDoc = null;
+        let totalPages = 0;
+        let selectedPages = new Set();
+
+        // Drag and Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadSection.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadSection.addEventListener(eventName, () => uploadSection.classList.add('border-red-500', 'bg-red-50'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadSection.addEventListener(eventName, () => uploadSection.classList.remove('border-red-500', 'bg-red-50'), false);
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            if (file && file.type === 'application/pdf') {
+                processFile(file);
+            } else {
+                alert('Please upload a valid PDF file.');
+            }
+        }, false);
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        });
+
+        async function processFile(file) {
+            currentFile = file;
+            uploadSection.classList.add('hidden');
+            workspace.classList.remove('hidden');
+            pagesGrid.innerHTML = '<div class="col-span-full text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div><p class="mt-2 text-slate-500">Loading document...</p></div>';
+
+            const arrayBuffer = await file.arrayBuffer();
+
+            const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+            pdfDoc = await loadingTask.promise;
+            totalPages = pdfDoc.numPages;
+
+            renderPages();
+        }
+
+        async function renderPages() {
+            pagesGrid.innerHTML = '';
+            selectedPages.clear();
+            updateUI();
+
+            for (let i = 1; i <= totalPages; i++) {
+                const page = await pdfDoc.getPage(i);
+                const viewport = page.getViewport({ scale: 0.5 });
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'page-item relative bg-white border border-slate-200 p-2 rounded-lg cursor-pointer transition-all overflow-hidden group select-none';
+                wrapper.dataset.page = i;
+
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL();
+                img.className = 'w-full h-auto border border-slate-100 shadow-sm';
+
+                const pageNum = document.createElement('div');
+                pageNum.className = 'text-center mt-2 text-sm font-medium text-slate-600';
+                pageNum.textContent = `Page ${i}`;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'overlay absolute inset-0 bg-red-600/20 hidden items-center justify-center';
+                overlay.innerHTML = '<div class="bg-red-600 text-white rounded-full p-2"><i data-lucide="trash-2" class="w-6 h-6"></i></div>';
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(pageNum);
+                wrapper.appendChild(overlay);
+
+                wrapper.addEventListener('click', () => toggleSelection(wrapper, i));
+
+                pagesGrid.appendChild(wrapper);
+            }
+            lucide.createIcons();
+        }
+
+        function toggleSelection(element, pageNum) {
+            if (selectedPages.has(pageNum)) {
+                selectedPages.delete(pageNum);
+                element.classList.remove('selected');
+            } else {
+                selectedPages.add(pageNum);
+                element.classList.add('selected');
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            selectionCount.textContent = selectedPages.size;
+            if (selectedPages.size > 0) {
+                btnDelete.disabled = false;
+                btnDelete.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnDelete.disabled = true;
+                btnDelete.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        btnSelectAll.addEventListener('click', () => {
+            const items = document.querySelectorAll('.page-item');
+            items.forEach(item => {
+                const pageNum = parseInt(item.dataset.page);
+                selectedPages.add(pageNum);
+                item.classList.add('selected');
+            });
+            updateUI();
+        });
+
+        btnClear.addEventListener('click', () => {
+            const items = document.querySelectorAll('.page-item');
+            items.forEach(item => {
+                const pageNum = parseInt(item.dataset.page);
+                selectedPages.delete(pageNum);
+                item.classList.remove('selected');
+            });
+            updateUI();
+        });
+
+        const btnDownload = document.getElementById('btn-download');
+        const resultSection = document.getElementById('result-section');
+
+        btnDelete.addEventListener('click', async () => {
+            if (selectedPages.size === 0) return;
+            if (selectedPages.size === totalPages) {
+                alert("You cannot delete all pages.");
+                return;
+            }
+
+            btnDelete.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Processing...';
+            btnDelete.disabled = true;
+            lucide.createIcons();
+
+            try {
+                const newArrayBuffer = await currentFile.arrayBuffer();
+                const pdfLibDoc = await PDFLib.PDFDocument.load(newArrayBuffer);
+                
+                // Pages to keep (0-indexed)
+                const pagesToKeep = [];
+                for (let i = 1; i <= totalPages; i++) {
+                    if (!selectedPages.has(i)) {
+                        pagesToKeep.push(i - 1);
+                    }
+                }
+
+                const newPdfDoc = await PDFLib.PDFDocument.create();
+                const copiedPages = await newPdfDoc.copyPages(pdfLibDoc, pagesToKeep);
+                copiedPages.forEach((page) => newPdfDoc.addPage(page));
+
+                const pdfBytes = await newPdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                btnDownload.href = url;
+                btnDownload.download = `edited_${fileInput.files[0]?.name || 'document.pdf'}`;
+                
+                workspace.classList.add('hidden');
+                resultSection.classList.remove('hidden');
+                
+            } catch (err) {
+                console.error(err);
+                alert("Error modifying PDF.");
+                btnDelete.innerHTML = '<i data-lucide="trash-2" class="w-4 h-4"></i> Apply Changes';
+                btnDelete.disabled = false;
+                lucide.createIcons();
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback & Report Issue | SOLMATES</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body {
+      background: #fdfdfd;
+      color: #111;
+      padding-top: 80px;
+      min-height: 100vh;
+    }
+
+    /* ========== Navbar ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px 0 15px;
+      padding-right: 30px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .nav-left {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      color: #0f2b46;
+    }
+
+    /* NAVBAR OPTIONS - CENTERED */
+    .nav-center {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: absolute;
+      left: 28px;\n            transform: translateX(-50%);
+    }
+
+    .nav-center a {
+      text-decoration: none;
+      color: #333;
+      font-size: 12px;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      will-change: transform;
+    }
+
+    .nav-center a:hover {
+      color: #0071e3;
+      background: rgba(0, 113, 227, 0.05);
+    }
+
+    /* Active page indicator */
+    .nav-center a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Back button */
+    .back-btn {
+      background: #0f2b46;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      will-change: transform;
+      transform: translateZ(0);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #333;
+      cursor: pointer;
+      padding: 5px;
+      will-change: transform;
+    }
+
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 999;
+      padding: 20px;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .mobile-nav-overlay.active {
+      display: flex;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-nav-overlay a {
+      padding: 15px;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+      transform: translateZ(0);
+    }
+
+    .mobile-nav-overlay a:active {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .mobile-nav-overlay a i {
+      width: 24px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* Active page indicator in mobile */
+    .mobile-nav-overlay a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    @media (max-width: 768px) {
+      .nav-center {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+
+    /* ========== Container ========== */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* ========== Feedback Form ========== */
+    .feedback-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eee;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    /* Star Rating */
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      font-size: 30px;
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label {
+      color: #c0962d;
+    }
+
+    .rating-label {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    /* Inputs */
+    .input-field, .select-field, .textarea-field {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s;
+      background: #fbfbfc;
+    }
+
+    .input-field:focus, .select-field:focus, .textarea-field:focus {
+      border-color: #0071e3;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.05);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(15, 43, 70, 0.15);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .submit-btn.loading .spinner {
+      display: block;
+    }
+    
+    .submit-btn.loading span {
+        display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success Message */
+    .success-overlay {
+      display: none;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .success-overlay i {
+      font-size: 60px;
+      color: #22c55e;
+      margin-bottom: 20px;
+    }
+
+    .success-overlay h2 {
+      margin-bottom: 10px;
+      color: #0f2b46;
+    }
+
+    .back-home {
+        display: inline-block;
+        margin-top: 20px;
+        color: #0071e3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      .row { grid-template-columns: 1fr; }
+      .header h1 { font-size: 24px; }
+    }
+
+    /* Custom File Input & Direct Mail */
+    .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
+    .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .file-input-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: #eef2f6; border: 2px dashed #cbd5e1; border-radius: 12px; color: #475569; font-weight: 500; cursor: pointer; transition: all 0.3s; }
+    .file-input-wrapper:hover .file-input-btn { background: #e2e8f0; border-color: #94a3b8; }
+    .file-input-btn i { font-size: 18px; color: #3b82f6; }
+    
+    .direct-mail { margin-top: 15px; padding: 15px; background: #eff6ff; border-radius: 12px; font-size: 14px; color: #1e293b; border: 1px solid #bfdbfe; text-align: left; }
+    .direct-mail a { color: #0071e3; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+    .direct-mail a:hover { text-decoration: underline; }
+
+    .select-field { appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position-x: 95%; background-position-y: center; }
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 30px 20px 20px;
+      background: transparent;
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      width: 100%;
+      overflow-x: hidden;
+      transform: translateZ(0);
+    }
+
+    .footer p {
+      padding: 0 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* SOCIAL ICONS - COMPACT */
+    .social {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding: 0 10px;
+      transform: translateZ(0);
+    }
+
+    .social a {
+      font-size: 16px;
+      color: #0071e3;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: rgba(0, 113, 227, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ========== WhatsApp Dropdown ========== */
+    .whatsapp-container {
+      position: relative;
+      display: inline-block;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 113, 227, 0.05);
+      color: #0071e3;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1003;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-icon:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: scale(1.05);
+    }
+
+    .whatsapp-dropdown {
+      position: absolute;
+      top: 100%;
+      left: -2px;
+      transform: translateY(10px) scale(0.95);
+      background: white;
+      width: 110px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 8px;
+      margin-top: 8px;
+      z-index: 1004;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .whatsapp-dropdown::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 20px;
+      transform: translateX(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent white transparent;
+    }
+
+    .whatsapp-options {
+      display: flex;
+      gap: 6px;
+    }
+
+    .whatsapp-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 6px;
+      color: #333;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+      background: #f8f9fa;
+      min-width: 0;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-option:hover {
+      background: #25D366;
+      color: white;
+      transform: translateY(-2px);
+      border-color: #25D366;
+    }
+
+    .whatsapp-option:hover i {
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .whatsapp-option i {
+      font-size: 18px;
+      color: #25D366;
+      transition: all 0.25s ease;
+      margin-bottom: 4px;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-option .option-text {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .whatsapp-option .option-desc {
+      font-size: 9px;
+      color: #666;
+      line-height: 1.2;
+    }
+
+    .whatsapp-option:hover .option-desc {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="top-nav">
+    <div class="nav-left" onclick="window.location.href='/'" style="cursor: pointer;">SOLMATES</div>
+
+    <div class="nav-center">
+      <a href="/database">Database</a>
+      <a href="/tools">Tools</a>
+      <a href="/skills">Skills & Development</a>
+      <a href="/games">Games</a>
+                  <a href="/journey">Journey</a>
+<a href="/feedback" class="active">Feedback</a>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-right">
+      <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i> BACK
+      </a>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay" id="mobileNav">
+    <a href="/database">
+      <i class="fas fa-database"></i> Database
+    </a>
+    <a href="/tools">
+      <i class="fas fa-tools"></i> Tools
+    </a>
+    <a href="/skills">
+      <i class="fas fa-chart-line"></i> Skills & Development
+    </a>
+    <a href="/games">
+      <i class="fas fa-gamepad"></i> Games
+    </a>
+              <a href="/journey"><i class="fas fa-road"></i> Journey</a>
+<a href="/feedback" class="active">
+      <i class="fas fa-comment-dots"></i> Feedback
+    </a>
+  </div>
+
+  <div class="container">
+    <div id="formSection">
+      <div class="header">
+        <h1>Share Your Feedback</h1>
+        <p>Help us improve SOLMATES by reporting issues or sharing suggestions.</p>
+      </div>
+
+      <div class="feedback-card">
+        <form id="feedbackForm" onsubmit="handleFeedbackSubmit(event)">
+          
+          <div class="form-group" id="group-rating">
+            <label>How would you rate your experience? *</label>
+            <div class="star-rating">
+              <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+              <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+              <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+              <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+              <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+            </div>
+            <div class="rating-label" id="ratingDesc">Tap to rate</div>
+          </div>
+
+          <div class="row">
+            <div class="form-group" id="group-type">
+              <label for="feedbackType">Feedback Type *</label>
+              <select id="feedbackType" name="feedbackType" class="select-field" required onchange="updateFormFields(this.value)">
+                <option value="">Select Type...</option>
+                <option value="Suggestion">Suggestion</option>
+                <option value="Bug Report">Issue / Bug</option>
+                <option value="Content Error">Content Error</option>
+                <option value="Appreciation">Appreciation</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group" id="group-page-url">
+              <label for="pageUrl" id="label-page-url">Page of Issue</label>
+              <input type="text" id="pageUrl" name="pageUrl" class="input-field" placeholder="Which page?">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="userName">Name (Optional)</label>
+            <input type="text" id="userName" name="userName" class="input-field" placeholder="Your name">
+          </div>
+
+          <div class="form-group" id="group-message">
+            <label for="message">Detailed Feedback *</label>
+            <textarea id="message" name="message" class="textarea-field" rows="5" placeholder="Tell us more about your experience or the issue you faced..." required></textarea>
+          </div>
+
+          <div class="form-group" id="group-screenshot">
+            <label>Attach Screenshots (Optional)</label>
+            <div class="file-input-wrapper">
+              <div class="file-input-btn" id="fileBtnText">
+                <i class="fas fa-cloud-upload-alt"></i> Choose Files...
+              </div>
+              <input type="file" id="screenshot" name="screenshot" accept="image/*" multiple onchange="updateFileLabel(this)">
+            </div>
+            <p style="font-size: 11px; color: #888; margin-top: 5px;">You can select multiple screenshots if needed.</p>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span>Submit Feedback</span>
+            <div class="spinner"></div>
+          </button>
+          
+          <div class="direct-mail" style="margin-top: 25px; text-align: center;">
+            <i class="fas fa-envelope-open-text" style="color:#3b82f6; margin-right:8px;"></i>
+            Prefer direct email? 
+            <a href="mailto:du.solmates@gmail.com?subject=SOLMATES Feedback"><i class="fas fa-paper-plane"></i> Mail us directly</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="successSection" class="success-overlay">
+      <i class="fas fa-check-circle"></i>
+      <h2>Thank You!</h2>
+      <p>Your feedback helps us make SOLMATES better for everyone.</p>
+      <a href="/" class="back-home">Return to Home</a>
+    </div>
+  </div>
+
+  <script>
+    // Configuration - Replace with your NEW Telegram Bot Details
+    const FEEDBACK_BOT_TOKEN = '8597525439:AAEV6WWYB3KXReoaNmbUoNWQqCyPvUe2laY';
+    const FEEDBACK_CHAT_ID = '1772865405';
+
+    // Auto-detect page URL from query param or referrer
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromPage = urlParams.get('from') || document.referrer || 'Direct Link';
+      document.getElementById('pageUrl').value = fromPage.split('/').pop().split('?')[0] || 'Home';
+      
+      // Star rating labels
+      const stars = document.querySelectorAll('input[name="rating"]');
+      const desc = document.getElementById('ratingDesc');
+      const labels = { '5': 'Excellent', '4': 'Very Good', '3': 'Average', '2': 'Poor', '1': 'Very Bad' };
+      
+      stars.forEach(star => {
+        star.addEventListener('change', () => {
+          desc.innerText = labels[star.value];
+          desc.style.color = '#0f2b46';
+        });
+      });
+
+      // Initialize form fields based on default/current selection
+      updateFormFields(document.getElementById('feedbackType').value);
+    });
+
+    function updateFileLabel(input) {
+      const btn = document.getElementById('fileBtnText');
+      if (input.files && input.files.length > 0) {
+        if (input.files.length === 1) {
+          btn.innerHTML = `<i class="fas fa-file-image"></i> ${input.files[0].name}`;
+        } else {
+          btn.innerHTML = `<i class="fas fa-copy"></i> ${input.files.length} files selected`;
+        }
+        btn.style.background = '#e0f2fe';
+        btn.style.borderColor = '#7dd3fc';
+        btn.style.color = '#0369a1';
+      } else {
+        btn.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> Choose Files...`;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+    }
+
+    /**
+     * Dynamic Form Logic (v115.2)
+     * Shows/Hides fields based on feedback type.
+     */
+    function updateFormFields(type) {
+      const groupPageUrl = document.getElementById('group-page-url');
+      const groupScreenshot = document.getElementById('group-screenshot');
+      const labelPageUrl = document.getElementById('label-page-url');
+      const inputPageUrl = document.getElementById('pageUrl');
+
+      // Reset defaults
+      groupPageUrl.style.display = 'block';
+      groupScreenshot.style.display = 'block';
+      inputPageUrl.required = false;
+      labelPageUrl.innerText = 'Page of Issue';
+
+      if (type === 'Appreciation') {
+        groupPageUrl.style.display = 'none';
+        groupScreenshot.style.display = 'none';
+      } 
+      else if (type === 'Suggestion') {
+        labelPageUrl.innerText = 'Reference Page (Optional)';
+        inputPageUrl.placeholder = 'e.g. Database, Tools...';
+      }
+      else if (type === 'Bug Report' || type === 'Content Error') {
+        inputPageUrl.required = true;
+        labelPageUrl.innerText = (type === 'Bug Report') ? 'Page where bug found *' : 'Page with error *';
+        inputPageUrl.placeholder = 'e.g. pdf-viewer.html';
+      }
+      else if (type === 'Other') {
+        labelPageUrl.innerText = 'Related Page (Optional)';
+      }
+      else {
+        // Initial state or "Select Type..."
+        groupPageUrl.style.display = 'none';
+        groupScreenshot.style.display = 'none';
+      }
+    }
+
+    async function handleFeedbackSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('submitBtn');
+      const formData = new FormData(form);
+      
+      // Validation
+      const rating = formData.get('rating');
+      if (!rating) {
+          alert('Please provide a rating by selecting a star.');
+          document.getElementById('group-rating').scrollIntoView({ behavior: 'smooth' });
+          return;
+      }
+
+      if (!formData.get('feedbackType')) {
+          alert('Please select a feedback type (Bug, Suggestion, etc.)');
+          document.getElementById('group-type').scrollIntoView({ behavior: 'smooth' });
+          return;
+      }
+
+      if (!formData.get('message').trim()) {
+          alert('Please enter your detailed feedback message.');
+          document.getElementById('group-message').scrollIntoView({ behavior: 'smooth' });
+          return;
+      }
+
+      // Profanity Filter
+      const badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father'];
+      const containsProfanity = (text) => {
+          if (!text) return false;
+          let lowerText = text.toLowerCase()
+              .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a')
+              .replace(/5/g, 's').replace(/@/g, 'a').replace(/\$/g, 's').replace(/!/g, 'i')
+              .replace(/[^a-z]/g, '');
+          return badWords.some(word => {
+              if (word.length <= 3) {
+                  const origClean = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+                  return new RegExp(`\\b${word}\\b`).test(origClean);
+              }
+              return lowerText.includes(word);
+          });
+      };
+
+      const hasInvalidChars = (text) => /[*#¥€¢%×@₹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
+
+      if (hasInvalidChars(formData.get('name')) || hasInvalidChars(formData.get('message'))) {
+          alert('Special characters like * # ¥ € ¢ % × @ ₹ & are not allowed in the form.');
+          return;
+      }
+
+      if (containsProfanity(formData.get('name')) || containsProfanity(formData.get('message'))) {
+          alert('Please keep your language clean and appropriate. Profanity is not allowed.');
+          return;
+      }
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      const starsDisplay = "⭐".repeat(parseInt(rating));
+
+      try {
+      const text = `📝 *New Website Feedback*\n\n` +
+                   `⭐ *Rating:* ${rating}/5 ${starsDisplay}\n` +
+                   `📂 *Type:* ${formData.get('feedbackType')}\n` +
+                   `📍 *Page:* ${formData.get('pageUrl')}\n` +
+                   `👤 *User:* ${formData.get('userName') || 'Anonymous'}\n\n` +
+                   `💬 *Message:*\n${formData.get('message')}`;
+
+      // 1. Send text message
+      const textResponse = await fetch(`https://api.telegram.org/bot${FEEDBACK_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: FEEDBACK_CHAT_ID,
+          text: text,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      if (!textResponse.ok) throw new Error('Text API Error');
+
+      // 2. Send screenshots if exist
+      const fileInput = document.getElementById('screenshot');
+      if (fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const file = fileInput.files[i];
+          const fileData = new FormData();
+          fileData.append('chat_id', FEEDBACK_CHAT_ID);
+          fileData.append('document', file);
+          fileData.append('caption', `Screenshot ${i+1}/${fileInput.files.length} from ${formData.get('userName') || 'Anonymous'}`);
+
+          await fetch(`https://api.telegram.org/bot${FEEDBACK_BOT_TOKEN}/sendDocument`, {
+            method: 'POST',
+            body: fileData
+          });
+        }
+      }
+
+      document.getElementById('formSection').style.display = 'none';
+        document.getElementById('successSection').style.display = 'block';
+
+      } catch (error) {
+        console.error(error);
+        alert('❌ Error sending feedback. Please try again later.');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    // ========== MOBILE MENU ==========
+    let menuOpen = false;
+
+    function toggleMobileMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      if (!mobileNav) return;
+
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        mobileNav.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        // Add listener to close on click outside
+        setTimeout(() => {
+          document.addEventListener('click', closeMenuOnClickOutside);
+        }, 10);
+      } else {
+        forceCloseMobileMenu();
+      }
+    }
+
+    function forceCloseMobileMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      if (!mobileNav) return;
+
+      menuOpen = false;
+      mobileNav.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('click', closeMenuOnClickOutside);
+    }
+
+    function closeMenuOnClickOutside(e) {
+      const mobileNav = document.getElementById('mobileNav');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      if (menuOpen && mobileNav && !mobileNav.contains(e.target) && !menuBtn.contains(e.target)) {
+        forceCloseMobileMenu();
+      }
+    }
+  </script>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="social">
+            <div class="whatsapp-container">
+                <div class="whatsapp-icon" id="whatsappIcon"><i class="fab fa-whatsapp"></i></div>
+                <div class="whatsapp-dropdown" id="whatsappDropdown">
+                    <div class="whatsapp-options">
+                        <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
+                            <i class="fas fa-users"></i><span class="option-text">Community</span><span class="option-desc">Join Group</span>
+                        </a>
+                        <a href="https://whatsapp.com/channel/0029Vb6iO1GKmCPIg5fdUv0Z" target="_blank" class="whatsapp-option">
+                            <i class="fas fa-broadcast-tower"></i><span class="option-text">Channel</span><span class="option-desc">Updates</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <a href="https://twitter.com/teamsolmates" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://facebook.com/teamsolmates" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://t.me/solmates_channelbot" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+            <a href="https://instagram.com/teamsolmates" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/@teamsolmates" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.linkedin.com/company/teamsomates/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
+        </div>
+        <p>2026 SOLMATES &bull; A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+    </footer>
+    <script>
+        // WhatsApp Dropdown Logic
+        const whatsappIcon = document.getElementById('whatsappIcon');
+        const whatsappDropdown = document.getElementById('whatsappDropdown');
+        if (whatsappIcon && whatsappDropdown) {
+            whatsappIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                whatsappDropdown.classList.toggle('active');
+            });
+            document.addEventListener('click', (e) => {
+                if (!whatsappDropdown.contains(e.target)) {
+                    whatsappDropdown.classList.remove('active');
+                }
+            });
+        }
+    </script>
+\n</body>
+</html>

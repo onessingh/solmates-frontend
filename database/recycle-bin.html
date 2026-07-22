@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Recycle Bin - SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/api-client.js?v=89.0"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #6366f1;
+      --bg: #f8fafc;
+      --card-bg: #fff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
+    body { background: var(--bg); color: #1e293b; min-height: 100vh; padding-top: 80px; }
+
+    .top-nav {
+      position: fixed; top: 0; width: 100%; height: 60px;
+      background: rgba(255,255,255,0.98); border-bottom: 1px solid #eee;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 20px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    .bin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .bin-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .bin-title i { font-size: 32px; color: var(--accent); }
+    .bin-title h1 { font-size: 28px; color: var(--primary); }
+
+    .back-btn {
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .back-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 10px; }
+
+    /* Info Bar */
+    .info-bar {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 12px 20px;
+      border-radius: 12px;
+      color: #1e40af;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    /* Grid */
+    .bin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .bin-item-card {
+      background: white;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.3s ease;
+      animation: fadeIn 0.4s ease-out forwards;
+      position: relative;
+      padding-left: 40px;
+    }
+    .bin-item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border-color: var(--accent);
+    }
+
+    .bin-item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .bin-badge {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .badge-folder { background: #e0e7ff; color: #4338ca; }
+    .badge-item { background: #fef3c7; color: #92400e; }
+
+    .bin-item-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .bin-item-details {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    .bin-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 5px;
+    }
+
+    .action-btn {
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .btn-restore { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+    .btn-restore:hover { background: #15803d; color: white; }
+
+    .btn-delete { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+    .btn-delete:hover { background: #be123c; color: white; }
+
+    /* States */
+    .loading-state { grid-column: 1 / -1; text-align: center; padding: 80px; color: #64748b; }
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 100px;
+      color: #94a3b8;
+    }
+    .empty-state i { font-size: 60px; margin-bottom: 20px; display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .bin-grid { grid-template-columns: 1fr; }
+    }
+
+    .selection-bar {
+      display: none;
+      position: sticky;
+      top: 60px;
+      z-index: 950;
+      background: #eff6ff; /* Light blue tint */
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 25px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      animation: slideDown 0.3s ease;
+    }
+    .selection-bar.active { display: flex; }
+    
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .selection-controls { display: flex; align-items: center; gap: 10px; }
+    .selection-count { 
+      font-size: 13px; font-weight: 800; background: var(--primary); 
+      color: white; padding: 2px 8px; border-radius: 6px; 
+    }
+    
+    .bulk-actions { display: flex; align-items: center; gap: 6px; }
+    .bulk-btn {
+      padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s;
+      border: 1px solid transparent; text-transform: uppercase;
+    }
+    .bulk-btn.restore { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .bulk-btn.restore:hover { background: #166534; color: white; }
+    .bulk-btn.delete { background: #fee2e2; color: #991b1b; border: 1px solid #fecdd3; }
+    .bulk-btn.delete:hover { background: #991b1b; color: white; }
+    .bulk-btn.cancel-btn { background: #f1f5f9; color: #475569; padding: 7px 10px; }
+
+    /* Mobile specific tweaks */
+    @media (max-width: 480px) {
+      .selection-bar { padding: 8px 10px; margin: 0 -5px 20px; }
+      .select-all-wrap { font-size: 11px; }
+      .selection-count { display: none; }
+      .bulk-btn { padding: 6px 8px; font-size: 11px; }
+    }
+
+    /* Checkbox Styling */
+    .item-checkbox-wrap {
+      position: absolute; top: 12px; left: 10px;
+      z-index: 10; cursor: pointer;
+    }
+    .item-checkbox-wrap input {
+      width: 20px; height: 20px; cursor: pointer;
+      accent-color: var(--accent);
+    }
+    .bin-item-card { position: relative; }
+    
+    .select-all-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .select-all-wrap input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <header class="top-nav">
+    <div class="nav-logo" onclick="window.location.href='/database'">SOLMATES <span style="font-size: 12px; opacity: 0.6;">Admin Bin</span></div>
+    <a href="/database" class="back-btn btn-sm"><i class="fas fa-arrow-left"></i> Exit Bin</a>
+  </header>
+
+  <div class="container">
+    <div class="bin-header">
+      <div class="bin-title">
+        <i class="fas fa-trash-alt"></i>
+        <h1>Recycle Bin</h1>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button onclick="emptyRecycleBinPrompt()" class="back-btn" style="background: #be123c;">
+          <i class="fas fa-dumpster"></i> Remove All
+        </button>
+        <button onclick="refreshRecycleBin()" class="back-btn" style="background: #64748b;">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Selection Bar (Top Fixed/Sticky) -->
+    <div id="selectionBar" class="selection-bar">
+      <div class="selection-controls">
+        <label class="select-all-wrap">
+          <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)">
+          All
+        </label>
+        <span class="selection-count" id="selectionCount">0</span>
+      </div>
+      <div class="bulk-actions">
+        <button class="bulk-btn restore" onclick="executeBulk('restore')">
+          <i class="fas fa-undo"></i> Restore
+        </button>
+        <button class="bulk-btn delete" onclick="executeBulk('delete')">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button class="bulk-btn cancel-btn" onclick="clearSelection()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="info-bar">
+      <i class="fas fa-info-circle"></i>
+      <span>Items in the recycle bin are permanently deleted automatically after <strong>7 days</strong>.</span>
+    </div>
+
+    <div id="binLoading" class="loading-state">
+      <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+      <p style="margin-top: 15px;">Fetching deleted items...</p>
+    </div>
+
+    <div id="binGrid" class="bin-grid"></div>
+
+
+    <div id="bulkLoader" class="loading-state" style="display: none; padding: 40px;">
+      <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+      <p id="bulkText" style="margin-top: 10px;">Processing...</p>
+    </div>
+
+    <div id="binEmpty" class="empty-state" style="display: none;">
+      <i class="fas fa-ghost"></i>
+      <h3>Your bin is empty</h3>
+      <p>Items deleted in the last 7 days will appear here.</p>
+    </div>
+  </div>
+
+  <script>
+    let selectedIds = new Set();
+    let allVisibleIds = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Ensure admin is logged in
+      if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) {
+        alert('Access Denied');
+        window.location.href = '/database';
+        return;
+      }
+      refreshRecycleBin();
+    });
+
+    async function refreshRecycleBin() {
+      const grid = document.getElementById('binGrid');
+      const loader = document.getElementById('binLoading');
+      const empty = document.getElementById('binEmpty');
+      
+      // Reset selection state
+      selectedIds.clear();
+      allVisibleIds = [];
+      updateSelectionUI();
+      document.getElementById('selectAllCheckbox').checked = false;
+
+      grid.innerHTML = '';
+      loader.style.display = 'block';
+      empty.style.display = 'none';
+
+      try {
+        const res = await window.solmatesAPI.getRecycleBin();
+        loader.style.display = 'none';
+
+        if (!res.success || !res.data || res.data.length === 0) {
+          empty.style.display = 'block';
+          return;
+        }
+
+        res.data.forEach(item => {
+          allVisibleIds.push(item.id);
+          const card = createBinCard(item);
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        loader.style.display = 'none';
+        console.error('Bin fetch failed:', err);
+      }
+    }
+
+    function createBinCard(item) {
+      const card = document.createElement('div');
+      card.className = 'bin-item-card';
+      card.id = `card-${item.id}`;
+      
+      const isFolder = item.type === 'folder';
+      const title = item.data.title || item.data.name || 'Untitled Item';
+      const semester = item.semester === 'all' ? 'All Semesters' : `Semester ${item.semester}`;
+
+      card.innerHTML = `
+        <div class="item-checkbox-wrap">
+          <input type="checkbox" class="card-checkbox" value="${item.id}" onchange="toggleSelectItem('${item.id}', this.checked)">
+        </div>
+        <div class="bin-item-meta">
+          <span class="bin-badge ${isFolder ? 'badge-folder' : 'badge-item'}">${isFolder ? 'Folder' : (item.category || 'Item')}</span>
+          <span>Deleted ${getTimeAgo(item.deletedAt)}</span>
+        </div>
+        <div class="bin-item-title">${title}</div>
+        <div class="bin-item-details">
+          <i class="fas fa-layer-group"></i> ${semester} <br>
+          <span style="font-size: 11px; opacity: 0.7;">ID: ${item.id}</span>
+        </div>
+        <div class="bin-actions">
+          <button class="action-btn btn-restore" onclick="restoreFromBin('${item.id}')">
+            <i class="fas fa-undo"></i> Restore
+          </button>
+          <button class="action-btn btn-delete" onclick="permanentDelete('${item.id}')">
+            <i class="fas fa-times"></i> Clear
+          </button>
+        </div>
+      `;
+      return card;
+    }
+
+    function getTimeAgo(dateStr) {
+      const diff = Math.floor((new Date() - new Date(dateStr)) / (1000 * 60 * 60 * 24));
+      return diff === 0 ? 'Today' : `${diff}d ago`;
+    }
+
+    function toggleSelectItem(id, checked) {
+      if (checked) {
+        selectedIds.add(id);
+        document.getElementById(`card-${id}`).style.borderColor = 'var(--accent)';
+        document.getElementById(`card-${id}`).style.background = '#f5f7ff';
+      } else {
+        selectedIds.delete(id);
+        document.getElementById(`card-${id}`).style.borderColor = '';
+        document.getElementById(`card-${id}`).style.background = '';
+      }
+      updateSelectionUI();
+    }
+
+    function toggleSelectAll(checked) {
+      selectedIds.clear();
+      if (checked) {
+        allVisibleIds.forEach(id => selectedIds.add(id));
+      }
+      
+      document.querySelectorAll('.card-checkbox').forEach(cb => {
+        cb.checked = checked;
+        const card = document.getElementById(`card-${cb.value}`);
+        if (card) {
+          card.style.borderColor = checked ? 'var(--accent)' : '';
+          card.style.background = checked ? '#f5f7ff' : '';
+        }
+      });
+      updateSelectionUI();
+    }
+
+    function clearSelection() {
+      document.getElementById('selectAllCheckbox').checked = false;
+      toggleSelectAll(false);
+    }
+
+    function updateSelectionUI() {
+      const bar = document.getElementById('selectionBar');
+      const countLabel = document.getElementById('selectionCount');
+      
+      if (selectedIds.size > 0) {
+        bar.classList.add('active');
+        countLabel.innerText = `${selectedIds.size} items selected`;
+      } else {
+        bar.classList.remove('active');
+      }
+    }
+
+    async function executeBulk(action) {
+      const verb = action === 'restore' ? 'restore' : 'permanently delete';
+      if (!confirm(`Are you sure you want to ${verb} ${selectedIds.size} items?`)) return;
+
+      const loader = document.getElementById('bulkLoader');
+      const text = document.getElementById('bulkText');
+      loader.style.display = 'block';
+      
+      const idsArr = Array.from(selectedIds);
+      let successCount = 0;
+
+      for (let i = 0; i < idsArr.length; i++) {
+        const id = idsArr[i];
+        text.innerText = `Processing ${i + 1}/${idsArr.length}...`;
+        try {
+          if (action === 'restore') await window.solmatesAPI.restoreFromBin(id);
+          else await window.solmatesAPI.permanentDeleteFromBin(id);
+          successCount++;
+        } catch (e) { console.error(`Failed for ${id}:`, e); }
+      }
+
+      loader.style.display = 'none';
+      alert(`${successCount} items processed successfully.`);
+      refreshRecycleBin();
+    }
+
+    async function emptyRecycleBinPrompt() {
+      if (!confirm('EXTREMELY IMPORTANT: This will PERMANENTLY delete ALL items in the recycle bin. This cannot be undone. Proceed?')) return;
+      if (!confirm('FINAL CONFIRMATION: Are you absolutely sure? This action is irreversible.')) return;
+
+      const loader = document.getElementById('bulkLoader');
+      loader.style.display = 'block';
+      const text = document.getElementById('bulkText');
+      text.innerText = 'Deep cleaning bin...';
+
+      try {
+        const res = await window.solmatesAPI.getRecycleBin();
+        if (res.success && res.data) {
+          for (let item of res.data) {
+            await window.solmatesAPI.permanentDeleteFromBin(item.id).catch(() => null);
+          }
+        }
+      } catch (e) {
+        alert('Something went wrong during clear all.');
+      } finally {
+        loader.style.display = 'none';
+        refreshRecycleBin();
+      }
+    }
+
+    async function restoreFromBin(id) {
+      if (!confirm('Restore this item?')) return;
+      try {
+        const res = await window.solmatesAPI.restoreFromBin(id);
+        if (res.success) refreshRecycleBin();
+      } catch (err) { alert('Error: ' + err.message); }
+    }
+
+    async function permanentDelete(id) {
+      if (!confirm('Permanently delete this item?')) return;
+      try {
+        const res = await window.solmatesAPI.permanentDeleteFromBin(id);
+        if (res.success) refreshRecycleBin();
+      } catch (err) { alert('Error: ' + err.message); }
+    }
+  </script>
+</body>
+</html>

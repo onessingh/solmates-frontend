@@ -1,0 +1,17 @@
+[
+    { "q": "What is the primary goal of financial management in a corporation?", "options": ["Maximize profits", "Minimize risk", "Maximize shareholder wealth", "Maximize market share"], "a": 2 },
+    { "q": "The cost of capital is essentially the:", "options": ["Interest rate paid on debt", "Minimum required rate of return", "Dividend yield", "Tax rate"], "a": 1 },
+    { "q": "Which financial statement shows the financial position of a company at a specific point in time?", "options": ["Income Statement", "Balance Sheet", "Cash Flow Statement", "Statement of Retained Earnings"], "a": 1 },
+    { "q": "The formula (Current Assets - Current Liabilities) calculates:", "options": ["Net Profit", "Gross Margin", "Net Working Capital", "Quick Ratio"], "a": 2 },
+    { "q": "NPV stands for:", "options": ["Net Present Value", "Net Profit Value", "Nominal Price Value", "New Product Valuation"], "a": 0 },
+    { "q": "Which method of capital budgeting does not account for the time value of money?", "options": ["Net Present Value", "Internal Rate of Return", "Payback Period", "Profitability Index"], "a": 2 },
+    { "q": "The mixture of debt and equity used by a firm to finance its operations is called:", "options": ["Capital budgeting", "Capital structure", "Working capital management", "Financial leverage"], "a": 1 },
+    { "q": "Which ratio indicates a firm's ability to pay off short-term obligations without relying on the sale of inventory?", "options": ["Current Ratio", "Quick Ratio", "Debt Ratio", "Profit Margin"], "a": 1 },
+    { "q": "The rate at which the NPV of a project equals zero is the:", "options": ["Cost of capital", "Hurdle rate", "Internal Rate of Return (IRR)", "Discount rate"], "a": 2 },
+    { "q": "Systematic risk is also known as:", "options": ["Diversifiable risk", "Market risk", "Unique risk", "Firm-specific risk"], "a": 1 },
+    { "q": "CAPM stands for:", "options": ["Capital Asset Pricing Model", "Corporate Accounting and Pricing Method", "Cost and Profit Management", "Current Asset Performance Metric"], "a": 0 },
+    { "q": "In the dividend discount model (DDM), the intrinsic value of a stock depends heavily on:", "options": ["Past dividends", "Future expected dividends", "Historical stock prices", "Competitor's dividend payout"], "a": 1 },
+    { "q": "An increase in the discount rate will cause the present value of a future cash flow to:", "options": ["Increase", "Decrease", "Remain unchanged", "Become negative"], "a": 1 },
+    { "q": "The term 'Beta' in finance measures which type of risk?", "options": ["Unsystematic risk", "Systematic risk", "Liquidity risk", "Credit risk"], "a": 1 },
+    { "q": "Working capital management primarily deals with:", "options": ["Long-term investments", "Capital structure", "Short-term assets and liabilities", "Dividend policy"], "a": 2 }
+]

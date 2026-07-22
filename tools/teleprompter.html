@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Teleprompter & Speech Timer | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --danger: #ff3b30;
+      --purple: #af52de;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; min-height: 100vh; overflow-x: hidden; }
+
+    .top-nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 1000; border-bottom: 1px solid var(--border); }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); cursor: pointer; }
+    .back-link { background: var(--primary); color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .back-link:hover { background: #1a3c5e; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 20px 80px; }
+
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero-icon { width: 68px; height: 68px; background: linear-gradient(135deg, #1e3a5f, #0071e3); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 10px 30px rgba(0,113,227,0.25); }
+    .hero-icon i { font-size: 2rem; color: white; }
+    .hero h1 { font-size: 1.9rem; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero p { font-size: 0.95rem; color: var(--light); max-width: 550px; margin: 0 auto; line-height: 1.5; }
+    @media (max-width: 500px) { .hero h1 { font-size: 1.5rem; } }
+
+    .card { background: var(--card); border-radius: 24px; border: 1px solid var(--border); padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); margin-bottom: 24px;}
+    @media (max-width: 500px) { .card { padding: 20px; } }
+    
+    .stats-row { display: flex; gap: 20px; margin-bottom: 20px; background: #f9f9fb; padding: 16px 20px; border-radius: 16px; border: 1px solid var(--border); }
+    .stat { flex: 1; text-align: center; }
+    .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.8rem; font-weight: 600; color: var(--light); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    .stat-divider { width: 1px; background: var(--border); }
+
+    .script-area { width: 100%; height: 280px; padding: 20px; border-radius: 16px; border: 1.5px solid var(--border); font-size: 1.1rem; line-height: 1.6; color: var(--text); background: #fafafa; outline: none; transition: all 0.2s; font-family: inherit; resize: vertical; }
+    .script-area:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(0,113,227,0.1); }
+    
+    .settings-row { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+    .set-group { flex: 1; min-width: 200px; }
+    .set-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+    
+    /* Range Slider Styling */
+    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-top: -8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); border: 1px solid #ddd; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #e5e5ea; border-radius: 10px; }
+    input[type=range]:focus { outline: none; }
+    input[type=range]:focus::-webkit-slider-runnable-track { background: #d1d1d6; }
+
+    .btn-primary { width: 100%; padding: 18px; border-radius: 16px; background: linear-gradient(135deg, var(--primary), #1a3c5e); color: white; border: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 20px rgba(15,43,70,0.25); margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(15,43,70,0.3); }
+
+    /* TELEPROMPTER OVERLAY */
+    .prompter-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 9999; display: none; flex-direction: column; overflow: hidden; }
+    .prompter-active { display: flex !important; }
+    
+    /* Eyeline Indicator */
+    .eyeline { position: absolute; top: 35%; left: 0; width: 100%; height: 60px; background: linear-gradient(rgba(0,113,227,0.1), rgba(0,113,227,0.0)); border-top: 2px solid rgba(0,113,227,0.5); pointer-events: none; z-index: 10001; }
+
+    .prompter-content { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    
+    .scroll-text { position: absolute; width: 100%; padding: 0 20px; font-size: 60px; line-height: 1.5; color: rgba(255,255,255,0.9); font-weight: 600; text-align: center; white-space: pre-wrap; word-wrap: break-word; transform: translateY(100vh); transition: font-size 0.2s; }
+    
+    /* Mirror mode class */
+    .mirror-text { transform: scaleX(-1) translateY(100vh) !important; }
+    .mirror-text.scrolling { transform: scaleX(-1) translateY(var(--scroll-pos)) !important; }
+
+    /* Controls overlay inside prompter */
+    .p-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(30,30,30,0.7); backdrop-filter: blur(10px); padding: 12px 24px; border-radius: 40px; display: flex; gap: 20px; align-items: center; z-index: 10002; border: 1px solid rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.3s; }
+    .prompter-overlay:hover .p-controls { opacity: 1; }
+    
+    .pc-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; }
+    .pc-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
+    .pc-btn.active { color: var(--accent); }
+    .pc-play { background: var(--accent); }
+    .pc-play:hover { background: #005bb5; }
+    .pc-close { background: rgba(255,59,48,0.2); color: var(--danger); }
+    .pc-close:hover { background: var(--danger); color: white; }
+
+    .speed-indicator { color: white; font-weight: 700; font-size: 1rem; min-width: 40px; text-align: center; }
+
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-tv"></i> Web Teleprompter</h1>
+    </div>
+
+
+
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-tv"></i></div>
+    
+    <p>Paste your presentation script, adjust the speed, and read naturally with our auto-scrolling teleprompter.</p>
+  </div>
+
+  <div class="card">
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-val" id="wordCount">0</div>
+        <div class="stat-label">Words</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-val" id="estTime">00:00</div>
+        <div class="stat-label">Est. Speech Time</div>
+      </div>
+    </div>
+
+    <textarea id="scriptInput" class="script-area" placeholder="Paste your presentation script here..." oninput="updateStats()"></textarea>
+    
+    <div style="text-align: right; margin-top: 8px;">
+      <button onclick="loadSampleText()" style="background: none; border: none; color: var(--accent); font-weight: 600; font-size: 0.85rem; cursor: pointer;"><i class="fas fa-magic"></i> Load Sample Dummy Text</button>
+    </div>
+
+    <div class="settings-row">
+      <div class="set-group">
+        <label>Scroll Speed (<span id="speedVal">3</span>)</label>
+        <input type="range" id="speedInput" min="1" max="10" value="3" oninput="document.getElementById('speedVal').innerText = this.value; if(isPlaying) currentSpeed = parseInt(this.value);">
+      </div>
+      <div class="set-group">
+        <label>Font Size</label>
+        <input type="range" id="fontInput" min="30" max="120" value="70" oninput="updateFontSize()">
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startPrompter()"><i class="fas fa-play"></i> Start Teleprompter</button>
+  </div>
+</div>
+
+<!-- TELEPROMPTER FULLSCREEN OVERLAY -->
+<div class="prompter-overlay" id="prompterUI">
+  <div class="eyeline"></div>
+  
+  <div class="prompter-content" id="prompterContent">
+    <div class="scroll-text" id="scrollText"></div>
+  </div>
+
+  <div class="p-controls">
+    <button class="pc-btn" onclick="adjustSpeed(-1)" title="Slower"><i class="fas fa-minus"></i></button>
+    <div class="speed-indicator" id="pSpeedVal">3</div>
+    <button class="pc-btn" onclick="adjustSpeed(1)" title="Faster"><i class="fas fa-plus"></i></button>
+    
+    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.2); margin: 0 10px;"></div>
+    
+    <button class="pc-btn pc-play" id="btnPlayPause" onclick="togglePlay()"><i class="fas fa-pause"></i></button>
+    <button class="pc-btn" onclick="toggleMirror()" title="Mirror Text (For Glass Prompters)" id="btnMirror"><i class="fas fa-arrows-alt-h"></i></button>
+    
+    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.2); margin: 0 10px;"></div>
+    
+    <button class="pc-btn pc-close" onclick="closePrompter()" title="Exit"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<script>
+  // DOM Elements
+  const scriptInput = document.getElementById('scriptInput');
+  const wordCountEl = document.getElementById('wordCount');
+  const estTimeEl = document.getElementById('estTime');
+  const scrollText = document.getElementById('scrollText');
+  const prompterUI = document.getElementById('prompterUI');
+  const speedInput = document.getElementById('speedInput');
+  const fontInput = document.getElementById('fontInput');
+  const btnPlayPause = document.getElementById('btnPlayPause');
+  const pSpeedVal = document.getElementById('pSpeedVal');
+  const btnMirror = document.getElementById('btnMirror');
+
+  // Load saved script
+  window.onload = () => {
+    const saved = localStorage.getItem('sol_prompter_script');
+    if (saved) {
+      scriptInput.value = saved;
+      updateStats();
+    }
+  };
+
+  // State
+  let isPlaying = false;
+  let currentSpeed = 3;
+  let scrollPos = 0;
+  let animationFrameId;
+  let isMirrored = false;
+
+  function updateStats() {
+    const text = scriptInput.value;
+    localStorage.setItem('sol_prompter_script', text);
+    
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    wordCountEl.innerText = words;
+
+    // Average speaking rate: 130 words per minute
+    const minutes = Math.floor(words / 130);
+    const seconds = Math.floor((words % 130) / (130 / 60));
+    
+    estTimeEl.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  function updateFontSize() {
+    let baseSize = parseInt(fontInput.value);
+    if (window.innerWidth < 600) {
+      baseSize = Math.round(baseSize * 0.6); // Scale down 40% on mobile to fit words properly
+    }
+    scrollText.style.fontSize = baseSize + 'px';
+  }
+
+  function startPrompter() {
+    const text = scriptInput.value.trim();
+    if (!text) {
+      alert("Please paste some text first.");
+      return;
+    }
+
+    // Push hash state for back-button support
+    window.location.hash = 'prompter';
+
+    // Initialize UI
+    scrollText.innerText = text;
+    updateFontSize();
+    currentSpeed = parseInt(speedInput.value);
+    pSpeedVal.innerText = currentSpeed;
+    
+    prompterUI.classList.add('prompter-active');
+    
+    // Reset Scroll Position
+    scrollPos = window.innerHeight * 0.8; // Start text near the bottom
+    applyTransform();
+
+    // Start Animation
+    isPlaying = true;
+    updatePlayIcon();
+    animateScroll();
+  }
+
+  function closePrompter() {
+    // If closed via UI, this clears the hash. If closed via back button, hash is already cleared.
+    if (window.location.hash === '#prompter') {
+      window.history.back(); 
+    } else {
+      isPlaying = false;
+      cancelAnimationFrame(animationFrameId);
+      prompterUI.classList.remove('prompter-active');
+    }
+  }
+
+  // Handle hardware back button
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash !== '#prompter') {
+      isPlaying = false;
+      cancelAnimationFrame(animationFrameId);
+      prompterUI.classList.remove('prompter-active');
+    }
+  });
+
+  function togglePlay() {
+    isPlaying = !isPlaying;
+    updatePlayIcon();
+    if (isPlaying) {
+      animateScroll();
+    } else {
+      cancelAnimationFrame(animationFrameId);
+    }
+  }
+
+  function updatePlayIcon() {
+    btnPlayPause.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+  }
+
+  function toggleMirror() {
+    isMirrored = !isMirrored;
+    if (isMirrored) {
+      btnMirror.classList.add('active');
+      scrollText.classList.add('mirror-text');
+    } else {
+      btnMirror.classList.remove('active');
+      scrollText.classList.remove('mirror-text');
+    }
+    applyTransform();
+  }
+
+  function adjustSpeed(delta) {
+    let newSpeed = currentSpeed + delta;
+    if (newSpeed >= 1 && newSpeed <= 10) {
+      currentSpeed = newSpeed;
+      speedInput.value = currentSpeed;
+      document.getElementById('speedVal').innerText = currentSpeed;
+      pSpeedVal.innerText = currentSpeed;
+    }
+  }
+
+  function applyTransform() {
+    if (isMirrored) {
+      scrollText.style.transform = `scaleX(-1) translateY(${scrollPos}px)`;
+    } else {
+      scrollText.style.transform = `translateY(${scrollPos}px)`;
+    }
+  }
+
+  function animateScroll() {
+    if (!isPlaying) return;
+
+    // Speed mapping (1 to 10 mapped to actual pixel movement per frame)
+    // 1 = very slow (0.3px/frame), 10 = fast (3px/frame)
+    const pxPerFrame = 0.3 + ((currentSpeed - 1) * 0.3);
+    
+    scrollPos -= pxPerFrame;
+    applyTransform();
+
+    // Stop if scrolled past content
+    const contentHeight = scrollText.getBoundingClientRect().height;
+    // Auto-close when text reaches the upper middle of the screen
+    if (scrollPos < -contentHeight + (window.innerHeight / 3)) {
+      isPlaying = false;
+      closePrompter();
+      return;
+    }
+
+    animationFrameId = requestAnimationFrame(animateScroll);
+  }
+
+  const sampleScripts = [
+    "Welcome everyone to today's presentation.\n\nWe are here to discuss the future of digital education and how technology is reshaping the way we learn, interact, and grow in the modern world.\n\nOver the past few years, we have seen an incredible shift towards online platforms. What was once considered an alternative has now become the primary method of education for millions.\n\nOur goal today is to look at three main areas:\n\nFirst, accessibility. How can we ensure that every student, regardless of their location, has access to premium learning materials?\n\nSecond, engagement. How do we keep students focused when they are staring at a screen for hours?\n\nAnd finally, outcomes. Are students actually retaining what they learn through these new digital mediums?\n\nLet's dive into the data and see what the latest research tells us. Thank you for being here.",
+    
+    "Good morning team.\n\nToday I want to talk about leadership in times of uncertainty. True leadership isn't just about managing successes; it's about navigating through the storms.\n\nWhen the market shifts unexpectedly, the team looks to us not just for answers, but for stability.\n\nWe need to foster an environment where failure is seen as a stepping stone rather than a roadblock. Communication must be completely transparent.\n\nRemember, your team won't remember what you achieved when things were easy, they will remember how you guided them when things were hard.\n\nLet's review our Q3 strategy with this mindset.",
+    
+    "Hello and welcome to our annual product launch event.\n\nFor the last eighteen months, our engineering and design teams have been working tirelessly on a project that we believe will fundamentally change how you manage your daily workflow.\n\nWe asked ourselves one simple question: Why does productivity software feel like a chore?\n\nIt shouldn't. Tools should adapt to the way you think, not the other way around.\n\nToday, I am thrilled to introduce you to our newest innovation. A system so intuitive, you'll wonder how you ever worked without it.\n\nLet me show you a quick demo.",
+    
+    "Distinguished guests, thank you for joining us this evening.\n\nWe stand at the edge of a new technological revolution. Artificial Intelligence is no longer just a concept in sci-fi movies, it is actively running our supply chains, writing our code, and diagnosing our patients.\n\nBut with great power comes great responsibility.\n\nAs creators and innovators, we must ensure that these algorithms are built with ethics at their core. Bias in AI is not a tech problem, it is a human problem.\n\nOver the next twenty minutes, I will share five key frameworks that every modern business must adopt to use AI responsibly and sustainably.",
+    
+    "Welcome to the Q4 Financial Overview.\n\nI am pleased to announce that we have not only met our revenue targets for this quarter, but we have exceeded them by 14%.\n\nThis growth was primarily driven by our expansion into the Asian markets and the successful restructuring of our subscription tiers.\n\nHowever, while top-line revenue grew, our operational costs also increased due to supply chain bottlenecks.\n\nMoving into next year, our primary focus will be on margin optimization and lean operations. If we can reduce our overhead by just 5%, the impact on our EBITDA will be massive.\n\nLet's look at the detailed breakdown."
+  ];
+
+  function loadSampleText() {
+    const randomIndex = Math.floor(Math.random() * sampleScripts.length);
+    scriptInput.value = sampleScripts[randomIndex];
+    updateStats();
+  }
+
+  // Keyboard controls for prompter
+  document.addEventListener('keydown', (e) => {
+    if (!prompterUI.classList.contains('prompter-active')) return;
+    
+    if (e.code === 'Space') {
+      e.preventDefault();
+      togglePlay();
+    } else if (e.code === 'Escape') {
+      closePrompter();
+    } else if (e.code === 'ArrowUp') {
+      e.preventDefault();
+      scrollPos += 50;
+      applyTransform();
+    } else if (e.code === 'ArrowDown') {
+      e.preventDefault();
+      scrollPos -= 50;
+      applyTransform();
+    }
+  });
+
+</script>
+</body>
+</html>

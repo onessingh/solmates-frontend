@@ -1,0 +1,767 @@
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBA Study Material, PYQs & Class Materials | SOLMATES</title>
+  <meta name="description" content="Access a comprehensive collection of MBA notes, previous year question papers (PYQs), and class materials at SOLMATES. Download resources for all subjects.">
+  <meta name="keywords" content="MBA PYQs, MBA notes free download, class materials MBA, DU SOL study material, MBA study material, SOLMATES database, notes">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=104.2"></script>
+  <script src="/js/api-client.js?v=104.2"></script>
+  <script src="/js/sol-cache.js?v=104.2"></script>
+  <script src="/js/prefetch-helper.js?v=104.2"></script>
+  <script>
+    // [v104.4] NUCLEAR AUTO-UPDATE SYSTEM
+    (function() {
+      const currentVersion = '104.4'; 
+      const savedVersion = localStorage.getItem('sol_app_version');
+      if (savedVersion && savedVersion !== currentVersion) {
+        localStorage.setItem('sol_app_version', currentVersion);
+        location.reload(true);
+      } else {
+        localStorage.setItem('sol_app_version', currentVersion);
+      }
+    })();
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #c0962d;
+    }
+    * { 
+      margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; 
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+    body { background: #f8fafc; color: #1e293b; min-height: 100vh; padding-top: 75px; }
+
+    /* [v111.9] GLOBAL TOUCH-FREE LOCKDOWN */
+    .top-nav, .breadcrumb, .page-header, .btn, .card-icon, h3, p, .admin-bar {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .card.file h3, .card.folder h3 { -webkit-user-select: text; user-select: text; }
+
+    .top-nav {
+      position: fixed; top: 0; width: 100%; height: 60px;
+      background: rgba(255, 255, 255, 0.98); border-bottom: 1px solid #eee;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 20px; z-index: 1000; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
+    .nav-right { display: flex; align-items: center; gap: 12px; position: relative; }
+
+    .database-btn {
+      background: #0f2b46; color: white; text-decoration: none;
+      padding: 7px 16px; border-radius: 20px; font-size: 13px;
+      display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;
+      font-weight: 600; transition: 0.3s;
+    }
+    .database-btn:hover { background: #1a3c5e; transform: translateY(-1px); }
+    .database-btn i { font-size: 14px; color: #c0962d; }
+
+    .admin-indicator {
+      width: 8px; height: 8px; border-radius: 50%;
+      background-color: #4CAF50; display: none;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+    }
+    .admin-indicator.active { display: block; animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+      70% { box-shadow: 0 0 0 5px rgba(76, 175, 80, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+    }
+
+    .breadcrumb {
+      background: white; border-bottom: 1px solid #eee;
+      padding: 12px 30px; display: none; align-items: center; gap: 8px;
+      font-size: 13px; color: #888; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; margin-bottom: 20px;
+      scrollbar-width: none; /* Hide scrollbar for clean UI */
+    }
+    .breadcrumb::-webkit-scrollbar { display: none; }
+    .breadcrumb span { color: var(--accent); cursor: pointer; font-weight: 500; max-width: 150px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: bottom; }
+    .breadcrumb i.sep { font-size: 9px; color: #ccc; flex-shrink: 0; }
+    .breadcrumb .current { color: #333; cursor: default; font-weight: 700; max-width: 220px; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+    .page-header { text-align: center; margin-bottom: 35px; }
+    .page-header h1 { font-size: 28px; color: var(--primary); margin-bottom: 6px; }
+    .page-header p { color: #888; font-size: 14px; }
+
+    .admin-bar {
+      display: none; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 10px; margin-bottom: 30px; padding: 16px; background: #f8fafc;
+      border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+    .admin-bar.visible { display: flex; }
+    @media (min-width: 768px) { .admin-bar { justify-content: flex-end; padding: 12px 24px; } }
+
+    .btn {
+      background: var(--primary); color: white; border: 1px solid rgba(0,0,0,0.05);
+      padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .btn-item { background: #0d9488 !important; }
+    .btn-folder { background: #6366f1 !important; }
+    .btn-arrange { background: #f59e0b !important; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    @media (min-width: 1024px) { .grid { gap: 35px; } }
+
+    .card {
+      background: white; border-radius: 12px; padding: 18px 20px;
+      border: 1px solid #eee; cursor: pointer; text-align: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; position: relative; transition: all 0.3s ease;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); border-color: #0f2b46; }
+    .card i.main-icon { font-size: 32px; transition: 0.3s; }
+
+    /* Centered Style (Old SOLMATES) */
+    .card.folder, .card.file { padding: 18px 20px; }
+    .card.folder i.main-icon { color: #facc15; }
+    .card.file i.main-icon { color: #3b82f6; }
+    .card h3 { font-size: 16px; font-weight: 700; color: #333; overflow-wrap: anywhere; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+
+    .ctrl-btn {
+      position: absolute; top: 10px; width: 42px; height: 42px; border-radius: 12px;
+      display: none; align-items: center; justify-content: center;
+      transition: all 0.2s; z-index: 10; background: white; border: 1px solid #ddd;
+    }
+    .ctrl-btn.edit { left: 10px; color: #3b82f6; }
+    .ctrl-btn.delete { right: 10px; color: #ef4444; }
+    .ctrl-btn.move { left: 58px; color: #10b981; }
+    .ctrl-btn.hide { left: 106px; color: #64748b; }
+    .card:hover .ctrl-btn { display: flex; }
+    /* Mobile standard: always show admin icons if small screen */
+    @media (max-width: 768px) {
+      .ctrl-btn { display: flex; width: 34px; height: 34px; font-size: 14px; top: 8px; }
+      .ctrl-btn.edit { left: 8px; }
+      .ctrl-btn.delete { right: 8px; }
+      .ctrl-btn.move { left: 48px; }
+      .ctrl-btn.hide { left: 88px; }
+    }
+
+    /* Reorder Mode Styles */
+    .reorder-mode-active #grid {
+      background: rgba(15, 43, 70, 0.03); padding: 20px; border-radius: 20px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.05); min-height: 400px;
+    }
+    .reorder-mode-active #grid .card { 
+      cursor: move !important; opacity: 0.9; background: white;
+      border: 1px solid #e2e8f0 !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
+    }
+    .reorder-mode-active #grid .card:hover { transform: scale(1.02) !important; border-color: #3b82f6 !important; }
+    .reorder-mode-active #grid .card * { pointer-events: none !important; }
+    
+    .drag-handle {
+      position: absolute; top: 10px; right: 10px;
+      cursor: grab; color: #cbd5e1; font-size: 16px;
+      transition: 0.2s; display: none; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%; border: 1px solid #eee; background: white;
+      z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .reorder-mode-active #grid .card .drag-handle { 
+      display: flex !important; opacity: 1 !important; background: #3b82f6; 
+      color: white; border: none; pointer-events: auto !important;
+    }
+    
+    .reorder-mode-active #grid .card .ctrl-btn { display: none !important; }
+    
+    .sortable-ghost { opacity: 0.2; background: #cbd5e1 !important; transform: scale(0.9); }
+    .sortable-drag { 
+      opacity: 1 !important; cursor: grabbing !important; 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      background: white !important; border: 2px solid #3b82f6 !important;
+      transform: scale(1.05); z-index: 9999 !important;
+    }
+
+    #btnReorder { transition: 0.3s; }
+    #btnReorder.active { background: #f59e0b !important; color: white !important; border-color: #f59e0b !important; animation: pulse-yellow 2s infinite; }
+    @keyframes pulse-yellow {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    .empty { text-align: center; padding: 60px 20px; color: #aaa; font-size: 15px; grid-column: 1/-1; }
+    
+    /* Flicker Fix */
+    #grid.fade-in { animation: gridFadeIn 0.3s ease-out forwards; }
+    @keyframes gridFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .modal-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: white; padding: 30px; border-radius: 18px; width: 90%; max-width: 380px; }
+    .modal-box h2 { font-size: 19px; margin-bottom: 20px; color: var(--primary); }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
+    .field input { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; }
+    .field input:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .modal-actions .btn { flex: 1; }
+    .btn-cancel { background: #eee; color: #333; }
+
+    /* Long-Press Lock Animation */
+    .card.holding {
+      animation: shrinkHold 5s linear forwards;
+      border-color: #3b82f6 !important;
+      background: #eff6ff !important;
+      z-index: 100 !important;
+    }
+    @keyframes shrinkHold {
+      from { transform: scale(1); }
+      to { transform: scale(0.6); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-nav">
+    <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">SOLMATES</div>
+    <div class="nav-right">
+      <a href="/database" class="database-btn"><i class="fas fa-database"></i> Database</a>
+      <div class="admin-indicator" id="adminIndicator"></div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 id="pageTitle">Database</h1>
+      <p id="pageDesc">Select a semester to continue</p>
+    </div>
+
+    <div class="breadcrumb" id="breadcrumb"></div>
+
+    <div id="adminBar" class="admin-bar">
+      <button class="btn btn-folder" onclick="openModal('folderModal')">
+        <i class="fas fa-folder-plus"></i> New Folder
+      </button>
+      <button class="btn btn-item" onclick="openModal('linkModal')">
+        <i class="fas fa-plus-circle"></i> New Item
+      </button>
+      <button class="btn btn-arrange" id="btnReorder" onclick="toggleReorderMode()">
+        <i class="fas fa-arrows-alt"></i> Organize
+      </button>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="empty">Loading...</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="folderModal">
+    <div class="modal-box">
+      <h2><i class="fas fa-folder-plus"></i> New Folder</h2>
+      <div class="field">
+        <label>Folder Name</label>
+        <input type="text" id="folderName" placeholder="e.g. Unit 1">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="createFolder()">Create</button>
+        <button class="btn btn-cancel" onclick="closeModal('folderModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="linkModal">
+    <div class="modal-box">
+      <h2><i class="fas fa-link"></i> Add Link</h2>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="linkTitle" placeholder="e.g. Chapter 1 Notes">
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input type="text" id="linkUrl" placeholder="https://...">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="linkModalSubmit" onclick="addLink()">Add</button>
+        <button class="btn btn-cancel" onclick="closeModal('linkModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="moveModal">
+    <div class="modal-box">
+      <h2><i class="fas fa-arrows-alt"></i> Move Item</h2>
+      <div class="field">
+        <label>Target Semester</label>
+        <select id="moveSemester" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" onchange="loadDestFolders()">
+          <option value="1">1st Semester</option>
+          <option value="2">2nd Semester</option>
+          <option value="3">3rd Semester</option>
+          <option value="4">4th Semester</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Target Folder</label>
+        <select id="moveFolder" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          <option value="">Semester Root (No Folder)</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-arrange" onclick="submitMove()" style="flex:1;">Move</button>
+        <button class="btn btn-cancel" onclick="closeModal('moveModal')" style="flex:1;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const CATEGORY = (function() {
+      const fromParam = params.get('category');
+      if (fromParam) return fromParam;
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('/pyqs')) return 'pyqs';
+      if (path.includes('/notes')) return 'notes';
+      if (path.includes('/oneshot')) return 'oneshot';
+      if (path.includes('/professor')) return 'professor';
+      if (path.includes('/youtube')) return 'youtube';
+      if (path.includes('/elearning')) return 'elearning';
+      if (path.includes('/classes')) return 'live-classes';
+      return 'notes';
+    })();
+
+    let semester = null, folderId = null, navStack = [], editingItemId = null, isNavigating = false, isReorderMode = false;
+    let sortableInstance = null;
+
+    const CAT_LABELS = {
+      'live-classes': 'Live Portal', 'recorded-class': 'Recorded Class', 'notes': 'Study Notes',
+      'pyqs': 'Previous Year Papers', 'oneshot': 'One-Shot Revision', 'youtube': 'Video Lessons',
+      'elearning': 'E-Books', 'professor': 'Class Materials'
+    };
+
+    function init() {
+      document.getElementById('pageTitle').innerText = CAT_LABELS[CATEGORY] || 'Database';
+      if (window.solmatesAPI.isAdminLoggedIn()) {
+        document.getElementById('adminBar').style.display = 'flex';
+        document.getElementById('adminIndicator').classList.add('active');
+      }
+      const urlSem = parseInt(params.get('semester')), urlFolderId = params.get('folderId'), urlName = params.get('name');
+      if (urlSem) {
+        semester = urlSem;
+        if (urlFolderId) {
+          folderId = urlFolderId;
+          navStack = [{ name: `Semester ${semester}`, folderId: null }, { name: urlName || 'Folder', folderId: urlFolderId }];
+        } else navStack = [{ name: `Semester ${semester}`, folderId: null }];
+        window.history.replaceState({ stack: [...navStack], folderId, semester }, '', window.location.href);
+        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${semester}`;
+        updateBreadcrumb();
+        loadContent();
+      } else {
+        window.history.replaceState({ stack: [], folderId: null, semester: null }, '', window.location.href);
+        renderSemesters(true);
+      }
+    }
+
+    async function onSemesterClick(s) {
+      if (isNavigating) return;
+      if (CATEGORY === 'elearning') { window.location.href = `/database/elearning-subjects.html?semester=${s}`; return; }
+      if (CATEGORY === 'youtube') { window.location.href = `/database/youtube-browse?semester=${s}`; return; }
+      semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
+      history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);
+      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${s}`;
+      updateBreadcrumb();
+      if (window.solmatesAPI.isAdminLoggedIn()) document.getElementById('adminBar').style.display = 'flex';
+      await loadContent();
+    }
+
+    async function loadContent() {
+      if (isReorderMode) return;
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+      try {
+        const [fRes, iRes] = await Promise.all([
+          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, true),
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, true)
+        ]);
+        renderGrid(fRes.data || [], iRes.data || []);
+      } catch (e) { grid.innerHTML = '<div class="empty">Error loading content.</div>'; }
+    }
+
+    function renderGrid(folders, items) {
+      const isAdmin = window.solmatesAPI.isAdminLoggedIn();
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      if (!folders.length && !items.length) { grid.innerHTML = '<div class="empty">No content here.</div>'; return; }
+      
+      folders.forEach(f => {
+        const isHidden = (f.name || '').includes('[HIDDEN]');
+        if (isHidden && !isAdmin) return;
+
+        const fId = f.id || f._id;
+        const isLocked = f.isLocked || (f.name || '').includes('[LOCKED]');
+        const card = mkCard('folder', isLocked ? '<i class="fas fa-lock main-icon"></i>' : '<i class="fas fa-folder main-icon"></i>', f.name, fId);
+        
+        if (isHidden) card.style.opacity = '0.5';
+
+        if (isAdmin) {
+          const edt = document.createElement('div'); edt.className = 'ctrl-btn edit'; edt.innerHTML = '<i class="fas fa-edit"></i>';
+          edt.onclick = e => { e.stopPropagation(); editFolderName(fId, f.name); };
+          
+          const del = document.createElement('div'); del.className = 'ctrl-btn delete'; del.innerHTML = '<i class="fas fa-trash"></i>';
+          del.onclick = e => { e.stopPropagation(); deleteFolder(fId); };
+          
+          const mv = document.createElement('div'); mv.className = 'ctrl-btn move'; mv.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+          mv.onclick = e => { e.stopPropagation(); openMoveModal('folder', f); };
+
+          const hd = document.createElement('div'); hd.className = 'ctrl-btn hide';
+          hd.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+          hd.onclick = e => { e.stopPropagation(); toggleHide('folder', f); };
+
+          card.appendChild(edt); card.appendChild(del); card.appendChild(mv); card.appendChild(hd);
+        }
+        setupLongPress(card, fId);
+        card.onclick = () => {
+          if (isReorderMode) return;
+          if (isLocked && !isAdmin) return alert("Locked.");
+          navStack.push({ name: f.name, folderId: fId }); folderId = fId;
+          history.pushState({ stack: [...navStack], folderId, semester }, "", window.location.pathname + `?category=${CATEGORY}&semester=${semester}&folderId=${fId}&name=${encodeURIComponent(f.name)}`);
+          updateBreadcrumb(); loadContent();
+        };
+        grid.appendChild(card);
+      });
+
+      items.forEach(item => {
+        const title = item.title || item.subject || '';
+        const isHidden = title.includes('[HIDDEN]');
+        if (isHidden && !isAdmin) return;
+
+        const card = mkCard('file', '<i class="fas fa-file-lines main-icon"></i>', title, item.id);
+        
+        if (isHidden) card.style.opacity = '0.5';
+
+        card.onclick = () => {
+          if (isReorderMode) return;
+          const link = item.link || item.pdf || item.url || item.videoUrl;
+          
+          // v101.0: Redirect to appropriate internal viewer
+          if (link) {
+            const l = link.toLowerCase();
+            if (l.includes('drive.google.com') || l.includes('docs.google.com/presentation') || l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('youtube.com') || l.includes('youtu.be') || l.includes('photos.app.goo.gl')) {
+                const viewer = (l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('docs.google.com/presentation') || (l.includes('drive.google.com') && !l.includes('VIDEO') && !l.includes('MP4'))) 
+                    ? 'pdf-viewer' 
+                    : 'video-viewer';
+                window.location.href = `/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}`;
+            } else {
+                window.open(link, '_blank');
+            }
+          }
+        };
+        if (isAdmin) {
+          const edit = document.createElement('div'); edit.className = 'ctrl-btn edit'; edit.innerHTML = '<i class="fas fa-edit"></i>';
+          edit.onclick = e => { e.stopPropagation(); openEditModal(item); };
+          
+          const del = document.createElement('div'); del.className = 'ctrl-btn delete'; del.innerHTML = '<i class="fas fa-trash"></i>';
+          del.onclick = e => { e.stopPropagation(); deleteItem(item.id); };
+
+          const mv = document.createElement('div'); mv.className = 'ctrl-btn move'; mv.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+          mv.onclick = e => { e.stopPropagation(); openMoveModal('item', item); };
+
+          const hd = document.createElement('div'); hd.className = 'ctrl-btn hide';
+          hd.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+          hd.onclick = e => { e.stopPropagation(); toggleHide('item', item); };
+
+          card.appendChild(edit); card.appendChild(del); card.appendChild(mv); card.appendChild(hd);
+        }
+        grid.appendChild(card);
+      });
+      
+      initSortable();
+    }
+
+    function initSortable() {
+      const isAdmin = window.solmatesAPI.isAdminLoggedIn();
+      if (!isAdmin || typeof Sortable === 'undefined') return;
+      const grid = document.getElementById('grid');
+      if (sortableInstance) sortableInstance.destroy();
+      sortableInstance = Sortable.create(grid, {
+        animation: 150,
+        handle: isReorderMode ? null : '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        forceFallback: true,
+        onStart: () => { if (navigator.vibrate) navigator.vibrate(50); },
+        onEnd: async () => {
+          const cards = Array.from(grid.querySelectorAll('.card'));
+          const folderIds = cards.filter(c => c.getAttribute('data-type') === 'folder').map(c => c.getAttribute('data-id'));
+          const itemIds = cards.filter(c => c.getAttribute('data-type') === 'file').map(c => c.getAttribute('data-id'));
+          
+          try {
+            const btn = document.getElementById('btnReorder');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            if (folderIds.length > 0) await window.solmatesAPI.reorderBulkSOL('folders', folderIds, semester);
+            if (itemIds.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemIds, semester);
+            btn.innerHTML = original;
+          } catch(e) { alert('Failed to save: ' + e.message); }
+        }
+      });
+    }
+
+    function toggleReorderMode() {
+      isReorderMode = !isReorderMode;
+      const btn = document.getElementById('btnReorder');
+      if (isReorderMode) {
+        btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-check"></i> Done';
+        document.body.classList.add('reorder-mode-active');
+      } else {
+        btn.classList.remove('active'); btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize';
+        document.body.classList.remove('reorder-mode-active');
+      }
+      initSortable();
+    }
+
+    function mkCard(type, icon, title, id) {
+      const div = document.createElement('div'); div.className = `card ${type}`;
+      div.setAttribute('data-id', id); div.setAttribute('data-type', type);
+      div.innerHTML = `<div class="drag-handle"><i class="fas fa-grip-vertical"></i></div><div class="card-icon">${icon}</div><h3>${title}</h3>`;
+      return div;
+    }
+
+    function jumpTo(index) {
+      if (isNavigating) return;
+      navStack = navStack.slice(0, index + 1);
+      const target = navStack[navStack.length - 1];
+      folderId = target.folderId;
+      const targetName = encodeURIComponent(target.name);
+      history.pushState({ stack: [...navStack], folderId, semester }, "", window.location.pathname + `?category=${CATEGORY}&semester=${semester}&folderId=${folderId || ''}&name=${targetName}`);
+      updateBreadcrumb();
+      loadContent();
+    }
+
+    function updateBreadcrumb() {
+      const bc = document.getElementById('breadcrumb'); bc.style.display = 'flex'; bc.innerHTML = '';
+      const home = document.createElement('span'); home.innerText = 'Database';
+      home.onclick = () => { renderSemesters(); }; bc.appendChild(home);
+      navStack.forEach((item, i) => {
+        const sep = document.createElement('i'); sep.className = 'fas fa-chevron-right sep'; bc.appendChild(sep);
+        const span = document.createElement('span'); span.innerText = item.name;
+        if (i < navStack.length - 1) span.onclick = () => jumpTo(i);
+        else span.className = 'current';
+        bc.appendChild(span);
+      });
+    }
+
+    async function createFolder() {
+      const name = document.getElementById('folderName').value.trim();
+      if (!name) return;
+      try {
+        await window.solmatesAPI.addSOLFolder({ name, category: CATEGORY, semester, parentId: folderId });
+        closeModal('folderModal'); 
+        document.getElementById('folderName').value = '';
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        window.location.reload();
+      } catch (e) { alert(e.message); }
+    }
+
+    async function addLink() {
+      const title = document.getElementById('linkTitle').value.trim(), url = document.getElementById('linkUrl').value.trim();
+      if (!title || !url) return;
+      const today = new Date().toISOString().split('T')[0];
+      let data = { folderId, title, link: url, pdf: url, date: today, subject: title };
+      try {
+        if (editingItemId) await window.solmatesAPI.updateSOLItem(CATEGORY, semester, editingItemId, data);
+        else await window.solmatesAPI.addSOLItem(CATEGORY, semester, data);
+        closeModal('linkModal'); 
+        document.getElementById('linkTitle').value = '';
+        document.getElementById('linkUrl').value = '';
+        editingItemId = null;
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        window.location.reload();
+      } catch (e) { alert(e.message); }
+    }
+
+    function openEditModal(item) {
+      editingItemId = item.id; document.getElementById('linkTitle').value = item.title || item.subject;
+      document.getElementById('linkUrl').value = item.link || item.pdf || item.videoUrl || item.url; openModal('linkModal');
+    }
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    function deleteFolder(id) { if (confirm('Delete?')) window.solmatesAPI.deleteSOLFolder(id).then(() => window.location.reload()); }
+    function deleteItem(id) { if (confirm('Delete?')) window.solmatesAPI.deleteSOLItem(CATEGORY, semester, id).then(() => window.location.reload()); }
+    function editFolderName(id, old) { const n = prompt('New name:', old); if (n) window.solmatesAPI.updateSOLFolder(id, { name: n }).then(() => window.location.reload()); }
+    
+    // ── Admin Move Logic ────────────────────────────────────────────────────────
+    let movingType = null;
+    let movingEntity = null;
+
+    function openMoveModal(type, entity) {
+      movingType = type;
+      movingEntity = entity;
+      document.getElementById('moveSemester').value = String(semester || 1);
+      openModal('moveModal');
+      loadDestFolders();
+    }
+
+    async function loadDestFolders() {
+      const sem = parseInt(document.getElementById('moveSemester').value);
+      const folderSelect = document.getElementById('moveFolder');
+      folderSelect.innerHTML = '<option value="">Semester Root (No Folder)</option>';
+      try {
+        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true, true);
+        const folders = (res && res.data) ? res.data : [];
+        function buildFolderTree(list, parentId = null, depth = 0) {
+          let optionsHtml = '';
+          const children = list.filter(f => (f.parentId || null) === parentId);
+          children.forEach(c => {
+            if (movingType === 'folder' && c.id === movingEntity.id) return;
+            const cleanName = c.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '├─ ' : '');
+            optionsHtml += `<option value="${c.id}">${prefix}${cleanName}</option>`;
+            optionsHtml += buildFolderTree(list, c.id, depth + 1);
+          });
+          return optionsHtml;
+        }
+        folderSelect.innerHTML += buildFolderTree(folders, null, 0);
+      } catch (e) { console.error(e); }
+    }
+
+    async function submitMove() {
+      const targetSem = document.getElementById('moveSemester').value;
+      const targetFolderId = document.getElementById('moveFolder').value || null;
+      if (!confirm('Are you sure you want to move this item?')) return;
+      try {
+        if (movingType === 'folder') {
+          await window.solmatesAPI.updateSOLFolder(movingEntity.id, { semester: parseInt(targetSem), parentId: targetFolderId });
+        } else {
+          let updatedItem = Object.assign({}, movingEntity);
+          updatedItem.semester = parseInt(targetSem);
+          updatedItem.folderId = targetFolderId;
+          delete updatedItem.id;
+          delete updatedItem._id;
+          await window.solmatesAPI.updateSOLItem(CATEGORY, semester, movingEntity.id, updatedItem);
+        }
+        closeModal('moveModal');
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        window.location.reload();
+      } catch (e) { alert('Move failed: ' + e.message); }
+    }
+
+    async function toggleHide(type, entity) {
+      const isHidden = (type === 'folder' ? entity.name : (entity.title || entity.subject)).includes('[HIDDEN]');
+      let newName = type === 'folder' ? entity.name : (entity.title || entity.subject);
+      
+      if (isHidden) {
+        newName = newName.replace('[HIDDEN]', '').trim();
+      } else {
+        newName = newName.trim() + ' [HIDDEN]';
+      }
+
+      try {
+        if (type === 'folder') {
+          await window.solmatesAPI.updateSOLFolder(entity.id, { name: newName });
+        } else {
+          await window.solmatesAPI.updateSOLItem(CATEGORY, semester, entity.id, { title: newName, subject: newName });
+        }
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        window.location.reload();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+    
+    // ── Long-Press Lock Logic ───────────────────────────────────────────────────
+    function setupLongPress(card, fId) {
+      if (!window.solmatesAPI.isAdminLoggedIn()) return;
+      
+      let holdTimer = null;
+      let startX = 0;
+      let startY = 0;
+
+      const startHold = (e) => {
+        if (isReorderMode) return;
+        if (holdTimer) clearTimeout(holdTimer);
+        
+        if (e.touches && e.touches[0]) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }
+        
+        card.classList.add('holding');
+        holdTimer = setTimeout(async () => {
+          try {
+            await window.solmatesAPI.toggleSOLFolderLock(fId);
+            window.location.reload();
+          } catch (err) {
+            alert('Lock failed: ' + err.message);
+            stopHold();
+          }
+        }, 800);
+      };
+      
+      const stopHold = () => {
+        if (holdTimer) clearTimeout(holdTimer);
+        card.classList.remove('holding');
+      };
+      
+      const onTouchMove = (e) => {
+        if (e.touches && e.touches[0]) {
+          const dx = Math.abs(e.touches[0].clientX - startX);
+          const dy = Math.abs(e.touches[0].clientY - startY);
+          if (dx > 10 || dy > 10) stopHold();
+        } else {
+          stopHold();
+        }
+      };
+
+      card.addEventListener('mousedown', startHold);
+      card.addEventListener('touchstart', (e) => { startHold(e); }, { passive: true });
+      card.addEventListener('mouseup', stopHold);
+      card.addEventListener('mouseleave', stopHold);
+      card.addEventListener('touchend', stopHold);
+      card.addEventListener('touchcancel', stopHold);
+      card.addEventListener('touchmove', onTouchMove, { passive: true });
+    }
+
+    window.onpopstate = function(event) {
+      if (isNavigating) return;
+      if (event.state) {
+        navStack = event.state.stack || [];
+        folderId = event.state.folderId || null;
+        semester = event.state.semester || null;
+        
+        if (!semester) {
+          renderSemesters(true); // true = don't push state
+        } else {
+          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${semester}`;
+          updateBreadcrumb();
+          loadContent();
+        }
+      } else {
+        renderSemesters(true);
+      }
+    };
+
+    async function renderSemesters(skipHistory = false) {
+      semester = null; folderId = null; navStack = [];
+      if (!skipHistory) {
+        history.pushState({ stack: [], folderId: null, semester: null }, "", window.location.pathname + `?category=${CATEGORY}`);
+      }
+      document.getElementById('adminBar').style.display = 'none';
+      document.getElementById('pageDesc').innerText = 'Select a semester to continue';
+      document.getElementById('breadcrumb').style.display = 'none';
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b'];
+      const ordinal = ['1st', '2nd', '3rd', '4th'];
+      for (let s = 1; s <= 4; s++) {
+        const card = document.createElement('div');
+        card.className = 'card sem';
+        card.innerHTML = `<div style="width:60px;height:60px;background:${colors[s - 1]};color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;">${s}</div>
+                      <div><h3>${ordinal[s - 1]} Semester</h3><p style="font-size:12px;color:#888;margin-top:4px;">View Subjects</p></div>`;
+        card.onclick = () => onSemesterClick(s);
+        grid.appendChild(card);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

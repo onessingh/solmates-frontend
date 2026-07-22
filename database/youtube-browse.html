@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Videos - SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+  <script src="/js/prefetch-helper.js?v=89.0"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #c0962d;
+      --bg: #f8fafc;
+      --bg2: #ffffff;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --border: #eeeeee;
+      --border-hover: #0f2b46;
+      --text: #1e293b;
+      --sub: #64748b;
+      --red: #ef4444;
+      --red-glow: rgba(239, 68, 68, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-top: 58px;
+    }
+
+    /* ─── Navbar ─── */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 58px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .nav-logo .yt-icon {
+      color: var(--red);
+      font-size: 26px;
+    }
+
+    .back-btn {
+      background: #f1f5f9;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.18s;
+    }
+
+    .back-btn:hover {
+      background: var(--border);
+    }
+
+    .database-btn {
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .database-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    .database-btn i {
+      font-size: 14px;
+      color: #c0962d;
+    }
+
+    /* ─── Modern Breadcrumb ─── */
+    .breadcrumb {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 13px;
+      position: sticky;
+      top: 58px;
+      z-index: 900;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .breadcrumb::-webkit-scrollbar {
+      display: none;
+    }
+
+    .bc-item {
+      display: flex;
+      align-items: center;
+      color: var(--sub);
+      text-decoration: none;
+      transition: 0.2s;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .bc-item:hover {
+      color: var(--primary);
+      background: rgba(15, 43, 70, 0.05);
+    }
+
+    .bc-item i {
+      font-size: 14px;
+      margin-right: 6px;
+    }
+
+    .bc-item.home i {
+      color: var(--primary);
+    }
+
+    .bc-item.current {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: default;
+      background: none;
+    }
+
+    .bc-sep {
+      color: #cbd5e1;
+      margin: 0 4px;
+      font-size: 10px;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      padding: 35px 24px 25px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: var(--red);
+      opacity: 0.05;
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 i {
+      color: var(--red);
+      text-shadow: 0 4px 12px var(--red-glow);
+    }
+
+    .hero p {
+      color: var(--sub);
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+
+    /* ─── Section label ─── */
+    .section-label {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label i {
+      color: var(--red);
+    }
+
+    .section-label .sub {
+      color: var(--sub);
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    /* ─── Semester Grid ─── */
+    .sem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .sem-card {
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .sem-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--border-hover);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.1);
+    }
+
+    .sem-thumb {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sem-1 {
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+    }
+
+    .sem-2 {
+      background: linear-gradient(135deg, #0ea5e9, #22d3ee, #2dd4bf);
+    }
+
+    .sem-3 {
+      background: linear-gradient(135deg, #10b981, #34d399, #a7f3d0);
+    }
+
+    .sem-4 {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24, #fef3c7);
+    }
+
+    .sem-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(15, 23, 42, 0.4) 100%);
+    }
+
+    .sem-icon-wrap {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sem-number-badge {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: 0.3s;
+    }
+
+    .sem-card:hover .sem-number-badge {
+      transform: scale(1.1) rotate(5deg);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .sem-label-badge {
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .sem-info {
+      padding: 20px;
+      background: #f8fafc;
+    }
+
+    .sem-info h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .sem-info p {
+      font-size: 13px;
+      color: #3b82f6;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sem-info p i {
+      color: #3b82f6;
+      font-size: 16px;
+    }
+
+    /* ─── Subject Grid ─── */
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* Subject color themes - Modernized */
+    .sc-0 {
+      --sc: #6366f1;
+      --sc2: #8b5cf6;
+    }
+
+    .sc-1 {
+      --sc: #0ea5e9;
+      --sc2: #22d3ee;
+    }
+
+    .sc-2 {
+      --sc: #10b981;
+      --sc2: #34d399;
+    }
+
+    .sc-3 {
+      --sc: #f59e0b;
+      --sc2: #fbbf24;
+    }
+
+    .sc-4 {
+      --sc: #ec4899;
+      --sc2: #f472b6;
+    }
+
+    .sc-5 {
+      --sc: #06b6d4;
+      --sc2: #22d3ee;
+    }
+
+    .sc-6 {
+      --sc: #8b5cf6;
+      --sc2: #a78bfa;
+    }
+
+    .sc-7 {
+      --sc: #22c55e;
+      --sc2: #4ade80;
+    }
+
+    .subject-card {
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .subject-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      background: var(--card-hover);
+    }
+
+    .subject-thumb {
+      height: 140px;
+      background: linear-gradient(135deg, var(--sc), var(--sc2));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .subject-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .subject-play-btn {
+      position: relative;
+      z-index: 2;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
+
+    .subject-play-btn i {
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .subject-card:hover .subject-play-btn {
+      transform: scale(1.15) rotate(10deg);
+      background: rgba(255, 255, 255, 0.35);
+      border-color: #fff;
+    }
+
+    .subject-thumb-label {
+      position: relative;
+      z-index: 2;
+      font-size: 11px;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .subject-info {
+      padding: 18px;
+    }
+
+    .subject-info h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .subject-info .sub-meta {
+      font-size: 12px;
+      color: var(--sub);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subject-info .sub-meta i {
+      color: var(--accent);
+    }
+
+    /* ─── Back btn ─── */
+    .back-sem-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.18s;
+      margin-bottom: 22px;
+    }
+
+    .back-sem-btn:hover {
+      background: var(--border);
+    }
+
+    .sem-card.navigating,
+    .subject-card.navigating {
+      opacity: 0.6;
+      pointer-events: none;
+      transform: scale(0.98) !important;
+    }
+
+    /* ─── Admin Bar ─── */
+    .admin-bar {
+      display: none;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin: 0 0 25px;
+      padding: 15px 20px;
+      background: #fff8ee;
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+    }
+
+    .admin-bar.visible {
+      display: flex;
+    }
+
+    .btn-create {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+
+    .btn-create:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    .del-btn,
+    .edit-btn {
+      position: absolute;
+      top: 12px;
+      font-size: 14px;
+      opacity: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+
+    .del-btn {
+      right: 12px;
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .edit-btn {
+      left: 12px;
+      color: #0f2b46;
+      background: rgba(15, 43, 70, 0.1);
+      border: 1px solid rgba(15, 43, 70, 0.2);
+    }
+
+    .del-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .edit-btn:hover {
+      background: #0f2b46;
+      color: #fff;
+    }
+
+    .hide-btn,
+    .move-btn {
+      position: absolute;
+      top: 12px;
+      font-size: 14px;
+      opacity: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      z-index: 10;
+      color: #fff;
+    }
+
+    .hide-btn {
+      left: 50px;
+    }
+
+    .move-btn {
+      left: 88px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .move-btn:hover {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .subject-card:hover .del-btn,
+    .subject-card:hover .edit-btn,
+    .subject-card:hover .hide-btn,
+    .subject-card:hover .move-btn {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .del-btn,
+      .edit-btn,
+      .hide-btn,
+      .move-btn {
+        opacity: 1;
+      }
+    }
+
+    /* ─── Modals ─── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      width: 90%;
+      max-width: 380px;
+    }
+
+    .modal-box h2 {
+      font-size: 19px;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-modal {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-modal.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-modal.cancel {
+      background: #eee;
+      color: #333;
+    }
+
+
+    .sem-card.navigating,
+    .subject-card.navigating {
+      opacity: 0.6;
+      pointer-events: none;
+      transform: scale(0.98) !important;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <header class="top-nav">
+    <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
+      SOLMATES
+    </div>
+    <a href="/database" class="database-btn">
+      <i class="fas fa-database"></i> Database
+    </a>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb" id="breadcrumb">
+    <a href="/database" class="bc-item home"><i class="fas fa-home"></i> Database</a>
+    <i class="fas fa-chevron-right bc-sep"></i>
+    <span class="bc-item current"><i class="fab fa-youtube"></i> YouTube Videos</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1><i class="fab fa-youtube"></i> YouTube Videos</h1>
+    <p>Curated playlists &amp; lectures for all MBA semesters</p>
+  </div>
+
+  <div class="container" id="mainContainer">
+
+    <!-- Semester view -->
+    <div id="semView">
+      <div class="section-label">
+        <i class="fas fa-layer-group"></i> Semesters
+        <span class="sub">— Select your semester</span>
+      </div>
+      <div class="sem-grid" id="semGrid">
+        <!-- Semester 1 -->
+        <div class="sem-card" onclick="loadSubjects(1)">
+          <div class="sem-thumb sem-1">
+            <div class="sem-icon-wrap">
+              <div class="sem-number-badge">1</div>
+              <span class="sem-label-badge">MBA Sem 1</span>
+            </div>
+          </div>
+          <div class="sem-info">
+            <h3>1st Semester</h3>
+            <p><i class="fas fa-play-circle"></i> View Subjects</p>
+          </div>
+        </div>
+        <!-- Semester 2 -->
+        <div class="sem-card" onclick="loadSubjects(2)">
+          <div class="sem-thumb sem-2">
+            <div class="sem-icon-wrap">
+              <div class="sem-number-badge">2</div>
+              <span class="sem-label-badge">MBA Sem 2</span>
+            </div>
+          </div>
+          <div class="sem-info">
+            <h3>2nd Semester</h3>
+            <p><i class="fas fa-play-circle"></i> View Subjects</p>
+          </div>
+        </div>
+        <!-- Semester 3 -->
+        <div class="sem-card" onclick="loadSubjects(3)">
+          <div class="sem-thumb sem-3">
+            <div class="sem-icon-wrap">
+              <div class="sem-number-badge">3</div>
+              <span class="sem-label-badge">MBA Sem 3</span>
+            </div>
+          </div>
+          <div class="sem-info">
+            <h3>3rd Semester</h3>
+            <p><i class="fas fa-play-circle"></i> View Subjects</p>
+          </div>
+        </div>
+        <!-- Semester 4 -->
+        <div class="sem-card" onclick="loadSubjects(4)">
+          <div class="sem-thumb sem-4">
+            <div class="sem-icon-wrap">
+              <div class="sem-number-badge">4</div>
+              <span class="sem-label-badge">MBA Sem 4</span>
+            </div>
+          </div>
+          <div class="sem-info">
+            <h3>4th Semester</h3>
+            <p><i class="fas fa-play-circle"></i> View Subjects</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subject view -->
+    <div id="subjectView" style="display:none;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 15px;">
+        <div id="adminBar" class="admin-bar">
+          <button class="btn-create" onclick="openModal('folderModal')"><i class="fas fa-folder-plus"></i> Add
+            Subject</button>
+        </div>
+      </div>
+
+      <div class="section-label" id="subjectLabel">
+        <i class="fab fa-youtube"></i> Subjects
+      </div>
+      <div class="subject-grid" id="subjectGrid"></div>
+    </div>
+
+
+    <!-- Loading -->
+    <div id="loadingState" class="state-block" style="display:none;">
+      <i class="fas fa-spinner fa-spin" style="color:var(--red)"></i>
+      <strong>Loading...</strong>
+    </div>
+
+  </div>
+
+  <!-- Folder Modal -->
+  <div class="overlay" id="folderModal">
+    <div class="modal-box">
+      <h2><i class="fas fa-folder-plus"></i> New Subject</h2>
+      <div class="field">
+        <label>Subject Name</label>
+        <input type="text" id="newFolderName" placeholder="e.g. MARKETING MANAGEMENT">
+      </div>
+      <div class="modal-btns">
+        <button class="btn-modal primary" onclick="createFolder()">Create</button>
+        <button class="btn-modal cancel" onclick="closeModal('folderModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Move Modal -->
+  <div class="overlay" id="moveModal">
+    <div class="modal-box" style="max-width: 400px; width: 90%;">
+      <h2><i class="fas fa-arrows-alt"></i> Move Content</h2>
+      <div class="field">
+        <label>Destination Semester</label>
+        <select id="moveSemester" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none;" onchange="loadDestFolders()">
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Destination Subject / Folder</label>
+        <select id="moveFolder" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none;">
+          <option value="">Semester Root (No Folder)</option>
+        </select>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-modal primary" onclick="submitMove()">Move</button>
+        <button class="btn-modal cancel" onclick="closeModal('moveModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    const SEM1_SUBJECTS = [
+      "ACCOUNTING FOR MANAGERS",
+      "BUSINESS COMMUNICATION",
+      "DATA ANALYSIS AND DECISION TOOLS",
+      "HUMAN RESOURCE MANAGEMENT",
+      "INFORMATION TECHNOLOGY MANAGEMENT",
+      "MANAGERIAL ECONOMICS",
+      "MARKETING MANAGEMENT",
+      "ORGANISATIONAL BEHAVIOUR"
+    ];
+
+    const SEM2_SUBJECTS = [
+      "ORGANIZATION EFFECTIVENESS AND CHANGES",
+      "DECISION MODELLING AND OPTIMIZATION",
+      "ECONOMIC ENVIRONMENT OF BUSINESS",
+      "CORPORATE FINANCE",
+      "MANAGEMENT ACCOUNTING",
+      "PRODUCTION AND OPERATION MANAGEMENT",
+      "MARKETING RESEARCH",
+      "MANAGEMENT OF INFORMATION SYSTEMS"
+    ];
+
+    const SEMESTER_SUBJECTS = { 1: SEM1_SUBJECTS, 2: SEM2_SUBJECTS };
+    const SEM_ORDINAL = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
+    const SEM_ICONS = { 1: 'fas fa-graduation-cap', 2: 'fas fa-book-open', 3: 'fas fa-chart-line', 4: 'fas fa-trophy' };
+    let currentSemester = null;
+    let isNavigating = false;
+    const CATEGORY = 'youtube';
+
+
+
+    // Subject icons based on keywords
+    function getSubjectIcon(name) {
+      const n = name.toUpperCase();
+      if (n.includes('ACCOUNT') || n.includes('FINANCE') || n.includes('ECONOMIC')) return 'fas fa-coins';
+      if (n.includes('MARKETING') || n.includes('SALES')) return 'fas fa-bullhorn';
+      if (n.includes('HR') || n.includes('HUMAN RESOURCE') || n.includes('ORGANISATION')) return 'fas fa-users';
+      if (n.includes('IT') || n.includes('INFORMATION') || n.includes('TECHNOLOGY')) return 'fas fa-laptop-code';
+      if (n.includes('DATA') || n.includes('ANALYTICS') || n.includes('DECISION')) return 'fas fa-chart-bar';
+      if (n.includes('COMMUNICATION') || n.includes('LANGUAGE')) return 'fas fa-comments';
+      if (n.includes('PRODUCTION') || n.includes('OPERATION')) return 'fas fa-industry';
+      if (n.includes('RESEARCH')) return 'fas fa-search';
+      if (n.includes('CORPORATE') || n.includes('MANAGEMENT')) return 'fas fa-briefcase';
+      if (n.includes('ECONOMICS') || n.includes('ENVIRONMENT')) return 'fas fa-globe';
+      return 'fas fa-play';
+    }
+
+    // ── Semester View ─────────────────────────────────────────────────────────
+    async function showSemesters(isPopState = false) {
+      if (isNavigating) return;
+      currentSemester = null;
+
+      const semView = document.getElementById('semView');
+      const subjectView = document.getElementById('subjectView');
+      const loadingState = document.getElementById('loadingState');
+
+      semView.style.display = 'block';
+      subjectView.style.display = 'none';
+      loadingState.style.display = 'none';
+
+      // Update Header Text
+      const backBtn = document.getElementById('headerBackBtn');
+      if (backBtn) backBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Database';
+
+      // Update History only if not from popstate
+      if (!isPopState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('semester');
+        window.history.pushState({ view: 'semesters' }, '', url);
+      }
+
+      document.getElementById('breadcrumb').innerHTML = `
+      <span onclick="window.location='/database'">Database</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="current">YouTube Videos</span>
+    `;
+
+      const grid = document.getElementById('semGrid');
+      // We now use static HTML cards for semesters for maximum stability.
+      // Logic below just ensures the view state is correct.
+    }
+
+
+    // ── Subject View ──────────────────────────────────────────────────────────
+    async function loadSubjects(sem, isPopState = false) {
+      if (isNavigating) return;
+      isNavigating = true;
+      currentSemester = sem;
+
+      const loadingState = document.getElementById('loadingState');
+      const semView = document.getElementById('semView');
+      const subjectView = document.getElementById('subjectView');
+      const hasItems = document.getElementById('subjectGrid').querySelectorAll('.subject-card').length > 0;
+
+      // ✅ Switch Views Instantly
+      semView.style.display = 'none';
+      if (!hasItems) {
+        subjectView.style.display = 'none';
+        loadingState.style.display = 'block';
+      } else {
+        subjectView.style.display = 'block';
+        loadingState.style.display = 'none';
+      }
+
+      // Update History only if not from popstate
+      if (!isPopState) {
+        const url = new URL(window.location);
+        url.searchParams.set('semester', sem);
+        window.history.pushState({ view: 'subjects', semester: sem }, '', url);
+      }
+
+      // Breadcrumbs
+      document.getElementById('breadcrumb').innerHTML = `
+      <a href="/database" class="bc-item home"><i class="fas fa-home"></i> Database</a>
+      <i class="fas fa-chevron-right bc-sep"></i>
+      <a href="javascript:void(0)" onclick="showSemesters()" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
+      <i class="fas fa-chevron-right bc-sep"></i>
+      <span class="bc-item current"><i class="fas fa-layer-group"></i> Semester ${sem}</span>
+    `;
+
+      // ✅ STEP 1: Cache Render
+      const cKey = `folders_${CATEGORY}_${sem}_root`;
+      const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(cKey) : null;
+      if (cFolders && cFolders.data) {
+        renderGridSafe(sem, cFolders.data, true);
+      } else if (!hasItems) {
+        loadingState.style.display = 'block';
+      }
+
+      // ✅ STEP 2: Fresh Render
+      try {
+        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true);
+        const folders = (semRes && semRes.data) ? semRes.data : [];
+        renderGridSafe(sem, folders, false);
+      } catch (e) {
+        console.warn('Refresh failed:', e.message);
+      } finally {
+        loadingState.style.display = 'none';
+        isNavigating = false;
+      }
+    }
+
+    function renderGridSafe(sem, folders, isStale = false) {
+      const grid = document.getElementById('subjectGrid');
+      const loadingState = document.getElementById('loadingState');
+      const subjectView = document.getElementById('subjectView');
+
+      // De-Dupe & Merge Templates
+      let subjects = [...folders];
+      if (SEMESTER_SUBJECTS[sem]) {
+        SEMESTER_SUBJECTS[sem].forEach(name => {
+          if (!subjects.find(f => (f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim() === name.toUpperCase().trim())) {
+            subjects.push({ id: null, name, _virtual: true });
+          }
+        });
+      }
+      subjects.sort((a, b) => a.name.localeCompare(b.name));
+
+      if (subjects.length === 0) {
+        if (isStale) return; // Wait
+        grid.innerHTML = `<div class="state-block" style="grid-column:1/-1;"><i class="fab fa-youtube"></i><strong>No Subjects</strong></div>`;
+        return;
+      }
+
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (isAdmin) document.getElementById('adminBar').classList.add('visible');
+
+      const frag = document.createDocumentFragment();
+      const seenNames = new Set();
+
+      subjects.forEach((sub, idx) => {
+        const n = (sub.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim();
+        if (seenNames.has(n)) return;
+        seenNames.add(n);
+        
+        const isHidden = (sub.name || '').includes('[HIDDEN]');
+        if (isHidden && !isAdmin) return;
+
+        const displayName = (sub.name || '').replace('[HIDDEN]', '').replace('[LOCKED]', '').trim();
+        const colorClass = `sc-${idx % 8}`;
+        const icon = getSubjectIcon(displayName);
+        const card = document.createElement('div');
+        card.className = `subject-card ${colorClass}`;
+        if (isHidden) card.style.opacity = '0.5';
+
+        card.innerHTML = `
+        <div class="subject-thumb"><div class="subject-play-btn"><i class="${icon}"></i></div><span class="subject-thumb-label">View Playlist</span></div>
+        <div class="subject-info"><h3>${displayName}</h3><div class="sub-meta"><i class="fab fa-youtube"></i> YouTube Videos</div></div>
+      `;
+
+        card.onclick = () => {
+          if (isNavigating) return;
+          isNavigating = true; card.classList.add('navigating');
+          handleFolderClick(sub.id, encodeURIComponent(sub.name), !!sub._virtual);
+        }
+
+        if (isAdmin && sub.id) {
+          const del = document.createElement('div');
+          del.className = 'del-btn'; del.innerHTML = '<i class="fas fa-trash"></i>';
+          del.onclick = (e) => { e.stopPropagation(); deleteFolder(sub.id, sub.name); };
+          card.appendChild(del);
+
+          const edit = document.createElement('div');
+          edit.className = 'edit-btn'; edit.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+          edit.onclick = (e) => { e.stopPropagation(); editFolderName(sub.id, sub.name); };
+          card.appendChild(edit);
+
+          const hide = document.createElement('div');
+          hide.className = 'hide-btn';
+          hide.style.background = isHidden ? 'rgba(100, 116, 139, 0.9)' : 'rgba(100, 116, 139, 0.1)';
+          hide.style.border = '1px solid rgba(100, 116, 139, 0.2)';
+          hide.style.color = isHidden ? '#fff' : '#64748b';
+          hide.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+          hide.onclick = (e) => { e.stopPropagation(); toggleHide('folder', sub); };
+          card.appendChild(hide);
+
+          const move = document.createElement('div');
+          move.className = 'move-btn';
+          move.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+          move.onclick = (e) => { e.stopPropagation(); openMoveModal('folder', sub); };
+          card.appendChild(move);
+        }
+        frag.appendChild(card);
+      });
+
+      grid.replaceChildren(frag);
+      subjectView.style.display = 'block';
+      // Update Subject Label
+      document.getElementById('subjectLabel').innerHTML = `
+      <i class="fab fa-youtube"></i> Semester ${sem} — Subjects
+    `;
+    }
+
+    // ── Admin Actions ────────────────────────────────────────────────────────
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    async function createFolder() {
+      const name = document.getElementById('newFolderName').value.trim();
+      if (!name) return alert('Please enter a subject name.');
+
+      // Duplicate Check
+      try {
+        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, currentSemester, null);
+        const existing = (semRes && semRes.data) ? semRes.data : [];
+        if (existing.find(f => (f.name || '').toUpperCase() === name.toUpperCase())) {
+          return alert(`Subject "${name}" already exists in this semester!`);
+        }
+
+        await window.solmatesAPI.addSOLFolder({ name, category: CATEGORY, semester: currentSemester });
+        closeModal('folderModal');
+        document.getElementById('newFolderName').value = '';
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        loadSubjects(currentSemester, true);
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function editFolderName(id, oldName) {
+      const clean = oldName.replace(/\[FOLDER\]/gi, '').replace(/\[OTHER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+      const newName = prompt('New name for this subject:', clean);
+      if (!newName || newName.trim() === clean) return;
+      try {
+        let final = newName.trim();
+        if (oldName.includes('[OTHER]')) final += ' [OTHER]';
+        if (oldName.includes('[TOPIC_FOLDER]')) final += ' [TOPIC_FOLDER]';
+        if (oldName.includes('[FOLDER]')) final += ' [FOLDER]';
+        if (oldName.includes('[LOCKED]')) final += ' [LOCKED]';
+        if (oldName.includes('[HIDDEN]')) final += ' [HIDDEN]';
+        await window.solmatesAPI.updateSOLFolder(id, { name: final });
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        loadSubjects(currentSemester, true);
+      } catch (e) { alert('Rename fail: ' + e.message); }
+    }
+
+    async function deleteFolder(id, name) {
+      if (!confirm(`Delete subject folder "${name}"? Purana data is subject ke id se juda ho sakta hai.`)) return;
+      try {
+        await window.solmatesAPI.deleteSOLFolder(id);
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        loadSubjects(currentSemester, true);
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+
+    async function handleFolderClick(folderId, nameRaw, isVirtual) {
+
+      const name = decodeURIComponent(nameRaw);
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+
+      if (name.includes('[HIDDEN]') && !isAdmin) {
+        isNavigating = false;
+        document.querySelectorAll('.navigating').forEach(c => c.classList.remove('navigating'));
+        return;
+      }
+
+      const navigateTo = (url) => {
+        setTimeout(() => {
+          window.location.href = url;
+        }, 150);
+      };
+
+      if (isVirtual) {
+        if (isAdmin) {
+          try {
+            // Double check before creating virtual
+            const semRes = await window.solmatesAPI.getSOLFolders('youtube', currentSemester, null);
+            const existing = (semRes && semRes.data) ? semRes.data : [];
+            const match = existing.find(f => (f.name || '').toUpperCase() === name.toUpperCase());
+
+            if (match) {
+              // If already exists, just navigate to it instead of creating
+              navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${match.id}&name=${encodeURIComponent(name)}`);
+              return;
+            }
+
+            const r = await window.solmatesAPI.addSOLFolder({ name, category: 'youtube', semester: currentSemester });
+            navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${r.data.id}&name=${encodeURIComponent(name)}`);
+          } catch (e) { alert('Error: ' + e.message); }
+        } else {
+          navigateTo(`/database/youtube-content?semester=${currentSemester}&name=${encodeURIComponent(name)}&noContent=true`);
+        }
+        return;
+      }
+      navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${folderId}&name=${encodeURIComponent(name)}`);
+    }
+
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function escapeAttr(s) {
+      if (!s) return '';
+      return String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // ── Browser Navigation ───────────────────────────────────────────────────
+    window.onpopstate = function (event) {
+      const state = event.state;
+      if (state && state.view === 'subjects') {
+        loadSubjects(state.semester, true);
+      } else {
+        showSemesters(true);
+      }
+    };
+
+    function handleHeaderBack() {
+      if (currentSemester) {
+        showSemesters();
+      } else {
+        window.location.href = '/database';
+      }
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    async function init() {
+      // 🏁 WAIT for API status with safe checks
+      try {
+        let retry = 0;
+        while (retry < 5) {
+          if (window.solmatesAPI && typeof window.solmatesAPI.isReady === 'function') {
+            if (window.solmatesAPI.isReady()) break;
+          }
+          await new Promise(r => setTimeout(r, 100));
+          retry++;
+        }
+      } catch (e) { console.warn('Init wait error:', e); }
+
+      await new Promise(r => setTimeout(r, 100)); // Final buffer
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const initSem = parseInt(urlParams.get('semester'));
+
+      // Check admin early for bar visibility
+      if (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) {
+        document.getElementById('adminBar').classList.add('visible');
+      }
+
+      if (initSem >= 1 && initSem <= 4) {
+        loadSubjects(initSem, true);
+      } else {
+        showSemesters(true);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    // Reset flag when page is shown (handles Back button / Bfcache)
+    window.addEventListener('pageshow', (event) => {
+      isNavigating = false;
+      document.querySelectorAll('.navigating').forEach(c => c.classList.remove('navigating'));
+    });
+
+    // ── Hide & Move Functions ──────────────────────────────────────────────
+    async function toggleHide(type, entity) {
+      const isHidden = (type === 'folder' ? entity.name : entity.title).includes('[HIDDEN]');
+      let newName = (type === 'folder' ? entity.name : entity.title);
+      if (isHidden) newName = newName.replace('[HIDDEN]', '').trim();
+      else newName = newName.trim() + ' [HIDDEN]';
+
+      try {
+        if (type === 'folder') {
+          await window.solmatesAPI.updateSOLFolder(entity.id, { name: newName });
+        } else {
+          await window.solmatesAPI.updateSOLItem(CATEGORY, currentSemester, entity.id, { title: newName, subject: newName });
+        }
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        loadSubjects(currentSemester, true);
+      } catch (e) { alert('Error toggling hide: ' + e.message); }
+    }
+
+    let movingType = null;
+    let movingEntity = null;
+
+    function openMoveModal(type, entity) {
+      movingType = type;
+      movingEntity = entity;
+      
+      document.getElementById('moveSemester').value = String(currentSemester || 1);
+      openModal('moveModal');
+      loadDestFolders();
+    }
+
+        async function loadDestFolders() {
+      const sem = parseInt(document.getElementById('moveSemester').value);
+      const folderSelect = document.getElementById('moveFolder');
+      folderSelect.innerHTML = '<option value="">Semester Root (No Folder)</option>';
+      
+      try {
+        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true, true);
+        const folders = (res && res.data) ? res.data : [];
+        
+        function buildFolderTree(list, parentId = null, depth = 0) {
+          let optionsHtml = '';
+          const children = list.filter(f => (f.parentId || null) === parentId);
+          
+          children.forEach(c => {
+            if (movingType === 'folder' && c.id === movingEntity.id) return;
+            const cleanName = c.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
+            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '├─ ' : '');
+            optionsHtml += `<option value="${c.id}">${prefix}${cleanName}</option>`;
+            optionsHtml += buildFolderTree(list, c.id, depth + 1);
+          });
+          
+          return optionsHtml;
+        }
+        
+        folderSelect.innerHTML += buildFolderTree(folders, null, 0);
+      } catch (e) {
+        console.error('Error loading destination folders:', e);
+      }
+    }
+
+    async function submitMove() {
+      const targetSem = document.getElementById('moveSemester').value;
+      const targetFolderId = document.getElementById('moveFolder').value || null;
+      
+      if (!confirm('Are you sure you want to move this item?')) return;
+      
+      try {
+        if (movingType === 'folder') {
+          await window.solmatesAPI.updateSOLFolder(movingEntity.id, {
+            semester: parseInt(targetSem),
+            parentId: targetFolderId
+          });
+        } else {
+          let updatedItem = Object.assign({}, movingEntity);
+          updatedItem.semester = parseInt(targetSem);
+          updatedItem.folderId = targetFolderId;
+          delete updatedItem.id;
+          delete updatedItem._id;
+          await window.solmatesAPI.updateSOLItem(CATEGORY, currentSemester, movingEntity.id, updatedItem);
+        }
+        
+        closeModal('moveModal');
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        loadSubjects(currentSemester, true);
+      } catch (e) {
+        alert('Move failed: ' + e.message);
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>

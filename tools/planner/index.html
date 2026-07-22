@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Study Planner - SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f5f7fa;
+      color: #111;
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ========== Navbar ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-left {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      color: #0f2b46;
+    }
+
+    .nav-left a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .back-btn {
+      background: #0f2b46;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .back-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    /* ========== Page Content ========== */
+    .page-content {
+      min-height: calc(100vh - 60px);
+      padding-top: 70px;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ========== Study Planner Container ========== */
+    .planner-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    @media (min-width: 768px) {
+      .planner-container {
+        padding: 20px;
+        gap: 20px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .planner-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+      }
+    }
+
+    /* ========== Planner Header ========== */
+    .planner-header {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 15px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e6e6e6;
+      margin-bottom: 5px;
+    }
+
+    @media (min-width: 768px) {
+      .planner-header {
+        padding: 25px;
+      }
+    }
+
+    .planner-header h1 {
+      font-size: 24px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .planner-header h1 {
+        font-size: 32px;
+      }
+    }
+
+    .planner-header h1 i {
+      color: #c0962d;
+      font-size: 26px;
+    }
+
+    @media (min-width: 768px) {
+      .planner-header h1 i {
+        font-size: 34px;
+      }
+    }
+
+    .planner-header p {
+      color: #666;
+      font-size: 14px;
+      max-width: 700px;
+      margin: 0 auto 20px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    @media (min-width: 768px) {
+      .planner-header p {
+        font-size: 15px;
+      }
+    }
+
+    /* Stats Cards - Mobile Optimized */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    @media (min-width: 480px) {
+      .stats-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #0f2b46, #1a3c5e);
+      color: white;
+      border-radius: 8px;
+      padding: 12px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70px;
+    }
+
+    .stat-card i {
+      font-size: 18px;
+      margin-bottom: 5px;
+      color: #c0962d;
+    }
+
+    .stat-card .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 3px 0;
+      line-height: 1;
+    }
+
+    .stat-card .stat-label {
+      font-size: 10px;
+      opacity: 0.9;
+      line-height: 1.2;
+    }
+
+    @media (min-width: 480px) {
+      .stat-card {
+        padding: 15px 10px;
+        min-height: 85px;
+      }
+
+      .stat-card i {
+        font-size: 20px;
+      }
+
+      .stat-card .stat-value {
+        font-size: 22px;
+      }
+
+      .stat-card .stat-label {
+        font-size: 11px;
+      }
+    }
+
+    /* ========== Planner Sections ========== */
+    .planner-section {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e6e6e6;
+      height: fit-content;
+    }
+
+    @media (min-width: 768px) {
+      .planner-section {
+        padding: 22px;
+        border-radius: 14px;
+      }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .section-header i {
+      font-size: 20px;
+      color: #0f2b46;
+      width: 36px;
+      height: 36px;
+      background: rgba(15, 43, 70, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+      color: #0f2b46;
+      line-height: 1.3;
+    }
+
+    @media (min-width: 768px) {
+      .section-header h2 {
+        font-size: 20px;
+      }
+    }
+
+    /* ========== Semester Planner ========== */
+    .semester-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #333;
+      font-size: 13px;
+    }
+
+    .form-control {
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      background: #f9f9fb;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #0f2b46;
+      box-shadow: 0 0 0 2px rgba(15, 43, 70, 0.1);
+    }
+
+    .btn {
+      padding: 12px 16px;
+      background: #0f2b46;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(15, 43, 70, 0.15);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-success {
+      background: #28a745;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    /* ========== Assignment Tracker ========== */
+    .assignment-list {
+      max-height: 250px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      padding-right: 5px;
+    }
+
+    .assignment-item {
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s;
+      gap: 8px;
+    }
+
+    @media (min-width: 480px) {
+      .assignment-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    .assignment-item:hover {
+      background: #f9f9fb;
+    }
+
+    .assignment-info {
+      flex: 1;
+      min-width: 0;
+      /* For text truncation */
+    }
+
+    .assignment-info h4 {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .assignment-info p {
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .assignment-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-in-progress {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .action-btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      min-height: 32px;
+    }
+
+    .action-edit {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .action-delete {
+      background: #dc3545;
+      color: white;
+    }
+
+    /* ========== Exam Countdown ========== */
+    .countdown-container {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg, #0f2b46, #1a3c5e);
+      border-radius: 10px;
+      color: white;
+      margin-bottom: 15px;
+    }
+
+    .countdown-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #c0962d;
+      font-weight: 600;
+    }
+
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 50px;
+    }
+
+    .countdown-value {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+      color: white;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .exam-date-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .exam-date-input .form-control {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ========== Progress Analytics ========== */
+    .progress-chart {
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin: 15px 0;
+      padding: 10px;
+      background: #f9f9fb;
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+
+    .progress-chart::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .progress-chart::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 2px;
+    }
+
+    .progress-chart::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 2px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      min-width: 40px;
+      background: #e9ecef;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+      min-height: 20px;
+    }
+
+    .progress-fill {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(to top, #0f2b46, #1a3c5e);
+      transition: height 1s ease;
+    }
+
+    .progress-label {
+      position: absolute;
+      top: -22px;
+      width: 100%;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+    }
+
+    /* ========== Goal Setting ========== */
+    .goal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .goal-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #0f2b46;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .goal-checkbox.checked {
+      background: #0f2b46;
+      color: white;
+    }
+
+    .goal-checkbox i {
+      font-size: 12px;
+    }
+
+    .goal-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .goal-details h4 {
+      font-size: 15px;
+      margin-bottom: 4px;
+      color: #333;
+      line-height: 1.3;
+    }
+
+    .goal-details p {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .goal-progress {
+      height: 6px;
+      background: #e9ecef;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .goal-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0f2b46, #c0962d);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* ========== Calendar View ========== */
+    .calendar-section {
+      order: 6;
+      /* Mobile order */
+    }
+
+    @media (min-width: 1024px) {
+      .calendar-section {
+        grid-column: 1 / -1;
+        order: 0;
+      }
+    }
+
+    .calendar-header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    @media (min-width: 480px) {
+      .calendar-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .calendar-header h3 {
+      font-size: 18px;
+      color: #0f2b46;
+      text-align: center;
+    }
+
+    .calendar-nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .calendar-nav-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .calendar-nav-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .calendar-grid {
+        font-size: 14px;
+      }
+    }
+
+    .calendar-day-header {
+      background: #0f2b46;
+      color: white;
+      padding: 10px 5px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (min-width: 480px) {
+      .calendar-day-header {
+        padding: 12px 8px;
+        font-size: 12px;
+      }
+    }
+
+    .calendar-day {
+      background: white;
+      padding: 8px 4px;
+      min-height: 70px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    @media (min-width: 480px) {
+      .calendar-day {
+        padding: 10px 6px;
+        min-height: 80px;
+      }
+    }
+
+    .calendar-day:hover {
+      background: #f9f9fb;
+    }
+
+    .calendar-day.today {
+      background: #e3f2fd;
+    }
+
+    .day-number {
+      font-weight: 600;
+      color: #333;
+      font-size: 13px;
+      align-self: flex-end;
+      margin-bottom: 4px;
+    }
+
+    @media (min-width: 480px) {
+      .day-number {
+        font-size: 14px;
+      }
+    }
+
+    .calendar-event {
+      font-size: 10px;
+      background: #0f2b46;
+      color: white;
+      padding: 2px 4px;
+      border-radius: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+
+    @media (min-width: 480px) {
+      .calendar-event {
+        font-size: 11px;
+        padding: 3px 5px;
+      }
+    }
+
+    /* ========== Modal ========== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      color: #0f2b46;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #666;
+      cursor: pointer;
+      transition: color 0.3s;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .close-modal:hover {
+      background: #f5f5f5;
+      color: #0f2b46;
+    }
+
+    /* ========== Empty States ========== */
+    .empty-state {
+      text-align: center;
+      padding: 30px 15px;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 36px;
+      color: #ddd;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* ========== Swipe Indicator (Mobile Only) ========== */
+    .swipe-hint {
+      display: none;
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 480px) {
+      .swipe-hint {
+        display: block;
+      }
+    }
+
+    /* ========== Mobile Menu Button (Hidden) ========== */
+    .mobile-menu-btn {
+      display: none !important;
+    }
+
+    /* ========== Touch Optimizations ========== */
+    @media (hover: none) {
+
+      .btn:hover,
+      .action-btn:hover,
+      .calendar-nav-btn:hover,
+      .close-modal:hover {
+        transform: none;
+      }
+
+      .btn:active,
+      .action-btn:active,
+      .calendar-nav-btn:active,
+      .close-modal:active {
+        transform: scale(0.98);
+      }
+    }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-calendar-alt"></i> Study Planner</h1>
+    </div>
+
+
+  
+
+  <div class="page-content">
+    <div class="planner-container">
+      <!-- Header -->
+      <div class="planner-header">
+        
+        <p>Plan your semester, track progress, and manage assignments with smart study scheduling tools.</p>
+
+        <div class="stats-container">
+          <div class="stat-card">
+            <i class="fas fa-tasks"></i>
+            <div class="stat-value" id="totalAssignments">0</div>
+            <div class="stat-label">Total Assignments</div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-calendar-check"></i>
+            <div class="stat-value" id="daysUntilExam">30</div>
+            <div class="stat-label">Days Until Exams</div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-chart-line"></i>
+            <div class="stat-value" id="progressPercentage">0%</div>
+            <div class="stat-label">Overall Progress</div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-bullseye"></i>
+            <div class="stat-value" id="goalsCompleted">0/5</div>
+            <div class="stat-label">Goals Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semester Planner -->
+      <div class="planner-section">
+        <div class="section-header">
+          <i class="fas fa-calendar-plus"></i>
+          <h2>Semester Planner</h2>
+        </div>
+        <form id="semesterForm" class="semester-form">
+          <div class="form-group">
+            <label for="semesterName">Semester Name</label>
+            <input type="text" id="semesterName" class="form-control" placeholder="e.g., Fall 2024" required>
+          </div>
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="courses">Courses (comma separated)</label>
+            <input type="text" id="courses" class="form-control" placeholder="e.g., Finance, Marketing" required>
+          </div>
+          <div class="form-group">
+            <label for="availableHours">Available Study Hours/Day</label>
+            <input type="number" id="availableHours" class="form-control" placeholder="4" min="1" max="12" value="4">
+          </div>
+          <button type="submit" class="btn">
+            <i class="fas fa-save"></i> Save Semester Plan
+          </button>
+          <button type="button" class="btn btn-success" onclick="generateSmartSchedule()" style="margin-top:10px;">
+            <i class="fas fa-magic"></i> Generate Smart Schedule
+          </button>
+        </form>
+      </div>
+
+      <!-- AI Schedule (shown when generated) -->
+      <div class="planner-section" id="aiScheduleSection" style="display:none;">
+        <div class="section-header">
+          <i class="fas fa-calendar-check"></i>
+          <h2>AI-Optimized Schedule</h2>
+        </div>
+        <div id="aiScheduleContent"></div>
+      </div>
+
+      <!-- Assignment Tracker -->
+      <div class="planner-section">
+        <div class="section-header">
+          <i class="fas fa-clipboard-list"></i>
+          <h2>Assignment Tracker</h2>
+        </div>
+        <div class="assignment-list" id="assignmentList">
+          <div class="empty-state">
+            <i class="fas fa-clipboard"></i>
+            <p>No assignments added yet</p>
+            <p style="font-size: 12px; margin-top: 5px;">Add your first assignment to get started</p>
+          </div>
+        </div>
+        <div class="swipe-hint">
+          <i class="fas fa-arrows-alt-h"></i> Swipe to see more
+        </div>
+        <button class="btn btn-secondary" onclick="openAssignmentModal()">
+          <i class="fas fa-plus"></i> Add New Assignment
+        </button>
+      </div>
+
+      <!-- Exam Countdown -->
+      <div class="planner-section">
+        <div class="section-header">
+          <i class="fas fa-clock"></i>
+          <h2>Exam Countdown</h2>
+        </div>
+        <div class="countdown-container">
+          <div class="countdown-title">Next Major Exam</div>
+          <div class="countdown-timer" id="countdownTimer">
+            <div class="countdown-unit">
+              <div class="countdown-value" id="days">30</div>
+              <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-unit">
+              <div class="countdown-value" id="hours">00</div>
+              <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-unit">
+              <div class="countdown-value" id="minutes">00</div>
+              <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-unit">
+              <div class="countdown-value" id="seconds">00</div>
+              <div class="countdown-label">Seconds</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="examDate">Set Exam Date</label>
+          <div class="exam-date-input">
+            <input type="date" id="examDate" class="form-control">
+            <button class="btn btn-success" onclick="setExamDate()">
+              <i class="fas fa-calendar-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Analytics -->
+      <div class="planner-section">
+        <div class="section-header">
+          <i class="fas fa-chart-pie"></i>
+          <h2>Progress Analytics</h2>
+        </div>
+        <div class="progress-chart" id="progressChart">
+          <div class="empty-state">
+            <i class="fas fa-chart-pie"></i>
+            <p>Set up your semester plan to see progress analytics</p>
+          </div>
+        </div>
+        <div class="swipe-hint">
+          <i class="fas fa-arrows-alt-h"></i> Swipe to see all courses
+        </div>
+        <button class="btn" onclick="updateProgress()">
+          <i class="fas fa-sync-alt"></i> Update Progress
+        </button>
+      </div>
+
+      <!-- Goal Setting -->
+      <div class="planner-section">
+        <div class="section-header">
+          <i class="fas fa-bullseye"></i>
+          <h2>Goal Setting</h2>
+        </div>
+        <div id="goalsList">
+          <div class="goal-item">
+            <div class="goal-checkbox" onclick="toggleGoal(this)">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="goal-details">
+              <h4>Complete Marketing Assignment</h4>
+              <p>Due: Dec 15</p>
+              <div class="goal-progress">
+                <div class="goal-progress-fill" style="width: 75%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="goal-item">
+            <div class="goal-checkbox checked" onclick="toggleGoal(this)">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="goal-details">
+              <h4>Read Finance Chapter 5</h4>
+              <p>Completed: Dec 10</p>
+              <div class="goal-progress">
+                <div class="goal-progress-fill" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="openGoalModal()" style="margin-top: 15px;">
+          <i class="fas fa-plus"></i> Add New Goal
+        </button>
+      </div>
+
+      <!-- Calendar View -->
+      <div class="planner-section calendar-section">
+        <div class="section-header">
+          <i class="fas fa-calendar-day"></i>
+          <h2>Study Calendar</h2>
+        </div>
+        <div class="calendar-header">
+          <h3 id="currentMonth">December 2024</h3>
+          <div class="calendar-nav">
+            <button class="calendar-nav-btn" onclick="changeMonth(-1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="calendar-nav-btn" onclick="changeMonth(0)">
+              <i class="fas fa-calendar-alt"></i>
+            </button>
+            <button class="calendar-nav-btn" onclick="changeMonth(1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Calendar will be generated dynamically -->
+        </div>
+        <div class="swipe-hint">
+          <i class="fas fa-arrows-alt-h"></i> Swipe to navigate calendar
+        </div>
+        <!-- Add Smart Study Plan Generator Section -->
+        <div class="planner-section" style="grid-column: 1 / -1;">
+          <div class="section-header">
+            <i class="fas fa-magic"></i>
+            <h2>Smart Study Plan Generator</h2>
+          </div>
+
+          <div class="semester-form"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="form-group">
+              <label>Subject / Goal</label>
+              <input type="text" id="aiSubject" class="form-control"
+                placeholder="e.g. Marketing Management, CFA Level 1">
+            </div>
+            <div class="form-group">
+              <label>Timeframe</label>
+              <select id="aiTimeframe" class="form-control">
+                <option value="1 week">1 Week (Crash Course)</option>
+                <option value="1 month" selected>4 Weeks (1 Month)</option>
+                <option value="3 months">12 Weeks (3 Months)</option>
+                <option value="6 months">24 Weeks (6 Months)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Hours per week</label>
+              <input type="number" id="aiHours" class="form-control" placeholder="e.g. 10" value="10">
+            </div>
+          </div>
+          <button id="generatePlanBtn" class="btn btn-primary" style="margin-top: 15px; width: auto;"><i
+              class="fas fa-magic"></i> Generate Smart Plan</button>
+
+          <!-- Loading State for Smart Generator -->
+          <div id="aiLoading" style="display: none; text-align: center; margin-top: 20px;">
+            <i class="fas fa-circle-notch fa-spin" style="font-size: 24px; color: #0071e3; margin-bottom: 10px;"></i>
+            <p>Analyzing and building your study plan...</p>
+          </div>
+
+          <!-- Error State -->
+          <div id="aiError"
+            style="display: none; background: #ffe5e5; color: #bf3b3b; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #bf3b3b;">
+          </div>
+
+          <!-- AI Plan Result Container -->
+          <div id="aiPlanResult"
+            style="display: none; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
+            <h3 id="aiPlanTitle" style="color: #0f2b46; margin-bottom: 5px;">Study Plan</h3>
+            <p id="aiPlanDuration" style="color: #666; font-size: 14px; margin-bottom: 20px;">Duration: 1 month</p>
+
+            <div id="aiPlanModules" style="display: flex; flex-direction: column; gap: 15px;">
+              <!-- Modules injected here -->
+            </div>
+
+            <div
+              style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 15px; margin-top: 20px;">
+              <h4 style="color: #92400e; margin-bottom: 8px; font-size: 15px;"><i class="fas fa-lightbulb"></i> Study
+                Tips</h4>
+              <ul id="aiStudyTips" style="padding-left: 20px; color: #b45309; font-size: 14px; line-height: 1.6;">
+                <!-- Tips injected here -->
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- End AI Study Plan Section -->
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Assignment Modal -->
+  <div class="modal" id="assignmentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Assignment</h3>
+        <button class="close-modal" onclick="closeAssignmentModal()">&times;</button>
+      </div>
+      <form id="assignmentForm">
+        <div class="form-group">
+          <label for="assignmentTitle">Assignment Title</label>
+          <input type="text" id="assignmentTitle" class="form-control" placeholder="e.g., Marketing Case Study"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="assignmentCourse">Course</label>
+          <input type="text" id="assignmentCourse" class="form-control" placeholder="e.g., Strategic Marketing"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="assignmentDueDate">Due Date</label>
+          <input type="date" id="assignmentDueDate" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="assignmentPriority">Priority</label>
+          <select id="assignmentPriority" class="form-control">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="assignmentStatus">Status</label>
+          <select id="assignmentStatus" class="form-control">
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="assignmentNotes">Notes (Optional)</label>
+          <textarea id="assignmentNotes" class="form-control" rows="3"
+            placeholder="Add any additional notes..."></textarea>
+        </div>
+        <button type="submit" class="btn">
+          <i class="fas fa-save"></i> Save Assignment
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Goal Modal -->
+  <div class="modal" id="goalModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Goal</h3>
+        <button class="close-modal" onclick="closeGoalModal()">&times;</button>
+      </div>
+      <form id="goalForm">
+        <div class="form-group">
+          <label for="goalTitle">Goal Title</label>
+          <input type="text" id="goalTitle" class="form-control" placeholder="e.g., Complete Finance Project" required>
+        </div>
+        <div class="form-group">
+          <label for="goalDeadline">Target Deadline</label>
+          <input type="date" id="goalDeadline" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="goalProgress">Current Progress (%)</label>
+          <input type="range" id="goalProgress" class="form-control" min="0" max="100" value="0">
+          <div style="text-align: center; margin-top: 5px;">
+            <span id="progressValue">0%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="goalCategory">Category</label>
+          <select id="goalCategory" class="form-control">
+            <option value="academic">Academic</option>
+            <option value="skill">Skill Development</option>
+            <option value="personal">Personal Growth</option>
+            <option value="career">Career Related</option>
+          </select>
+        </div>
+        <button type="submit" class="btn">
+          <i class="fas fa-bullseye"></i> Set Goal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ========== GLOBAL VARIABLES ==========
+    let editingAssignmentId = null;
+    let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+    let goals = JSON.parse(localStorage.getItem('goals')) || [
+      {
+        id: 1,
+        title: "Complete Marketing Assignment",
+        deadline: "2024-12-15",
+        progress: 75,
+        category: "academic",
+        completed: false
+      },
+      {
+        id: 2,
+        title: "Read Finance Chapter 5",
+        deadline: "2024-12-10",
+        progress: 100,
+        category: "academic",
+        completed: true
+      }
+    ];
+    let examDate = localStorage.getItem('examDate') || '2024-12-30';
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    // ========== INITIALIZATION ==========
+    document.addEventListener('DOMContentLoaded', function () {
+      // Set default dates
+      const today = new Date().toISOString().split('T')[0];
+      const threeMonthsLater = new Date();
+      threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+      document.getElementById('startDate').value = today;
+      document.getElementById('endDate').value = threeMonthsLater.toISOString().split('T')[0];
+      document.getElementById('examDate').value = examDate;
+      document.getElementById('assignmentDueDate').value = today;
+      document.getElementById('goalDeadline').value = today;
+
+      // Load data
+      updateStats();
+      renderAssignments();
+      renderGoals();
+      updateProgressChart();
+      startCountdown();
+      generateCalendar();
+
+      // Set up event listeners
+      document.getElementById('semesterForm').addEventListener('submit', saveSemesterPlan);
+      document.getElementById('assignmentForm').addEventListener('submit', saveAssignment);
+      document.getElementById('goalForm').addEventListener('submit', saveGoal);
+      document.getElementById('goalProgress').addEventListener('input', function () {
+        document.getElementById('progressValue').textContent = this.value + '%';
+      });
+
+      // Touch swipe support for calendar
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      const calendarGrid = document.getElementById('calendarGrid');
+      calendarGrid.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+
+      calendarGrid.addEventListener('touchend', function (e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      });
+
+      function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            // Swipe left - next month
+            changeMonth(1);
+          } else {
+            // Swipe right - previous month
+            changeMonth(-1);
+          }
+        }
+      }
+    });
+
+    // ========== SMART SCHEDULE GENERATOR (LOCAL ALGORITHM) ==========
+    function generateSmartSchedule() {
+      // 1. Get courses from semester plan
+      const semesterPlan = JSON.parse(localStorage.getItem('semesterPlan'));
+      const courses = semesterPlan && semesterPlan.courses && semesterPlan.courses.length > 0
+        ? semesterPlan.courses
+        : goals.map(g => g.title).filter(Boolean); // Fallback to goals if no courses
+
+      if (!courses || courses.length === 0) {
+        showMobileNotification('Please save a Semester Plan with courses first.');
+        return;
+      }
+
+      // 2. Get available hours
+      const hours = parseInt(document.getElementById('availableHours')?.value || 4, 10);
+
+      showMobileNotification('Generating smart schedule...');
+
+      // 3. Local Algorithm: Distribute hours across courses for the week
+      const schedule = [];
+      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+      for (let i = 0; i < 7; i++) {
+        const dayTasks = [];
+        let hoursRemaining = hours;
+
+        // On weekends, maybe study a bit less or more depending on user preference, we'll keep it consistent for logic
+        const isWeekend = (i === 5 || i === 6);
+        const effectiveHours = isWeekend ? Math.max(2, hours - 1) : hours;
+
+        // Rotate primary focus course daily
+        const primaryCourse = courses[i % courses.length];
+        const secondaryCourse = courses[(i + 1) % courses.length];
+
+        if (effectiveHours > 0) {
+          // Assign 60% of time to primary, 40% to secondary
+          const primaryHours = Math.ceil(effectiveHours * 0.6);
+          const secondaryHours = effectiveHours - primaryHours;
+
+          dayTasks.push({ topic: primaryCourse, duration: primaryHours });
+          if (secondaryHours > 0 && primaryCourse !== secondaryCourse) {
+            dayTasks.push({ topic: secondaryCourse, duration: secondaryHours });
+          }
+        }
+
+        schedule.push({ day: daysOfWeek[i], tasks: dayTasks });
+      }
+
+      // 4. Render the schedule
+      const section = document.getElementById('aiScheduleSection');
+      const content = document.getElementById('aiScheduleContent');
+      const headerTitle = section.querySelector('.section-header h2');
+
+      if (headerTitle) headerTitle.textContent = "Smart Weekly Schedule";
+
+      if (section && content) {
+        let html = '<div class="assignment-list">';
+        schedule.forEach((dayInfo) => {
+          html += '<div class="assignment-item" style="border-bottom:1px solid #eee;">';
+          html += '<strong style="color:#0f2b46; width: 90px; flex-shrink: 0;">' + dayInfo.day + '</strong>';
+
+          html += '<div style="flex: 1; display: flex; flex-wrap: wrap; gap: 5px;">';
+          if (dayInfo.tasks.length === 0) {
+            html += '<span style="color:#888; font-size:12px;">Rest Day</span>';
+          } else {
+            html += dayInfo.tasks.map(t =>
+              `<span style="background:#f0f4f8; padding:3px 8px; border-radius:4px; font-size:12px; color:#333; border:1px solid #e1e8ed;">
+               ${t.topic} <strong style="color:#0071e3">(${t.duration}h)</strong>
+             </span>`
+            ).join('');
+          }
+          html += '</div></div>';
+        });
+        html += '</div>';
+
+        content.innerHTML = html;
+        section.style.display = 'block';
+      }
+    }
+
+    // ========== SEMESTER PLANNER ==========
+    function saveSemesterPlan(e) {
+      e.preventDefault();
+
+      const semesterData = {
+        name: document.getElementById('semesterName').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        courses: document.getElementById('courses').value.split(',').map(c => c.trim())
+      };
+
+      localStorage.setItem('semesterPlan', JSON.stringify(semesterData));
+
+      // Mobile-friendly notification
+      showMobileNotification('Semester plan saved successfully!');
+
+      // Reset form
+      document.getElementById('semesterForm').reset();
+
+      // Set default dates again
+      const today = new Date().toISOString().split('T')[0];
+      const threeMonthsLater = new Date();
+      threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+      document.getElementById('startDate').value = today;
+      document.getElementById('endDate').value = threeMonthsLater.toISOString().split('T')[0];
+
+      // Update progress chart
+      updateProgressChart();
+    }
+
+    // ========== ASSIGNMENT TRACKER ==========
+    function openAssignmentModal() {
+      document.getElementById('assignmentModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      // If we are not editing, ensure title is Add
+      if (!editingAssignmentId) {
+        document.querySelector('#assignmentModal .modal-header h3').textContent = 'Add New Assignment';
+      }
+    }
+
+    function closeAssignmentModal() {
+      document.getElementById('assignmentModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      document.getElementById('assignmentForm').reset();
+      editingAssignmentId = null;
+    }
+
+    function editAssignment(id) {
+      const assignment = assignments.find(a => a.id === id);
+      if (assignment) {
+        editingAssignmentId = id;
+        document.getElementById('assignmentTitle').value = assignment.title;
+        document.getElementById('assignmentCourse').value = assignment.course;
+        document.getElementById('assignmentDueDate').value = assignment.dueDate;
+        document.getElementById('assignmentPriority').value = assignment.priority;
+        document.getElementById('assignmentStatus').value = assignment.status;
+        document.getElementById('assignmentNotes').value = assignment.notes || '';
+        
+        document.querySelector('#assignmentModal .modal-header h3').textContent = 'Edit Assignment';
+        openAssignmentModal();
+      }
+    }
+
+    function saveAssignment(e) {
+      e.preventDefault();
+
+      const assignmentData = {
+        title: document.getElementById('assignmentTitle').value,
+        course: document.getElementById('assignmentCourse').value,
+        dueDate: document.getElementById('assignmentDueDate').value,
+        priority: document.getElementById('assignmentPriority').value,
+        status: document.getElementById('assignmentStatus').value,
+        notes: document.getElementById('assignmentNotes').value
+      };
+
+      if (editingAssignmentId) {
+        const index = assignments.findIndex(a => a.id === editingAssignmentId);
+        if (index !== -1) {
+          assignments[index] = { ...assignments[index], ...assignmentData };
+        }
+        showMobileNotification('Assignment updated successfully!');
+      } else {
+        assignmentData.id = Date.now();
+        assignmentData.createdAt = new Date().toISOString();
+        assignments.push(assignmentData);
+        showMobileNotification('Assignment added successfully!');
+      }
+
+      localStorage.setItem('assignments', JSON.stringify(assignments));
+
+      renderAssignments();
+      updateStats();
+      updateProgressChart(); // Update chart in case status changed
+      generateCalendar(); // Update calendar markers
+      closeAssignmentModal();
+    }
+
+    function deleteAssignment(id) {
+      if (confirm('Are you sure you want to delete this assignment?')) {
+        assignments = assignments.filter(assignment => assignment.id !== id);
+        localStorage.setItem('assignments', JSON.stringify(assignments));
+        renderAssignments();
+        updateStats();
+        showMobileNotification('Assignment deleted!');
+      }
+    }
+
+    function renderAssignments() {
+      const assignmentList = document.getElementById('assignmentList');
+
+      if (assignments.length === 0) {
+        assignmentList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-clipboard"></i>
+          <p>No assignments added yet</p>
+          <p style="font-size: 12px; margin-top: 5px;">Add your first assignment to get started</p>
+        </div>
+      `;
+        return;
+      }
+
+      // Sort by due date
+      assignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+      assignmentList.innerHTML = assignments.map(assignment => `
+      <div class="assignment-item">
+        <div class="assignment-info">
+          <h4>${assignment.title}</h4>
+          <p>
+            <i class="fas fa-book"></i> ${assignment.course}
+            <i class="fas fa-calendar-alt"></i> ${formatDateShort(assignment.dueDate)}
+            <span class="status-badge status-${assignment.status.replace(' ', '-')}">
+              ${assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+            </span>
+          </p>
+          ${assignment.notes ? `<p style="margin-top: 5px; color: #888; font-size: 11px;">${truncateText(assignment.notes, 60)}</p>` : ''}
+        </div>
+        <div class="assignment-actions">
+          <button class="action-btn action-edit" onclick="editAssignment(${assignment.id})" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn action-delete" onclick="deleteAssignment(${assignment.id})" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+    }
+
+    // ========== EXAM COUNTDOWN ==========
+    function setExamDate() {
+      const examDateInput = document.getElementById('examDate').value;
+      if (examDateInput) {
+        examDate = examDateInput;
+        localStorage.setItem('examDate', examDate);
+        startCountdown();
+        showMobileNotification('Exam date set successfully!');
+      }
+    }
+
+    function startCountdown() {
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const examTime = new Date(examDate).getTime();
+      const timeLeft = examTime - now;
+
+      if (timeLeft < 0) {
+        document.getElementById('daysUntilExam').textContent = '0';
+        document.getElementById('days').textContent = '0';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      document.getElementById('daysUntilExam').textContent = days;
+      document.getElementById('days').textContent = days.toString().padStart(2, '0');
+      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    // ========== PROGRESS ANALYTICS ==========
+    function updateProgressChart() {
+      const progressChart = document.getElementById('progressChart');
+      const semesterPlan = JSON.parse(localStorage.getItem('semesterPlan'));
+
+      if (!semesterPlan || !semesterPlan.courses || semesterPlan.courses.length === 0) {
+        progressChart.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-chart-pie"></i>
+          <p>Set up your semester plan to see progress analytics</p>
+        </div>
+      `;
+        return;
+      }
+
+      // Use actual courses from semester plan
+      const courses = semesterPlan.courses.slice(0, 5); // Limit to 5 courses for mobile
+      const progressData = courses.map(course => {
+        // Calculate progress based on assignments for this course
+        const courseAssignments = assignments.filter(a => a.course.toLowerCase().trim() === course.toLowerCase().trim());
+        let progress = 0;
+        
+        if (courseAssignments.length > 0) {
+          const completed = courseAssignments.filter(a => a.status === 'completed').length;
+          progress = Math.round((completed / courseAssignments.length) * 100);
+        } else {
+          // Fallback: if no assignments, look at goals as a backup metric
+          const courseGoals = goals.filter(g => g.title.toLowerCase().includes(course.toLowerCase().trim()));
+          if (courseGoals.length > 0) {
+             const compGoals = courseGoals.filter(g => g.completed).length;
+             progress = Math.round((compGoals / courseGoals.length) * 100);
+          }
+        }
+        
+        return {
+          name: course,
+          progress: progress
+        };
+      });
+
+      progressChart.innerHTML = progressData.map(course => `
+      <div class="progress-bar">
+        <div class="progress-label">${truncateText(course.name, 10)}</div>
+        <div class="progress-fill" style="height: ${course.progress}%"></div>
+      </div>
+    `).join('');
+
+      // Update overall progress
+      const totalProgress = progressData.reduce((sum, course) => sum + course.progress, 0) / (progressData.length || 1);
+      document.getElementById('progressPercentage').textContent = Math.round(totalProgress) + '%';
+    }
+
+    function updateProgress() {
+      updateProgressChart();
+      showMobileNotification('Progress updated!');
+    }
+
+    // ========== GOAL SETTING ==========
+    function openGoalModal() {
+      document.getElementById('goalModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGoalModal() {
+      document.getElementById('goalModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      document.getElementById('goalForm').reset();
+      document.getElementById('progressValue').textContent = '0%';
+    }
+
+    function saveGoal(e) {
+      e.preventDefault();
+
+      const goal = {
+        id: Date.now(),
+        title: document.getElementById('goalTitle').value,
+        deadline: document.getElementById('goalDeadline').value,
+        progress: parseInt(document.getElementById('goalProgress').value),
+        category: document.getElementById('goalCategory').value,
+        completed: false
+      };
+
+      goals.push(goal);
+      localStorage.setItem('goals', JSON.stringify(goals));
+
+      renderGoals();
+      updateStats();
+      closeGoalModal();
+      showMobileNotification('Goal added successfully!');
+    }
+
+    function toggleGoal(checkbox) {
+      const goalItem = checkbox.closest('.goal-item');
+      const goalTitle = goalItem.querySelector('h4').textContent;
+
+      const goal = goals.find(g => g.title === goalTitle);
+      if (goal) {
+        goal.completed = !goal.completed;
+        goal.progress = goal.completed ? 100 : 75;
+        localStorage.setItem('goals', JSON.stringify(goals));
+        renderGoals();
+        updateStats();
+
+        showMobileNotification(goal.completed ? 'Goal completed! 🎉' : 'Goal marked as pending');
+      }
+
+      checkbox.classList.toggle('checked');
+    }
+
+    function renderGoals() {
+      const goalsList = document.getElementById('goalsList');
+
+      if (goals.length === 0) {
+        goalsList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-bullseye"></i>
+          <p>No goals set yet. Add your first goal!</p>
+        </div>
+      `;
+        return;
+      }
+
+      goalsList.innerHTML = goals.slice(0, 4).map(goal => `
+      <div class="goal-item">
+        <div class="goal-checkbox ${goal.completed ? 'checked' : ''}" onclick="toggleGoal(this)">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="goal-details">
+          <h4>${truncateText(goal.title, 30)}</h4>
+          <p>${goal.completed ? 'Completed' : 'Due'}: ${formatDateShort(goal.deadline)}</p>
+          <div class="goal-progress">
+            <div class="goal-progress-fill" style="width: ${goal.progress}%"></div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    }
+
+    // ========== CALENDAR ==========
+    function generateCalendar() {
+      const calendarGrid = document.getElementById('calendarGrid');
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+
+      document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+      // Clear existing calendar
+      calendarGrid.innerHTML = '';
+
+      // Add day headers
+      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      dayNames.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-day-header';
+        dayHeader.textContent = day;
+        calendarGrid.appendChild(dayHeader);
+      });
+
+      // Get first day of month and total days
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const today = new Date();
+
+      // Add empty cells for days before first day
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'calendar-day';
+        calendarGrid.appendChild(emptyDay);
+      }
+
+      // Add days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+
+        // Check if this is today
+        if (day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+          dayElement.classList.add('today');
+        }
+
+        dayElement.innerHTML = `
+        <div class="day-number">${day}</div>
+      `;
+
+        // Add events based on assignments
+        const dayDate = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+        const dayAssignments = assignments.filter(a => a.dueDate === dayDate);
+
+        if (dayAssignments.length > 0) {
+          const eventCount = Math.min(dayAssignments.length, 2); // Max 2 events per day on mobile
+          for (let i = 0; i < eventCount; i++) {
+            const assignment = dayAssignments[i];
+            dayElement.innerHTML += `<div class="calendar-event" title="${assignment.title}">${truncateText(assignment.title, 8)}</div>`;
+          }
+          if (dayAssignments.length > 2) {
+            dayElement.innerHTML += `<div class="calendar-event">+${dayAssignments.length - 2} more</div>`;
+          }
+        }
+
+        calendarGrid.appendChild(dayElement);
+      }
+    }
+
+    function changeMonth(direction) {
+      if (direction === 0) {
+        // Reset to current month
+        currentMonth = new Date().getMonth();
+        currentYear = new Date().getFullYear();
+      } else {
+        currentMonth += direction;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        } else if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+      }
+      generateCalendar();
+    }
+
+    // ========== STATS UPDATER ==========
+    function updateStats() {
+      document.getElementById('totalAssignments').textContent = assignments.length;
+
+      const completedGoals = goals.filter(goal => goal.completed).length;
+      document.getElementById('goalsCompleted').textContent = `${completedGoals}/${goals.length}`;
+    }
+
+    // ========== HELPER FUNCTIONS ==========
+    function formatDateShort(dateString) {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffTime = Math.abs(date - now);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 7) {
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
+        });
+      } else {
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      }
+    }
+
+    function truncateText(text, maxLength) {
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    }
+
+    function showMobileNotification(message) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f2b46;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 3000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideDown 0.3s ease, fadeOut 0.3s ease 2s forwards;
+      max-width: 90%;
+      text-align: center;
+    `;
+
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      // Remove after animation
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 2300);
+
+      // Add keyframes
+      const style = document.createElement('style');
+      style.textContent = `
+      @keyframes slideDown {
+        from { top: 50px; opacity: 0; }
+        to { top: 70px; opacity: 1; }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+    `;
+      document.head.appendChild(style);
+    }
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function (event) {
+      const assignmentModal = document.getElementById('assignmentModal');
+      const goalModal = document.getElementById('goalModal');
+
+      if (event.target === assignmentModal) {
+        closeAssignmentModal();
+      }
+      if (event.target === goalModal) {
+        closeGoalModal();
+      }
+    });
+
+    // Prevent body scroll when modal is open
+    document.addEventListener('touchmove', function (e) {
+
+      if (document.getElementById('assignmentModal').style.display === 'flex' ||
+        document.getElementById('goalModal').style.display === 'flex') {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // ========== SMART PLAN GENERATION (LOCAL ALGORITHM) ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      const generatePlanBtn = document.getElementById('generatePlanBtn');
+      const aiSubject = document.getElementById('aiSubject');
+      const aiTimeframe = document.getElementById('aiTimeframe');
+      const aiHours = document.getElementById('aiHours');
+      const aiLoading = document.getElementById('aiLoading');
+      const aiError = document.getElementById('aiError');
+      const aiPlanResult = document.getElementById('aiPlanResult');
+
+      if (generatePlanBtn) {
+        generatePlanBtn.addEventListener('click', () => {
+          const subject = aiSubject.value.trim();
+          const timeframe = aiTimeframe.value;
+          const hours = parseInt(aiHours.value, 10);
+
+          if (!subject) {
+            aiError.textContent = 'Please enter a Subject or Goal.';
+            aiError.style.display = 'block';
+            return;
+          }
+
+          aiError.style.display = 'none';
+          aiPlanResult.style.display = 'none';
+          aiLoading.style.display = 'block';
+          generatePlanBtn.disabled = true;
+
+          // Simulate a slight thought process for UI feedback
+          setTimeout(() => {
+            try {
+              const planData = generateLocalStudyPlan(subject, timeframe, hours);
+              renderAIPlan(planData);
+            } catch (err) {
+              console.error(err);
+              aiError.textContent = 'An error occurred building your study plan.';
+              aiError.style.display = 'block';
+            } finally {
+              aiLoading.style.display = 'none';
+              generatePlanBtn.disabled = false;
+            }
+          }, 800);
+        });
+      }
+
+      function generateLocalStudyPlan(subject, timeframeStr, weeklyHours) {
+        let numWeeks = 4;
+        if (timeframeStr === '1 week') numWeeks = 1;
+        else if (timeframeStr === '3 months') numWeeks = 12;
+        else if (timeframeStr === '6 months') numWeeks = 24;
+
+        const weeklyPlan = [];
+        const baseSubject = subject.split(' ')[0] || subject;
+
+        // Build the progressive phases
+        for (let i = 1; i <= numWeeks; i++) {
+          let focusArea = '';
+          let tasks = [];
+          const percentComplete = i / numWeeks;
+
+          // Smart heuristics based on how far along we are
+          if (numWeeks === 1) {
+            focusArea = `Intensive Review & Practice`;
+            tasks = [
+              `Day 1-2: Core Concepts of ${subject}`,
+              `Day 3-4: Practice Problems & Application`,
+              `Day 5-6: Mock Tests & Weakness Review`,
+              `Day 7: Final Polish`
+            ];
+          } else if (percentComplete <= 0.25) {
+            focusArea = `Foundations of ${subject}`;
+            tasks = [
+              `Read Introductory Chapters / Materials`,
+              `Setup Development / Study Environment`,
+              `Summarize Key Terms`
+            ];
+          } else if (percentComplete <= 0.60) {
+            focusArea = `Deep Dive into Core Topics`;
+            tasks = [
+              `Break down complex ${baseSubject} modules`,
+              `Complete mid-level assignments/practice`,
+              `Review previous week's notes`
+            ];
+          } else if (percentComplete <= 0.85) {
+            focusArea = `Advanced Concepts & Application`;
+            tasks = [
+              `Work on major projects or case studies`,
+              `Relate ${baseSubject} concepts to real-world scenarios`,
+              `Start compiling a comprehensive study guide`
+            ];
+          } else {
+            focusArea = `Final Review & Mastery`;
+            tasks = [
+              `Take full-length mock exams`,
+              `Identify and tackle final completely weak areas`,
+              `Rest and mentally prepare for actual test/goal`
+            ];
+          }
+
+          weeklyPlan.push({
+            week: i,
+            focusArea: focusArea,
+            estimatedHours: weeklyHours,
+            tasks: tasks
+          });
+        }
+
+        return {
+          title: `${subject} Mastery Plan`,
+          totalDuration: timeframeStr,
+          weeklyPlan: weeklyPlan,
+          studyTips: [
+            `Use the Pomodoro Technique: Study for 25 mins, rest for 5 mins to maximize focus on ${baseSubject}.`,
+            `Active Recall: Instead of re-reading, try to teach the concept to an imaginary friend.`,
+            `Consistency is key: Sticking to ${weeklyHours} hours/week is better than cramming multiple hours at the end.`
+          ]
+        };
+      }
+
+      function renderAIPlan(data) {
+        document.getElementById('aiPlanTitle').textContent = data.title || 'Your Personalized Study Plan';
+        document.getElementById('aiPlanDuration').textContent = `Total Duration: ${data.totalDuration || 'Not specified'}`;
+
+        const modulesContainer = document.getElementById('aiPlanModules');
+        modulesContainer.innerHTML = '';
+
+        if (data.weeklyPlan && Array.isArray(data.weeklyPlan)) {
+          data.weeklyPlan.forEach(week => {
+            const weekCard = document.createElement('div');
+            weekCard.style.cssText = 'background: white; border: 1px solid #e6e6e6; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);';
+
+            const tasksHtml = (week.tasks || []).map(task => `<li style="margin-bottom:5px; display:flex; gap:8px;"><i class="fas fa-check-circle" style="color:#28a745; margin-top:3px;"></i> <span>${task}</span></li>`).join('');
+
+            weekCard.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px;">
+            <h4 style="color:#0f2b46; font-size:16px;">Week ${week.week}: ${week.focusArea || 'General Study'}</h4>
+            <span style="background:#e8f4fd; color:#0071e3; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">${week.estimatedHours || 0} hrs</span>
+          </div>
+          <ul style="list-style:none; padding:0; color:#555; font-size:14px;">
+            ${tasksHtml}
+          </ul>
+        `;
+            modulesContainer.appendChild(weekCard);
+          });
+        }
+
+        const tipsContainer = document.getElementById('aiStudyTips');
+        tipsContainer.innerHTML = '';
+        if (data.studyTips && Array.isArray(data.studyTips)) {
+          data.studyTips.forEach(tip => {
+            const li = document.createElement('li');
+            li.textContent = tip;
+            tipsContainer.appendChild(li);
+          });
+        }
+
+        aiPlanResult.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+
+</html>

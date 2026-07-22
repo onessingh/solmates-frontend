@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.9">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solmates – Job Search Aggregator</title>
+    <link rel="stylesheet" href="/tools/job-search/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="/js/sol-cache.js?v=89.0"></script>
+<style>
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+    
+    <div class="header-bar">
+        <h1><i class="fas fa-search"></i> Job Search Aggregator</h1>
+        
+    </div>
+
+
+    <div class="page-content">
+        <div style="text-align: right; padding-right: 20px; padding-top: 10px; margin-bottom: -15px; position: relative; z-index: 10;">
+            <a href="/admin/manage-jobs" id="adminManageJobsBtn" class="back-btn hidden" style="display: inline-block; border-color: #ff4757; color: #ff4757; text-decoration: none; padding: 6px 14px; border-radius: 6px; border: 1.5px solid; font-size: 14px; font-weight: 600; background: #fff1f2;">
+                <i class="fas fa-tasks"></i> Manage
+            </a>
+        </div>
+        <div class="hero">
+            <div class="logo-wrapper">
+                <h1>Find Your Next <span>Opportunity</span></h1>
+                <p class="tagline">The most powerful AI-driven job search engine for the Solmates ecosystem.</p>
+            </div>
+        </div>
+
+        <section class="search-section">
+            <div class="sol-form-wrap">
+                <h2 class="sol-form-title">Job Search Filters</h2>
+                <form id="jobSearchForm" class="sol-form">
+
+                    <div class="form-row">
+                        <div class="sol-form-group">
+                            <label class="sol-form-label">Job Field</label>
+                            <select id="jobField" class="sol-form-input" required>
+                                <option value="">Select Field</option>
+                                <option value="IT & Software">IT & Software</option>
+                                <option value="Management & Business">Management & Business</option>
+                                <option value="Finance & Accounting">Finance & Accounting</option>
+                                <option value="Marketing & Communication">Marketing & Communication</option>
+                                <option value="Sales & Business Dev">Sales & Business Dev</option>
+                                <option value="Data Science & AI">Data Science & AI</option>
+                                <option value="Healthcare & Medical">Healthcare & Medical</option>
+                                <option value="Engineering (Core)">Engineering (Core)</option>
+                                <option value="Creative Arts & Media">Creative Arts & Media</option>
+                                <option value="Education & Training">Education & Training</option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Legal & Compliance">Legal & Compliance</option>
+                                <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+                                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                                <option value="Construction & Real Estate">Construction & Real Estate</option>
+                                <option value="Science & Research">Science & Research</option>
+                                <option value="Customer Support">Customer Support</option>
+                                <option value="Media & Entertainment">Media & Entertainment</option>
+                                <option value="Other Fields">Other Fields</option>
+                                <option value="other">Other (Type manually...)</option>
+                            </select>
+                            <input type="text" id="jobFieldCustom" class="sol-form-input hidden" placeholder="Enter your Job Field">
+                        </div>
+                        <div class="sol-form-group">
+                            <label class="sol-form-label">Sub Field</label>
+                            <select id="subField" class="sol-form-input" required>
+                                <option value="">Select Sub Field</option>
+                                <option value="other">Other (Type manually...)</option>
+                            </select>
+                            <input type="text" id="subFieldCustom" class="sol-form-input hidden" placeholder="Enter your Sub Field">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="sol-form-group">
+                            <label class="sol-form-label">Preferred Shift</label>
+                            <select id="jobShift" class="sol-form-input">
+                                <option value="both">All Shifts</option>
+                                <option value="morning">Morning Shift</option>
+                                <option value="night">Night Shift</option>
+                            </select>
+                        </div>
+                        <div class="sol-form-group">
+                            <label class="sol-form-label">Experience Level</label>
+                            <select id="experience" class="sol-form-input">
+                                <option value="fresher">Fresher</option>
+                                <option value="0-1">0-1 Years</option>
+                                <option value="1-3">1-3 Years</option>
+                                <option value="3-5">3-5 Years</option>
+                                <option value="5+">5+ Years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="sol-form-group">
+                            <label class="sol-form-label">Salary Package (LPA/k)</label>
+                            <input type="text" id="package" class="sol-form-input" placeholder="e.g. 5-10 LPA or 50k">
+                        </div>
+                        <div class="sol-form-group">
+                            <label class="sol-form-label">Location</label>
+                            <input type="text" id="location" class="sol-form-input" placeholder="e.g. Noida, Remote">
+                        </div>
+                    </div>
+
+                    <div class="sol-form-btns">
+                        <button type="submit" class="sol-btn" id="findJobsBtn">
+                            <i class="fas fa-search"></i> Find Jobs
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="results-section">
+            <!-- Insights & Trends -->
+            <div id="insightsPanel" class="insights-panel hidden">
+                <div class="insight-card">
+                    <h4>Market Demand</h4>
+                    <span class="value" id="totalMatches">0</span>
+                    <span class="sub-text">Live Jobs Found</span>
+                </div>
+                <div class="insight-card">
+                    <h4>Top Location</h4>
+                    <span class="value" id="topLocation">-</span>
+                    <span class="sub-text">Hiring Hotspot</span>
+                </div>
+                <div class="insight-card">
+                    <h4>Skill Trend</h4>
+                    <span class="value" id="topSkill">-</span>
+                    <span class="sub-text">Most Demanded</span>
+                </div>
+            </div>
+
+            <div class="results-controls">
+                <div class="tab-group" id="mainTabGroup">
+                    <button class="tab-btn active" data-tab="newly-added">
+                        <i class="fas fa-magic"></i> Newly Added
+                        <span class="tab-count" id="countAdded">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="saved">
+                        <i class="far fa-heart"></i> Saved
+                        <span class="tab-count" id="countSaved">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="live">
+                        <i class="fas fa-satellite-dish"></i> Live Search
+                        <span class="tab-count" id="countLive">0</span>
+                    </button>
+                </div>
+                <div id="platformStats" style="font-size: 13px; color: var(--text-muted); font-weight: 600;">
+                    <!-- Platform distribution will show here -->
+                </div>
+            </div>
+
+            <div id="platformFilters" class="platform-filters-scroll hidden">
+                <!-- Filter buttons injected here -->
+            </div>
+
+            <div id="resultsGrid" class="results-grid">
+                <!-- Results cards will be injected here -->
+            </div>
+            <div class="platforms-info">
+                <p>Searching across: LinkedIn, Naukri, Indeed, Glassdoor, Shine, Monster, Internshala, Freshersworld, Upwork, Fiverr, Toptal, Cutshort, AngelList, and more.</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="/config.js?v=113.8"></script>
+    <script src="/js/api-client.js?v=89.0"></script>
+    <script src="/tools/job-search/script.js?v=89.0"></script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aptitude Test — SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1c1f;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #0071e3;
+      font-weight: 500;
+    }
+
+    .page-content {
+      padding: 92px 24px 48px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .input-grp {
+      margin-bottom: 20px;
+    }
+
+    .input-grp label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px solid #eee;
+      font-size: 1rem;
+      outline: none;
+      background: #fafafa;
+    }
+
+    select:focus {
+      border-color: #0071e3;
+      background: white;
+    }
+
+    .btn-primary {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .question-box {
+      background: #f9f9fb;
+      padding: 24px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .option {
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .option.selected {
+      background: #e8f0fe;
+      border-color: #0071e3;
+    }
+
+    .result-score {
+      font-size: 4rem;
+      font-weight: 700;
+      color: #0071e3;
+      text-align: center;
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .explanation-text {
+      line-height: 1.6;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .explanation-text b {
+      color: #0071e3;
+    }
+
+    .btn-why {
+      background: #f0f0f0;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0071e3;
+      cursor: pointer;
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-why:hover {
+      background: #e0e0e0;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <header class="top-nav" style="justify-content: center;">
+    <span class="nav-logo" style="cursor: default;">Aptitude Test</span>
+  </header>
+
+  <div class="page-content">
+    <div class="container">
+      <div id="setupStep" class="card">
+        <h1><i class="fas fa-brain"></i> Aptitude Test</h1>
+        <p>Evaluate logical, numerical, and verbal reasoning dynamically with **Mate AI**.</p>
+
+        <div class="input-grp">
+          <label>Difficulty Level</label>
+          <select id="diffLevel">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <div class="input-grp">
+          <label>Number of Questions</label>
+          <select id="qCount">
+            <option value="10" selected>10 Questions</option>
+            <option value="15">15 Questions</option>
+            <option value="30">30 Questions</option>
+            <option value="45">45 Questions</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" id="startBtn">Generate Test</button>
+      </div>
+
+      <div id="loadingStep" class="card hidden" style="text-align: center;">
+        <h3 style="color: #334155; font-size: 1.3rem; font-weight: 600;"><i class="fas fa-spinner fa-spin" style="margin-right:10px; color:#0071e3;"></i> Generating AI Assessment...</h3>
+      </div>
+
+      <div id="testStep" class="card hidden">
+        <div id="progress"></div>
+        <div class="question-box">
+          <div class="question-text" id="qText"></div>
+          <div id="optContainer"></div>
+        </div>
+        <button class="btn-primary" id="nextBtn">Next</button>
+      </div>
+
+      <div id="resultStep" class="card hidden">
+        <h1 style="text-align: center;">Results</h1>
+        <div class="result-score" id="scoreDiv">0%</div>
+        <div id="reviewContainer" style="margin-top: 20px;"></div>
+        <button class="btn-primary" id="retakeBtn" style="margin-top: 20px;">Retake Test</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="whyModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="modal-close" id="closeModal">&times;</span>
+      <h3 style="margin-bottom: 15px; color: #0071e3;"><i class="fas fa-lightbulb"></i> AI Explanation</h3>
+      <div id="explanationBody" class="explanation-text">
+        <div style="text-align: center; padding: 20px;">
+          <i class="fas fa-circle-notch fa-spin"></i> Loading explanation...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let sessionId, questions = [], answers = [], currentIdx = 0;
+
+      const setupStep = document.getElementById('setupStep');
+      const loadingStep = document.getElementById('loadingStep');
+      const testStep = document.getElementById('testStep');
+      const resultStep = document.getElementById('resultStep');
+      const whyModal = document.getElementById('whyModal');
+      const explanationBody = document.getElementById('explanationBody');
+
+      document.getElementById('startBtn').onclick = async () => {
+        setupStep.classList.add('hidden'); loadingStep.classList.remove('hidden');
+        try {
+          const difficulty = document.getElementById('diffLevel').value;
+          const count = parseInt(document.getElementById('qCount').value) || 10;
+          const res = await window.solmatesAPI.generateAIToolData('aptitude-test', { difficulty, count });
+          if (!res.success) throw new Error();
+          questions = res.data.questions;
+          sessionId = res.data.sessionId;
+          answers = new Array(questions.length).fill(null);
+          currentIdx = 0;
+          loadingStep.classList.add('hidden'); testStep.classList.remove('hidden');
+          renderQ();
+        } catch (e) {
+          alert("Error generating API data"); location.reload();
+        }
+      };
+
+      function renderQ() {
+        if (currentIdx >= questions.length) { submitTest(); return; }
+        document.getElementById('progress').textContent = `${currentIdx + 1}/${questions.length}`;
+        document.getElementById('qText').textContent = questions[currentIdx].text;
+        const c = document.getElementById('optContainer'); c.innerHTML = '';
+        questions[currentIdx].options.forEach((opt, idx) => {
+          const d = document.createElement('div'); d.className = 'option';
+          if (answers[currentIdx] === idx) d.classList.add('selected');
+          d.textContent = opt;
+          d.onclick = () => {
+            c.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            d.classList.add('selected'); answers[currentIdx] = idx;
+          };
+          c.appendChild(d);
+        });
+      }
+
+      document.getElementById('nextBtn').onclick = () => {
+        if (answers[currentIdx] === null) return alert("Select an answer");
+        currentIdx++; renderQ();
+      };
+
+      async function submitTest() {
+        testStep.classList.add('hidden'); loadingStep.classList.remove('hidden');
+        try {
+          const res = await window.solmatesAPI.submitAIToolResult(sessionId, answers);
+          document.getElementById('scoreDiv').textContent = `${res.score}% (${res.rawScore}/${res.totalQuestions})`;
+
+          const rc = document.getElementById('reviewContainer'); rc.innerHTML = '';
+          res.questions.forEach((q, i) => {
+            const isRight = q.correctIndex === answers[i];
+            const resCard = document.createElement('div');
+            resCard.style.cssText = `padding:15px; margin-bottom:12px; border-left:5px solid ${isRight ? '#10b981' : '#ef4444'}; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);`;
+
+            resCard.innerHTML = `
+          <div style="font-weight:600; margin-bottom:6px;">${i + 1}. ${q.text}</div>
+          <div style="font-size:13px; color:#555;">Correct: <span style="color:#10b981; font-weight:600;">${q.options[q.correctIndex]}</span></div>
+          <div style="font-size:13px; color:#555;">Your Answer: <span style="color:${isRight ? '#10b981' : '#ef4444'}; font-weight:600;">${answers[i] !== null ? q.options[answers[i]] : 'None'}</span></div>
+          <button class="btn-why" data-idx="${i}"><i class="fas fa-wand-sparkles"></i> Why / Explain?</button>
+        `;
+            rc.appendChild(resCard);
+          });
+
+          // Bind Why buttons
+          rc.querySelectorAll('.btn-why').forEach(btn => {
+            btn.onclick = async () => {
+              const idx = parseInt(btn.dataset.idx);
+              const q = res.questions[idx];
+              whyModal.classList.remove('hidden');
+              explanationBody.innerHTML = '<div style="text-align:center; padding:20px;"><i class="fas fa-circle-notch fa-spin"></i> Mate AI is thinking...</div>';
+
+              try {
+                const expRes = await window.solmatesAPI.explainAnswer(q.text, q.options[q.correctIndex], 'Aptitude Test');
+                if (expRes.success) {
+                  explanationBody.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6;">${expRes.explanation}</div>`;
+                } else {
+                  explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: #ffe5e5; border-radius: 10px;">
+                <i class="fas fa-exclamation-circle"></i> ${expRes.error || 'Could not generate explanation.'}
+                ${expRes.detail ? `<br><small style="opacity: 0.8;">${expRes.detail}</small>` : ''}
+              </div>`;
+                }
+              } catch (e) {
+                explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: #ffe5e5; border-radius: 10px;">
+              <i class="fas fa-wifi"></i> Error connecting to AI. Please try again.
+              <br><small style="opacity: 0.8;">${e.message}</small>
+            </div>`;
+              }
+            };
+          });
+
+          loadingStep.classList.add('hidden'); resultStep.classList.remove('hidden');
+        } catch (e) { alert("Submission failed"); }
+      }
+
+      document.getElementById('closeModal').onclick = () => whyModal.classList.add('hidden');
+      window.onclick = (e) => { if (e.target === whyModal) whyModal.classList.add('hidden'); };
+
+      document.getElementById('retakeBtn').onclick = () => location.reload();
+    });
+  </script>
+</body>
+
+</html>

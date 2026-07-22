@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Optimization Suite | SOLMATES Tools</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --linkedin: #0077b5;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-top: 0 !important; }
+
+    .header-bar {
+      background: var(--card);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 20px 20px 0;
+      background: var(--bg);
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { background: #eef2f5; }
+    .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(15,43,70,0.2); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Checklist Styles (Original) */
+    .hero { text-align: center; margin-bottom: 36px; }
+    .hero-icon { width: 64px; height: 64px; background: linear-gradient(135deg, #0077b5, #00a0dc); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 24px rgba(0,119,181,0.3); }
+    .hero-icon i { font-size: 2rem; color: white; }
+    .hero h1 { font-size: 1.9rem; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero p { color: var(--light); font-size: 0.95rem; }
+
+    .score-banner { background: linear-gradient(135deg, var(--primary), #1a3c5e); border-radius: 20px; padding: 24px 30px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .score-left h2 { color: white; font-size: 1.1rem; margin-bottom: 4px; }
+    .score-left p { color: rgba(255,255,255,0.65); font-size: 0.85rem; }
+    .score-right { display: flex; align-items: center; gap: 16px; }
+    .score-circle { width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3); }
+    .score-num { font-size: 1.8rem; font-weight: 700; color: white; line-height: 1; }
+    .score-total { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+    .score-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+    .progress-bar-wrap { background: rgba(255,255,255,0.15); border-radius: 10px; height: 8px; margin-top: 16px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #34c759, #00e0a0); border-radius: 10px; transition: width 0.6s ease; width: 0%; }
+
+    .category { background: var(--card); border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+    .category-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; cursor: pointer; user-select: none; transition: background 0.2s; gap: 12px; }
+    .category-header:hover { background: #f9f9fb; }
+    .cat-left { display: flex; align-items: center; gap: 14px; }
+    .cat-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .cat-title { font-weight: 700; font-size: 1rem; color: var(--primary); }
+    .cat-count { font-size: 0.8rem; color: var(--light); margin-top: 2px; }
+    .cat-right { display: flex; align-items: center; gap: 10px; }
+    .cat-badge { font-size: 0.8rem; font-weight: 600; padding: 4px 10px; border-radius: 10px; }
+    .chevron { color: var(--light); transition: transform 0.3s; font-size: 0.85rem; }
+    .category.open .chevron { transform: rotate(180deg); }
+    .category-body { display: none; border-top: 1px solid var(--border); }
+    .category.open .category-body { display: block; }
+    .check-item { display: flex; align-items: flex-start; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+    .check-item:last-child { border-bottom: none; }
+    .check-item:hover { background: #f9f9fb; }
+    .check-item.checked { background: rgba(52,199,89,0.04); }
+    .check-box { width: 22px; height: 22px; border: 2px solid #ddd; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; }
+    .check-item.checked .check-box { background: var(--success); border-color: var(--success); }
+    .check-box i { font-size: 0.7rem; color: white; display: none; }
+    .check-item.checked .check-box i { display: block; }
+    .check-content { flex: 1; }
+    .check-title { font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 3px; }
+    .check-item.checked .check-title { color: var(--light); text-decoration: line-through; }
+    .check-desc { font-size: 0.82rem; color: var(--light); line-height: 1.4; }
+    .priority-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 8px; }
+    .p-high { background: var(--danger); }
+    .p-med { background: var(--warning); }
+    .p-low { background: var(--success); }
+
+    /* Forms & Inputs */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; }
+    .form-control { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; outline: none; transition: border 0.2s; }
+    .form-control:focus { border-color: var(--linkedin); }
+    textarea.form-control { resize: vertical; min-height: 100px; }
+    .btn-main { background: var(--linkedin); color: white; border: none; padding: 14px 24px; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-main:hover { background: #006097; }
+
+    /* Banner Maker */
+    .banner-preview-wrap { width: 100%; max-width: 792px; margin: 0 auto; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; background: #fff; }
+    #banner-canvas { width: 100%; height: 198px; position: relative; background: linear-gradient(135deg, #1e293b, #0f172a); color: white; display: flex; flex-direction: column; justify-content: center; padding: 30px; }
+    /* 1584x396 ratio is 4:1. Here width is 100%, height is 25% */
+    .b-title { font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
+    .b-subtitle { font-size: 1.1rem; color: #94a3b8; font-weight: 500; }
+    .b-skills { margin-top: 15px; font-size: 0.85rem; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
+    .b-contact { position: absolute; bottom: 20px; right: 30px; font-size: 0.8rem; color: #cbd5e1; }
+    
+    .theme-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+    .theme-opt { flex: 1; padding: 10px; text-align: center; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .theme-opt.active { border-color: var(--linkedin); background: #f0f7fc; color: var(--linkedin); }
+
+    /* Sandbox */
+    .sandbox-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #e0e0e0; max-width: 600px; margin: 0 auto; }
+    .sb-banner { height: 150px; background: #cbd5e1; position: relative; }
+    .sb-banner img { width: 100%; height: 100%; object-fit: cover; }
+    .sb-profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; position: absolute; bottom: -60px; left: 20px; background: #e2e8f0; background-size: cover; background-position: center; }
+    .sb-info { padding: 70px 20px 20px; }
+    .sb-name { font-size: 1.4rem; font-weight: 600; margin-bottom: 4px; }
+    .sb-headline { font-size: 1rem; color: #111; margin-bottom: 10px; }
+    .sb-loc { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
+    .sb-btns { display: flex; gap: 10px; margin-bottom: 20px; }
+    .sb-btn-primary { background: var(--linkedin); color: white; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; }
+    .sb-btn-sec { border: 1px solid var(--linkedin); color: var(--linkedin); padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; }
+    .sb-about { background: white; border-radius: 12px; box-shadow: 0 0 0 1px #e0e0e0; padding: 20px; margin-top: 10px; max-width: 600px; margin: 10px auto; }
+    .sb-about-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
+    .sb-about-text { font-size: 0.9rem; color: #333; line-height: 1.5; white-space: pre-wrap; }
+
+    /* AI Generated Cards */
+    .ai-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 15px; position: relative; }
+    .ai-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+    .ai-badge { background: #f0f7fc; color: var(--linkedin); font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; display: inline-block; }
+    .ai-text { font-size: 1rem; line-height: 1.5; white-space: pre-wrap; color: #333; }
+    .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-top: 15px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-copy:hover { background: #f5f5f7; }
+
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1><i class="fab fa-linkedin" style="color: #0077b5;"></i> LinkedIn Suite</h1>
+  </div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('sandbox', this)">📱 Sandbox Preview</button>
+    <button class="tab-btn" onclick="switchTab('checklist', this)">✅ Profile Checklist</button>
+    <button class="tab-btn" onclick="switchTab('banner', this)">🖼️ Banner Maker</button>
+    <button class="tab-btn" onclick="switchTab('ai', this)">✍️ AI Writer</button>
+  </div>
+
+  <div class="container">
+    
+    <!-- TAB 1: CHECKLIST -->
+    <div id="tab-checklist" class="tab-content">
+      <div class="hero">
+        <div class="hero-icon"><i class="fab fa-linkedin-in"></i></div>
+        <h1>LinkedIn Profile Optimizer</h1>
+        <p>Check off every item to maximize your visibility and recruiter reach</p>
+      </div>
+
+      <div class="score-banner">
+        <div class="score-left">
+          <h2>Profile Strength</h2>
+          <p id="scoreLabel">Complete items to build your score</p>
+          <div class="progress-bar-wrap" style="min-width: 220px;">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+        </div>
+        <div class="score-right">
+          <div class="score-circle">
+            <span class="score-num" id="scoreNum">0</span>
+            <span class="score-total" id="scoreTotal">/0</span>
+          </div>
+          <span class="score-badge" id="scoreBadge">Beginner</span>
+        </div>
+      </div>
+
+      <!-- Checklist Categories -->
+      <div id="checklist"></div>
+    </div>
+
+    <!-- TAB 2: BANNER MAKER -->
+    <div id="tab-banner" class="tab-content">
+      <h2 style="margin-bottom: 20px; color: var(--primary);">Custom Banner Generator</h2>
+      
+      <div class="banner-preview-wrap" id="banner-capture-zone">
+        <div id="banner-canvas">
+          <div class="b-title" id="bv-name">Shivarn Singh</div>
+          <div class="b-subtitle" id="bv-role">Full Stack Developer & AI Enthusiast</div>
+          <div class="b-skills" id="bv-skills">REACT • NODE.JS • PYTHON • UI/UX</div>
+          <div class="b-contact" id="bv-contact">📍 New Delhi, India</div>
+        </div>
+      </div>
+
+      <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border);">
+        <div class="theme-selector">
+          <div class="theme-opt active" onclick="setBannerTheme(this, 'dark')">Cyber Dark</div>
+          <div class="theme-opt" onclick="setBannerTheme(this, 'blue')">Corporate Blue</div>
+          <div class="theme-opt" onclick="setBannerTheme(this, 'gradient')">Modern Gradient</div>
+        </div>
+        
+        <div class="form-group">
+          <label>Your Name / Brand</label>
+          <input type="text" class="form-control" id="b-name" placeholder="e.g. John Doe" oninput="updateBanner()">
+        </div>
+        <div class="form-group">
+          <label>Tagline / Profession</label>
+          <input type="text" class="form-control" id="b-role" placeholder="e.g. Software Engineer & Designer" oninput="updateBanner()">
+        </div>
+        <div class="form-group">
+          <label>Key Skills (Separated by • or |)</label>
+          <input type="text" class="form-control" id="b-skills" placeholder="e.g. REACT • NODE.JS • PYTHON" oninput="updateBanner()">
+        </div>
+        <div class="form-group">
+          <label>Location / Website / Email</label>
+          <input type="text" class="form-control" id="b-contact" placeholder="e.g. 📍 New York | johndoe.com" oninput="updateBanner()">
+        </div>
+
+        <button class="btn-main" onclick="downloadBanner()"><i class="fas fa-download"></i> Download High-Res Banner (1584x396)</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: AI WRITER -->
+    <div id="tab-ai" class="tab-content">
+      <h2 style="margin-bottom: 20px; color: var(--primary);">Smart AI Content Generator</h2>
+      <p style="margin-bottom: 20px; color: var(--light);">Instantly generate optimized Headlines, About sections, and viral Posts.</p>
+      
+      <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 25px;">
+        <div class="form-group">
+          <label>What is your current Role / Target Job?</label>
+          <input type="text" class="form-control" id="ai-role" placeholder="e.g. Frontend Developer, MBA Student, Data Analyst">
+        </div>
+        <div class="form-group">
+          <label>Top 3 Skills</label>
+          <input type="text" class="form-control" id="ai-skills" placeholder="e.g. React, UI Design, Problem Solving">
+        </div>
+        <div class="form-group">
+          <label>What do you want to generate?</label>
+          <select class="form-control" id="ai-type">
+            <option value="headline">5 Catchy Headlines</option>
+            <option value="about">Professional 'About Me' Section</option>
+            <option value="post">Viral LinkedIn Post Template</option>
+          </select>
+        </div>
+        <button class="btn-main" onclick="generateAI()"><i class="fas fa-magic"></i> Generate Magic</button>
+      </div>
+
+      <div id="ai-results" style="display: none;">
+        <h3 style="margin-bottom: 15px;">Generated Results:</h3>
+        <div id="ai-output-container"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SANDBOX -->
+    <div id="tab-sandbox" class="tab-content active">
+      <h2 style="margin-bottom: 20px; color: var(--primary); text-align: center;">Live Profile Simulator</h2>
+      <p style="margin-bottom: 30px; color: var(--light); text-align: center;">See exactly how your profile looks to recruiters on mobile.</p>
+      
+      <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <!-- Controls -->
+        <div style="flex: 1; min-width: 300px; background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border);">
+          <div class="form-group">
+            <label>Profile Photo</label>
+            <label for="sb-in-photo" id="upload-label" style="display: block; padding: 15px; border: 2px dashed var(--linkedin); border-radius: 12px; text-align: center; cursor: pointer; background: #f0f7fc; transition: all 0.3s; color: #0077b5; font-weight: 600;">
+              <i class="fas fa-camera" style="font-size: 1.5rem; margin-bottom: 5px;"></i><br>
+              <span id="upload-text">Click to upload & crop photo</span>
+            </label>
+            <input type="file" id="sb-in-photo" accept="image/*" style="display: none;" onchange="updateSandboxPhoto(event)">
+          </div>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" id="sb-in-name" placeholder="e.g. John Doe" oninput="updateSandbox()">
+          </div>
+          <div class="form-group">
+            <label>Headline</label>
+            <textarea class="form-control" id="sb-in-headline" rows="3" placeholder="e.g. Tech Innovator | Open to Work" oninput="updateSandbox()"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" class="form-control" id="sb-in-loc" placeholder="e.g. New York, USA" oninput="updateSandbox()">
+          </div>
+          <div class="form-group">
+            <label>About</label>
+            <textarea class="form-control" id="sb-in-about" rows="6" placeholder="e.g. I am a passionate software developer..." oninput="updateSandbox()"></textarea>
+          </div>
+        </div>
+
+        <!-- Phone Mockup -->
+        <div style="flex: 1; min-width: 300px;">
+          <div class="sandbox-card">
+            <div class="sb-banner" id="sb-out-banner" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+              <div class="sb-profile-pic"></div>
+            </div>
+            <div class="sb-info">
+              <div class="sb-name" id="sb-out-name">Shivarn Singh</div>
+              <div class="sb-headline" id="sb-out-headline">Tech Innovator | Full Stack Developer | Building Solmates for 10K+ Students</div>
+              <div class="sb-loc" id="sb-out-loc">New Delhi, Delhi, India</div>
+              <div class="sb-btns">
+                <div class="sb-btn-primary">Connect</div>
+                <div class="sb-btn-sec">Message</div>
+              </div>
+            </div>
+          </div>
+          <div class="sb-about">
+            <div class="sb-about-title">About</div>
+            <div class="sb-about-text" id="sb-out-about">I am a passionate software developer dedicated to building impactful digital products. Currently scaling Solmates to help students worldwide.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cropper Modal -->
+  <div id="cropper-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; flex-direction:column;">
+    <div style="background:white; padding:20px; border-radius:12px; width:90%; max-width:500px;">
+      <h3 style="margin-bottom:15px; text-align:center;">Crop Profile Photo</h3>
+      <div style="max-height:60vh; overflow:hidden; background:#eee;">
+        <img id="cropper-image" style="max-width:100%; display:block;">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+        <button onclick="closeCropper()" style="padding:10px 20px; border:1px solid #ccc; border-radius:8px; cursor:pointer; background:white;">Cancel</button>
+        <button onclick="applyCrop()" style="padding:10px 20px; border:none; border-radius:8px; cursor:pointer; background:var(--linkedin); color:white;">Apply Crop</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab Switching
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // --- CHECKLIST LOGIC ---
+    const data = [
+      { id: 'photo', title: 'Profile Photo & Banner', icon: '📸', color: '#e8f4fd', iconColor: '#0077b5', items: [{ id: 'p1', title: 'Professional profile photo', desc: 'Clear face, good lighting, formal attire. Profiles with photos get 21x more views.', priority: 'high' },{ id: 'p2', title: 'Custom background banner', desc: 'Use a 1584x396px banner showing your field, city, or brand. Free tools: Canva.', priority: 'high' },{ id: 'p3', title: 'Profile photo frame (Open to Work / Hiring)', desc: 'Enable the green "Open to Work" frame in profile settings.', priority: 'med' }] },
+      { id: 'headline', title: 'Headline & About', icon: '✍️', color: '#fff3e0', iconColor: '#ff9f0a', items: [{ id: 'h1', title: 'Keyword-rich headline', desc: 'Avoid just "Student at XYZ". Use: MBA Student | Marketing | Analytics | Open to Opportunities.', priority: 'high' },{ id: 'h2', title: 'About section (2200 chars)', desc: 'Tell your story: who you are, what you do, key achievements, and CTA.', priority: 'high' },{ id: 'h3', title: 'About section has keywords', desc: 'Include role keywords like "data analysis", "marketing strategy", etc.', priority: 'high' }] },
+      { id: 'experience', title: 'Experience & Education', icon: '💼', color: '#f0faf3', iconColor: '#34c759', items: [{ id: 'e1', title: 'All jobs/internships added', desc: 'Include every relevant experience. Even short internships matter.', priority: 'high' },{ id: 'e2', title: 'Bullet points with impact', desc: 'Don\'t just list duties. Use: "Increased sales by 15% through..." format.', priority: 'high' },{ id: 'e3', title: 'Education section complete', desc: 'Add your degree, institution, year, and relevant coursework/grade.', priority: 'high' }] },
+      { id: 'skills', title: 'Skills & Endorsements', icon: '🏆', color: '#f5f0ff', iconColor: '#7c3aed', items: [{ id: 's1', title: 'At least 10 skills added', desc: 'Add all relevant skills. LinkedIn promotes profiles with more verified skills.', priority: 'high' },{ id: 's2', title: 'Top 3 skills pinned', desc: 'Pin your 3 most recruiter-relevant skills at the top.', priority: 'high' }] },
+      { id: 'network', title: 'Network & Connections', icon: '🌐', color: '#fff0f5', iconColor: '#ff375f', items: [{ id: 'n1', title: '500+ connections', desc: 'Profiles with 500+ connections rank significantly higher.', priority: 'high' },{ id: 'n2', title: 'Personalized requests', desc: 'Always send a note when connecting. "Hi [name], I saw your work..."', priority: 'med' }] },
+      { id: 'content', title: 'Activity & Content', icon: '📣', color: '#e8f8f5', iconColor: '#00b894', items: [{ id: 'c1', title: 'Post at least once a week', desc: 'Share learnings, industry insights, or project updates.', priority: 'med' },{ id: 'c2', title: 'Featured section added', desc: 'Pin your best post, a project, or portfolio link in the Featured section.', priority: 'low' }] }
+    ];
+
+    let checked = JSON.parse(localStorage.getItem('li_checklist') || '{}');
+    function updateScore() {
+      const total = data.reduce((s, c) => s + c.items.length, 0);
+      const done = Object.values(checked).filter(Boolean).length;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById('scoreNum').textContent = done;
+      document.getElementById('scoreTotal').textContent = '/' + total;
+      document.getElementById('progressFill').style.width = pct + '%';
+      
+      let label = pct === 100 ? '🏆 All Star' : pct >= 80 ? '🔥 Expert' : pct >= 50 ? '⚡ Advanced' : '🌱 Beginner';
+      document.getElementById('scoreBadge').textContent = label;
+      localStorage.setItem('li_checklist', JSON.stringify(checked));
+    }
+    
+    function toggleItem(id) {
+      checked[id] = !checked[id];
+      const el = document.getElementById('item_' + id);
+      if (checked[id]) el.classList.add('checked');
+      else el.classList.remove('checked');
+      updateScore();
+    }
+    
+    function buildChecklist() {
+      const container = document.getElementById('checklist');
+      container.innerHTML = '';
+      data.forEach((cat, idx) => {
+        const div = document.createElement('div');
+        div.className = 'category' + (idx === 0 ? ' open' : '');
+        div.innerHTML = `<div class="category-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="cat-left">
+              <div class="cat-icon" style="background:${cat.color}; color:${cat.iconColor};">${cat.icon}</div>
+              <div class="cat-title">${cat.title}</div>
+            </div>
+            <i class="fas fa-chevron-down chevron"></i>
+          </div>
+          <div class="category-body">
+            ${cat.items.map(item => `
+              <div class="check-item ${checked[item.id] ? 'checked' : ''}" id="item_${item.id}" onclick="toggleItem('${item.id}')">
+                <div class="check-box"><i class="fas fa-check"></i></div>
+                <div class="check-content"><div class="check-title">${item.title}</div><div class="check-desc">${item.desc}</div></div>
+              </div>
+            `).join('')}
+          </div>`;
+        container.appendChild(div);
+      });
+      updateScore();
+    }
+    buildChecklist();
+
+    // --- BANNER MAKER LOGIC ---
+    function updateBanner() {
+      document.getElementById('bv-name').textContent = document.getElementById('b-name').value || 'Your Name';
+      document.getElementById('bv-role').textContent = document.getElementById('b-role').value || 'Your Profession';
+      document.getElementById('bv-skills').textContent = document.getElementById('b-skills').value || 'SKILL 1 • SKILL 2';
+      document.getElementById('bv-contact').textContent = document.getElementById('b-contact').value;
+    }
+    function setBannerTheme(btn, theme) {
+      document.querySelectorAll('.theme-opt').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      const cvs = document.getElementById('banner-canvas');
+      if (theme === 'dark') {
+        cvs.style.background = 'linear-gradient(135deg, #1e293b, #0f172a)';
+        cvs.style.color = 'white';
+        document.getElementById('bv-skills').style.color = '#38bdf8';
+        document.getElementById('bv-contact').style.color = '#cbd5e1';
+      } else if (theme === 'blue') {
+        cvs.style.background = 'linear-gradient(135deg, #0077b5, #005582)';
+        cvs.style.color = 'white';
+        document.getElementById('bv-skills').style.color = '#e0f2fe';
+        document.getElementById('bv-contact').style.color = '#bae6fd';
+      } else {
+        cvs.style.background = 'linear-gradient(135deg, #8b5cf6, #d946ef)';
+        cvs.style.color = 'white';
+        document.getElementById('bv-skills').style.color = '#fdf4ff';
+        document.getElementById('bv-contact').style.color = '#fae8ff';
+      }
+    }
+    async function downloadBanner() {
+      const cvs = document.getElementById('banner-canvas');
+      const canvas = await html2canvas(cvs, { scale: 4 }); // 4x scale for high res
+      const link = document.createElement('a');
+      link.download = 'linkedin_banner.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // --- AI WRITER LOGIC (Smart Templates) ---
+    function generateAI() {
+      const role = document.getElementById('ai-role').value || '[Your Role]';
+      const skills = document.getElementById('ai-skills').value || '[Key Skills]';
+      const type = document.getElementById('ai-type').value;
+      const container = document.getElementById('ai-output-container');
+      
+      let html = '';
+      if (type === 'headline') {
+        const headlines = [
+          `${role} | Helping businesses grow with ${skills}`,
+          `${role} | Specializing in ${skills} | Open to Opportunities`,
+          `Aspiring ${role} | Passionate about ${skills} & Innovation`,
+          `Turning ideas into reality via ${skills} | ${role}`,
+          `${role} Professional | ${skills} | Lifelong Learner`
+        ];
+        headlines.forEach((h, i) => {
+          html += `<div class="ai-card">
+            <div class="ai-card-header"><div class="ai-badge">Option ${i+1}</div></div>
+            <div class="ai-text" id="ai-copy-${i}">${h}</div>
+            <button class="btn-copy" onclick="copyText('ai-copy-${i}')"><i class="far fa-copy"></i> Copy</button>
+          </div>`;
+        });
+      } else if (type === 'about') {
+        const about = `Hi, I'm a passionate ${role} with a strong foundation in ${skills}.\n\nThroughout my journey, I have developed a deep appreciation for solving complex problems and delivering impactful results. My expertise lies in ${skills}, and I am constantly learning new technologies to stay ahead of the curve.\n\nI am currently looking for exciting opportunities where I can contribute my skills and grow as a professional.\n\nLet's connect and build something amazing together!`;
+        html = `<div class="ai-card">
+          <div class="ai-card-header"><div class="ai-badge">Professional Summary</div></div>
+          <div class="ai-text" id="ai-copy-a">${about}</div>
+          <button class="btn-copy" onclick="copyText('ai-copy-a')"><i class="far fa-copy"></i> Copy</button>
+        </div>`;
+      } else {
+        const posts = [
+          `🚀 Exciting Update!\n\nI just finished an amazing project involving ${skills} and I couldn't be happier with the results. As a ${role}, continuous learning is my biggest driver.\n\nWhat are you guys learning this week? Drop it in the comments below! 👇\n\n#${role.replace(/\s+/g,'')} #Learning #Growth`,
+          `💡 A quick thought on ${skills}:\n\nIf you want to excel as a ${role}, mastering these basics is crucial. I spent the last few weeks diving deep into this and it completely changed my perspective.\n\nAlways stay curious! ✨\n\n#Tech #Development #Career`,
+        ];
+        posts.forEach((p, i) => {
+          html += `<div class="ai-card">
+            <div class="ai-card-header"><div class="ai-badge">Viral Template ${i+1}</div></div>
+            <div class="ai-text" id="ai-copy-p${i}">${p}</div>
+            <button class="btn-copy" onclick="copyText('ai-copy-p${i}')"><i class="far fa-copy"></i> Copy</button>
+          </div>`;
+        });
+      }
+      
+      container.innerHTML = html;
+      document.getElementById('ai-results').style.display = 'block';
+    }
+    
+    function copyText(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text);
+      alert('Copied to clipboard!');
+    }
+
+    // --- SANDBOX LOGIC ---
+    function updateSandbox() {
+      document.getElementById('sb-out-name').textContent = document.getElementById('sb-in-name').value || 'Your Name';
+      document.getElementById('sb-out-headline').textContent = document.getElementById('sb-in-headline').value || 'Your Headline';
+      document.getElementById('sb-out-loc').textContent = document.getElementById('sb-in-loc').value || 'Location';
+      document.getElementById('sb-out-about').textContent = document.getElementById('sb-in-about').value || 'Your About Section';
+    }
+
+    let cropper = null;
+
+    function updateSandboxPhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('cropper-image').src = e.target.result;
+          document.getElementById('cropper-modal').style.display = 'flex';
+          
+          if (cropper) cropper.destroy();
+          cropper = new Cropper(document.getElementById('cropper-image'), {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+            background: false
+          });
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function closeCropper() {
+      document.getElementById('cropper-modal').style.display = 'none';
+      if (cropper) cropper.destroy();
+      document.getElementById('sb-in-photo').value = ''; // Reset input
+    }
+
+    function applyCrop() {
+      if (!cropper) return;
+      const canvas = cropper.getCroppedCanvas({ width: 240, height: 240 });
+      const imgDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      
+      document.querySelector('.sb-profile-pic').style.backgroundImage = `url(${imgDataUrl})`;
+      document.getElementById('upload-text').textContent = 'Photo uploaded successfully!';
+      
+      closeCropper();
+    }
+
+  </script>
+</body>
+</html>

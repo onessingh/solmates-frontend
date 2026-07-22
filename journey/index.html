@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.5">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/webview-fix.js?v=112.5"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBA Journey - Track Your Progress | SOLMATES</title>
+
+  <meta name="description"
+    content="Map your MBA journey, track achievements, milestones, and connect with your academic path.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://solmates.netlify.app/journey">
+  <meta property="og:title" content="MBA Journey - Track Your Progress | SOLMATES">
+  <meta property="og:description"
+    content="Map your MBA journey, track achievements, milestones, and connect with your academic path.">
+  <meta property="og:url" content="https://solmates.netlify.app/journey">
+  <meta name="twitter:title" content="MBA Journey - Track Your Progress | SOLMATES">
+  <meta name="twitter:description"
+    content="Map your MBA journey, track achievements, milestones, and connect with your academic path.">
+
+  <style>
+    /* ========== Base Reset ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #ffffff;
+      color: #111;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ========== Navbar ========== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px 0 15px;
+      padding-right: 30px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .nav-left {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      color: #0f2b46;
+    }
+
+    .nav-center {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-center a {
+      text-decoration: none;
+      color: #333;
+      font-size: 12px;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-center a:hover {
+      color: #0071e3;
+      background: transparent;
+    }
+
+    .nav-center a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .back-btn {
+      background: #0f2b46;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #333;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 999;
+      padding: 20px;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+    }
+
+    .mobile-nav-overlay.active {
+      display: flex;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mobile-nav-overlay a {
+      padding: 15px;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+    }
+
+    .mobile-nav-overlay a.active {
+      background: transparent;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .mobile-nav-overlay a i {
+      width: 24px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    /* ========== Page Content ========== */
+    .page-content {
+      min-height: calc(100vh - 60px);
+      padding-top: 60px;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ========== Journey Section ========== */
+    .journey-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px 0;
+    }
+
+    .journey-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .journey-header h1 {
+      font-size: 36px;
+      color: #0f2b46;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .journey-header h1 i {
+      color: #c0962d;
+      font-size: 40px;
+    }
+
+    .journey-header p {
+      color: #666;
+      font-size: 16px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Horizontal Slider */
+    .team-slider-container {
+      position: relative;
+      margin: 60px 0;
+      padding: 0 50px;
+    }
+
+    @media (max-width: 768px) {
+      .team-slider-container {
+        padding: 0 30px;
+      }
+    }
+
+    .team-slider {
+      display: flex;
+      gap: 30px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 20px 10px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+    }
+
+    .team-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .team-member-card {
+      flex: 0 0 300px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      scroll-snap-align: start;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .team-member-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .member-image {
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      position: relative;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Image Protection - No Download */
+    .member-image img,
+    .group-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform 0.5s ease, opacity 0.3s ease;
+      display: block;
+      opacity: 0;
+      will-change: transform, opacity;
+      pointer-events: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .member-image img.loaded,
+    .group-photo.loaded {
+      opacity: 1;
+    }
+
+    .team-member-card:hover .member-image img.loaded {
+      transform: scale(1.08);
+    }
+
+    .image-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+      color: #666;
+      font-weight: 500;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .image-fallback.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Image Loading Skeleton */
+    .image-skeleton {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      z-index: 2;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .image-skeleton.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes skeleton-loading {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .member-info {
+      padding: 25px;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .member-name {
+      font-size: 22px;
+      font-weight: 600;
+      color: #0f2b46;
+      margin-bottom: 5px;
+    }
+
+    .member-role {
+      font-size: 14px;
+      color: #c0962d;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .member-bio {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .slider-nav {
+      position: absolute;
+      top: 45%;
+      transform: translateY(-45%);
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 20px;
+      color: #0f2b46;
+    }
+
+    .slider-nav:hover {
+      background: #0f2b46;
+      color: white;
+      transform: translateY(-45%) scale(1.1);
+    }
+
+    .slider-nav.prev {
+      left: 0;
+    }
+
+    .slider-nav.next {
+      right: 0;
+    }
+
+    .member-link {
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .member-link:hover .member-name {
+      color: #0071e3;
+    }
+
+    .slider-dots {
+      display: none;
+      /* Hidden on desktop */
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin: 20px auto 40px;
+      width: 100%;
+      position: relative;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ddd;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: #0f2b46;
+      transform: scale(1.2);
+    }
+
+    /* ========== TIMELINE ========== */
+    .journey-timeline {
+      margin: 80px 0 20px;
+      padding: 40px 0 0;
+    }
+
+    .timeline-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .timeline-header h2 {
+      font-size: 32px;
+      color: #0f2b46;
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .timeline-header h2:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: #c0962d;
+      border-radius: 2px;
+    }
+
+    .timeline-header p {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .timeline-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .timeline-card {
+      flex: 0 0 280px;
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f0f0f0;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(15, 43, 70, 0.1);
+      border-color: #c0962d;
+    }
+
+    .timeline-card-year {
+      font-size: 22px;
+      font-weight: 700;
+      color: #c0962d;
+      margin-bottom: 15px;
+      background: rgba(192, 150, 45, 0.08);
+      padding: 5px 15px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+
+    .timeline-card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0f2b46;
+      margin-bottom: 12px;
+    }
+
+    .timeline-card-desc {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* Group Photo */
+    .group-photo-container {
+      text-align: center;
+      margin: 30px 0 0;
+      position: relative;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .group-photo {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      display: block;
+      margin: 0 auto;
+      background: #f5f5f5;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .group-photo.loaded {
+      opacity: 1;
+    }
+
+    .group-photo-skeleton {
+      width: 300px;
+      height: 200px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      border-radius: 12px;
+      margin: 0 auto;
+      pointer-events: none;
+    }
+
+    .group-photo-caption {
+      margin-top: 8px;
+      margin-bottom: 0;
+      font-size: 15px;
+      color: #0f2b46;
+      font-weight: 500;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-center {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .journey-container {
+        padding: 30px 15px 0;
+      }
+
+      .journey-header h1 {
+        font-size: 28px;
+      }
+
+      .team-member-card {
+        flex: 0 0 280px;
+      }
+
+      .member-image {
+        height: 373px;
+      }
+
+      .member-info {
+        padding: 20px;
+      }
+
+      .member-name {
+        font-size: 20px;
+      }
+
+      .slider-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      .timeline-grid {
+        gap: 20px;
+      }
+
+      .timeline-card {
+        flex: 0 0 100%;
+        max-width: 400px;
+      }
+
+      .group-photo-skeleton {
+        width: 250px;
+        height: 167px;
+      }
+
+      .slider-dots {
+        display: flex;
+        /* Shown only on mobile */
+      }
+
+      .social {
+        gap: 6px;
+        flex-wrap: nowrap !important;
+      }
+
+      .social a,
+      .whatsapp-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding: 20px 20px 20px;
+      background: #fff;
+      margin-top: 0;
+      border-top: 1px solid #eee;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .footer p {
+      padding: 0 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .social {
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      margin-bottom: 15px;
+      padding: 0 10px;
+    }
+
+    .social a {
+      font-size: 16px;
+      color: #0071e3;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: rgba(0, 113, 227, 0.05);
+      text-decoration: none;
+    }
+
+    .social a:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .whatsapp-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .whatsapp-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 113, 227, 0.05);
+      color: #0071e3;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1003;
+    }
+
+    .whatsapp-icon:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: scale(1.05);
+    }
+
+    .whatsapp-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px) scale(0.95);
+      background: white;
+      width: 120px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+      z-index: 1004;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+    }
+
+    .whatsapp-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .whatsapp-dropdown::after {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent white transparent;
+    }
+
+    .whatsapp-options {
+      display: flex;
+      gap: 6px;
+    }
+
+    .whatsapp-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px 6px;
+      color: #333;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+      background: #f8f9fa;
+    }
+
+    .whatsapp-option:hover {
+      background: #25D366;
+      color: white;
+      transform: translateY(-2px);
+      border-color: #25D366;
+    }
+
+    .whatsapp-option:hover i {
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .whatsapp-option i {
+      font-size: 18px;
+      color: #25D366;
+      transition: all 0.25s ease;
+      margin-bottom: 4px;
+      transform: translateZ(0);
+    }
+
+    .whatsapp-option .option-text {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .whatsapp-option .option-desc {
+      font-size: 9px;
+      color: #666;
+      line-height: 1.2;
+    }
+
+    .whatsapp-option:hover .option-desc {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <header class="top-nav">
+    <div class="nav-left" onclick="window.location.href='/'" style="cursor: pointer;">SOLMATES</div>
+
+    <div class="nav-center">
+      <a href="/database" title="Database">Database</a>
+      <a href="/tools" title="Tools">Tools</a>
+      <a href="/skills" title="Skills & Development">Skills & Development</a>
+      <a href="/games" title="Games">Games</a>
+                  <a href="/journey">Journey</a>
+<a href="/feedback?from=Journey" title="Feedback">Feedback</a>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-right">
+      <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay" id="mobileNav">
+
+    <a href="/database"><i class="fas fa-database"></i> Database</a>
+    <a href="/tools"><i class="fas fa-tools"></i> Tools</a>
+    <a href="/skills"><i class="fas fa-chart-line"></i> Skills & Development</a>
+    <a href="/games">
+      <i class="fas fa-gamepad"></i> Games
+    </a>
+              <a href="/journey"><i class="fas fa-road"></i> Journey</a>
+<a href="/feedback?from=Journey">
+      <i class="fas fa-comment-dots"></i> Feedback
+    </a>
+  </div>
+
+  <div class="page-content">
+    <div class="journey-container">
+      <div class="journey-header">
+        <h1><i class="fas fa-road"></i> SOLMATES Journey</h1>
+        <p>From humble beginnings to a thriving community of 5 leaders. Our story of growth, learning, and success.</p>
+      </div>
+
+      <!-- Team Slider - With Optimized & Protected Images -->
+      <div class="team-slider-container" oncontextmenu="return false;">
+        <h2 style="text-align: center; margin-bottom: 40px; color: #0f2b46;">Meet Our 5 Leaders</h2>
+
+
+
+        <div class="team-slider" id="teamSlider" onscroll="updateActiveDotOnScroll()">
+
+          <!-- Team Member 1 - Vikas Bal (Chairman) -->
+          <div class="team-member-card">
+            <div class="member-image">
+              <div class="image-skeleton" id="skeleton-1"></div>
+              <img src="/journey/vikasbal.png" alt="Vikas Bal" loading="lazy"
+                onload="imageLoaded(this, 'skeleton-1', 'fallback-1')"
+                onerror="imageError(this, 'fallback-1', 'skeleton-1')" draggable="false" oncontextmenu="return false;"
+                ondragstart="return false;" onmousedown="return false;">
+              <div class="image-fallback" id="fallback-1">Vikas Bal</div>
+            </div>
+            <div class="member-info">
+              <div class="member-name">Vikas Bal</div>
+              <div class="member-role">Advisor</div>
+              <div class="member-bio">Providing valuable insights, strategic direction, and continuous support to Solmates. Helping the team make informed decisions, identifying new opportunities, and supporting the long-term vision and growth of the community.</div>
+            </div>
+          </div>
+
+          <!-- Team Member 2 - Parth Nayyar (Founder) -->
+          <div class="team-member-card">
+            <a href="https://www.linkedin.com/in/parth-nayyar?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="member-link">
+              <div class="member-image">
+                <div class="image-skeleton" id="skeleton-2"></div>
+                <img src="/journey/parthnayyar.png" alt="Parth Nayyar" loading="lazy"
+                  onload="imageLoaded(this, 'skeleton-2', 'fallback-2')"
+                  onerror="imageError(this, 'fallback-2', 'skeleton-2')" draggable="false" oncontextmenu="return false;"
+                  ondragstart="return false;" onmousedown="return false;">
+                <div class="image-fallback" id="fallback-2">Parth Nayyar</div>
+              </div>
+              <div class="member-info">
+                <div class="member-name">Parth Nayyar</div>
+                <div class="member-role">Coordinator</div>
+                <div class="member-bio">Coordinating initiatives, streamlining communication, and keeping the team connected. Supporting collaboration across different activities while ensuring smooth coordination within the Solmates team.</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Team Member 4 - Shivarn Singh (Web Development Lead) -->
+          <div class="team-member-card">
+            <a href="https://shivarnsingh-portfolio.vercel.app/" target="_blank" class="member-link">
+              <div class="member-image">
+                <div class="image-skeleton" id="skeleton-4"></div>
+                <img src="/journey/shivarnsingh.png" alt="Shivarn Singh" loading="lazy"
+                  onload="imageLoaded(this, 'skeleton-4', 'fallback-4')"
+                  onerror="imageError(this, 'fallback-4', 'skeleton-4')" draggable="false" oncontextmenu="return false;"
+                  ondragstart="return false;" onmousedown="return false;">
+                <div class="image-fallback" id="fallback-4">Shivarn Singh</div>
+              </div>
+              <div class="member-info">
+                <div class="member-name">Shivarn Singh</div>
+                <div class="member-role">Technical Lead</div>
+                <div class="member-bio">Building and managing the Solmates website, study materials, and digital tools. Continuously improving the platform by developing new features, maintaining digital resources, and creating a seamless learning experience for the community.</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Team Member 6 - Prince Gothwal (Operations & Finance Head) -->
+          <div class="team-member-card">
+            <a href="https://www.linkedin.com/in/prince-gothwal-ab23b833b?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="member-link">
+              <div class="member-image">
+                <div class="image-skeleton" id="skeleton-6"></div>
+                <img src="/journey/princegothwal.png" alt="Prince Gothwal" loading="lazy"
+                  onload="imageLoaded(this, 'skeleton-6', 'fallback-6')"
+                  onerror="imageError(this, 'fallback-6', 'skeleton-6')" draggable="false" oncontextmenu="return false;"
+                  ondragstart="return false;" onmousedown="return false;">
+                <div class="image-fallback" id="fallback-6">Prince Gothwal</div>
+              </div>
+              <div class="member-info">
+                <div class="member-name">Prince Gothwal</div>
+                <div class="member-role">Operations Lead</div>
+                <div class="member-bio">Managing operations and ensuring the smooth execution of community activities. Organizing workflows, supporting daily operations, and helping the team deliver a reliable and efficient experience for every member.</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="team-member-card">
+            <a href="https://www.linkedin.com/in/parvesh-raj-2087361a3?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="member-link">
+              <div class="member-image">
+                <div class="image-skeleton" id="skeleton-8"></div>
+                <img src="/journey/parveshrajput.png" alt="Parvesh Raj" loading="lazy"
+                  onload="imageLoaded(this, 'skeleton-8', 'fallback-8')"
+                  onerror="imageError(this, 'fallback-8', 'skeleton-8')" draggable="false" oncontextmenu="return false;"
+                  ondragstart="return false;" onmousedown="return false;">
+                <div class="image-fallback" id="fallback-8">Parvesh Raj</div>
+              </div>
+              <div class="member-info">
+                <div class="member-name">Parvesh Raj</div>
+                <div class="member-role">Community Lead</div>
+                <div class="member-bio">Fostering engagement, strengthening member relationships, and growing the Solmates community. Encouraging active participation, supporting members, and maintaining a positive, collaborative, and welcoming environment.</div>
+              </div>
+            </a>
+          </div>
+
+        </div>
+
+        <div class="slider-dots" id="sliderDots"></div>
+
+        <!-- Timeline Section -->
+        <div class="journey-timeline">
+          <div class="timeline-header">
+            <h2>Our Growth Timeline</h2>
+            <p>From idea to impact - The SOLMATES evolution</p>
+          </div>
+
+          <div class="timeline-grid">
+            <!-- September 2025 -->
+            <div class="timeline-card">
+              <div class="timeline-card-year">September 2025</div>
+              <div class="timeline-card-title">The Beginning 🌱</div>
+              <div class="timeline-card-desc">5 MBA students connected on Teams app. Started with study groups and
+                shared notes.</div>
+            </div>
+
+            <!-- October 2025 -->
+            <div class="timeline-card">
+              <div class="timeline-card-year">October 2025</div>
+              <div class="timeline-card-title">WhatsApp Community 🚀</div>
+              <div class="timeline-card-desc">Launched WhatsApp community reaching 1000+ members. Started organizing
+                weekly webinars and study sessions.</div>
+            </div>
+
+            <!-- January 2026 -->
+            <div class="timeline-card">
+              <div class="timeline-card-year">January 2026</div>
+              <div class="timeline-card-title">Social Media Launch 📱</div>
+              <div class="timeline-card-desc">Created all social media platforms - Instagram, Twitter, LinkedIn,
+                YouTube, Telegram. Expanded reach to 1000+ followers.</div>
+            </div>
+
+            <!-- March 2026 -->
+            <div class="timeline-card">
+              <div class="timeline-card-year">March 2026</div>
+              <div class="timeline-card-title">Website Launch 💻</div>
+              <div class="timeline-card-desc">Launched SOLMATES website for distance and online learning MBA students.
+                Database, tools section, and study materials.</div>
+            </div>
+          </div>
+
+          <!-- GROUP PHOTO WITH PROTECTION -->
+          <div class="group-photo-container" oncontextmenu="return false;">
+            <div class="group-photo-skeleton" id="group-photo-skeleton"></div>
+            <img src="/journey/solmates.png" alt="SOLMATES Group Photo" class="group-photo" id="group-photo"
+              loading="lazy"
+              onload="this.classList.add('loaded'); document.getElementById('group-photo-skeleton').style.display='none';"
+              draggable="false" oncontextmenu="return false;" ondragstart="return false;" onmousedown="return false;">
+            <p class="group-photo-caption">Team Solmates</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="social">
+        <div class="whatsapp-container">
+          <div class="whatsapp-icon" id="whatsappIcon">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div class="whatsapp-dropdown" id="whatsappDropdown">
+            <div class="whatsapp-options">
+              <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
+                <i class="fas fa-users"></i>
+                <span class="option-text">Community</span>
+                <span class="option-desc">Join Group</span>
+              </a>
+              <a href="https://whatsapp.com/channel/0029Vb6iO1GKmCPIg5fdUv0Z" target="_blank" class="whatsapp-option">
+                <i class="fas fa-broadcast-tower"></i>
+                <span class="option-text">Channel</span>
+                <span class="option-desc">Updates</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a href="https://twitter.com/teamsolmates" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="https://facebook.com/teamsolmates" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="https://t.me/solmates_channelbot" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+        <a href="https://instagram.com/teamsolmates" target="_blank" title="Instagram"><i
+            class="fab fa-instagram"></i></a>
+        <a href="https://youtube.com/@teamsolmates" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.linkedin.com/company/teamsomates/" target="_blank" title="LinkedIn"><i
+            class="fab fa-linkedin"></i></a>
+        <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
+      </div>
+      <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+    </footer>
+
+    <script>
+      // ========== SKILLS COMING SOON ==========
+      function showSkillsComingSoon() {
+        alert('🚀 Skills & Development section is coming soon! We\'re working on exciting content for you. Stay tuned!');
+        return false;
+      }
+
+      // ========== IMAGE OPTIMIZATION FUNCTIONS ==========
+      function imageLoaded(img, skeletonId, fallbackId) {
+        img.classList.add('loaded');
+        const skeleton = document.getElementById(skeletonId);
+        const fallback = document.getElementById(fallbackId);
+        if (skeleton) skeleton.classList.add('hidden');
+        if (fallback) fallback.classList.add('hidden');
+      }
+
+      function imageError(img, fallbackId, skeletonId) {
+        const fallback = document.getElementById(fallbackId);
+        const skeleton = document.getElementById(skeletonId);
+        if (fallback) fallback.classList.remove('hidden');
+        if (skeleton) skeleton.classList.add('hidden');
+        img.style.display = 'none';
+      }
+
+      // ========== MOBILE MENU ==========
+      let menuOpen = false;
+      function toggleMobileMenu() {
+        const mobileNav = document.getElementById('mobileNav');
+        if (!mobileNav) return;
+
+        menuOpen = !menuOpen;
+
+        if (menuOpen) {
+          mobileNav.classList.add('active');
+          document.body.style.overflow = 'hidden';
+
+          // Close other things if open
+          if (typeof whatsappOpen !== 'undefined' && whatsappOpen) closeWhatsappDropdown();
+
+          // Add listener to close on click outside
+          document.addEventListener('click', closeMenuOnClickOutside);
+        } else {
+          forceCloseMobileMenu();
+        }
+      }
+
+      function forceCloseMobileMenu() {
+        const mobileNav = document.getElementById('mobileNav');
+        if (!mobileNav) return;
+
+        menuOpen = false;
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        document.removeEventListener('click', closeMenuOnClickOutside);
+      }
+
+      function closeMenuOnClickOutside(e) {
+        const mobileNav = document.getElementById('mobileNav');
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        if (menuOpen && mobileNav && (e.target === mobileNav || (!mobileNav.contains(e.target) && !menuBtn.contains(e.target)))) {
+          forceCloseMobileMenu();
+        }
+      }
+
+      // ========== WHATSAPP DROPDOWN ==========
+      const whatsappIcon = document.getElementById('whatsappIcon');
+      const whatsappDropdown = document.getElementById('whatsappDropdown');
+      let whatsappOpen = false;
+      let whatsappTimeout;
+
+      whatsappIcon.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!whatsappOpen) {
+          whatsappDropdown.classList.add('show');
+          whatsappOpen = true;
+          document.addEventListener('click', closeWhatsappOnClickOutside);
+          clearTimeout(whatsappTimeout);
+          whatsappTimeout = setTimeout(() => { if (whatsappOpen) closeWhatsappDropdown(); }, 5000);
+        } else {
+          closeWhatsappDropdown();
+        }
+      });
+
+      function closeWhatsappDropdown() {
+        whatsappDropdown.classList.remove('show');
+        whatsappOpen = false;
+        document.removeEventListener('click', closeWhatsappOnClickOutside);
+        clearTimeout(whatsappTimeout);
+      }
+
+      function closeWhatsappOnClickOutside(e) {
+        if (!whatsappIcon.contains(e.target) && !whatsappDropdown.contains(e.target)) {
+          closeWhatsappDropdown();
+        }
+      }
+
+      // ========== SLIDER FUNCTIONALITY ==========
+      const teamSlider = document.getElementById('teamSlider');
+      const sliderDots = document.getElementById('sliderDots');
+      const cards = document.querySelectorAll('.team-member-card');
+      const totalCards = cards.length;
+
+      function getCardWidth() {
+        if (cards.length === 0) return 330;
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 30;
+        return cardWidth + gap;
+      }
+
+      let autoScrollInterval;
+      let currentSlideIndex = 0;
+
+      function createDots() {
+        sliderDots.innerHTML = '';
+        for (let i = 0; i < totalCards; i++) {
+          const dot = document.createElement('div');
+          dot.className = `dot ${i === 0 ? 'active' : ''}`;
+          dot.addEventListener('click', () => goToCard(i));
+          sliderDots.appendChild(dot);
+        }
+      }
+
+      function goToCard(index) {
+        if (index < 0 || index >= totalCards) return;
+        const cardWidth = getCardWidth();
+        teamSlider.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+        currentSlideIndex = index;
+        updateDots();
+        resetAutoScroll();
+      }
+
+      function scrollSlider(direction) {
+        const newIndex = currentSlideIndex + direction;
+        if (newIndex >= 0 && newIndex < totalCards) goToCard(newIndex);
+      }
+
+      function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlideIndex));
+      }
+
+      function updateActiveDotOnScroll() {
+        const cardWidth = getCardWidth();
+        const scrollLeft = teamSlider.scrollLeft;
+        const approximateIndex = Math.round(scrollLeft / cardWidth);
+        const newIndex = Math.max(0, Math.min(totalCards - 1, approximateIndex));
+        if (newIndex !== currentSlideIndex) {
+          currentSlideIndex = newIndex;
+          updateDots();
+          resetAutoScroll();
+        }
+      }
+
+      function startAutoScroll() {
+        if (autoScrollInterval) clearInterval(autoScrollInterval);
+        autoScrollInterval = setInterval(() => {
+          const nextIndex = (currentSlideIndex + 1) % totalCards;
+          goToCard(nextIndex);
+        }, 4000);
+      }
+
+      function resetAutoScroll() {
+        clearInterval(autoScrollInterval);
+        startAutoScroll();
+      }
+
+      // Custom Biased Shuffle
+      function shuffleTeamMembers() {
+        const slider = document.getElementById('teamSlider');
+        let cardsArray = Array.from(slider.querySelectorAll('.team-member-card'));
+        
+        let shivarnCard = null;
+        let otherCards = [];
+        
+        cardsArray.forEach(card => {
+          const nameEl = card.querySelector('.member-name');
+          if (nameEl && nameEl.innerText.trim() === 'Shivarn Singh') {
+            shivarnCard = card;
+          } else {
+            otherCards.push(card);
+          }
+        });
+
+        // Fully shuffle other members
+        for (let i = otherCards.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [otherCards[i], otherCards[j]] = [otherCards[j], otherCards[i]];
+        }
+        
+        // Check consecutive 1st positions
+        let consecutiveFirsts = parseInt(sessionStorage.getItem('shivarnConsecutiveFirsts') || '0');
+        
+        // 40% chance 1st, 40% chance 2nd, 20% chance 3rd
+        let rand = Math.random();
+        
+        // If 1st twice in a row, force 2nd or 3rd position
+        if (consecutiveFirsts >= 2) {
+          rand = Math.random() * 0.6 + 0.4; // 0.4 to 1.0
+        }
+        
+        let targetIndex = 0;
+        if (rand <= 0.4) {
+          targetIndex = 0;
+          sessionStorage.setItem('shivarnConsecutiveFirsts', (consecutiveFirsts + 1).toString());
+        } else {
+          sessionStorage.setItem('shivarnConsecutiveFirsts', '0');
+          if (rand <= 0.8) {
+            targetIndex = 1;
+          } else {
+            targetIndex = 2;
+          }
+        }
+        
+        if (shivarnCard) {
+          otherCards.splice(targetIndex, 0, shivarnCard);
+        }
+        
+        otherCards.forEach(card => slider.appendChild(card));
+      }
+
+      // Initialize slider
+      shuffleTeamMembers();
+      createDots();
+      teamSlider.addEventListener('scroll', () => window.requestAnimationFrame(updateActiveDotOnScroll));
+      teamSlider.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
+      teamSlider.addEventListener('mouseleave', startAutoScroll);
+      window.addEventListener('resize', () => setTimeout(() => goToCard(currentSlideIndex), 100));
+      startAutoScroll();
+      document.addEventListener('DOMContentLoaded', () => setTimeout(() => goToCard(0), 100));
+
+      // ========== IMAGE PROTECTION ==========
+      /* DISABLED: Disable right click on entire page for images
+      document.addEventListener('contextmenu', function(e) {
+        if (e.target.tagName === 'IMG' || e.target.closest('.member-image') || e.target.closest('.group-photo-container')) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      */
+
+      // Disable drag and drop
+      document.addEventListener('dragstart', function (e) {
+        if (e.target.tagName === 'IMG') {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // Disable touch events for long-press on mobile, but allow links to work
+      document.addEventListener('touchstart', function (e) {
+        if (e.target.tagName === 'IMG' && !e.target.closest('a')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchend', function (e) {
+        if (e.target.tagName === 'IMG') {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Disable keyboard shortcuts for saving
+      document.addEventListener('keydown', function (e) {
+        // Ctrl+S, Ctrl+Shift+S, Ctrl+U (view source), F12
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          if (e.target.tagName === 'IMG' || e.target.closest('.member-image')) {
+            e.preventDefault();
+          }
+        }
+        /* DISABLED: F12 / Inspect / View Source
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+          e.preventDefault();
+        }
+        */
+      });
+
+      // Preload first few images for better performance
+      document.addEventListener('DOMContentLoaded', function () {
+        const firstImages = document.querySelectorAll('.team-member-card img');
+        for (let i = 0; i < Math.min(3, firstImages.length); i++) {
+          const img = firstImages[i];
+          if (img && img.src) {
+            const preloadLink = document.createElement('link');
+            preloadLink.rel = 'preload';
+            preloadLink.as = 'image';
+            preloadLink.href = img.src;
+            document.head.appendChild(preloadLink);
+          }
+        }
+      });
+
+      console.log('✅ Image protection enabled - No downloads allowed');
+    </script>
+</body>
+
+</html>

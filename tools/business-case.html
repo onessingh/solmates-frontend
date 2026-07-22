@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Case Template | SOLMATES Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary:#0f2b46; --accent:#0071e3; --bg:#f5f5f7; --card:#fff;
+      --text:#1d1d1f; --light:#86868b; --border:#e5e5ea; --success:#34c759;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);padding-top:60px;min-height:100vh;}
+
+    .top-nav{position:fixed;top:0;width:100%;height:60px;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);display:flex;justify-content:space-between;align-items:center;padding:0 24px;z-index:1000;border-bottom:1px solid var(--border);}
+    .nav-logo{font-weight:700;font-size:1.2rem;color:var(--primary);cursor:pointer;}
+    .back-link{background:var(--primary);color:white;padding:8px 18px;border-radius:20px;text-decoration:none;font-size:0.85rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+
+    .container{max-width:860px;margin:0 auto;padding:28px 20px 80px;}
+
+    .hero{text-align:center;margin-bottom:24px;}
+    .hero-icon{width:62px;height:62px;background:linear-gradient(135deg,#7c3aed,#5b21b6);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 24px rgba(124,58,237,0.25);}
+    .hero-icon i{font-size:1.8rem;color:white;}
+    .hero h1{font-size:1.8rem;font-weight:700;color:var(--primary);letter-spacing:-0.5px;}
+    @media(max-width:500px){.hero h1{font-size:1.45rem;}}
+
+    /* Progress bar */
+    .progress-bar{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:16px 20px;margin-bottom:18px;box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+    .pb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .pb-label{font-size:0.85rem;font-weight:700;color:var(--primary);}
+    .pb-pct{font-size:0.85rem;font-weight:700;color:var(--accent);}
+    .pb-track{background:#f0f0f2;border-radius:8px;height:8px;overflow:hidden;}
+    .pb-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#7c3aed,#0071e3);transition:width 0.4s ease;}
+
+    /* Section card */
+    .section-card{background:var(--card);border-radius:20px;border:1px solid var(--border);margin-bottom:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.04);transition:box-shadow 0.2s;}
+    .section-card:hover{box-shadow:0 8px 28px rgba(0,0,0,0.08);}
+    .section-head{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;}
+    .sec-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:white;flex-shrink:0;}
+    .sec-info{flex:1;}
+    .sec-title{font-size:0.98rem;font-weight:700;color:var(--primary);}
+    .sec-desc{font-size:0.78rem;color:var(--light);margin-top:2px;}
+    .sec-chevron{color:var(--light);transition:transform 0.3s;font-size:0.9rem;}
+    .section-card.open .sec-chevron{transform:rotate(180deg);}
+    .sec-status{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+    .sec-status.filled{background:var(--success);border-color:var(--success);color:white;font-size:0.6rem;}
+
+    .section-body{display:none;padding:0 22px 22px;}
+    .section-card.open .section-body{display:block;animation:slideDown 0.25s ease;}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+    .field-group{margin-bottom:16px;}
+    .field-label{font-size:0.83rem;font-weight:600;color:var(--primary);margin-bottom:6px;display:block;}
+    .field-hint{font-size:0.75rem;color:var(--light);margin-bottom:8px;line-height:1.4;}
+    .field-input,.field-textarea{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:0.93rem;font-family:inherit;outline:none;background:#fafafa;color:var(--text);transition:all 0.2s;resize:vertical;}
+    .field-textarea{min-height:100px;line-height:1.6;}
+    .field-input:focus,.field-textarea:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(0,113,227,0.1);}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:500px){.field-row{grid-template-columns:1fr;}}
+
+    /* Action bar */
+    .action-bar{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+    .btn-action{padding:13px 24px;border-radius:12px;border:none;font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s;}
+    .btn-print{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:white;box-shadow:0 6px 18px rgba(124,58,237,0.25);}
+    .btn-print:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(124,58,237,0.3);}
+    .btn-save{background:linear-gradient(135deg,var(--success),#16a34a);color:white;box-shadow:0 6px 18px rgba(52,199,89,0.2);}
+    .btn-save:hover{transform:translateY(-2px);}
+    .btn-clear{background:var(--card);color:var(--light);border:1.5px solid var(--border);}
+    .btn-clear:hover{border-color:#ff3b30;color:#ff3b30;}
+
+    /* Print */
+    @media print{
+      .top-nav,.action-bar,.section-head .sec-chevron,.progress-bar{display:none!important;}
+      body{background:white;padding-top:0;}
+      .container{padding:0;max-width:100%;}
+      .hero-icon{display:none;}
+      .section-card{border:1px solid #ddd;break-inside:avoid;box-shadow:none;}
+      .section-body{display:block!important;}
+      .section-head{cursor:default;padding-bottom:8px;}
+      .field-input,.field-textarea{border:none;background:transparent;padding:4px 0;font-size:0.92rem;}
+      .field-textarea{min-height:auto;resize:none;}
+    }
+  
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+
+</style>
+
+    <style>
+      body { padding-top: 0 !important; }
+      .page-content { padding-top: 20px !important; }
+    </style>
+    </head>
+<body>
+
+    <div class="header-bar" style="position: relative;">
+        <h1><i class="fas fa-briefcase"></i> Business Case Generator</h1>
+    </div>
+
+
+
+
+<div class="container">
+  <div class="hero">
+    <div class="hero-icon"><i class="fas fa-briefcase"></i></div>
+    <h1>Business Case Template</h1>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <div class="pb-head">
+      <span class="pb-label">Completion</span>
+      <span class="pb-pct" id="pctLabel">0%</span>
+    </div>
+    <div class="pb-track"><div class="pb-fill" id="pbFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Sections -->
+  <div id="sectionsContainer"></div>
+
+  <div class="action-bar">
+    <button class="btn-action btn-save" onclick="saveData()"><i class="fas fa-save"></i> Save Progress</button>
+    <button class="btn-action btn-print" onclick="printCase()"><i class="fas fa-print"></i> Print / Export PDF</button>
+    <button class="btn-action btn-clear" onclick="clearAll()"><i class="fas fa-trash"></i> Clear All</button>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    id:'cover', icon:'fa-id-card', color:'#7c3aed', title:'Cover Information',
+    desc:'Basic details about this business case',
+    fields:[
+      {id:'title', label:'Business Case Title', type:'input', ph:'e.g. Launch of EV Charging Network in Tier-2 Cities'},
+      {id:'company', label:'Company / Organization', type:'input', ph:'e.g. GreenTech Pvt. Ltd.'},
+      {id:'prepared', label:'Prepared By', type:'input', ph:'e.g. Group 3, MBA Semester 2'},
+      {id:'date', label:'Date', type:'input', ph:'e.g. 17 July 2025'},
+      {id:'version', label:'Version', type:'input', ph:'e.g. v1.0'},
+    ]
+  },
+  {
+    id:'exec', icon:'fa-star', color:'#0071e3', title:'Executive Summary',
+    desc:'A concise overview of the entire business case',
+    fields:[
+      {id:'summary', label:'Executive Summary', type:'textarea', ph:'Summarize the business problem, proposed solution, key benefits, and the investment required. Keep it to 150–200 words. Readers should understand the full picture from this section alone.', hint:'Tip: Write this section last, after completing all others.'},
+    ]
+  },
+  {
+    id:'problem', icon:'fa-exclamation-circle', color:'#dc2626', title:'Problem Statement',
+    desc:'Define the core business problem being addressed',
+    fields:[
+      {id:'prob_stmt', label:'Problem Statement', type:'textarea', ph:'Clearly describe the business problem or opportunity. Include current situation, who is affected, and the impact of not addressing it.'},
+      {id:'prob_scope', label:'Scope & Boundaries', type:'textarea', ph:'Define what is included and excluded from this business case. Mention departments, geographies, time periods, etc.'},
+      {id:'prob_impact', label:'Impact of Inaction', type:'textarea', ph:'What happens if this problem is not addressed? Quantify losses or missed opportunities where possible.'},
+    ]
+  },
+  {
+    id:'solution', icon:'fa-lightbulb', color:'#16a34a', title:'Proposed Solution',
+    desc:'Describe your recommended approach',
+    fields:[
+      {id:'sol_desc', label:'Solution Description', type:'textarea', ph:'Describe the proposed solution in detail. How does it address the problem? What does it involve?'},
+      {id:'sol_alt', label:'Alternatives Considered', type:'textarea', ph:'List other options that were evaluated and explain why they were rejected in favor of the proposed solution.'},
+      {id:'sol_timeline', label:'Implementation Timeline', type:'textarea', ph:'Provide a high-level timeline: Phase 1, Phase 2, etc. Include key milestones and expected completion date.'},
+    ]
+  },
+  {
+    id:'market', icon:'fa-chart-pie', color:'#d97706', title:'Market Analysis',
+    desc:'Industry landscape and competitive positioning',
+    fields:[
+      {id:'mkt_size', label:'Market Size & Opportunity', type:'textarea', ph:'Describe the total addressable market (TAM), serviceable market (SAM). Use data and statistics wherever possible.'},
+      {id:'mkt_target', label:'Target Audience', type:'textarea', ph:'Define your target customer segments: demographics, psychographics, behaviours.'},
+      {id:'mkt_comp', label:'Competitive Landscape', type:'textarea', ph:'Who are the key competitors? What are their strengths and weaknesses? What is your competitive advantage?'},
+    ]
+  },
+  {
+    id:'finance', icon:'fa-rupee-sign', color:'#0f2b46', title:'Financial Analysis',
+    desc:'Costs, revenue projections and ROI',
+    fields:[
+      {id:'fin_invest', label:'Total Investment Required', type:'input', ph:'e.g. ₹25,00,000'},
+      {id:'fin_rev', label:'Projected Revenue (Year 1)', type:'input', ph:'e.g. ₹40,00,000'},
+      {id:'fin_roi', label:'Expected ROI', type:'input', ph:'e.g. 60% in 18 months'},
+      {id:'fin_break', label:'Break-Even Point', type:'input', ph:'e.g. Month 14'},
+      {id:'fin_detail', label:'Cost-Benefit Summary', type:'textarea', ph:'Break down major costs (setup, operations, marketing, HR) and expected revenue streams. Justify financial projections with assumptions.'},
+    ]
+  },
+  {
+    id:'risk', icon:'fa-shield-alt', color:'#6366f1', title:'Risk Analysis',
+    desc:'Identify and mitigate potential risks',
+    fields:[
+      {id:'risk_list', label:'Key Risks', type:'textarea', ph:'List major risks:\n1. Market Risk — Lower than expected adoption\n2. Financial Risk — Cost overruns\n3. Operational Risk — Supply chain delays\n4. Regulatory Risk — Policy changes'},
+      {id:'risk_mit', label:'Mitigation Strategies', type:'textarea', ph:'For each risk listed above, describe specific mitigation actions and contingency plans.'},
+    ]
+  },
+  {
+    id:'recommend', icon:'fa-check-circle', color:'#34c759', title:'Recommendation & Conclusion',
+    desc:'Final recommendation and call to action',
+    fields:[
+      {id:'rec_stmt', label:'Recommendation', type:'textarea', ph:'State your final recommendation clearly. Which solution should be adopted, and why? What is the urgency?'},
+      {id:'rec_next', label:'Next Steps', type:'textarea', ph:'List the immediate actions required after approval:\n1. Approve budget by [date]\n2. Form project team\n3. Kick-off meeting\n4. ...'},
+      {id:'rec_approval', label:'Approval Required From', type:'input', ph:'e.g. CFO, Board of Directors, Department Head'},
+    ]
+  },
+];
+
+let formData = {};
+
+function buildUI() {
+  const container = document.getElementById('sectionsContainer');
+  SECTIONS.forEach((sec, idx) => {
+    const card = document.createElement('div');
+    card.className = 'section-card' + (idx === 0 ? ' open' : '');
+    card.id = 'sec-' + sec.id;
+
+    const fieldsHTML = sec.fields.map(f => `
+      <div class="field-group">
+        <label class="field-label">${f.label}</label>
+        ${f.hint ? `<div class="field-hint">${f.hint}</div>` : ''}
+        ${f.type === 'textarea'
+          ? `<textarea class="field-textarea" id="f_${sec.id}_${f.id}" placeholder="${f.ph}" oninput="onFieldChange('${sec.id}','${f.id}',this.value)">${formData[sec.id]?.[f.id] || ''}</textarea>`
+          : `<input class="field-input" type="text" id="f_${sec.id}_${f.id}" placeholder="${f.ph}" value="${formData[sec.id]?.[f.id] || ''}" oninput="onFieldChange('${sec.id}','${f.id}',this.value)">`
+        }
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="section-head" onclick="toggleSection('${sec.id}')">
+        <div class="sec-icon" style="background:${sec.color}"><i class="fas ${sec.icon}"></i></div>
+        <div class="sec-info">
+          <div class="sec-title">${sec.title}</div>
+          <div class="sec-desc">${sec.desc}</div>
+        </div>
+        <div class="sec-status" id="status-${sec.id}"></div>
+        <i class="fas fa-chevron-down sec-chevron"></i>
+      </div>
+      <div class="section-body">${fieldsHTML}</div>
+    `;
+    container.appendChild(card);
+  });
+  updateProgress();
+}
+
+function toggleSection(id) {
+  const card = document.getElementById('sec-' + id);
+  card.classList.toggle('open');
+}
+
+function onFieldChange(secId, fieldId, value) {
+  if (!formData[secId]) formData[secId] = {};
+  formData[secId][fieldId] = value;
+  updateProgress();
+  autoSave();
+}
+
+function updateProgress() {
+  let filled = 0, total = 0;
+  SECTIONS.forEach(sec => {
+    let secFilled = 0;
+    sec.fields.forEach(f => {
+      total++;
+      const val = (formData[sec.id] && formData[sec.id][f.id]) ? formData[sec.id][f.id].trim() : '';
+      if (val) { filled++; secFilled++; }
+    });
+    const status = document.getElementById('status-' + sec.id);
+    if (status) {
+      if (secFilled === sec.fields.length) {
+        status.className = 'sec-status filled';
+        status.innerHTML = '<i class="fas fa-check"></i>';
+      } else if (secFilled > 0) {
+        status.className = 'sec-status';
+        status.style.background = '#fff9c4';
+        status.style.borderColor = '#fbbf24';
+        status.innerHTML = '';
+      } else {
+        status.className = 'sec-status';
+        status.style.background = '';
+        status.style.borderColor = '';
+        status.innerHTML = '';
+      }
+    }
+  });
+  const pct = Math.round((filled / total) * 100);
+  document.getElementById('pctLabel').textContent = pct + '%';
+  document.getElementById('pbFill').style.width = pct + '%';
+}
+
+function autoSave() {
+  localStorage.setItem('sol_bizcase', JSON.stringify(formData));
+}
+
+function saveData() {
+  autoSave();
+  const btn = document.querySelector('.btn-save');
+  btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+  setTimeout(() => btn.innerHTML = '<i class="fas fa-save"></i> Save Progress', 2000);
+}
+
+function printCase() {
+  // Open all sections before printing
+  SECTIONS.forEach(sec => document.getElementById('sec-' + sec.id).classList.add('open'));
+  setTimeout(() => window.print(), 200);
+}
+
+function clearAll() {
+  if (!confirm('Clear all data? This cannot be undone.')) return;
+  formData = {};
+  localStorage.removeItem('sol_bizcase');
+  document.getElementById('sectionsContainer').innerHTML = '';
+  buildUI();
+}
+
+// Load saved
+const saved = localStorage.getItem('sol_bizcase');
+if (saved) { try { formData = JSON.parse(saved); } catch(e) {} }
+buildUI();
+</script>
+</body>
+</html>

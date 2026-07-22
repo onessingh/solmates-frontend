@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Ideas Generator — SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: #f5f5f7;
+      color: #1d1c1f;
+    }
+
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #0071e3;
+      font-weight: 500;
+    }
+
+    .page-content {
+      padding: 92px 24px 48px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 15px 0 5px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .project-card {
+      border: 1px solid #ddd;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      background: #fff;
+    }
+
+    .project-card h3 {
+      color: #0f2b46;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+
+    .badge-diff {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 15px;
+      background: #f0f0f0;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .p-section {
+      margin-bottom: 15px;
+    }
+
+    .p-section strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #444;
+    }
+
+    .tech-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #e8f4fd;
+      color: #0071e3;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+  </style>
+  <script src="/js/sol-cache.js?v=89.0"></script>
+</head>
+
+<body>
+
+  <header class="top-nav" style="justify-content: center;">
+    <span class="nav-logo" style="cursor: default;">Project Ideas Generator</span>
+  </header>
+
+  <div class="page-content">
+    <div class="container">
+      <div id="setupStep" class="card">
+        <h1><i class="fas fa-lightbulb"></i> Project Ideas Generator</h1>
+        <p>Need portfolio projects? AI will generate 3 highly impressive real-world project ideas based on your domain.
+        </p>
+
+        <label>Target Domain / Area</label>
+        <input type="text" id="targetDom" placeholder="e.g. Data Visualization, Full-Stack Web, Cybersecurity">
+
+        <label>Current Skill Level</label>
+        <select id="currLev">
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+
+        <button class="btn-primary" id="startBtn">Generate Projects</button>
+      </div>
+
+      <div id="loadingStep" class="card hidden" style="text-align: center;">
+        <h3>Brainstorming with AI...</h3>
+      </div>
+
+      <div id="resultStep" class="card hidden">
+        <h1 style="text-align: center; margin-bottom: 30px;">Your Custom Project Ideas</h1>
+
+        <div id="projectsContainer"></div>
+
+        <div
+          style="background: #f9f9fb; border-left: 5px solid #0071e3; padding: 20px; border-radius: 10px; margin-top: 30px;">
+          <h3><i class="fas fa-briefcase"></i> Portfolio Advice</h3>
+          <p id="advTxt" style="margin-top: 10px;"></p>
+        </div>
+
+        <button class="btn-primary" onclick="location.reload()">Generate More</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=101.0"></script>
+  <script src="/js/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startBtn').onclick = async () => {
+        const dom = document.getElementById('targetDom').value;
+        if (!dom) return alert("Please enter a domain.");
+
+        document.getElementById('setupStep').classList.add('hidden');
+        document.getElementById('loadingStep').classList.remove('hidden');
+
+        try {
+          const res = await window.solmatesAPI.generateAIToolData('project-ideas', {
+            domain: dom,
+            level: document.getElementById('currLev').value
+          });
+          if (!res.success) throw new Error();
+
+          const { projects, portfolioAdvice } = res.data;
+
+          document.getElementById('advTxt').textContent = portfolioAdvice;
+
+          document.getElementById('projectsContainer').innerHTML = projects.map(p => `
+        <div class="project-card">
+          <h3>${p.title}</h3>
+          <span class="badge-diff"><i class="fas fa-hammer"></i> ${p.difficulty}</span>
+          
+          <div class="p-section">
+            <strong>Description</strong>
+            ${p.description}
+          </div>
+          
+          <div class="p-section">
+            <strong>Tech Stack</strong>
+            ${p.techStack.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+          </div>
+          
+          <div class="p-section">
+            <strong>Learning Outcomes</strong>
+            <ul style="padding-left: 20px;">
+              ${p.learningOutcomes.map(o => `<li>${o}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `).join('');
+
+          document.getElementById('loadingStep').classList.add('hidden');
+          document.getElementById('resultStep').classList.remove('hidden');
+        } catch (e) {
+          alert("Error generating API data"); location.reload();
+        }
+      };
+    });
+  </script>
+</body>
+
+</html>

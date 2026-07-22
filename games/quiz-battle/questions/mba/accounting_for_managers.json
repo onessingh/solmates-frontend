@@ -1,0 +1,17 @@
+[
+    { "q": "Which accounting principle states that a business is a separate entity from its owners?", "options": ["Going Concern Concept", "Business Entity Concept", "Matching Concept", "Cost Concept"], "a": 1 },
+    { "q": "The fundamental accounting equation is:", "options": ["Assets = Liabilities + Equity", "Assets + Liabilities = Equity", "Equity = Assets + Liabilities", "Liabilities = Assets + Equity"], "a": 0 },
+    { "q": "Which financial statement reports a company's revenues and expenses over a specific period?", "options": ["Balance Sheet", "Cash Flow Statement", "Income Statement", "Statement of Retained Earnings"], "a": 2 },
+    { "q": "Depreciation is an example of:", "options": ["A cash expense", "A non-cash expense", "A capital expenditure", "An intangible asset"], "a": 1 },
+    { "q": "The process of recording financial transactions in a journal is called:", "options": ["Posting", "Journalizing", "Balancing", "Auditing"], "a": 1 },
+    { "q": "A ledger is often referred to as a book of:", "options": ["Original entry", "Secondary entry", "Final entry", "Cash entry"], "a": 2 },
+    { "q": "Which ratio measures a company's ability to pay off its short-term liabilities with its short-term assets?", "options": ["Debt-to-Equity Ratio", "Current Ratio", "Return on Assets", "Gross Profit Margin"], "a": 1 },
+    { "q": "In a cash flow statement, the purchase of equipment is classified under:", "options": ["Operating activities", "Investing activities", "Financing activities", "Non-operating activities"], "a": 1 },
+    { "q": "What type of account is 'Accounts Receivable'?", "options": ["Asset", "Liability", "Equity", "Revenue"], "a": 0 },
+    { "q": "The rule of debit and credit for Asset accounts is:", "options": ["Debit increases, Credit decreases", "Debit decreases, Credit increases", "Debit and Credit both increase", "Debit and Credit both decrease"], "a": 0 },
+    { "q": "Which method of inventory valuation assumes that the last items placed in inventory are the first ones sold?", "options": ["FIFO", "LIFO", "Weighted Average", "Specific Identification"], "a": 1 },
+    { "q": "Goodwill is classified as an:", "options": ["Current Asset", "Tangible Fixed Asset", "Intangible Asset", "Fictitious Asset"], "a": 2 },
+    { "q": "Retained earnings represent:", "options": ["Cash kept in the bank", "Profits reinvested in the business", "Capital contributed by shareholders", "Total assets minus total liabilities"], "a": 1 },
+    { "q": "Which principle dictates that expenses should be recognized in the same period as the revenues they help generate?", "options": ["Revenue Recognition Principle", "Cost Principle", "Matching Principle", "Conservatism Principle"], "a": 2 },
+    { "q": "An unearned revenue is considered a:", "options": ["Asset", "Liability", "Revenue", "Expense"], "a": 1 }
+]
