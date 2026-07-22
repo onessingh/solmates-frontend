@@ -523,15 +523,18 @@
         
         @media (max-width: 800px) { 
             .nav-center { display: none !important; }
-            .mobile-menu-btn { display: block !important; }
+            .mobile-menu-btn { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important;  display: block !important; }
             .header-bar { padding: 0 15px; padding-right: 15px; }
             .profile-name { display: none !important; }
             .profile-btn { padding: 6px !important; }
         }
         
-        .mobile-menu-btn {
+        .mobile-menu-btn { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important; 
             display: none; background: none; border: none; font-size: 20px;
             color: #333; cursor: pointer; padding: 5px; margin: 0;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
         }
 
         .mobile-nav-overlay {
@@ -841,3 +844,5 @@
     </script>
 </body>
 </html>
+
+

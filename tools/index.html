@@ -200,7 +200,7 @@
     }
 
     /* Mobile Menu */
-    .mobile-menu-btn {
+    .mobile-menu-btn { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important; 
       display: none;
       background: none;
       border: none;
@@ -830,7 +830,7 @@ padding-bottom: 10px;
     /* ========== Mobile Responsive ========== */
     @media (max-width: 768px) {
       .nav-center { display: none !important; }
-      .mobile-menu-btn { display: block !important; }
+      .mobile-menu-btn { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important;  display: block !important; }
       .tools-container { padding: 20px 12px; }
       .tools-header { margin-bottom: 30px; }
       .tools-header h1 { font-size: 22px; }
@@ -1363,4 +1363,6 @@ padding-bottom: 10px;
   </script>
 </body>
 </html>
+
+
 
