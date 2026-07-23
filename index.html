@@ -4606,10 +4606,18 @@
           }
           if (!allowedSems.includes('all') && !allowedSems.includes('0')) allowedSems.push('0');
 
-          const unreadItems = res.data.filter(item => {
+          const dedupeMap = new Map();
+          res.data.forEach(item => {
             const itemSem = String(item.semester || '0');
-            if (!allowedSems.includes('all') && !allowedSems.includes(itemSem)) return false;
+            if (!allowedSems.includes('all') && !allowedSems.includes(itemSem)) return;
 
+            const key = `sem${itemSem}_${normalize(item.title)}`;
+            const existing = dedupeMap.get(key);
+            const hasLink = item.link && item.link !== "#pending" && item.link !== "#";
+            if (!existing || hasLink) dedupeMap.set(key, item);
+          });
+
+          const unreadItems = Array.from(dedupeMap.values()).filter(item => {
             const itemLink = (item.link || '').trim();
             const uniqueKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(item.title)}`;
             const dateObj = parseNoticeDate(item.date, item.title);
