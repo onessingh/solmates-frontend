@@ -916,10 +916,15 @@ if (typeof module !== 'undefined' && module.exports) {
           // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
         }
 
-        // Silent Resync every session to guarantee 100% notification delivery
-        if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
-           await window.solmatesAPI.subscribeToPush(pushSelected).catch(() => null);
-           console.log('[PUSH] Silent token resync completed.');
+        // Silent Resync bounded to once per 24h
+        const lastSync = localStorage.getItem('sol_push_last_sync');
+        const now = Date.now();
+        if (!lastSync || now - parseInt(lastSync) > 86400000) {
+          if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
+             await window.solmatesAPI.subscribeToPush(pushSelected).catch(() => null);
+             localStorage.setItem('sol_push_last_sync', now.toString());
+             console.log('[PUSH] Silent token resync completed.');
+          }
         }
 
         if (typeof window.syncNativePushTags === 'function') {
@@ -932,4 +937,5 @@ if (typeof module !== 'undefined' && module.exports) {
     }
   }, 2500);
 })();
+
 

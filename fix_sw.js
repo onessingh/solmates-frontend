@@ -23,9 +23,14 @@ const healLogic = `
         // Auto-heal push subscriptions
         if (localStorage.getItem('sol_notif_enabled') === 'true') {
            if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
-              let semArr = ['all'];
-              try { semArr = JSON.parse(localStorage.getItem('sol_subscribed_sems')) || ['all']; } catch(e){}
-              window.solmatesAPI.subscribeToPush(semArr).catch(e => console.warn('Auto-heal failed', e));
+              const lastSync = localStorage.getItem('sol_push_last_sync_autoheal');
+              const now = Date.now();
+              if (!lastSync || now - parseInt(lastSync) > 86400000) {
+                 let semArr = ['all'];
+                 try { semArr = JSON.parse(localStorage.getItem('sol_subscribed_sems')) || ['all']; } catch(e){}
+                 window.solmatesAPI.subscribeToPush(semArr).catch(e => console.warn('Auto-heal failed', e));
+                 localStorage.setItem('sol_push_last_sync_autoheal', now.toString());
+              }
            }
         }
 `;
@@ -39,3 +44,4 @@ if (!notifContent.includes('Auto-heal push subscriptions')) {
 }
 
 // Do the same for index.html if it has push logic (it doesn't have subscribe logic normally, but let's check)
+
