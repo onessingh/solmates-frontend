@@ -2578,7 +2578,7 @@
         pushSelected = [...uiSelected];
         // Ensure users always receive global and general announcements
         if (!pushSelected.includes('0')) pushSelected.push('0');
-        if (!pushSelected.includes('all')) pushSelected.push('all');
+        // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
       }
 
       if (uiSelected.length === 0) {
@@ -2621,7 +2621,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=113.3';
+        const swUrl = './sw.js?v=113.4';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v116.4] refreshed flag + pageOpenTime guard — prevents infinite reload loop
@@ -2830,4 +2830,6 @@
   </div>
 </body>
 </html>
+
+
 

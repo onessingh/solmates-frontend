@@ -4777,7 +4777,7 @@
 
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
-        const swUrl = './sw.js?v=113.3';
+        const swUrl = './sw.js?v=113.4';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v116.4] controllerchange guard — 'refreshed' flag prevents infinite reload loop
@@ -4831,5 +4831,6 @@
 </body>
 
 </html>
+
 
 

@@ -913,7 +913,7 @@ if (typeof module !== 'undefined' && module.exports) {
           pushSelected = ['all', '0', '1', '2', '3', '4'];
         } else {
           if (!pushSelected.includes('0')) pushSelected.push('0');
-          if (!pushSelected.includes('all')) pushSelected.push('all');
+          // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
         }
 
         // Silent Resync every session to guarantee 100% notification delivery
@@ -932,3 +932,4 @@ if (typeof module !== 'undefined' && module.exports) {
     }
   }, 2500);
 })();
+
