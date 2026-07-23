@@ -4596,7 +4596,20 @@
         const res = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all`, { cache: 'no-store', signal: _nc.signal }).then(res => res.json()).catch(() => ({ success: false }));
         clearTimeout(_nt);
         if (res.success && res.data) {
+          const manualStr = localStorage.getItem('sol_subscribed_sems');
+          let allowedSems = ['all'];
+          if (manualStr) {
+            try { allowedSems = JSON.parse(manualStr); } catch (e) { }
+          } else {
+            const activeSem = localStorage.getItem('solmates_active_semester');
+            if (activeSem) allowedSems = [activeSem];
+          }
+          if (!allowedSems.includes('all') && !allowedSems.includes('0')) allowedSems.push('0');
+
           const unreadItems = res.data.filter(item => {
+            const itemSem = String(item.semester || '0');
+            if (!allowedSems.includes('all') && !allowedSems.includes(itemSem)) return false;
+
             const itemLink = (item.link || '').trim();
             const uniqueKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(item.title)}`;
             const dateObj = parseNoticeDate(item.date, item.title);
