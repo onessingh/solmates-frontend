@@ -439,7 +439,7 @@ function revealAnswers(answers, correctIdx) {
     document.getElementById('answer-feedback').classList.remove('hidden');
     let msg = "Incorrect";
     if (myAns.idx === -1) {
-        msg = "You ran out of time";
+        msg = "";
     } else if (myAns.idx === correctIdx) {
         // Find fastest time
         let fastest = TIME_LIMIT_MS;
@@ -608,5 +608,6 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 

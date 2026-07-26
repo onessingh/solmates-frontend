@@ -282,7 +282,7 @@ function handleGuestData(data) {
         gameState.round = data.round; gameState.word = data.word; gameState.hint = data.hint;
         gameState.guessed = data.guessed; gameState.mistakes = data.mistakes;
         gameState.turnIdx = data.turnIdx; gameState.scores = data.scores;
-        syncUIState();
+        startGame(false); syncUIState();
     }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
@@ -556,7 +556,7 @@ function migrateHost(hostId) {
                                 guessed: gameState.guessed, mistakes: gameState.mistakes,
                                 turnIdx: gameState.turnIdx, scores: gameState.scores 
                             });
-                            syncUIState();
+                            startGame(false); syncUIState();
                         }
                     }, 500);
                 });
@@ -638,6 +638,7 @@ function syncUIState() {
     
     updateTurnUI();
 }
+
 
 
 

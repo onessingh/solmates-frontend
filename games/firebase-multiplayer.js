@@ -131,7 +131,7 @@ window.Peer = class Peer {
         
         db.ref(`solmates-rooms/${hostId}`).once('value', snap => {
             const roomData = snap.val();
-            const isReconnect = roomData.clients && roomData.clients[clientId];
+            const isReconnect = roomData && roomData.clients && roomData.clients[clientId];
             if (!roomData || !roomData.active || (roomData.locked && !isReconnect)) {
                 this._fire('error', { type: 'peer-unavailable' });
                 return;
@@ -248,6 +248,7 @@ window.Peer = class Peer {
         db.ref(`solmates-rooms/${this.id}`).remove();
     }
 };
+
 
 
 
