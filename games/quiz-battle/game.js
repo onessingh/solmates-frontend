@@ -593,7 +593,12 @@ function showLeaderboard(scores) {
     
     // Sort players by score; disconnected go to bottom
     const sorted = [...roomState.players].sort((a,b) => {
-        return (scores[b.id]||0) - (scores[a.id]||0);
+        const sA = scores[a.id] || 0;
+        const sB = scores[b.id] || 0;
+        if (sB !== sA) return sB - sA;
+        if (a.disconnected && !b.disconnected) return 1;
+        if (!a.disconnected && b.disconnected) return -1;
+        return 0;
     });
     
     sorted.forEach((p, idx) => {

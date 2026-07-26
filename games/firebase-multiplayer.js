@@ -110,7 +110,7 @@ window.Peer = class Peer {
             }, 50);
         });
         
-        this._fire('open', 'SOLMATES-' + this.id);
+        const prefix = this.id.startsWith('GUEST-') ? '' : 'SOLMATES-';\n        this._fire('open', prefix + this.id);
     }
     
     connect(hostIdRaw) {
