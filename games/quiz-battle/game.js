@@ -638,6 +638,7 @@ window.onload = () => {
 
 function migrateHost(hostId) {
     if (!roomState.backupQuestions) return;
+    if (hostConn) { hostConn.close(); hostConn = null; }
     const db = firebase.database();
     db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
         if (currentData === null) return myId;
@@ -671,7 +672,7 @@ function migrateHost(hostId) {
                                     conn.send({ type: 'SYNC_STATE', state: { roomState, timeRemaining, currentSettings } });
                                 }
                                 broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
-                                renderLobby();
+                                if (!roomState.backupQuestions) renderLobby();
                             } else if(data.type === 'ANSWER') {
                                 handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
                             }
@@ -700,6 +701,7 @@ function migrateHost(hostId) {
         }
     });
 }
+
 
 
 
