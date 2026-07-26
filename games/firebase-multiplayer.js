@@ -182,6 +182,11 @@ window.Peer = class Peer {
                                 conn._handlers.host_disconnect.forEach(cb => cb());
                             }
                             disconnectTimeoutId = setTimeout(checkTimeout, 10000);
+                        } else if (now - disconnectTime > 10000) {
+                            if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
+                                conn._handlers.host_disconnect_early.forEach(cb => cb());
+                            }
+                            disconnectTimeoutId = setTimeout(checkTimeout, 10000);
                         } else {
                             disconnectTimeoutId = setTimeout(checkTimeout, 10000);
                         }
