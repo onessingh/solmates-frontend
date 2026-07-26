@@ -310,6 +310,7 @@ function connectToHost(hostId) {
                 renderQuestion(data.question, data.qNum, data.totalQ);
             } else if(data.type === 'RESULT') {
                 roomState.correctCounts = data.correctCounts || {};
+                roomState.scores = data.scores || {};
                 showResult(data.correctIdx, data.scores);
             } else if(data.type === 'GAME_OVER') {
                 roomState.correctCounts = data.correctCounts || {};
@@ -317,11 +318,15 @@ function connectToHost(hostId) {
             }
         });
         
-        hostConn.on('host_disconnect', () => {
+        hostConn.on('host_disconnect_early', () => {
             if (roomState.backupQuestions) {
                 showToast('Host left. Attempting migration...');
                 migrateHost(hostId);
-            } else {
+            }
+        });
+        
+        hostConn.on('host_disconnect', () => {
+            if (!roomState.backupQuestions) {
                 let el = document.getElementById('sol-host-reconnect');
                 if (!el) {
                     el = document.createElement('div');
@@ -641,6 +646,7 @@ function migrateHost(hostId) {
         if (committed && snapshot.val() === myId) {
             isHost = true;
             roomState.questions = roomState.backupQuestions;
+            roomState.currentAnswers = {};
             if (peer) peer.destroy();
             setTimeout(() => {
                 initPeer((id) => {
