@@ -645,7 +645,10 @@ window.onload = () => {
 };
 
 
+let isMigrating = false;
 function migrateHost(hostId) {
+    if (isMigrating) return;
+    isMigrating = true;
     if (!roomState.backupQuestions) return;
     if (hostConn) { hostConn.close(); hostConn = null; }
     const db = firebase.database();
@@ -715,6 +718,7 @@ function migrateHost(hostId) {
         }
     });
 }
+
 
 
 

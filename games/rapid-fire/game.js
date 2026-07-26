@@ -102,7 +102,8 @@ function initPeer(onOpen, onFail) {
     });
     let opened = false;
     const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
-    peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, ''); onOpen(myId); });
+    peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
+                    isMigrating = false; onOpen(myId); });
     peer.on('error', err => { if (!opened) { clearTimeout(failTimer);
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
     setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
@@ -509,7 +510,10 @@ function renderPlayers() {
 
 
 
+let isMigrating = false;
 function migrateHost(hostId) {
+    if (isMigrating) return;
+    isMigrating = true;
     if (!gameState.questions || gameState.questions.length === 0) return;
     if (hostConn) { hostConn.close(); hostConn = null; }
     
@@ -550,6 +554,7 @@ function migrateHost(hostId) {
                 });
                 peer.on('open', (pid) => {
                     myId = pid.replace(ROOM_PREFIX, '');
+                    isMigrating = false;
                     let me = players.find(p => p.id === myOldId);
                     if (me) me.id = myId;
                     gameState.scores[myId] = gameState.scores[myOldId] || 0;
@@ -588,6 +593,7 @@ function migrateHost(hostId) {
         } else {
             // Someone else became host, reconnect
             setTimeout(() => {
+                isMigrating = false;
                 manualJoinRoomReconnect(hostId);
             }, 3000);
         }
@@ -622,6 +628,7 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
 
