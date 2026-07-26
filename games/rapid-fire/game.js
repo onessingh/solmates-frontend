@@ -326,7 +326,9 @@ function nextQuestion() {
         broadcast({ type: 'END_GAME' }); showLeaderboard(); return;
     }
     gameState.currentAnswers = {};
-    const q = gameState.questions[gameState.qIndex];
+    if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
     broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
     showQuestion(gameState.qIndex, q);
 
@@ -344,7 +346,9 @@ function checkAllAnswered() {
     const activePlayers = players.filter(p => !p.disconnected);
     if (activePlayers.every(p => gameState.currentAnswers[p.id])) {
         clearTimeout(forceRevealTimer);
-        const q = gameState.questions[gameState.qIndex];
+        if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
         // Score calculation
         activePlayers.forEach(p => {
             const ans = gameState.currentAnswers[p.id];
@@ -565,7 +569,9 @@ function migrateHost(hostId) {
                     setTimeout(() => {
                         broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
                         if (gameState.qIndex >= 0 && gameState.qIndex < gameState.questions.length) {
-                            const q = gameState.questions[gameState.qIndex];
+                            if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
                             broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
                             showQuestion(gameState.qIndex, q);
                                 clearTimeout(forceRevealTimer);
@@ -616,6 +622,7 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
 

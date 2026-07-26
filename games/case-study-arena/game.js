@@ -390,7 +390,9 @@ function nextQuestion() {
         broadcast({ type: 'END_GAME' }); showLeaderboard(); return;
     }
     gameState.currentAnswers = {};
-    const q = gameState.caseData.questions[gameState.qIndex];
+    if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
     broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
     showQuestion(gameState.qIndex, q);
 
@@ -408,7 +410,9 @@ function checkAllAnswered() {
     const active = players.filter(p => !p.disconnected);
     if (active.every(p => gameState.currentAnswers[p.id])) {
         clearTimeout(forceRevealTimer);
-        const q = gameState.caseData.questions[gameState.qIndex];
+        if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
         
         active.forEach(p => {
             const ans = gameState.currentAnswers[p.id];
@@ -633,7 +637,9 @@ function migrateHost(hostId) {
                                 broadcast({ type: 'READ_CASE', caseData: gameState.caseData });
                                 startReadingUI();
                             } else {
-                                const q = gameState.caseData.questions[gameState.qIndex];
+                                if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
                                 broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
                                 showQuestion(gameState.qIndex, q);
                                 clearTimeout(forceRevealTimer);
@@ -685,6 +691,7 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
 
