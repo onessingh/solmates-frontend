@@ -491,11 +491,11 @@ function sendNextQuestion() {
 function updateLiveScoresUI() {
     const container = document.getElementById('live-scores-container');
     if (!container) return;
-    container.innerHTML = roomState.players.map(p => 
-        <div class="px-3 py-1.5 rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-700 ">
-            : <span class="text-sky-600"></span>
+    container.innerHTML = roomState.players.map(p => `
+        <div class="px-3 py-1.5 rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-700 ${p.disconnected ? 'opacity-40' : ''}">
+            ${p.id === myId ? 'You' : p.name}: <span class="text-sky-600">${roomState.scores[p.id] || 0}</span>
         </div>
-    ).join('');
+    `).join('');
 }
 
 function renderQuestion(q, qNum, totalQ) {
