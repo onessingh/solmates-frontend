@@ -386,8 +386,16 @@ Respond in this exact JSON format only, no extra text:
             if (match) { aiScore = match.score; feedback = match.feedback; }
         } else {
             // Fallback: score based on answer length and keywords
-            const len = (p.pitch || '').length;
-            aiScore = Math.min(100, Math.max(20, Math.floor(len / 3 + Math.random() * 20)));
+            const pitchStr = (p.pitch || '').toLowerCase();
+            const challengeStr = (gameState.challenges[gameState.round - 1] || '').toLowerCase();
+            const challengeWords = challengeStr.split(/\s+/).filter(w => w.length > 3);
+            let keywordMatches = 0;
+            challengeWords.forEach(w => { if (pitchStr.includes(w)) keywordMatches++; });
+            const len = pitchStr.length;
+            const lengthScore = Math.min(50, len / 4);
+            const keywordScore = Math.min(50, (keywordMatches / Math.max(1, challengeWords.length)) * 75);
+            aiScore = Math.min(100, Math.max(20, Math.floor(lengthScore + keywordScore)));
+            feedback = "Good effort! (AI Fallback)";
         }
         const points = Math.round(aiScore);
         gameState.scores[p.id] = (gameState.scores[p.id] || 0) + points;
@@ -489,10 +497,13 @@ function migrateHost(hostId) {
                 oldHostPlayer.id = hostId + '-LEFT';
                 oldHostPlayer.disconnected = true;
               }
-              // Forcefully disconnect anyone who isn't 'me'
+              // Delay disconnect to prevent UI flicker
               players.forEach(p => {
                   if (p.id !== myId && p.name !== myName) {
-                      p.disconnected = true;
+                      const oldId = p.id;
+                      setTimeout(() => {
+                          if (p.id === oldId) { p.disconnected = true; renderPlayers(); }
+                      }, 8000);
                   }
               });
               if (oldHostPlayer) {
@@ -584,6 +595,9 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
+
 
 
 

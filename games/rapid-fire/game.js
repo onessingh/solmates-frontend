@@ -531,10 +531,13 @@ function migrateHost(hostId) {
                 oldHostPlayer.id = hostId + '-LEFT';
                 oldHostPlayer.disconnected = true;
               }
-              // Forcefully disconnect anyone who isn't 'me'
+              // Delay disconnect to prevent UI flicker
               players.forEach(p => {
                   if (p.id !== myId && p.name !== myName) {
-                      p.disconnected = true;
+                      const oldId = p.id;
+                      setTimeout(() => {
+                          if (p.id === oldId) { p.disconnected = true; renderPlayers(); }
+                      }, 8000);
                   }
               });
               if (oldHostPlayer) {
@@ -625,6 +628,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 
