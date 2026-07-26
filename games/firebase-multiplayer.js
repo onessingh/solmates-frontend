@@ -25,7 +25,7 @@ class PeerConnection {
         this.roomId = roomId;
         this.clientId = clientId;
         this.peer = clientId; // To match conn.peer in game logic
-        this._handlers = { open: [], data: [], close: [], error: [], host_disconnect: [], host_reconnect: [] };
+        this._handlers = { open: [], data: [], close: [], error: [], host_disconnect: [], host_reconnect: [], host_disconnect_early: [] };
         this.open = true;
     }
     on(event, cb) { 
@@ -226,6 +226,7 @@ window.Peer = class Peer {
         db.ref(`solmates-rooms/${this.id}`).remove();
     }
 };
+
 
 
 
