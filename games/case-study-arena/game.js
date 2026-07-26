@@ -100,6 +100,8 @@ async function createRoom() {
         topic = "MBA " + sem + " all subjects";
     }
     
+    const qCount = parseInt(document.getElementById('select-q-count').value || "5", 10);
+    
     // Pick dummy case as fallback if AI fails
     let caseItem = {
         title: "Default Case Study",
@@ -110,7 +112,7 @@ async function createRoom() {
     if (window.aiGameConnector) {
         try {
             document.getElementById('btn-create-room').textContent = "Generating Case Study...";
-            const aiData = await window.aiGameConnector.getQuestions('case-study-arena', topic, 4, []);
+            const aiData = await window.aiGameConnector.getQuestions('case-study-arena', topic, qCount, []);
             // AI returns an array of questions, sometimes with 'scenario' instead of 'question'
             if (aiData && Array.isArray(aiData) && aiData.length > 0) {
                 // If the first item has a 'scenario' or 'description', use it
