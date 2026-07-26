@@ -132,7 +132,10 @@ async function createRoom() {
                         });
                         
                         // Pad options if less than 4
-                        while(cleanOptions.length < 4) cleanOptions.push("None of the above");
+                        if (cleanOptions.length === 4 && cleanOptions.every(opt => /^[A-D]$/i.test(opt))) {
+                              cleanOptions = cleanOptions.map(opt => "Option " + opt.toUpperCase());
+                          }
+                          while(cleanOptions.length < 4) cleanOptions.push("None of the above");
                         cleanOptions = cleanOptions.slice(0, 4);
 
                         // Shuffle options and track the correct one
@@ -697,6 +700,9 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
+
 
 
 

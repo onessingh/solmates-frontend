@@ -512,6 +512,14 @@ function migrateHost(hostId) {
             if (oldHostPlayer) {
                 oldHostPlayer.id = hostId + '-LEFT';
                 oldHostPlayer.disconnected = true;
+              }
+              // Forcefully disconnect anyone who isn't 'me'
+              players.forEach(p => {
+                  if (p.id !== myId && p.name !== myName) {
+                      p.disconnected = true;
+                  }
+              });
+              if (oldHostPlayer) {
                 gameState.scores[oldHostPlayer.id] = gameState.scores[hostId] || 0;
                 gameState.correctCounts[oldHostPlayer.id] = gameState.correctCounts[hostId] || 0;
             }
@@ -537,7 +545,7 @@ function migrateHost(hostId) {
                 peer.on('open', (pid) => {
                     myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false;
-                    let me = players.find(p => p.id === myOldId);
+                    let me = players.find(p => p.id === myOldId || p.name === myName);
                     if (me) me.id = myId;
                     gameState.scores[myId] = gameState.scores[myOldId] || 0;
                     gameState.correctCounts[myId] = gameState.correctCounts[myOldId] || 0;
@@ -645,6 +653,8 @@ function syncUIState() {
     
     updateTurnUI();
 }
+
+
 
 
 
