@@ -574,10 +574,10 @@ function showResult(correctIdx, scores) {
     const myScore = scores[myId] || 0;
     
     if(document.getElementById(`opt-${correctIdx}`).classList.contains('selected')) {
-        fbt.textContent = `Correct! Total Score: ${myScore}`;
+        fbt.textContent = `Correct!`;
         fbt.className = "text-xl font-bold text-green-400";
     } else {
-        fbt.textContent = `Wrong! Total Score: ${myScore}`;
+        fbt.textContent = `Wrong!`;
         fbt.className = "text-xl font-bold text-red-400";
     }
 }
