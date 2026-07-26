@@ -142,7 +142,14 @@ async function createRoom() {
         sem = document.getElementById('select-semester').value;
         if(!sem) { showToast("Please select a semester first"); return; }
         sub = document.getElementById('select-subject') ? (document.getElementById('select-subject').value || "All") : "All";
-        topic = sub;
+        
+        if (sub === 'All' && window.QUIZ_DATA && window.QUIZ_DATA.structure && window.QUIZ_DATA.structure["MBA"] && window.QUIZ_DATA.structure["MBA"][sem]) {
+            topic = "MBA " + sem + " Covering exactly: " + window.QUIZ_DATA.structure["MBA"][sem].join(", ");
+        } else if (sub === 'All') {
+            topic = "MBA " + sem + " all subjects";
+        } else {
+            topic = sub;
+        }
     } else {
         const diff = document.getElementById('select-difficulty').value;
         topic = course + " (" + diff + " difficulty)";

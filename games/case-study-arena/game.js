@@ -92,7 +92,13 @@ function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) 
 async function createRoom() {
     const sem = document.getElementById('select-semester').value;
     if(!sem) { showToast("Please select a semester first"); return; }
-    const topic = document.getElementById('select-subject').value || "All";
+    let topic = document.getElementById('select-subject').value || "All";
+    
+    if (topic === 'All' && window.QUIZ_DATA && window.QUIZ_DATA.structure && window.QUIZ_DATA.structure["MBA"] && window.QUIZ_DATA.structure["MBA"][sem]) {
+        topic = "MBA " + sem + " Covering exactly: " + window.QUIZ_DATA.structure["MBA"][sem].join(", ");
+    } else if (topic === 'All') {
+        topic = "MBA " + sem + " all subjects";
+    }
     
     // Pick dummy case as fallback if AI fails
     let caseItem = {
