@@ -673,3 +673,4 @@ function migrateHost(hostId) {
         }
     });
 }
+
