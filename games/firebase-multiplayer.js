@@ -49,6 +49,7 @@ class PeerConnection {
         if (!this.isHost) {
             db.ref(`solmates-rooms/${this.roomId}/clients/${this.clientId}`).remove();
         }
+        if (this._cleanup) this._cleanup();
         this._handlers.close.forEach(cb => cb());
     }
 }
@@ -181,21 +182,21 @@ window.Peer = class Peer {
                             conn._handlers.close.forEach(cb => cb());
                             inboxRef.off();
                             db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
-                        } else if (now - disconnectTime > 30000) {
+                        } else if (now - disconnectTime > 28000) {
                             if (conn._handlers.host_disconnect && conn._handlers.host_disconnect.length > 0) {
                                 conn._handlers.host_disconnect.forEach(cb => cb());
                             }
                             if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
                                 conn._handlers.host_disconnect_early.forEach(cb => cb());
                             }
-                            disconnectTimeoutId = setTimeout(checkTimeout, 10000);
+                            disconnectTimeoutId = setTimeout(checkTimeout, 2000);
                         } else if (now - disconnectTime > 10000) {
                             if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
                                 conn._handlers.host_disconnect_early.forEach(cb => cb());
                             }
-                            disconnectTimeoutId = setTimeout(checkTimeout, 5000);
+                            disconnectTimeoutId = setTimeout(checkTimeout, 2000);
                         } else {
-                            disconnectTimeoutId = setTimeout(checkTimeout, 10000);
+                            disconnectTimeoutId = setTimeout(checkTimeout, 2000);
                         }
                     };
                     checkTimeout();
@@ -210,6 +211,13 @@ window.Peer = class Peer {
                     }
                 }
             });
+            
+            conn._cleanup = () => {
+                inboxRef.off();
+                db.ref(`solmates-rooms/${hostId}/active`).off();
+                db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
+                if (disconnectTimeoutId) clearTimeout(disconnectTimeoutId);
+            };
             
             setTimeout(() => {
                 conn._handlers.open.forEach(cb => cb());
