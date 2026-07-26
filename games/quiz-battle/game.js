@@ -103,9 +103,8 @@ function updateCourseSelection() {
 }
 
 // PeerJS Networking
-function initPeer(onOpen) {
-    // Generate a clean 6-digit alphanumeric ID for the room
-    const id = Math.random().toString(36).substring(2, 8).toUpperCase();
+function initPeer(onOpen, forceId) {
+    const id = forceId || Math.random().toString(36).substring(2, 8).toUpperCase();
     peer = new Peer('SOLMATES-' + id, {
         debug: 1,
         config: {
@@ -304,6 +303,7 @@ function connectToHost(hostId) {
                 document.getElementById('lobby-topic').textContent = data.topic;
                 renderLobby();
             } else if(data.type === 'START_GAME') {
+                if (data.questions) roomState.backupQuestions = data.questions;
                 startGameUI();
             } else if(data.type === 'QUESTION') {
                 renderQuestion(data.question, data.qNum, data.totalQ);
@@ -317,7 +317,13 @@ function connectToHost(hostId) {
         });
         
         hostConn.on('close', () => {
-            showToast("Host left the room.");
+            if (roomState.backupQuestions) {
+                showToast("Host left. Attempting migration...");
+                migrateHost(hostId);
+            } else {
+                showToast("Host left the room.");
+                setTimeout(() => window.location.href='/', 2000);
+            }
         });
     });
 }
@@ -394,7 +400,7 @@ function startGame() {
     roomState.questions = shuffled.slice(0, Math.min(qCount, shuffled.length));
     roomState.currentQ = 0;
     
-    broadcast({ type: 'START_GAME' });
+    broadcast({ type: 'START_GAME', questions: roomState.questions });
     startGameUI();
     
     setTimeout(sendNextQuestion, 2000);
