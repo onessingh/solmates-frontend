@@ -584,9 +584,7 @@ function migrateHost(hostId) {
                     // Resume game
                     setTimeout(() => {
                         broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
-                        if (gameState.gameStarted && !gameState.gameOver) {
-                            nextQuestion();
-                        }
+                        if (gameState.gameStarted && !gameState.gameOver) { gameState.qIndex--; nextQuestion(); }
                     }, 500);
                 });
             }, 1000);
@@ -628,6 +626,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 
