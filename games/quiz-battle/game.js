@@ -355,6 +355,9 @@ function connectToHost(hostId) {
             if (!roomState.backupQuestions) {
                 showToast('Host left the room.');
                 setTimeout(() => window.location.href='/', 2000);
+            } else {
+                showToast('Host left. Attempting migration...');
+                migrateHost(hostId);
             }
         });
     });
@@ -732,6 +735,7 @@ function migrateHost(hostId) {
         }
     });
 }
+
 
 
 

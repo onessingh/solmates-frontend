@@ -472,7 +472,7 @@ function migrateHost(hostId) {
                   if (p.id !== myId && p.name !== myName) {
                       const oldId = p.id;
                       setTimeout(() => {
-                          if (p.id === oldId) { p.disconnected = true; renderPlayers(); }
+                          if (p.id === oldId) { p.disconnected = true; renderLobby(); }
                       }, 8000);
                   }
               });
@@ -567,6 +567,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 

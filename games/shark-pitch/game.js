@@ -502,7 +502,7 @@ function migrateHost(hostId) {
                   if (p.id !== myId && p.name !== myName) {
                       const oldId = p.id;
                       setTimeout(() => {
-                          if (p.id === oldId) { p.disconnected = true; renderPlayers(); }
+                          if (p.id === oldId) { p.disconnected = true; renderLobby(); }
                       }, 8000);
                   }
               });
@@ -536,7 +536,7 @@ function migrateHost(hostId) {
                     gameState.scores[myId] = gameState.scores[myOldId] || 0;
                     
                     hideAllScreens();
-                    document.getElementById('screen-game').classList.remove('hidden');
+                    document.getElementById('screen-pitch').classList.remove('hidden');
                     if(typeof showToast === 'function') showToast("You are the new host!");
                     
                     peer.on('connection', conn => {
@@ -548,11 +548,11 @@ function migrateHost(hostId) {
                     // Resume game
                     setTimeout(() => {
                         broadcast({ type: 'LOBBY_UPDATE', players, settings: { topic: gameState.topic, totalRounds: gameState.totalRounds, timePerRound: gameState.timePerRound, challenges: gameState.challenges } });
-                        if (gameState.gameStarted && !gameState.gameOver && gameState.roundIndex < gameState.challenges.length) {
+                        if (gameState.gameStarted && !gameState.gameOver && gameState.round < gameState.challenges.length) {
                             // resend current round
-                            const ch = gameState.challenges[gameState.roundIndex];
-                            broadcast({ type: 'START_ROUND', roundIndex: gameState.roundIndex, challenge: ch });
-                            startRoundUI(ch, gameState.roundIndex);
+                            const ch = gameState.challenges[gameState.round];
+                            broadcast({ type: 'START_ROUND', roundIndex: gameState.round, challenge: ch });
+                            startPitchUI(ch, gameState.round);
                         }
                     }, 500);
                 });
@@ -595,6 +595,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 

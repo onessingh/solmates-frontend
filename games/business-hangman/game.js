@@ -283,7 +283,7 @@ function handleGuestData(data) {
         gameState.round = data.round; gameState.word = data.word; gameState.hint = data.hint;
         gameState.guessed = data.guessed; gameState.mistakes = data.mistakes;
         gameState.turnIdx = data.turnIdx; gameState.scores = data.scores;
-        startGame(false); syncUIState();
+        startGame(false);
     }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
@@ -390,9 +390,10 @@ function guessLetter(letter) {
 }
 
 function nextTurn() {
+    if (!players || players.length === 0) return;
     let nextIdx = (gameState.turnIdx + 1) % players.length;
     let iterations = 0;
-    while (players[nextIdx].disconnected && iterations < players.length) {
+    while (players[nextIdx] && players[nextIdx].disconnected && iterations < players.length) {
         nextIdx = (nextIdx + 1) % players.length;
         iterations++;
     }
@@ -573,7 +574,7 @@ function migrateHost(hostId) {
                                 guessed: gameState.guessed, mistakes: gameState.mistakes,
                                 turnIdx: gameState.turnIdx, scores: gameState.scores 
                             });
-                            startGame(false); syncUIState();
+                            startGame(false);
                         }
                     }, 500);
                 });
@@ -617,8 +618,7 @@ function manualJoinRoomReconnect(code) {
     });
 }
 
-function syncUIState() {
-    document.getElementById('game-round-num').textContent = `Round ${gameState.round}/${gameState.totalRounds}`;
+/${gameState.totalRounds}`;
     document.getElementById('game-hint').textContent = gameState.hint;
     
     // Draw word
@@ -656,6 +656,9 @@ function syncUIState() {
     
     updateTurnUI();
 }
+
+
+
 
 
 

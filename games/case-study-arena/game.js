@@ -643,7 +643,7 @@ function migrateHost(hostId) {
                         if (gameState.gameStarted && !gameState.gameOver && gameState.qIndex < gameState.caseData.questions.length) {
                             if (gameState.phase === 'reading') {
                                 broadcast({ type: 'READ_CASE', caseData: gameState.caseData });
-                                startReadingUI();
+                                startReadPhase();
                             } else {
                                 if (gameState.gameOver) return;
                                 nextQuestion();
@@ -690,6 +690,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 
