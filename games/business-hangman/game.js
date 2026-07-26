@@ -507,6 +507,7 @@ function migrateHost(hostId) {
             let oldHostPlayer = players.find(p => p.id === hostId);
             if (oldHostPlayer) {
                 oldHostPlayer.id = hostId + '-LEFT';
+                oldHostPlayer.disconnected = true;
                 gameState.scores[oldHostPlayer.id] = gameState.scores[hostId] || 0;
                 gameState.correctCounts[oldHostPlayer.id] = gameState.correctCounts[hostId] || 0;
             }
@@ -638,6 +639,7 @@ function syncUIState() {
     
     updateTurnUI();
 }
+
 
 
 

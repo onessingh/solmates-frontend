@@ -483,6 +483,7 @@ function migrateHost(hostId) {
             let oldHostPlayer = players.find(p => p.id === hostId);
             if (oldHostPlayer) {
                 oldHostPlayer.id = hostId + '-LEFT';
+                oldHostPlayer.disconnected = true;
                 gameState.scores[oldHostPlayer.id] = gameState.scores[hostId] || 0;
             }
             let myOldId = myId;
@@ -569,5 +570,6 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
