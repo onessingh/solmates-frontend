@@ -219,7 +219,7 @@ function handleGuestData(data) {
         document.getElementById('lobby-topic').textContent = `Market Mavericks · ${data.settings.topic} · ${data.settings.totalEvents} Events`;
         renderLobby();
     }
-    if (data.type === 'START_EVENT') { gameState.eventIndex = data.eventIndex; gameState.portfolios = data.portfolios; startEventUI(data.event, data.eventIndex); }
+    if (data.type === 'START_EVENT') { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; gameState.portfolios = data.portfolios; startEventUI(data.event, data.eventIndex); }
     if (data.type === 'TRADE_COUNT') { const el = document.getElementById('waiting-count'); if (el) el.textContent = `${data.count} / ${data.total} traded`; }
     if (data.type === 'EVENT_RESULT') { gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
@@ -248,7 +248,7 @@ function copyInviteLink() {
                 text: 'Play this multiplayer game with me on Solmates!',
                 url: linkText
             }).catch(err => console.log('Share cancelled', err));
-        }, 500);
+        }, 4000);
     } else if (typeof showToast !== 'function') {
         alert('Invite link copied!');
     }
@@ -274,6 +274,7 @@ function hostNextEvent() {
 }
 
 function startEventUI(event, idx) {
+    myTradeSubmitted = false;
     hideAllScreens(); document.getElementById('screen-game').classList.remove('hidden');
     document.getElementById('game-event-num').textContent = `Event ${idx + 1}/${gameState.totalEvents}`;
     document.getElementById('event-headline').textContent = event.headline;
@@ -526,7 +527,7 @@ function migrateHost(hostId) {
                             broadcast({ type: 'START_EVENT', eventIndex: gameState.eventIndex, event: ev, portfolios: gameState.portfolios });
                             startEventUI(ev, gameState.eventIndex);
                         }
-                    }, 500);
+                    }, 4000);
                 });
             }, 1000);
         } else {
@@ -567,6 +568,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 

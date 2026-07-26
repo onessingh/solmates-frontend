@@ -291,7 +291,7 @@ function copyInviteLink() {
                 text: 'Play this multiplayer game with me on Solmates!',
                 url: linkText
             }).catch(err => console.log('Share cancelled', err));
-        }, 500);
+        }, 4000);
     } else if (typeof showToast !== 'function') {
         alert('Invite link copied!');
     }
@@ -301,7 +301,7 @@ function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }
-    if (data.type === 'START_GAME') { gameState.questions = data.questions; gameState.qCount = data.questions.length; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startGameUI(); }
+    if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.questions = data.questions; gameState.qCount = data.questions.length; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startGameUI(); }
     if (data.type === 'QUESTION') { showQuestion(data.qIndex, data.question); }
     if (data.type === 'REVEAL') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
@@ -587,7 +587,7 @@ function migrateHost(hostId) {
                     setTimeout(() => {
                         broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
                         if (gameState.gameStarted && !gameState.gameOver) { gameState.qIndex--; nextQuestion(); }
-                    }, 500);
+                    }, 4000);
                 });
             }, 1000);
         } else {
@@ -628,6 +628,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 

@@ -230,7 +230,7 @@ function handleGuestData(data) {
         document.getElementById('lobby-topic').textContent = `Shark Pitch · ${data.settings.topic} · ${data.settings.totalRounds} rounds`;
         renderLobby();
     }
-    if (data.type === 'START_ROUND') { gameState.round = data.round; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); }
+    if (data.type === 'START_ROUND') { gameState.gameStarted = true; gameState.round = data.round; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
     if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; showRoundResults(data.results, data.round, data.totalRounds); }
@@ -260,7 +260,7 @@ function copyInviteLink() {
                 text: 'Play this multiplayer game with me on Solmates!',
                 url: linkText
             }).catch(err => console.log('Share cancelled', err));
-        }, 500);
+        }, 4000);
     } else if (typeof showToast !== 'function') {
         alert('Invite link copied!');
     }
@@ -389,10 +389,13 @@ Respond in this exact JSON format only, no extra text:
             const pitchStr = (p.pitch || '').trim();
             const pitchLower = pitchStr.toLowerCase();
             
-            // Too short = 0 points (garbage/random text)
-            if (pitchStr.length < 15) {
+            const words = pitchStr.split(/\s+/);
+            const maxWordLength = Math.max(...words.map(w => w.length));
+            
+            // Catch short answers, single-word keyboard mashing, or repeated character spam
+            if (pitchStr.length < 15 || words.length < 3 || maxWordLength > 20 || /(.)\1{4,}/.test(pitchStr)) {
                 aiScore = 0;
-                feedback = "Too short or irrelevant. Write a detailed pitch to earn points.";
+                feedback = "Too short, irrelevant, or spam detected. Write a real pitch to earn points.";
             } else {
                 const challengeStr = (gameState.challenges[gameState.round - 1] || '').toLowerCase();
                 const challengeWords = challengeStr.split(/\s+/).filter(w => w.length > 3);
@@ -566,13 +569,13 @@ function migrateHost(hostId) {
                     // Resume game
                     setTimeout(() => {
                         broadcast({ type: 'LOBBY_UPDATE', players, settings: { topic: gameState.topic, totalRounds: gameState.totalRounds, timePerRound: gameState.timePerRound, challenges: gameState.challenges } });
-                        if (gameState.gameStarted && !gameState.gameOver && gameState.round < gameState.challenges.length) {
+                        if (gameState.gameStarted && !gameState.gameOver && gameState.round <= gameState.challenges.length) {
                             // resend current round
-                            const ch = gameState.challenges[gameState.round];
+                            const ch = gameState.challenges[gameState.round - 1];
                             broadcast({ type: 'START_ROUND', roundIndex: gameState.round, challenge: ch });
-                            startPitchUI(ch, gameState.round);
+                            startPitchUI(ch, gameState.round, gameState.totalRounds, gameState.timePerRound);
                         }
-                    }, 500);
+                    }, 4000);
                 });
             }, 1000);
         } else {
@@ -613,6 +616,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 

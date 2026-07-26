@@ -174,6 +174,7 @@ function handleDisconnect(peerId) {
         const active = players.filter(pl => !pl.disconnected);
         if (active.length > 0 && players[gameState.turnIdx]?.id === peerId) {
             nextTurn();
+            broadcast({ type: 'ROUND_STATE', state: gameState });
         }
     }
 }
@@ -263,7 +264,7 @@ function copyInviteLink() {
                 text: 'Play this multiplayer game with me on Solmates!',
                 url: linkText
             }).catch(err => console.log('Share cancelled', err));
-        }, 500);
+        }, 4000);
     } else if (typeof showToast !== 'function') {
         alert('Invite link copied!');
     }
@@ -274,7 +275,7 @@ function handleGuestData(data) {
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.category = data.category; gameState.totalRounds = data.totalRounds; document.getElementById('lobby-topic').textContent = data.category + " · " + data.totalRounds + " Rounds"; renderPlayers(); }
     
-    if (data.type === 'START_GAME') {
+    if (data.type === 'START_GAME') { gameState.gameStarted = true;
         gameState.pool = data.pool; // backup pool for host migration
  startGame(false); }
     if (data.type === 'ROUND_STATE') { gameState = data.state; renderRound(); }
@@ -576,7 +577,7 @@ function migrateHost(hostId) {
                             });
                             startGame(false);
                         }
-                    }, 500);
+                    }, 4000);
                 });
             }, 1000);
         } else {
@@ -619,6 +620,8 @@ function manualJoinRoomReconnect(code) {
 }
 
 // syncUIState removed - renderRound() handles all UI updates
+
+
 
 
 

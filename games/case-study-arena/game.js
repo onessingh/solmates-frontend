@@ -322,7 +322,7 @@ function copyInviteLink() {
                 text: 'Play this multiplayer game with me on Solmates!',
                 url: linkText
             }).catch(err => console.log('Share cancelled', err));
-        }, 500);
+        }, 4000);
     } else if (typeof showToast !== 'function') {
         alert('Invite link copied!');
     }
@@ -332,7 +332,7 @@ function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; renderPlayers(); }
-    if (data.type === 'START_GAME') { gameState.caseData = data.caseData; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startReadPhase(); }
+    if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.caseData = data.caseData; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startReadPhase(); }
     if (data.type === 'READ_CASE') { gameState.caseData = data.caseData; startReadPhase(); }
       if (data.type === 'READY_STATUS') { updateReadyStatus(data.readyCount, data.total); }
     if (data.type === 'QUESTION') { showQuestion(data.qIndex, data.question); }
@@ -650,7 +650,7 @@ function migrateHost(hostId) {
                                 nextQuestion();
                             }
                         }
-                    }, 500);
+                    }, 4000);
                 });
             }, 1000);
         } else {
@@ -691,6 +691,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 
