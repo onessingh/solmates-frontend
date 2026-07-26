@@ -46,9 +46,6 @@ class PeerConnection {
     }
     close() {
         this.open = false;
-        if (!this.isHost) {
-            db.ref(`solmates-rooms/${this.roomId}/clients/${this.clientId}`).remove();
-        }
         if (this._cleanup) this._cleanup();
         this._handlers.close.forEach(cb => cb());
     }
@@ -177,6 +174,7 @@ window.Peer = class Peer {
                     let el = document.getElementById('sol-host-reconnect');
                     if (el) el.style.display = 'none';
                     const checkTimeout = () => {
+                        if (!conn.open) return;
                         const now = Date.now() + serverTimeOffset;
                         if (now - disconnectTime > 300000) {
                             conn._handlers.close.forEach(cb => cb());
