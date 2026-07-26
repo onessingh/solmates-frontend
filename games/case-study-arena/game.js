@@ -288,7 +288,8 @@ function manualJoinRoom() {
             document.getElementById('wait-host-msg').classList.remove('hidden');
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });\n        hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
+        hostConn.on('close', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
         hostConn.on('error', err => { clearTimeout(failTimer); statusEl.textContent = "Connection failed."; showToast("Error: " + err.type); });
     });
     peer.on('error', err => { clearTimeout(failTimer); statusEl.textContent = "Connection failed."; showToast("Error: " + err.type); });
@@ -573,7 +574,7 @@ function migrateHost(hostId) {
     
     // We need firebase database reference
     const db = firebase.database();
-    db.ref(solmates-rooms//newHost).transaction((currentData) => {
+    db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
         if (currentData === null) return myId;
         return; // Someone else claimed
     }, (error, committed, snapshot) => {
@@ -675,3 +676,5 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
