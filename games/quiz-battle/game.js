@@ -331,7 +331,7 @@ function connectToHost(hostId) {
                     el.style.backgroundColor = 'rgba(0,0,0,0.8)';
                     el.style.color = 'white'; el.style.display = 'flex'; el.style.flexDirection = 'column';
                     el.style.justifyContent = 'center'; el.style.alignItems = 'center'; el.style.zIndex = '9999';
-                    el.innerHTML = '<h2>Host may be offline</h2><p>Wait for them or leave?</p><div style="margin-top:20px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:10px 20px;background:#3b82f6;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:10px 20px;background:#ef4444;border-radius:5px;font-weight:bold;">Leave</button></div>';
+                    el.innerHTML = `<h2>Host may be offline</h2><p>Wait for them or leave?</p><div style="margin-top:20px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:10px 20px;background:#3b82f6;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:10px 20px;background:#ef4444;border-radius:5px;font-weight:bold;">Leave</button></div>`;
                     document.body.appendChild(el);
                 } else {
                     el.style.display = 'flex';
