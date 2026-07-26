@@ -109,9 +109,9 @@ function initPeer(onOpen, onFail) {
     const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
     peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false; onOpen(myId); });
-    peer.on('error', err => { if (!opened) { clearTimeout(failTimer);
-    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
+    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
 }
 
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
@@ -385,17 +385,35 @@ Respond in this exact JSON format only, no extra text:
             const match = aiScores.scores.find(s => s.name === p.name);
             if (match) { aiScore = match.score; feedback = match.feedback; }
         } else {
-            // Fallback: score based on answer length and keywords
-            const pitchStr = (p.pitch || '').toLowerCase();
-            const challengeStr = (gameState.challenges[gameState.round - 1] || '').toLowerCase();
-            const challengeWords = challengeStr.split(/\s+/).filter(w => w.length > 3);
-            let keywordMatches = 0;
-            challengeWords.forEach(w => { if (pitchStr.includes(w)) keywordMatches++; });
-            const len = pitchStr.length;
-            const lengthScore = Math.min(50, len / 4);
-            const keywordScore = Math.min(50, (keywordMatches / Math.max(1, challengeWords.length)) * 75);
-            aiScore = Math.min(100, Math.max(20, Math.floor(lengthScore + keywordScore)));
-            feedback = "Good effort! (AI Fallback)";
+            // Fallback: score based on answer quality, length and keyword relevance
+            const pitchStr = (p.pitch || '').trim();
+            const pitchLower = pitchStr.toLowerCase();
+            
+            // Too short = 0 points (garbage/random text)
+            if (pitchStr.length < 15) {
+                aiScore = 0;
+                feedback = "Too short or irrelevant. Write a detailed pitch to earn points.";
+            } else {
+                const challengeStr = (gameState.challenges[gameState.round - 1] || '').toLowerCase();
+                const challengeWords = challengeStr.split(/\s+/).filter(w => w.length > 3);
+                let keywordMatches = 0;
+                challengeWords.forEach(w => { if (pitchLower.includes(w)) keywordMatches++; });
+                const keywordRatio = keywordMatches / Math.max(1, challengeWords.length);
+                
+                // Length score (0-30): need at least 50 chars for reasonable pitch
+                const lengthScore = Math.min(30, (pitchStr.length - 15) / 5);
+                // Keyword relevance score (0-50)
+                const keywordScore = Math.min(50, keywordRatio * 70);
+                // Sentence structure bonus (0-20): has periods, commas = more structured
+                const hasSentences = (pitchStr.match(/[.!?]/g) || []).length;
+                const structureScore = Math.min(20, hasSentences * 5);
+                
+                aiScore = Math.min(100, Math.max(0, Math.floor(lengthScore + keywordScore + structureScore)));
+                
+                if (aiScore >= 60) feedback = "Solid pitch! (AI Fallback)";
+                else if (aiScore >= 30) feedback = "Decent effort, but could be more detailed. (AI Fallback)";
+                else feedback = "Needs more substance and relevance. (AI Fallback)";
+            }
         }
         const points = Math.round(aiScore);
         gameState.scores[p.id] = (gameState.scores[p.id] || 0) + points;
@@ -595,6 +613,7 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
 

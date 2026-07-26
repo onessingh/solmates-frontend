@@ -83,9 +83,9 @@ function initPeer(onOpen, onFail) {
     const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
     peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false; onOpen(myId); });
-    peer.on('error', err => { if (!opened) { clearTimeout(failTimer);
-    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
+    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
 }
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
 
@@ -646,6 +646,7 @@ function migrateHost(hostId) {
                                 startReadPhase();
                             } else {
                                 if (gameState.gameOver) return;
+                                gameState.qIndex--;
                                 nextQuestion();
                             }
                         }
@@ -690,6 +691,7 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
 

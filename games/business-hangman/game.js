@@ -100,9 +100,9 @@ function initPeer(onOpen, onFail) {
     const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
     peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false; onOpen(myId); });
-    peer.on('error', err => { if (!opened) { clearTimeout(failTimer);
-    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
+    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
 }
 
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
@@ -618,44 +618,8 @@ function manualJoinRoomReconnect(code) {
     });
 }
 
-/${gameState.totalRounds}`;
-    document.getElementById('game-hint').textContent = gameState.hint;
-    
-    // Draw word
-    const container = document.getElementById('word-container');
-    container.innerHTML = '';
-    for (let c of gameState.word) {
-        const box = document.createElement('div');
-        box.className = 'letter-box';
-        if (c === ' ') box.style.border = 'none';
-        else if (gameState.guessed.includes(c)) box.textContent = c;
-        container.appendChild(box);
-    }
-    
-    // Draw keyboard
-    const kb = document.getElementById('keyboard');
-    kb.innerHTML = '';
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
-        const btn = document.createElement('button');
-        btn.className = 'key-btn';
-        btn.textContent = l;
-        if (gameState.guessed.includes(l)) {
-            btn.disabled = true;
-            if (gameState.word.includes(l)) btn.classList.add('correct');
-            else btn.classList.add('wrong');
-        } else {
-            btn.onclick = () => guessLetter(l);
-        }
-        kb.appendChild(btn);
-    });
-    
-    // Draw hangman
-    LIMB_IDS.forEach((id, i) => {
-        document.getElementById(id).style.opacity = i < gameState.mistakes ? '1' : '0';
-    });
-    
-    updateTurnUI();
-}
+// syncUIState removed - renderRound() handles all UI updates
+
 
 
 

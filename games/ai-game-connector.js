@@ -46,7 +46,15 @@ class AIGameConnector {
                     timestamp: Date.now(),
                     questions: data.data.questions
                 }));
-                let finalQuestions = data.data.questions;
+                let finalQuestions = data.data.questions.filter(q => {
+                    // Reject questions with fake options like "A", "B", "C", "D"
+                    const opts = q.options || [];
+                    if (opts.length < 2) return false;
+                    const fakeCount = opts.filter(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2).length;
+                    if (fakeCount === opts.length) return false; // ALL options are fake
+                    return true;
+                });
+                console.log(`[AI Connector] ${finalQuestions.length} valid questions after filtering`);
                 if (finalQuestions.length < count) {
                     const needed = count - finalQuestions.length;
                     const extra = fallbackData.slice(0, needed);

@@ -104,9 +104,9 @@ function initPeer(onOpen, onFail) {
     const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
     peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false; onOpen(myId); });
-    peer.on('error', err => { if (!opened) { clearTimeout(failTimer);
-    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
+    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
 }
 
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
@@ -136,7 +136,9 @@ async function createRoom() {
                 pool = aiData.filter(q => {
                     const qText = q.question || q.q || "";
                     const opts = q.options || [];
-                    return qText.trim().length > 5 && opts.length >= 2;
+                    // Reject fake options like "A", "B", "C", "D"
+                    const hasFakeOpts = opts.every(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2);
+                    return qText.trim().length > 5 && opts.length >= 2 && !hasFakeOpts;
                 }).map(q => {
                     let correctIdx = 0;
                     if (typeof q.answer === 'string' && q.options) {
