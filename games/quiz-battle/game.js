@@ -660,9 +660,23 @@ function migrateHost(hostId) {
             isHost = true;
             roomState.questions = roomState.backupQuestions;
             roomState.currentAnswers = {};
+
+            let oldHostPlayer = roomState.players.find(p => p.id === hostId);
+            if (oldHostPlayer) {
+                oldHostPlayer.id = hostId + '-LEFT';
+                oldHostPlayer.disconnected = true;
+                roomState.scores[oldHostPlayer.id] = roomState.scores[hostId] || 0;
+                roomState.correctCounts[oldHostPlayer.id] = roomState.correctCounts[hostId] || 0;
+            }
+            let myOldId = myId;
+
             if (peer) peer.destroy();
             setTimeout(() => {
                 initPeer((id) => {
+                    let me = roomState.players.find(p => p.id === myOldId || p.name === myName);
+                    if (me) me.id = myId;
+                    roomState.scores[myId] = roomState.scores[myOldId] || 0;
+                    roomState.correctCounts[myId] = roomState.correctCounts[myOldId] || 0;
                     hideAllScreens();
                     document.getElementById('screen-game').classList.remove('hidden');
                     showToast("You are the new host!");
@@ -718,6 +732,7 @@ function migrateHost(hostId) {
         }
     });
 }
+
 
 
 

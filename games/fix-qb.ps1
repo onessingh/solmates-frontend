@@ -1,0 +1,7 @@
+$file = "c:\Users\Toshiba\OneDrive\Desktop\solmates\frontend\games\quiz-battle\game.js"
+$content = Get-Content $file -Raw
+$target = "            isHost = true;`n            roomState.questions = roomState.backupQuestions;`n            roomState.currentAnswers = {};`n            if (peer) peer.destroy();`n            setTimeout(() => {`n                initPeer((id) => {"
+$replacement = "            isHost = true;`n            roomState.questions = roomState.backupQuestions;`n            roomState.currentAnswers = {};`n`n            let oldHostPlayer = roomState.players.find(p => p.id === hostId);`n            if (oldHostPlayer) {`n                oldHostPlayer.id = hostId + '-LEFT';`n                oldHostPlayer.disconnected = true;`n                roomState.scores[oldHostPlayer.id] = roomState.scores[hostId] || 0;`n                roomState.correctCounts[oldHostPlayer.id] = roomState.correctCounts[hostId] || 0;`n            }`n            let myOldId = myId;`n`n            if (peer) peer.destroy();`n            setTimeout(() => {`n                initPeer((id) => {`n                    let me = roomState.players.find(p => p.id === myOldId || p.name === myName);`n                    if (me) me.id = myId;`n                    roomState.scores[myId] = roomState.scores[myOldId] || 0;`n                    roomState.correctCounts[myId] = roomState.correctCounts[myOldId] || 0;"
+$content = $content.Replace($target, $replacement)
+Set-Content $file -Value $content
+Write-Host "Updated quiz-battle"
