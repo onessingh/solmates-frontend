@@ -326,9 +326,7 @@ function placeTrade(decision) {
         checkAllTraded();
     } else {
         hostConn.send({ type: 'TRADE', decision });
-        if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-        window.guestWaitTimeout = setTimeout(() => { alert("Host disconnected or game got stuck. Leaving the room."); safeExit(); }, 10 * 1000 + 10000);
-    }
+                    }
 }
 
 function broadcastTradeCount() {
@@ -374,8 +372,7 @@ function resolveEvent() {
 }
 
 function showEventResult(event, change, results, eventIdx, totalEvents) {
-    if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-    hideAllScreens(); document.getElementById('screen-event-result').classList.remove('hidden');
+        hideAllScreens(); document.getElementById('screen-event-result').classList.remove('hidden');
     document.getElementById('result-title').textContent = event.headline;
     const cls = change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral';
     document.getElementById('result-change').className = `text-center text-3xl font-black mb-4 ${cls}`;
@@ -444,3 +441,4 @@ function renderLobby() {
     const btn = document.getElementById('btn-start-game');
     if (btn && isHost && players.filter(p => !p.disconnected).length > 0) btn.classList.remove('hidden');
 }
+

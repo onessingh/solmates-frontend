@@ -402,8 +402,7 @@ function showJudging() {
 }
 
 function showRoundResults(results, round, totalRounds) {
-    if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-    hideAllScreens(); document.getElementById('screen-results').classList.remove('hidden');
+        hideAllScreens(); document.getElementById('screen-results').classList.remove('hidden');
     document.getElementById('result-round-num').textContent = `Round ${round}/${totalRounds}`;
 
     const sorted = [...results].sort((a,b) => b.aiScore - a.aiScore);
@@ -464,3 +463,4 @@ function renderLobby() {
     const btn = document.getElementById('btn-start-game');
     if (btn && isHost && players.filter(p => !p.disconnected).length > 0) btn.classList.remove('hidden');
 }
+

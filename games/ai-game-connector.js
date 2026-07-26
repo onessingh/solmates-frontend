@@ -46,7 +46,13 @@ class AIGameConnector {
                     timestamp: Date.now(),
                     questions: data.data.questions
                 }));
-                return data.data.questions;
+                let finalQuestions = data.data.questions;
+                if (finalQuestions.length < count) {
+                    const needed = count - finalQuestions.length;
+                    const extra = fallbackData.slice(0, needed);
+                    finalQuestions = finalQuestions.concat(extra);
+                }
+                return finalQuestions.slice(0, count);
             } else {
                 throw new Error('Invalid AI data structure');
             }
@@ -70,3 +76,4 @@ class AIGameConnector {
 
 // Attach to window so all games can use it
 window.aiGameConnector = new AIGameConnector();
+

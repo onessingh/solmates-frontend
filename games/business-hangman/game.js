@@ -268,8 +268,7 @@ function copyInviteLink() {
 }
 
 function handleGuestData(data) {
-    if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-    if (data.type === 'PING') return;
+        if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.category = data.category; gameState.totalRounds = data.totalRounds; document.getElementById('lobby-topic').textContent = data.category + " · " + data.totalRounds + " Rounds"; renderPlayers(); }
     if (data.type === 'START_GAME') { startGame(false); }
@@ -375,9 +374,7 @@ function guessLetter(letter) {
     if (isHost) processGuess(letter);
     else if (hostConn && hostConn.open) {
         hostConn.send({ type: 'GUESS', letter });
-        if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-        window.guestWaitTimeout = setTimeout(() => { alert("Host disconnected or game got stuck. Leaving the room."); safeExit(); }, 10 * 1000 + 10000);
-    }
+                    }
 }
 
 function nextTurn() {
@@ -480,3 +477,4 @@ function renderPlayers() {
     const btn = document.getElementById('btn-start-game');
     if (btn && isHost && players.filter(p => !p.disconnected).length > 0) btn.classList.remove('hidden');
 }
+

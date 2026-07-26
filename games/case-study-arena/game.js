@@ -485,15 +485,12 @@ function lockInAnswer(idx) {
         checkAllAnswered();
     } else {
         if (hostConn && hostConn.open) hostConn.send({ type: 'ANSWER', idx, elapsed });
-        if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-        window.guestWaitTimeout = setTimeout(() => { alert("Host disconnected or game got stuck. Leaving the room."); safeExit(); }, 10 * 1000 + 10000);
-        
+                        
     }
 }
 
 function revealAnswers(answers, correctIdx) {
-    if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-    clearInterval(tickInterval);
+        clearInterval(tickInterval);
     const buttons = document.querySelectorAll('#options-grid .option-btn');
     buttons.forEach((b, i) => {
         b.disabled = true;
@@ -567,3 +564,4 @@ function renderPlayers() {
     const btn = document.getElementById('btn-start-game');
     if (btn && isHost && players.filter(p => !p.disconnected).length > 0) btn.classList.remove('hidden');
 }
+

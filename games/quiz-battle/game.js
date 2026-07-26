@@ -487,10 +487,7 @@ function submitAnswer(idx) {
         handleGuestAnswer(myId, idx, timeRemaining);
     } else {
         hostConn.send({ type: 'ANSWER', answerIdx: idx, timeLeft: timeRemaining });
-        if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-        window.guestWaitTimeout = setTimeout(() => { alert("Host disconnected or game got stuck. Leaving the room."); safeExit(); }, (timeRemaining + 15) * 1000);
-                window.guestWaitTimeout = setTimeout(() => { alert("Host disconnected or game got stuck. Leaving the room."); safeExit(); }, (timeRemaining + 15) * 1000);
-    }
+                                    }
 }
 
 function handleGuestAnswer(playerId, idx, timeLeft) {
@@ -522,9 +519,7 @@ function resolveQuestion() {
 }
 
 function showResult(correctIdx, scores) {
-    if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-    if(window.guestWaitTimeout) clearTimeout(window.guestWaitTimeout);
-    if(questionTimer) clearInterval(questionTimer);
+            if(questionTimer) clearInterval(questionTimer);
     document.querySelectorAll('.option-btn').forEach((btn, idx) => {
         btn.disabled = true;
         if(idx === correctIdx) {
@@ -607,3 +602,4 @@ window.onload = () => {
         document.getElementById('url-join-box').classList.remove('hidden');
     }
 };
+
