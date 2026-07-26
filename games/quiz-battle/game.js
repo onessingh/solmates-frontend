@@ -487,7 +487,20 @@ function sendNextQuestion() {
     }, 1000);
 }
 
+
+function updateLiveScoresUI() {
+    const container = document.getElementById('live-scores-container');
+    if (!container) return;
+    container.innerHTML = roomState.players.map(p => 
+        <div class="px-3 py-1.5 rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-700 ">
+            : <span class="text-sky-600"></span>
+        </div>
+    ).join('');
+}
+
 function renderQuestion(q, qNum, totalQ) {
+    updateLiveScoresUI();
+
     answered = false;
     document.getElementById('game-q-num').textContent = `Q ${qNum}/${totalQ}`;
     document.getElementById('question-text').textContent = q.q;
