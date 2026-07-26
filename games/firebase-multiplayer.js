@@ -173,7 +173,7 @@ window.Peer = class Peer {
                     if (el) el.style.display = 'none';
                     const checkTimeout = () => {
                         const now = Date.now() + serverTimeOffset;
-                        if (now - disconnectTime > 120000) {
+                        if (now - disconnectTime > 5000) {
                             conn._handlers.close.forEach(cb => cb());
                             inboxRef.off();
                             db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
@@ -221,4 +221,5 @@ window.Peer = class Peer {
         db.ref(`solmates-rooms/${this.id}`).remove();
     }
 };
+
 

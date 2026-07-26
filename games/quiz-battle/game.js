@@ -602,4 +602,263 @@ window.onload = () => {
         document.getElementById('url-join-box').classList.remove('hidden');
     }
 };
+function sendNextQuestion() {
+    if(roomState.currentQ >= roomState.questions.length) {
+        broadcast({ type: 'GAME_OVER', scores: roomState.scores, correctCounts: roomState.correctCounts });
+        showLeaderboard(roomState.scores);
+        return;
+    }
+    
+    const q = roomState.questions[roomState.currentQ];
+    // Reset host answers tracking
+    roomState.currentAnswers = {};
+    
+    const qData = {
+        question: { q: q.q, options: q.options },
+        qNum: roomState.currentQ + 1,
+        totalQ: roomState.questions.length
+    };
+    
+    broadcast({ type: 'QUESTION', ...qData });
+    renderQuestion(qData.question, qData.qNum, qData.totalQ);
+    
+    // Host internal timer
+    let ticks = 15;
+    const t = setInterval(() => {
+        ticks--;
+        if(ticks <= 0) {
+            clearInterval(t);
+            resolveQuestion();
+        } else if(Object.keys(roomState.currentAnswers).length === roomState.players.filter(p => !p.disconnected).length) {
+            // Everyone answered
+            clearInterval(t);
+            setTimeout(resolveQuestion, 1000);
+        }
+    }, 1000);
+}
 
+function renderQuestion(q, qNum, totalQ) {
+    answered = false;
+    document.getElementById('game-q-num').textContent = `Q ${qNum}/${totalQ}`;
+    document.getElementById('question-text').textContent = q.q;
+    
+    const grid = document.getElementById('options-grid');
+    grid.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, idx) => {
+        grid.innerHTML += `<button id="opt-${idx}" class="option-btn p-4 rounded-xl text-left font-semibold text-lg" onclick="submitAnswer(${idx})">${letters[idx]}. ${opt}</button>`;
+    });
+    
+    document.getElementById('answer-feedback').classList.add('hidden');
+    
+    // Visual Timer
+    timeRemaining = 15;
+    document.getElementById('game-timer').textContent = "15s";
+    const bar = document.getElementById('timer-bar');
+    bar.style.width = '100%';
+    
+    if(questionTimer) clearInterval(questionTimer);
+    questionTimer = setInterval(() => {
+        timeRemaining--;
+        document.getElementById('game-timer').textContent = timeRemaining + "s";
+        bar.style.width = `${(timeRemaining/15)*100}%`;
+        if(timeRemaining <= 0) clearInterval(questionTimer);
+    }, 1000);
+}
+
+function submitAnswer(idx) {
+    if(answered) return;
+    answered = true;
+    clearInterval(questionTimer);
+    
+    document.getElementById(`opt-${idx}`).classList.add('selected');
+    document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+    
+    document.getElementById('answer-feedback').classList.remove('hidden');
+    document.getElementById('feedback-text').textContent = "Waiting for others...";
+    document.getElementById('feedback-text').className = "text-xl font-bold text-slate-400";
+    
+    if(isHost) {
+        handleGuestAnswer(myId, idx, timeRemaining);
+    } else {
+        hostConn.send({ type: 'ANSWER', answerIdx: idx, timeLeft: timeRemaining });
+                                    }
+}
+
+function handleGuestAnswer(playerId, idx, timeLeft) {
+    roomState.currentAnswers[playerId] = { idx, time: timeLeft };
+}
+
+function resolveQuestion() {
+    const q = roomState.questions[roomState.currentQ];
+    const correctIdx = q.a;
+    
+    // Calculate points
+    roomState.players.forEach(p => {
+        const ans = roomState.currentAnswers[p.id];
+        if(!roomState.scores[p.id]) roomState.scores[p.id] = 0;
+        if(!roomState.correctCounts[p.id]) roomState.correctCounts[p.id] = 0;
+        
+        if(ans && ans.idx === correctIdx) {
+            roomState.scores[p.id] += (100 + (ans.time * 10));
+            roomState.correctCounts[p.id]++;
+        }
+    });
+    
+    const resData = { correctIdx, scores: roomState.scores, correctCounts: roomState.correctCounts };
+    broadcast({ type: 'RESULT', ...resData });
+    showResult(resData.correctIdx, resData.scores);
+    
+    roomState.currentQ++;
+    setTimeout(sendNextQuestion, 4000);
+}
+
+function showResult(correctIdx, scores) {
+            if(questionTimer) clearInterval(questionTimer);
+    document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+        btn.disabled = true;
+        if(idx === correctIdx) {
+            btn.classList.add('correct');
+        } else if(btn.classList.contains('selected')) {
+            btn.classList.add('wrong');
+        }
+    });
+    
+    const fb = document.getElementById('answer-feedback');
+    const fbt = document.getElementById('feedback-text');
+    fb.classList.remove('hidden');
+    
+    const myScore = scores[myId] || 0;
+    
+    if(document.getElementById(`opt-${correctIdx}`).classList.contains('selected')) {
+        fbt.textContent = `Correct! Total Score: ${myScore}`;
+        fbt.className = "text-xl font-bold text-green-400";
+    } else {
+        fbt.textContent = `Wrong! Total Score: ${myScore}`;
+        fbt.className = "text-xl font-bold text-red-400";
+    }
+}
+
+function showLeaderboard(scores) {
+    roomState.gameOver = true;
+    hideAllScreens();
+    document.getElementById('screen-leaderboard').classList.remove('hidden');
+    
+    const list = document.getElementById('leaderboard-list');
+    list.innerHTML = '';
+    const totalQ = roomState.questions.length;
+    
+    // Sort players by score; disconnected go to bottom
+    const sorted = [...roomState.players].sort((a,b) => {
+        if (a.disconnected && !b.disconnected) return 1;
+        if (!a.disconnected && b.disconnected) return -1;
+        return (scores[b.id]||0) - (scores[a.id]||0);
+    });
+    
+    sorted.forEach((p, idx) => {
+        const isMe = p.id === myId;
+        const correct = roomState.correctCounts[p.id] || 0;
+        const borderCls = idx === 0 ? 'border-yellow-300 bg-yellow-50' : (isMe ? 'border-sky-200 bg-sky-50' : 'border-slate-200 bg-white');
+        list.innerHTML += `
+            <div class="p-4 rounded-xl border ${borderCls} flex items-center justify-between shadow-sm ${p.disconnected ? 'opacity-50' : ''}">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-slate-400">#${idx+1}</span>
+                    <div>
+                        <p class="font-bold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' 🔌' : ''}</p>
+                        <p class="text-xs text-slate-500 mt-0.5">✅ ${correct} / ${totalQ} correct</p>
+                    </div>
+                    ${idx===0 && !p.disconnected ? '<span class="text-yellow-500">🏆</span>' : ''}
+                </div>
+                <span class="font-bold text-slate-900 text-lg">${scores[p.id] || 0} pts</span>
+            </div>
+        `;
+    });
+}
+
+// Prevent accidental reloads destroying the P2P connection
+let allowExit = false;
+window.addEventListener('beforeunload', (e) => {
+    if (!allowExit && ((isHost && roomState.players.length > 0) || (!isHost && hostConn && hostConn.open))) {
+        e.preventDefault();
+        e.returnValue = "Leaving this page will disconnect you from the game!";
+        return e.returnValue;
+    }
+});
+
+function safeExit() {
+    allowExit = true;
+    window.location.href = "/games/";
+}
+
+// Auto-check URL on load
+window.onload = () => {
+    const url = new URL(window.location.href);
+    if(url.searchParams.get('room')) {
+        document.getElementById('url-join-box').classList.remove('hidden');
+    }
+};
+
+
+function migrateHost(hostId) {
+    if (!roomState.backupQuestions) return;
+    const db = firebase.database();
+    db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
+        if (currentData === null) return myId;
+        return; // Someone else claimed
+    }, (error, committed, snapshot) => {
+        if (committed && snapshot.val() === myId) {
+            isHost = true;
+            roomState.questions = roomState.backupQuestions;
+            if (peer) peer.destroy();
+            setTimeout(() => {
+                initPeer((id) => {
+                    hideAllScreens();
+                    document.getElementById('screen-game').classList.remove('hidden');
+                    showToast("You are the new host!");
+                    
+                    // Accept reconnecting guests
+                    peer.on('connection', (conn) => {
+                        conn.on('data', (data) => {
+                            if(data.type === 'JOIN') {
+                                guestConns[conn.peer] = conn;
+                                let existingPlayer = roomState.players.find(p => p.id === conn.peer);
+                                if (existingPlayer) {
+                                    existingPlayer.disconnected = false;
+                                    existingPlayer.name = data.name;
+                                } else {
+                                    roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
+                                    roomState.correctCounts[conn.peer] = 0;
+                                }
+                                if (roomState.questions && roomState.questions.length > 0 && roomState.currentQ > 0) {
+                                    conn.send({ type: 'SYNC_STATE', state: { roomState, timeRemaining, currentSettings } });
+                                }
+                                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
+                                renderLobby();
+                            } else if(data.type === 'ANSWER') {
+                                handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
+                            }
+                        });
+                        conn.on('close', () => {
+                            const p = roomState.players.find(pl => pl.id === conn.peer);
+                            if (p) { p.disconnected = true; showToast(p.name + " disconnected"); }
+                            delete guestConns[conn.peer];
+                            broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
+                            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
+                        });
+                    });
+                    
+                    // Resume game
+                    setTimeout(() => {
+                        if (roomState.currentQ > 0) { roomState.currentQ--; resolveQuestion(); } 
+                        else { sendNextQuestion(); }
+                    }, 3000);
+                }, hostId);
+            }, 1000);
+        } else {
+            // Someone else became host, reconnect
+            setTimeout(() => {
+                connectToHost(hostId);
+            }, 3000);
+        }
+    });
+}
