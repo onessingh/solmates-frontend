@@ -622,7 +622,7 @@ function migrateHost(hostId) {
                 peer.on('open', (pid) => {
                     myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false;
-                    let me = players.find(p => p.id === myOldId);
+                    let me = players.find(p => p.id === myOldId || p.name === myName);
                     if (me) me.id = myId;
                     gameState.scores[myId] = gameState.scores[myOldId] || 0;
                     gameState.correctCounts[myId] = gameState.correctCounts[myOldId] || 0;
@@ -646,17 +646,7 @@ function migrateHost(hostId) {
                                 startReadingUI();
                             } else {
                                 if (gameState.gameOver) return;
-        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
-        if (!q) return;
-                                broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
-                                showQuestion(gameState.qIndex, q);
-                                clearTimeout(forceRevealTimer);
-                                forceRevealTimer = setTimeout(() => {
-                                    players.filter(p => !p.disconnected).forEach(p => {
-                                        if (!gameState.currentAnswers[p.id]) gameState.currentAnswers[p.id] = { idx: -1, elapsed: TIME_LIMIT_MS };
-                                    });
-                                    checkAllAnswered();
-                                }, TIME_LIMIT_MS + 2000);
+                                nextQuestion();
                             }
                         }
                     }, 500);
@@ -700,6 +690,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 
