@@ -181,19 +181,19 @@ window.Peer = class Peer {
                             conn._handlers.close.forEach(cb => cb());
                             inboxRef.off();
                             db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
-                        } else if (now - disconnectTime > 10000) {
-                            if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
-                                conn._handlers.host_disconnect_early.forEach(cb => cb());
-                            }
-                            if (conn._handlers.host_disconnect && conn._handlers.host_disconnect.length > 0) {
-                                conn._handlers.host_disconnect.forEach(cb => cb());
-                            }
-                            disconnectTimeoutId = setTimeout(checkTimeout, 10000);
                         } else if (now - disconnectTime > 30000) {
                             if (conn._handlers.host_disconnect && conn._handlers.host_disconnect.length > 0) {
                                 conn._handlers.host_disconnect.forEach(cb => cb());
                             }
+                            if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
+                                conn._handlers.host_disconnect_early.forEach(cb => cb());
+                            }
                             disconnectTimeoutId = setTimeout(checkTimeout, 10000);
+                        } else if (now - disconnectTime > 10000) {
+                            if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
+                                conn._handlers.host_disconnect_early.forEach(cb => cb());
+                            }
+                            disconnectTimeoutId = setTimeout(checkTimeout, 5000);
                         } else {
                             disconnectTimeoutId = setTimeout(checkTimeout, 10000);
                         }

@@ -698,8 +698,7 @@ function migrateHost(hostId) {
                     
                     // Resume game
                     setTimeout(() => {
-                        if (roomState.currentQ > 0) { roomState.currentQ--; resolveQuestion(); } 
-                        else { sendNextQuestion(); }
+                        sendNextQuestion();
                     }, 3000);
                 }, hostId);
             }, 1000);
