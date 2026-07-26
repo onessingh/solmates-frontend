@@ -25,7 +25,7 @@ class PeerConnection {
         this.roomId = roomId;
         this.clientId = clientId;
         this.peer = clientId; // To match conn.peer in game logic
-        this._handlers = { open: [], data: [], close: [], error: [] };
+        this._handlers = { open: [], data: [], close: [], error: [], host_disconnect: [], host_reconnect: [] };
         this.open = true;
     }
     on(event, cb) { 
