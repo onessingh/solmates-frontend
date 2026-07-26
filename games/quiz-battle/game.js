@@ -332,11 +332,15 @@ function connectToHost(hostId) {
                     el = document.createElement('div');
                     el.id = 'sol-host-reconnect';
                     el.style.position = 'fixed';
-                    el.style.top = '0'; el.style.left = '0'; el.style.width = '100vw'; el.style.height = '100vh';
-                    el.style.backgroundColor = 'rgba(0,0,0,0.8)';
-                    el.style.color = 'white'; el.style.display = 'flex'; el.style.flexDirection = 'column';
-                    el.style.justifyContent = 'center'; el.style.alignItems = 'center'; el.style.zIndex = '9999';
-                    el.innerHTML = `<h2>Host may be offline</h2><p>Wait for them or leave?</p><div style="margin-top:20px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:10px 20px;background:#3b82f6;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:10px 20px;background:#ef4444;border-radius:5px;font-weight:bold;">Leave</button></div>`;
+                    el.style.top = '20px'; el.style.left = '50%'; el.style.transform = 'translateX(-50%)';
+                    el.style.backgroundColor = 'white';
+                    el.style.color = 'black'; 
+                    el.style.padding = '20px';
+                    el.style.borderRadius = '10px';
+                    el.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+                    el.style.display = 'flex'; el.style.flexDirection = 'column';
+                    el.style.alignItems = 'center'; el.style.zIndex = '9999';
+                    el.innerHTML = `<h3 style="margin:0;font-size:18px;">Host may be offline</h3><p style="margin:10px 0;font-size:14px;color:#666;">Wait for them or leave?</p><div style="margin-top:10px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:8px 16px;background:#3b82f6;color:white;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:8px 16px;background:#ef4444;color:white;border-radius:5px;font-weight:bold;">Leave</button></div>`;
                     document.body.appendChild(el);
                 } else {
                     el.style.display = 'flex';
@@ -679,7 +683,13 @@ function migrateHost(hostId) {
                         });
                         conn.on('close', () => {
                             const p = roomState.players.find(pl => pl.id === conn.peer);
-                            if (p) { p.disconnected = true; showToast(p.name + " disconnected"); }
+                            if (p) { 
+                                if (!roomState.backupQuestions) {
+                                    roomState.players = roomState.players.filter(pl => pl.id !== conn.peer);
+                                } else {
+                                    p.disconnected = true; showToast(p.name + " disconnected"); 
+                                }
+                            }
                             delete guestConns[conn.peer];
                             broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
                             if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();

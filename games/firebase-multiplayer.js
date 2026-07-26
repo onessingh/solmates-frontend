@@ -74,8 +74,12 @@ window.Peer = class Peer {
         
         // Host Presence tracking
         const hostPresenceRef = db.ref(`solmates-rooms/${this.id}/hostDisconnectedAt`);
-        hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
-        hostPresenceRef.remove(); // Clear on connect/reconnect
+        db.ref('.info/connected').on('value', snap => {
+            if (snap.val() === true) {
+                hostPresenceRef.remove();
+                hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+            }
+        });
         
         this.clientRefs = db.ref(`solmates-rooms/${this.id}/clients`);
         this.clientRefs.on('child_added', snap => {
@@ -185,13 +189,13 @@ window.Peer = class Peer {
                                 conn._handlers.host_disconnect.forEach(cb => cb());
                             }
                             disconnectTimeoutId = setTimeout(checkTimeout, 10000);
-                        } else if (now - disconnectTime > 5000) {
+                        } else if (now - disconnectTime > 30000) {
                             if (conn._handlers.host_disconnect && conn._handlers.host_disconnect.length > 0) {
                                 conn._handlers.host_disconnect.forEach(cb => cb());
                             }
-                            disconnectTimeoutId = setTimeout(checkTimeout, 5000);
+                            disconnectTimeoutId = setTimeout(checkTimeout, 10000);
                         } else {
-                            disconnectTimeoutId = setTimeout(checkTimeout, 5000);
+                            disconnectTimeoutId = setTimeout(checkTimeout, 10000);
                         }
                     };
                     checkTimeout();
