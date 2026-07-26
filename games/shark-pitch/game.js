@@ -393,7 +393,10 @@ Respond in this exact JSON format only, no extra text:
             const maxWordLength = Math.max(...words.map(w => w.length));
             
             // Catch short answers, single-word keyboard mashing, or repeated character spam
-            if (pitchStr.length < 15 || words.length < 3 || maxWordLength > 20 || /(.)\1{4,}/.test(pitchStr)) {
+            const hasVowels = /[aeiouy]/i.test(pitchStr);
+            const consonantRatio = pitchStr.replace(/[^a-z]/gi, '').length > 0 ? (pitchStr.replace(/[^a-z]/gi, '').match(/[^aeiouy]/gi) || []).length / pitchStr.replace(/[^a-z]/gi, '').length : 1;
+            
+            if (pitchStr.length < 15 || words.length < 3 || maxWordLength > 20 || /(.)\1{3,}/.test(pitchStr) || !hasVowels || consonantRatio > 0.85) {
                 aiScore = 0;
                 feedback = "Too short, irrelevant, or spam detected. Write a real pitch to earn points.";
             } else {
@@ -616,6 +619,7 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
 
 
 

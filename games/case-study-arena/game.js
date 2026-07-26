@@ -236,8 +236,14 @@ function handleDisconnect(peerId) {
 function handleHostData(data, fromId) {
     if (data.type === 'PONG') return;
     if (data.type === 'JOIN') {
-        players.push({ id: fromId, name: data.name, score: 0, disconnected: false });
-        gameState.scores[fromId] = 0;
+        const existing = players.find(p => p.id === fromId);
+        if (existing) {
+            existing.disconnected = false;
+            existing.name = data.name;
+        } else {
+            players.push({ id: fromId, name: data.name, score: 0, disconnected: false });
+            gameState.scores[fromId] = 0;
+        }
         gameState.correctCounts[fromId] = 0;
         gameState.readStatus[fromId] = false;
         broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
@@ -335,7 +341,7 @@ function handleGuestData(data) {
     if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.caseData = data.caseData; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startReadPhase(); }
     if (data.type === 'READ_CASE') { gameState.caseData = data.caseData; startReadPhase(); }
       if (data.type === 'READY_STATUS') { updateReadyStatus(data.readyCount, data.total); }
-    if (data.type === 'QUESTION') { showQuestion(data.qIndex, data.question); }
+    if (data.type === 'QUESTION') { gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
     if (data.type === 'REVEAL') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
@@ -691,6 +697,8 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
     });
 }
+
+
 
 
 

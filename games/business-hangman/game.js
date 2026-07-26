@@ -182,8 +182,14 @@ function handleDisconnect(peerId) {
 function handleHostData(data, fromId) {
     if (data.type === 'PONG') return;
     if (data.type === 'JOIN') {
-        players.push({ id: fromId, name: data.name, score: 0, disconnected: false });
-        gameState.scores[fromId] = 0;
+        const existing = players.find(p => p.id === fromId);
+        if (existing) {
+            existing.disconnected = false;
+            existing.name = data.name;
+        } else {
+            players.push({ id: fromId, name: data.name, score: 0, disconnected: false });
+            gameState.scores[fromId] = 0;
+        }
         gameState.correctCounts[fromId] = 0;
         broadcast({ type: 'LOBBY_UPDATE', players, category: gameState.category, totalRounds: gameState.totalRounds });
         renderPlayers();
@@ -620,6 +626,7 @@ function manualJoinRoomReconnect(code) {
 }
 
 // syncUIState removed - renderRound() handles all UI updates
+
 
 
 

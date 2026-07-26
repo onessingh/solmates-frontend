@@ -57,7 +57,15 @@ class PeerConnection {
 // Overwrite the global Peer class
 window.Peer = class Peer {
     constructor(id) {
-        if (!id) id = 'GUEST-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+        if (!id) {
+            let existingId = sessionStorage.getItem('solmates_guest_id');
+            if (existingId) {
+                id = existingId;
+            } else {
+                id = 'GUEST-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                sessionStorage.setItem('solmates_guest_id', id);
+            }
+        }
         this.id = id.replace('SOLMATES-', ''); // Keep it clean in DB
         this.disconnected = false;
         this.destroyed = false;
@@ -248,6 +256,7 @@ window.Peer = class Peer {
         db.ref(`solmates-rooms/${this.id}`).remove();
     }
 };
+
 
 
 

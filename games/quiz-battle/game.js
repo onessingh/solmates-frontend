@@ -236,8 +236,14 @@ async function createRoom() {
             conn.on('data', (data) => {
                 if(data.type === 'JOIN') {
                     guestConns[conn.peer] = conn;
-                    roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
-                    roomState.correctCounts[conn.peer] = 0;
+                    const existing = roomState.players.find(p => p.id === conn.peer);
+                    if (existing) {
+                        existing.disconnected = false;
+                        existing.name = data.name;
+                    } else {
+                        roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
+                        roomState.correctCounts[conn.peer] = 0;
+                    }
                     broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
                     renderLobby();
                 } else if(data.type === 'ANSWER') {
@@ -735,6 +741,8 @@ function migrateHost(hostId) {
         }
     });
 }
+
+
 
 
 
