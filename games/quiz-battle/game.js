@@ -306,6 +306,7 @@ function connectToHost(hostId) {
                 if (data.questions) roomState.backupQuestions = data.questions;
                 startGameUI();
             } else if(data.type === 'QUESTION') {
+                roomState.currentQ = data.qNum - 1;
                 renderQuestion(data.question, data.qNum, data.totalQ);
             } else if(data.type === 'RESULT') {
                 roomState.correctCounts = data.correctCounts || {};
@@ -316,12 +317,34 @@ function connectToHost(hostId) {
             }
         });
         
-        hostConn.on('close', () => {
+        hostConn.on('host_disconnect', () => {
             if (roomState.backupQuestions) {
-                showToast("Host left. Attempting migration...");
+                showToast('Host left. Attempting migration...');
                 migrateHost(hostId);
             } else {
-                showToast("Host left the room.");
+                let el = document.getElementById('sol-host-reconnect');
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = 'sol-host-reconnect';
+                    el.style.position = 'fixed';
+                    el.style.top = '0'; el.style.left = '0'; el.style.width = '100vw'; el.style.height = '100vh';
+                    el.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                    el.style.color = 'white'; el.style.display = 'flex'; el.style.flexDirection = 'column';
+                    el.style.justifyContent = 'center'; el.style.alignItems = 'center'; el.style.zIndex = '9999';
+                    el.innerHTML = '<h2>Host may be offline</h2><p>Wait for them or leave?</p><div style="margin-top:20px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:10px 20px;background:#3b82f6;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:10px 20px;background:#ef4444;border-radius:5px;font-weight:bold;">Leave</button></div>';
+                    document.body.appendChild(el);
+                } else {
+                    el.style.display = 'flex';
+                }
+            }
+        });
+        hostConn.on('host_reconnect', () => {
+            let el = document.getElementById('sol-host-reconnect');
+            if (el) el.style.display = 'none';
+        });
+        hostConn.on('close', () => {
+            if (!roomState.backupQuestions) {
+                showToast('Host left the room.');
                 setTimeout(() => window.location.href='/', 2000);
             }
         });
@@ -561,8 +584,6 @@ function showLeaderboard(scores) {
     
     // Sort players by score; disconnected go to bottom
     const sorted = [...roomState.players].sort((a,b) => {
-        if (a.disconnected && !b.disconnected) return 1;
-        if (!a.disconnected && b.disconnected) return -1;
         return (scores[b.id]||0) - (scores[a.id]||0);
     });
     
@@ -673,4 +694,7 @@ function migrateHost(hostId) {
         }
     });
 }
+
+
+
 
