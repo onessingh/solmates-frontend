@@ -214,8 +214,8 @@ function manualJoinRoom() {
             document.getElementById('wait-host-msg').classList.remove('hidden');
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
-        hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
+        hostConn.on('close', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
         hostConn.on('error', err => { clearTimeout(failTimer); showToast("Could not connect: " + err.type); });
     });
     peer.on('error', err => { showToast("Error: " + err.type); });
@@ -504,6 +504,14 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (isMigrating) return;
     isMigrating = true;
+      let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
+      let hostName = "Host";
+      if (pList && pList.length > 0) {
+          let oldHost = pList.find(p => p.id === hostId || p.id === hostId + '-LEFT');
+          if (oldHost) hostName = oldHost.name;
+      }
+      if (typeof showToast === 'function') showToast(hostName + " disconnected");
+
     if (!gameState.challenges || gameState.challenges.length === 0) return;
     if (hostConn) { hostConn.close(); hostConn = null; }
     
@@ -584,8 +592,15 @@ function migrateHost(hostId) {
         } else {
             // Someone else became host, reconnect
             setTimeout(() => {
-                isMigrating = false;
-                manualJoinRoomReconnect(hostId);
+                
+                  let newHostName = "Someone";
+                  let pList2 = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
+                  let newHostPlayer = pList2.find(p => p.id === snapshot.val());
+                  if (newHostPlayer) newHostName = newHostPlayer.name;
+                  if (typeof showToast === 'function') showToast(newHostName + " is the new host");
+                  
+                  isMigrating = false;
+                  manualJoinRoomReconnect(hostId);
             }, 3000);
         }
     });
@@ -615,8 +630,8 @@ function manualJoinRoomReconnect(code) {
             if(typeof showToast === 'function') showToast("Reconnected!");
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
-        hostConn.on('host_disconnect_early', () => { if(typeof showToast === 'function') showToast("Host disconnected. Attempting migration..."); migrateHost(code); });
+        hostConn.on('close', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
     });
 }
 

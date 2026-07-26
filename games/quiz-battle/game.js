@@ -326,7 +326,6 @@ function connectToHost(hostId) {
         
         hostConn.on('host_disconnect_early', () => {
             if (roomState.backupQuestions) {
-                showToast('Host left. Attempting migration...');
                 migrateHost(hostId);
             }
         });
@@ -362,7 +361,6 @@ function connectToHost(hostId) {
                 showToast('Host left the room.');
                 setTimeout(() => window.location.href='/', 2000);
             } else {
-                showToast('Host left. Attempting migration...');
                 migrateHost(hostId);
             }
         });
@@ -658,6 +656,14 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (isMigrating) return;
     isMigrating = true;
+      let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
+      let hostName = "Host";
+      if (pList && pList.length > 0) {
+          let oldHost = pList.find(p => p.id === hostId || p.id === hostId + '-LEFT');
+          if (oldHost) hostName = oldHost.name;
+      }
+      if (typeof showToast === 'function') showToast(hostName + " disconnected");
+
     if (!roomState.backupQuestions) return;
     if (hostConn) { hostConn.close(); hostConn = null; }
     const db = firebase.database();
