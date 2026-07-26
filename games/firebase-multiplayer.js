@@ -45,8 +45,11 @@ class PeerConnection {
         }
     }
     close() {
+        if (this._closed) return;
+        this._closed = true;
         this.open = false;
         if (this._cleanup) this._cleanup();
+        if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
         this._handlers.close.forEach(cb => cb());
     }
 }
@@ -245,6 +248,9 @@ window.Peer = class Peer {
         db.ref(`solmates-rooms/${this.id}`).remove();
     }
 };
+
+
+
 
 
 

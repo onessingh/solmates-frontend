@@ -626,7 +626,7 @@ function syncUIState() {
             if (gameState.word.includes(l)) btn.classList.add('correct');
             else btn.classList.add('wrong');
         } else {
-            btn.onclick = () => { if(players[gameState.turnIdx]?.id === myId) { processGuess(l); } else { hostConn.send({type:'GUESS', letter:l}); } };
+            btn.onclick = () => guessLetter(l);
         }
         kb.appendChild(btn);
     });
@@ -638,6 +638,7 @@ function syncUIState() {
     
     updateTurnUI();
 }
+
 
 
 
