@@ -676,10 +676,10 @@
     }
 
     .tab-btn.active {
-      background: #0f2b46;
-      color: white;
-      box-shadow: 0 4px 15px rgba(15, 43, 70, 0.25);
-    }
+        background: var(--tab-active-bg, #0f2b46);
+        color: white;
+        box-shadow: 0 4px 15px var(--tab-active-shadow, rgba(15,43,70,0.25));
+      }
 
     .tab-btn.hidden {
       display: none !important;
@@ -909,6 +909,8 @@
       --border-color: #eeeeee;
       --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
       --brand-primary: #0f2b46;
+        --tab-active-bg: #0f2b46;
+        --tab-active-shadow: rgba(15, 43, 70, 0.25);
       --brand-accent: #c0962d;
       }
 
@@ -924,6 +926,8 @@
         --border-color: #334155;
         --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
         --brand-primary: #f8fafc;
+          --tab-active-bg: #3b82f6;
+          --tab-active-shadow: rgba(59, 130, 246, 0.3);
         --brand-accent: #c0962d;
 
           --primary: #f8fafc;
