@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/tools/resumebuilder/style.css?v=113.1" />
+  <link rel="stylesheet" href="/tools/resumebuilder/style.css?v=113.2" />
   <link rel="stylesheet" href="/tools/resumebuilder/wizard.css?v=105.2" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
@@ -49,6 +49,9 @@
 
 
 
+
+
+
 <!-- INJECTED DARK MODE -->
 <style>
 @media (prefers-color-scheme: dark) {
@@ -56,7 +59,7 @@
     .site-header, .top-nav, .header-bar { background: rgba(15,23,42,0.95) !important; border-bottom: 1px solid #334155 !important; }
     
     /* Interface Cards */
-    .card, .form-panel, .panel-section, .hero, .rb-tab-content, .white-box, .metric, .template-card, .rb-tabs, .wizard-header, .builder-layout, .jd-match, .score-card, .jd-score-card, .repeater-item, .section-item, .wizard-nav, .jd-panel, .chip-wrapper { 
+    .card, .form-panel, .panel-section, .hero, .rb-tab-content, .white-box, .metric, .template-card, .rb-tabs, .wizard-header, .builder-layout, .jd-match, .score-card, .jd-score-card, .repeater-item, .section-item, .wizard-nav, .jd-panel, .chip-wrapper, .preview-panel { 
         background: #1e293b !important; 
         border-color: #334155 !important; 
         box-shadow: none !important;
@@ -90,8 +93,8 @@
     /* Fix bottom bar */
     .wizard-nav { border-top: 1px solid #334155 !important; }
     
-    /* FIX: Force Resume Preview container to ALWAYS be white paper */
-    .preview-panel, .preview-panel .resume-preview, #resume-preview {
+    /* FIX: Force ONLY the Resume Preview inner container to be white paper */
+    .resume-preview, #resume-preview {
         background: #ffffff !important;
         border: 1px solid #d9e1ec !important;
     }
