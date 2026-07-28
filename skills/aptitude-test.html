@@ -196,7 +196,7 @@
     }
 
     .btn-why {
-      background: #f0f0f0;
+      background: var(--bg-card-hover);
       border: none;
       padding: 6px 12px;
       border-radius: 20px;
@@ -247,7 +247,7 @@
       }
     }
     </style>
-  <script src="/js/sol-cache.js?v=89.0"></script>
+  <script src="/js/sol-cache.js?v=90.0"></script>
 </head>
 
 <body>
@@ -318,7 +318,7 @@
     </div>
   </div>
 
-  <script src="/config.js?v=113.8"></script>
+  <script src="/config.js?v=117.0"></script>
   <script src="/js/uptime-helper.js?v=101.0"></script>
   <script src="/js/api-client.js"></script>
   <script>
@@ -406,13 +406,13 @@
                 if (expRes.success) {
                   explanationBody.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6;">${expRes.explanation}</div>`;
                 } else {
-                  explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: #ffe5e5; border-radius: 10px;">
+                  explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: var(--bg-card-hover); border-radius: 10px;">
                 <i class="fas fa-exclamation-circle"></i> ${expRes.error || 'Could not generate explanation.'}
                 ${expRes.detail ? `<br><small style="opacity: 0.8;">${expRes.detail}</small>` : ''}
               </div>`;
                 }
               } catch (e) {
-                explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: #ffe5e5; border-radius: 10px;">
+                explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: var(--bg-card-hover); border-radius: 10px;">
               <i class="fas fa-wifi"></i> Error connecting to AI. Please try again.
               <br><small style="opacity: 0.8;">${e.message}</small>
             </div>`;
