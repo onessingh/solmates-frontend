@@ -96,7 +96,7 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             white-space: nowrap;
-            color: #0f172a;
+            color: var(--text-main);
         }
 
         .admin-indicator {
@@ -126,8 +126,8 @@
         }
 
         .database-btn {
-            background: #0f172a;
-            color: white;
+            background: var(--text-main);
+            color: var(--bg-body);
             text-decoration: none;
             padding: 7px 16px;
             border-radius: 20px;
@@ -142,7 +142,7 @@
         }
 
         .database-btn:hover {
-            background: #1e293b;
+            background: var(--bg-card);
             transform: translateY(-1px);
         }
 
@@ -200,15 +200,15 @@
         }
 
         .tab-btn:hover {
-            border-color: #cbd5e1;
+            border-color: var(--border-color);
             transform: translateY(-1px);
-            color: #0f172a;
+            color: var(--text-main);
         }
 
         .tab-btn.active {
-            background: #0f172a;
-            color: white;
-            border-color: #0f172a;
+            background: var(--text-main);
+            color: var(--bg-body);
+            border-color: var(--text-main);
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
         }
 
@@ -282,7 +282,7 @@
             align-items: center;
             justify-content: center;
             gap: 16px;
-            color: #0f172a;
+            color: var(--text-main);
         }
 
         .live-class-container>p {
@@ -325,7 +325,7 @@
         .live-session-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            border-color: #cbd5e1;
+            border-color: var(--border-color);
         }
 
         .session-header {
@@ -350,7 +350,7 @@
         .session-title h4 {
             font-size: 16px;
             margin-bottom: 6px;
-            color: #0f172a;
+            color: var(--text-main);
             overflow-wrap: break-word;
         }
 
@@ -377,8 +377,8 @@
         }
 
         .join-btn {
-            background: #0f172a;
-            color: white;
+            background: var(--text-main);
+            color: var(--bg-body);
             border: none;
             padding: 12px;
             border-radius: 8px;
@@ -394,7 +394,7 @@
         }
 
         .join-btn:hover {
-            background: #1e293b;
+            background: var(--bg-card);
             transform: translateY(-2px);
         }
 
@@ -476,7 +476,7 @@
 
         .platform-join-card h5 {
             font-size: 14px;
-            color: #0f172a;
+            color: var(--text-main);
             font-weight: 600;
         }
 
@@ -510,7 +510,7 @@
 
         .btn-delete:hover {
             background: #ef4444;
-            color: white;
+            color: var(--bg-body);
         }
 
         .btn-reorder {
@@ -576,7 +576,7 @@
 
         .upload-header h3 {
             font-size: 24px;
-            color: #0f172a;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -616,7 +616,7 @@
         .input-wrapper i {
             position: absolute;
             left: 16px;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
 
         .premium-input,
@@ -1443,7 +1443,7 @@
         function escapeHtml(s) { return s ? String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : ''; }
         function showNotification(msg, type) {
             const div = document.createElement('div');
-            div.style.cssText = `position:fixed;bottom:24px;right:24px;background:#0f172a;color:white;padding:12px 24px;border-radius:12px;z-index:9999;font-weight:600;`;
+            div.style.cssText = `position:fixed;bottom:24px;right:24px;background: var(--text-main);color:var(--bg-body);padding:12px 24px;border-radius:12px;z-index:9999;font-weight:600;`;
             div.textContent = msg;
             document.body.appendChild(div);
             setTimeout(() => div.remove(), 3000);
