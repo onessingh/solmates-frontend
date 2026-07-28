@@ -526,10 +526,10 @@
       document.getElementById('resultsArea').style.display = 'block';
 
       // 1. Populate Metrics
-      document.getElementById('valWordCount').innerHTML = <i class="fas fa-font"></i> ;
-      document.getElementById('valVerbs').innerHTML = <i class="fas fa-bolt"></i> ;
-      document.getElementById('valNumbers').innerHTML = <i class="fas fa-chart-bar"></i> ;
-      document.getElementById('valKeywords').innerHTML = <i class="fas fa-key"></i> ;
+      document.getElementById('valWordCount').innerHTML = `<i class="fas fa-font"></i> ${data.wordCount || 0}`;
+      document.getElementById('valVerbs').innerHTML = `<i class="fas fa-bolt"></i> ${data.actionVerbs || 0}`;
+      document.getElementById('valNumbers').innerHTML = `<i class="fas fa-chart-bar"></i> ${data.measurableMetrics || 0}`;
+      document.getElementById('valKeywords').innerHTML = `<i class="fas fa-key"></i> ${data.keywordMatch || 'N/A'}`;
 
       // 2. Score UI
       let score = Math.max(0, Math.min(100, data.score || 0));
@@ -543,7 +543,7 @@
       else if (score >= 60) strokeColor = "#ffc107"; // warn
 
       circle.setAttribute("stroke", strokeColor);
-      circle.setAttribute("stroke-dasharray", ${score}, 100);
+      circle.setAttribute("stroke-dasharray", `${score}, 100`);
       text.textContent = score;
       text.style.fill = strokeColor;
 
