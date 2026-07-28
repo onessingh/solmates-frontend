@@ -227,7 +227,32 @@
         --brand-accent: #c0962d;
       }
     }
-    </style>
+    
+    /* UNIVERSAL DARK MODE OVERRIDES */
+    @media (prefers-color-scheme: dark) {
+        body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
+        .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
+        .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .resume-preview, .feature-item, .info-box { 
+            background: var(--bg-card, #1e293b) !important; 
+            border: 1px solid var(--border-color, #334155) !important; 
+        }
+        h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
+        h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
+        .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
+        input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
+            background: var(--bg-card-hover, #334155) !important; 
+            color: var(--text-main, #f8fafc) !important; 
+            border: 1px solid var(--border-color, #475569) !important; 
+        }
+        input:focus, select:focus, textarea:focus, .searchable-select .select-btn:hover {
+            border-color: var(--brand-primary, #60a5fa) !important;
+        }
+        .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+        .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
+    }
+
+</style>
     </head>
 <body>
 
