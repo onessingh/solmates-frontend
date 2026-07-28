@@ -143,7 +143,7 @@
 
     .database-btn {
       background: var(--primary);
-      color: white;
+      color: var(--bg);
       text-decoration: none;
       padding: 7px 16px;
       border-radius: 20px;
@@ -231,7 +231,7 @@
 
     /* ─── Hero ─── */
     .hero {
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      background: var(--hero-bg);
       padding: 35px 24px 25px;
       text-align: center;
       border-bottom: 1px solid var(--border);
@@ -620,7 +620,7 @@
       gap: 12px;
       margin: 0 0 25px;
       padding: 15px 20px;
-      background: #fff8ee;
+      background: var(--bg-card-hover);
       border: 1px dashed var(--accent);
       border-radius: 12px;
     }
@@ -631,7 +631,7 @@
 
     .btn-create {
       background: var(--primary);
-      color: white;
+      color: var(--bg-body);
       border: none;
       padding: 10px 20px;
       border-radius: 8px;
@@ -782,7 +782,7 @@
     .field input {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 14px;
       outline: none;
@@ -808,11 +808,11 @@
 
     .btn-modal.primary {
       background: var(--primary);
-      color: white;
+      color: var(--bg-body);
     }
 
     .btn-modal.cancel {
-      background: #eee;
+      background: var(--border-color);
       color: var(--text-main);
     }
 
@@ -962,7 +962,7 @@
       <h2><i class="fas fa-arrows-alt"></i> Move Content</h2>
       <div class="field">
         <label>Destination Semester</label>
-        <select id="moveSemester" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none;" onchange="loadDestFolders()">
+        <select id="moveSemester" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; outline: none;" onchange="loadDestFolders()">
           <option value="1">Semester 1</option>
           <option value="2">Semester 2</option>
           <option value="3">Semester 3</option>
@@ -971,7 +971,7 @@
       </div>
       <div class="field">
         <label>Destination Subject / Folder</label>
-        <select id="moveFolder" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none;">
+        <select id="moveFolder" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; outline: none;">
           <option value="">Semester Root (No Folder)</option>
         </select>
       </div>
@@ -1195,7 +1195,7 @@
           hide.className = 'hide-btn';
           hide.style.background = isHidden ? 'rgba(100, 116, 139, 0.9)' : 'rgba(100, 116, 139, 0.1)';
           hide.style.border = '1px solid rgba(100, 116, 139, 0.2)';
-          hide.style.color = isHidden ? '#fff' : '#64748b';
+          hide.style.color = isHidden ? '#fff' : 'var(--sub)';
           hide.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
           hide.onclick = (e) => { e.stopPropagation(); toggleHide('folder', sub); };
           card.appendChild(hide);

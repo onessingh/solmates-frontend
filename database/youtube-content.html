@@ -152,7 +152,7 @@
 
     .database-btn {
       background: var(--primary);
-      color: white;
+      color: var(--bg);
       text-decoration: none;
       padding: 7px 16px;
       border-radius: 20px;
@@ -252,7 +252,7 @@
       margin-bottom: 30px;
       flex-wrap: wrap;
       gap: 15px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 15px;
     }
 
@@ -301,7 +301,7 @@
 
     .btn-yt {
       background: var(--yt-red);
-      color: white;
+      color: var(--bg);
     }
 
     .btn-yt:hover {
@@ -1316,7 +1316,7 @@
       <h2><i class="fas fa-arrows-alt"></i> Move Content</h2>
       <div class="field">
         <label>Destination Semester</label>
-        <select id="moveSemester" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; background: var(--bg-card);" onchange="loadDestFolders()">
+        <select id="moveSemester" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; outline: none; background: var(--bg-card);" onchange="loadDestFolders()">
           <option value="1">Semester 1</option>
           <option value="2">Semester 2</option>
           <option value="3">Semester 3</option>
@@ -1325,7 +1325,7 @@
       </div>
       <div class="field">
         <label>Destination Subject / Folder</label>
-        <select id="moveFolder" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; background: var(--bg-card);">
+        <select id="moveFolder" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; outline: none; background: var(--bg-card);">
           <option value="">Semester Root (No Folder)</option>
         </select>
       </div>
@@ -1919,7 +1919,7 @@
               const hide = document.createElement('button');
               hide.className = 'hide-btn';
               hide.style.background = isHidden ? 'rgba(100, 116, 139, 0.9)' : 'rgba(100, 116, 139, 0.1)';
-              hide.style.color = isHidden ? '#fff' : '#64748b';
+              hide.style.color = isHidden ? '#fff' : 'var(--sub)';
               hide.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
               hide.onclick = e => { e.stopPropagation(); toggleHide('folder', f); };
               card.appendChild(hide);
@@ -2039,7 +2039,7 @@
               const hide = document.createElement('button');
               hide.className = 'hide-btn';
               hide.style.background = isHidden ? 'rgba(100, 116, 139, 0.9)' : 'rgba(100, 116, 139, 0.1)';
-              hide.style.color = isHidden ? '#fff' : '#64748b';
+              hide.style.color = isHidden ? '#fff' : 'var(--sub)';
               hide.innerHTML = isHidden ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
               hide.onclick = e => { e.stopPropagation(); toggleHide('item', item); };
               card.appendChild(hide);
