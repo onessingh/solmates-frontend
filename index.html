@@ -2807,7 +2807,37 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
-    }
+    
+          /* Premium Search Bar overrides */
+          .premium-search-bar {
+            background: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
+          }
+          .premium-search-bar::placeholder {
+            color: var(--text-muted) !important;
+          }
+          
+          /* Chat Input overrides */
+          .chat-input {
+            background: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
+          }
+          .chat-input::placeholder {
+            color: var(--text-muted) !important;
+          }
+          
+          /* Suggestion Tag overrides */
+          .suggestion-tag {
+            background: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
+          }
+          .suggestion-tag:hover {
+            background: var(--bg-card-hover) !important;
+          }
+}
     </style>
   <!-- Font Awesome: Non-blocking load via media swap trick -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
