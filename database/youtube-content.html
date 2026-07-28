@@ -133,10 +133,10 @@
 
     /* ── Modern Breadcrumb ────────────────────────────── */
     .breadcrumb {
-      background: rgba(255, 255, 255, 0.82);
+      background: var(--bg-nav);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid var(--border-color);
       padding: 12px 24px;
       display: flex;
       align-items: center;
@@ -305,7 +305,7 @@
 
     /* ── Recursive Subject Card Styles (Centered Layout) ── */
     .folder-card.centered-folder {
-      background: var(--card);
+      background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 20px;
       display: flex;
@@ -1142,6 +1142,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+    
   
 
     /* Dark Mode Native OS Integration */
