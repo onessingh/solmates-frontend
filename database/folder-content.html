@@ -58,8 +58,8 @@
     }
 
     body {
-      background: #f8fafc;
-      color: #1e293b;
+      background: var(--bg-body);
+      color: var(--text-main);
       min-height: 100vh;
       padding-top: 75px;
     }
@@ -157,7 +157,7 @@
       align-items: center;
       gap: 8px;
       font-size: 13px;
-      color: #888;
+      color: var(--text-muted);
       flex-wrap: wrap;
     }
 
@@ -197,7 +197,7 @@
     }
 
     .page-header p {
-      color: #888;
+      color: var(--text-muted);
       font-size: 14px;
     }
 
@@ -210,8 +210,8 @@
       gap: 10px;
       margin-bottom: 30px;
       padding: 16px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
       border-radius: 16px;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
     }
@@ -414,7 +414,7 @@
     /* Drag */
     .sortable-ghost {
       opacity: 0.4;
-      background: #e2e8f0 !important;
+      background: var(--border-color); !important;
       border: 2px dashed #94a3b8 !important;
     }
 
@@ -529,7 +529,7 @@
     /* Long Press */
     .subject-card.pressing {
       animation: long-press-scale 5s linear forwards;
-      background: #f1f5f9 !important;
+      background: var(--bg-card-hover); !important;
       border-color: var(--accent) !important;
     }
 
@@ -576,7 +576,7 @@
 
     .book-link-btn.not-available {
       background: #eee;
-      color: #888;
+      color: var(--text-muted);
       cursor: default;
     }
 
@@ -649,8 +649,8 @@
     }
 
     .folder-badge {
-      background: #f1f5f9;
-      color: #64748b;
+      background: var(--bg-card-hover);
+      color: var(--text-lighter);
       padding: 10px;
       border-radius: 8px;
       font-size: 13px;
@@ -687,7 +687,7 @@
       border: none;
       border-radius: 12px;
       background: transparent;
-      color: #64748b;
+      color: var(--text-lighter);
       cursor: pointer;
       font-weight: 700;
       font-size: 16px;
@@ -773,7 +773,7 @@
       width: 40px;
       border-radius: 50%;
       margin: 0 auto;
-      background: #f1f5f9;
+      background: var(--bg-card-hover);
       animation: shimmer-sweep 1.5s infinite linear;
       background-size: 200% 100%;
     }
@@ -857,7 +857,7 @@
     }
 
     .btn-cancel {
-      background: #f1f1f1;
+      background: var(--bg-card-hover);
       color: var(--text-muted);
     }
 
@@ -1316,7 +1316,7 @@
             <div style="display:flex; align-items:center; width:100%; margin-bottom:12px; gap:8px">
                 ${isAdmin ? '<div class="drag-handle">⋮⋮</div>' : ''}
                 <div class="subject-name" style="flex:1; ${isHidden ? 'opacity:0.5;' : ''}">
-                    <i class="fas ${mainIconClass}" style="${isGeneric ? 'color:#64748b' : ''}"></i>
+                    <i class="fas ${mainIconClass}" style="${isGeneric ? 'color: var(--text-lighter);' : ''}"></i>
                     <h3 style="margin:0">${displayName}</h3>
                 </div>
             </div>

@@ -127,7 +127,7 @@
             padding: 25px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .form-group {
@@ -185,7 +185,7 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             position: relative;
             transition: all 0.3s;
         }
@@ -205,7 +205,7 @@
         .item-content {
             font-size: 14px;
             line-height: 1.6;
-            color: #334155;
+            color: var(--text-main);
             white-space: pre-wrap;
             overflow-wrap: break-word;
             word-break: break-word;
@@ -258,7 +258,7 @@
         .empty-state {
             text-align: center;
             padding: 40px;
-            background: #f1f5f9;
+            background: var(--bg-card-hover);
             border-radius: 16px;
             color: var(--gray);
         }
@@ -294,7 +294,7 @@
                 <textarea id="content" rows="6" placeholder="Write the facts or information here..." required></textarea>
             </div>
             <button type="submit" class="btn-add" id="submitBtn">Add to Knowledge Base</button>
-            <button type="button" class="btn-add" id="cancelBtn" style="background: #e2e8f0; color: #475569; margin-top: 10px; display: none;">Cancel Edit</button>
+            <button type="button" class="btn-add" id="cancelBtn" style="background: var(--border-color); color: var(--text-muted); margin-top: 10px; display: none;">Cancel Edit</button>
         </form>
     </div>
 

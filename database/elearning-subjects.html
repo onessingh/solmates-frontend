@@ -58,8 +58,8 @@
         }
 
         body {
-            background: #f8fafc;
-            color: #1e293b;
+            background: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
             padding-top: 75px;
         }
@@ -155,7 +155,7 @@
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            color: #888;
+            color: var(--text-muted);
             flex-wrap: wrap;
         }
 
@@ -194,7 +194,7 @@
         }
 
         .page-header p {
-            color: #888;
+            color: var(--text-muted);
             font-size: 14px;
         }
 
@@ -206,8 +206,8 @@
             gap: 10px;
             margin-bottom: 30px;
             padding: 16px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
         }
@@ -349,7 +349,7 @@
 
         .sortable-ghost {
             opacity: 0.4;
-            background: #e2e8f0 !important;
+            background: var(--border-color); !important;
             border: 2px dashed #94a3b8 !important;
         }
 
@@ -371,8 +371,8 @@
             width: 48px;
             height: 48px;
             border-radius: 10px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
         }
 
         .reorder-mode-active .drag-handle {
@@ -381,7 +381,7 @@
 
         .drag-handle:hover {
             color: var(--brand-primary);
-            background: #f1f5f9;
+            background: var(--bg-card-hover);
             border-color: var(--brand-primary);
         }
 
@@ -469,7 +469,7 @@
 
         .subject-card.pressing {
             animation: long-press-scale 5s linear forwards;
-            background: #f1f5f9 !important;
+            background: var(--bg-card-hover); !important;
             border-color: var(--accent) !important;
         }
 
@@ -535,7 +535,7 @@
 
         .book-link-btn.not-available {
             background: #eee;
-            color: #888;
+            color: var(--text-muted);
             cursor: default;
         }
 
@@ -609,7 +609,7 @@
         .loading {
             text-align: center;
             padding: 60px;
-            color: #aaa;
+            color: var(--text-lighter);
             font-size: 15px;
         }
 
@@ -632,7 +632,7 @@
             border: none;
             border-radius: 12px;
             background: transparent;
-            color: #64748b;
+            color: var(--text-lighter);
             cursor: pointer;
             font-weight: 700;
             font-size: 16px;
@@ -782,7 +782,7 @@
             <h2 style="font-size:19px; margin-bottom:20px; color:var(--primary);"><i class="fas fa-folder-plus"></i> New
                 Subject</h2>
             <div style="margin-bottom:20px;">
-                <label style="display:block; font-size:13px; color:#666; margin-bottom:8px;">Subject Name</label>
+                <label style="display:block; font-size:13px; color: var(--text-lighter); margin-bottom:8px;">Subject Name</label>
                 <input type="text" id="newFolderName" placeholder="e.g. MARKETING MANAGEMENT"
                     style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; font-size:14px; outline:none;">
             </div>
@@ -962,7 +962,7 @@
           <div style="display:flex; align-items:center; width:100%; margin-bottom:12px; gap:8px">
               ${isAdmin ? '<div class="drag-handle">⋮⋮</div>' : ''}
               <div class="subject-name" style="flex:1">
-                  <i class="fas ${isGeneric ? 'fa-folder' : 'fa-book'}" style="${isGeneric ? 'color:#64748b' : ''}"></i>
+                  <i class="fas ${isGeneric ? 'fa-folder' : 'fa-book'}" style="${isGeneric ? 'color: var(--text-lighter);' : ''}"></i>
                   <h3 style="margin:0">${cleanName}</h3>
               </div>
           </div>

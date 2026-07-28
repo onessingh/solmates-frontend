@@ -52,7 +52,7 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; }
-    body { background: var(--bg); color: #1e293b; min-height: 100vh; padding-top: 80px; }
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; padding-top: 80px; }
 
     .top-nav {
       position: fixed; top: 0; width: 100%; height: 60px;
@@ -124,7 +124,7 @@
       background: var(--bg-card);
       padding: 12px 15px;
       border-radius: 12px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -144,7 +144,7 @@
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      color: #64748b;
+      color: var(--text-lighter);
     }
 
     .bin-badge {
@@ -167,7 +167,7 @@
 
     .bin-item-details {
       font-size: 12px;
-      color: #64748b;
+      color: var(--text-lighter);
       line-height: 1.4;
     }
 
@@ -199,7 +199,7 @@
     .btn-delete:hover { background: #be123c; color: white; }
 
     /* States */
-    .loading-state { grid-column: 1 / -1; text-align: center; padding: 80px; color: #64748b; }
+    .loading-state { grid-column: 1 / -1; text-align: center; padding: 80px; color: var(--text-lighter); }
     .empty-state {
       grid-column: 1 / -1;
       text-align: center;
@@ -255,7 +255,7 @@
     .bulk-btn.restore:hover { background: #166534; color: white; }
     .bulk-btn.delete { background: #fee2e2; color: #991b1b; border: 1px solid #fecdd3; }
     .bulk-btn.delete:hover { background: #991b1b; color: white; }
-    .bulk-btn.cancel-btn { background: #f1f5f9; color: #475569; padding: 7px 10px; }
+    .bulk-btn.cancel-btn { background: var(--bg-card-hover); color: var(--text-muted); padding: 7px 10px; }
 
     /* Mobile specific tweaks */
     @media (max-width: 480px) {

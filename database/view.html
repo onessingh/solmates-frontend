@@ -72,7 +72,7 @@
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
     }
-    body { background: #f8fafc; color: #1e293b; min-height: 100vh; padding-top: 75px; }
+    body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-top: 75px; }
 
     /* [v111.9] GLOBAL TOUCH-FREE LOCKDOWN */
     .top-nav, .breadcrumb, .page-header, .btn, .card-icon, h3, p, .admin-bar {
@@ -114,7 +114,7 @@
     .breadcrumb {
       background: var(--bg-card); border-bottom: 1px solid var(--border-color);
       padding: 12px 30px; display: none; align-items: center; gap: 8px;
-      font-size: 13px; color: #888; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; margin-bottom: 20px;
+      font-size: 13px; color: var(--text-muted); flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; margin-bottom: 20px;
       scrollbar-width: none; /* Hide scrollbar for clean UI */
     }
     .breadcrumb::-webkit-scrollbar { display: none; }
@@ -125,12 +125,12 @@
     .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
     .page-header { text-align: center; margin-bottom: 35px; }
     .page-header h1 { font-size: 28px; color: var(--primary); margin-bottom: 6px; }
-    .page-header p { color: #888; font-size: 14px; }
+    .page-header p { color: var(--text-muted); font-size: 14px; }
 
     .admin-bar {
       display: none; flex-wrap: wrap; align-items: center; justify-content: center;
-      gap: 10px; margin-bottom: 30px; padding: 16px; background: #f8fafc;
-      border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+      gap: 10px; margin-bottom: 30px; padding: 16px; background: var(--bg-body);
+      border: 1px solid var(--border-color); border-radius: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
     }
     .admin-bar.visible { display: flex; }
     @media (min-width: 768px) { .admin-bar { justify-content: flex-end; padding: 12px 24px; } }
@@ -172,7 +172,7 @@
     .ctrl-btn.edit { left: 10px; color: #3b82f6; }
     .ctrl-btn.delete { right: 10px; color: #ef4444; }
     .ctrl-btn.move { left: 58px; color: #10b981; }
-    .ctrl-btn.hide { left: 106px; color: #64748b; }
+    .ctrl-btn.hide { left: 106px; color: var(--text-lighter); }
     .card:hover .ctrl-btn { display: flex; }
     /* Mobile standard: always show admin icons if small screen */
     @media (max-width: 768px) {
@@ -190,7 +190,7 @@
     }
     .reorder-mode-active #grid .card { 
       cursor: move !important; opacity: 0.9; background: var(--bg-card);
-      border: 1px solid #e2e8f0 !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
+      border: 1px solid var(--border-color); !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
     }
     .reorder-mode-active #grid .card:hover { transform: scale(1.02) !important; border-color: #3b82f6 !important; }
     .reorder-mode-active #grid .card * { pointer-events: none !important; }
@@ -225,7 +225,7 @@
       100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
     }
 
-    .empty { text-align: center; padding: 60px 20px; color: #aaa; font-size: 15px; grid-column: 1/-1; }
+    .empty { text-align: center; padding: 60px 20px; color: var(--text-lighter); font-size: 15px; grid-column: 1/-1; }
     
     /* Flicker Fix */
     #grid.fade-in { animation: gridFadeIn 0.3s ease-out forwards; }
@@ -789,7 +789,7 @@
         const card = document.createElement('div');
         card.className = 'card sem';
         card.innerHTML = `<div style="width:60px;height:60px;background:${colors[s - 1]};color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;">${s}</div>
-                      <div><h3>${ordinal[s - 1]} Semester</h3><p style="font-size:12px;color:#888;margin-top:4px;">View Subjects</p></div>`;
+                      <div><h3>${ordinal[s - 1]} Semester</h3><p style="font-size:12px;color: var(--text-muted);margin-top:4px;">View Subjects</p></div>`;
         card.onclick = () => onSemesterClick(s);
         grid.appendChild(card);
       }
