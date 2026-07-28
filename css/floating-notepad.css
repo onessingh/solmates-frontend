@@ -396,4 +396,30 @@
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--np-accent);
   }
+
+  .sol-notepad-header {
+    background: rgba(255, 255, 255, 0.02) !important;
+  }
+  .sol-notepad-select-bar, .sol-notepad-footer {
+    background: rgba(0, 0, 0, 0.25) !important;
+  }
+  .sol-notepad-action-btn.pdf, .sol-notepad-action-btn.delete {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  .sol-notepad-action-btn.pdf {
+    color: #f87171 !important;
+  }
+  .sol-notepad-action-btn.delete {
+    color: var(--np-sub) !important;
+  }
+  .sol-notepad-action-btn.pdf:hover {
+    background: #ef4444 !important;
+    color: white !important;
+  }
+  .sol-notepad-action-btn.delete:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--np-text) !important;
+  }
+
 }
