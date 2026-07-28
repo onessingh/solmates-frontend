@@ -98,7 +98,7 @@
     }
 
     .apple-sub {
-      color: #6e6e73;
+      color: var(--text-muted);
       font-size: 0.95rem;
       margin-bottom: 28px;
     }
@@ -240,14 +240,14 @@
         --bg-nav: rgba(15, 23, 42, 0.98);
         --bg-card: #1e293b;
         --bg-card-hover: #334155;
-        --border-color: #334155;
+        --border-color: var(--text-main);
         --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
     }
     </style>
-  <script src="/js/sol-cache.js?v=90.0"></script>
+  <script src="/js/sol-cache.js?v=91.0"></script>
 </head>
 
 <body>
@@ -274,13 +274,13 @@
         <div class="loading-card">
           <div class="spinner"></div>
           <div id="loadingTitle" style="font-weight:600; margin-bottom:6px;">Generating your profile...</div>
-          <div style="color: #6e6e73; font-size:0.9rem;">Mate AI is analyzing...</div>
+          <div style="color: var(--text-muted); font-size:0.9rem;">Mate AI is analyzing...</div>
         </div>
       </div>
 
       <!-- TEST CARD -->
       <div id="testStep" class="card hidden">
-        <div style="text-align: right; margin-bottom: 12px; font-size: 0.9rem; color: #6e6e73;" id="progressLabel">
+        <div style="text-align: right; margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);" id="progressLabel">
         </div>
         <div class="question-box">
           <div class="question-text" id="questionText"></div>
@@ -295,7 +295,7 @@
         <h1><i class="fas fa-star"></i> Your Result</h1>
         <div class="apple-sub">Based on your answers to the AI-generated scenarios</div>
         <div class="result-score" id="mbtiScore">INTP</div>
-        <h2 id="mbtiTitle" style="margin-top: 10px; color: #1d1c1f; letter-spacing: -0.01em;">The Logician</h2>
+        <h2 id="mbtiTitle" style="margin-top: 10px; color: var(--text-main); letter-spacing: -0.01em;">The Logician</h2>
         <p style="margin: 20px 0; color: var(--text-main); font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;"
           id="mbtiDesc"></p>
 
@@ -307,7 +307,7 @@
     </div>
   </div>
 
-  <script src="/config.js?v=117.0"></script>
+  <script src="/config.js?v=118.0"></script>
   <script src="/js/uptime-helper.js?v=101.0"></script>
   <script src="/js/api-client.js"></script>
   <script>
@@ -431,10 +431,10 @@
           document.getElementById('mbtiScore').textContent = res.mbtiType;
           document.getElementById('mbtiTitle').textContent = `The ${details.name}`;
           document.getElementById('mbtiDesc').innerHTML = `
-        <div style="margin-bottom: 24px; font-size: 1.1rem; color: #1d1c1f;">${details.summary}</div>
+        <div style="margin-bottom: 24px; font-size: 1.1rem; color: var(--text-main);">${details.summary}</div>
         
         <div style="text-align: left; background: var(--bg-card-hover); padding: 20px; border-radius: 20px; border: 1px solid var(--border-color);">
-          <h4 style="margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; color: #6e6e73; letter-spacing: 0.05em;">Your Trait Breakdown</h4>
+          <h4 style="margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Your Trait Breakdown</h4>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; color: var(--text-main);">
             <div><strong>${fullForms['E']} (E):</strong> ${res.counts.E}</div>
             <div><strong>${fullForms['I']} (I):</strong> ${res.counts.I}</div>
