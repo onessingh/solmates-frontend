@@ -118,7 +118,7 @@
     .check-item:last-child { border-bottom: none; }
     .check-item:hover { background: var(--bg-card-hover); }
     .check-item.checked { background: rgba(52,199,89,0.04); }
-    .check-box { width: 22px; height: 22px; border: 2px solid #ddd; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; }
+    .check-box { width: 22px; height: 22px; border: 2px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; }
     .check-item.checked .check-box { background: var(--success); border-color: var(--success); }
     .check-box i { font-size: 0.7rem; color: white; display: none; }
     .check-item.checked .check-box i { display: block; }
@@ -189,7 +189,7 @@
       --bg-nav: rgba(255, 255, 255, 0.98);
       --bg-card: #ffffff;
       --bg-card-hover: #f9f9fb;
-      --border-color: #eeeeee;
+      --border-color: var(--border-color);
       --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
       --brand-primary: #0f2b46;
       --brand-accent: #c0962d;
@@ -396,7 +396,7 @@
         <img id="cropper-image" style="max-width:100%; display:block;">
       </div>
       <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-        <button onclick="closeCropper()" style="padding:10px 20px; border:1px solid #ccc; border-radius:8px; cursor:pointer; background:white;">Cancel</button>
+        <button onclick="closeCropper()" style="padding:10px 20px; border: 1px solid var(--border-color); border-radius:8px; cursor:pointer; background:white;">Cancel</button>
         <button onclick="applyCrop()" style="padding:10px 20px; border:none; border-radius:8px; cursor:pointer; background:var(--linkedin); color:white;">Apply Crop</button>
       </div>
     </div>
