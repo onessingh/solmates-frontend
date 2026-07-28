@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a">
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
@@ -1305,7 +1308,10 @@
   </div>
 
 
-  <!-- config.js is already loaded with defer in <head>, not needed here -->
+  <!-- config.js is already loaded with defer in <head>
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a">, not needed here -->
   <script>
     // Safe JSON parser helper
     function safeJSONParse(str, fallback = []) {
