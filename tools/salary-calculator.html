@@ -55,7 +55,7 @@
     .form-control:focus { border-color: var(--accent); background: var(--bg-card); box-shadow: 0 0 0 4px rgba(0,113,227,0.1); }
     
     .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: var(--bg-card-hover); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 15px; }
-    .toggle-label { font-weight: 600; font-size: 0.95rem; color: var(--primary); display: flex; flex-direction: column; }
+    .toggle-label { padding-right: 15px; font-weight: 600; font-size: 0.95rem; color: var(--primary); display: flex; flex-direction: column; }
     .toggle-desc { font-size: 0.8rem; color: var(--text-light); font-weight: 400; margin-top: 3px; }
     
     /* Toggle Switch */
@@ -250,6 +250,13 @@
         .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
         .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
         .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
+
+          /* Salary Calculator specific overrides */
+          input::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
+          .b-title { color: var(--text-muted, #94a3b8) !important; }
+          .b-value { color: var(--text-main, #f8fafc) !important; }
+          th, td, tr.row-net, h3[style*="color: var(--primary)"] { color: var(--text-main, #f8fafc) !important; }
+
     }
 
 </style>
