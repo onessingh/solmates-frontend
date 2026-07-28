@@ -23,8 +23,8 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-      background: #f5f5f7;
-      color: #1d1c1f;
+      background: var(--bg-body) !important;
+      color: var(--text-main) !important;
     }
 
     .top-nav {
@@ -386,8 +386,8 @@
 
             resCard.innerHTML = `
           <div style="font-weight:600; margin-bottom:6px;">${i + 1}. ${q.text}</div>
-          <div style="font-size:13px; color:#555;">Correct: <span style="color:#10b981; font-weight:600;">${q.options[q.correctIndex]}</span></div>
-          <div style="font-size:13px; color:#555;">Your Answer: <span style="color:${isRight ? '#10b981' : '#ef4444'}; font-weight:600;">${answers[i] !== null ? q.options[answers[i]] : 'None'}</span></div>
+          <div style="font-size:13px; color: var(--text-muted);">Correct: <span style="color:#10b981; font-weight:600;">${q.options[q.correctIndex]}</span></div>
+          <div style="font-size:13px; color: var(--text-muted);">Your Answer: <span style="color:${isRight ? '#10b981' : '#ef4444'}; font-weight:600;">${answers[i] !== null ? q.options[answers[i]] : 'None'}</span></div>
           <button class="btn-why" data-idx="${i}"><i class="fas fa-wand-sparkles"></i> Why / Explain?</button>
         `;
             rc.appendChild(resCard);

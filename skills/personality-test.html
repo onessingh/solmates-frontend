@@ -24,9 +24,9 @@
     }
 
     body {
-      font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #f5f5f7;
-      color: #1d1c1f;
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: var(--bg-body) !important;
+      color: var(--text-main) !important;
       line-height: 1.4;
       -webkit-font-smoothing: antialiased;
     }
@@ -296,7 +296,7 @@
         <div class="apple-sub">Based on your answers to the AI-generated scenarios</div>
         <div class="result-score" id="mbtiScore">INTP</div>
         <h2 id="mbtiTitle" style="margin-top: 10px; color: #1d1c1f; letter-spacing: -0.01em;">The Logician</h2>
-        <p style="margin: 20px 0; color: #444; font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;"
+        <p style="margin: 20px 0; color: var(--text-main); font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;"
           id="mbtiDesc"></p>
 
         <button class="btn btn-primary" id="retakeBtn" style="margin-top:20px; width:100%;">
@@ -435,7 +435,7 @@
         
         <div style="text-align: left; background: var(--bg-card-hover); padding: 20px; border-radius: 20px; border: 1px solid var(--border-color);">
           <h4 style="margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; color: #6e6e73; letter-spacing: 0.05em;">Your Trait Breakdown</h4>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; color: #444;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; color: var(--text-main);">
             <div><strong>${fullForms['E']} (E):</strong> ${res.counts.E}</div>
             <div><strong>${fullForms['I']} (I):</strong> ${res.counts.I}</div>
             <div><strong>${fullForms['S']} (S):</strong> ${res.counts.S}</div>
