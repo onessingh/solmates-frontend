@@ -169,6 +169,9 @@
 
 
 
+
+
+
 <!-- INJECTED DARK MODE -->
 <style>
 @media (prefers-color-scheme: dark) {
@@ -176,7 +179,7 @@
     body, html { background-color: #0f172a !important; color: #f8fafc !important; }
     
     /* Job Search Specific Containers */
-    .container, .sol-form-wrap, .sol-card, .tab-btn.active {
+    .container, .sol-form-wrap, .sol-card, .tab-btn.active, .results-controls, .skeleton-card {
         background-color: #1e293b !important;
         border-color: #334155 !important;
         box-shadow: none !important;
@@ -187,9 +190,24 @@
         border-color: #334155 !important;
     }
     
+    /* Skeletons */
+    .skeleton {
+        background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%) !important;
+        background-size: 200% 100% !important;
+    }
+    .skeleton-loading-text {
+        background: linear-gradient(90deg, #1e293b, #334155, #1e293b) !important;
+        background-size: 200% 100% !important;
+    }
+    
+    /* Fade Out Gradients */
+    .sol-desc:not(.expanded)::after {
+        background: linear-gradient(to bottom, rgba(30, 41, 59, 0), rgba(30, 41, 59, 1)) !important;
+    }
+    
     /* Headers & Text */
-    h1, h2, h3, h4, h5, h6, .sol-form-title, .tab-btn.active { color: #f8fafc !important; }
-    p, span, label, .sol-form-label, .tab-btn { color: #94a3b8 !important; }
+    h1, h2, h3, h4, h5, h6, .sol-form-title, .tab-btn.active, .sol-title, .sol-company { color: #f8fafc !important; }
+    p, span, label, .sol-form-label, .tab-btn, .sol-meta-item, .sol-desc, .platforms-info { color: #94a3b8 !important; }
     
     /* Interactive Elements */
     input, select, textarea, .sol-form-input {
