@@ -1072,7 +1072,16 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    
+      .all-sem-label {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+      }
+      #modalTypePicker {
+        background: #f5f5f7 !important;
+      }
+      /* End of Light Additions */
+@media (prefers-color-scheme: dark) {
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -1146,6 +1155,28 @@
             background: var(--bg-card) !important;
             border-color: var(--border-color) !important;
           }
+
+            .all-sem-label {
+              background: var(--bg-card-hover) !important;
+              border-color: var(--border-color) !important;
+            }
+            #modalTypePicker {
+              background: var(--bg-card) !important;
+            }
+            .type-btn {
+              background: var(--bg-card) !important;
+              color: var(--text-main) !important;
+              border-color: var(--border-color) !important;
+            }
+            .type-btn.active {
+              background: var(--bg-card-hover) !important;
+              border-color: var(--brand-primary) !important;
+            }
+            #addNoticeForm input, #addNoticeForm select, #addNoticeForm textarea {
+              background: var(--bg-card) !important;
+              color: var(--text-main) !important;
+              border-color: var(--border-color) !important;
+            }
 }
     </style>
 </head>
@@ -2801,7 +2832,7 @@
       <button class="toast-close" onclick="closeAddNoticeModal()"><i class="fas fa-times"></i></button>
       <h2 id="modalTitle" style="margin-bottom:20px;">Add Notification</h2>
       
-      <div id="modalTypePicker" style="display:flex; background:#f5f5f7; padding:5px; border-radius:12px; margin-bottom:20px;">
+      <div id="modalTypePicker" style="display:flex;  padding:5px; border-radius:12px; margin-bottom:20px;">
         <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:1;">Notification</button>
         <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:1;">Live Class</button>
       </div>
@@ -2894,7 +2925,7 @@
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Select the semesters you want to receive instant alerts for.</p>
       
       <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; text-align: left;">
-        <label style="display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 14px 18px; border-radius: 14px; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s;">
+        <label class="all-sem-label" style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s;">
           <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: var(--brand-primary);">
           <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: var(--brand-primary);">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
         </label>
@@ -2949,7 +2980,16 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    
+      .all-sem-label {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+      }
+      #modalTypePicker {
+        background: #f5f5f7 !important;
+      }
+      /* End of Light Additions */
+@media (prefers-color-scheme: dark) {
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -3056,6 +3096,28 @@
             background: var(--bg-card) !important;
             border-color: var(--border-color) !important;
           }
+
+            .all-sem-label {
+              background: var(--bg-card-hover) !important;
+              border-color: var(--border-color) !important;
+            }
+            #modalTypePicker {
+              background: var(--bg-card) !important;
+            }
+            .type-btn {
+              background: var(--bg-card) !important;
+              color: var(--text-main) !important;
+              border-color: var(--border-color) !important;
+            }
+            .type-btn.active {
+              background: var(--bg-card-hover) !important;
+              border-color: var(--brand-primary) !important;
+            }
+            #addNoticeForm input, #addNoticeForm select, #addNoticeForm textarea {
+              background: var(--bg-card) !important;
+              color: var(--text-main) !important;
+              border-color: var(--border-color) !important;
+            }
 }
     </style>
     </div>
