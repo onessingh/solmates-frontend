@@ -370,3 +370,30 @@
     right: 20px;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --np-primary: #f8fafc;
+    --np-bg: rgba(30, 41, 59, 0.95);
+    --np-border: rgba(255, 255, 255, 0.1);
+    --np-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    --np-text: #f8fafc;
+    --np-sub: #94a3b8;
+  }
+  .sol-notepad-warning {
+    background: rgba(192, 150, 45, 0.2);
+    color: #fcd34d;
+  }
+  .sol-notepad-header {
+    border-bottom-color: var(--np-border);
+  }
+  .sol-notepad-select, .sol-notepad-title, .sol-notepad-textarea {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--np-text);
+    border-color: var(--np-border);
+  }
+  .sol-notepad-select:focus, .sol-notepad-title:focus, .sol-notepad-textarea:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--np-accent);
+  }
+}
