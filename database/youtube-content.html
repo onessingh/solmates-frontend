@@ -133,10 +133,10 @@
 
     /* ── Modern Breadcrumb ────────────────────────────── */
     .breadcrumb {
-      background: rgba(255, 255, 255, 0.82);
+      background: var(--bg-nav);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid var(--border-color);
       padding: 12px 24px;
       display: flex;
       align-items: center;
@@ -294,7 +294,7 @@
     }
 
     .folder-card {
-      background: var(--card);
+      background: #0f172a;
       border-radius: 16px;
       border: 1px solid var(--border);
       overflow: hidden;
@@ -305,7 +305,7 @@
 
     /* ── Recursive Subject Card Styles (Centered Layout) ── */
     .folder-card.centered-folder {
-      background: var(--card);
+      background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 20px;
       display: flex;
@@ -1227,7 +1227,7 @@
         <button class="btn btn-dark" onclick="openModal('folderModal', 'folder')">
           <i class="fas fa-folder-plus"></i> New Playlist Folder
         </button>
-        <button class="btn btn-dark" id="btnNewTopicFolder" onclick="openModal('folderModal', 'topic_folder')" style="display: none; background: linear-gradient(135deg, #c0962d, #dfb750); color: var(--brand-primary); border: none; font-weight: 600;">
+        <button class="btn btn-dark" id="btnNewTopicFolder" onclick="openModal('folderModal', 'topic_folder')" style="display: none; background: linear-gradient(135deg, #c0962d, #dfb750); color: #0ea5e9; border: none; font-weight: 600;">
           <i class="fas fa-folder-open"></i> Add Topic Folder
         </button>
         <button class="btn btn-yt" onclick="openModal('linkModal')">
