@@ -32,7 +32,7 @@
       top: 0;
       width: 100%;
       height: 52px;
-      background: rgba(255, 255, 255, 0.8);
+      background: var(--bg-nav);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid #ddd;
       display: flex;
@@ -91,10 +91,10 @@
       width: 100%;
       padding: 12px;
       border-radius: 12px;
-      border: 1.5px solid #eee;
+      border: 1.5px solid var(--border-color);
       font-size: 1rem;
       outline: none;
-      background: #fafafa;
+      background: var(--bg-card-hover);
     }
 
     select:focus {
@@ -133,14 +133,14 @@
     .option {
       padding: 16px;
       background: var(--bg-card);
-      border: 1px solid #ddd;
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       margin-bottom: 10px;
       cursor: pointer;
     }
 
     .option.selected {
-      background: #e8f0fe;
+      background: rgba(0, 113, 227, 0.1);
       border-color: #0071e3;
     }
 
