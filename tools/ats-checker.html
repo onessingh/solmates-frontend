@@ -258,7 +258,48 @@
     }
 
 </style>
-    </head>
+    
+<!-- ADDITIONAL DARK MODE FIXES -->
+<style>
+@media (prefers-color-scheme: dark) {
+    /* Fix textarea placeholders */
+    textarea::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+
+    /* Fix drag and drop zone text */
+    .upload-zone h3, .upload-zone p {
+        color: #f8fafc !important;
+    }
+
+    /* Fix metric cards */
+    .metric-title {
+        color: #94a3b8 !important;
+    }
+    .metric-val {
+        color: #f8fafc !important;
+    }
+    .metric-card {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+    }
+    
+    /* Overall result box tweaks */
+    .result-box {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+    }
+
+    /* Fix score text explicitly */
+    #scoreText {
+        fill: #f8fafc !important;
+    }
+}
+</style>
+<!-- END ADDITIONAL DARK MODE FIXES -->
+
+</head>
 <body>
 
     <div class="header-bar" style="position: relative;">
@@ -447,7 +488,8 @@
     }
     // -----------------------
 
-    function analyzeResume() {
+    
+    async function analyzeResume() {
       const resume = document.getElementById('resumeText').value.trim();
       const jd = document.getElementById('jdText').value.trim();
 
@@ -462,122 +504,46 @@
       document.getElementById('resultsArea').style.display = 'none';
       document.getElementById('loader').style.display = 'block';
       const btn = document.getElementById('scanBtn');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing with AI...';
       btn.disabled = true;
 
-      // Simulate network delay for "scanning" effect
-      setTimeout(() => {
-        performAnalysis(resume, jd);
+      try {
+        const response = await window.solmatesAPI.generateAIToolData('ats-checker', { resume, jd });
+        if (!response.success) throw new Error(response.error || 'Failed to analyze resume');
         
+        renderResults(response.data);
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred during analysis: ' + err.message);
+      } finally {
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('resultsArea').style.display = 'flex';
         btn.innerHTML = '<i class="fas fa-search-plus"></i> Analyze My Resume';
         btn.disabled = false;
-        
-        // Mobile scroll to results
-        if(window.innerWidth < 900) {
-          document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 1500);
+      }
     }
 
-    function performAnalysis(resume, jd) {
-      let score = 100;
-      let feedback = [];
-      let rText = resume.toLowerCase();
-      let wordCount = resume.split(/\s+/).length;
+    function renderResults(data) {
+      document.getElementById('resultsArea').style.display = 'block';
 
-      // 1. Length Check (Ideal: 400 - 800 words for 1-2 pages)
-      if (wordCount < 200) {
-        score -= 15;
-        feedback.push({ type: 'bad', title: 'Resume is too short', desc: 'Aim for at least 300-400 words to provide enough detail for ATS to parse your skills.' });
-      } else if (wordCount > 1000) {
-        score -= 10;
-        feedback.push({ type: 'warn', title: 'Resume is too long', desc: 'ATS parsers and recruiters prefer concise resumes. Try to keep it under 800 words (1-2 pages).' });
-      } else {
-        feedback.push({ type: 'good', title: 'Perfect Length', desc: `Your resume is ${wordCount} words, which is the optimal length.` });
-      }
-      document.getElementById('valWordCount').innerHTML = `<i class="fas fa-font"></i> ${wordCount}`;
+      // 1. Populate Metrics
+      document.getElementById('valWordCount').innerHTML = <i class="fas fa-font"></i> ;
+      document.getElementById('valVerbs').innerHTML = <i class="fas fa-bolt"></i> ;
+      document.getElementById('valNumbers').innerHTML = <i class="fas fa-chart-bar"></i> ;
+      document.getElementById('valKeywords').innerHTML = <i class="fas fa-key"></i> ;
 
-      // 2. Action Verbs Check
-      let verbsFound = actionVerbs.filter(v => rText.includes(v));
-      if (verbsFound.length < 5) {
-        score -= 15;
-        feedback.push({ type: 'bad', title: 'Weak Impact Words', desc: 'Start bullet points with strong action verbs (e.g., Led, Developed, Improved). You only used ' + verbsFound.length + '.' });
-      } else {
-        feedback.push({ type: 'good', title: 'Strong Action Verbs', desc: `Great job! You used ${verbsFound.length} strong action verbs to describe your experience.` });
-      }
-      document.getElementById('valVerbs').innerHTML = `<i class="fas fa-bolt"></i> ${verbsFound.length}`;
-
-      // 3. Measurable Metrics (Numbers, %, $)
-      let numbersFound = resume.match(/\d+|%|\$/g) || [];
-      if (numbersFound.length < 3) {
-        score -= 15;
-        feedback.push({ type: 'bad', title: 'Missing Quantifiable Results', desc: 'Recruiters want to see impact. Add numbers, percentages, or dollar amounts to your achievements.' });
-      } else if (numbersFound.length < 7) {
-        score -= 5;
-        feedback.push({ type: 'warn', title: 'Could Use More Metrics', desc: 'You have some numbers, but adding more data-driven results will significantly boost your profile.' });
-      } else {
-        feedback.push({ type: 'good', title: 'Data-Driven Results', desc: 'Excellent! Your resume is backed by solid numbers and measurable metrics.' });
-      }
-      document.getElementById('valNumbers').innerHTML = `<i class="fas fa-chart-bar"></i> ${numbersFound.length}`;
-
-      // 4. Essential Contact Info
-      let hasEmail = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(rText);
-      // Improved phone regex to handle spaces like +91 98765 43210 or (123) 456-7890
-      let hasPhone = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?|(\+?\d{1,3}[\s-]?\d{3,}[\s-]?\d{3,})/i.test(resume.replace(/\s+/g, ' '));
-      let hasLinkedIn = /linkedin\.com/i.test(rText);
-      
-      if(!hasEmail || !hasPhone) {
-        score -= 20;
-        feedback.push({ type: 'bad', title: 'Missing Contact Info', desc: 'ATS could not detect an email or phone number. Make sure they are standard text, not inside headers/footers.' });
-      }
-      if(!hasLinkedIn) {
-        score -= 5;
-        feedback.push({ type: 'warn', title: 'Add LinkedIn URL', desc: 'Over 90% of recruiters will check your LinkedIn. Add the URL to your contact section.' });
-      }
-
-      // 5. Keyword Match (if JD provided)
-      if (jd) {
-        let jdKeywords = extractKeywords(jd);
-        let matchCount = 0;
-        jdKeywords.forEach(kw => {
-          if(rText.includes(kw)) matchCount++;
-        });
-        
-        let matchPercent = Math.round((matchCount / jdKeywords.length) * 100);
-        document.getElementById('valKeywords').innerHTML = `<i class="fas fa-key"></i> ${matchPercent}%`;
-        
-        if (matchPercent < 40) {
-          score -= 15;
-          feedback.push({ type: 'bad', title: 'Low Keyword Match', desc: `Your resume only matches ${matchPercent}% of the job description keywords. Add specific skills mentioned in the JD.` });
-        } else if (matchPercent < 70) {
-          score -= 5;
-          feedback.push({ type: 'warn', title: 'Moderate Keyword Match', desc: `You matched ${matchPercent}% of JD keywords. Try to naturally weave in a few more core requirements.` });
-        } else {
-          feedback.push({ type: 'good', title: 'Excellent Keyword Match', desc: `You matched ${matchPercent}% of the JD keywords! High chance of passing ATS filters.` });
-        }
-      } else {
-        document.getElementById('valKeywords').innerHTML = `<i class="fas fa-key"></i> N/A`;
-        feedback.push({ type: 'warn', title: 'No Job Description', desc: 'Paste a target job description to see how well your resume matches the specific role.' });
-      }
-
-      // Finalize Score
-      score = Math.max(0, Math.min(100, score)); // clamp 0-100
-      
-      // Update UI
+      // 2. Score UI
+      let score = Math.max(0, Math.min(100, data.score || 0));
       let circle = document.getElementById('scoreCircle');
       let text = document.getElementById('scoreText');
       let label = document.getElementById('scoreLabel');
       let desc = document.getElementById('scoreDesc');
       
-      // Color logic
       let strokeColor = "#dc3545"; // bad
       if (score >= 80) strokeColor = "#28a745"; // good
       else if (score >= 60) strokeColor = "#ffc107"; // warn
 
       circle.setAttribute("stroke", strokeColor);
-      circle.setAttribute("stroke-dasharray", `${score}, 100`);
+      circle.setAttribute("stroke-dasharray", ${score}, 100);
       text.textContent = score;
       text.style.fill = strokeColor;
 
@@ -595,28 +561,22 @@
         desc.textContent = "High risk of getting filtered out. Apply the feedback below immediately.";
       }
 
-      // Render Feedback
+      // 3. Feedback Rendering
       let fbHtml = "";
-      // Sort feedback so bad is first
-      feedback.sort((a,b) => {
-        const ranks = { 'bad': 0, 'warn': 1, 'good': 2 };
-        return ranks[a.type] - ranks[b.type];
-      });
-
-      feedback.forEach(f => {
-        let icon = f.type === 'good' ? 'fa-check-circle' : (f.type === 'warn' ? 'fa-exclamation-triangle' : 'fa-times-circle');
-        fbHtml += `
-          <li class="feedback-item fi-${f.type}">
-            <i class="fas ${icon}"></i>
-            <div class="feedback-text">
-              <strong>${f.title}</strong>
-              ${f.desc}
-            </div>
-          </li>
-        `;
-      });
+      if (data.feedback && Array.isArray(data.feedback)) {
+        data.feedback.forEach(f => {
+          let icon = f.type === 'good' ? 'fa-check-circle' : (f.type === 'warn' ? 'fa-exclamation-triangle' : 'fa-times-circle');
+          fbHtml += `
+          <div class="feedback-card type-${f.type}">
+            <h4><i class="fas ${icon}"></i> ${f.title}</h4>
+            <p>${f.desc}</p>
+          </div>
+          `;
+        });
+      }
       document.getElementById('feedbackList').innerHTML = fbHtml;
     }
+
   </script>
 </body>
 </html>
