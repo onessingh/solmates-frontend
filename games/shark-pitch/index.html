@@ -63,7 +63,19 @@
         .answer-card { background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
         .ai-score { display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-weight: 800; font-size: 1.1rem; line-height: 48px; text-align: center; }
         .countdown-ring { font-size: 3rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
+    
+        @media (prefers-color-scheme: dark) {
+            .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+            .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+            .option-btn:hover:not(:disabled) { background: var(--card-bg); border-color: var(--text-muted); }
+            .btn-primary { background: #0ea5e9; color: white; }
+            .btn-primary:hover { background: #0284c7; }
+            .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
+            .btn-secondary:hover { background: var(--primary); }
+            .glass-card { background: var(--card-bg); }
+        }
+
+</style>
 </head>
 <body>
 <div id="toast-container"></div>

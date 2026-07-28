@@ -130,7 +130,19 @@
             opacity: 1;
             transform: translateY(0);
         }
-    </style>
+    
+        @media (prefers-color-scheme: dark) {
+            .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+            .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+            .option-btn:hover:not(:disabled) { background: var(--card-bg); border-color: var(--text-muted); }
+            .btn-primary { background: #0ea5e9; color: white; }
+            .btn-primary:hover { background: #0284c7; }
+            .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
+            .btn-secondary:hover { background: var(--primary); }
+            .glass-card { background: var(--card-bg); }
+        }
+
+</style>
 </head>
 <body>
     <div id="toast-container"></div>

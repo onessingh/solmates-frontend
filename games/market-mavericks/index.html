@@ -72,7 +72,19 @@
         .neutral { color: #64748b; }
         .portfolio-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
         .ticker { font-family: 'Courier New', monospace; font-size: 0.85rem; }
-    </style>
+    
+        @media (prefers-color-scheme: dark) {
+            .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+            .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+            .option-btn:hover:not(:disabled) { background: var(--card-bg); border-color: var(--text-muted); }
+            .btn-primary { background: #0ea5e9; color: white; }
+            .btn-primary:hover { background: #0284c7; }
+            .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
+            .btn-secondary:hover { background: var(--primary); }
+            .glass-card { background: var(--card-bg); }
+        }
+
+</style>
 </head>
 <body>
 <div id="toast-container"></div>
