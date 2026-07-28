@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/tools/resumebuilder/style.css?v=112.0" />
+  <link rel="stylesheet" href="/tools/resumebuilder/style.css?v=112.5" />
   <link rel="stylesheet" href="/tools/resumebuilder/wizard.css?v=105.2" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
@@ -40,6 +40,9 @@
 
 
 
+
+
+
 <!-- INJECTED DARK MODE -->
 <style>
 @media (prefers-color-scheme: dark) {
@@ -47,7 +50,7 @@
     .site-header, .top-nav, .header-bar { background: rgba(15,23,42,0.95) !important; border-bottom: 1px solid #334155 !important; }
     
     /* Interface Cards */
-    .card, .form-panel, .panel-section, .hero, .rb-tab-content, .white-box, .metric, .template-card, .rb-tabs, .wizard-header, .builder-layout, .jd-match, .score-card, .repeater-item, .section-item, .wizard-nav { 
+    .card, .form-panel, .panel-section, .hero, .rb-tab-content, .white-box, .metric, .template-card, .rb-tabs, .wizard-header, .builder-layout, .jd-match, .score-card, .repeater-item, .section-item, .wizard-nav, .jd-panel, .chip-wrapper { 
         background: #1e293b !important; 
         border-color: #334155 !important; 
         box-shadow: none !important;
@@ -56,25 +59,27 @@
     .rb-tab { color: #94a3b8 !important; }
     .rb-tab.active { background: #334155 !important; color: #f8fafc !important; }
     
-    /* Scoped Text Colors (to avoid touching Live Preview) */
-    .hero-content h1, .section-header h2, .metric-value, .template-card h3, .jd-match h2, .score-card h3, .jd-score-value { 
+    /* Scoped Text Colors */
+    .hero-content h1, .section-header h2, .metric-value, .template-card h3, .jd-match h2, .score-card h3, .jd-score-value, .jd-panel summary, .jd-panel-meta, .jd-list li, .jd-heatmap-body td, .jd-panel-content h3 { 
         color: #f8fafc !important; 
         -webkit-text-fill-color: #f8fafc !important; 
         background: none !important; 
     }
     
-    .hero-subtitle, .eyebrow, .field label, .field-hint, .wizard-step-text, .metric-label, .section-item span, .jd-match p, .score-card p, .jd-score-label, .jd-score-feedback, .suggestion-item, .section-header p { 
+    .hero-subtitle, .eyebrow, .field label, .field-hint, .wizard-step-text, .metric-label, .section-item span, .jd-match p, .score-card p, .jd-score-label, .jd-score-feedback, .suggestion-item, .section-header p, .chip-input::placeholder { 
         color: #94a3b8 !important; 
     }
     
-    /* Form Inputs */
-    input:not([type="checkbox"]):not([type="radio"]), select, textarea, .form-input, .input-field { 
+    /* Form Inputs and Interactive */
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea, .form-input, .input-field, .btn-secondary, .btn-ghost, .chip, .jd-heatmap-head th, .jd-heatmap-head th { 
         background: #334155 !important; 
         color: #f8fafc !important; 
         border: 1px solid #475569 !important; 
     }
     
     input:focus, select:focus, textarea:focus { border-color: #60a5fa !important; }
+    
+    .btn-secondary:hover, .btn-ghost:hover { background: #1e293b !important; }
     
     /* Fix bottom bar */
     .wizard-nav { border-top: 1px solid #334155 !important; }
@@ -84,7 +89,6 @@
         background: #ffffff !important;
         border: 1px solid #d9e1ec !important;
     }
-    /* We DO NOT apply text colors globally so Live Preview retains its original colors! */
 }
 </style>
 <!-- END INJECTED DARK MODE -->
