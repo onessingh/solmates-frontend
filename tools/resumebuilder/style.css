@@ -2517,10 +2517,10 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 /* CUSTOM DARK MODE FOR RESUME BUILDER */
 @media (prefers-color-scheme: dark) {
     body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
-    .site-header, .top-nav, .header-bar, header { background: rgba(15,23,42,0.95) !important; border-bottom: 1px solid #334155 !important; }
+    .site-header, .top-nav, .header-bar { background: rgba(15,23,42,0.95) !important; border-bottom: 1px solid #334155 !important; }
     
     /* Interface Cards */
-    .card, .form-panel, .panel-section, .hero, .rb-tab-content, .white-box, .metric, .template-card, .rb-tabs, .wizard-header { 
+    .card, .form-panel, .panel-section, .hero, .rb-tab-content, .white-box, .metric, .template-card, .rb-tabs, .wizard-header, .repeater-item { 
         background: #1e293b !important; 
         border-color: #334155 !important; 
     }
