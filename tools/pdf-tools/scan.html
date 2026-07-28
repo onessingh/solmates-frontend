@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
     <meta charset="UTF-8">
@@ -16,6 +16,38 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="/tools/pdf-tools/common.css">
     <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
         #cameraView {
             width: 100%;
             max-width: 400px;
@@ -36,7 +68,7 @@
             width: 70px;
             height: 70px;
             border-radius: 50%;
-            background: #fff;
+            background: var(--bg-card);
             border: 6px solid rgba(15, 43, 70, 0.1);
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -130,7 +162,7 @@
 
     <div id="previewArea" style="display: none; text-align: center; margin-top: 1rem;">
         <h3 style="color: var(--primary); margin-bottom: 1rem;">Review Captured Page</h3>
-        <div style="background: #fff; padding: 10px; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: inline-block;">
+        <div style="background: var(--bg-card); padding: 10px; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: inline-block;">
             <img id="capturedImage" style="max-width: 100%; max-height: 400px; border-radius: 0.5rem;">
         </div>
         

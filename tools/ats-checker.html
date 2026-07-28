@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATS Resume Checker | SOLMATES Tools</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     :root {
       --primary: #0f2b46;
       --secondary: #c0962d;
@@ -46,7 +78,7 @@
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px; }
     .form-control { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.95rem; font-family: inherit; resize: vertical; outline: none; transition: all 0.3s; background: #fafafa; }
-    .form-control:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
+    .form-control:focus { border-color: var(--accent); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
     
     .file-drop-area { border: 2px dashed var(--accent); border-radius: 15px; padding: 30px 20px; text-align: center; background: rgba(0,113,227,0.05); cursor: pointer; transition: all 0.3s; margin-bottom: 15px; position: relative; }
     .file-drop-area:hover, .file-drop-area.dragover { background: rgba(0,113,227,0.1); border-color: #005bb5; }
@@ -68,7 +100,7 @@
     .results-area { display: none; flex-direction: column; gap: 25px; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
-    .score-circle-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #f9f9fb; border-radius: 15px; border: 1px dashed #ddd; }
+    .score-circle-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: var(--bg-card-hover); border-radius: 15px; border: 1px dashed #ddd; }
     .circular-chart { display: block; margin: 0 auto; max-width: 150px; max-height: 150px; }
     .circle-bg { fill: none; stroke: #eee; stroke-width: 3.8; }
     .circle { fill: none; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 1s ease-out; }
@@ -77,15 +109,15 @@
     .score-desc { font-size: 0.9rem; color: var(--text-light); text-align: center; margin-top: 5px; }
 
     .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .metric-card { background: #f9f9fb; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
+    .metric-card { background: var(--bg-card-hover); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); }
     .metric-title { font-size: 0.85rem; color: var(--text-light); margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .metric-val { font-size: 1.4rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
     .metric-val i { font-size: 1.1rem; }
 
     .feedback-section { margin-top: 10px; }
-    .feedback-section h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    .feedback-section h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
     .feedback-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .feedback-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; line-height: 1.4; padding: 12px; border-radius: 10px; background: #fff; border: 1px solid #eee; }
+    .feedback-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; line-height: 1.4; padding: 12px; border-radius: 10px; background: var(--bg-card); border: 1px solid var(--border-color); }
     .fi-good { border-left: 4px solid var(--success); }
     .fi-warn { border-left: 4px solid var(--warning); }
     .fi-bad { border-left: 4px solid var(--danger); }

@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
@@ -59,6 +59,38 @@
   </script>
   <style>
     /* ========== Base Reset ========== */
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -114,7 +146,7 @@
     .nav-left {
       font-size: 18px;
       font-weight: 600;
-      color: #0f2b46;
+      color: var(--brand-primary);
       text-decoration: none;
       letter-spacing: 1px;
       white-space: nowrap;
@@ -158,7 +190,7 @@
     .header-section h1 {
       font-size: 42px;
       font-weight: 900;
-      color: #0f2b46;
+      color: var(--brand-primary);
       margin-bottom: 12px;
       letter-spacing: -1px;
     }
@@ -270,7 +302,7 @@
 
     .edit-notice-btn {
       background: rgba(15, 43, 70, 0.05);
-      color: #0f2b46;
+      color: var(--brand-primary);
     }
 
     /* ========== Sundar Toast Popup ========== */
@@ -320,7 +352,7 @@
       width: 40px;
       height: 40px;
       background: rgba(15, 43, 70, 0.05);
-      color: #0f2b46;
+      color: var(--brand-primary);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -340,7 +372,7 @@
     .toast-title {
       font-weight: 700;
       font-size: 14px;
-      color: #0f2b46;
+      color: var(--brand-primary);
       margin-bottom: 4px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -494,7 +526,7 @@
     }
 
     .admin-modal-content {
-      background: white;
+      background: var(--bg-card);
       padding: 30px;
       border-radius: 20px;
       width: 90%;
@@ -632,13 +664,13 @@
     .content-box h3 {
       font-size: 16px;
       margin-bottom: 3px;
-      color: #333;
+      color: var(--text-main);
       font-weight: 700;
     }
 
     .content-box p {
       font-size: 13px;
-      color: #555;
+      color: var(--text-muted);
       margin-bottom: 8px;
       line-height: 1.4;
     }
@@ -694,7 +726,7 @@
       border-radius: 30px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       background: rgba(15, 43, 70, 0.05);
-      color: #0f2b46;
+      color: var(--brand-primary);
       border: 1px solid rgba(15, 43, 70, 0.1);
       letter-spacing: 0.2px;
     }
@@ -835,7 +867,7 @@
     }
 
     .type-btn.active {
-      border-color: #0f2b46;
+      border-color: var(--brand-primary);
     }
 
     .magic-fill-btn {
@@ -944,7 +976,7 @@
       transform: translateX(-50%) translateY(100px);
       width: 90%;
       max-width: 500px;
-      background: white;
+      background: var(--bg-card);
       border-radius: 16px;
       padding: 18px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -1017,7 +1049,7 @@
       align-items: flex-start;
       gap: 15px;
       text-align: left;
-      background: white;
+      background: var(--bg-card);
       padding: 15px;
       border-radius: 12px;
       margin-bottom: 12px;
@@ -2787,16 +2819,16 @@
   <div id="semSelectionModal" class="admin-modal">
     <div class="admin-modal-content" style="max-width: 420px; text-align: center; border-radius: 24px; padding: 32px;">
       <button class="toast-close" onclick="closeSemSelectionModal()"><i class="fas fa-times"></i></button>
-      <div style="width: 60px; height: 60px; background: rgba(15, 43, 70, 0.05); color: #0f2b46; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 20px;">
+      <div style="width: 60px; height: 60px; background: rgba(15, 43, 70, 0.05); color: var(--brand-primary); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 20px;">
         <i class="fas fa-sliders-h"></i>
       </div>
-      <h2 style="margin-bottom: 8px; font-weight: 800; color: #0f2b46;">Choose Semesters</h2>
+      <h2 style="margin-bottom: 8px; font-weight: 800; color: var(--brand-primary);">Choose Semesters</h2>
       <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">Select the semesters you want to receive instant alerts for.</p>
       
       <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; text-align: left;">
         <label style="display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 14px 18px; border-radius: 14px; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s;">
-          <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: #0f2b46;">
-          <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: #0f2b46;">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
+          <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: var(--brand-primary);">
+          <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: var(--brand-primary);">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
         </label>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -2816,7 +2848,7 @@
           display: flex;
           align-items: center;
           gap: 10px;
-          background: #fff;
+          background: var(--bg-card);
           padding: 12px 16px;
           border-radius: 12px;
           cursor: pointer;
@@ -2827,11 +2859,11 @@
           transition: all 0.2s;
         }
         .sem-check-label:has(input:checked) {
-          border-color: #0f2b46;
+          border-color: var(--brand-primary);
           background: rgba(15, 43, 70, 0.02);
-          color: #0f2b46;
+          color: var(--brand-primary);
         }
-        .sem-check-label input { width: 16px; height: 16px; accent-color: #0f2b46; cursor: pointer; }
+        .sem-check-label input { width: 16px; height: 16px; accent-color: var(--brand-primary); cursor: pointer; }
       </style>
     </div>
   </div>

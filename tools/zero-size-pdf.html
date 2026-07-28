@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zero Size PDF Converter | SOLMATES Tools</title>
@@ -11,6 +11,38 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     :root {
       --primary: #0f2b46;
       --accent: #0071e3;
@@ -53,7 +85,7 @@
 
     /* File List */
     .file-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; }
-    .file-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f9f9fb; border-radius: 12px; border: 1px solid var(--border); }
+    .file-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-card-hover); border-radius: 12px; border: 1px solid var(--border); }
     .file-info { display: flex; align-items: center; gap: 12px; overflow: hidden; }
     .file-icon { font-size: 1.2rem; color: #ff3b30; }
     .file-name { font-size: 0.9rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
@@ -73,7 +105,7 @@
     .layout-btn:hover { border-color: var(--accent); }
     .layout-btn.active { border-color: var(--accent); background: rgba(0,113,227,0.06); color: var(--accent); }
     .layout-vis { display: grid; gap: 2px; width: 32px; height: 32px; margin: 0 auto 6px; background: #ddd; padding: 2px; border-radius: 4px; }
-    .layout-vis div { background: white; border-radius: 1px; }
+    .layout-vis div { background: var(--bg-card); border-radius: 1px; }
     .layout-btn.active .layout-vis { background: var(--accent); }
     .l-2x2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
     .l-3x3 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }

@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
@@ -12,6 +12,38 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     /* APPLE-INSPIRED DESIGN */
     * {
       margin: 0;
@@ -155,7 +187,7 @@
     }
 
     .question-box {
-      background: #ffffff;
+      background: var(--bg-body);
       border-radius: 28px;
       padding: 28px;
       border: 1px solid #f0f0f3;
@@ -176,7 +208,7 @@
 
     .option {
       padding: 18px 24px;
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
       border: 1.5px solid #e6e6ea;
       border-radius: 34px;
       font-weight: 500;
@@ -185,7 +217,7 @@
     }
 
     .option:hover {
-      background: #ffffff;
+      background: var(--bg-body);
       border-color: #0071e3;
     }
 
@@ -396,7 +428,7 @@
           document.getElementById('mbtiDesc').innerHTML = `
         <div style="margin-bottom: 24px; font-size: 1.1rem; color: #1d1c1f;">${details.summary}</div>
         
-        <div style="text-align: left; background: #f9f9fb; padding: 20px; border-radius: 20px; border: 1px solid #eee;">
+        <div style="text-align: left; background: var(--bg-card-hover); padding: 20px; border-radius: 20px; border: 1px solid var(--border-color);">
           <h4 style="margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; color: #6e6e73; letter-spacing: 0.05em;">Your Trait Breakdown</h4>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; color: #444;">
             <div><strong>${fullForms['E']} (E):</strong> ${res.counts.E}</div>

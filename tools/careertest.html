@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
@@ -12,6 +12,38 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     /* APPLE-INSPIRED DESIGN */
     * {
       margin: 0;
@@ -173,7 +205,7 @@
     .searchable-select .select-btn {
       width: 100%;
       padding: 16px 20px;
-      background: #ffffff;
+      background: var(--bg-body);
       border: 1px solid #d2d2d6;
       border-radius: 28px;
       font-size: 1rem;
@@ -206,7 +238,7 @@
       top: calc(100% + 8px);
       left: 0;
       right: 0;
-      background: #ffffff;
+      background: var(--bg-body);
       border: 1px solid #d2d2d6;
       border-radius: 24px;
       max-height: 400px;
@@ -225,7 +257,7 @@
       border-bottom: 1px solid #e9e9ed;
       position: sticky;
       top: 0;
-      background: #ffffff;
+      background: var(--bg-body);
       border-radius: 24px 24px 0 0;
     }
 
@@ -236,12 +268,12 @@
       border-radius: 40px;
       font-size: 0.95rem;
       outline: none;
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
     }
 
     .searchable-select .search-box input:focus {
       border-color: #0071e3;
-      background: #ffffff;
+      background: var(--bg-body);
       box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
     }
 
@@ -258,7 +290,7 @@
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
     }
 
     .searchable-select .option-item {
@@ -296,7 +328,7 @@
     }
 
     .dual-badge {
-      background: #ffffff;
+      background: var(--bg-body);
       border-radius: 30px;
       border: 1px solid #d2d2d6;
       padding: 4px 6px;
@@ -354,7 +386,7 @@
       border: none;
       cursor: pointer;
       transition: all 0.15s ease;
-      background: #ffffff;
+      background: var(--bg-body);
       color: #0071e3;
       border: 1px solid #d2d2d6;
     }
@@ -385,7 +417,7 @@
     }
 
     .btn-secondary:hover {
-      background: #ffffff;
+      background: var(--bg-body);
       border-color: #0071e3;
     }
 
@@ -457,7 +489,7 @@
     }
 
     .question-box {
-      background: #ffffff;
+      background: var(--bg-body);
       border-radius: 28px;
       padding: 28px;
       border: 1px solid #f0f0f3;
@@ -480,7 +512,7 @@
 
     .option {
       padding: 18px 24px;
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
       border: 1.5px solid #e6e6ea;
       border-radius: 34px;
       font-weight: 500;
@@ -492,7 +524,7 @@
     }
 
     .option:hover {
-      background: #ffffff;
+      background: var(--bg-body);
       border-color: #0071e3;
       transform: translateX(6px);
     }
@@ -528,12 +560,12 @@
 
     .suggestions li {
       padding: 18px 24px;
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
       border-radius: 24px;
       margin-bottom: 10px;
       border-left: 5px solid #0071e3;
       font-weight: 500;
-      border: 1px solid #eee;
+      border: 1px solid var(--border-color);
     }
 
     /* Review */
@@ -619,7 +651,7 @@
     }
 
     .modal-content {
-      background: white;
+      background: var(--bg-card);
       padding: 30px;
       border-radius: 20px;
       width: 90%;
@@ -635,13 +667,13 @@
       right: 15px;
       font-size: 24px;
       cursor: pointer;
-      color: #666;
+      color: var(--text-lighter);
     }
 
     .explanation-text {
       line-height: 1.6;
       font-size: 1rem;
-      color: #333;
+      color: var(--text-main);
     }
 
     .explanation-text b {

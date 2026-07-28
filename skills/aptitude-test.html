@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
@@ -11,6 +11,38 @@
   <title>Aptitude Test — SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -60,7 +92,7 @@
     }
 
     .card {
-      background: white;
+      background: var(--bg-card);
       border-radius: 20px;
       padding: 36px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -78,7 +110,7 @@
     .input-grp label {
       display: block;
       font-size: 13px;
-      color: #666;
+      color: var(--text-lighter);
       margin-bottom: 6px;
       font-weight: 600;
     }
@@ -95,7 +127,7 @@
 
     select:focus {
       border-color: #0071e3;
-      background: white;
+      background: var(--bg-card);
     }
 
     .btn-primary {
@@ -114,7 +146,7 @@
     }
 
     .question-box {
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
       padding: 24px;
       border-radius: 20px;
       margin-bottom: 20px;
@@ -128,7 +160,7 @@
 
     .option {
       padding: 16px;
-      background: white;
+      background: var(--bg-card);
       border: 1px solid #ddd;
       border-radius: 10px;
       margin-bottom: 10px;
@@ -162,7 +194,7 @@
     }
 
     .modal-content {
-      background: white;
+      background: var(--bg-card);
       padding: 30px;
       border-radius: 20px;
       width: 90%;
@@ -178,13 +210,13 @@
       right: 15px;
       font-size: 24px;
       cursor: pointer;
-      color: #666;
+      color: var(--text-lighter);
     }
 
     .explanation-text {
       line-height: 1.6;
       font-size: 1rem;
-      color: #333;
+      color: var(--text-main);
     }
 
     .explanation-text b {
@@ -345,7 +377,7 @@
           res.questions.forEach((q, i) => {
             const isRight = q.correctIndex === answers[i];
             const resCard = document.createElement('div');
-            resCard.style.cssText = `padding:15px; margin-bottom:12px; border-left:5px solid ${isRight ? '#10b981' : '#ef4444'}; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);`;
+            resCard.style.cssText = `padding:15px; margin-bottom:12px; border-left:5px solid ${isRight ? '#10b981' : '#ef4444'}; background:var(--bg-card); border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);`;
 
             resCard.innerHTML = `
           <div style="font-weight:600; margin-bottom:6px;">${i + 1}. ${q.text}</div>

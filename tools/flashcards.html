@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Flashcards | SOLMATES Tools</title>
   <link rel="stylesheet" href="/css/global-lockdown.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     :root {
       --primary: #0f2b46;
       --accent: #5e5ce6;
@@ -60,7 +92,7 @@
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
     .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: #fafafa; transition: all 0.2s; outline: none; resize: vertical; }
-    .form-control:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.1); }
+    .form-control:focus { border-color: var(--accent); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.1); }
     
     .btn-main { background: var(--accent); color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(94, 92, 230, 0.3); }
@@ -68,7 +100,7 @@
     .deck-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 5px; }
     .deck-list::-webkit-scrollbar { width: 5px; }
     .deck-list::-webkit-scrollbar-thumb { background: #d1d1d6; border-radius: 10px; }
-    .deck-item { background: white; border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .deck-item { background: var(--bg-card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
     .deck-item .content { flex: 1; margin-right: 15px; }
     .deck-item strong { display: block; font-size: 1rem; margin-bottom: 4px; }
     .deck-item span { color: var(--light); font-size: 0.85rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px; }
@@ -89,7 +121,7 @@
     .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
     .flashcard.flipped { transform: rotateY(180deg); }
 
-    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: white; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; border: 1px solid var(--border); }
+    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: var(--bg-card); border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; border: 1px solid var(--border); }
     .card-front { z-index: 2; transform: rotateY(0deg); }
     .card-back { transform: rotateY(180deg); background: #fafafa; border: 2px solid var(--accent); }
 
@@ -153,7 +185,7 @@
       <div class="start-banner" id="start-banner" style="display: none;">
         <h3 style="margin-bottom: 10px;">Ready to Master These?</h3>
         <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px;">Use Active Recall to permanently store this in your brain.</p>
-        <button onclick="startStudy()" style="background: white; color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
+        <button onclick="startStudy()" style="background: var(--bg-card); color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
           Start Swipe Study <i class="fas fa-play" style="margin-left: 5px;"></i>
         </button>
       </div>

@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
@@ -11,6 +11,38 @@
   <title>Interest Inventory — SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -60,7 +92,7 @@
     }
 
     .card {
-      background: white;
+      background: var(--bg-card);
       border-radius: 20px;
       padding: 36px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -89,7 +121,7 @@
     }
 
     .question-box {
-      background: #f9f9fb;
+      background: var(--bg-card-hover);
       padding: 24px;
       border-radius: 20px;
       margin-bottom: 20px;
@@ -103,7 +135,7 @@
 
     .option {
       padding: 16px;
-      background: white;
+      background: var(--bg-card);
       border: 1px solid #ddd;
       border-radius: 10px;
       margin-bottom: 10px;
@@ -132,7 +164,7 @@
     .code-label {
       text-align: center;
       font-size: 1.2rem;
-      color: #666;
+      color: var(--text-lighter);
       margin-bottom: 20px;
     }
 
@@ -144,7 +176,7 @@
       display: flex;
       justify-content: space-between;
       padding: 10px;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--border-color);
     }
   </style>
   <script src="/js/sol-cache.js?v=89.0"></script>
@@ -170,7 +202,7 @@
       </div>
 
       <div id="testStep" class="card hidden">
-        <div id="progress" style="margin-bottom: 10px; color: #666; font-size: 0.9rem; text-align: right;"></div>
+        <div id="progress" style="margin-bottom: 10px; color: var(--text-lighter); font-size: 0.9rem; text-align: right;"></div>
         <div class="question-box">
           <div class="question-text" id="qText"></div>
           <div id="optContainer"></div>

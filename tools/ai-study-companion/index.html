@@ -2,18 +2,50 @@
 <!-- Cache Buster: v2026-07-18-14-38 -->
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AI Study Companion | Solmates Tools</title>
   <meta name="description" content="Enter any topic and get AI-generated easy explanations, exam notes, important questions, summaries, and FAQs instantly.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
     :root {
       --primary: #0f2b46;
       --accent: #0071e3;
-      --background: #f9f9fb;
+      --background: var(--bg-card-hover);
       --surface: #ffffff;
       --text-color: #333333;
       --border: #eaeaea;
@@ -21,7 +53,7 @@
     
     @media print {
       body {
-        background: #fff;
+        background: var(--bg-card);
         color: #000;
       }
       .navbar, .search-box, .toolbar, .tabs, .floating-bubbles {
@@ -82,7 +114,7 @@
     }
     
     .navbar {
-      background: #fff;
+      background: var(--bg-card);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
@@ -145,7 +177,7 @@
     .input-group input:focus {
       outline: none;
       border-color: var(--accent);
-      background: #fff;
+      background: var(--bg-card);
       box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
     }
     .input-group button {
@@ -283,7 +315,23 @@
       .input-group { flex-direction: column; }
       .tab-content { padding: 25px; }
     }
-  </style>
+  
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary: #f8fafc;
+        --accent: #38bdf8;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text-color: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+    }
+
+</style>
 </head>
 <body>
   <header class="hero">
@@ -509,7 +557,7 @@
         imagesHTML = `<div style="display: flex; gap: 15px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin; align-items: center;">`;
         additionalImages.forEach(img => {
           if(img && img.startsWith('//')) img = 'https:' + img;
-          if(img) imagesHTML += `<img src="${img}" alt="${topic}" style="max-height: 280px; max-width: 85vw; width: auto; object-fit: cover; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); flex-shrink: 0; background: #fff; border: 1px solid #f1f5f9;">`;
+          if(img) imagesHTML += `<img src="${img}" alt="${topic}" style="max-height: 280px; max-width: 85vw; width: auto; object-fit: cover; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); flex-shrink: 0; background: var(--bg-card); border: 1px solid #f1f5f9;">`;
         });
         imagesHTML += `</div>`;
       }

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
     <meta charset="UTF-8">
@@ -16,6 +16,38 @@
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <link rel="stylesheet" href="/tools/pdf-tools/common.css">
     <style>
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+
         .text-block-detect {
             position: absolute;
             cursor: pointer;
@@ -30,12 +62,12 @@
         }
         .tool-btn {
             width: 45px; height: 45px; border-radius: 12px; border: 1px solid var(--border);
-            background: #fff; color: var(--text-main); display: flex; align-items: center; justify-content: center;
+            background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s;
         }
         .tool-btn:hover { background: var(--bg-light); border-color: var(--primary); }
         .tool-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .nav-btn { background: #fff; border: 1px solid var(--border); padding: 5px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 500; }
+        .nav-btn { background: var(--bg-card); border: 1px solid var(--border); padding: 5px 15px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 500; }
         .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
         @media (max-width: 768px) {
             .edit-layout { flex-direction: column !important; align-items: center !important; }
@@ -93,7 +125,7 @@
     <div id="editArea" style="display: none; background: #f8fafc; border: 1px solid var(--border); border-radius: 1.5rem; padding: 1rem; margin-top: 2rem; text-align: center;">
         <div class="edit-layout" style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
             <!-- Left Toolbar -->
-            <div class="toolbar-left" style="width: 70px; display: flex; flex-direction: column; gap: 0.75rem; background: #fff; padding: 1rem; border-radius: 1rem; border: 1px solid var(--border); box-shadow: var(--shadow); transition: all 0.3s;">
+            <div class="toolbar-left" style="width: 70px; display: flex; flex-direction: column; gap: 0.75rem; background: var(--bg-card); padding: 1rem; border-radius: 1rem; border: 1px solid var(--border); box-shadow: var(--shadow); transition: all 0.3s;">
                 <button class="tool-btn active" id="toolSelect" title="Select & Edit Text"><i data-lucide="mouse-pointer-2"></i></button>
                 <button class="tool-btn" id="toolText" title="Add New Text"><i data-lucide="type"></i></button>
                 <button class="tool-btn" id="toolImage" title="Add/Replace Image"><i data-lucide="image"></i></button>
@@ -104,13 +136,13 @@
 
             <!-- Main Canvas View -->
             <div class="canvas-container" style="flex: 2; min-width: 400px; display: flex; flex-direction: column; align-items: center; max-width: 100%;">
-                <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: #fff; padding: 0.75rem 1.5rem; border-radius: 1rem; border: 1px solid var(--border); position: sticky; top: 0; z-index: 999;">
+                <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: var(--bg-card); padding: 0.75rem 1.5rem; border-radius: 1rem; border: 1px solid var(--border); position: sticky; top: 0; z-index: 999;">
                     <button id="prevPage" class="nav-btn"><i data-lucide="chevron-left"></i></button>
                     <span id="pageInfo" style="font-weight: 700; color: var(--primary);">Page 1 / 1</span>
                     <button id="nextPage" class="nav-btn"><i data-lucide="chevron-right"></i></button>
                 </div>
 
-                <div style="position: relative; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.1); background: #fff; line-height: 0; overflow: auto; max-width: 100%;">
+                <div style="position: relative; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.1); background: var(--bg-card); line-height: 0; overflow: auto; max-width: 100%;">
                     <canvas id="pdfCanvas"></canvas>
                     <div id="pdfOverlay" style="position: absolute; top:0; left:0; width:100%; height:100%;"></div>
                 </div>
