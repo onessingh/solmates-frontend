@@ -583,7 +583,7 @@ function renderPlayers() {
     if (countEl) countEl.textContent = players.length;
     list.innerHTML = '';
     players.forEach(p => {
-        list.innerHTML += `<div class="bg-white p-3 rounded-lg border border-slate-200 font-bold shadow-sm">${p.name} ${p.id === myId ? '(You)' : ''} ${p.disconnected ? '🔌' : ''}</div>`;
+        list.innerHTML += `<div class="player-item">${p.name} ${p.id === myId ? '(You)' : ''} ${p.disconnected ? '🔌' : ''}</div>`;
     });
     const btn = document.getElementById('btn-start-game');
     if (btn && isHost && players.filter(p => !p.disconnected).length > 0) btn.classList.remove('hidden');

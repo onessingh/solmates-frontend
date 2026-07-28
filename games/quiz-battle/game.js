@@ -400,7 +400,7 @@ function renderLobby() {
     const list = document.getElementById('players-list');
     list.innerHTML = '';
     roomState.players.forEach(p => {
-        list.innerHTML += `<div class="bg-white p-3 rounded-lg border border-slate-200 font-bold shadow-sm">${p.name} ${p.id === myId ? '(You)' : ''}</div>`;
+        list.innerHTML += `<div class="player-item">${p.name} ${p.id === myId ? '(You)' : ''}</div>`;
     });
 }
 
