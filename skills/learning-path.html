@@ -146,8 +146,24 @@
         --brand-accent: #c0962d;
       }
     }
+    
+    input, select, textarea {
+      background: var(--bg-card-hover) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--border-color) !important;
+      outline: none;
+    }
+    input::placeholder, textarea::placeholder {
+      color: var(--text-muted) !important;
+      opacity: 0.7;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #0071e3 !important;
+      box-shadow: 0 0 0 2px rgba(0,113,227,0.2);
+    }
+
     </style>
-  <script src="/js/sol-cache.js?v=91.0"></script>
+  <script src="/js/sol-cache.js?v=92.0"></script>
 </head>
 
 <body>
@@ -201,7 +217,7 @@
     </div>
   </div>
 
-  <script src="/config.js?v=118.0"></script>
+  <script src="/config.js?v=119.0"></script>
   <script src="/js/uptime-helper.js?v=101.0"></script>
   <script src="/js/api-client.js"></script>
   <script>
