@@ -175,6 +175,9 @@
 
 
 
+
+
+
 <!-- INJECTED DARK MODE -->
 <style>
 @media (prefers-color-scheme: dark) {
@@ -210,7 +213,12 @@
     
     /* Headers & Text */
     h1, h2, h3, h4, h5, h6, .sol-form-title, .tab-btn.active, .sol-title, .sol-company, .insight-card h4, .insight-card .value { color: #f8fafc !important; }
-    p, span, label, .sol-form-label, .sol-meta-item, .sol-desc, .platforms-info, .insight-card .sub-text { color: #cbd5e1 !important; }
+    
+    /* Exclude .platform-badge from becoming dim grey */
+    p, span:not(.platform-badge), label, .sol-form-label, .sol-meta-item, .sol-desc, .platforms-info, .insight-card .sub-text { color: #cbd5e1 !important; }
+    
+    /* Force platform badge text to be bright white */
+    .platform-badge { color: #ffffff !important; font-weight: 700 !important; }
     
     /* Make unselected tabs brighter */
     .tab-btn { color: #cbd5e1 !important; }
@@ -244,11 +252,38 @@
         color: #60a5fa !important; /* Make icons stand out */
     }
     
+    /* Fix Save Button */
+    .save-btn {
+        background: #334155 !important;
+        border-color: #475569 !important;
+        color: #cbd5e1 !important;
+    }
+    .save-btn.active {
+        background: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: #ffffff !important;
+    }
+    .save-btn:hover {
+        border-color: #ef4444 !important;
+        color: #ef4444 !important;
+    }
+    
+    /* Fix overlap of logo and save button */
+    .sol-card-header {
+        padding-right: 50px !important;
+    }
+    
     /* Fix tab group */
     .tab-group { background: rgba(255, 255, 255, 0.05) !important; }
     
-    /* Make logos/badges pop more if needed */
-    .platform-logo { background: #ffffff !important; border-radius: 4px; padding: 2px; }
+    /* Ensure Logos have clear contrast */
+    .platform-logo { 
+        background: #ffffff !important; 
+        border-radius: 6px !important; 
+        padding: 4px !important; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+        object-fit: contain !important;
+    }
 }
 </style>
 <!-- END INJECTED DARK MODE -->
