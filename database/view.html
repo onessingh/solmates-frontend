@@ -32,51 +32,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <style>
 
-    /* Dark Mode Native OS Integration */
-    :root {
-      --bg-body: #ffffff;
-      --text-main: #111111;
-      --text-muted: #555555;
-      --text-lighter: #666666;
-      --bg-nav: rgba(255, 255, 255, 0.98);
-      --bg-card: #ffffff;
-      --bg-card-hover: #f9f9fb;
-      --border-color: #eeeeee;
-      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
-      --brand-primary: #0f2b46;
-      --brand-accent: #c0962d;
-      }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
-
-          --primary: #f8fafc;
-          --accent: #38bdf8;
-          --bg: #0f172a;
-          --bg2: #1e293b;
-          --card: #1e293b;
-          --card-hover: #334155;
-          --border: #334155;
-          --border-hover: #f8fafc;
-          --text: #f8fafc;
-          --sub: #94a3b8;
-          --card-bg: #1e293b;
-          --gray: #94a3b8;
-          --white: #1e293b;
-        }
-      }
-
     :root {
       --primary: #0f2b46;
       --accent: #c0962d;
@@ -150,7 +105,7 @@
     @media (min-width: 768px) { .admin-bar { justify-content: flex-end; padding: 12px 24px; } }
 
     .btn {
-      background: var(--primary); color: var(--bg-body); border: 1px solid rgba(0,0,0,0.05);
+      background: var(--primary); color: white; border: 1px solid rgba(0,0,0,0.05);
       padding: 10px 18px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 700;
       display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 2px 4px rgba(0,0,0,0.05); white-space: nowrap;
@@ -268,7 +223,53 @@
       from { transform: scale(1); }
       to { transform: scale(0.6); }
     }
-  </style>
+  
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+      }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+
+          --primary: #f8fafc;
+          --accent: #38bdf8;
+          --bg: #0f172a;
+          --bg2: #1e293b;
+          --card: #1e293b;
+          --card-hover: #334155;
+          --border: #334155;
+          --border-hover: #f8fafc;
+          --text: #f8fafc;
+          --sub: #94a3b8;
+          --card-bg: #1e293b;
+          --gray: #94a3b8;
+          --white: #1e293b;
+        }
+      }
+    </style>
 </head>
 <body>
 

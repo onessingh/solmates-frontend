@@ -22,6 +22,29 @@
 
 <style>
 
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+
+
     /* Dark Mode Native OS Integration */
     :root {
       --bg-body: #ffffff;
@@ -52,29 +75,7 @@
         --brand-accent: #c0962d;
       }
     }
-
-    .header-bar {
-      background: var(--surface, #ffffff);
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .header-bar h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary, #0f2b46);
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      gap: 12px;
-      width: 100%;
-    }
-    body { padding-top: 0 !important; }
-</style>
+    </style>
 </head>
 
 <body>
@@ -261,6 +262,38 @@
                 transform: rotate(360deg);
             }
         }
+    
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
     </style>
 
 </body>

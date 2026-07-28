@@ -16,6 +16,28 @@
     <link rel="stylesheet" href="/tools/pdf-tools/common.css">
     <style>
 
+        .spin { animation: rotate 2s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .nav-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-light); }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        @media (max-width: 900px) {
+            .compare-grid { flex-direction: column !important; }
+            .compare-item { width: 100% !important; min-width: 0 !important; }
+        }
+    
+
     /* Dark Mode Native OS Integration */
     :root {
       --bg-body: #ffffff;
@@ -46,27 +68,6 @@
         --brand-accent: #c0962d;
       }
     }
-
-        .spin { animation: rotate 2s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .nav-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .nav-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-light); }
-        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        @media (max-width: 900px) {
-            .compare-grid { flex-direction: column !important; }
-            .compare-item { width: 100% !important; min-width: 0 !important; }
-        }
     </style>
   <script src="/js/webview-fix.js?v=89.0"></script>
   <script src="/js/sol-cache.js?v=89.0"></script>
@@ -93,7 +94,39 @@
       width: 100%;
     }
     body { padding-top: 0 !important; }
-</style>
+
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    }
+    </style>
 </head>
 <body>
 

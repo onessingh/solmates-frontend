@@ -21,6 +21,29 @@
 
 <style>
 
+    .header-bar {
+      background: var(--surface, #ffffff);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary, #0f2b46);
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 12px;
+      width: 100%;
+    }
+    body { padding-top: 0 !important; }
+
+
     /* Dark Mode Native OS Integration */
     :root {
       --bg-body: #ffffff;
@@ -51,29 +74,7 @@
         --brand-accent: #c0962d;
       }
     }
-
-    .header-bar {
-      background: var(--surface, #ffffff);
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .header-bar h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary, #0f2b46);
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      gap: 12px;
-      width: 100%;
-    }
-    body { padding-top: 0 !important; }
-</style>
+    </style>
 </head>
 <body>
 
