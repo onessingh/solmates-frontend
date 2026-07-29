@@ -16,14 +16,13 @@
     <link rel="stylesheet" href="/css/global-lockdown.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
             --primary: #f8fafc; --accent: #0ea5e9; --card-bg: rgba(255, 255, 255, 0.8);
             --glass-border: rgba(0, 0, 0, 0.05); --text-main: #0f172a; --text-muted: #64748b;
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
 
         /* dark mode moved */
@@ -37,8 +36,6 @@
             background-color: var(--primary); color: var(--text-main);
             background-image: radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.05), transparent 25%), radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.05), transparent 25%);
             margin: 0; min-height: 100vh; display: flex; flex-direction: column;
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
         .header-bar { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 16px; text-align: center; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
         .header-bar h1 { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--text-main); display: flex; justify-content: center; align-items: center; gap: 8px; }
@@ -47,8 +44,6 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
         .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
         .gradient-text { background: linear-gradient(45deg, #6366f1, #0ea5e9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -86,16 +81,10 @@
                 --glass-border: rgba(255, 255, 255, 0.05);
                 --text-main: #f8fafc;
                 --text-muted: #94a3b8;
-      
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
             .header-bar {
                 background: rgba(15, 23, 42, 0.8) !important;
-      
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       
 
             .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
@@ -106,20 +95,45 @@
             .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
             .btn-secondary:hover { background: var(--primary); }
             .glass-card { background: var(--card-bg); }
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       
 </style>
 <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
-      if (savedTheme) {
-        document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
-        }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      const applyDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      
+      if (applyDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+      } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+      }
+      
+      window.addEventListener('DOMContentLoaded', () => {
+          const darkStyle = document.getElementById('solmates-dark-style');
+          if (darkStyle) {
+              if (applyDark) {
+                  darkStyle.media = 'all'; 
+                  darkStyle.disabled = false;
+              } else {
+                  darkStyle.media = 'not all'; 
+                  darkStyle.disabled = true;
+              }
+          }
+      });
+      
+      const darkStyleImm = document.getElementById('solmates-dark-style');
+      if (darkStyleImm) {
+          if (applyDark) {
+              darkStyleImm.media = 'all'; 
+              darkStyleImm.disabled = false;
+          } else {
+              darkStyleImm.media = 'not all'; 
+              darkStyleImm.disabled = true;
+          }
       }
     })();
   </script>
@@ -267,16 +281,12 @@
         if(savedName) {
             document.getElementById('welcome-name').textContent = savedName;
             document.getElementById('welcome-avatar').textContent = savedName.charAt(0).toUpperCase();
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
     </script>
     <script>
         // Prevent long-press context menu on mobile
         document.addEventListener('contextmenu', event => {
             event.preventDefault();
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       });
     </script>
     <!-- Firebase SDKs -->

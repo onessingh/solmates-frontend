@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/css/global-lockdown.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
@@ -34,9 +35,6 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       }
 
         /* dark mode moved */
@@ -76,19 +74,10 @@
                 --glass-border: rgba(255, 255, 255, 0.05);
                 --text-main: #f8fafc;
                 --text-muted: #94a3b8;
-      
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       }
             .header-bar {
                 background: rgba(15, 23, 42, 0.8) !important;
-      
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       }
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       
 
             .pitch-textarea { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
@@ -100,21 +89,45 @@
             .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
             .btn-secondary:hover { background: var(--primary); }
             .glass-card { background: var(--card-bg); }
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       
 </style>
 <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
-      if (savedTheme) {
-        document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
-        }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      const applyDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      
+      if (applyDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+      } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+      }
+      
+      window.addEventListener('DOMContentLoaded', () => {
+          const darkStyle = document.getElementById('solmates-dark-style');
+          if (darkStyle) {
+              if (applyDark) {
+                  darkStyle.media = 'all'; 
+                  darkStyle.disabled = false;
+              } else {
+                  darkStyle.media = 'not all'; 
+                  darkStyle.disabled = true;
+              }
+          }
+      });
+      
+      const darkStyleImm = document.getElementById('solmates-dark-style');
+      if (darkStyleImm) {
+          if (applyDark) {
+              darkStyleImm.media = 'all'; 
+              darkStyleImm.disabled = false;
+          } else {
+              darkStyleImm.media = 'not all'; 
+              darkStyleImm.disabled = true;
+          }
       }
     })();
   </script>
@@ -274,9 +287,6 @@
         // Prevent long-press context menu on mobile
         document.addEventListener('contextmenu', event => {
             event.preventDefault();
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       });
     </script>
     <!-- Firebase SDKs -->
