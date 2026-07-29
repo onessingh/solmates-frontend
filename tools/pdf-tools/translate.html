@@ -90,7 +90,7 @@
     .btn-primary:disabled { background: #334155 !important; color: #94a3b8 !important; }
 
     /* Fix loading overlay blinding white & position */
-    .loading-overlay { background: rgba(15, 23, 42, 0.95) !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; }
+    .loading-overlay { background: rgba(15, 23, 42, 0.95) !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 99999 !important; }
     .loading-overlay p, #loadingText { color: var(--text-main, #f8fafc) !important; }
     .spinner { border-color: #334155 !important; border-top-color: #0071e3 !important; }
 
@@ -98,12 +98,16 @@
     .result-area > div[style*="background: #ecfdf5"], div[style*="background: #ecfdf5"] { background: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; border: 1px solid rgba(16, 185, 129, 0.2) !important; }
     div[style*="background: #ecfdf5"] p strong { color: #10b981 !important; }
     div[style*="color: #065f46"] { color: #10b981 !important; }
+    div[style*="background: #f8fafc"] { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-left-color: var(--brand-accent, #c0962d) !important; }
 
-    /* Fix tailwind buttons in Add/Delete pages */
+    /* Fix tailwind buttons & text in Add/Delete/Favicon pages */
     button.bg-slate-100, button.bg-white, .btn-outline { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #475569) !important; }
     button.bg-slate-100.selected { border-color: var(--brand-accent, #c0962d) !important; }
     .bg-blue-50 { background: rgba(0, 113, 227, 0.1) !important; color: #60a5fa !important; border: 1px solid rgba(0, 113, 227, 0.2) !important; }
     .shutter-btn { border-color: #334155 !important; background: #cbd5e1 !important; }
+    .bg-slate-50 { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+    .text-slate-500 { color: var(--text-main, #f8fafc) !important; }
+    #summaryText { color: var(--text-main, #f8fafc) !important; }
 </style>
 <script>
     (function() {
@@ -259,8 +263,10 @@
             contentHolder.textContent = fullText;
             translationFlow.style.display = 'block';
             dropZone.style.display = 'none';
-            document.querySelector('.tool-header').style.display = 'none';
-            document.querySelector('.container > div:nth-child(3)').style.display = 'none';
+            const th = document.querySelector('.header-bar');
+            if(th) th.style.display = 'none';
+            const nth = document.querySelector('.container > div:nth-child(3)');
+            if(nth) nth.style.display = 'none';
             
             transBtn.innerHTML = '<i data-lucide="check"></i> Translated';
             lucide.createIcons();
