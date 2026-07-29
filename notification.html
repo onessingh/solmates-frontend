@@ -61,6 +61,20 @@
     })();
   </script>
   <style>
+    /* ========== Light Mode CSS Variables (Default) ========== */
+    :root {
+      --bg-body: #f0f2f5;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-color: #e2e8f0;
+      --brand-primary: #0f2b46;
+      --brand-accent: #c0962d;
+    }
+
     /* ========== Base Reset ========== */
 
     * {
@@ -177,8 +191,7 @@
     /* ========== Tabs Premium ========== */
     .tabs {
       display: flex;
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
+      background: var(--bg-card, #ffffff);
       border-radius: 16px;
       padding: 6px;
       margin-bottom: 35px;
@@ -578,14 +591,12 @@
     }
 
     .notification-card {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: var(--bg-card, #ffffff);
       border-radius: 20px;
       padding: 16px;
       margin-bottom: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border-color, #e2e8f0);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       gap: 16px;
@@ -1097,6 +1108,22 @@
       }
       .notification-card, .modal-content, .admin-modal-content, .empty-state, #modalTypePicker, .type-btn, #addNoticeForm input, #addNoticeForm select, #addNoticeForm textarea {
         background: var(--bg-card) !important;
+        color: var(--text-main) !important;
+        border-color: var(--border-color) !important;
+      }
+      /* Tabs container - dark mode visibility fix */
+      .tabs {
+        background: var(--bg-card) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: 1px solid var(--border-color) !important;
+      }
+      .tab-btn {
+        color: var(--text-muted) !important;
+        background: transparent !important;
+      }
+      .sem-check-label {
+        background: var(--bg-card-hover) !important;
         color: var(--text-main) !important;
         border-color: var(--border-color) !important;
       }
@@ -2943,6 +2970,7 @@
   </div>
 </body>
 </html>
+
 
 
 
