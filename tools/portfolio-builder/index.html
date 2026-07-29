@@ -633,7 +633,8 @@
     function setTheme(key) {
       currentThemeKey = key;
       document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
-      document.getElementById('theme-card-' + key).classList.add('active');
+      const card = document.getElementById('theme-card-' + key);
+      if (card) { card.classList.add('active'); }
       updatePreview();
     }
 
