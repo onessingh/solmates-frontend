@@ -2796,7 +2796,32 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    /* dark mode moved to separate style tag */
+    
+
+      .theme-toggle-btn {
+        background: rgba(15, 43, 70, 0.05);
+        color: var(--brand-primary);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-right: 12px;
+        font-size: 0.95rem;
+      }
+      .theme-toggle-btn:hover {
+        background: rgba(15, 43, 70, 0.1);
+        transform: translateY(-1px);
+        color: #0071e3;
+      }
+</style>
+<style id="theme-dark-style" media="(prefers-color-scheme: dark)">
+
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -2869,8 +2894,10 @@
           .quiz-trigger:hover {
             background: var(--bg-card) !important;
           }
-}
-    </style>
+
+</style>
+<style>
+
   <!-- Font Awesome: Non-blocking load via media swap trick -->
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
@@ -2913,6 +2940,22 @@
     })();
   </script>
   <script src="/js/uptime-helper.js?v=101.0" defer></script>
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        const darkStyle = document.getElementById('theme-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') {
+            darkStyle.media = 'all';
+          } else if (savedTheme === 'light') {
+            darkStyle.media = 'not all';
+          }
+        }
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -3086,7 +3129,11 @@
 
     <div class="nav-right">
       <button class="admin-login-btn" id="adminLoginBtn" style="display: none;">Admin</button>
-      <div class="notification-btn" id="notificationBtn" onclick="goToNotifications()">
+      
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Theme">
+          <i class="fas fa-moon" id="themeToggleIcon"></i>
+        </button>
+<div class="notification-btn" id="notificationBtn" onclick="goToNotifications()">
         <i class="fas fa-bell"></i>
         <span class="notification-badge" style="display: none;">0</span>
       </div>
@@ -4946,7 +4993,56 @@
     }
     // v116.4: Run after window load + 3s idle, NOT on DOMContentLoaded
     window.addEventListener('load', () => setTimeout(initHomePush, 3000));
-  </script>
+  
+    // Theme Toggle Logic
+    function toggleTheme() {
+      const darkStyle = document.getElementById('theme-dark-style');
+      if (!darkStyle) return;
+      
+      let isDarkCurrently;
+      const currentMedia = darkStyle.media;
+      
+      if (currentMedia === 'all') {
+        isDarkCurrently = true;
+      } else if (currentMedia === 'not all') {
+        isDarkCurrently = false;
+      } else {
+        isDarkCurrently = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+      
+      const newTheme = isDarkCurrently ? 'light' : 'dark';
+      darkStyle.media = newTheme === 'dark' ? 'all' : 'not all';
+      localStorage.setItem('solmates_theme', newTheme);
+      updateThemeIcon(newTheme);
+    }
+    
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (!icon) return;
+      
+      if (theme === 'dark') {
+        icon.className = 'fas fa-sun';
+      } else if (theme === 'light') {
+        icon.className = 'fas fa-moon';
+      } else {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    
+    // Initialize icon on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('solmates_theme');
+      updateThemeIcon(saved);
+      
+      // Listen for OS theme changes if not overridden
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('solmates_theme')) {
+          updateThemeIcon(null);
+        }
+      });
+    });
+</script>
 </body>
 
 </html>
