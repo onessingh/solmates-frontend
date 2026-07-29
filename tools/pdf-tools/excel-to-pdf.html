@@ -209,8 +209,8 @@
     }
 
     convertBtn.onclick = async () => {
-        loadingOverlay.style.display = 'flex';
-        convertBtn.disabled = true;
+        
+        convertBtn.disabled = true; convertBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> Converting...'; lucide.createIcons();
 
         try {
             const data = await selectedFile.arrayBuffer();
@@ -245,7 +245,7 @@
             alert('Error processing spreadsheet.');
             convertBtn.disabled = false;
         } finally {
-            loadingOverlay.style.display = 'none';
+            
         }
     };
 
