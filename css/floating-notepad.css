@@ -444,3 +444,5 @@ html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-warning { b
 html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-action-btn.pdf { background: #f8fafc !important; color: #ef4444 !important; border: 1px solid rgba(239,68,68,0.2) !important; }
 html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-action-btn.delete { background: #f8fafc !important; color: #64748b !important; }
 
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-new-btn { color: white !important; }
+
