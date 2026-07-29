@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a">
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Excuse Generator | Complete Communication Assistant</title>
-    <link rel="stylesheet" href="/css/global-lockdown.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-<script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Excuse Generator | Complete Communication Assistant</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
       if (savedTheme) {
         document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } else {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.classList.add('dark');
         }
       }
     })();
@@ -139,6 +146,16 @@
     </div>
 
     <script>
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+</script>
+<script>
         lucide.createIcons();
         
         const form = document.getElementById('excuse-form');
@@ -245,4 +262,7 @@
     </script>
 </body>
 </html>
+
+
+
 
