@@ -146,12 +146,12 @@
 
       body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
       .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
-      .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card, .calc-card, .flashcard, .topic-card, .overlay, .task-card, .glass-panel, .converter-box, .settings-panel, .control-panel, .action-card, .attendance-card, .search-box, .tab-content, .faq-q, .faq-item, .btn-tool, .input-card, .deck-item, .card-face, .done-state { 
+      .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card, .calc-card, .flashcard, .topic-card, .overlay, .task-card, .glass-panel, .converter-box, .settings-panel, .control-panel, .action-card, .attendance-card, .search-box, .tab-content, .faq-q, .faq-item, .btn-tool, .input-card, .deck-item, .card-face { 
           background: var(--bg-card, #1e293b) !important; 
           border: 1px solid var(--border-color, #334155) !important; 
           color: var(--text-main, #f8fafc) !important;
       }
-      .card *, .form-card *, .result-box *, .result-area *, .white-box *, .container *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool *, .input-card *, .deck-item *, .card-face *, .done-state * {
+      .card *, .form-card *, .result-box *, .result-area *, .white-box *, .container *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool *, .input-card *, .deck-item *, .card-face * {
           color: var(--text-main, #f8fafc) !important;
       }
       h1, h2, h3, h4, h5, h6, p, span, li, a, label {
@@ -178,7 +178,8 @@
       .del-btn:hover { background: #991b1b !important; }
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
-      .done-state { background: transparent !important; }
+      .done-state { background: transparent !important; border: none !important; }
+      .done-state * { color: var(--text-main, #f8fafc) !important; }
 </style>
 <script>
     (function() {
@@ -229,7 +230,7 @@
       <div class="start-banner" id="start-banner" style="display: none;">
         <h3 style="margin-bottom: 10px;">Ready to Master These?</h3>
         <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px;">Use Active Recall to permanently store this in your brain.</p>
-        <button onclick="startStudy()" style="background: var(--bg-card); color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
+        <button onclick="startStudy()" style="background: var(--card, #ffffff); color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
           Start Swipe Study <i class="fas fa-play" style="margin-left: 5px;"></i>
         </button>
       </div>
