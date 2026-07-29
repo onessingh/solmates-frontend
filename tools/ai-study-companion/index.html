@@ -384,24 +384,24 @@
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      try {
-        for (let i = 0; i < document.styleSheets.length; i++) {
+      for (let i = 0; i < document.styleSheets.length; i++) {
+        try {
           let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href).origin !== window.location.origin) continue;
+          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
           let rules = sheet.cssRules || sheet.rules;
           if (!rules) continue;
           for (let j = 0; j < rules.length; j++) {
             let rule = rules[j];
             if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
               if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all';
+                rule.media.mediaText = 'all /* solmates-dark-override */';
               } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all';
+                rule.media.mediaText = 'not all /* solmates-dark-override */';
               }
             }
           }
-        }
-      } catch(e) {}
+        } catch(e) {}
+      }
     }
   })();
 </script>
