@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.8">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.9">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Study Planner - SOLMATES</title>
@@ -548,9 +548,12 @@
       margin: 15px 0;
       padding: 10px;
       background: var(--bg-card-hover);
-      border-radius: 10px;
-      overflow-x: auto;
-    }
+        border-radius: 10px;
+        overflow-x: auto;
+        /* to center empty state */
+        justify-content: center;
+        padding-top: 30px;
+      }
 
     .progress-chart::-webkit-scrollbar {
       height: 4px;
@@ -572,8 +575,7 @@
       background: #e9ecef;
       border-radius: 5px;
       position: relative;
-      overflow: hidden;
-      min-height: 20px;
+      /* overflow hidden removed */ min-height: 20px; height: 100%;
     }
 
     .progress-fill {
@@ -582,7 +584,8 @@
       width: 100%;
       background: linear-gradient(to top, #0f2b46, #1a3c5e);
       transition: height 1s ease;
-    }
+        border-radius: 0 0 5px 5px;
+      }
 
     .progress-label {
       position: absolute;
@@ -1055,6 +1058,7 @@
         .status-in-progress { color: #bfdbfe !important; background: #1e3a8a !important; }
         .status-completed { color: #bbf7d0 !important; background: #14532d !important; }
         .calendar-day.today { background: #1e3a8a !important; color: #bfdbfe !important; }
+        .calendar-grid { background: var(--border-color) !important; border-color: var(--border-color) !important; }
         .week-badge { background: #1e3a8a !important; color: #bfdbfe !important; }
         #studyTipsWrapper { background: #451a03 !important; border-color: #78350f !important; }
         #studyTipsWrapper h4, #studyTipsWrapper i, #aiStudyTips { color: #fde68a !important; }
