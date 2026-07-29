@@ -80,6 +80,7 @@
       --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
       --brand-primary: #f8fafc;
       --brand-accent: #c0962d;
+      --bg-light: var(--bg-card-hover, #334155);
     }
 
     body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
@@ -127,6 +128,9 @@
     #summaryText, #summaryText * { color: var(--text-main, #f8fafc) !important; }
     a[download] { color: var(--text-main, #f8fafc) !important; }
     label[for="insert-upload"]:hover, label[for="insert-upload"]:active, label[for="insert-upload"]:focus { background: var(--bg-card-hover, #334155) !important; }
+
+    /* Fix translate pdf container */
+    #contentHolder, #contentHolder * { color: var(--text-main, #f8fafc) !important; background: var(--bg-card-hover, #334155) !important; border-color: var(--border-color, #334155) !important; }
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100 font-sans">

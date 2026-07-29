@@ -78,6 +78,7 @@
       --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
       --brand-primary: #f8fafc;
       --brand-accent: #c0962d;
+      --bg-light: var(--bg-card-hover, #334155);
     }
 
     body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
@@ -125,6 +126,9 @@
     #summaryText, #summaryText * { color: var(--text-main, #f8fafc) !important; }
     a[download] { color: var(--text-main, #f8fafc) !important; }
     label[for="insert-upload"]:hover, label[for="insert-upload"]:active, label[for="insert-upload"]:focus { background: var(--bg-card-hover, #334155) !important; }
+
+    /* Fix translate pdf container */
+    #contentHolder, #contentHolder * { color: var(--text-main, #f8fafc) !important; background: var(--bg-card-hover, #334155) !important; border-color: var(--border-color, #334155) !important; }
 </style>
 <script>
     (function() {
@@ -222,7 +226,7 @@
                 margin: 0.5,
                 filename: selectedFile.name.split('.')[0] + '.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
+                html2canvas: { scale: 2, windowWidth: 1200 },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
 
