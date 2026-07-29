@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/global-lockdown.css">
     <link rel="stylesheet" href="/tools/pdf-tools/common.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
@@ -123,13 +124,42 @@
 <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
-      if (savedTheme) {
-        document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
-        }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      const applyDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      
+      if (applyDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+      } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+      }
+      
+      // Still need to toggle solmates-dark-style for non-Tailwind elements
+      window.addEventListener('DOMContentLoaded', () => {
+          const darkStyle = document.getElementById('solmates-dark-style');
+          if (darkStyle) {
+              if (applyDark) {
+                  darkStyle.media = 'all'; 
+                  darkStyle.disabled = false;
+              } else {
+                  darkStyle.media = 'not all'; 
+                  darkStyle.disabled = true;
+              }
+          }
+      });
+      
+      // Also apply immediately if the element is already parsed
+      const darkStyleImm = document.getElementById('solmates-dark-style');
+      if (darkStyleImm) {
+          if (applyDark) {
+              darkStyleImm.media = 'all'; 
+              darkStyleImm.disabled = false;
+          } else {
+              darkStyleImm.media = 'not all'; 
+              darkStyleImm.disabled = true;
+          }
       }
     })();
   </script>
