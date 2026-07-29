@@ -371,59 +371,76 @@
   }
 }
 
+/* Dark mode: respond to BOTH OS preference AND Solmates manual toggle */
 @media (prefers-color-scheme: dark) {
-  :root {
+  #sol-floating-notepad:not(.sol-notepad-light),
+  #sol-notepad-minimized-icon:not(.sol-notepad-light) {
     --np-primary: #f8fafc;
     --np-bg: rgba(30, 41, 59, 0.95);
     --np-border: rgba(255, 255, 255, 0.1);
     --np-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     --np-text: #f8fafc;
     --np-sub: #94a3b8;
+    background: var(--np-bg) !important;
   }
-  .sol-notepad-warning {
-    background: rgba(192, 150, 45, 0.2);
-    color: #fcd34d;
-  }
-  .sol-notepad-header {
-    border-bottom-color: var(--np-border);
-  }
-  .sol-notepad-select, .sol-notepad-title, .sol-notepad-textarea {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--np-text);
-    border-color: var(--np-border);
-  }
-  .sol-notepad-select:focus, .sol-notepad-title:focus, .sol-notepad-textarea:focus {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--np-accent);
-  }
-
-  .sol-notepad-header {
-    background: rgba(255, 255, 255, 0.02) !important;
-  }
-  .sol-notepad-select-bar, .sol-notepad-footer {
-    background: rgba(0, 0, 0, 0.25) !important;
-  }
-  .sol-notepad-action-btn.pdf, .sol-notepad-action-btn.delete {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-  }
-  .sol-notepad-action-btn.pdf {
-    color: #f87171 !important;
-  }
-  .sol-notepad-action-btn.delete {
-    color: var(--np-sub) !important;
-  }
-  .sol-notepad-action-btn.pdf:hover {
-    background: #ef4444 !important;
-    color: white !important;
-  }
-  .sol-notepad-action-btn.delete:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: var(--np-text) !important;
-  }
-  .sol-notepad-new-btn {
-    color: #0f172a !important;
-    font-weight: 600;
-  }
-
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-warning { background: rgba(192, 150, 45, 0.2); color: #fcd34d; }
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-header { border-bottom-color: var(--np-border); background: rgba(255,255,255,0.02) !important; }
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-select,
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-title-input,
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-textarea { background: rgba(255,255,255,0.05); color: #f8fafc; border-color: rgba(255,255,255,0.1); }
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-select-bar,
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-footer { background: rgba(0,0,0,0.25) !important; }
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-action-btn.pdf,
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-action-btn.delete { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.1) !important; }
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-action-btn.pdf { color: #f87171 !important; }
+  #sol-floating-notepad:not(.sol-notepad-light) .sol-notepad-new-btn { color: #0f172a !important; }
 }
+
+/* Solmates manual dark toggle: when html has data-solmates-theme="dark" */
+html[data-solmates-theme="dark"] #sol-floating-notepad,
+html[data-solmates-theme="dark"] #sol-notepad-minimized-icon {
+  --np-primary: #f8fafc;
+  --np-bg: rgba(30, 41, 59, 0.95);
+  --np-border: rgba(255, 255, 255, 0.1);
+  --np-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --np-text: #f8fafc;
+  --np-sub: #94a3b8;
+  background: var(--np-bg) !important;
+}
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-warning { background: rgba(192, 150, 45, 0.2); color: #fcd34d; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-header { border-bottom-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.02) !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-select,
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-title-input,
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-textarea { background: rgba(255,255,255,0.05) !important; color: #f8fafc !important; border-color: rgba(255,255,255,0.1) !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-header-left span,
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-header-left i { color: #f8fafc !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-select-bar,
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-footer { background: rgba(0,0,0,0.25) !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-action-btn.pdf,
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-action-btn.delete { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.1) !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-action-btn.pdf { color: #f87171 !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-new-btn { color: #0f172a !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-btn { color: #94a3b8 !important; }
+html[data-solmates-theme="dark"] #sol-floating-notepad .sol-notepad-status { color: #94a3b8 !important; }
+
+/* Solmates manual light toggle: force light when OS is dark */
+html[data-solmates-theme="light"] #sol-floating-notepad {
+  --np-primary: #0f2b46 !important;
+  --np-bg: rgba(255, 255, 255, 0.92) !important;
+  --np-border: rgba(15, 43, 70, 0.15) !important;
+  --np-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+  --np-text: #1e293b !important;
+  --np-sub: #64748b !important;
+  background: var(--np-bg) !important;
+}
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-select,
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-title-input,
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-textarea { background: rgba(255,255,255,0.6) !important; color: #1e293b !important; border-color: rgba(15,43,70,0.15) !important; }
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-header-left span,
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-header-left i { color: #0f2b46 !important; }
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-select-bar,
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-footer { background: rgba(255,255,255,0.4) !important; }
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-warning { background: rgba(192,150,45,0.12) !important; color: #854d0e !important; }
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-action-btn.pdf { background: #f8fafc !important; color: #ef4444 !important; border: 1px solid rgba(239,68,68,0.2) !important; }
+html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-action-btn.delete { background: #f8fafc !important; color: #64748b !important; }
+

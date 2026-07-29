@@ -716,6 +716,24 @@
     initNotepad();
   }
 
+  // Sync data-solmates-theme attribute for CSS targeting
+  (function syncNotepadTheme() {
+    const savedTheme = localStorage.getItem('solmates_theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-solmates-theme', savedTheme);
+    } else {
+      // If no manual preference, set based on OS preference
+      const osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-solmates-theme', osDark ? 'dark' : 'light');
+    }
+    // Listen for storage changes (theme toggle on same page)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'solmates_theme' && e.newValue) {
+        document.documentElement.setAttribute('data-solmates-theme', e.newValue);
+      }
+    });
+  })();
+
   // Cleanup: Reset notepad state when leaving viewer pages so it doesn't persist to normal pages
   window.addEventListener('beforeunload', () => {
     if (isViewerPage) {
@@ -723,3 +741,4 @@
     }
   });
 })();
+

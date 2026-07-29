@@ -2951,6 +2951,7 @@
             darkStyle.media = 'not all';
           }
         }
+        document.documentElement.setAttribute('data-solmates-theme', savedTheme);
       }
     })();
   </script>
@@ -5011,6 +5012,7 @@
       const newTheme = isDarkCurrently ? 'light' : 'dark';
       darkStyle.media = newTheme === 'dark' ? 'all' : 'not all';
       localStorage.setItem('solmates_theme', newTheme);
+      document.documentElement.setAttribute('data-solmates-theme', newTheme);
       updateThemeIcon(newTheme);
     }
     
