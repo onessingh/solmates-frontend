@@ -179,7 +179,13 @@
     
 
 <style id="solmates-dark-style" media="screen and (prefers-color-scheme: dark)">
-      :root {
+        :root {
+          --card: var(--bg-card, #1e293b);
+          --primary: var(--text-main, #f8fafc);
+          --border: var(--border-color, #334155);
+          --bg: var(--bg-body, #0f172a);
+          --text: var(--text-main, #f8fafc);
+          --light: var(--text-muted, #94a3b8);
         --bg-body: #0f172a;
         --text-main: #f8fafc;
         --text-muted: #94a3b8;
@@ -229,6 +235,8 @@
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
       .done-state { background: transparent !important; }
+        .fc { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #334155) !important; }
+        .fc:focus { background: var(--bg-card, #1e293b) !important; }
 </style>
 <script>
     (function() {
