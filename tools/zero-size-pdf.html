@@ -423,7 +423,8 @@
           const y = A4_H - pad - (row + 1) * cellH - row * pad; // Top-to-bottom layout
           
           if (src.type === 'pdfPage') {
-            const dims = src.page.scaleToFit(cellW, cellH);
+            const scaleFactor = Math.min(cellW / src.page.width, cellH / src.page.height);
+            const dims = src.page.scale(scaleFactor);
             const drawX = x + (cellW - dims.width) / 2;
             const drawY = y + (cellH - dims.height) / 2;
             
