@@ -305,21 +305,6 @@
 
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
-      :root {
-        --primary: #f8fafc;
-        --accent: #38bdf8;
-        --background: #0f172a;
-        --surface: #1e293b;
-        --text-color: #f8fafc;
-        --text-secondary: #94a3b8;
-        --border-color: #334155;
-        --glass-bg: rgba(30, 41, 59, 0.7);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --shadow: 0 10px 30px rgba(0,0,0,0.5);
-      }
-    
-
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -332,44 +317,27 @@
         --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
+        --bg-light: var(--bg-card-hover, #334155);
       }
-    
 
-    /* Base Body */
-    body, html { background-color: #0f172a !important; color: #f8fafc !important; }
-    
-    /* Common Containers */
-    .container, .card, .glass-panel, .form-container, .tool-container, main, section, .modal-content, .stats-card, .filter-box, .result-card {
-        background-color: #1e293b !important;
-        border: 1px solid #334155 !important;
-        box-shadow: none !important;
-    }
-    
-    /* Headers & Text */
-    h1, h2, h3, h4, h5, h6 { color: #f8fafc !important; }
-    p, span, label, .text-muted, .description { color: #94a3b8 !important; }
-    
-    /* Interactive Elements */
-    input, select, textarea, .form-control {
-        background-color: #334155 !important;
-        color: #f8fafc !important;
-        border: 1px solid #475569 !important;
-    }
-    input::placeholder, textarea::placeholder { color: #64748b !important; }
-    input:focus, select:focus, textarea:focus { border-color: #3b82f6 !important; }
-    
-    /* Buttons */
-    button.primary-btn, .btn-primary { background-color: #2563eb !important; color: #ffffff !important; }
-    button.secondary-btn, .btn-secondary { background-color: #475569 !important; color: #f8fafc !important; }
-    
-    /* Tables & Lists */
-    table, th, td, .list-group-item {
-        background-color: #1e293b !important;
-        border-color: #334155 !important;
-        color: #f8fafc !important;
-    }
-    th { background-color: #0f172a !important; }
-
+      body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
+      .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
+      .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card, .calc-card, .flashcard, .topic-card, .overlay, .task-card, .glass-panel, .converter-box, .settings-panel, .control-panel, .action-card, .attendance-card { 
+          background: var(--bg-card, #1e293b) !important; 
+          border: 1px solid var(--border-color, #334155) !important; 
+      }
+      .card *, .form-card *, .result-box *, .result-area *, .white-box *, .container *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card * {
+          color: var(--text-main, #f8fafc);
+      }
+      input, select, textarea, .input-field, .add-sem-btn, .btn-secondary, .form-control, .prompt-box, .search-box, .chat-input {
+          background: var(--bg-card-hover, #334155) !important;
+          border: 1px solid var(--border-color, #334155) !important;
+          color: var(--text-main, #f8fafc) !important;
+      }
+      .nav-logo { color: var(--brand-primary) !important; }
+      .text-muted, .text-lighter { color: var(--text-muted) !important; }
+      .btn-primary, .primary-btn, .btn { color: white !important; background: #0071e3 !important; border: none !important; }
+      .back-link, .back-btn { background: var(--bg-card-hover) !important; color: var(--text-main) !important; border: 1px solid var(--border-color) !important; }
 </style>
 <script>
     (function() {
