@@ -173,7 +173,7 @@
       .card *, .form-card *, .result-box *, .result-area *, .white-box *, .container *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool *, .input-card *, .deck-item *, .card-face *, .done-state * {
           color: var(--text-main, #f8fafc) !important;
       }
-      h1, h2, h3, h4, h5, h6, p, span, li, a {
+      h1, h2, h3, h4, h5, h6, p, span, li, a, label {
           color: var(--text-main, #f8fafc) !important;
       }
       input, select, textarea, .input-field, .add-sem-btn, .btn-secondary, .form-control, .prompt-box, .chat-input {
@@ -188,6 +188,16 @@
       .text-muted, .text-lighter { color: var(--text-muted) !important; }
       .btn-primary, .primary-btn, .btn, .btn-main { color: white !important; background: #0071e3 !important; border: none !important; }
       .back-link, .back-btn { background: var(--bg-card-hover) !important; color: var(--text-main) !important; border: 1px solid var(--border-color) !important; }
+      
+      /* Explicit overrides for flashcards */
+      .input-card { background: var(--bg-card, #1e293b) !important; }
+      .btn-forgot { background: #7f1d1d !important; color: #fca5a5 !important; border: 1px solid #991b1b !important; }
+      .btn-remember { background: #14532d !important; color: #bbf7d0 !important; border: 1px solid #166534 !important; }
+      .del-btn { background: #7f1d1d !important; color: #fca5a5 !important; }
+      .del-btn:hover { background: #991b1b !important; }
+      .card-face { background: var(--bg-card, #1e293b) !important; }
+      .deck-item { background: var(--bg-card, #1e293b) !important; }
+      .done-state { background: transparent !important; }
 </style>
 <script>
     (function() {
