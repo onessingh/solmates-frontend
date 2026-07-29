@@ -33,6 +33,7 @@
       --text: #334155;
       --border: #e2e8f0;
       --shadow: 0 4px 20px rgba(0,0,0,0.05);
+      --bg-card: #ffffff;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -273,6 +274,7 @@
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
       :root {
+        --primary: #f8fafc;
         --bg-body: #0f172a;
         --text-main: #f8fafc;
         --text-muted: #94a3b8;
@@ -519,10 +521,11 @@
   <!-- All Templates Modal -->
   <div id="all-templates-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding: 20px; box-sizing: border-box;">
     <div style="background:var(--bg-card); padding:20px; border-radius:15px; width:100%; max-width:900px; max-height: 90vh; display: flex; flex-direction: column; box-sizing: border-box;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
         <div style="font-size:1.5rem; font-weight:bold; color:var(--primary);"><i class="fas fa-layer-group"></i> All 100+ Templates</div>
         <button onclick="closeTemplateModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#64748b;"><i class="fas fa-times"></i></button>
       </div>
+      <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 20px;">Click on any template to apply it instantly.</p>
       <input type="text" id="modalThemeSearch" placeholder="Search templates... (e.g. Minimal, Dark, Cyber)" class="form-control" oninput="filterModalThemes()" style="margin-bottom: 20px;">
       <div id="modal-theme-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; overflow-y: auto; padding-right: 10px; flex: 1;">
         <!-- Rendered by JS -->
