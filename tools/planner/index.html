@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.9">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=113.1">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Study Planner - SOLMATES</title>
@@ -122,7 +122,7 @@
 
     /* ========== Planner Header ========== */
     .planner-header {
-      background: var(--bg-card);
+      background: var(--bg-card, white);
       border-radius: 12px;
       padding: 20px 15px;
       box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
@@ -247,7 +247,7 @@
 
     /* ========== Planner Sections ========== */
     .planner-section {
-      background: var(--bg-card);
+      background: var(--bg-card, white);
       border-radius: 12px;
       padding: 18px;
       box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
@@ -321,7 +321,7 @@
       border-radius: 8px;
       font-size: 14px;
       transition: border-color 0.3s;
-      background: var(--bg-card-hover);
+      background: var(--bg-card-hover, #f8f9fa);
       width: 100%;
       -webkit-appearance: none;
       appearance: none;
@@ -400,7 +400,7 @@
     }
 
     .assignment-item:hover {
-      background: var(--bg-card-hover);
+      background: var(--bg-card-hover, #f8f9fa);
     }
 
     .assignment-info {
@@ -541,19 +541,15 @@
 
     /* ========== Progress Analytics ========== */
     .progress-chart {
-      height: 180px;
       display: flex;
-      align-items: flex-end;
-      gap: 8px;
+      flex-direction: column;
+      gap: 10px;
       margin: 15px 0;
-      padding: 10px;
-      background: var(--bg-card-hover);
-        border-radius: 10px;
-        overflow-x: auto;
-        /* to center empty state */
-        justify-content: center;
-        padding-top: 30px;
-      }
+      padding: 15px;
+      background: var(--bg-card-hover, #f8f9fa);
+      border-radius: 10px;
+      justify-content: center;
+    }
 
     .progress-chart::-webkit-scrollbar {
       height: 4px;
@@ -706,7 +702,7 @@
       height: 36px;
       border-radius: 50%;
       border: 1px solid #ddd;
-      background: var(--bg-card);
+      background: var(--bg-card, white);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -755,7 +751,7 @@
     }
 
     .calendar-day {
-      background: var(--bg-card);
+      background: var(--bg-card, white);
       padding: 8px 4px;
       min-height: 70px;
       position: relative;
@@ -772,7 +768,7 @@
     }
 
     .calendar-day:hover {
-      background: var(--bg-card-hover);
+      background: var(--bg-card-hover, #f8f9fa);
     }
 
     .calendar-day.today {
@@ -839,7 +835,7 @@
     }
 
     .modal-content {
-      background: var(--bg-card);
+      background: var(--bg-card, white);
       border-radius: 12px;
       padding: 20px;
       width: 100%;
@@ -1042,7 +1038,7 @@
       .nav-logo { color: var(--brand-primary) !important; }
       .text-muted, .text-lighter { color: var(--text-muted) !important; }
       .btn-primary, .primary-btn, .btn, .btn-main { color: white !important; background: #0071e3 !important; border: none !important; }
-      .back-link, .back-btn { background: var(--bg-card-hover) !important; color: var(--text-main) !important; border: 1px solid var(--border-color) !important; }
+      .back-link, .back-btn { background: var(--bg-card-hover, #f8f9fa) !important; color: var(--text-main) !important; border: 1px solid var(--border-color) !important; }
       
       /* Explicit overrides for flashcards */
       .input-card { background: var(--bg-card, #1e293b) !important; }
@@ -1062,9 +1058,9 @@
         .week-badge { background: #1e3a8a !important; color: #bfdbfe !important; }
         #studyTipsWrapper { background: #451a03 !important; border-color: #78350f !important; }
         #studyTipsWrapper h4, #studyTipsWrapper i, #aiStudyTips { color: #fde68a !important; }
-        .progress-chart::-webkit-scrollbar-track { background: var(--bg-card-hover) !important; }
+        .progress-chart::-webkit-scrollbar-track { background: var(--bg-card-hover, #f8f9fa) !important; }
         .progress-chart::-webkit-scrollbar-thumb { background: var(--border-color) !important; }
-        .progress-bar { background: var(--bg-card-hover) !important; }
+        .progress-bar { background: var(--bg-card-hover, #f8f9fa) !important; }
         .progress-label { color: var(--text-lighter) !important; }
         .progress-fill { background: linear-gradient(to top, #2563eb, #60a5fa) !important; }
 </style>
@@ -1181,9 +1177,7 @@
             <p style="font-size: 12px; margin-top: 5px;">Add your first assignment to get started</p>
           </div>
         </div>
-        <div class="swipe-hint">
-          <i class="fas fa-arrows-alt-h"></i> Swipe to see more
-        </div>
+        
         <button class="btn btn-secondary" onclick="openAssignmentModal()">
           <i class="fas fa-plus"></i> Add New Assignment
         </button>
@@ -1239,9 +1233,7 @@
             <p>Set up your semester plan to see progress analytics</p>
           </div>
         </div>
-        <div class="swipe-hint">
-          <i class="fas fa-arrows-alt-h"></i> Swipe to see all courses
-        </div>
+        
         <button class="btn" onclick="updateProgress()">
           <i class="fas fa-sync-alt"></i> Update Progress
         </button>
@@ -1864,11 +1856,16 @@
       });
 
       progressChart.innerHTML = progressData.map(course => `
-      <div class="progress-bar">
-        <div class="progress-label">${truncateText(course.name, 10)}</div>
-        <div class="progress-fill" style="height: ${course.progress}%"></div>
+      <div style="margin-bottom: 12px; width: 100%;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px; font-weight:600;">
+          <span style="color:var(--text-main, #333);">${truncateText(course.name, 25)}</span>
+          <span style="color:#0071e3;">${course.progress}%</span>
+        </div>
+        <div style="width:100%; height:8px; background:var(--bg-card-hover, #e9ecef); border-radius:4px; overflow:hidden;">
+          <div style="height:100%; width:${course.progress}%; background:linear-gradient(to right, #0071e3, #60a5fa); border-radius:4px;"></div>
+        </div>
       </div>
-    `).join('');
+      `).join('');
 
       // Update overall progress
       const totalProgress = progressData.reduce((sum, course) => sum + course.progress, 0) / (progressData.length || 1);
@@ -2273,7 +2270,7 @@
         if (data.weeklyPlan && Array.isArray(data.weeklyPlan)) {
           data.weeklyPlan.forEach(week => {
             const weekCard = document.createElement('div');
-            weekCard.style.cssText = 'background: var(--bg-card); border: 1px solid #e6e6e6; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);';
+            weekCard.style.cssText = 'background: var(--bg-card, white); border: 1px solid #e6e6e6; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);';
 
             const tasksHtml = (week.tasks || []).map(task => `<li style="margin-bottom:5px; display:flex; gap:8px;"><i class="fas fa-check-circle" style="color:#28a745; margin-top:3px;"></i> <span>${task}</span></li>`).join('');
 
