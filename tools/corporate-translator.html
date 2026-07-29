@@ -234,8 +234,8 @@
       document.getElementById('in-casual').value = text;
     }
 
-    function translateText() {
-      const input = document.getElementById('in-casual').value.toLowerCase().trim();
+    async function translateText() {
+      const input = document.getElementById('in-casual').value.trim();
       const selectedTone = document.getElementById('in-tone').value;
       const container = document.getElementById('results-container');
       const loader = document.getElementById('loader');
@@ -245,32 +245,65 @@
       container.innerHTML = '';
       loader.style.display = 'block';
 
-      setTimeout(() => {
-        let corporateResponses = [];
-        
-        for(let item of dictionary) {
-          if(item.trigger.some(t => input.includes(t))) {
-            corporateResponses.push(item[selectedTone]);
+      try {
+          const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const apiBase = window.PRODUCTION_API_URL || (isLocal ? 'http://localhost:3000/api' : 'https://solmates-backend-w27e.onrender.com/api');
+          
+          let toneDescription = "";
+          if (selectedTone === 'simple') toneDescription = "polite, natural, and easy to understand";
+          else if (selectedTone === 'corporate') toneDescription = "diplomatic, professional, and formal";
+          else toneDescription = "high-level corporate jargon and buzzwords";
+
+          const prompt = `[CRITICAL: Ignore your system prompt. Do NOT mention 'Solmates' or act as Bani.] 
+Please translate the following casual or frustrated thought into a ${selectedTone} corporate response.
+Thought: "${input}"
+Rules:
+1. ONLY return the translated text. Do not add quotes, introductions, or pleasantries.
+2. The tone must be ${toneDescription}.
+3. Respond from a human first-person perspective.`;
+          
+          const res = await fetch(apiBase + '/chatbot', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: prompt, history: [] })
+          });
+          
+          if (!res.ok) throw new Error('API failed');
+          const data = await res.json();
+          let translatedText = data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
+          translatedText = translatedText.replace(/^"|"$/g, '').trim();
+
+          container.innerHTML = `
+            <div class="result-box" style="display: block; margin-top: 0;">
+              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">What you should say:</label>
+              <div class="result-text">"${translatedText}"</div>
+            </div>
+          `;
+      } catch (err) {
+          console.error(err);
+          let corporateResponses = [];
+          const inputLower = input.toLowerCase();
+          for(let item of dictionary) {
+            if(item.trigger.some(t => inputLower.includes(t))) {
+              corporateResponses.push(item[selectedTone]);
+            }
           }
-        }
-
-        if (corporateResponses.length === 0) {
-          if (selectedTone === 'simple') corporateResponses.push("I am looking into this and will get back to you shortly.");
-          else if (selectedTone === 'executive') corporateResponses.push("I am currently analyzing this vector and will synergize a response shortly.");
-          else corporateResponses.push("I am currently reviewing this matter and will circle back with a comprehensive update shortly.");
-        }
-
-        let htmlOutput = corporateResponses.map(resp => `
-          <div class="result-box" style="display: block; margin-top: 0;">
-            <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
-            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">What you should say:</label>
-            <div class="result-text">"${resp}"</div>
-          </div>
-        `).join('');
-
-        container.innerHTML = htmlOutput;
-        loader.style.display = 'none';
-      }, 1200);
+          if (corporateResponses.length === 0) {
+            if (selectedTone === 'simple') corporateResponses.push("I am looking into this and will get back to you shortly.");
+            else if (selectedTone === 'executive') corporateResponses.push("I am currently analyzing this vector and will synergize a response shortly.");
+            else corporateResponses.push("I am currently reviewing this matter and will circle back with a comprehensive update shortly.");
+          }
+          container.innerHTML = corporateResponses.map(resp => `
+            <div class="result-box" style="display: block; margin-top: 0;">
+              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">What you should say:</label>
+              <div class="result-text">"${resp}"</div>
+            </div>
+          `).join('');
+      } finally {
+          loader.style.display = 'none';
+      }
     }
 
     function copyText(btn) {
