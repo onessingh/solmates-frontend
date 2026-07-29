@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v114.3 - NUCLEAR REFRESH)
+ * SOLMATES Service Worker (v114.4 - NUCLEAR REFRESH)
  * Handles background push notifications and offline caching.
  */
 
