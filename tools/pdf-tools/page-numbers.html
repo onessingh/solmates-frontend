@@ -150,7 +150,7 @@
         <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
     </div>
 
-    <div id="settingsArea" style="display: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+    <div id="settingsArea" style=" background: var(--bg-card); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: center;">
         <div style="margin-bottom: 2rem;">
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Position</label>
             <select id="position" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); width: 100%; max-width: 300px;">
@@ -159,7 +159,7 @@
                 <option value="top-center">Top Center</option>
             </select>
         </div>
-        <button id="addBtn" class="btn-primary">
+        <button id="addBtn" class="btn-primary" disabled>
             <i data-lucide="play"></i> Add Page Numbers
         </button>
     </div>
@@ -202,8 +202,8 @@
         if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) { alert('Please select a valid PDF file.'); return; }
         selectedFile = file;
         fileName.textContent = file.name;
-        dropZone.style.display = 'none';
-        settingsArea.style.display = 'block';
+        addBtn.disabled = false;
+        
     }
 
     addBtn.onclick = async () => {
