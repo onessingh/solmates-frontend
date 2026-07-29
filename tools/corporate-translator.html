@@ -60,30 +60,13 @@
   
 
     /* Dark Mode Native OS Integration */
-    :root {
-      --bg-body: #ffffff;
-      --text-main: #111111;
-      --text-muted: #555555;
-      --text-lighter: #666666;
-      --bg-nav: rgba(255, 255, 255, 0.98);
-      --bg-card: #ffffff;
-      --bg-card-hover: #f9f9fb;
-      --border-color: var(--border-color);
-      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
-      --brand-primary: #0f2b46;
-      --brand-accent: #c0962d;
-    }
-
-    /* dark mode moved */
+    
     
     /* UNIVERSAL DARK MODE OVERRIDES */
-    /* dark mode moved */
-
-</style>
+    </style>
 
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -97,6 +80,7 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
+
     
 
         body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
@@ -119,8 +103,7 @@
         .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
         .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
         .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
-    
-</style>
+    </style>
 <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');

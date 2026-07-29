@@ -32,13 +32,13 @@
   <script src="/js/webview-fix.js?v=113.3" defer></script>
   <script src="/js/sol-cache.js?v=113.3" defer></script>
   <script>
-    // [v116.4] NUCLEAR AUTO-UPDATE — ASYNC + LOOP-GUARD FIX
+    // [v116.5] NUCLEAR AUTO-UPDATE — ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '116.4';
-        const currentVersion = '116.4';
+        window.SOL_APP_VERSION = '116.5';
+        const currentVersion = '116.5';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -1086,7 +1086,6 @@
 
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -1100,201 +1099,40 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
-    
-          body {
-            background: var(--bg-body) !important;
-            color: var(--text-main) !important;
-            background-image: none !important;
-          }
-          .top-nav {
-            background: var(--bg-nav) !important;
-            border-bottom-color: var(--border-color) !important;
-          }
-          .notification-card {
-            background: var(--bg-card) !important;
-            box-shadow: none !important;
-            border: 1px solid var(--border-color) !important;
-          }
-          .header h1 {
-            color: var(--text-main) !important;
-          }
-          .header p {
-            color: var(--text-muted) !important;
-          }
-          .tab-btn {
-            background: var(--bg-card) !important;
-            color: var(--text-muted) !important;
-          }
-          .tab-btn.active {
-            background: var(--brand-primary) !important;
-            color: var(--bg-body) !important;
-          }
-          .content-box div {
-            color: var(--text-main);
-          }
-          .empty-state h3 {
-            color: var(--text-main) !important;
-          }
-          .empty-state p {
-            color: var(--text-muted) !important;
-          }
-          .card-btn {
-            background: var(--bg-card-hover) !important;
-            color: var(--text-main) !important;
-          }
-          .modal-content, .admin-modal-content {
-            background: var(--bg-card) !important;
-            color: var(--text-main) !important;
-          }
-
-          .view-btn {
-            background: var(--bg-card-hover) !important;
-            color: var(--text-main) !important;
-          }
-          .view-btn.join-btn {
-            background: linear-gradient(135deg, #28C76F 0%, #0396FF 100%) !important;
-            color: white !important;
-          }
-
-          .empty-state {
-            background: var(--bg-card) !important;
-            border-color: var(--border-color) !important;
-          }
-
-            .all-sem-label {
-              background: var(--bg-card-hover) !important;
-              border-color: var(--border-color) !important;
-            }
-            #modalTypePicker {
-              background: var(--bg-card) !important;
-            }
-            .type-btn {
-              background: var(--bg-card) !important;
-              color: var(--text-main) !important;
-              border-color: var(--border-color) !important;
-            }
-            .type-btn.active {
-              background: var(--bg-card-hover) !important;
-              border-color: var(--brand-primary) !important;
-            }
-            #addNoticeForm input, #addNoticeForm select, #addNoticeForm textarea {
-              background: var(--bg-card) !important;
-              color: var(--text-main) !important;
-              border-color: var(--border-color) !important;
-            }
-
-
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
+      body {
+        background: var(--bg-body) !important;
+        color: var(--text-main) !important;
+        background-image: none !important;
       }
-    
-
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
+      .top-nav {
+        background: var(--bg-nav) !important;
+        border-bottom-color: var(--border-color) !important;
       }
-    
-          body {
-            background: var(--bg-body) !important;
-            color: var(--text-main) !important;
-            background-image: none !important;
-          }
-          .top-nav {
-            background: var(--bg-nav) !important;
-            border-bottom-color: var(--border-color) !important;
-          }
-          .notification-card {
-            background: var(--bg-card) !important;
-            box-shadow: none !important;
-            border: 1px solid var(--border-color) !important;
-          }
-          .header h1 {
-            color: var(--text-main) !important;
-          }
-          .header p {
-            color: var(--text-muted) !important;
-          }
-          .tab-btn {
-            background: var(--bg-card) !important;
-            color: var(--text-muted) !important;
-          }
-          .tab-btn.active {
-            background: var(--brand-primary) !important;
-            color: var(--bg-body) !important;
-          }
-          .content-box div {
-            color: var(--text-main);
-          }
-          .empty-state h3 {
-            color: var(--text-main) !important;
-          }
-          .empty-state p {
-            color: var(--text-muted) !important;
-          }
-          .card-btn {
-            background: var(--bg-card-hover) !important;
-            color: var(--text-main) !important;
-          }
-          .modal-content, .admin-modal-content {
-            background: var(--bg-card) !important;
-            color: var(--text-main) !important;
-          }
-
-          .view-btn {
-            background: var(--bg-card-hover) !important;
-            color: var(--text-main) !important;
-          }
-          .view-btn.join-btn {
-            background: linear-gradient(135deg, #28C76F 0%, #0396FF 100%) !important;
-            color: white !important;
-          }
-
-          .empty-state {
-            background: var(--bg-card) !important;
-            border-color: var(--border-color) !important;
-          }
-
-            .all-sem-label {
-              background: var(--bg-card-hover) !important;
-              border-color: var(--border-color) !important;
-            }
-            #modalTypePicker {
-              background: var(--bg-card) !important;
-            }
-            .type-btn {
-              background: var(--bg-card) !important;
-              color: var(--text-main) !important;
-              border-color: var(--border-color) !important;
-            }
-            .type-btn.active {
-              background: var(--bg-card-hover) !important;
-              border-color: var(--brand-primary) !important;
-            }
-            #addNoticeForm input, #addNoticeForm select, #addNoticeForm textarea {
-              background: var(--bg-card) !important;
-              color: var(--text-main) !important;
-              border-color: var(--border-color) !important;
-            }
-
+      .notification-card, .modal-content, .admin-modal-content, .empty-state, #modalTypePicker, .type-btn, #addNoticeForm input, #addNoticeForm select, #addNoticeForm textarea {
+        background: var(--bg-card) !important;
+        color: var(--text-main) !important;
+        border-color: var(--border-color) !important;
+      }
+      .header h1, .empty-state h3 {
+        color: var(--text-main) !important;
+      }
+      .header p, .tab-btn, .empty-state p {
+        color: var(--text-muted) !important;
+      }
+      .tab-btn.active {
+        background: var(--brand-primary) !important;
+        color: var(--bg-body) !important;
+      }
+      .card-btn, .view-btn, .all-sem-label, .type-btn.active {
+        background: var(--bg-card-hover) !important;
+        color: var(--text-main) !important;
+        border-color: var(--border-color) !important;
+      }
+      .view-btn.join-btn {
+        background: linear-gradient(135deg, #28C76F 0%, #0396FF 100%) !important;
+        color: white !important;
+        border: none !important;
+      }
 </style>
 <script>
     (function() {
@@ -1595,7 +1433,7 @@
         if (!fetchAllPromise) {
           fetchAllPromise = (async () => {
             console.log('[NOTIFICATIONS] Fetching all notifications in bulk...');
-            // [v116.4] 8s timeout to prevent 3-4min mobile freeze on Render cold start
+            // [v116.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
             const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all?_t=${Date.now()}`, { signal: _fc.signal });
@@ -2887,7 +2725,7 @@
         const swUrl = './sw.js?v=113.4';
         const registration = await navigator.serviceWorker.register(swUrl);
         
-        // [v116.4] refreshed flag + pageOpenTime guard — prevents infinite reload loop
+        // [v116.5] refreshed flag + pageOpenTime guard — prevents infinite reload loop
         const _pageOpenTime = Date.now();
         let _swRefreshed = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -3144,6 +2982,7 @@
   </div>
 </body>
 </html>
+
 
 
 

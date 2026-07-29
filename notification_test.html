@@ -32,13 +32,13 @@
   <script src="/js/webview-fix.js?v=113.3" defer></script>
   <script src="/js/sol-cache.js?v=113.3" defer></script>
   <script>
-    // [v116.4] NUCLEAR AUTO-UPDATE — ASYNC + LOOP-GUARD FIX
+    // [v116.5] NUCLEAR AUTO-UPDATE — ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '116.4';
-        const currentVersion = '116.4';
+        window.SOL_APP_VERSION = '116.5';
+        const currentVersion = '116.5';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -1595,7 +1595,7 @@
         if (!fetchAllPromise) {
           fetchAllPromise = (async () => {
             console.log('[NOTIFICATIONS] Fetching all notifications in bulk...');
-            // [v116.4] 8s timeout to prevent 3-4min mobile freeze on Render cold start
+            // [v116.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
             const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all?_t=${Date.now()}`, { signal: _fc.signal });
@@ -2887,7 +2887,7 @@
         const swUrl = './sw.js?v=113.4';
         const registration = await navigator.serviceWorker.register(swUrl);
         
-        // [v116.4] refreshed flag + pageOpenTime guard — prevents infinite reload loop
+        // [v116.5] refreshed flag + pageOpenTime guard — prevents infinite reload loop
         const _pageOpenTime = Date.now();
         let _swRefreshed = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {

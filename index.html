@@ -2901,7 +2901,7 @@
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
   <!-- config.js loaded once at top (deferred), no need to repeat here -->
   <script>
-    // [v116.4] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // [v116.5] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
     // Bug: previous sync version fired reload(true) after 500ms without awaiting
     // cache.delete() and sw.unregister() — on slow devices these weren't done yet
     // causing an infinite reload loop (version still mismatched after reload).
@@ -2909,7 +2909,7 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        const currentVersion = '116.4';
+        const currentVersion = '116.5';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -4733,7 +4733,7 @@
         // v74.8: Identical unique key normalization
         const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\s+/g, ' ').trim();
 
-        // [v116.4] 8s timeout so Render cold-start never freezes mobile tab
+        // [v116.5] 8s timeout so Render cold-start never freezes mobile tab
         const _nc = new AbortController();
         const _nt = setTimeout(() => _nc.abort(), 8000);
         const res = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all`, { cache: 'no-store', signal: _nc.signal }).then(res => res.json()).catch(() => ({ success: false }));
@@ -4832,7 +4832,7 @@
       initPremiumSearch();
       initAnimations();
       initMainOptionAnimations();
-      // [v116.4] Delay notification fetch by 3s so it never blocks first paint
+      // [v116.5] Delay notification fetch by 3s so it never blocks first paint
       // On slow mobile networks this was the #1 cause of the loading freeze
       setTimeout(fetchNotificationCount, 3000);
       // Init socket/realtime after page is idle
@@ -4931,7 +4931,7 @@
       }
     }, { passive: true });
 
-    // v116.4: Run initHomePush AFTER window fully loads + 5s idle delay
+    // v116.5: Run initHomePush AFTER window fully loads + 5s idle delay
     // Previously ran on DOMContentLoaded which blocked initial render on mobile
     async function initHomePush() {
       try {
@@ -4944,7 +4944,7 @@
         const swUrl = './sw.js?v=113.4';
         const registration = await navigator.serviceWorker.register(swUrl);
         
-        // [v116.4] controllerchange guard — 'refreshed' flag prevents infinite reload loop
+        // [v116.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
         // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
         // controllerchange fires AFTER nuclear reload, triggering a second reload → infinite loop.
         let _swRefreshed = false;
@@ -4989,7 +4989,7 @@
         console.warn('[Push Home] Failed:', e);
       }
     }
-    // v116.4: Run after window load + 3s idle, NOT on DOMContentLoaded
+    // v116.5: Run after window load + 3s idle, NOT on DOMContentLoaded
     window.addEventListener('load', () => setTimeout(initHomePush, 3000));
   
     // Theme Toggle Logic
