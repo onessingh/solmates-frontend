@@ -132,10 +132,12 @@
 
     body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
     .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
-    .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .tool-card { 
+    .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card { 
         background: var(--bg-card, #1e293b) !important; 
         border: 1px solid var(--border-color, #334155) !important; 
     }
+    .upload-card:hover { background: var(--bg-card-hover, #334155) !important; border-color: var(--brand-accent, #c0962d) !important; }
+    .upload-card i, .upload-card h2 { color: var(--text-main, #f8fafc) !important; }
     h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
     h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
     .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
@@ -146,6 +148,9 @@
     }
     input::placeholder, textarea::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
     .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+    .btn-primary { background: #0071e3 !important; color: #ffffff !important; border: none !important; }
+    .btn-primary:hover { background: #005bb5 !important; }
+    .btn-primary:disabled { background: #334155 !important; color: #94a3b8 !important; }
 </style>
 <script>
     (function() {
