@@ -1297,17 +1297,18 @@
 
 </style>
 <script>
-  (function() {
-    const savedTheme = localStorage.getItem('solmates_theme');
-    if (savedTheme) {
-      const darkStyle = document.getElementById('solmates-dark-style');
-      if (darkStyle) {
-        if (savedTheme === 'dark') darkStyle.media = 'all';
-        else if (savedTheme === 'light') darkStyle.media = 'not all';
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        document.documentElement.style.colorScheme = savedTheme;
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        }
       }
-    }
-  })();
-</script>
+    })();
+  </script>
 </head>
 
 <body>
