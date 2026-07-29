@@ -298,7 +298,7 @@
         h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
         .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
         input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
-            background: var(--bg-card-hover, #334155) !important; 
+            background: var(--bg-body, #0f172a) !important; 
             color: var(--text-main, #f8fafc) !important; 
             border: 1px solid var(--border-color, #475569) !important; 
         }
@@ -306,7 +306,7 @@
             border-color: var(--brand-primary, #60a5fa) !important;
         }
         .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
-        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
         .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
     
 
@@ -344,7 +344,21 @@
         color: #f8fafc !important;
     }
     th { background-color: #0f172a !important; }
-    </style>
+    
+        /* Builder Specific Dark Mode Overrides */
+        .card-title { color: var(--text-main, #f8fafc) !important; border-bottom-color: var(--border-color, #334155) !important; }
+        .card-title i { color: var(--brand-accent, #c0962d) !important; }
+        #upload-label { background: var(--bg-body, #0f172a) !important; border-color: var(--border-color, #334155) !important; color: var(--text-muted, #94a3b8) !important; }
+        #upload-label i { color: var(--brand-accent, #c0962d) !important; }
+        .btn-add { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #334155) !important; }
+        .btn-add:hover { background: var(--border-color, #475569) !important; }
+        .theme-card { background: var(--bg-body, #0f172a) !important; border-color: var(--border-color, #334155) !important; }
+        .theme-card i { color: var(--text-muted, #94a3b8) !important; }
+        .theme-card:hover { border-color: var(--text-muted, #94a3b8) !important; }
+        .theme-card.active { border-color: var(--brand-accent, #60a5fa) !important; background: rgba(96, 165, 250, 0.1) !important; }
+        .repeater-item { background: var(--bg-body, #0f172a) !important; border-color: var(--border-color, #334155) !important; }
+        p[style*="color: var(--brand-primary)"] { color: var(--text-muted, #94a3b8) !important; }
+</style>
 <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
