@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.4">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Universal Cover Page Generator | SOLMATES</title>
@@ -206,7 +206,9 @@
 
     /* Dark Mode Native OS Integration */
     
-    </style>
+          .a4-content { background: white !important; }
+      .a4-preview-wrapper { background: #e2e8f0 !important; }
+</style>
 
     <style>
       body { padding-top: 0 !important; }
@@ -221,7 +223,9 @@
 
     /* Dark Mode Native OS Integration */
     
-    </style>
+          .a4-content { background: white !important; }
+      .a4-preview-wrapper { background: #e2e8f0 !important; }
+</style>
     
 
 <style id="solmates-dark-style" media="screen and (prefers-color-scheme: dark)">
@@ -242,15 +246,15 @@
 
       body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
       .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
-      .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card, .calc-card, .flashcard, .topic-card, .overlay, .task-card, .glass-panel, .converter-box, .settings-panel, .control-panel, .action-card, .attendance-card, .search-box, .tab-content, .faq-q, .faq-item, .btn-tool, .input-card, .deck-item, .card-face, .done-state { 
+      .card, .form-card, .result-box, .result-area, .white-box, .editor-panel, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card, .calc-card, .flashcard, .topic-card, .overlay, .task-card, .glass-panel, .converter-box, .settings-panel, .control-panel, .action-card, .attendance-card, .search-box, .tab-content, .faq-q, .faq-item, .btn-tool, .input-card, .deck-item, .card-face, .done-state { 
           background: var(--bg-card, #1e293b) !important; 
           border: 1px solid var(--border-color, #334155) !important; 
           color: var(--text-main, #f8fafc) !important;
       }
-      .card *, .form-card *, .result-box *, .result-area *, .white-box *, .container *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool *, .input-card *, .deck-item *, .card-face *, .done-state * {
+      .card *, .form-card *, .result-box *, .result-area *, .white-box *, .editor-panel *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool *, .input-card *, .deck-item *, .card-face *, .done-state * {
           color: var(--text-main, #f8fafc) !important;
       }
-      h1, h2, h3, h4, h5, h6, p, span, li, a, label {
+      h1:not(.a4-content *), h2:not(.a4-content *), h3:not(.a4-content *), h4:not(.a4-content *), h5:not(.a4-content *), h6:not(.a4-content *), p:not(.a4-content *), span:not(.a4-content *), li:not(.a4-content *), a:not(.a4-content *), label:not(.a4-content *) {
           color: var(--text-main, #f8fafc) !important;
       }
       input, select, textarea, .input-field, .add-sem-btn, .btn-secondary, .form-control, .prompt-box, .chat-input {
@@ -275,6 +279,8 @@
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
       .done-state { background: transparent !important; }
+      .a4-content { background: white !important; }
+      .a4-preview-wrapper { background: #e2e8f0 !important; }
 </style>
 <script>
     (function() {
