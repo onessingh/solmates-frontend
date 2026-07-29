@@ -789,7 +789,17 @@
       --brand-accent: #c0962d;
       }
 
-    @media (prefers-color-scheme: dark) {
+    /* dark mode moved */
+    </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/config.js?v=113.8"></script>
+  <script src="/js/uptime-helper.js?v=104.6"></script>
+  <script src="/js/api-client.js?v=104.6"></script>
+  <script src="/js/sol-cache.js?v=104.6"></script>
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -835,35 +845,16 @@
           .recycle-bin-card:hover {
             background: rgba(99, 102, 241, 0.2) !important;
           }
-}
-    </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=113.8"></script>
-  <script src="/js/uptime-helper.js?v=104.6"></script>
-  <script src="/js/api-client.js?v=104.6"></script>
-  <script src="/js/sol-cache.js?v=104.6"></script>
 
+</style>
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();

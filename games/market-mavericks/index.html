@@ -38,25 +38,7 @@
             .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --primary: #0f172a;
-                --accent: #38bdf8;
-                --card-bg: rgba(30, 41, 59, 0.8);
-                --glass-border: rgba(255, 255, 255, 0.05);
-                --text-main: #f8fafc;
-                --text-muted: #94a3b8;
-      
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      }
-            .header-bar {
-                background: rgba(15, 23, 42, 0.8) !important;
-      
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      }
-  
-            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      }
+        /* dark mode moved */
 
         .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
         .gradient-text { background: linear-gradient(45deg, #22c55e, #0ea5e9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
@@ -85,7 +67,34 @@
         .portfolio-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
         .ticker { font-family: 'Courier New', monospace; font-size: 0.85rem; }
     
-        @media (prefers-color-scheme: dark) {
+        /* dark mode moved */
+
+
+        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
+</style>
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
+            :root {
+                --primary: #0f172a;
+                --accent: #38bdf8;
+                --card-bg: rgba(30, 41, 59, 0.8);
+                --glass-border: rgba(255, 255, 255, 0.05);
+                --text-main: #f8fafc;
+                --text-muted: #94a3b8;
+      
+            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
+      }
+            .header-bar {
+                background: rgba(15, 23, 42, 0.8) !important;
+      
+            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
+      }
+  
+            .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
+      
+
             .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
             .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main);  white-space: normal; height: auto; min-height: 60px; word-wrap: break-word; }
             .option-btn:hover:not(:disabled) { background: var(--card-bg); border-color: var(--text-muted); }
@@ -96,33 +105,16 @@
             .glass-card { background: var(--card-bg); }
   
             .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
-      }
-
-
-        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
+      
 </style>
-
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();

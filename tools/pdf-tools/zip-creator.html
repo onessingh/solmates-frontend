@@ -91,21 +91,7 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
-      }
-    }
+    /* dark mode moved */
     </style>
 
 <style>
@@ -147,21 +133,7 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
-      }
-    }
+    /* dark mode moved */
     
     
 
@@ -180,7 +152,12 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    /* dark mode moved */
+    </style>
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -194,30 +171,46 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
-    }
-    </style>
+    
 
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    
+
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    
+</style>
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();

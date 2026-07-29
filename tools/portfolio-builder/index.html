@@ -255,20 +255,7 @@
     .export-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,113,227,0.4); }
 
   
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --primary: #f8fafc;
-        --accent: #38bdf8;
-        --background: #0f172a;
-        --surface: #1e293b;
-        --text-color: #f8fafc;
-        --text-secondary: #94a3b8;
-        --border-color: #334155;
-        --glass-bg: rgba(30, 41, 59, 0.7);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --shadow: 0 10px 30px rgba(0,0,0,0.5);
-      }
-    }
+    /* dark mode moved */
     
 
 
@@ -288,7 +275,33 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    /* dark mode moved */
+    </style>
+
+<!-- INJECTED DARK MODE -->
+<style>
+/* dark mode moved */
+</style>
+<!-- END INJECTED DARK MODE -->
+
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
+      :root {
+        --primary: #f8fafc;
+        --accent: #38bdf8;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text-color: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+    
+
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -302,12 +315,8 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
-    }
-    </style>
+    
 
-<!-- INJECTED DARK MODE -->
-<style>
-@media (prefers-color-scheme: dark) {
     /* Base Body */
     body, html { background-color: #0f172a !important; color: #f8fafc !important; }
     
@@ -342,32 +351,103 @@
         color: #f8fafc !important;
     }
     th { background-color: #0f172a !important; }
-}
+
+
+      :root {
+        --primary: #f8fafc;
+        --accent: #38bdf8;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text-color: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+    
+
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    
+
+        body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
+        .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
+        .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .resume-preview, .feature-item, .info-box { 
+            background: var(--bg-card, #1e293b) !important; 
+            border: 1px solid var(--border-color, #334155) !important; 
+        }
+        h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
+        h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
+        .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
+        input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
+            background: var(--bg-card-hover, #334155) !important; 
+            color: var(--text-main, #f8fafc) !important; 
+            border: 1px solid var(--border-color, #475569) !important; 
+        }
+        input:focus, select:focus, textarea:focus, .searchable-select .select-btn:hover {
+            border-color: var(--brand-primary, #60a5fa) !important;
+        }
+        .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+        .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
+    
+
+    /* Base Body */
+    body, html { background-color: #0f172a !important; color: #f8fafc !important; }
+    
+    /* Common Containers */
+    .container, .card, .glass-panel, .form-container, .tool-container, main, section, .modal-content, .stats-card, .filter-box, .result-card {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        box-shadow: none !important;
+    }
+    
+    /* Headers & Text */
+    h1, h2, h3, h4, h5, h6 { color: #f8fafc !important; }
+    p, span, label, .text-muted, .description { color: #94a3b8 !important; }
+    
+    /* Interactive Elements */
+    input, select, textarea, .form-control {
+        background-color: #334155 !important;
+        color: #f8fafc !important;
+        border: 1px solid #475569 !important;
+    }
+    input::placeholder, textarea::placeholder { color: #64748b !important; }
+    input:focus, select:focus, textarea:focus { border-color: #3b82f6 !important; }
+    
+    /* Buttons */
+    button.primary-btn, .btn-primary { background-color: #2563eb !important; color: #ffffff !important; }
+    button.secondary-btn, .btn-secondary { background-color: #475569 !important; color: #f8fafc !important; }
+    
+    /* Tables & Lists */
+    table, th, td, .list-group-item {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f8fafc !important;
+    }
+    th { background-color: #0f172a !important; }
+
 </style>
-<!-- END INJECTED DARK MODE -->
-
-
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();
@@ -831,20 +911,7 @@
       .skill-tag { padding: 4px 10px !important; font-size: 0.8rem !important; }
     }
   
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --primary: #f8fafc;
-        --accent: #38bdf8;
-        --background: #0f172a;
-        --surface: #1e293b;
-        --text-color: #f8fafc;
-        --text-secondary: #94a3b8;
-        --border-color: #334155;
-        --glass-bg: rgba(30, 41, 59, 0.7);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --shadow: 0 10px 30px rgba(0,0,0,0.5);
-      }
-    }
+    /* dark mode moved */
     
 
 
@@ -864,7 +931,37 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    /* dark mode moved */
+    
+    /* UNIVERSAL DARK MODE OVERRIDES */
+    /* dark mode moved */
+
+</style>
+
+<!-- INJECTED DARK MODE -->
+<style>
+/* dark mode moved */
+</style>
+<!-- END INJECTED DARK MODE -->
+
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
+      :root {
+        --primary: #f8fafc;
+        --accent: #38bdf8;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text-color: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+    
+
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -878,37 +975,8 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
-    }
     
-    /* UNIVERSAL DARK MODE OVERRIDES */
-    @media (prefers-color-scheme: dark) {
-        body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
-        .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
-        .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .resume-preview, .feature-item, .info-box { 
-            background: var(--bg-card, #1e293b) !important; 
-            border: 1px solid var(--border-color, #334155) !important; 
-        }
-        h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
-        h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
-        .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
-        input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
-            background: var(--bg-card-hover, #334155) !important; 
-            color: var(--text-main, #f8fafc) !important; 
-            border: 1px solid var(--border-color, #475569) !important; 
-        }
-        input:focus, select:focus, textarea:focus, .searchable-select .select-btn:hover {
-            border-color: var(--brand-primary, #60a5fa) !important;
-        }
-        .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
-        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
-        .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
-    }
 
-</style>
-
-<!-- INJECTED DARK MODE -->
-<style>
-@media (prefers-color-scheme: dark) {
     /* Base Body */
     body, html { background-color: #0f172a !important; color: #f8fafc !important; }
     
@@ -943,32 +1011,103 @@
         color: #f8fafc !important;
     }
     th { background-color: #0f172a !important; }
-}
+
+
+      :root {
+        --primary: #f8fafc;
+        --accent: #38bdf8;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text-color: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+    
+
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+        --brand-accent: #c0962d;
+      }
+    
+
+        body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
+        .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
+        .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .resume-preview, .feature-item, .info-box { 
+            background: var(--bg-card, #1e293b) !important; 
+            border: 1px solid var(--border-color, #334155) !important; 
+        }
+        h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
+        h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
+        .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
+        input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
+            background: var(--bg-card-hover, #334155) !important; 
+            color: var(--text-main, #f8fafc) !important; 
+            border: 1px solid var(--border-color, #475569) !important; 
+        }
+        input:focus, select:focus, textarea:focus, .searchable-select .select-btn:hover {
+            border-color: var(--brand-primary, #60a5fa) !important;
+        }
+        .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+        .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
+    
+
+    /* Base Body */
+    body, html { background-color: #0f172a !important; color: #f8fafc !important; }
+    
+    /* Common Containers */
+    .container, .card, .glass-panel, .form-container, .tool-container, main, section, .modal-content, .stats-card, .filter-box, .result-card {
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        box-shadow: none !important;
+    }
+    
+    /* Headers & Text */
+    h1, h2, h3, h4, h5, h6 { color: #f8fafc !important; }
+    p, span, label, .text-muted, .description { color: #94a3b8 !important; }
+    
+    /* Interactive Elements */
+    input, select, textarea, .form-control {
+        background-color: #334155 !important;
+        color: #f8fafc !important;
+        border: 1px solid #475569 !important;
+    }
+    input::placeholder, textarea::placeholder { color: #64748b !important; }
+    input:focus, select:focus, textarea:focus { border-color: #3b82f6 !important; }
+    
+    /* Buttons */
+    button.primary-btn, .btn-primary { background-color: #2563eb !important; color: #ffffff !important; }
+    button.secondary-btn, .btn-secondary { background-color: #475569 !important; color: #f8fafc !important; }
+    
+    /* Tables & Lists */
+    table, th, td, .list-group-item {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f8fafc !important;
+    }
+    th { background-color: #0f172a !important; }
+
 </style>
-<!-- END INJECTED DARK MODE -->
-
-
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();

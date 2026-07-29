@@ -39,7 +39,36 @@
       .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
       }
 
-        @media (prefers-color-scheme: dark) {
+        /* dark mode moved */
+
+        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
+        .gradient-text { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .hidden { display: none !important; }
+        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; box-sizing: border-box; }
+        .input-box:focus { outline: none; border-color: #f59e0b; }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(15,23,42,0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .pitch-textarea { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0; color: var(--text-main); font-size: 1rem; resize: vertical; font-family: inherit; box-sizing: border-box; }
+        .pitch-textarea:focus { outline: none; border-color: #f59e0b; }
+        .answer-card { background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
+        .ai-score { display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-weight: 800; font-size: 1.1rem; line-height: 48px; text-align: center; }
+        .countdown-ring { font-size: 3rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    
+        /* dark mode moved */
+
+
+        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
+.challenge-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+</style>
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
             :root {
                 --primary: #0f172a;
                 --accent: #38bdf8;
@@ -60,27 +89,8 @@
   
             .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
-      }
+      
 
-        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
-        .gradient-text { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; border: none; cursor: pointer; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .btn-secondary:hover { background: #e2e8f0; }
-        .hidden { display: none !important; }
-        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; box-sizing: border-box; }
-        .input-box:focus { outline: none; border-color: #f59e0b; }
-        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { background: rgba(15,23,42,0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .pitch-textarea { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0; color: var(--text-main); font-size: 1rem; resize: vertical; font-family: inherit; box-sizing: border-box; }
-        .pitch-textarea:focus { outline: none; border-color: #f59e0b; }
-        .answer-card { background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
-        .ai-score { display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-weight: 800; font-size: 1.1rem; line-height: 48px; text-align: center; }
-        .countdown-ring { font-size: 3rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    
-        @media (prefers-color-scheme: dark) {
             .pitch-textarea { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
             .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
             .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main);  white-space: normal; height: auto; min-height: 60px; word-wrap: break-word; }
@@ -93,34 +103,16 @@
   
             .player-item { background: var(--card-bg); border-color: var(--glass-border); color: var(--text-main); }
       .challenge-box { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
-      }
-
-
-        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
-.challenge-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+      
 </style>
-
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();

@@ -288,20 +288,7 @@
       .tab-content { padding: 25px; }
     }
   
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --primary: #f8fafc;
-        --accent: #38bdf8;
-        --background: #0f172a;
-        --surface: #1e293b;
-        --text-color: #f8fafc;
-        --text-secondary: #94a3b8;
-        --border-color: #334155;
-        --glass-bg: rgba(30, 41, 59, 0.7);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --shadow: 0 10px 30px rgba(0,0,0,0.5);
-      }
-    }
+    /* dark mode moved */
     
 
 
@@ -321,7 +308,33 @@
       --brand-accent: #c0962d;
     }
 
-    @media (prefers-color-scheme: dark) {
+    /* dark mode moved */
+    </style>
+
+<!-- INJECTED DARK MODE -->
+<style>
+/* dark mode moved */
+</style>
+<!-- END INJECTED DARK MODE -->
+
+
+
+<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+
+      :root {
+        --primary: #f8fafc;
+        --accent: #38bdf8;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text-color: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --glass-bg: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+    
+
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -335,12 +348,8 @@
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
       }
-    }
-    </style>
+    
 
-<!-- INJECTED DARK MODE -->
-<style>
-@media (prefers-color-scheme: dark) {
     /* Base Body */
     body, html { background-color: #0f172a !important; color: #f8fafc !important; }
     
@@ -375,32 +384,16 @@
         color: #f8fafc !important;
     }
     th { background-color: #0f172a !important; }
-}
+
 </style>
-<!-- END INJECTED DARK MODE -->
-
-
 <script>
   (function() {
     const savedTheme = localStorage.getItem('solmates_theme');
     if (savedTheme) {
-      for (let i = 0; i < document.styleSheets.length; i++) {
-        try {
-          let sheet = document.styleSheets[i];
-          if (sheet.href && new URL(sheet.href, window.location.href).origin !== window.location.origin) continue;
-          let rules = sheet.cssRules || sheet.rules;
-          if (!rules) continue;
-          for (let j = 0; j < rules.length; j++) {
-            let rule = rules[j];
-            if (rule.conditionText && rule.conditionText.includes('prefers-color-scheme: dark')) {
-              if (savedTheme === 'dark') {
-                rule.media.mediaText = 'all /* solmates-dark-override */';
-              } else if (savedTheme === 'light') {
-                rule.media.mediaText = 'not all /* solmates-dark-override */';
-              }
-            }
-          }
-        } catch(e) {}
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
       }
     }
   })();

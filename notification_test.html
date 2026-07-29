@@ -1084,6 +1084,18 @@
 /* dark mode moved */
     </style>
 
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('solmates_theme');
+    if (savedTheme) {
+      const darkStyle = document.getElementById('solmates-dark-style');
+      if (darkStyle) {
+        if (savedTheme === 'dark') darkStyle.media = 'all';
+        else if (savedTheme === 'light') darkStyle.media = 'not all';
+      }
+    }
+  })();
+</script>
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
 
@@ -1296,18 +1308,6 @@
             }
 
 </style>
-<script>
-  (function() {
-    const savedTheme = localStorage.getItem('solmates_theme');
-    if (savedTheme) {
-      const darkStyle = document.getElementById('solmates-dark-style');
-      if (darkStyle) {
-        if (savedTheme === 'dark') darkStyle.media = 'all';
-        else if (savedTheme === 'light') darkStyle.media = 'not all';
-      }
-    }
-  })();
-</script>
 </head>
 
 <body>
