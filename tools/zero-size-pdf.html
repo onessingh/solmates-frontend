@@ -157,7 +157,7 @@
     </style>
     
 
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+<style id="solmates-dark-style" media="screen and (prefers-color-scheme: dark)">
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -178,6 +178,7 @@
       .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card, .calc-card, .flashcard, .topic-card, .overlay, .task-card, .glass-panel, .converter-box, .settings-panel, .control-panel, .action-card, .attendance-card, .search-box, .tab-content, .faq-q, .faq-item, .btn-tool { 
           background: var(--bg-card, #1e293b) !important; 
           border: 1px solid var(--border-color, #334155) !important; 
+          color: var(--text-main, #f8fafc) !important;
       }
       .card *, .form-card *, .result-box *, .result-area *, .white-box *, .container *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool * {
           color: var(--text-main, #f8fafc) !important;
@@ -190,6 +191,9 @@
           border: 1px solid var(--border-color, #334155) !important;
           color: var(--text-main, #f8fafc) !important;
       }
+      ::placeholder { color: var(--text-muted, #94a3b8) !important; opacity: 1 !important; }
+      ::-webkit-input-placeholder { color: var(--text-muted, #94a3b8) !important; }
+      ::-moz-placeholder { color: var(--text-muted, #94a3b8) !important; }
       .nav-logo { color: var(--brand-primary) !important; }
       .text-muted, .text-lighter { color: var(--text-muted) !important; }
       .btn-primary, .primary-btn, .btn { color: white !important; background: #0071e3 !important; border: none !important; }
@@ -202,7 +206,7 @@
         document.documentElement.style.colorScheme = savedTheme;
         const darkStyle = document.getElementById('solmates-dark-style');
         if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
           else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
         }
       }
