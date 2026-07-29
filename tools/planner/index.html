@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=113.4">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=113.5">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Study Planner - SOLMATES</title>
@@ -1148,9 +1148,14 @@
             <label for="availableHours">Available Study Hours/Day</label>
             <input type="number" id="availableHours" class="form-control" placeholder="4" min="1" max="12" value="4">
           </div>
-          <button type="submit" class="btn">
-            <i class="fas fa-save"></i> Save Semester Plan
-          </button>
+          <div style="display:flex; gap:10px;">
+              <button type="submit" class="btn" style="flex:1;">
+                <i class="fas fa-save"></i> Save Semester Plan
+              </button>
+              <button type="button" class="btn" onclick="deleteSemesterPlan()" style="background:#dc3545; color:white; padding:12px; border-radius:8px; width:50px;">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           <button type="button" class="btn btn-success" onclick="generateSmartSchedule()" style="margin-top:10px;">
             <i class="fas fa-magic"></i> Generate Smart Schedule
           </button>
@@ -1593,7 +1598,17 @@
     }
 
     // ========== SEMESTER PLANNER ==========
-    function saveSemesterPlan(e) {
+    
+      window.deleteSemesterPlan = function() {
+        if (confirm('Are you sure you want to delete your Semester Plan?')) {
+          localStorage.removeItem('semesterPlan');
+          document.getElementById('semesterForm').reset();
+          updateProgressChart();
+          showMobileNotification('Semester Plan deleted!');
+        }
+      };
+      
+      function saveSemesterPlan(e) {
       e.preventDefault();
 
       const semesterData = {
@@ -1800,23 +1815,27 @@
       }
 
       // Use actual courses from semester plan
-      const courses = semesterPlan.courses.slice(0, 5); // Limit to 5 courses for mobile
+      const courses = semesterPlan.courses;
       const progressData = courses.map(course => {
         // Calculate progress based on assignments for this course
         const courseAssignments = assignments.filter(a => a.course.toLowerCase().trim() === course.toLowerCase().trim());
         let progress = 0;
-        
-        if (courseAssignments.length > 0) {
-          const completed = courseAssignments.filter(a => a.status === 'completed').length;
-          progress = Math.round((completed / courseAssignments.length) * 100);
-        } else {
-          // Fallback: if no assignments, look at goals as a backup metric
-          const courseGoals = goals.filter(g => g.title.toLowerCase().includes(course.toLowerCase().trim()));
-          if (courseGoals.length > 0) {
-             const compGoals = courseGoals.filter(g => g.completed).length;
-             progress = Math.round((compGoals / courseGoals.length) * 100);
+          let details = "";
+          
+          if (courseAssignments.length > 0) {
+            const completed = courseAssignments.filter(a => a.status === 'completed').length;
+            progress = Math.round((completed / courseAssignments.length) * 100);
+            details = `${completed}/${courseAssignments.length} tasks`;
+          } else {
+            const courseGoals = goals.filter(g => g.title.toLowerCase().includes(course.toLowerCase().trim()));
+            if (courseGoals.length > 0) {
+               const compGoals = courseGoals.filter(g => g.completed).length;
+               progress = Math.round((compGoals / courseGoals.length) * 100);
+               details = `${compGoals}/${courseGoals.length} tasks`;
+            } else {
+               details = `0 tasks`;
+            }
           }
-        }
         
         return {
           name: course,
@@ -1828,7 +1847,10 @@
       <div style="margin-bottom: 12px; width: 100%;">
         <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px; font-weight:600;">
           <span style="color:var(--text-main, #333);">${truncateText(course.name, 25)}</span>
-          <span style="color:#0071e3;">${course.progress}%</span>
+          <div>
+            <span style="color:var(--text-muted); font-size:11px; margin-right:8px; font-weight:normal;">${course.details}</span>
+            <span style="color:#0071e3;">${course.progress}%</span>
+          </div>
         </div>
         <div style="width:100%; height:8px; background:var(--bg-card-hover, #e9ecef); border-radius:4px; overflow:hidden;">
           <div style="height:100%; width:${course.progress}%; background:linear-gradient(to right, #0071e3, #60a5fa); border-radius:4px;"></div>
