@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=113.1">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=113.4">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Study Planner - SOLMATES</title>
@@ -1062,7 +1062,9 @@
         .progress-chart::-webkit-scrollbar-thumb { background: var(--border-color) !important; }
         .progress-bar { background: var(--bg-card-hover, #f8f9fa) !important; }
         .progress-label { color: var(--text-lighter) !important; }
-        .progress-fill { background: linear-gradient(to top, #2563eb, #60a5fa) !important; }
+        .progress-fill { background: linear-gradient(to right, #2563eb, #60a5fa) !important; }
+        .goal-checkbox { border-color: #60a5fa !important; }
+        .goal-checkbox.checked { background: #60a5fa !important; color: #1e3a8a !important; }
 </style>
 <script>
     (function() {
@@ -1234,9 +1236,7 @@
           </div>
         </div>
         
-        <button class="btn" onclick="updateProgress()">
-          <i class="fas fa-sync-alt"></i> Update Progress
-        </button>
+        
       </div>
 
       <!-- Goal Setting -->
@@ -1246,30 +1246,7 @@
           <h2>Goal Setting</h2>
         </div>
         <div id="goalsList">
-          <div class="goal-item">
-            <div class="goal-checkbox" onclick="toggleGoal(this)">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="goal-details">
-              <h4>Complete Marketing Assignment</h4>
-              <p>Due: Dec 15</p>
-              <div class="goal-progress">
-                <div class="goal-progress-fill" style="width: 75%"></div>
-              </div>
-            </div>
-          </div>
-          <div class="goal-item">
-            <div class="goal-checkbox checked" onclick="toggleGoal(this)">
-              <i class="fas fa-check"></i>
-            </div>
-            <div class="goal-details">
-              <h4>Read Finance Chapter 5</h4>
-              <p>Completed: Dec 10</p>
-              <div class="goal-progress">
-                <div class="goal-progress-fill" style="width: 100%"></div>
-              </div>
-            </div>
-          </div>
+          
         </div>
         <button class="btn btn-secondary" onclick="openGoalModal()" style="margin-top: 15px;">
           <i class="fas fa-plus"></i> Add New Goal
@@ -1435,13 +1412,7 @@
           <label for="goalDeadline">Target Deadline</label>
           <input type="date" id="goalDeadline" class="form-control" required>
         </div>
-        <div class="form-group">
-          <label for="goalProgress">Current Progress (%)</label>
-          <input type="range" id="goalProgress" class="form-control" min="0" max="100" value="0">
-          <div style="text-align: center; margin-top: 5px;">
-            <span id="progressValue">0%</span>
-          </div>
-        </div>
+        
         <div class="form-group">
           <label for="goalCategory">Category</label>
           <select id="goalCategory" class="form-control">
@@ -1509,9 +1480,7 @@
       document.getElementById('semesterForm').addEventListener('submit', saveSemesterPlan);
       document.getElementById('assignmentForm').addEventListener('submit', saveAssignment);
       document.getElementById('goalForm').addEventListener('submit', saveGoal);
-      document.getElementById('goalProgress').addEventListener('input', function () {
-        document.getElementById('progressValue').textContent = this.value + '%';
-      });
+      
 
       // Touch swipe support for calendar
       let touchStartX = 0;
@@ -1887,7 +1856,7 @@
       document.getElementById('goalModal').style.display = 'none';
       document.body.style.overflow = 'auto';
       document.getElementById('goalForm').reset();
-      document.getElementById('progressValue').textContent = '0%';
+      
     }
 
     function saveGoal(e) {
@@ -1897,7 +1866,7 @@
         id: Date.now(),
         title: document.getElementById('goalTitle').value,
         deadline: document.getElementById('goalDeadline').value,
-        progress: parseInt(document.getElementById('goalProgress').value),
+        progress: 0,
         category: document.getElementById('goalCategory').value,
         completed: false
       };
@@ -1929,7 +1898,19 @@
       checkbox.classList.toggle('checked');
     }
 
-    function renderGoals() {
+    
+      window.deleteGoal = function(title) {
+        if (confirm('Are you sure you want to delete this goal?')) {
+          goals = goals.filter(g => g.title !== title);
+          localStorage.setItem('goals', JSON.stringify(goals));
+          renderGoals();
+          updateStats();
+          updateProgressChart();
+          showMobileNotification('Goal deleted!');
+        }
+      };
+      
+      function renderGoals() {
       const goalsList = document.getElementById('goalsList');
 
       if (goals.length === 0) {
@@ -1943,18 +1924,20 @@
       }
 
       goalsList.innerHTML = goals.slice(0, 4).map(goal => `
-      <div class="goal-item">
-        <div class="goal-checkbox ${goal.completed ? 'checked' : ''}" onclick="toggleGoal(this)">
-          <i class="fas fa-check"></i>
-        </div>
-        <div class="goal-details">
-          <h4>${truncateText(goal.title, 30)}</h4>
-          <p>${goal.completed ? 'Completed' : 'Due'}: ${formatDateShort(goal.deadline)}</p>
-          <div class="goal-progress">
-            <div class="goal-progress-fill" style="width: ${goal.progress}%"></div>
+      <div class="goal-item" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <div style="display:flex; gap:12px; align-items:center; flex:1;">
+            <div class="goal-checkbox ${goal.completed ? 'checked' : ''}" onclick="toggleGoal(this)">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="goal-details">
+              <h4 style="margin:0;">${truncateText(goal.title, 30)}</h4>
+              <p style="margin-top:2px;">${goal.completed ? 'Completed' : 'Due'}: ${formatDateShort(goal.deadline)}</p>
+            </div>
           </div>
+          <button class="action-btn action-delete" onclick="deleteGoal('${goal.title.replace(/'/g, "\\'")}')" title="Delete" style="background:transparent; border:none; color:#dc3545; font-size:16px; padding:8px; cursor:pointer;">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
-      </div>
     `).join('');
     }
 
@@ -2020,8 +2003,16 @@
         }
 
         calendarGrid.appendChild(dayElement);
+        }
+        
+        const totalCells = firstDay + daysInMonth;
+        const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (let i = 0; i < remainingCells; i++) {
+          const emptyDay = document.createElement('div');
+          emptyDay.className = 'calendar-day';
+          calendarGrid.appendChild(emptyDay);
+        }
       }
-    }
 
     function changeMonth(direction) {
       if (direction === 0) {
