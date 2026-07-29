@@ -9,7 +9,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Flashcards | SOLMATES Tools</title>
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.2">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
 
@@ -79,7 +79,9 @@
     .del-btn { color: var(--danger); background: #ffebee; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
     .del-btn:hover { background: #ffcdd2; }
 
-    .start-banner { background: linear-gradient(135deg, var(--primary), #1a3c5e); padding: 25px; border-radius: 16px; color: white; text-align: center; margin-top: 30px; box-shadow: 0 10px 30px rgba(15,43,70,0.2); }
+        .start-banner { background: linear-gradient(135deg, var(--primary), #1a3c5e); padding: 25px; border-radius: 16px; color: white; text-align: center; margin-top: 30px; box-shadow: 0 10px 30px rgba(15,43,70,0.2); }
+    .start-btn { background: #ffffff; color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: 0.2s; }
+    .start-btn:hover { transform: scale(1.05); }
 
     /* VIEW 2: STUDY MODE */
     #study-mode { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; animation: fadeIn 0.3s; padding-bottom: 40px; }
@@ -179,7 +181,8 @@
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
       .done-state { background: transparent !important; border: none !important; }
-      .done-state * { color: var(--text-main, #f8fafc) !important; }
+            .done-state * { color: var(--text-main, #f8fafc) !important; }
+      .start-btn { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
 </style>
 <script>
     (function() {
@@ -230,7 +233,7 @@
       <div class="start-banner" id="start-banner" style="display: none;">
         <h3 style="margin-bottom: 10px;">Ready to Master These?</h3>
         <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px;">Use Active Recall to permanently store this in your brain.</p>
-        <button onclick="startStudy()" style="background: var(--card, #ffffff); color: var(--primary); border: none; padding: 12px 30px; border-radius: 30px; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
+        <button onclick="startStudy()" class="start-btn">
           Start Swipe Study <i class="fas fa-play" style="margin-left: 5px;"></i>
         </button>
       </div>
