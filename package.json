@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/onessingh/solmates-frontend/issues"
   },
-  "homepage": "https://github.com/onessingh/solmates-frontend#readme"
+  "homepage": "https://github.com/onessingh/solmates-frontend#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "puppeteer": "^25.4.0"
+  }
 }
