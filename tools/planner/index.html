@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.8">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Study Planner - SOLMATES</title>
@@ -1050,6 +1050,19 @@
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
       .done-state { background: transparent !important; }
+
+        .status-pending { color: #fcd34d !important; background: #78350f !important; }
+        .status-in-progress { color: #bfdbfe !important; background: #1e3a8a !important; }
+        .status-completed { color: #bbf7d0 !important; background: #14532d !important; }
+        .calendar-day.today { background: #1e3a8a !important; color: #bfdbfe !important; }
+        .week-badge { background: #1e3a8a !important; color: #bfdbfe !important; }
+        #studyTipsWrapper { background: #451a03 !important; border-color: #78350f !important; }
+        #studyTipsWrapper h4, #studyTipsWrapper i, #aiStudyTips { color: #fde68a !important; }
+        .progress-chart::-webkit-scrollbar-track { background: var(--bg-card-hover) !important; }
+        .progress-chart::-webkit-scrollbar-thumb { background: var(--border-color) !important; }
+        .progress-bar { background: var(--bg-card-hover) !important; }
+        .progress-label { color: var(--text-lighter) !important; }
+        .progress-fill { background: linear-gradient(to top, #2563eb, #60a5fa) !important; }
 </style>
 <script>
     (function() {
@@ -1201,12 +1214,12 @@
         </div>
         <div class="form-group">
           <label for="examDate">Set Exam Date</label>
-          <div class="exam-date-input">
-            <input type="date" id="examDate" class="form-control">
-            <button class="btn btn-success" onclick="setExamDate()">
-              <i class="fas fa-calendar-alt"></i>
-            </button>
-          </div>
+          <div class="exam-date-input" style="display:flex; flex-direction:column; gap:10px;">
+              <input type="date" id="examDate" class="form-control" style="width:100%; padding:12px; cursor:pointer; min-height:48px;" placeholder="Select Exam Date">
+              <button class="btn btn-success" onclick="setExamDate()" style="width:100%;">
+                <i class="fas fa-calendar-alt"></i> Set Exam Date
+              </button>
+            </div>
         </div>
       </div>
 
@@ -1345,8 +1358,7 @@
               <!-- Modules injected here -->
             </div>
 
-            <div
-              style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 15px; margin-top: 20px;">
+            <div id="studyTipsWrapper" style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 15px; margin-top: 20px;">
               <h4 style="color: #92400e; margin-bottom: 8px; font-size: 15px;"><i class="fas fa-lightbulb"></i> Study
                 Tips</h4>
               <ul id="aiStudyTips" style="padding-left: 20px; color: #b45309; font-size: 14px; line-height: 1.6;">
@@ -2264,7 +2276,7 @@
             weekCard.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px;">
             <h4 style="color:#0f2b46; font-size:16px;">Week ${week.week}: ${week.focusArea || 'General Study'}</h4>
-            <span style="background:#e8f4fd; color:#0071e3; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">${week.estimatedHours || 0} hrs</span>
+            <span class="week-badge" style="background:#e8f4fd; color:#0071e3; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">${week.estimatedHours || 0} hrs</span>
           </div>
           <ul style="list-style:none; padding:0; color:#555; font-size:14px;">
             ${tasksHtml}
