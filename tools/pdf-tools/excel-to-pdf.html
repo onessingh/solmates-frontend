@@ -156,14 +156,11 @@
 <div class="container">
     
 
-    <div class="upload-card" id="dropZone">
+    <label class="upload-card" id="dropZone" for="fileInput" style="display: block; cursor: pointer;">
         <i data-lucide="file-up"></i>
         <h2>Select Excel file (.xlsx, .xls, .csv)</h2>
         <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
-        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
-    </div>
-
-    <div style="text-align: center; margin-top: 2rem;">
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p></label><div style="text-align: center; margin-top: 2rem;">
         <button id="convertBtn" class="btn-primary" disabled>
             <i data-lucide="play"></i> Convert to PDF
         </button>
@@ -178,7 +175,7 @@
         </button>
     </div>
 
-    <div id="excelPreview" style="display: none; padding: 20px; background: var(--bg-card);"></div>
+    <div id="excelPreview" style="position: absolute; left: -9999px; top: -9999px; width: 1200px; padding: 20px; background: var(--bg-card);"></div>
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
         <p id="loadingText" style="color: var(--primary); font-weight: 600;">Generating Document...</p>
@@ -199,7 +196,7 @@
     let selectedFile = null;
     let pdfBlob = null;
 
-    dropZone.onclick = () => fileInput.click();
+    // dropZone.onclick removed in favor of label
     fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
     
     function handleFile(file) {

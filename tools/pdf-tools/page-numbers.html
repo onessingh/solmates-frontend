@@ -142,15 +142,12 @@
 <div class="container">
     
 
-    <div class="upload-card" id="dropZone">
+    <label class="upload-card" id="dropZone" for="fileInput" style="display: block; cursor: pointer;">
         <i data-lucide="list-ordered"></i>
         <h2>Select PDF file</h2>
         <p>or drag and drop a PDF here</p>
         <input type="file" id="fileInput" accept=".pdf" hidden>
-        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
-    </div>
-
-    <div id="settingsArea" style=" background: var(--bg-card); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: center;">
+        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p></label><div id="settingsArea" style=" background: var(--bg-card); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; margin-top: 2rem; text-align: center;">
         <div style="margin-bottom: 2rem;">
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Position</label>
             <select id="position" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); width: 100%; max-width: 300px;">
@@ -192,7 +189,7 @@
     let selectedFile = null;
     let processedPdfUrl = null;
 
-    dropZone.onclick = () => fileInput.click();
+    // dropZone.onclick removed in favor of label
     fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
     dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--primary)'; };
     dropZone.ondragleave = () => { dropZone.style.borderColor = 'var(--border)'; };
