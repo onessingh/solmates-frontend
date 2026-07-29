@@ -8,7 +8,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=113.8">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image & PDF Compressor — SOLMATES</title>
@@ -303,10 +303,7 @@
       transform: translateY(-2px);
     }
 
-    .btn-primary:disabled {
-      background: #d2d2d6;
-      cursor: not-allowed;
-    }
+    .btn-primary:disabled { background: #0071e3; opacity: 0.7; cursor: wait; }
 
     .btn-success {
       background: #34c759;
@@ -448,6 +445,7 @@
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
       .done-state { background: transparent !important; }
+        .file-pill { background: #334155 !important; color: #f8fafc !important; }
 </style>
 <script>
     (function() {
@@ -568,27 +566,27 @@
 
         <!-- Results -->
         <div id="resultCard" class="result-card"
-          style="border: 1px solid #ddd; background: #f8f9fa; border-radius: 24px;">
-          <h3 style="color:#1d1c1f; margin-bottom:16px; text-align:center;"><i class="fas fa-check-circle"></i>
-            Compression Complete!</h3>
-          <div class="stats-row">
-            <div class="stat-box">
-              <div class="label" style="color:#6e6e73;">Original</div>
-              <div class="val" id="resOriginal" style="color:#1d1c1f;">2.5 MB</div>
+            style="border: 1px solid var(--border-color, #ddd); background: var(--bg-light, #f8f9fa); border-radius: 24px;">
+            <h3 style="color:var(--text-main, #1d1c1f); margin-bottom:16px; text-align:center;"><i class="fas fa-check-circle" style="color:#28a745;"></i>
+              Compression Complete!</h3>
+            <div class="stats-row">
+              <div class="stat-box">
+                <div class="label" style="color:var(--text-muted, #6e6e73);">Original</div>
+                <div class="val" id="resOriginal" style="color:var(--text-main, #1d1c1f);">2.5 MB</div>
+              </div>
+              <div class="stat-box">
+                <div class="label" style="color:var(--text-muted, #6e6e73);">Compressed</div>
+                <div class="val" id="resCompressed" style="color:var(--text-main, #000); font-size:1.4rem;">500 KB</div>
+              </div>
+              <div class="stat-box">
+                <div class="label" style="color:var(--text-muted, #6e6e73);">Saved</div>
+                <div class="val saved" id="resSaved" style="color:var(--text-main, #000); font-weight:800;">80%</div>
+              </div>
             </div>
-            <div class="stat-box">
-              <div class="label" style="color:#6e6e73;">Compressed</div>
-              <div class="val" id="resCompressed" style="color:#000; font-size:1.4rem;">500 KB</div>
-            </div>
-            <div class="stat-box">
-              <div class="label" style="color:#6e6e73;">Saved</div>
-              <div class="val saved" id="resSaved" style="color:#000; font-weight:800;">80%</div>
-            </div>
-          </div>
-          <button id="downloadBtn" class="btn btn-success"
-            style="background:var(--bg-card); color:#000; border:1px solid #000; height:60px; font-size:1.2rem; border-radius:30px; box-shadow:none;">
-            <i class="fas fa-download"></i> Download Compressed File
-          </button>
+            <button id="downloadBtn" class="btn btn-success"
+              style="height:60px; font-size:1.2rem; border-radius:30px; box-shadow:none; background:#0071e3; color:white; border:none;">
+              <i class="fas fa-download"></i> Download Compressed File
+            </button>
         </div>
 
       </div>
