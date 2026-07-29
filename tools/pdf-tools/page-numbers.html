@@ -156,7 +156,7 @@
                 <option value="top-center">Top Center</option>
             </select>
         </div>
-        <button id="addBtn" class="btn-primary" disabled>
+        <button id="addBtn" class="btn-primary">
             <i data-lucide="play"></i> Add Page Numbers
         </button>
     </div>
@@ -199,7 +199,7 @@
         
         selectedFile = file;
         fileName.textContent = file.name;
-        dropZone.style.display = 'none'; settingsArea.style.display = 'block';
+        dropZone.style.display = 'none'; settingsArea.style.display = 'block'; addBtn.disabled = false;
         
     }
 
@@ -251,7 +251,7 @@
         } catch (err) {
             console.error(err);
             alert(err.message || 'Error adding page numbers');
-            dropZone.style.display = 'none'; settingsArea.style.display = 'block';
+            dropZone.style.display = 'none'; settingsArea.style.display = 'block'; addBtn.disabled = false;
         } finally {
             loadingOverlay.style.display = 'none';
         }
