@@ -164,6 +164,10 @@
       .card-face { background: var(--bg-card, #1e293b) !important; }
       .deck-item { background: var(--bg-card, #1e293b) !important; }
       .done-state { background: transparent !important; }
+        .file-pill { background: #334155 !important; color: #f8fafc !important; }
+        .format-btn { background: #1e293b !important; border-color: #334155 !important; color: #f8fafc !important; }
+        .format-btn:hover { border-color: #60a5fa !important; color: #60a5fa !important; }
+        .format-btn.active { background: #2563eb !important; border-color: #2563eb !important; color: white !important; }
 </style>
 <script>
     (function() {
@@ -209,12 +213,12 @@
 
 
       <button id="convertBtn" class="btn-convert">Convert File(s)</button>
-    </div>    <div id="resultsArea" style="display:none; margin-top:20px; text-align:center; padding:25px; background:#f8f9fa; border-radius:20px; border:1px solid #ddd;">
-      <h3 style="color:#1d1d1f; margin-bottom:15px;"><i class="fas fa-check-circle"></i> Files Converted Successfully!</h3>
-      <button id="downloadResultBtn" class="btn-convert" style="background:var(--bg-card); color:#000; border:1px solid #000; max-width:300px; margin:0 auto; box-shadow:none;">
-        <i class="fas fa-download"></i> Download Result
-      </button>
-    </div>
+    </div>    <div id="resultsArea" style="display:none; margin-top:20px; text-align:center; padding:25px; background:var(--bg-light, #f8f9fa); border-radius:20px; border:1px solid var(--border-color, #ddd);">
+        <h3 style="color:var(--text-main, #1d1d1f); margin-bottom:15px;"><i class="fas fa-check-circle" style="color:#28a745;"></i> Files Converted Successfully!</h3>
+        <button id="downloadResultBtn" class="btn-convert" style="max-width:300px; margin:0 auto; box-shadow:none;">
+          <i class="fas fa-download"></i> Download Result
+        </button>
+      </div>
   </div>
 </div>
 <script>
