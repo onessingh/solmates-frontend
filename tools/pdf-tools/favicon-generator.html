@@ -54,19 +54,7 @@
         }
     </style>
 
-<script>
-    (function() {
-      const savedTheme = localStorage.getItem('solmates_theme');
-      if (savedTheme) {
-        document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
-        }
-      }
-    })();
-  </script>
+
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
     :root {
       --bg-body: #0f172a;
@@ -132,6 +120,19 @@
     /* Fix translate pdf container */
     #contentHolder, #contentHolder * { color: var(--text-main, #f8fafc) !important; background: var(--bg-card-hover, #334155) !important; border-color: var(--border-color, #334155) !important; }
 </style>
+<script>
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        document.documentElement.style.colorScheme = savedTheme;
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        }
+      }
+    })();
+  </script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100 font-sans">
     <div class="header-bar">
