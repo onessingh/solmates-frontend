@@ -265,8 +265,7 @@
             dropZone.style.display = 'none';
             const th = document.querySelector('.header-bar');
             if(th) th.style.display = 'none';
-            const nth = document.querySelector('.container > div:nth-child(3)');
-            if(nth) nth.style.display = 'none';
+            transBtn.parentNode.style.display = 'none';
             
             transBtn.innerHTML = '<i data-lucide="check"></i> Translated';
             lucide.createIcons();
