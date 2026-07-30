@@ -249,13 +249,16 @@
 (function() {
     function updateMetaColorScheme() {
         var meta = document.querySelector('meta[name="color-scheme"]');
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
+            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
         }
     }
@@ -318,7 +321,7 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-weight: 700; font-size: 0.95rem; color: var(--primary);">MAX <span style="color: var(--accent);">(Ultra-Crisp)</span></span>
           </div>
-          <div style="font-size: 0.75rem; color: var(--light); line-height: 1.5;">Rendering at 20x resolution — print-grade quality. Text will be sharp even when zoomed in on your PDF viewer.</div>
+          <div style="font-size: 0.75rem; color: var(--light); line-height: 1.5;">Rendering at 20x resolution ? print-grade quality. Text will be sharp even when zoomed in on your PDF viewer.</div>
         </div>
       </div>
     </div>

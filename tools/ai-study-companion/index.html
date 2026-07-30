@@ -3,8 +3,7 @@
 <html lang="en">
 <head>
 
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a">
+  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta charset="UTF-8">
@@ -373,13 +372,16 @@
 (function() {
     function updateMetaColorScheme() {
         var meta = document.querySelector('meta[name="color-scheme"]');
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
+            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
         }
     }

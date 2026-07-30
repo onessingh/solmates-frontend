@@ -3,8 +3,7 @@
 
 <head>
 
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a">
+  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
@@ -149,7 +148,7 @@
     }
 
     </style>
-  <script src="/js/sol-cache.js?v=90.0"></script>
+  <script src="/js/sol-cache.js?v=91.0"></script>
 
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
@@ -187,13 +186,16 @@
 (function() {
     function updateMetaColorScheme() {
         var meta = document.querySelector('meta[name="color-scheme"]');
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
+            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
         }
     }
@@ -261,7 +263,7 @@
     </div>
   </div>
 
-  <script src="/config.js?v=117.0"></script>
+  <script src="/config.js?v=118.0"></script>
   <script src="/js/uptime-helper.js?v=101.0"></script>
   <script src="/js/api-client.js"></script>
   <script>

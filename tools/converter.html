@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/css/global-lockdown.css?v=113.7">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Format Converter — SOLMATES</title>
+  <title>Format Converter ? SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -202,13 +202,16 @@
 (function() {
     function updateMetaColorScheme() {
         var meta = document.querySelector('meta[name="color-scheme"]');
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
+            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
         }
     }
