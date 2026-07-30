@@ -1,4 +1,4 @@
-// Robust Storage Fallback (v113.5)
+// Robust Storage Fallback (v113.6)
 (function() {
   let storageSupported = true;
   try {
@@ -331,5 +331,6 @@ if (typeof document !== "undefined") {
         else document.addEventListener('DOMContentLoaded', inject);
     })();
 }
+
 
 
