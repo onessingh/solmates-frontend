@@ -4637,6 +4637,15 @@
       const msgDiv = document.createElement('div');
       msgDiv.id = id;
       msgDiv.className = 'chat-message ai-message';
+      msgDiv.innerHTML = `
+    <div class="avatar ai-avatar">AI</div>
+    <div class="skeleton-chat-item"></div>
+  `;
+      messagesDiv.appendChild(msgDiv);
+      scrollToBottom();
+      return id;
+    }
+
     function removeChatTypingIndicator(id) {
       const el = document.getElementById(id);
       if (el) el.remove();
