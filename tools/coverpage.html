@@ -615,6 +615,7 @@
       document.body.classList.add('show-preview');
       document.getElementById('tab-preview').classList.add('active');
       document.getElementById('tab-details').classList.remove('active');
+      setTimeout(scalePreview, 10);
     } else {
       document.body.classList.remove('show-preview');
       document.getElementById('tab-details').classList.add('active');
