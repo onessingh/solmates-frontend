@@ -220,14 +220,55 @@
     }
 
     /* Device Visibility Logic */
-    @media (max-width: 768px) {
+    .mobile-tabs { display: none; }
+    
+    @media (max-width: 1023px) {
       .header-bar h1 { font-size: 1.2rem; }
       .iframe-wrapper {
-        width: 100%; /* Full width on phones for phone preview */
+        width: 100%;
         height: 600px;
       }
       #preview-frame { height: 100%; }
+      
+      /* Mobile Bottom Navigation */
+      .mobile-tabs {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--surface);
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        border-top: 1px solid var(--border);
+      }
+      .m-tab {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        background: none;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .m-tab.active {
+        color: var(--accent);
+        border-top: 3px solid var(--accent);
+        background: rgba(0,113,227,0.05);
+      }
+      .form-column { padding-bottom: 80px; }
+      .preview-column { display: none; padding-bottom: 80px; margin-top: 0; }
+      
+      body.show-preview .form-column { display: none; }
+      body.show-preview .preview-column { display: block; }
     }
+    
     @media (min-width: 1024px) {
       .iframe-wrapper {
         width: 100%; /* Laptop view */
@@ -364,6 +405,11 @@
         .theme-name { color: var(--text-main, #f8fafc) !important; }
         button[onclick="cancelCrop()"] { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #475569) !important; }
         button[onclick="openTemplateModal()"] { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #475569) !important; }
+        
+        /* Mobile Tabs */
+        .mobile-tabs { background: var(--bg-card, #1e293b) !important; border-top-color: var(--border-color, #334155) !important; }
+        .m-tab { color: var(--text-muted, #94a3b8) !important; }
+        .m-tab.active { color: var(--brand-accent, #60a5fa) !important; border-top-color: var(--brand-accent, #60a5fa) !important; background: rgba(96, 165, 250, 0.1) !important; }
 </style>
 <script>
     (function() {
@@ -383,6 +429,11 @@
 
   <div class="header-bar">
     <h1>Portfolio Website Builder</h1>
+  </div>
+
+  <div class="mobile-tabs">
+    <button class="m-tab active" id="m-tab-editor" onclick="switchMobileTab('editor')"><i class="fas fa-edit"></i> Edit Details</button>
+    <button class="m-tab" id="m-tab-preview" onclick="switchMobileTab('preview')"><i class="fas fa-eye"></i> Live Preview</button>
   </div>
 
   <div class="container">
@@ -1049,6 +1100,20 @@
         
         updatePreview();
         alert('Data extracted! We pulled as much as we could (including Experience/Projects if found). Please review and modify the details.');
+    }
+
+    function switchMobileTab(tab) {
+      if (tab === 'preview') {
+        document.body.classList.add('show-preview');
+        document.getElementById('m-tab-editor').classList.remove('active');
+        document.getElementById('m-tab-preview').classList.add('active');
+      } else {
+        document.body.classList.remove('show-preview');
+        document.getElementById('m-tab-preview').classList.remove('active');
+        document.getElementById('m-tab-editor').classList.add('active');
+      }
+      // Scroll to top when switching
+      window.scrollTo(0, 0);
     }
   </script>
 </body>
