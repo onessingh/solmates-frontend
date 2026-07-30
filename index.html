@@ -4513,8 +4513,14 @@
     async function summarizeAiMessage(btn) {
       const msgActions = btn.parentElement;
       const rawText = msgActions.getAttribute('data-raw');
-      const msgDiv = msgActions.parentElement;
-      const textContainer = msgDiv.querySelector('.message-text') || msgDiv;
+      const bodyWrapper = msgActions.parentElement;
+      // Target only the .content div (text bubble), NOT the whole wrapper
+      const textContainer = bodyWrapper.querySelector('.content');
+
+      if (!textContainer) {
+        alert('Could not find message content to summarize.');
+        return;
+      }
 
       // Visual feedback on button
       const originalHtml = btn.innerHTML;
@@ -4523,8 +4529,8 @@
 
       try {
         const payload = {
-            message: `Summarize this in 3 concise bullet points: ${rawText}`,
-            history: [] // No need for history for a direct summary
+            message: `Summarize this in 3 concise bullet points:\n\n${rawText}`,
+            history: []
         };
         const apiBase = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
         const res = await fetch(apiBase + '/chatbot', {
@@ -4533,19 +4539,18 @@
             body: JSON.stringify(payload)
         });
         const data = await res.json();
-        
-        if (data.success) {
-            // Update the data-raw so subsequent actions use the new text
+
+        if (data.success && data.message) {
+            // Update data-raw for copy/share/listen to use summary
             msgActions.setAttribute('data-raw', data.message);
-            // Re-render text in place
-            textContainer.innerHTML = '';
-            typeWriterHub(textContainer, data.message);
+            // Replace only the text content inside the bubble
+            textContainer.innerHTML = formatHubReply(data.message);
         } else {
-            alert('Failed to summarize.');
+            alert('Failed to summarize. Please try again.');
         }
       } catch (err) {
-        console.error(err);
-        alert('Error while summarizing.');
+        console.error('Summarize error:', err);
+        alert('Error while summarizing. Check your connection.');
       }
 
       btn.innerHTML = '<i class="fas fa-check"></i> Summarized';
