@@ -174,10 +174,35 @@
     .template-emerald .cv-block h3 { color: #27ae60; }
 
 
+    .mobile-only { display: none; }
     @media (max-width: 900px) {
-      .container { flex-direction: column; }
-      .editor-panel, .preview-panel { width: 100%; max-width: 100%; }
+      .mobile-only { display: block; }
+      .container { flex-direction: column; margin-bottom: 80px; }
+      .editor-panel, .preview-panel { width: 100%; max-width: 100%; padding: 15px; }
       .a4-preview-wrapper { max-width: 100%; }
+      body:not(.show-preview) .preview-panel { display: none !important; }
+      body.show-preview .editor-panel { display: none !important; }
+      .mobile-tabs { display: flex !important; }
+    }
+    
+    .mobile-tabs {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--surface, var(--bg-card, #ffffff));
+      border-top: 1px solid var(--border-color, #e5e5ea);
+      z-index: 9999;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+    }
+    .mobile-tab {
+      flex: 1; text-align: center; padding: 15px 0;
+      font-weight: 600; font-size: 1rem; color: var(--text-muted, #86868b);
+      cursor: pointer; transition: 0.2s;
+    }
+    .mobile-tab.active {
+      color: var(--primary, #0f2b46);
+      border-top: 3px solid var(--accent, #0071e3);
+      background: var(--bg-card, #f0f4f8);
     }
   
     .header-bar {
@@ -400,6 +425,7 @@
   <!-- PREVIEW PANEL -->
   <div class="preview-panel">
     <h3 style="margin-bottom:15px; color:#666;"><i class="fas fa-eye"></i> Live PDF Preview</h3>
+    <button class="btn-download mobile-only" onclick="downloadPDF()" style="margin-bottom: 20px;"><i class="fas fa-file-pdf"></i> Download PDF Cover Page</button>
     <div class="a4-preview-wrapper" id="previewWrapper">
       <!-- High-res content box that gets scaled down using CSS transform -->
       <div class="a4-content template-classic" id="a4Content">
@@ -448,6 +474,11 @@
   </div>
 
 </div>
+
+  <div class="mobile-tabs">
+    <div class="mobile-tab active" onclick="switchTab('details')" id="tab-details"><i class="fas fa-edit"></i> Edit Details</div>
+    <div class="mobile-tab" onclick="switchTab('preview')" id="tab-preview"><i class="fas fa-eye"></i> Live Preview</div>
+  </div>
 
 <script>
   let currentLogo = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMTUzMjQzIiBzdHJva2Utd2lkdGg9IjUiLz4KICA8dGV4dCB4PSIxMDAiIHk9IjEzMCIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzE1MzI0MyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RFU8L3RleHQ+Cjwvc3ZnPg==";
@@ -571,6 +602,18 @@
     } finally {
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-file-pdf"></i> Download PDF Cover Page';
+    }
+  }
+
+  function switchTab(tab) {
+    if(tab === 'preview') {
+      document.body.classList.add('show-preview');
+      document.getElementById('tab-preview').classList.add('active');
+      document.getElementById('tab-details').classList.remove('active');
+    } else {
+      document.body.classList.remove('show-preview');
+      document.getElementById('tab-details').classList.add('active');
+      document.getElementById('tab-preview').classList.remove('active');
     }
   }
 </script>
