@@ -2310,14 +2310,14 @@
     .suggested-resources {
       margin-top: 15px;
       padding-top: 12px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+      border-top: 1px dashed var(--border-color);
     }
 
     .res-label {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-muted);
       margin-bottom: 8px;
       display: block;
     }
@@ -2333,20 +2333,20 @@
       align-items: center;
       gap: 6px;
       padding: 6px 12px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       border-radius: 8px;
-      color: white;
+      color: var(--brand-primary);
       text-decoration: none;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       transition: all 0.2s ease;
     }
 
     .res-link:hover {
-      background: #c0962d;
-      border-color: #c0962d;
-      color: var(--brand-primary);
+      background: var(--brand-accent, #c0962d);
+      border-color: var(--brand-accent, #c0962d);
+      color: var(--bg-body);
       transform: translateY(-2px);
     }
 
@@ -4526,7 +4526,8 @@
             message: `Summarize this in 3 concise bullet points: ${rawText}`,
             history: [] // No need for history for a direct summary
         };
-        const res = await fetch('/api/v1/content/chatbot', {
+        const apiBase = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+        const res = await fetch(apiBase + '/chatbot', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
