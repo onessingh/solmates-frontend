@@ -321,7 +321,7 @@ Rules:
           const data = await res.json();
           let rawText = data.message || data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
           
-          let options = rawText.split(/\\n+/).filter(t => t.trim().length > 5);
+          let options = rawText.split(/(?:Option \\d+:|^\\d+\\.|\\n\\n+)/mi).map(s => s.trim()).filter(t => t.length > 5);
           if (options.length === 0) options = [rawText];
 
           container.innerHTML = options.map((opt, index) => `
