@@ -4,14 +4,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-
-  <meta name="theme-color" content="#ffffff">
-  <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shark Pitch | AI Judged Multiplayer</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/global-lockdown.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,204 +33,87 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-      }
-
-        /* dark mode moved */
-
-        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
-        .gradient-text { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; border: none; cursor: pointer; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .btn-secondary:hover { background: #e2e8f0; }
-        .hidden { display: none !important; }
-        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; box-sizing: border-box; }
-        .input-box:focus { outline: none; border-color: #f59e0b; }
-        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { background: rgba(15,23,42,0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .pitch-textarea { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0; color: var(--text-main); font-size: 1rem; resize: vertical; font-family: inherit; box-sizing: border-box; }
-        .pitch-textarea:focus { outline: none; border-color: #f59e0b; }
-        .answer-card { background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
-        .ai-score { display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-weight: 800; font-size: 1.1rem; line-height: 48px; text-align: center; }
-        .countdown-ring { font-size: 3rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    
-        /* dark mode moved */
-
-
-        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
-.challenge-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
-</style>
-
-
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
-            :root {
-                --primary: #0f172a;
-                --accent: #38bdf8;
-                --card-bg: rgba(30, 41, 59, 0.8);
-                --glass-border: rgba(255, 255, 255, 0.05);
-                --text-main: #f8fafc;
-                --text-muted: #94a3b8;
-      }
-            .header-bar {
-                background: rgba(15, 23, 42, 0.8) !important;
-      }
-      
-
-            .pitch-textarea { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
-            .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
-    <script>tailwind.config = { darkMode: 'class' }</script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <style>
-        :root { --primary: #f8fafc; --card-bg: rgba(255,255,255,0.8); --glass-border: rgba(0,0,0,0.05); --text-main: #0f172a; --text-muted: #64748b; }
-        body {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; background: var(--primary); color: var(--text-main);
-            background-image: radial-gradient(circle at 15% 50%, rgba(245,158,11,0.05), transparent 25%), radial-gradient(circle at 85% 30%, rgba(239,68,68,0.05), transparent 25%);
-            margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-        .header-bar { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); padding: 16px; text-align: center; border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
-        .header-bar h1 { margin: 0; font-size: 1.25rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-      }
-
-        /* dark mode moved */
-
-        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
-        .gradient-text { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; border: none; cursor: pointer; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .btn-secondary:hover { background: #e2e8f0; }
-        .hidden { display: none !important; }
-        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; box-sizing: border-box; }
-        .input-box:focus { outline: none; border-color: #f59e0b; }
-        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { background: rgba(15,23,42,0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .pitch-textarea { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0; color: var(--text-main); font-size: 1rem; resize: vertical; font-family: inherit; box-sizing: border-box; }
-        .pitch-textarea:focus { outline: none; border-color: #f59e0b; }
-        .answer-card { background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
-        .ai-score { display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-weight: 800; font-size: 1.1rem; line-height: 48px; text-align: center; }
-        .countdown-ring { font-size: 3rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-    
-        /* dark mode moved */
-
-
-        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
-.challenge-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
-</style>
-
-
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
-            :root {
-                --primary: #0f172a;
-                --accent: #38bdf8;
-                --card-bg: rgba(30, 41, 59, 0.8);
-                --glass-border: rgba(255, 255, 255, 0.05);
-                --text-main: #f8fafc;
-                --text-muted: #94a3b8;
-      }
-            .header-bar {
-                background: rgba(15, 23, 42, 0.8) !important;
-      }
-      
-
-            .pitch-textarea { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
-            .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
-            .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main);  white-space: normal; height: auto; min-height: 60px; word-wrap: break-word; }
-            .option-btn:hover:not(:disabled) { background: var(--card-bg); border-color: var(--text-muted); }
-            .btn-primary { background: #0ea5e9; color: white; }
-            .btn-primary:hover { background: #0284c7; }
-            .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
-            .btn-secondary:hover { background: var(--primary); }
-            .glass-card { background: var(--card-bg); }
-            .player-item { background: var(--card-bg) !important; color: var(--text-main) !important; border-color: var(--glass-border) !important; }
-            .toast { background: rgba(255,255,255,0.9) !important; color: #0f172a !important; box-shadow: 0 4px 15px rgba(255,255,255,0.1) !important; }
-            .challenge-box { background: rgba(245, 158, 11, 0.1) !important; border-color: rgba(245, 158, 11, 0.2) !important; }
-      
-</style>
-<script>
-    (function() {
-      const savedTheme = localStorage.getItem('solmates_theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      const applyDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-      
-      if (applyDark) {
-          document.documentElement.classList.add('dark');
-          document.documentElement.style.colorScheme = 'dark';
-      } else {
-          document.documentElement.classList.remove('dark');
-          document.documentElement.style.colorScheme = 'light';
-      }
-      
-      window.addEventListener('DOMContentLoaded', () => {
-          const darkStyle = document.getElementById('solmates-dark-style');
-          if (darkStyle) {
-              if (applyDark) {
-                  darkStyle.media = 'all'; 
-                  darkStyle.disabled = false;
-              } else {
-                  darkStyle.media = 'not all'; 
-                  darkStyle.disabled = true;
-              }
-          }
-      });
-      
-      const darkStyleImm = document.getElementById('solmates-dark-style');
-      if (darkStyleImm) {
-          if (applyDark) {
-              darkStyleImm.media = 'all'; 
-              darkStyleImm.disabled = false;
-          } else {
-              darkStyleImm.media = 'not all'; 
-              darkStyleImm.disabled = true;
-          }
-      }
-    })();
-  </script>
-<script id="color-scheme-sync">
-(function() {
-    function updateMetaColorScheme() {
-        var meta = document.querySelector('meta[name="color-scheme"]');
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
-        var darkStyle = document.getElementById('solmates-dark-style');
-        if (!meta) return;
-        var theme = localStorage.getItem('solmates_theme');
-        if (theme === 'dark') {
-            meta.setAttribute('content', 'dark only');
-            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
-            document.documentElement.style.colorScheme = 'dark';
-            document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
-        } else if (theme === 'light') {
-            meta.setAttribute('content', 'light only');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
-            document.documentElement.style.colorScheme = 'light';
-            document.documentElement.classList.remove('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'not all');
         }
-    }
-    updateMetaColorScheme();
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'solmates_theme') updateMetaColorScheme();
-    });
-    var originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
-        if (key === 'solmates_theme') updateMetaColorScheme();
-    };
-})();
-</script>
+        .glass-card { margin: auto; background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 20px; }
+        .gradient-text { background: linear-gradient(45deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: var(--text-main); color: white; transition: all 0.2s; border-radius: 12px; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-secondary { background: #f1f5f9; color: var(--text-main); transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .hidden { display: none !important; }
+        .input-box { width: 100%; padding: 16px; margin-bottom: 16px; border-radius: 12px; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); font-size: 1rem; box-sizing: border-box; }
+        .input-box:focus { outline: none; border-color: #f59e0b; }
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(15,23,42,0.9); color: white; padding: 12px 24px; border-radius: 99px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .pitch-textarea { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; background: #fff; border: 2px solid #e2e8f0; color: var(--text-main); font-size: 1rem; resize: vertical; font-family: inherit; box-sizing: border-box; }
+        .pitch-textarea:focus { outline: none; border-color: #f59e0b; }
+        .answer-card { background: var(--bg-body); border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
+        .ai-score { display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; font-weight: 800; font-size: 1.1rem; line-height: 48px; text-align: center; }
+        .countdown-ring { font-size: 3rem; font-weight: 800; text-align: center; background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
+        .challenge-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    </style>
+
+    <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+        :root {
+            --primary: #0f172a;
+            --accent: #38bdf8;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        .header-bar {
+            background: rgba(15, 23, 42, 0.8) !important;
+        }
+        .pitch-textarea { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+        .input-box { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); }
+        .option-btn { background: var(--primary); border-color: var(--glass-border); color: var(--text-main); white-space: normal; height: auto; min-height: 60px; word-wrap: break-word; }
+        .option-btn:hover:not(:disabled) { background: var(--card-bg); border-color: var(--text-muted); }
+        .btn-primary { background: #0ea5e9; color: white; }
+        .btn-primary:hover { background: #0284c7; }
+        .btn-secondary { background: var(--card-bg); color: var(--text-main); border-color: var(--glass-border); }
+        .btn-secondary:hover { background: var(--primary); }
+        .glass-card { background: var(--card-bg); }
+        .player-item { background: var(--card-bg) !important; color: var(--text-main) !important; border-color: var(--glass-border) !important; }
+        .toast { background: rgba(255,255,255,0.9) !important; color: #0f172a !important; box-shadow: 0 4px 15px rgba(255,255,255,0.1) !important; }
+        .challenge-box { background: rgba(245, 158, 11, 0.1) !important; border-color: rgba(245, 158, 11, 0.2) !important; }
+    </style>
+
+    <script id="color-scheme-sync">
+    (function() {
+        function updateMetaColorScheme() {
+            var meta = document.querySelector('meta[name="color-scheme"]');
+            var themeMeta = document.querySelector('meta[name="theme-color"]');
+            var darkStyle = document.getElementById('solmates-dark-style');
+            if (!meta) return;
+            var theme = localStorage.getItem('solmates_theme');
+            if (theme === 'dark') {
+                meta.setAttribute('content', 'dark only');
+                if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
+                document.documentElement.style.colorScheme = 'dark';
+                document.documentElement.classList.add('dark');
+                if (darkStyle) darkStyle.setAttribute('media', 'all');
+            } else if (theme === 'light') {
+                meta.setAttribute('content', 'light only');
+                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+                document.documentElement.style.colorScheme = 'light';
+                document.documentElement.classList.remove('dark');
+                if (darkStyle) darkStyle.setAttribute('media', 'not all');
+            }
+        }
+        updateMetaColorScheme();
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'solmates_theme') updateMetaColorScheme();
+        });
+        var originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'solmates_theme') updateMetaColorScheme();
+        };
+    })();
+    </script>
 </head>
 <body>
 <div id="toast-container"></div>
