@@ -2203,11 +2203,11 @@
       transition: all 0.2s ease;
       font-size: 13px;
       font-weight: 500;
-      color: #444;
+      color: var(--text-main);
     }
 
     .mode-option:hover {
-      background: #f5f5f7;
+      background: var(--bg-card-hover, #f5f5f7);
     }
 
     .mode-option.active {
@@ -2845,6 +2845,10 @@
           }
           .premium-search-bar::placeholder {
             color: var(--text-muted) !important;
+          }
+          
+          .hub-message a {
+            color: #66b3ff !important;
           }
           
           /* Chat Input overrides */
@@ -4507,19 +4511,47 @@
 
     // ========== SMART SUMMARIZER ==========
     async function summarizeAiMessage(btn) {
-      const rawText = btn.parentElement.getAttribute('data-raw');
-      const input = document.getElementById('chatInput');
+      const msgActions = btn.parentElement;
+      const rawText = msgActions.getAttribute('data-raw');
+      const msgDiv = msgActions.parentElement;
+      const textContainer = msgDiv.querySelector('.message-text') || msgDiv;
 
       // Visual feedback on button
       const originalHtml = btn.innerHTML;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Summarizing...';
       btn.style.pointerEvents = 'none';
 
-      input.value = `Summarize this in 3 concise bullet points: ${rawText}`;
-      await sendChatHubMessage();
+      try {
+        const payload = {
+            message: `Summarize this in 3 concise bullet points: ${rawText}`,
+            history: [] // No need for history for a direct summary
+        };
+        const res = await fetch('/api/v1/content/chatbot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            // Update the data-raw so subsequent actions use the new text
+            msgActions.setAttribute('data-raw', data.message);
+            // Re-render text in place
+            textContainer.innerHTML = '';
+            typeWriterHub(textContainer, data.message);
+        } else {
+            alert('Failed to summarize.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error while summarizing.');
+      }
 
-      btn.innerHTML = originalHtml;
-      btn.style.pointerEvents = 'auto';
+      btn.innerHTML = '<i class="fas fa-check"></i> Summarized';
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.style.pointerEvents = 'auto';
+      }, 2000);
     }
 
     function launchConfetti() {
@@ -4667,7 +4699,7 @@
         if (line.startsWith('|') && line.endsWith('|')) {
           if (!inTable) {
             inTable = true;
-            tableHtml = '<div style="overflow-x:auto; margin: 15px 0;"><table class="study-planner-table" style="width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid var(--border-color, #ccc); color: var(--text-color, #333);">';
+            tableHtml = '<div style="overflow-x:auto; margin: 15px 0;"><table class="study-planner-table" style="width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid var(--border-color, #ccc); color: var(--text-main);">';
           }
           
           if (line.replace(/[\|\-\s:]/g, '') === '') {
