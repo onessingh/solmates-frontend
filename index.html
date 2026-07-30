@@ -4817,7 +4817,11 @@
      * Fetch notification count from all MBA semesters (1-4)
      * Synchronized with "NEW" badges on notification.html (v74.8)
      */
+    let _notifFetchTimer = null;
     async function fetchNotificationCount() {
+      // Debounce: prevent multiple calls within 2 seconds
+      if (_notifFetchTimer) return;
+      _notifFetchTimer = setTimeout(() => { _notifFetchTimer = null; }, 2000);
       const badge = document.querySelector('.notification-badge');
       if (!badge) return;
 
