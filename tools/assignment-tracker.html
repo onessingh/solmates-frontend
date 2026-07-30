@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -340,9 +340,9 @@
       <div class="fg">
         <label>Priority</label>
         <select class="fc" id="fPriority">
-          <option value="high">🔴 High — Urgent</option>
-          <option value="med" selected>🟡 Medium — Normal</option>
-          <option value="low">🟢 Low — Optional</option>
+          <option value="high">?? High � Urgent</option>
+          <option value="med" selected>?? Medium � Normal</option>
+          <option value="low">?? Low � Optional</option>
         </select>
       </div>
       <div class="fg full">
@@ -386,9 +386,9 @@
       <div class="fg"><label>Due Date</label><input class="fc" type="date" id="eDue"></div>
       <div class="fg"><label>Priority</label>
         <select class="fc" id="ePriority">
-          <option value="high">🔴 High</option>
-          <option value="med">🟡 Medium</option>
-          <option value="low">🟢 Low</option>
+          <option value="high">?? High</option>
+          <option value="med">?? Medium</option>
+          <option value="low">?? Low</option>
         </select>
       </div>
       <div class="fg"><label>Notes</label><input class="fc" type="text" id="eNote"></div>
@@ -560,7 +560,7 @@
       const dueDisplay = a.due ? new Date(a.due + 'T00:00:00').toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) : 'No deadline';
 
       let statusBadge = '';
-      if (a.done) statusBadge = `<span class="badge b-done">✓ Done</span>`;
+      if (a.done) statusBadge = `<span class="badge b-done">? Done</span>`;
       else if (overdue) statusBadge = `<span class="badge b-overdue">Overdue</span>`;
       else if (soon) statusBadge = `<span class="badge b-due-soon">Due Soon</span>`;
 
@@ -580,7 +580,7 @@
               <span><i class="fas fa-calendar-alt"></i> ${dueDisplay}</span>
               ${dueLabel ? `<span style="color:${overdue ? 'var(--danger)' : soon ? 'var(--warning)' : 'var(--light)'}"><i class="fas fa-clock"></i> ${dueLabel}</span>` : ''}
             </div>
-            ${a.note ? `<div class="a-note">📝 ${a.note}</div>` : ''}
+            ${a.note ? `<div class="a-note">?? ${a.note}</div>` : ''}
           </div>
           <div class="a-actions">
             <button class="act-btn" onclick="openEdit(${a.id})" title="Edit"><i class="fas fa-edit"></i></button>
