@@ -3,7 +3,7 @@
 <head>
 
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a">
+  <meta name="theme-color" media="screen and (prefers-color-scheme: dark)" content="#0f172a">
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
   <meta charset="UTF-8">
@@ -117,7 +117,7 @@
     </style>
 
 
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
+<style id="solmates-dark-style" media="screen and (prefers-color-scheme: dark)">
       :root {
         --bg-body: #0f172a;
         --text-main: #f8fafc;
@@ -178,7 +178,7 @@
         document.documentElement.style.colorScheme = savedTheme;
         const darkStyle = document.getElementById('solmates-dark-style');
         if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
           else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
         }
       }
