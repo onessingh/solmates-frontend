@@ -272,6 +272,9 @@
           border: 1px solid var(--border-color, #334155) !important; 
           color: var(--text-main, #f8fafc) !important;
       }
+      .mobile-tabs { background: var(--bg-card, #1e293b) !important; border-top-color: var(--border-color, #334155) !important; }
+      .mobile-tab { color: var(--text-muted, #94a3b8) !important; }
+      .mobile-tab.active { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-top-color: var(--brand-accent, #c0962d) !important; }
       .card *, .form-card *, .result-box *, .result-area *, .white-box *, .editor-panel *, .main-content *, .card-body *, .feature-item *, .info-box *, .upload-area *, .upload-card *, .tool-card *, .calc-card *, .flashcard *, .topic-card *, .overlay *, .task-card *, .glass-panel *, .converter-box *, .settings-panel *, .control-panel *, .action-card *, .attendance-card *, .search-box *, .tab-content *, .faq-q *, .faq-item *, .btn-tool *, .input-card *, .deck-item *, .card-face *, .done-state * {
           color: var(--text-main, #f8fafc) !important;
       }
@@ -604,6 +607,8 @@
       btn.innerHTML = '<i class="fas fa-file-pdf"></i> Download PDF Cover Page';
     }
   }
+
+  window.addEventListener('load', updatePreview);
 
   function switchTab(tab) {
     if(tab === 'preview') {
