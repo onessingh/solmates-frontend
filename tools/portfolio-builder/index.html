@@ -270,6 +270,7 @@
     }
     
     @media (min-width: 1024px) {
+      .mobile-only { display: none !important; }
       .iframe-wrapper {
         width: 100%; /* Laptop view */
         height: calc(100vh - 220px);
@@ -516,6 +517,12 @@
       </label>
       <div id="resume-loading" style="display:none; text-align:center; margin-top:10px; font-weight:bold; color:var(--primary);">Extracting Data...</div>
     </div>
+    
+    <!-- Mobile Export Button -->
+    <div class="mobile-only" style="margin-bottom: 20px;">
+      <button class="export-btn" onclick="exportWebsite()"><i class="fas fa-file-archive"></i> Download Website ZIP</button>
+    </div>
+    
     </div> <!-- END form-column -->
 
     <!-- Preview & Export -->
@@ -525,10 +532,10 @@
       <div class="card" style="margin-bottom: 30px;">
         <div class="card-title" onclick="toggleAccordion('design-accordion')" style="cursor: pointer; justify-content: space-between; border-bottom: none; margin-bottom: 0;">
           <span><i class="fas fa-paint-brush"></i> Choose Theme & Colors</span>
-          <i class="fas fa-chevron-up" id="design-accordion-icon"></i>
+          <i class="fas fa-chevron-down" id="design-accordion-icon"></i>
         </div>
         
-        <div id="design-accordion" style="display: block; padding-top: 20px; border-top: 2px solid var(--border); margin-top: 15px;">
+        <div id="design-accordion" style="display: none; padding-top: 20px; border-top: 2px solid var(--border); margin-top: 15px;">
           <div class="theme-grid" id="theme-grid">
             <!-- Rendered by JS -->
           </div>
