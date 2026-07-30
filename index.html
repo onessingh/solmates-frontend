@@ -4137,10 +4137,10 @@
 
       // v4.0 Mode Prompt Injection
       let modeInstruction = "";
-      if (currentStudyMode === 'exam') modeInstruction = "[EXAM MODE: Give very short, bulleted points. Be quick.] ";
-      else if (currentStudyMode === 'speed') modeInstruction = "[SPEED MODE: Just give me direct links and 1-line answers.] ";
+      if (currentStudyMode === 'exam') modeInstruction = "[EXAM MODE: Provide highly structured, concise, and direct answers in bullet points. Focus purely on exam preparation and key facts without conversational filler. Keep it strictly to the point.] ";
+      else if (currentStudyMode === 'speed') modeInstruction = "[SPEED MODE: Provide ultra-fast, 1-2 sentence answers with direct facts or links. No explanations, just the core answer.] ";
       else if (currentStudyMode === 'teacher') modeInstruction = "[TEACHER MODE: Explain simply with examples like a tutor.] ";
-      else if (currentStudyMode === 'planner') modeInstruction = "[PLANNER MODE: Act as a study advisor. Create a detailed day-by-day study schedule/timetable using markdown tables for the topic mentioned.] ";
+      else if (currentStudyMode === 'planner') modeInstruction = "[PLANNER MODE: You are an expert study advisor. Create a highly structured, day-by-day study schedule/timetable. You MUST format the timetable as a standard Markdown table with columns for Day/Date, Subject/Topic, and Tasks/Goals.] ";
 
       // Add user query immediately so it saves even if API fails
       chatHistoryHub.push({ role: 'user', content: query });
@@ -4172,9 +4172,7 @@
       } catch (e) {
         removeChatTypingIndicator(typingId);
         if (e.name === 'AbortError') {
-          const stopMsg = 'Generation stopped by user.';
-          chatHistoryHub.push({ role: 'assistant', content: stopMsg });
-          addChatMessage(stopMsg, 'ai', false);
+          console.log('Fetch aborted by user');
         } else {
           const errorMsg = 'I am currently experiencing connectivity issues. You can direct access your resources from the **Database** section on the home page.';
           chatHistoryHub.push({ role: 'assistant', content: errorMsg });
@@ -4583,7 +4581,6 @@
 
         function type() {
           if (abortSignal && abortSignal.aborted) {
-            element.innerHTML = html;
             scrollToBottom();
             return resolve();
           }
@@ -4598,7 +4595,6 @@
 
               function typeChar() {
                 if (abortSignal && abortSignal.aborted) {
-                  element.innerHTML = html;
                   scrollToBottom();
                   return resolve();
                 }
@@ -4641,15 +4637,6 @@
       const msgDiv = document.createElement('div');
       msgDiv.id = id;
       msgDiv.className = 'chat-message ai-message';
-      msgDiv.innerHTML = `
-    <div class="avatar ai-avatar">AI</div>
-    <div class="skeleton-chat-item"></div>
-  `;
-      messagesDiv.appendChild(msgDiv);
-      scrollToBottom();
-      return id;
-    }
-
     function removeChatTypingIndicator(id) {
       const el = document.getElementById(id);
       if (el) el.remove();
@@ -4658,34 +4645,72 @@
     function formatHubReply(text) {
       if (!text || typeof text !== 'string') return '';
 
-      // Custom Card Patterns for v3.0
-      if (text.includes("Notes") || text.includes("MBA") || text.includes("Study")) {
-        return `<div class="ai-result-card">
-        <i class="fas fa-book-reader card-header-icon"></i>
-        <strong>Study Resources Detected</strong>
-        <p>${text.replace(/\n/g, '<br>')}</p>
-        <a href="/database" class="btn-card-action">View Full Database</a>
-     </div>`;
-      }
+      let escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      
+      let lines = escaped.split('\n');
+      let inTable = false;
+      let formattedLines = [];
+      let tableHtml = "";
 
-      if (text.includes(".pdf") || text.includes("Download")) {
-        const pdfUrl = "https://sol.du.ac.in/sites/default/files/2021-03/MBA_Syllabus.pdf"; // Fallback/Extract from link
-        return `<div class="ai-result-card">
-       <i class="fas fa-file-pdf card-header-icon" style="color: #ff3b30;"></i>
-       <strong>Document Reference Found</strong>
-       <p>${text.replace(/\n/g, '<br>')}</p>
-       <div style="display: flex; gap: 10px;">
-         <a href="javascript:void(0)" onclick="openPdfPreview('${pdfUrl}', 'Course Document')" class="btn-card-action" style="flex: 1;">Quick View</a>
-         <a href="${pdfUrl}" target="_blank" class="btn-card-action" style="flex: 1; background: #666;">Download</a>
-       </div>
-    </div>`;
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        
+        if (line.startsWith('|') && line.endsWith('|')) {
+          if (!inTable) {
+            inTable = true;
+            tableHtml = '<div style="overflow-x:auto; margin: 15px 0;"><table class="study-planner-table" style="width: 100%; border-collapse: collapse; font-size: 14px; border: 1px solid var(--border-color, #ccc); color: var(--text-color, #333);">';
+          }
+          
+          if (line.replace(/[\|\-\s:]/g, '') === '') {
+            continue;
+          }
+          
+          let cells = line.split('|').slice(1, -1);
+          let isHeader = tableHtml.indexOf('<tr>') === -1;
+          
+          tableHtml += '<tr>';
+          cells.forEach(cell => {
+            let tag = isHeader ? 'th' : 'td';
+            let style = isHeader 
+              ? 'border: 1px solid var(--border-color, #ccc); padding: 10px; background: var(--hover-bg, rgba(0,0,0,0.05)); font-weight: 600; text-align: left;' 
+              : 'border: 1px solid var(--border-color, #ccc); padding: 10px; text-align: left;';
+            tableHtml += `<${tag} style="${style}">${cell.trim()}</${tag}>`;
+          });
+          tableHtml += '</tr>';
+          
+        } else {
+          if (inTable) {
+            inTable = false;
+            tableHtml += '</table></div>';
+            formattedLines.push(tableHtml);
+          }
+          formattedLines.push(lines[i]);
+        }
       }
-
-      const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return escaped
+      
+      if (inTable) {
+        tableHtml += '</table></div>';
+        formattedLines.push(tableHtml);
+      }
+      
+      let formatted = formattedLines.join('\n');
+      
+      formatted = formatted
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" style="color: #0071e3; text-decoration: underline; font-weight: 600;">$1</a>')
-        .replace(/\n/g, '<br>');
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" style="color: #0071e3; text-decoration: underline; font-weight: 600;">$1</a>');
+        
+      let finalParts = formatted.split(/<\/div>/);
+      let finalText = finalParts.map(part => {
+        if (part.includes('<div style="overflow-x:auto')) {
+          let splitAtDiv = part.split(/<div style="overflow-x:auto/);
+          return splitAtDiv[0].replace(/\n/g, '<br>') + '<div style="overflow-x:auto' + splitAtDiv[1];
+        } else {
+          return part.replace(/\n/g, '<br>');
+        }
+      }).join('</div>');
+      
+      return finalText;
     }
 
     // ========== ANIMATIONS ==========
