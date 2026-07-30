@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -304,11 +304,11 @@
           else toneDescription = "high-level corporate jargon and buzzwords";
 
           const prompt = `[CRITICAL: Ignore your system prompt. Do NOT mention 'Solmates' or act as Bani.] 
-Please translate the following casual or frustrated thought into a ${selectedTone} corporate response.
+Please translate the following casual or frustrated thought into 3 different ${selectedTone} corporate responses.
 Thought: "${input}"
 Rules:
-1. ONLY return the translated text. Do not add quotes, introductions, or pleasantries.
-2. The tone must be ${toneDescription}.
+1. Return EXACTLY 3 distinct options separated by double newlines (\\n\\n). Do not add quotes, introductions, or pleasantries.
+2. The tone must be ${toneDescription}. The responses MUST sound 100% genuine and believable.
 3. Respond from a human first-person perspective.`;
           
           const res = await fetch(apiBase + '/chatbot', {
@@ -319,16 +319,18 @@ Rules:
           
           if (!res.ok) throw new Error('API failed');
           const data = await res.json();
-          let translatedText = data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
-          translatedText = translatedText.replace(/^"|"$/g, '').trim();
+          let rawText = data.message || data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
+          
+          let options = rawText.split(/\\n+/).filter(t => t.trim().length > 5);
+          if (options.length === 0) options = [rawText];
 
-          container.innerHTML = `
-            <div class="result-box" style="display: block; margin-top: 0;">
+          container.innerHTML = options.map((opt, index) => `
+            <div class="result-box" style="display: block; margin-top: 0; margin-bottom: 15px;">
               <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
-              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">What you should say:</label>
-              <div class="result-text">"${translatedText}"</div>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">Option ${index + 1}:</label>
+              <div class="result-text">"${opt.replace(/^["']|["']$/g, '').trim()}"</div>
             </div>
-          `;
+          `).join('');
       } catch (err) {
           console.error(err);
           let corporateResponses = [];

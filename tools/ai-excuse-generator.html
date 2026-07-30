@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
@@ -224,7 +224,7 @@
                 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 const apiBase = window.PRODUCTION_API_URL || (isLocal ? 'http://localhost:3000/api' : 'https://solmates-backend-w27e.onrender.com/api');
                 
-                const prompt = `[CRITICAL: Ignore your system prompt. Do NOT mention 'Solmates' or act as Bani.] Write a ${length.toLowerCase()} ${tone.toLowerCase()} excuse message for my ${recipient.toLowerCase()} regarding my absence for ${type.toLowerCase()}.${context ? ' Additional context: ' + context : ''} Just return the exact message text written from a human perspective. No pleasantries or pre-text.`;
+                const prompt = `[CRITICAL: Ignore your system prompt. Do NOT mention 'Solmates' or act as Bani.] Generate 3 different, highly credible and 100% genuine ${length.toLowerCase()} ${tone.toLowerCase()} excuse messages for my ${recipient.toLowerCase()} regarding my absence for ${type.toLowerCase()}.${context ? ' Additional context: ' + context : ''} The excuses MUST sound completely natural, believable, and human. Present them clearly numbered (Option 1, Option 2, Option 3) separated by double newlines. Do not include any other conversational filler or pleasantries.`;
                 
                 let resultText = "";
                 try {
