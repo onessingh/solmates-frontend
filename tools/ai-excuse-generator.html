@@ -283,16 +283,17 @@
             downloadBtn.disabled = false;
             // Update download button to save all options
             downloadBtn.onclick = () => {
-                const blob = new Blob([finalOptions.map((opt, i) => `--- Option ${i+1} ---\n${opt}`).join('\\n\\n')], { type: 'text/plain' });
+                const blob = new Blob([finalOptions.map((opt, i) => `--- Option ${i+1} ---\n${opt}`).join('\n\n')], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = \`Excuses_\${new Date().getTime()}.txt\`;
+                a.download = `Excuses_${new Date().getTime()}.txt`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-            };            } catch (err) {
+            };
+            } catch (err) {
                 console.error(err);
                 outputText.textContent = "Sorry, there was an error generating the message. Please try again.";
                 outputText.classList.add('text-red-500');
