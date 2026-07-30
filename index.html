@@ -5021,12 +5021,12 @@
       if (!icon) return;
       
       if (theme === 'dark') {
-        icon.className = 'fas fa-sun';
+        icon.className = 'fas fa-cloud-sun';
       } else if (theme === 'light') {
         icon.className = 'fas fa-moon';
       } else {
         const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        icon.className = isDark ? 'fas fa-cloud-sun' : 'fas fa-moon';
       }
     }
     
