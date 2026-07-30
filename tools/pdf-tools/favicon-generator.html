@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -163,6 +163,31 @@
       }
     })();
   </script>
+<script id="color-scheme-sync">
+(function() {
+    function updateMetaColorScheme() {
+        var meta = document.querySelector('meta[name="color-scheme"]');
+        if (!meta) return;
+        var theme = localStorage.getItem('solmates_theme');
+        if (theme === 'dark') {
+            meta.setAttribute('content', 'dark only');
+            document.documentElement.style.colorScheme = 'dark';
+        } else if (theme === 'light') {
+            meta.setAttribute('content', 'light only');
+            document.documentElement.style.colorScheme = 'light';
+        }
+    }
+    updateMetaColorScheme();
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'solmates_theme') updateMetaColorScheme();
+    });
+    var originalSetItem = localStorage.setItem;
+    localStorage.setItem = function(key, value) {
+        originalSetItem.apply(this, arguments);
+        if (key === 'solmates_theme') updateMetaColorScheme();
+    };
+})();
+</script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100 font-sans">
     <div class="header-bar">
