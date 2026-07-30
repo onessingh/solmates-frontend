@@ -27,7 +27,6 @@
     .hero-icon{width:62px;height:62px;background:linear-gradient(135deg,#059669,#047857);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 24px rgba(5,150,105,0.3);}
     .hero-icon i{font-size:1.8rem;color:white;}
     .hero h1{font-size:1.8rem;font-weight:700;color:var(--primary);letter-spacing:-0.5px;}
-    @media(max-width:500px){.hero h1{font-size:1.45rem;}}
 
     /* Category Tabs */
     .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
@@ -35,6 +34,19 @@
     .ctab:hover{border-color:var(--accent);color:var(--accent);}
     .ctab.active{background:var(--primary);color:white;border-color:var(--primary);}
     .ctab i{font-size:0.8rem;}
+
+    @media(max-width:500px){
+      .hero h1{font-size:1.45rem;}
+      .hero{margin-bottom:12px;}
+      .hero-icon{width:48px;height:48px;margin-bottom:8px;}
+      .hero-icon i{font-size:1.3rem;}
+      .container{padding-top:12px;}
+      .cat-tabs { gap: 6px; margin-bottom: 16px; }
+      .ctab { flex: 1 1 28%; justify-content: center; padding: 8px 4px; font-size: 0.75rem; }
+      .ctab i { font-size: 0.75rem; margin-right: 2px; }
+      .header-bar { padding: 12px !important; }
+      .header-bar h1 { font-size: 1.25rem !important; }
+    }
 
     /* Ratio Cards Grid */
     .ratios-grid{display:grid;gap:16px;}
