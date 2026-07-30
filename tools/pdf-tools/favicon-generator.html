@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favicon Generator | Create Icons for Websites</title>
-    <meta name="description" content="Generate perfect favicons for your website instantly. Create ICO, PNG, and Apple Touch Icons from any image.">
+    
     <link rel="stylesheet" href="/css/global-lockdown.css">
     <link rel="stylesheet" href="/tools/pdf-tools/common.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -195,6 +195,20 @@
     };
 })();
 </script>
+    <!-- [AUTO-SEO-START] -->
+    <meta name="description" content="Access the Favicon Generator and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Favicon, Generator, Create, Icons, Websites">
+    <meta name="author" content="Shivarn Singh">
+    <meta property="og:title" content="Favicon Generator | Create Icons for Websites | Solmates">
+    <meta property="og:description" content="Access the Favicon Generator and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta property="og:image" content="/preview.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Favicon Generator | Create Icons for Websites | Solmates">
+    <meta name="twitter:description" content="Access the Favicon Generator and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="twitter:image" content="/preview.png">
+    <link rel="manifest" href="/manifest.json">
+    <!-- [AUTO-SEO-END] -->
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100 font-sans">
     <div class="header-bar">
@@ -407,7 +421,7 @@
             }
             
             // Add HTML tags text file to the zip
-            const htmlTags = `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\n<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\n<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">\n<link rel="manifest" href="/site.webmanifest">`;
+            const htmlTags = `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\n<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\n<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">\n`;
             zip.file("html-tags.txt", htmlTags);
 
             zip.generateAsync({ type: 'blob' }).then(content => {

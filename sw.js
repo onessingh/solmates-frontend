@@ -53,13 +53,83 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-// Basic lifecycle events
+const CACHE_NAME = 'solmates-cache-v1';
+const STATIC_ASSETS = [
+    '/',
+    '/index.html',
+    '/manifest.json',
+    '/css/output.css',
+    '/preview.png',
+    '/android-chrome-192x192.png',
+    '/android-chrome-512x512.png',
+    '/favicon-16x16.png',
+    '/favicon-32x32.png',
+    '/favicon.ico',
+    '/apple-touch-icon.png'
+];
+
 self.addEventListener('install', (event) => {
     self.skipWaiting();
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            console.log('Opened cache');
+            return cache.addAll(STATIC_ASSETS);
+        })
+    );
 });
 
 self.addEventListener('activate', (event) => {
     event.waitUntil(clients.claim());
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    // Only cache GET requests and not API calls
+    if (event.request.method !== 'GET' || event.request.url.includes('/api/')) return;
+    
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            // Cache hit - return response
+            if (response) {
+                // Fetch in background to update cache (stale-while-revalidate)
+                fetch(event.request).then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, networkResponse.clone());
+                        });
+                    }
+                }).catch(() => {});
+                return response;
+            }
+            
+            // Not in cache - fetch from network
+            return fetch(event.request).then((networkResponse) => {
+                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                    return networkResponse;
+                }
+                
+                let responseToCache = networkResponse.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseToCache);
+                });
+                
+                return networkResponse;
+            }).catch(() => {
+                // Fallback for offline if not cached
+                // Could return a custom offline page here if one exists
+            });
+        })
+    );
 });
 
 // [Fix] Handle push token expiration / browser key rotation in background
