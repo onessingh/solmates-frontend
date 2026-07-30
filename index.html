@@ -2807,17 +2807,19 @@
         height: 32px;
         border-radius: 50%;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         cursor: pointer;
         transition: all 0.2s;
         margin-right: 12px;
         font-size: 0.95rem;
+        -webkit-tap-highlight-color: transparent;
       }
-      .theme-toggle-btn:hover {
+      .theme-toggle-btn:hover, .theme-toggle-btn:active, .theme-toggle-btn:focus {
         background: rgba(15, 43, 70, 0.1);
         transform: translateY(-1px);
-        color: #0071e3;
+        color: var(--brand-primary);
+        outline: none;
       }
 </style>
 <style id="theme-dark-style" media="(prefers-color-scheme: dark)">
@@ -5021,12 +5023,12 @@
       if (!icon) return;
       
       if (theme === 'dark') {
-        icon.className = 'fas fa-cloud-sun';
+        icon.className = 'fas fa-circle-half-stroke';
       } else if (theme === 'light') {
         icon.className = 'fas fa-moon';
       } else {
         const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        icon.className = isDark ? 'fas fa-cloud-sun' : 'fas fa-moon';
+        icon.className = isDark ? 'fas fa-circle-half-stroke' : 'fas fa-moon';
       }
     }
     
