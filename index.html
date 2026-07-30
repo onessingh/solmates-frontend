@@ -4169,7 +4169,10 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: modeInstruction + query,
-            history: chatHistoryHub.slice(0, -1).slice(-20) // exclude the current query from history Context
+            history: chatHistoryHub.slice(0, -1).slice(-20).map(msg => ({
+              ...msg,
+              content: msg.content && msg.content.length > 1900 ? msg.content.substring(0, 1900) + '...' : msg.content
+            })) // exclude current query; truncate to pass backend 2000 char validation
           }),
           signal: currentChatController.signal
         });
