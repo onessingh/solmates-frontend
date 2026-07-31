@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -584,9 +584,9 @@
         data.feedback.forEach(f => {
           let icon = f.type === 'good' ? 'fa-check-circle' : (f.type === 'warn' ? 'fa-exclamation-triangle' : 'fa-times-circle');
           fbHtml += `
-          <div class="feedback-card type-${f.type}">
-            <h4><i class="fas ${icon}"></i> ${f.title}</h4>
-            <p>${f.desc}</p>
+          <div class="feedback-item fi-${f.type}">
+            <i class="fas ${icon}"></i>
+            <div><strong>${f.title}</strong><br>${f.desc}</div>
           </div>
           `;
         });

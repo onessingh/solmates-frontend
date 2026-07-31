@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -110,6 +110,30 @@
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+    .toggle-label {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    
+    .btn-outline {
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+      background: rgba(0, 113, 227, 0.1);
+    }
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 12px;
     }
     .header-bar h1 {
       margin: 0;
@@ -581,7 +605,15 @@
       if (pctSavings + pctExp + pctDed > 100) {
         if(pctSavings > 0) pctSavings -= (pctSavings + pctExp + pctDed - 100);
       }
-      if (savingsYearly < 0) { pctSavings = 0; }
+      
+      if (savingsYearly < 0) { 
+        pctSavings = 0; 
+      }
+      
+      // Prevent negative widths from breaking CSS
+      pctSavings = Math.max(0, pctSavings);
+      pctExp = Math.max(0, pctExp);
+      pctDed = Math.max(0, pctDed);
 
       setTimeout(() => {
         document.getElementById('barSavings').style.width = pctSavings + '%';

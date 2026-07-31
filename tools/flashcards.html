@@ -486,15 +486,18 @@
     }
 
     function flipCard() {
-      if (isFlipped) return; // Only flip once to reveal
+      isFlipped = !isFlipped;
       
-      isFlipped = true;
-      document.getElementById('active-card').classList.add('flipped');
-      
-      // Show action buttons after flip animation
-      setTimeout(() => {
-        document.getElementById('action-controls').classList.add('visible');
-      }, 300);
+      if (isFlipped) {
+        document.getElementById('active-card').classList.add('flipped');
+        
+        // Show action buttons after flip animation
+        setTimeout(() => {
+          document.getElementById('action-controls').classList.add('visible');
+        }, 300);
+      } else {
+        document.getElementById('active-card').classList.remove('flipped');
+      }
     }
 
     function markCard(remembered) {

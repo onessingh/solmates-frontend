@@ -341,7 +341,7 @@
     <div class="pct-banner" id="pctBanner">
       <div class="pct-value" id="pctValue">0%</div>
       <div class="pct-label">Current Attendance</div>
-      <div class="pct-status" id="pctStatus">?</div>
+      <div class="pct-status" id="pctStatus">📊</div>
     </div>
 
     <!-- Info Grid -->
@@ -349,7 +349,7 @@
 
     <!-- Advice -->
     <div class="advice-box" id="adviceBox">
-      <div class="advice-icon" id="adviceIcon">??</div>
+      <div class="advice-icon" id="adviceIcon">📋</div>
       <div>
         <div class="advice-title" id="adviceTitle">Analysis</div>
         <div class="advice-text" id="adviceText"></div>
@@ -390,8 +390,8 @@
     banner.className = 'pct-banner ' + state;
     document.getElementById('pctValue').textContent = rounded + '%';
     document.getElementById('pctStatus').textContent =
-      state === 'safe' ? '? Target Met' :
-      state === 'warning' ? '?? At Risk' : '? Below Target';
+      state === 'safe' ? '✅ Target Met' :
+      state === 'warning' ? '⚠️ At Risk' : '🔴 Below Target';
 
     // Info tiles
     let tilesHtml = '';
@@ -404,7 +404,7 @@
       // (attended) / (total + x) >= target/100
       // x <= (attended * 100/target) - total
       const canSkip = Math.floor((attended * 100 / targetPct) - total);
-      tilesHtml += tile('??', canSkip >= 0 ? canSkip : 0, 'Classes you can skip<br>& still meet target', canSkip > 0 ? 'good' : 'warn');
+      tilesHtml += tile('🎉', canSkip >= 0 ? canSkip : 0, 'Classes you can skip<br>& still meet target', canSkip > 0 ? 'good' : 'warn');
     } else {
       // Need to attend
       // (attended + x) / (total + x) >= target/100
@@ -412,22 +412,24 @@
       // 100*attended + 100x >= target*total + target*x
       // x*(100-target) >= target*total - 100*attended
       // x >= (target*total - 100*attended) / (100 - target)
-      const needAttend = Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
-      tilesHtml += tile('??', needAttend, 'Consecutive classes<br>needed to hit target', 'bad');
+      // Guard: if target is 100% and not already at 100%, it's impossible
+      const divisor = 100 - targetPct;
+      const needAttend = divisor === 0 ? '∞' : Math.ceil((targetPct * total - 100 * attended) / divisor);
+      tilesHtml += tile('📚', needAttend, 'Consecutive classes<br>needed to hit target', 'bad');
     }
 
     // Extra stats
     const absent = total - attended;
-    tilesHtml += tile('??', total, 'Total Classes Held', '');
-    tilesHtml += tile('?', attended, 'Classes Attended', '');
-    tilesHtml += tile('?', absent, 'Classes Missed', absent === 0 ? 'good' : absent / total > 0.25 ? 'bad' : 'warn');
+    tilesHtml += tile('📅', total, 'Total Classes Held', '');
+    tilesHtml += tile('✏️', attended, 'Classes Attended', '');
+    tilesHtml += tile('❌', absent, 'Classes Missed', absent === 0 ? 'good' : absent / total > 0.25 ? 'bad' : 'warn');
 
     document.getElementById('infoGrid').innerHTML = tilesHtml;
 
     // Advice
     const adviceBox = document.getElementById('adviceBox');
     adviceBox.className = 'advice-box ' + state;
-    document.getElementById('adviceIcon').textContent = state === 'safe' ? '??' : state === 'warning' ? '??' : '??';
+    document.getElementById('adviceIcon').textContent = state === 'safe' ? '🎯' : state === 'warning' ? '⚠️' : '🚨';
 
     if (state === 'safe') {
       const canSkip = Math.max(0, Math.floor((attended * 100 / targetPct) - total));
@@ -435,12 +437,12 @@
       document.getElementById('adviceText').textContent =
         `Your attendance is ${rounded}% which is above your ${targetPct}% target. You can afford to skip up to ${canSkip} more classes before falling below the limit. Stay consistent!`;
     } else if (state === 'warning') {
-      const needAttend = Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
+      const needAttend2 = (100 - targetPct) === 0 ? '∞' : Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
       document.getElementById('adviceTitle').textContent = 'Close to the limit!';
       document.getElementById('adviceText').textContent =
-        `Your attendance is ${rounded}% ? just ${(targetPct - pct).toFixed(1)}% below your ${targetPct}% target. Attend the next ${needAttend} classes consecutively to get back on track. Don't skip any more!`;
+        `Your attendance is ${rounded}% — just ${(targetPct - pct).toFixed(1)}% below your ${targetPct}% target. Attend the next ${needAttend2} classes consecutively to get back on track. Don't skip any more!`;
     } else {
-      const needAttend = Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
+      const needAttend = (100 - targetPct) === 0 ? '∞' : Math.ceil((targetPct * total - 100 * attended) / (100 - targetPct));
       document.getElementById('adviceTitle').textContent = 'Danger Zone!';
       document.getElementById('adviceText').textContent =
         `Your attendance is dangerously low at ${rounded}%. You need to attend the next ${needAttend} classes in a row to reach ${targetPct}%. Skipping even one more class will make recovery harder. Talk to your teacher if needed.`;
