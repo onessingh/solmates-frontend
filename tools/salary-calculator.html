@@ -349,6 +349,17 @@
         </label>
       </div>
 
+      <div class="toggle-group">
+        <div class="toggle-label">
+          Use New Tax Regime
+          <span class="toggle-desc">Default is New Regime (No exemptions/deductions)</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="newRegimeToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
 
       <h3 style="color: var(--primary); font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-shopping-cart"></i> Monthly Expenses (Optional)</h3>
@@ -495,19 +506,43 @@
       return '₹' + Math.round(num).toLocaleString('en-IN');
     }
 
-    function calculateTax(taxableIncome) {
-      // Very basic old tax regime approximation for generic calculation
+    function calculateTax(taxableIncome, useNewRegime) {
       let tax = 0;
-      if (taxableIncome > 500000) {
-        if (taxableIncome <= 1000000) {
-          tax = (taxableIncome - 500000) * 0.20 + 12500;
-        } else {
-          tax = (taxableIncome - 1000000) * 0.30 + 112500;
+      
+      if (useNewRegime) {
+        // New Tax Regime (FY 2023-24 onwards)
+        if (taxableIncome <= 700000) {
+          return 0; // Rebate under 87A
         }
-        // Add 4% cess
-        tax = tax * 1.04;
+        if (taxableIncome > 300000 && taxableIncome <= 600000) tax += (taxableIncome - 300000) * 0.05;
+        else if (taxableIncome > 300000) tax += 15000;
+        
+        if (taxableIncome > 600000 && taxableIncome <= 900000) tax += (taxableIncome - 600000) * 0.10;
+        else if (taxableIncome > 600000) tax += 30000;
+        
+        if (taxableIncome > 900000 && taxableIncome <= 1200000) tax += (taxableIncome - 900000) * 0.15;
+        else if (taxableIncome > 900000) tax += 45000;
+        
+        if (taxableIncome > 1200000 && taxableIncome <= 1500000) tax += (taxableIncome - 1200000) * 0.20;
+        else if (taxableIncome > 1200000) tax += 60000;
+        
+        if (taxableIncome > 1500000) tax += (taxableIncome - 1500000) * 0.30;
+      } else {
+        // Old Tax Regime
+        if (taxableIncome <= 500000) {
+          return 0; // Rebate under 87A
+        }
+        if (taxableIncome > 250000 && taxableIncome <= 500000) tax += (taxableIncome - 250000) * 0.05;
+        else if (taxableIncome > 250000) tax += 12500;
+        
+        if (taxableIncome > 500000 && taxableIncome <= 1000000) tax += (taxableIncome - 500000) * 0.20;
+        else if (taxableIncome > 500000) tax += 100000;
+        
+        if (taxableIncome > 1000000) tax += (taxableIncome - 1000000) * 0.30;
       }
-      return tax;
+      
+      // Add 4% Health & Education Cess
+      return tax > 0 ? tax * 1.04 : 0;
     }
 
     function calculateSalary() {
@@ -515,6 +550,7 @@
       const bonusInput = parseFloat(document.getElementById('bonusInput').value) || 0;
       const deductEpf = document.getElementById('epfToggle').checked;
       const deductPt = document.getElementById('ptToggle').checked;
+      const useNewRegime = document.getElementById('newRegimeToggle').checked;
 
       if (!ctcInput || isNaN(ctcInput) || ctcInput < 0) {
         alert("Please enter a valid Yearly CTC amount.");
@@ -555,10 +591,19 @@
 
       // Standard Deduction for Tax
       let standardDeduction = 50000;
-      let taxableIncome = grossYearly - epfYearly - ptYearly - standardDeduction;
+      
+      let taxableIncome = grossYearly;
+      if (!useNewRegime) {
+        // Old regime allows Section 80C (EPF) and PT deduction
+        taxableIncome = grossYearly - epfYearly - ptYearly - standardDeduction;
+      } else {
+        // New regime only allows standard deduction of 50,000 for salaried employees
+        taxableIncome = grossYearly - standardDeduction;
+      }
+      
       if (taxableIncome < 0) taxableIncome = 0;
 
-      let taxYearly = calculateTax(taxableIncome);
+      let taxYearly = calculateTax(taxableIncome, useNewRegime);
       let taxMonthly = taxYearly / 12;
 
       // Total Deductions (Employee side)
