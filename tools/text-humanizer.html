@@ -293,6 +293,14 @@
     <div class="card controls-card">
       <div class="controls-title">Formatting Options</div>
       
+      <div style="margin-bottom: 20px;">
+        <div style="font-weight: 600; font-size: 14px; color: var(--text-main); margin-bottom: 8px;">Target Tone</div>
+        <select id="toneSelect" class="form-control" style="width: 100%; padding: 10px; border-radius: 8px;">
+          <option value="casual">Casual & Conversational (Default)</option>
+          <option value="professional">Professional & Academic</option>
+        </select>
+      </div>
+
       <label class="option-row">
         <div class="opt-icon bg-p"><i class="fas fa-robot"></i></div>
         <div class="opt-text">
@@ -403,6 +411,21 @@
     { regex: /\b(in the heart of)\b/gi, repl: "inside" }
   ];
 
+  const aiReplacementsProf = [
+    // ChatGPT usually uses these even in professional writing, replace with more natural professional equivalents
+    { regex: /\b(delve into|dive into)\b/gi, repl: "examine" },
+    { regex: /\b(a myriad of|a plethora of)\b/gi, repl: "various" },
+    { regex: /\b(tapestry)\b/gi, repl: "framework" },
+    { regex: /\b(symphony of)\b/gi, repl: "combination of" },
+    { regex: /\b(testament to)\b/gi, repl: "evidence of" },
+    { regex: /\b(catalyst)\b/gi, repl: "driver" },
+    { regex: /\b(synergy)\b/gi, repl: "collaboration" },
+    { regex: /\b(seamlessly)\b/gi, repl: "efficiently" },
+    { regex: /\b(embark on|embarked upon)\b/gi, repl: "initiate" },
+    { regex: /\b(in today's rapidly evolving landscape|in the modern digital age|in today's world)\b/gi, repl: "in the current environment" },
+    { regex: /\b(navigating the complexities)\b/gi, repl: "managing the challenges" }
+  ];
+
   function humanizeText() {
     let text = document.getElementById('inputText').value;
     if (!text.trim()) {
@@ -426,7 +449,9 @@
     // 2. Vocabulary Replacements
     let replacedText = text;
     if (doVocab) {
-      aiReplacements.forEach(pair => {
+      const tone = document.getElementById('toneSelect') ? document.getElementById('toneSelect').value : 'casual';
+      const dict = tone === 'professional' ? aiReplacementsProf : aiReplacements;
+      dict.forEach(pair => {
         // Keep original casing for first letter if possible, or just force lower/upper based on context
         // A simple string replace won't handle case perfectly, but we use a function to match case
         replacedText = replacedText.replace(pair.regex, function(match) {
