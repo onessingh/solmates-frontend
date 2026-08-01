@@ -349,15 +349,14 @@
         </label>
       </div>
 
-      <div class="toggle-group">
-        <div class="toggle-label">
-          Use New Tax Regime
-          <span class="toggle-desc">Default is New Regime (No exemptions/deductions)</span>
+      <div class="form-group">
+        <label><i class="fas fa-file-invoice-dollar" style="color: var(--text-muted); margin-right: 5px;"></i> Tax Regime</label>
+        <div class="input-wrapper" style="padding-left: 0;">
+          <select id="regimeSelect" class="form-control" style="padding-left: 15px;" onchange="calculateSalary()">
+            <option value="new">New Tax Regime (Default, No Exemptions)</option>
+            <option value="old">Old Tax Regime (Supports EPF/PT Deductions)</option>
+          </select>
         </div>
-        <label class="switch">
-          <input type="checkbox" id="newRegimeToggle" checked>
-          <span class="slider"></span>
-        </label>
       </div>
 
       <hr style="border: 0; border-top: 1px dashed #ddd; margin: 25px 0;">
@@ -550,7 +549,7 @@
       const bonusInput = parseFloat(document.getElementById('bonusInput').value) || 0;
       const deductEpf = document.getElementById('epfToggle').checked;
       const deductPt = document.getElementById('ptToggle').checked;
-      const useNewRegime = document.getElementById('newRegimeToggle').checked;
+      const useNewRegime = document.getElementById('regimeSelect').value === 'new';
 
       if (!ctcInput || isNaN(ctcInput) || ctcInput < 0) {
         alert("Please enter a valid Yearly CTC amount.");
