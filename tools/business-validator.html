@@ -476,9 +476,9 @@ Return ONLY a valid JSON object with this exact structure (do NOT wrap in markdo
       document.getElementById('out-scale-badge').textContent = scale.badge;
 
       // Update Analysis
-      document.getElementById('out-strengths').innerHTML = strengths.map(s => \`<div class="pro-item"><i class="fas fa-check-circle"></i> <span>\${s}</span></div>\`).join('');
-      document.getElementById('out-weaknesses').innerHTML = weaknesses.map(w => \`<div class="con-item"><i class="fas fa-exclamation-circle"></i> <span>\${w}</span></div>\`).join('');
-      document.getElementById('out-monetization').innerHTML = monetization.map(m => \`<span class="m-tag">\${m}</span>\`).join('');
+      document.getElementById('out-strengths').innerHTML = strengths.map(s => `<div class="pro-item"><i class="fas fa-check-circle"></i> <span>${s}</span></div>`).join('');
+      document.getElementById('out-weaknesses').innerHTML = weaknesses.map(w => `<div class="con-item"><i class="fas fa-exclamation-circle"></i> <span>${w}</span></div>`).join('');
+      document.getElementById('out-monetization').innerHTML = monetization.map(m => `<span class="m-tag">${m}</span>`).join('');
     }
 
     function generateHeuristicReport(name, industry, desc, audience) {
