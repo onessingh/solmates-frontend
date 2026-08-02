@@ -339,13 +339,17 @@ Rules:
           let options = rawText.split(/(?:Option \\d+:|^\\d+\\.|\\n\\n+)/mi).map(s => s.trim()).filter(t => t.length > 5);
           if (options.length === 0) options = [rawText];
 
-          container.innerHTML = options.map((opt, index) => `
+          container.innerHTML = `
             <div class="result-box" style="display: block; margin-top: 0; margin-bottom: 15px;">
-              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
-              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">Option ${index + 1}:</label>
-              <div class="result-text">"${opt.replace(/^["']|["']$/g, '').trim()}"</div>
+              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy All</button>
+              ${options.map((opt, index) => `
+                <div style="margin-bottom: 15px;">
+                  <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:5px;">Option ${index + 1}:</label>
+                  <div class="result-text" style="margin-bottom: 10px;">"${opt.replace(/^["']|["']$/g, '').trim()}"</div>
+                </div>
+              `).join('')}
             </div>
-          `).join('');
+          `;
       } catch (err) {
           console.error(err);
           let corporateResponses = [];
@@ -360,23 +364,27 @@ Rules:
             else if (selectedTone === 'executive') corporateResponses.push("I am currently analyzing this vector and will synergize a response shortly.");
             else corporateResponses.push("I am currently reviewing this matter and will circle back with a comprehensive update shortly.");
           }
-          container.innerHTML = corporateResponses.map(resp => `
+          container.innerHTML = `
             <div class="result-box" style="display: block; margin-top: 0;">
-              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy</button>
-              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:10px;">What you should say:</label>
-              <div class="result-text">"${resp}"</div>
+              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy All</button>
+              ${corporateResponses.map((resp, index) => `
+                <div style="margin-bottom: 15px;">
+                  <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:5px;">Option ${index + 1}:</label>
+                  <div class="result-text" style="margin-bottom: 10px;">"${resp}"</div>
+                </div>
+              `).join('')}
             </div>
-          `).join('');
+          `;
       } finally {
           loader.style.display = 'none';
       }
     }
 
     function copyText(btn) {
-      const text = btn.parentElement.querySelector('.result-text').innerText.replace(/"/g, '');
-      navigator.clipboard.writeText(text);
+      const texts = Array.from(btn.parentElement.querySelectorAll('.result-text')).map(el => el.innerText.replace(/"/g, ''));
+      navigator.clipboard.writeText(texts.join('\\n\\n'));
       btn.innerHTML = '<i class="fas fa-check"></i> Copied';
-      setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy', 2000);
+      setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy All', 2000);
     }
   </script>
 </body>

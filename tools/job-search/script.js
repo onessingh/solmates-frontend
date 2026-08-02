@@ -146,7 +146,15 @@ document.getElementById('jobSearchForm').addEventListener('submit', async functi
             <div class="skeleton-btn skeleton"></div>
         </div>
     `).join('');
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
+    
+    // On mobile, scrollIntoView can push the search bar completely out of view.
+    // Instead of scrolling aggressively, we'll just let the UI update naturally, 
+    // or provide a gentler scroll offset if really needed.
+    const yOffset = -80; // Offset for sticky header
+    const y = resultsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    if (window.innerWidth <= 768) {
+        window.scrollTo({top: y, behavior: 'smooth'});
+    }
 
     try {
         const API_BASE = 'https://onerajsingh2321-solmates-job-backend.hf.space';
