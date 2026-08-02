@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v2';
+const CACHE_NAME = 'solmates-cache-v3';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -126,7 +126,10 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             }).catch(() => {
                 // Fallback for offline if not cached
-                // Could return a custom offline page here if one exists
+                return new Response('Offline or Network Error', {
+                    status: 503,
+                    statusText: 'Service Unavailable'
+                });
             });
         })
     );
