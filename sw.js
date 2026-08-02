@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v3';
+const CACHE_NAME = 'solmates-cache-v4';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -94,8 +94,9 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Only cache GET requests and not API calls
-    if (event.request.method !== 'GET' || event.request.url.includes('/api/')) return;
+    // Only cache GET requests and not API calls, and only cache our own origin
+    const url = new URL(event.request.url);
+    if (event.request.method !== 'GET' || event.request.url.includes('/api/') || url.origin !== self.location.origin) return;
     
     event.respondWith(
         caches.match(event.request).then((response) => {
@@ -126,10 +127,7 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             }).catch(() => {
                 // Fallback for offline if not cached
-                return new Response('Offline or Network Error', {
-                    status: 503,
-                    statusText: 'Service Unavailable'
-                });
+                return Response.error();
             });
         })
     );
