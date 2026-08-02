@@ -206,6 +206,11 @@ document.getElementById('jobSearchForm').addEventListener('submit', async functi
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
         }
+        
+        // Scroll down slightly so the user sees the results
+        const yOffset = -20; 
+        const y = resultsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({top: y, behavior: 'smooth'});
     }
 });
 
