@@ -515,15 +515,15 @@ Return ONLY a valid JSON object with this exact structure (do NOT wrap in markdo
       if (techCount > 2) { scale.text = 'Highly Scalable'; scale.badge = 'HIGH'; scale.class = 'status-high'; }
 
       const strengths = [
-        \`Clear value proposition for \${audience}\`,
-        \`\${industry} is a proven market with existing demand\`,
+        `Clear value proposition for ${audience}`,
+        `${industry} is a proven market with existing demand`,
       ];
       if (probCount > 0) strengths.push("Strong focus on solving a tangible problem.");
       if (techCount > 0) strengths.push("Leverages technology for potential rapid scalability.");
       if (score >= 80) strengths.push("Highly viable concept if executed correctly.");
 
       const weaknesses = [
-        \`Customer acquisition in \${industry} can be expensive initially\`,
+        `Customer acquisition in ${industry} can be expensive initially`,
       ];
       if (industry === 'Tech/SaaS') weaknesses.push("High upfront development costs and technical debt risks.");
       if (industry === 'Food/Beverage') weaknesses.push("Slim profit margins and heavy reliance on local foot traffic/delivery platforms.");
