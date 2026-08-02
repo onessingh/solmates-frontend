@@ -150,11 +150,7 @@ document.getElementById('jobSearchForm').addEventListener('submit', async functi
     // On mobile, scrollIntoView can push the search bar completely out of view.
     // Instead of scrolling aggressively, we'll just let the UI update naturally, 
     // or provide a gentler scroll offset if really needed.
-    const yOffset = -80; // Offset for sticky header
-    const y = resultsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    if (window.innerWidth <= 768) {
-        window.scrollTo({top: y, behavior: 'smooth'});
-    }
+    // We removed window.scrollTo completely so the user stays near the search button.
 
     try {
         const API_BASE = 'https://onerajsingh2321-solmates-job-backend.hf.space';
@@ -190,17 +186,20 @@ document.getElementById('jobSearchForm').addEventListener('submit', async functi
             renderPlatformFilters(jobs);
             renderJobs(jobs);
             updateInsights(jobs);
+            updateTabCounts(); // Update live count after search results loaded!
         } else {
             console.warn('No live results, using fallback.');
             const f = document.getElementById('platformFilters');
             if (f) { f.classList.add('hidden'); f.style.display = 'none'; }
             renderFallbackLinks(query, loc, exp, sal, dateString, today);
+            updateTabCounts(); // Update counts even if fallback
         }
     } catch (error) {
         console.error('Search error details:', error);
         const f = document.getElementById('platformFilters');
         if (f) { f.classList.add('hidden'); f.style.display = 'none'; }
         renderFallbackLinks(query, loc, exp, sal, dateString, today);
+        updateTabCounts(); // Update counts even if fallback
     } finally {
         // Always restore the button
         if (submitBtn) {
@@ -313,10 +312,15 @@ function toggleSaveJob(job, e) {
     if (index > -1) {
         savedJobs.splice(index, 1);
     } else {
-        savedJobs.push(job);
+        // When saving, attach the current save date so it doesn't get stale as "3 days ago" forever
+        const newJob = { ...job, savedAt: Date.now() };
+        savedJobs.push(newJob);
     }
 
     localStorage.setItem('solSavedJobs', JSON.stringify(savedJobs));
+    
+    updateTabCounts(); // Update counts when saving/unsaving
+
     if (currentTab === 'saved') {
         renderJobs(savedJobs, true);
     } else {
@@ -669,13 +673,20 @@ function renderJobs(data, isSavedView = false, filterPlatform = 'All') {
             };
 
             const asset = platformAssets[job.source] || { color: 'var(--primary-blue)', logo: '' };
-            const dateText = job.date || 'Recent';
-            const isNew = dateText.toLowerCase().includes('today') ||
+            let dateText = job.date || 'Recent';
+            if (isSavedView && job.savedAt) {
+                const diffDays = Math.floor((Date.now() - job.savedAt) / (1000 * 60 * 60 * 24));
+                if (diffDays === 0) dateText = 'Saved today';
+                else if (diffDays === 1) dateText = 'Saved 1 day ago';
+                else dateText = `Saved ${diffDays} days ago`;
+            }
+
+            const isNew = !isSavedView && (dateText.toLowerCase().includes('today') ||
                 dateText.toLowerCase().includes('1 day') ||
                 dateText.toLowerCase().includes('2 day') ||
                 dateText.toLowerCase().includes('hour') ||
                 dateText.toLowerCase().includes('minute') ||
-                dateText.toLowerCase().includes('just now');
+                dateText.toLowerCase().includes('just now'));
             const isSaved = savedJobs.some(sj => sj.link === job.link);
 
             card.innerHTML = `

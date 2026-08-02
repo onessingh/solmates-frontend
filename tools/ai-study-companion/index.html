@@ -690,78 +690,74 @@ Return ONLY a valid JSON object with this exact structure (do NOT wrap in markdo
 
       // Smart extraction for dynamic sections (fallback if AI failed)
       const sentences = extract.split('. ').filter(s => s.length > 20);
-      const s1 = sentences[0] ? sentences[0].replace(/\\.$/, '') + '.' : \`\${capTopic} is a significant topic of study.\`;
-      const s2 = sentences[1] ? sentences[1].replace(/\\.$/, '') + '.' : \`It involves understanding core principles associated with \${topic}.\`;
-      const s3 = sentences[2] ? sentences[2].replace(/\\.$/, '') + '.' : \`Analysis in this area helps contextualize its broader impact.\`;
-      const s4 = sentences[3] ? sentences[3].replace(/\\.$/, '') + '.' : \`Experts continue to explore its various dimensions and history.\`;
+      const s1 = sentences[0] ? sentences[0].replace(/\.$/, '') + '.' : `${capTopic} is a significant topic of study.`;
+      const s2 = sentences[1] ? sentences[1].replace(/\.$/, '') + '.' : `It involves understanding core principles associated with ${topic}.`;
+      const s3 = sentences[2] ? sentences[2].replace(/\.$/, '') + '.' : `Analysis in this area helps contextualize its broader impact.`;
+      const s4 = sentences[3] ? sentences[3].replace(/\.$/, '') + '.' : `Experts continue to explore its various dimensions and history.`;
 
       if (aiData && aiData.notes) {
-          document.getElementById('content-notes').innerHTML = '<ul>' + aiData.notes.map(n => \`<li>\${n}</li>\`).join('') + '</ul>';
+          document.getElementById('content-notes').innerHTML = '<ul>' + aiData.notes.map(n => `<li>${n}</li>`).join('') + '</ul>';
       } else {
-          document.getElementById('content-notes').innerHTML = \`
+          document.getElementById('content-notes').innerHTML = `
             <ul>
-              <li><strong>Definition & Scope:</strong> \${s1}</li>
-              <li><strong>Context:</strong> \${s2}</li>
-              <li><strong>Key Detail:</strong> \${s3}</li>
-              <li><strong>Further Information:</strong> \${s4}</li>
+              <li><strong>Definition & Scope:</strong> ${s1}</li>
+              <li><strong>Context:</strong> ${s2}</li>
+              <li><strong>Key Detail:</strong> ${s3}</li>
+              <li><strong>Further Information:</strong> ${s4}</li>
             </ul>
-          \`;
+          `;
       }
 
       if (aiData && aiData.summary) {
-          const keys = aiData.key_points ? aiData.key_points.map(k => \`<li>\${k}</li>\`).join('') : '';
-          document.getElementById('content-summary').innerHTML = \`
-            <p><strong>TL;DR:</strong> \${aiData.summary}</p>
+          const keys = aiData.key_points ? aiData.key_points.map(k => `<li>${k}</li>`).join('') : '';
+          document.getElementById('content-summary').innerHTML = `
+            <p><strong>TL;DR:</strong> ${aiData.summary}</p>
             <p><strong>Key Points:</strong></p>
-            <ul>\${keys}</ul>
-          \`;
+            <ul>${keys}</ul>
+          `;
       } else {
-          document.getElementById('content-summary').innerHTML = \`
-            <p><strong>TL;DR:</strong> \${s1} \${s2}</p>
+          document.getElementById('content-summary').innerHTML = `
+            <p><strong>TL;DR:</strong> ${s1} ${s2}</p>
             <p><strong>Key Points:</strong></p>
             <ul>
-              <li>\${s3}</li>
-              <li>\${s4}</li>
-              <li>Analyzing \${topic} provides critical insights into related academic domains.</li>
+              <li>${s3}</li>
+              <li>${s4}</li>
+              <li>Analyzing ${topic} provides critical insights into related academic domains.</li>
             </ul>
-          \`;
+          `;
       }
 
       if (aiData && aiData.questions) {
-          document.getElementById('content-questions').innerHTML = '<ul>' + aiData.questions.map((q, i) => \`<li><strong>Q\${i+1}:</strong> \${q}</li>\`).join('') + '</ul>';
+          document.getElementById('content-questions').innerHTML = '<ul>' + aiData.questions.map((q, i) => `<li><strong>Q${i+1}:</strong> ${q}</li>`).join('') + '</ul>';
       } else {
-          document.getElementById('content-questions').innerHTML = \`
+          document.getElementById('content-questions').innerHTML = `
             <ul>
-              <li><strong>Q1:</strong> What are the key characteristics of \${capTopic}? (10 marks)</li>
-              <li><strong>Q2:</strong> Discuss the context around: "\${s2}" (15 marks)</li>
-              <li><strong>Q3:</strong> Elaborate on the core concepts behind \${capTopic} and its major implications. (10 marks)</li>
-              <li><strong>Q4:</strong> Write a short note on the evolution or historical importance of \${capTopic}. (5 marks)</li>
+              <li><strong>Q1:</strong> What are the key characteristics of ${capTopic}? (10 marks)</li>
+              <li><strong>Q2:</strong> Discuss the context around: "${s2}" (15 marks)</li>
+              <li><strong>Q3:</strong> Elaborate on the core concepts behind ${capTopic} and its major implications. (10 marks)</li>
+              <li><strong>Q4:</strong> Write a short note on the evolution or historical importance of ${capTopic}. (5 marks)</li>
             </ul>
-          \`;
+          `;
       }
 
       if (aiData && aiData.faqs) {
-          document.getElementById('content-faqs').innerHTML = aiData.faqs.map(faq => \`
+          document.getElementById('content-faqs').innerHTML = aiData.faqs.map(faq => `
             <div class="faq-item">
-              <div class="faq-q" onclick="toggleFaq(this)">\${faq.q} <i class="fas fa-chevron-down"></i></div>
-              <div class="faq-a"><p>\${faq.a}</p></div>
+              <div class="faq-q" onclick="toggleFaq(this)">${faq.q} <i class="fas fa-chevron-down"></i></div>
+              <div class="faq-a"><p>${faq.a}</p></div>
             </div>
-          \`).join('');
+          `).join('');
       } else {
-          document.getElementById('content-faqs').innerHTML = \`
+          document.getElementById('content-faqs').innerHTML = `
             <div class="faq-item">
-              <div class="faq-q" onclick="toggleFaq(this)">What is a simple definition of \${capTopic}? <i class="fas fa-chevron-down"></i></div>
-              <div class="faq-a"><p>\${s1}</p></div>
+              <div class="faq-q" onclick="toggleFaq(this)">What is the main significance of ${capTopic}? <i class="fas fa-chevron-down"></i></div>
+              <div class="faq-a"><p>${s1}</p></div>
             </div>
             <div class="faq-item">
-              <div class="faq-q" onclick="toggleFaq(this)">Why is this topic important to understand? <i class="fas fa-chevron-down"></i></div>
-              <div class="faq-a"><p>\${s3} Furthermore, \${s4.toLowerCase()}</p></div>
+              <div class="faq-q" onclick="toggleFaq(this)">How is it applied in real-world scenarios? <i class="fas fa-chevron-down"></i></div>
+              <div class="faq-a"><p>${s3} ${s4}</p></div>
             </div>
-            <div class="faq-item">
-              <div class="faq-q" onclick="toggleFaq(this)">Where can I find more resources on \${capTopic}? <i class="fas fa-chevron-down"></i></div>
-              <div class="faq-a"><p>You can refer to standard university textbooks, academic journals (via OpenAlex), or verified Wikipedia articles.</p></div>
-            </div>
-          \`;
+          `;
       }
     }
 

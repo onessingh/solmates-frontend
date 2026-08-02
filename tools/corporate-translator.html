@@ -336,16 +336,18 @@ Rules:
           const data = await res.json();
           let rawText = data.message || data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
           
-          let options = rawText.split(/(?:Option \\d+:|^\\d+\\.|\\n\\n+)/mi).map(s => s.trim()).filter(t => t.length > 5);
+          let options = rawText.split(/(?:Option \d+:|^\d+\.|\n\n+)/mi).map(s => s.trim()).filter(t => t.length > 5);
           if (options.length === 0) options = [rawText];
 
           container.innerHTML = `
             <div class="result-box" style="display: block; margin-top: 0; margin-bottom: 15px;">
-              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy All</button>
               ${options.map((opt, index) => `
-                <div style="margin-bottom: 15px;">
-                  <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:5px;">Option ${index + 1}:</label>
-                  <div class="result-text" style="margin-bottom: 10px;">"${opt.replace(/^["']|["']$/g, '').trim()}"</div>
+                <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <label style="font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase;">Option ${index + 1}:</label>
+                    <button class="copy-btn" onclick="copyIndividualText(this, ${index})" style="position: static; padding: 6px 12px; font-size: 0.85rem;"><i class="fas fa-copy"></i> Copy</button>
+                  </div>
+                  <div class="result-text" id="result-opt-${index}" style="margin-bottom: 0;">"${opt.replace(/^["']|["']$/g, '').trim()}"</div>
                 </div>
               `).join('')}
             </div>
@@ -366,11 +368,13 @@ Rules:
           }
           container.innerHTML = `
             <div class="result-box" style="display: block; margin-top: 0;">
-              <button class="copy-btn" onclick="copyText(this)"><i class="fas fa-copy"></i> Copy All</button>
               ${corporateResponses.map((resp, index) => `
-                <div style="margin-bottom: 15px;">
-                  <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase; margin-bottom:5px;">Option ${index + 1}:</label>
-                  <div class="result-text" style="margin-bottom: 10px;">"${resp}"</div>
+                <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <label style="font-size:0.8rem; font-weight:700; color:var(--light); text-transform:uppercase;">Option ${index + 1}:</label>
+                    <button class="copy-btn" onclick="copyIndividualText(this, ${index})" style="position: static; padding: 6px 12px; font-size: 0.85rem;"><i class="fas fa-copy"></i> Copy</button>
+                  </div>
+                  <div class="result-text" id="result-opt-${index}" style="margin-bottom: 0;">"${resp}"</div>
                 </div>
               `).join('')}
             </div>
@@ -380,11 +384,13 @@ Rules:
       }
     }
 
-    function copyText(btn) {
-      const texts = Array.from(btn.parentElement.querySelectorAll('.result-text')).map(el => el.innerText.replace(/"/g, ''));
-      navigator.clipboard.writeText(texts.join('\\n\\n'));
-      btn.innerHTML = '<i class="fas fa-check"></i> Copied';
-      setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy All', 2000);
+    function copyIndividualText(btn, index) {
+      const textEl = document.getElementById(`result-opt-${index}`);
+      if(textEl) {
+          navigator.clipboard.writeText(textEl.innerText.replace(/"/g, ''));
+          btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+          setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i> Copy', 2000);
+      }
     }
   </script>
 </body>
