@@ -965,26 +965,30 @@
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Shivarn Singh",
-      "image": "https://solmates.netlify.app/journey/shivarnsingh.png",
-      "url": "https://solmates.netlify.app/journey",
-      "sameAs": [
-        "https://www.instagram.com/__s.singh._",
-        "https://www.facebook.com/shivarnsingh.raj",
-        "https://snapchat.com/add/one_ssingh",
-        "https://x.com/one_ssingh",
-        "https://t.me/one_ssingh",
-        "mailto:thakurshivarnsingh2321@gmail.com"
-      ],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "SOLMATES"
-      }
-    }
+    <script>
+      const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Shivarn Singh",
+        "image": window.location.origin + "/journey/shivarnsingh.png",
+        "url": window.location.origin + "/journey",
+        "sameAs": [
+          "https://www.instagram.com/__s.singh._",
+          "https://www.facebook.com/shivarnsingh.raj",
+          "https://snapchat.com/add/one_ssingh",
+          "https://x.com/one_ssingh",
+          "https://t.me/one_ssingh",
+          "mailto:thakurshivarnsingh2321@gmail.com"
+        ],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "SOLMATES"
+        }
+      };
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(structuredData);
+      document.head.appendChild(script);
     </script>
 </head>
 
