@@ -4829,7 +4829,9 @@
       const badge = document.querySelector('.notification-badge');
       if (!badge) return;
 
+      window._pendingUnreadKeys = []; // Store unread keys globally
       const seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
+
       const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
 
       try {
@@ -4901,7 +4903,11 @@
             const isNewBadgeShown = !isNaN(itemTime) && (Date.now() - itemTime < 24 * 60 * 60 * 1000);
             const isUnseen = !seenIds.includes(uniqueKey);
 
-            return isNewBadgeShown && isUnseen;
+            if (isNewBadgeShown && isUnseen) {
+              window._pendingUnreadKeys.push(uniqueKey);
+              return true;
+            }
+            return false;
           });
           newCount = unreadItems.length;
         }
@@ -4927,6 +4933,26 @@
         return;
       }
       localStorage.setItem('last_read_notifications', Date.now());
+      
+      // [v117.1] Instantly clear any "ghost" badges by marking all calculated unread items as seen
+      if (window._pendingUnreadKeys && window._pendingUnreadKeys.length > 0) {
+        let seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
+        let updated = false;
+        window._pendingUnreadKeys.forEach(k => {
+          if (!seenIds.includes(k)) {
+            seenIds.push(k);
+            updated = true;
+          }
+        });
+        if (updated) {
+          if (seenIds.length > 200) seenIds = seenIds.slice(-200);
+          localStorage.setItem('seen_sol_notifications', JSON.stringify(seenIds));
+        }
+      }
+
+      const badge = document.querySelector('.notification-badge');
+      if (badge) badge.style.display = 'none';
+
       window.location.href = '/notification';
     }
 
