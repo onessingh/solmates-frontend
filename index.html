@@ -4875,10 +4875,20 @@
             const itemSem = String(item.semester || '0');
             if (!allowedSems.includes('all') && !allowedSems.includes(itemSem)) return;
 
-            const key = `sem${itemSem}_${normalize(item.title)}`;
-            const existing = dedupeMap.get(key);
-            const hasLink = item.link && item.link !== "#pending" && item.link !== "#";
-            if (!existing || hasLink) dedupeMap.set(key, item);
+            const isLive = !!((item.description && item.description.includes('MBA Live Class')) || 
+                              (item.title && item.title.toLowerCase().includes('live class')));
+            
+            if (!isLive) {
+              const key = item.title ? `reg_${itemSem}_${normalize(item.title)}` : (item.id || item._id);
+              dedupeMap.set(key, item);
+            } else {
+              const dateObj = parseNoticeDate(item.date, item.title);
+              const dayKey = isNaN(dateObj.getTime()) ? 'no-date' : new Date(dateObj).setHours(0,0,0,0);
+              const key = `live_${itemSem}_${normalize(item.title)}_${dayKey}`;
+              const existing = dedupeMap.get(key);
+              const hasLink = item.link && item.link !== "#pending" && item.link !== "#";
+              if (!existing || hasLink) dedupeMap.set(key, item);
+            }
           });
 
           const unreadItems = Array.from(dedupeMap.values()).filter(item => {
@@ -5096,7 +5106,10 @@
 
             const currentSemestersStr = JSON.stringify(semesters);
             const lastSubscribedStr = localStorage.getItem('solmates_push_last_subscribed_list');
-            if (lastSubscribedStr === currentSemestersStr && localStorage.getItem('sol_notif_enabled') === 'true') return;
+            if (lastSubscribedStr === currentSemestersStr && localStorage.getItem('sol_notif_enabled') === 'true') {
+              if (window.solmatesAPI.silentPushTokenRefresh) window.solmatesAPI.silentPushTokenRefresh();
+              return;
+            }
 
             await window.solmatesAPI.subscribeToPush(semesters)
               .then(() => {
