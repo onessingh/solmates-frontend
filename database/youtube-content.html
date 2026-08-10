@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -65,14 +65,14 @@
       opacity: 1;
     }
 
-    /* ── Navbar ─────────────────────────────────────────── */
+    /* -- Navbar ------------------------------------------- */
     .top-nav {
       position: fixed;
       top: 0;
       width: 100%;
       height: 56px;
       background: var(--bg-nav);
-      backdrop-filter: blur(12px);
+      
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -139,11 +139,11 @@
       color: #c0962d;
     }
 
-    /* ── Modern Breadcrumb ────────────────────────────── */
+    /* -- Modern Breadcrumb ------------------------------ */
     .breadcrumb {
       background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      
+
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       padding: 12px 24px;
       display: flex;
@@ -201,7 +201,7 @@
       font-size: 10px;
     }
 
-    /* ── Premium Page header ────────────────────────────── */
+    /* -- Premium Page header ------------------------------ */
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -242,7 +242,7 @@
       font-weight: 500;
     }
 
-    /* ── Admin Bar ──────────────────────────────────────── */
+    /* -- Admin Bar ---------------------------------------- */
     .admin-bar {
       display: none;
       gap: 10px;
@@ -281,7 +281,7 @@
       background: #333;
     }
 
-    /* ── Section heading ────────────────────────────────── */
+    /* -- Section heading ---------------------------------- */
     .section-label {
       font-size: 13px;
       font-weight: 600;
@@ -293,7 +293,7 @@
       border-bottom: 1px solid var(--yt-border);
     }
 
-    /* ── Folder cards (Playlist-style) ─────────────────── */
+    /* -- Folder cards (Playlist-style) ------------------- */
     .folders-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -307,11 +307,11 @@
       border: 1px solid var(--border);
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
     }
 
-    /* ── Recursive Subject Card Styles (Centered Layout) ── */
+    /* -- Recursive Subject Card Styles (Centered Layout) -- */
     .folder-card.centered-folder {
       background: var(--card);
       border: 1px solid var(--border);
@@ -409,7 +409,7 @@
       color: var(--sub);
     }
 
-    /* ── Video / Link cards ─────────────────────────────── */
+    /* -- Video / Link cards ------------------------------- */
     .videos-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -418,12 +418,12 @@
 
     .video-card {
       background: var(--card);
-      backdrop-filter: blur(12px);
+      
       border: 1px solid var(--border);
       border-radius: 16px;
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
     }
 
@@ -472,7 +472,7 @@
       width: 58px;
       height: 58px;
       background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
+      
       border: 2px solid rgba(255, 255, 255, 0.4);
       border-radius: 50%;
       display: flex;
@@ -521,7 +521,7 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      transition: all 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background 0.3s;
       width: 100%;
       justify-content: center;
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
@@ -543,7 +543,7 @@
       box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
     }
 
-    /* ── Playlist Fallback ─────────────────────────────── */
+    /* -- Playlist Fallback ------------------------------- */
     .playlist-thumb-overlay {
       display: flex;
       flex-direction: column;
@@ -571,7 +571,7 @@
       letter-spacing: 1px;
     }
 
-    /* ── Card Stack Effect ────────────────────────────── */
+    /* -- Card Stack Effect ------------------------------ */
     .video-thumb.is-playlist::before,
     .video-thumb.is-playlist::after {
       content: '';
@@ -604,7 +604,7 @@
       top: -18px;
     }
 
-    /* ── Delete btn ─────────────────────────────────────── */
+    /* -- Delete btn --------------------------------------- */
     .del-btn,
     .edit-btn {
       position: absolute;
@@ -615,12 +615,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 10;
       opacity: 0;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(4px);
+      
     }
 
     .del-btn {
@@ -653,13 +653,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 10;
       opacity: 0;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(16, 185, 129, 0.9); /* Emerald Green */
       color: white;
-      backdrop-filter: blur(4px);
+      
     }
 
     .video-card:hover .magic-btn {
@@ -682,12 +682,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 10;
       opacity: 0;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(4px);
+      
       color: white;
     }
 
@@ -728,7 +728,7 @@
       }
     }
 
-    /* ── Empty ──────────────────────────────────────────── */
+    /* -- Empty -------------------------------------------- */
     .empty {
       text-align: center;
       padding: 80px 20px;
@@ -749,12 +749,12 @@
       margin-bottom: 8px;
     }
 
-    /* ── Modal ──────────────────────────────────────────── */
+    /* -- Modal -------------------------------------------- */
     .overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
+      
       z-index: 3000;
       display: none;
       align-items: center;
@@ -856,7 +856,7 @@
       width: 92%;
       max-width: 600px;
       background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(12px);
+      
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 24px;
       padding: 16px 20px;
@@ -924,7 +924,7 @@
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(16, 185, 129, 0.95);
-      backdrop-filter: blur(4px);
+      
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1002,7 +1002,7 @@
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 6px 20px var(--tf-glow, rgba(192, 150, 45, 0.05)), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1), background 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
     .folder-card.centered-folder.premium-topic-folder::before {
       content: '';
@@ -1044,7 +1044,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1), background 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       z-index: 2;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
@@ -1088,7 +1088,7 @@
       border-radius: 12px;
       padding: 0 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
     }
     .search-input-wrapper:focus-within {
       border-color: var(--primary);
@@ -1537,7 +1537,7 @@
       // Update title, sub and breadcrumbs
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       // Reset Search Input on Navigation
@@ -1574,7 +1574,7 @@
       // Update title, sub and breadcrumbs
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       try {
@@ -1587,7 +1587,7 @@
     const CAT_LABEL = 'YouTube Videos';
     const ordinal = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
 
-    // ── Breadcrumb ──────────────────────────────────────────────────────────
+    // -- Breadcrumb ----------------------------------------------------------
     function buildBreadcrumb() {
       const bc = document.getElementById('breadcrumb');
       let html = `
@@ -1618,11 +1618,11 @@
       bc.innerHTML = html;
     }
 
-    // ── Init ────────────────────────────────────────────────────────────────
+    // -- Init ----------------------------------------------------------------
     async function init() {
       isNavigating = false;
 
-      // 🏁 WAIT for API status to be fully determined
+      // ?? WAIT for API status to be fully determined
       let retry = 0;
       while (retry < 5 && (!window.solmatesAPI || !window.solmatesAPI.isReady())) {
         await new Promise(r => setTimeout(r, 100));
@@ -1632,7 +1632,7 @@
 
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
@@ -1652,7 +1652,7 @@
       }
 
       if (NO_CONTENT && isAdmin) {
-        showEmpty('Empty — Add Content', 'Use the buttons above to add playlist folders or video links.');
+        showEmpty('Empty � Add Content', 'Use the buttons above to add playlist folders or video links.');
         return;
       }
 
@@ -1697,7 +1697,7 @@
           // Restore original state
           const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
           document.getElementById('pageTitle').innerText = displayPageName;
-          document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+          document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
           buildBreadcrumb();
           
           document.getElementById('loadingState').style.display = 'block';
@@ -1790,7 +1790,7 @@
       if (vSec) vSec.style.display = 'none';
     }
 
-    // ── Load content ────────────────────────────────────────────────────────
+    // -- Load content --------------------------------------------------------
     async function loadContent() {
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
 
@@ -1822,7 +1822,7 @@
         const folders = (fRes && fRes.data) ? fRes.data : [];
         const items = (iRes && iRes.data) ? iRes.data : [];
 
-        // ✅ PROTECTION: If both are empty and request failed, keep stale.
+        // ? PROTECTION: If both are empty and request failed, keep stale.
         // But if request succeeded and it is genuinely empty, proceed to show empty state!
         const fSuccess = fRes && fRes.success;
         const iSuccess = iRes && iRes.success;
@@ -1936,7 +1936,7 @@
         if (folders.length === 0 && items.length === 0) {
           if (isStale) return; // Wait for fresh
           showEmpty(
-            isAdmin ? 'Empty — Add Content' : 'No Videos Available',
+            isAdmin ? 'Empty � Add Content' : 'No Videos Available',
             isAdmin ? 'Use buttons above to add playlist folders or video links.' : 'No videos uploaded yet. Check back later!'
           );
           return;
@@ -2193,7 +2193,7 @@
       }
     }
 
-    // ── Extract YouTube video ID from any YouTube URL ────────────────────────
+    // -- Extract YouTube video ID from any YouTube URL ------------------------
     function extractYouTubeId(url) {
       if (!url) return { videoId: null, playlistId: null };
       let cleanUrl = url.trim();
@@ -2350,7 +2350,7 @@
       loadContent();
     }
 
-    // ── Auto-Capitalize Inputs ──────────────────────────────────────────────
+    // -- Auto-Capitalize Inputs ----------------------------------------------
     function capitalizeFirstLetter(input) {
       if (!input.value) return;
       input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
@@ -2363,7 +2363,7 @@
       }
     });
 
-    // ── Helpers ─────────────────────────────────────────────────────────────
+    // -- Helpers -------------------------------------------------------------
     function initLongPress(el, onLongPress) {
       let timer;
       const start = (e) => {
@@ -2413,7 +2413,7 @@
       return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
 
-    // ── Real-time refresh (Socket.io) ────────────────────────────────────────
+    // -- Real-time refresh (Socket.io) ----------------------------------------
     (function () {
       if (typeof io === 'undefined') return;
       try {
@@ -2524,7 +2524,7 @@
           alert('Expansion Failed: ' + (res.error || 'Unknown Error'));
           const stText = document.getElementById('scrapingStatusText');
           if (stText) {
-            stText.innerText = '⚠️ Expansion Failed: ' + (res.error || 'Unknown server error');
+            stText.innerText = '?? Expansion Failed: ' + (res.error || 'Unknown server error');
             stText.style.color = 'var(--yt-red)';
           }
           // Hide overlay after 4 seconds so the user can read the error on the dark screen
@@ -2536,7 +2536,7 @@
         console.error('Expansion error:', err);
         const stText = document.getElementById('scrapingStatusText');
         if (stText) {
-          stText.innerText = '⚠️ Technical Error: ' + err.message;
+          stText.innerText = '?? Technical Error: ' + err.message;
           stText.style.color = 'var(--yt-red)';
         }
         setTimeout(() => {
@@ -2545,7 +2545,7 @@
       }
     }
 
-    // ── Hide & Move Override Functions ──────────────────────────────────────
+    // -- Hide & Move Override Functions --------------------------------------
     async function toggleHide(type, entity) {
       const isHidden = (type === 'folder' ? entity.name : entity.title).includes('[HIDDEN]');
       let newName = (type === 'folder' ? entity.name : entity.title);
@@ -2598,7 +2598,7 @@
           children.forEach(c => {
             if (movingType === 'folder' && c.id === movingEntity.id) return;
             const cleanName = c.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
-            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '├─ ' : '');
+            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '+- ' : '');
             optionsHtml += `<option value="${c.id}">${prefix}${cleanName}</option>`;
             optionsHtml += buildFolderTree(list, c.id, depth + 1);
           });
@@ -2659,7 +2659,7 @@
       }
     }
 
-    // ── Resort Shuffled Playlist Logic ───────────────────────────────────────
+    // -- Resort Shuffled Playlist Logic ---------------------------------------
     async function openResortModal() {
       document.getElementById('resortPlaylistUrl').value = '';
       
@@ -2720,7 +2720,7 @@
       }
     }
 
-    // ── Organize Mode Controller Logic ───────────────────────────────────────
+    // -- Organize Mode Controller Logic ---------------------------------------
     let isOrganizeMode = false;
     let selectedOrganizeEntity = null;
 

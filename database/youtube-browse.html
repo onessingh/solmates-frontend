@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -55,14 +55,14 @@
       padding-top: 58px;
     }
 
-    /* ─── Navbar ─── */
+    /* --- Navbar --- */
     .top-nav {
       position: fixed;
       top: 0;
       width: 100%;
       height: 58px;
       background: var(--bg-nav);
-      backdrop-filter: blur(12px);
+      
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -130,11 +130,11 @@
       color: #c0962d;
     }
 
-    /* ─── Modern Breadcrumb ─── */
+    /* --- Modern Breadcrumb --- */
     .breadcrumb {
       background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      
+
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       padding: 12px 24px;
       display: flex;
@@ -192,7 +192,7 @@
       font-size: 10px;
     }
 
-    /* ─── Hero ─── */
+    /* --- Hero --- */
     .hero {
       background: var(--hero-bg);
       padding: 35px 24px 25px;
@@ -245,7 +245,7 @@
       padding: 28px 20px;
     }
 
-    /* ─── Section label ─── */
+    /* --- Section label --- */
     .section-label {
       font-size: 17px;
       font-weight: 700;
@@ -266,7 +266,7 @@
       font-weight: 400;
     }
 
-    /* ─── Semester Grid ─── */
+    /* --- Semester Grid --- */
     .sem-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -276,13 +276,13 @@
 
     .sem-card {
       background: var(--card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      
+
       border: 1px solid var(--border);
       border-radius: 20px;
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
     }
 
@@ -338,7 +338,7 @@
       height: 74px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
+      
       border: 2px solid rgba(255, 255, 255, 0.4);
       display: flex;
       align-items: center;
@@ -393,7 +393,7 @@
       font-size: 16px;
     }
 
-    /* ─── Subject Grid ─── */
+    /* --- Subject Grid --- */
     .subject-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -443,12 +443,12 @@
 
     .subject-card {
       background: var(--card);
-      backdrop-filter: blur(8px);
+      
       border: 1px solid var(--border);
       border-radius: 18px;
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
@@ -485,7 +485,7 @@
       height: 64px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
+      
       border: 2px solid rgba(255, 255, 255, 0.5);
       display: flex;
       align-items: center;
@@ -548,7 +548,7 @@
       color: var(--accent);
     }
 
-    /* ─── Back btn ─── */
+    /* --- Back btn --- */
     .back-sem-btn {
       display: inline-flex;
       align-items: center;
@@ -575,7 +575,7 @@
       transform: scale(0.98) !important;
     }
 
-    /* ─── Admin Bar ─── */
+    /* --- Admin Bar --- */
     .admin-bar {
       display: none;
       align-items: center;
@@ -624,7 +624,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background 0.3s;
       z-index: 10;
     }
 
@@ -664,7 +664,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background 0.3s;
       z-index: 10;
       color: #fff;
     }
@@ -701,7 +701,7 @@
       }
     }
 
-    /* ─── Modals ─── */
+    /* --- Modals --- */
     .overlay {
       position: fixed;
       inset: 0;
@@ -710,7 +710,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
+      
     }
 
     .overlay.open {
@@ -978,7 +978,7 @@
     <div id="semView">
       <div class="section-label">
         <i class="fas fa-layer-group"></i> Semesters
-        <span class="sub">— Select your semester</span>
+        <span class="sub">� Select your semester</span>
       </div>
       <div class="sem-grid" id="semGrid">
         <!-- Semester 1 -->
@@ -1151,7 +1151,7 @@
       return 'fas fa-play';
     }
 
-    // ── Semester View ─────────────────────────────────────────────────────────
+    // -- Semester View ---------------------------------------------------------
     async function showSemesters(isPopState = false) {
       if (isNavigating) return;
       currentSemester = null;
@@ -1187,7 +1187,7 @@
     }
 
 
-    // ── Subject View ──────────────────────────────────────────────────────────
+    // -- Subject View ----------------------------------------------------------
     async function loadSubjects(sem, isPopState = false) {
       if (isNavigating) return;
       isNavigating = true;
@@ -1198,7 +1198,7 @@
       const subjectView = document.getElementById('subjectView');
       const hasItems = document.getElementById('subjectGrid').querySelectorAll('.subject-card').length > 0;
 
-      // ✅ Switch Views Instantly
+      // ? Switch Views Instantly
       semView.style.display = 'none';
       if (!hasItems) {
         subjectView.style.display = 'none';
@@ -1224,7 +1224,7 @@
       <span class="bc-item current"><i class="fas fa-layer-group"></i> Semester ${sem}</span>
     `;
 
-      // ✅ STEP 1: Cache Render
+      // ? STEP 1: Cache Render
       const cKey = `folders_${CATEGORY}_${sem}_root`;
       const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(cKey) : null;
       if (cFolders && cFolders.data) {
@@ -1233,7 +1233,7 @@
         loadingState.style.display = 'block';
       }
 
-      // ✅ STEP 2: Fresh Render
+      // ? STEP 2: Fresh Render
       try {
         const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true);
         const folders = (semRes && semRes.data) ? semRes.data : [];
@@ -1333,11 +1333,11 @@
       subjectView.style.display = 'block';
       // Update Subject Label
       document.getElementById('subjectLabel').innerHTML = `
-      <i class="fab fa-youtube"></i> Semester ${sem} — Subjects
+      <i class="fab fa-youtube"></i> Semester ${sem} � Subjects
     `;
     }
 
-    // ── Admin Actions ────────────────────────────────────────────────────────
+    // -- Admin Actions --------------------------------------------------------
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -1440,7 +1440,7 @@
       return String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
 
-    // ── Browser Navigation ───────────────────────────────────────────────────
+    // -- Browser Navigation ---------------------------------------------------
     window.onpopstate = function (event) {
       const state = event.state;
       if (state && state.view === 'subjects') {
@@ -1458,9 +1458,9 @@
       }
     }
 
-    // ── Init ──────────────────────────────────────────────────────────────────
+    // -- Init ------------------------------------------------------------------
     async function init() {
-      // 🏁 WAIT for API status with safe checks
+      // ?? WAIT for API status with safe checks
       try {
         let retry = 0;
         while (retry < 5) {
@@ -1501,7 +1501,7 @@
       document.querySelectorAll('.navigating').forEach(c => c.classList.remove('navigating'));
     });
 
-    // ── Hide & Move Functions ──────────────────────────────────────────────
+    // -- Hide & Move Functions ----------------------------------------------
     async function toggleHide(type, entity) {
       const isHidden = (type === 'folder' ? entity.name : entity.title).includes('[HIDDEN]');
       let newName = (type === 'folder' ? entity.name : entity.title);
@@ -1547,7 +1547,7 @@
           children.forEach(c => {
             if (movingType === 'folder' && c.id === movingEntity.id) return;
             const cleanName = c.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
-            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '├─ ' : '');
+            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '+- ' : '');
             optionsHtml += `<option value="${c.id}">${prefix}${cleanName}</option>`;
             optionsHtml += buildFolderTree(list, c.id, depth + 1);
           });
