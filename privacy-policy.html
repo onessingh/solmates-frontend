@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy & Terms - SOLMATES</title>
   <meta name="description" content="Privacy Policy and Terms of Service for SOLMATES.">
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="color-scheme" content="light dark">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -170,11 +172,14 @@
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
       const darkStyle = document.getElementById('theme-dark-style');
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
       if (savedTheme && darkStyle) {
         if (savedTheme === 'dark') {
           darkStyle.media = 'all';
+          if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
         } else if (savedTheme === 'light') {
           darkStyle.media = 'not all';
+          if (themeMeta) themeMeta.setAttribute('content', '#f4f7fb');
         }
       }
     })();
@@ -205,7 +210,7 @@
         <p>At SOLMATES (accessible from solmates.in), the privacy of our visitors is our utmost priority. Since we do not operate a user-account system, we inherently minimize any data exposure.</p>
         
         <h3>Local Storage (Your Device, Your Data)</h3>
-        <p>To ensure you have a highly personalized experience, we use your browser's <strong>Local Storage</strong>. This means any preferences you set—such as dark mode toggles, AI chat history, bookmarked tools, or game scores—are saved entirely on your own device. We do not transmit or store this data on our servers.</p>
+        <p>To ensure you have a highly personalized experience, we use your browser's <strong>Local Storage</strong>. This means any preferences you setâ€”such as dark mode toggles, AI chat history, bookmarked tools, or game scoresâ€”are saved entirely on your own device. We do not transmit or store this data on our servers.</p>
 
         <h3>Push Notifications</h3>
         <p>We may request permission to send you Push Notifications (via OneSignal or similar services) strictly for educational updates, new features, or reminders. You are never forced to accept this, and you can instantly revoke this permission at any time through your browser or device settings.</p>
@@ -282,3 +287,4 @@
 
 </body>
 </html>
+
