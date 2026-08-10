@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -978,7 +978,7 @@
     <div id="semView">
       <div class="section-label">
         <i class="fas fa-layer-group"></i> Semesters
-        <span class="sub">— Select your semester</span>
+        <span class="sub">â€” Select your semester</span>
       </div>
       <div class="sem-grid" id="semGrid">
         <!-- Semester 1 -->
@@ -1196,17 +1196,11 @@
       const loadingState = document.getElementById('loadingState');
       const semView = document.getElementById('semView');
       const subjectView = document.getElementById('subjectView');
-      const hasItems = document.getElementById('subjectGrid').querySelectorAll('.subject-card').length > 0;
-
-      // ? Switch Views Instantly
-      semView.style.display = 'none';
-      if (!hasItems) {
+      const subjectGrid = document.getElementById('subjectGrid');
+        subjectGrid.innerHTML = '';
+        semView.style.display = 'none';
         subjectView.style.display = 'none';
         loadingState.style.display = 'block';
-      } else {
-        subjectView.style.display = 'block';
-        loadingState.style.display = 'none';
-      }
 
       // Update History only if not from popstate
       if (!isPopState) {
@@ -1229,8 +1223,6 @@
       const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(cKey) : null;
       if (cFolders && cFolders.data) {
         renderGridSafe(sem, cFolders.data, true);
-      } else if (!hasItems) {
-        loadingState.style.display = 'block';
       }
 
       // ? STEP 2: Fresh Render
@@ -1333,7 +1325,7 @@
       subjectView.style.display = 'block';
       // Update Subject Label
       document.getElementById('subjectLabel').innerHTML = `
-      <i class="fab fa-youtube"></i> Semester ${sem} — Subjects
+      <i class="fab fa-youtube"></i> Semester ${sem} â€” Subjects
     `;
     }
 
@@ -1595,3 +1587,5 @@
 </body>
 
 </html>
+
+
