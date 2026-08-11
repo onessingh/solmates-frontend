@@ -526,13 +526,22 @@ async function generateAll() {
 }
 
 async function callAI(prompt) {
-  if (!window.solmatesAPI) window.solmatesAPI = new SolmatesAPI();
-  const res = await window.solmatesAPI.sendChatMessage(prompt + '\n\nCRITICAL: Respond ONLY with valid JSON. No markdown, no code fences.', []);
-  const text = res?.candidates?.[0]?.content?.parts?.[0]?.text || res?.text || res || '';
   try {
-    const cleaned = text.replace(/```json|```/g, '').trim();
+    if (!window.solmatesAPI) window.solmatesAPI = new SolmatesAPI();
+    const res = await window.solmatesAPI.sendChatMessage(
+      prompt + '\n\nCRITICAL: Your response MUST be valid JSON only. No explanations, no markdown code fences (```), no extra text before or after the JSON object.',
+      []
+    );
+    // Backend returns { success: true, message: "..." }
+    const text = res?.message || res?.text || res?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    if (!text) { console.error('Empty AI response:', res); return null; }
+    // Strip any markdown code fences if AI added them anyway
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     return JSON.parse(cleaned);
-  } catch(e) { return null; }
+  } catch(e) {
+    console.error('callAI error:', e);
+    return null;
+  }
 }
 
 // ===== STUDY GUIDE =====
