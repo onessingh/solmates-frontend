@@ -316,7 +316,7 @@
                 }
             }
         }
-        throw new Error("Could not extract valid JSON. AI Output: " + text);
+        throw new Error("Invalid response format from AI");
     }
 
     (function() {
@@ -393,6 +393,7 @@
     <div id="result-mode">
       
 
+      <div id="progress-tracker" style="text-align: right; margin-bottom: 15px; font-weight: 600; color: var(--accent); font-size: 0.95rem;"></div>
       <div id="questions-container">
         <!-- MCQs injected here -->
       </div>
@@ -429,13 +430,13 @@ Output strictly in the following JSON array format, and nothing else:
     "q": "Question text...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correct": 1, 
-    "explanation": "Provide the detailed explanation in English and Hinglish seamlessly within a single continuous paragraph (DO NOT use any line breaks or newline characters).",
+    "explanation": "Provide a genuine, detailed point-wise explanation in English and Hinglish. Do NOT use markdown asterisks.",
     "tag": "${framework}"
   }
 ]
 Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
 
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Keep your response concise to avoid cutoff. Limit output length. Keep Hinglish explanations to exactly 1 short sentence.", []);
+        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
             let parsed;
@@ -454,6 +455,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         renderQuestions();
         
         document.getElementById('loader').style.display = 'none';
+        document.getElementById('progress-tracker').innerText = `0 out of ${generatedQuestions.length} completed`;
         document.getElementById('setup-mode').style.display = 'none';
         document.getElementById('result-mode').style.display = 'block';
         history.pushState({view: 'result'}, '', '');
@@ -462,6 +464,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
           console.error(err);
           alert('Failed to generate inventory: ' + (err.message || 'Unknown error'));
           document.getElementById('loader').style.display = 'none';
+        document.getElementById('progress-tracker').innerText = `0 out of ${generatedQuestions.length} completed`;
       }
     }
 
@@ -508,22 +511,38 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       card.classList.add('answered');
       
       const q = generatedQuestions[qIndex];
-      const isCorrect = false;
+      const isCorrect = (oIdx === q.correct);
       
-      element.classList.add('selected');
       answeredCount++;
+      document.getElementById('progress-tracker').innerText = `${answeredCount} out of ${generatedQuestions.length} completed`;
+      
       userAnswers.push({ q: q.q, selected: q.options[oIdx] });
       if(answeredCount === generatedQuestions.length) generateFinalAnalysis();
       
       options.forEach((opt, idx) => {
-        if(idx === oIdx) { opt.classList.add("selected"); opt.style.backgroundColor = "var(--primary)"; opt.style.color = "white"; }
         opt.style.pointerEvents = 'none';
+        if(idx === q.correct) {
+            opt.classList.add("correct");
+            opt.style.backgroundColor = "rgba(52, 199, 89, 0.1)";
+            opt.style.borderColor = "var(--success)";
+            opt.innerHTML += ' <i class="fas fa-check-circle" style="color: var(--success); margin-left: auto;"></i>';
+        }
       });
 
-      document.getElementById(`exp-${qIndex}`).classList.add('show');
+      if (!isCorrect) {
+          element.classList.add("incorrect");
+          element.style.backgroundColor = "rgba(255, 59, 48, 0.1)";
+          element.style.borderColor = "var(--danger)";
+          element.innerHTML += ' <i class="fas fa-times-circle" style="color: var(--danger); margin-left: auto;"></i>';
+      }
+
+      const expDiv = document.getElementById(`exp-${qIndex}`);
+      let cleanExp = q.explanation ? q.explanation.replace(/\*\*/g, '') : '';
+      cleanExp = cleanExp.replace(/\n/g, '<br>');
+      expDiv.innerHTML = '<strong>Explanation:</strong><br><br>' + cleanExp;
+      expDiv.classList.add('show');
     }
 
-    
     async function generateFinalAnalysis() {
       const container = document.getElementById('questions-container');
       const loaderHtml = `
@@ -538,7 +557,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         const answersText = JSON.stringify(userAnswers);
         const prompt = `Analyze the following test responses and provide a final evaluation for the user in a short, inspiring paragraph (English and Hinglish). Responses: ${answersText}`;
         
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Keep your response concise to avoid cutoff. Limit output length. Keep Hinglish explanations to exactly 1 short sentence.", []);
+        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
         document.getElementById('final-loader').remove();
         
         const resHtml = `
@@ -549,7 +568,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         `;
         container.insertAdjacentHTML('beforeend', resHtml);
       } catch (err) {
-        document.getElementById('final-loader').innerHTML = '<p style="color: red;">Failed to load analysis.</p>';
+        console.error(err); document.getElementById('final-loader').innerHTML = '<p style="color: red;">Failed to load analysis. Please try again later.</p>';
       }
     }
 
