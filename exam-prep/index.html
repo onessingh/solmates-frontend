@@ -523,7 +523,7 @@
         }
         
         container.innerHTML = filtered.map(exam => `
-          <a href="overview.html?exam=${exam.slug}" class="exam-card">
+          <a href="/exam-prep/overview.html?exam=${exam.slug}" class="exam-card">
             <h3>${exam.name}</h3>
             <p>${exam.short_description || 'Prepare with AI tailored specifically for this exam.'}</p>
             <div class="cta">Select Exam <i class="fas fa-arrow-right"></i></div>
