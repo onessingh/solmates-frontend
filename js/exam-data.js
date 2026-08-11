@@ -357,6 +357,566 @@ window.MOCK_EXAM_DATA = {
     }
 };
 
+
+    // ==========================================
+    // STATE PCS
+    // ==========================================
+    'mpsc': {
+        name: 'MPSC Rajyaseva',
+        category_id: 'government',
+        short_description: 'Maharashtra Civil Services Gazetted Group A & Group B Examination.',
+        about: 'MPSC Rajyaseva is the Maharashtra State Civil Services examination for recruitment to various Group A and Group B administrative posts under the Government of Maharashtra.',
+        pattern: '<ul><li><b>Prelims:</b> Paper I (GS), Paper II (CSAT)</li><li><b>Mains:</b> Marathi, English, Essay, GS I-IV, Optional</li></ul><p><i>Note: Subject to latest revised scheme.</i></p>',
+        eligibility: '<p>Bachelor degree or equivalent.</p>',
+        syllabus: '<p>History of Maharashtra, Geography of Maharashtra, Constitution, Economy, Agriculture, Science & Tech.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://mpsc.gov.in/" target="_blank">Official MPSC Website</a>',
+        subjects: [
+            {id: 'pre-gs', name: 'Prelims: General Studies'},
+            {id: 'pre-csat', name: 'Prelims: CSAT'},
+            {id: 'mains-marathi', name: 'Mains: Marathi'},
+            {id: 'mains-english', name: 'Mains: English'},
+            {id: 'mains-essay', name: 'Mains: Essay'},
+            {id: 'mains-gs1', name: 'Mains: GS I'},
+            {id: 'mains-gs2', name: 'Mains: GS II'},
+            {id: 'mains-gs3', name: 'Mains: GS III'},
+            {id: 'mains-gs4', name: 'Mains: GS IV'},
+            {id: 'mains-opt', name: 'Mains: Optional Subject'}
+        ]
+    },
+    'rpsc': {
+        name: 'RPSC RAS',
+        category_id: 'government',
+        short_description: 'Rajasthan State and Subordinate Services Combined Competitive Examination.',
+        about: 'RAS is the major Rajasthan State Civil Services examination for recruitment to Rajasthan State and Subordinate Services.',
+        pattern: '<ul><li><b>Prelims:</b> General Knowledge and General Science</li><li><b>Mains:</b> GS I, GS II, GS III, General Hindi & English</li></ul>',
+        eligibility: '<p>Bachelor degree or equivalent.</p>',
+        syllabus: '<p>History, Art & Culture of Rajasthan, Indian History, Economy, Polity, Public Administration, Ethics.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://rpsc.rajasthan.gov.in/" target="_blank">Official RPSC Website</a>',
+        subjects: [
+            {id: 'pre-gk', name: 'Prelims: GK & General Science'},
+            {id: 'mains-gs1', name: 'Mains: GS I'},
+            {id: 'mains-gs2', name: 'Mains: GS II'},
+            {id: 'mains-gs3', name: 'Mains: GS III'},
+            {id: 'mains-lang', name: 'Mains: General Hindi & English'}
+        ]
+    },
+
+    // ==========================================
+    // SSC
+    // ==========================================
+    'ssc-gd': {
+        name: 'SSC GD Constable',
+        category_id: 'ssc',
+        short_description: 'Recruitment for Constable (GD) posts in CAPFs.',
+        about: 'Recruitment examination for Constable (GD) posts in CAPFs and other forces.',
+        pattern: '<ul><li><b>CBE:</b> GI & Reasoning, GK, Mathematics, English/Hindi</li><li><b>PET/PST</b> & Medical Exam</li></ul>',
+        eligibility: '<p>10th pass / Matriculation.</p>',
+        syllabus: '<p>General Intelligence, General Awareness, Elementary Mathematics, English/Hindi.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
+        subjects: [
+            {id: 'cbe-gi', name: 'General Intelligence & Reasoning'},
+            {id: 'cbe-gk', name: 'General Knowledge & Awareness'},
+            {id: 'cbe-math', name: 'Elementary Mathematics'},
+            {id: 'cbe-lang', name: 'English / Hindi'}
+        ]
+    },
+    'ssc-cpo': {
+        name: 'SSC CPO',
+        category_id: 'ssc',
+        short_description: 'SSC Sub-Inspector in Delhi Police and CAPFs.',
+        about: 'Recruitment for Sub-Inspector posts in Delhi Police and CAPFs.',
+        pattern: '<ul><li><b>Paper I:</b> GI, GK, Quant, English</li><li><b>PET/PST</b></li><li><b>Paper II:</b> English Language & Comprehension</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>General Intelligence, GK, Quantitative Aptitude, English Comprehension.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
+        subjects: [
+            {id: 'paper1-gi', name: 'Paper I: General Intelligence'},
+            {id: 'paper1-gk', name: 'Paper I: General Knowledge'},
+            {id: 'paper1-quant', name: 'Paper I: Quantitative Aptitude'},
+            {id: 'paper1-eng', name: 'Paper I: English Comprehension'},
+            {id: 'paper2-eng', name: 'Paper II: English Language & Comprehension'}
+        ]
+    },
+
+    // ==========================================
+    // BANKING
+    // ==========================================
+    'ibps-clerk': {
+        name: 'IBPS Clerk',
+        category_id: 'banking',
+        short_description: 'IBPS Clerical / Customer Service Associate.',
+        about: 'Recruitment examination for clerical positions in participating public sector banks.',
+        pattern: '<ul><li><b>Prelims:</b> English, Numerical Ability, Reasoning</li><li><b>Mains:</b> General/Financial Awareness, General English, Reasoning, Quant</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>Reasoning, Quantitative Aptitude, English, Banking Awareness.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://www.ibps.in/" target="_blank">Official IBPS Website</a>',
+        subjects: [
+            {id: 'pre-eng', name: 'Prelims: English'},
+            {id: 'pre-num', name: 'Prelims: Numerical Ability'},
+            {id: 'pre-reason', name: 'Prelims: Reasoning'},
+            {id: 'mains-ga', name: 'Mains: General/Financial Awareness'},
+            {id: 'mains-eng', name: 'Mains: General English'},
+            {id: 'mains-reason', name: 'Mains: Reasoning Ability'},
+            {id: 'mains-quant', name: 'Mains: Quantitative Aptitude'}
+        ]
+    },
+    'sbi-clerk': {
+        name: 'SBI Clerk',
+        category_id: 'banking',
+        short_description: 'State Bank of India Junior Associate.',
+        about: 'Recruitment for Junior Associate (Customer Support & Sales) in SBI.',
+        pattern: '<ul><li><b>Prelims:</b> English, Numerical Ability, Reasoning</li><li><b>Mains:</b> GA, English, Quant, Reasoning</li><li><b>Local Language Test</b></li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>General/Financial Awareness, English, Quantitative Aptitude, Reasoning Ability.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
+        subjects: [
+            {id: 'pre-eng', name: 'Prelims: English'},
+            {id: 'pre-num', name: 'Prelims: Numerical Ability'},
+            {id: 'pre-reason', name: 'Prelims: Reasoning'},
+            {id: 'mains-ga', name: 'Mains: General/Financial Awareness'},
+            {id: 'mains-eng', name: 'Mains: General English'},
+            {id: 'mains-quant', name: 'Mains: Quantitative Aptitude'},
+            {id: 'mains-reason', name: 'Mains: Reasoning & Computer Aptitude'}
+        ]
+    },
+    'nabard': {
+        name: 'NABARD Grade A',
+        category_id: 'banking',
+        short_description: 'NABARD Assistant Manager Grade A.',
+        about: 'Recruitment for Assistant Manager in National Bank for Agriculture and Rural Development.',
+        pattern: '<ul><li><b>Prelims:</b> Reasoning, English, Computer, Quant, Decision Making, ESI, ARD, GA</li><li><b>Mains:</b> Paper I (English), Paper II (ESI, ARD, Specialist)</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>Economic & Social Issues (ESI), Agriculture & Rural Development (ARD).</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://www.nabard.org/" target="_blank">Official NABARD Website</a>',
+        subjects: [
+            {id: 'pre', name: 'Prelims: Common Subjects'},
+            {id: 'mains-eng', name: 'Mains: General English'},
+            {id: 'mains-esi-ard', name: 'Mains: ESI & ARD'},
+            {id: 'mains-specialist', name: 'Mains: Specialist Discipline'}
+        ]
+    },
+
+    // ==========================================
+    // RAILWAYS
+    // ==========================================
+    'rrb-ntpc': {
+        name: 'RRB NTPC',
+        category_id: 'railways',
+        short_description: 'Non-Technical Popular Categories.',
+        about: 'Recruitment for various non-technical posts in Indian Railways.',
+        pattern: '<ul><li><b>CBT 1 & 2:</b> General Awareness, Mathematics, General Intelligence & Reasoning</li><li><b>Skill Test / CBAT</b></li></ul>',
+        eligibility: '<p>10+2 or Graduation depending on the post.</p>',
+        syllabus: '<p>Mathematics, Reasoning, General Awareness (History, Geography, Polity, Science).</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
+        subjects: [
+            {id: 'ga', name: 'General Awareness'},
+            {id: 'math', name: 'Mathematics'},
+            {id: 'reasoning', name: 'General Intelligence & Reasoning'}
+        ]
+    },
+    'rrb-group-d': {
+        name: 'RRB Group D',
+        category_id: 'railways',
+        short_description: 'Railway Recruitment Board Group D / Level 1.',
+        about: 'Recruitment for various Level 1 posts like Track Maintainer, Helper, etc.',
+        pattern: '<ul><li><b>CBT:</b> General Science, Maths, Reasoning, GA</li><li><b>PET</b></li></ul>',
+        eligibility: '<p>10th pass / ITI.</p>',
+        syllabus: '<p>General Science (Physics, Chemistry, Biology), Mathematics, Reasoning.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
+        subjects: [
+            {id: 'science', name: 'General Science'},
+            {id: 'math', name: 'Mathematics'},
+            {id: 'reasoning', name: 'Reasoning'},
+            {id: 'ga', name: 'General Awareness & Current Affairs'}
+        ]
+    },
+    'rrb-alp': {
+        name: 'RRB ALP',
+        category_id: 'railways',
+        short_description: 'Assistant Loco Pilot & Technicians.',
+        about: 'Recruitment for Assistant Loco Pilot and Technician posts.',
+        pattern: '<ul><li><b>CBT 1:</b> Maths, Mental Ability, Science, GA</li><li><b>CBT 2:</b> Part A (Maths, Reasoning, Basic Science/Engg), Part B (Trade)</li><li><b>CBAT</b></li></ul>',
+        eligibility: '<p>Matriculation / ITI / Diploma.</p>',
+        syllabus: '<p>Basic Science & Engineering, Trade-specific subjects.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
+        subjects: [
+            {id: 'cbt1', name: 'CBT 1: All Subjects'},
+            {id: 'cbt2-parta', name: 'CBT 2: Part A (Maths, Reasoning, Science)'},
+            {id: 'cbt2-partb', name: 'CBT 2: Part B (Trade-specific)'}
+        ]
+    },
+
+    // ==========================================
+    // DEFENCE
+    // ==========================================
+    'nda': {
+        name: 'NDA',
+        category_id: 'defence',
+        short_description: 'National Defence Academy and Naval Academy Examination.',
+        about: 'Conducted by UPSC for admission to the Army, Navy and Air Force wings of the NDA.',
+        pattern: '<ul><li><b>Paper I:</b> Mathematics</li><li><b>Paper II:</b> General Ability Test (English & GK)</li><li><b>SSB Interview</b></li></ul>',
+        eligibility: '<p>10+2. Age limit as per current notification.</p>',
+        syllabus: '<p>Mathematics (Algebra, Matrices, Calculus, Vectors), English, GK (Physics, Chemistry, History, Geography).</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
+        subjects: [
+            {id: 'math', name: 'Paper I: Mathematics'},
+            {id: 'gat-eng', name: 'Paper II: English'},
+            {id: 'gat-gk', name: 'Paper II: General Knowledge'}
+        ]
+    },
+    'cds': {
+        name: 'CDS',
+        category_id: 'defence',
+        short_description: 'Combined Defence Services Examination.',
+        about: 'Conducted by UPSC for recruitment into the Indian Military Academy, Officers Training Academy, Indian Naval Academy, and Indian Air Force Academy.',
+        pattern: '<ul><li><b>IMA/INA/AFA:</b> English, GK, Elementary Maths</li><li><b>OTA:</b> English, GK</li><li><b>SSB Interview</b></li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>English, GK, Elementary Mathematics.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
+        subjects: [
+            {id: 'eng', name: 'English'},
+            {id: 'gk', name: 'General Knowledge'},
+            {id: 'math', name: 'Elementary Mathematics'}
+        ]
+    },
+    'afcat': {
+        name: 'AFCAT',
+        category_id: 'defence',
+        short_description: 'Air Force Common Admission Test.',
+        about: 'For recruiting officers in Flying, Technical, and Ground Duty branches of IAF.',
+        pattern: '<ul><li><b>AFCAT:</b> General Awareness, English, Numerical Ability, Reasoning, Military Aptitude</li><li><b>AFSB Interview</b></li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>General Awareness, English, Numerical Ability, Reasoning, Military Aptitude.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://careerairforce.gov.in/" target="_blank">Official AFCAT Website</a>',
+        subjects: [
+            {id: 'eng', name: 'English'},
+            {id: 'ga', name: 'General Awareness'},
+            {id: 'num', name: 'Numerical Ability'},
+            {id: 'reasoning', name: 'Reasoning & Military Aptitude'}
+        ]
+    },
+    'agniveer': {
+        name: 'Agniveer',
+        category_id: 'defence',
+        short_description: 'Indian Armed Forces Agniveer Recruitment.',
+        about: 'Recruitment for various non-commissioned trades in the Indian Armed Forces under the Agnipath scheme.',
+        pattern: '<ul><li><b>CEE:</b> Common Entrance Exam (Subjects vary by trade)</li><li><b>Physical & Medical</b></li></ul>',
+        eligibility: '<p>10th/12th depending on the specific trade.</p>',
+        syllabus: '<p>General Knowledge, General Science, Mathematics, Logical Reasoning (Varies by trade).</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://joinindianarmy.nic.in/" target="_blank">Official Indian Army Website</a>',
+        subjects: [
+            {id: 'gd-gk', name: 'GD: General Knowledge'},
+            {id: 'gd-sci', name: 'GD: General Science'},
+            {id: 'gd-math', name: 'GD: Mathematics'},
+            {id: 'gd-reasoning', name: 'GD: Logical Reasoning'},
+            {id: 'tech-phy', name: 'Tech: Physics'},
+            {id: 'tech-chem', name: 'Tech: Chemistry'}
+        ]
+    },
+
+    // ==========================================
+    // MEDICAL PG
+    // ==========================================
+    'neet-pg': {
+        name: 'NEET PG',
+        category_id: 'medical',
+        short_description: 'National Eligibility cum Entrance Test for Postgraduate.',
+        about: 'National entrance examination for admission to MD/MS and other postgraduate medical programmes as prescribed by NBEMS.',
+        pattern: '<ul><li><b>CBT:</b> Multiple choice questions covering all MBBS subjects.</li></ul><p><i>Note: Refer to latest NBEMS information bulletin for exact pattern.</i></p>',
+        eligibility: '<p>MBBS degree/provisional pass and internship requirements as per NBEMS.</p>',
+        syllabus: '<p>Pre-clinical, Para-clinical, and Clinical subjects of MBBS curriculum.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://natboard.edu.in/" target="_blank">Official NBEMS Website</a>',
+        subjects: [
+            {id: 'anatomy', name: 'Anatomy'},
+            {id: 'physiology', name: 'Physiology'},
+            {id: 'biochem', name: 'Biochemistry'},
+            {id: 'pathology', name: 'Pathology'},
+            {id: 'pharmacology', name: 'Pharmacology'},
+            {id: 'microbio', name: 'Microbiology'},
+            {id: 'forensic', name: 'Forensic Medicine'},
+            {id: 'community', name: 'Community Medicine'},
+            {id: 'medicine', name: 'General Medicine'},
+            {id: 'surgery', name: 'General Surgery'},
+            {id: 'obgyn', name: 'Obstetrics & Gynecology'},
+            {id: 'peds', name: 'Pediatrics'}
+        ]
+    },
+    'ini-cet': {
+        name: 'INI-CET',
+        category_id: 'medical',
+        short_description: 'Institute of National Importance Combined Entrance Test.',
+        about: 'For postgraduate medical admissions to participating INIs like AIIMS, JIPMER, PGIMER, NIMHANS.',
+        pattern: '<ul><li><b>CBT:</b> Covers all 19 MBBS subjects.</li></ul>',
+        eligibility: '<p>MBBS.</p>',
+        syllabus: '<p>Pre-clinical, Para-clinical, and Clinical subjects.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://aiimsexams.ac.in/" target="_blank">Official AIIMS Exams Website</a>',
+        subjects: [
+            {id: 'pre-clinical', name: 'Pre-clinical Subjects'},
+            {id: 'para-clinical', name: 'Para-clinical Subjects'},
+            {id: 'clinical', name: 'Clinical Subjects'}
+        ]
+    },
+
+    // ==========================================
+    // ENGINEERING (CONTINUED)
+    // ==========================================
+    'jee-advanced': {
+        name: 'JEE Advanced',
+        category_id: 'engineering',
+        short_description: 'Joint Entrance Examination Advanced for IITs.',
+        about: 'The second phase of the JEE for admission to Bachelor, Integrated Master, and Dual Degree programs at all the IITs.',
+        pattern: '<ul><li><b>Paper 1 & Paper 2:</b> Both compulsory. Each covers Physics, Chemistry, and Mathematics.</li></ul>',
+        eligibility: '<p>Must clear JEE Main cutoff.</p>',
+        syllabus: '<p>Advanced level Physics, Chemistry, and Mathematics.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://jeeadv.ac.in/" target="_blank">Official JEE Advanced Website</a>',
+        subjects: [
+            {id: 'physics', name: 'Physics'},
+            {id: 'chemistry', name: 'Chemistry'},
+            {id: 'math', name: 'Mathematics'}
+        ]
+    },
+    'bitsat': {
+        name: 'BITSAT',
+        category_id: 'engineering',
+        short_description: 'BITS Admission Test.',
+        about: 'Entrance exam for admission to B.E., M.Sc., and B.Pharm programs at BITS Pilani campuses.',
+        pattern: '<ul><li><b>Sections:</b> Physics, Chemistry, English Proficiency, Logical Reasoning, Mathematics/Biology.</li></ul>',
+        eligibility: '<p>10+2 with Physics, Chemistry, and Math/Biology with adequate marks.</p>',
+        syllabus: '<p>Physics, Chemistry, Math/Bio, English, Logical Reasoning.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://www.bitsadmission.com/" target="_blank">Official BITS Admission Website</a>',
+        subjects: [
+            {id: 'physics', name: 'Physics'},
+            {id: 'chemistry', name: 'Chemistry'},
+            {id: 'math', name: 'Mathematics'},
+            {id: 'bio', name: 'Biology'},
+            {id: 'eng', name: 'English Proficiency'},
+            {id: 'lr', name: 'Logical Reasoning'}
+        ]
+    },
+
+    // ==========================================
+    // TEACHING (CONTINUED)
+    // ==========================================
+    'csir-net': {
+        name: 'CSIR UGC NET',
+        category_id: 'teaching',
+        short_description: 'Council of Scientific and Industrial Research NET.',
+        about: 'For Junior Research Fellowship and Lectureship in Science subjects.',
+        pattern: '<ul><li><b>Part A:</b> General Aptitude</li><li><b>Part B:</b> Subject-based</li><li><b>Part C:</b> Higher-order analytical questions</li></ul>',
+        eligibility: '<p>M.Sc. or equivalent degree.</p>',
+        syllabus: '<p>Chemical Sciences, Earth Sciences, Life Sciences, Mathematical Sciences, Physical Sciences.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://csirnet.nta.ac.in/" target="_blank">Official CSIR NET Website</a>',
+        subjects: [
+            {id: 'chemical', name: 'Chemical Sciences'},
+            {id: 'earth', name: 'Earth, Atmospheric, Ocean and Planetary Sciences'},
+            {id: 'life', name: 'Life Sciences'},
+            {id: 'math', name: 'Mathematical Sciences'},
+            {id: 'physical', name: 'Physical Sciences'}
+        ]
+    },
+    'ctet': {
+        name: 'CTET',
+        category_id: 'teaching',
+        short_description: 'Central Teacher Eligibility Test.',
+        about: 'National level exam conducted by CBSE for eligibility to teach Classes I-VIII.',
+        pattern: '<ul><li><b>Paper I (I-V):</b> CDP, Languages, Maths, EVS</li><li><b>Paper II (VI-VIII):</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
+        eligibility: '<p>B.Ed / D.El.Ed.</p>',
+        syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://ctet.nic.in/" target="_blank">Official CTET Website</a>',
+        subjects: [
+            {id: 'paper1', name: 'Paper I (Classes I to V)'},
+            {id: 'paper2-math', name: 'Paper II (Mathematics & Science)'},
+            {id: 'paper2-sst', name: 'Paper II (Social Studies)'}
+        ]
+    },
+    'uptet': {
+        name: 'UPTET',
+        category_id: 'teaching',
+        short_description: 'Uttar Pradesh Teacher Eligibility Test.',
+        about: 'State level exam for eligibility to teach in UP state schools.',
+        pattern: '<ul><li><b>Paper I (I-V):</b> CDP, Languages, Maths, EVS</li><li><b>Paper II (VI-VIII):</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
+        eligibility: '<p>B.Ed / BTC / D.El.Ed.</p>',
+        syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://updeled.gov.in/" target="_blank">Official UP Basic Education Portal</a>',
+        subjects: [
+            {id: 'paper1', name: 'Paper I (Classes I to V)'},
+            {id: 'paper2-math', name: 'Paper II (Maths & Science)'},
+            {id: 'paper2-sst', name: 'Paper II (Social Studies)'}
+        ]
+    },
+    'reet': {
+        name: 'REET',
+        category_id: 'teaching',
+        short_description: 'Rajasthan Eligibility Examination for Teachers.',
+        about: 'State level exam for eligibility to teach in Rajasthan state schools.',
+        pattern: '<ul><li><b>Level I:</b> CDP, Languages, Maths, EVS</li><li><b>Level II:</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
+        eligibility: '<p>B.Ed / B.S.T.C.</p>',
+        syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://rajeduboard.rajasthan.gov.in/" target="_blank">Official BSER Website</a>',
+        subjects: [
+            {id: 'level1', name: 'Level I'},
+            {id: 'level2-math', name: 'Level II (Maths & Science)'},
+            {id: 'level2-sst', name: 'Level II (Social Studies)'}
+        ]
+    },
+
+    // ==========================================
+    // MANAGEMENT (CONTINUED)
+    // ==========================================
+    'xat': {
+        name: 'XAT',
+        category_id: 'management',
+        short_description: 'Xavier Aptitude Test.',
+        about: 'National level management entrance exam conducted by XLRI.',
+        pattern: '<ul><li><b>Sections:</b> Verbal Ability, Decision Making, Quant & DI, General Knowledge.</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>Verbal Ability, Logical Reasoning, Decision Making, Quantitative Aptitude, Data Interpretation, General Knowledge.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://xatonline.in/" target="_blank">Official XAT Website</a>',
+        subjects: [
+            {id: 'verbal', name: 'Verbal Ability & Logical Reasoning'},
+            {id: 'dm', name: 'Decision Making'},
+            {id: 'quant', name: 'Quantitative Aptitude & DI'},
+            {id: 'gk', name: 'General Knowledge'}
+        ]
+    },
+    'cmat': {
+        name: 'CMAT',
+        category_id: 'management',
+        short_description: 'Common Management Admission Test.',
+        about: 'National level entrance examination conducted by NTA for admission to management programs.',
+        pattern: '<ul><li><b>Sections:</b> Quant & DI, Logical Reasoning, Language Comprehension, GA, Innovation & Entrepreneurship.</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>Quantitative Techniques, Logical Reasoning, Language, General Awareness, Innovation & Entrepreneurship.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://exams.nta.ac.in/CMAT/" target="_blank">Official CMAT Website</a>',
+        subjects: [
+            {id: 'quant', name: 'Quantitative Techniques & DI'},
+            {id: 'lr', name: 'Logical Reasoning'},
+            {id: 'lang', name: 'Language Comprehension'},
+            {id: 'ga', name: 'General Awareness'},
+            {id: 'ie', name: 'Innovation & Entrepreneurship'}
+        ]
+    },
+    'mat': {
+        name: 'MAT',
+        category_id: 'management',
+        short_description: 'Management Aptitude Test.',
+        about: 'Standardized test conducted by AIMA to facilitate Business Schools to screen candidates.',
+        pattern: '<ul><li><b>Sections:</b> Language, Intelligence, Mathematical Skills, Data Analysis, Economy/Business Environment.</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>Language Comprehension, Intelligence & Critical Reasoning, Mathematical Skills, Data Analysis & Sufficiency, Economic & Business Environment.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://mat.aima.in/" target="_blank">Official MAT Website</a>',
+        subjects: [
+            {id: 'lang', name: 'Language Comprehension'},
+            {id: 'intelligence', name: 'Intelligence & Critical Reasoning'},
+            {id: 'math', name: 'Mathematical Skills'},
+            {id: 'data', name: 'Data Analysis & Sufficiency'},
+            {id: 'eco', name: 'Economic & Business Environment'}
+        ]
+    },
+    'snap': {
+        name: 'SNAP',
+        category_id: 'management',
+        short_description: 'Symbiosis National Aptitude Test.',
+        about: 'Entrance exam for MBA programs offered by institutes of Symbiosis International (Deemed University).',
+        pattern: '<ul><li><b>Sections:</b> General English, Analytical & Logical Reasoning, Quantitative/DI/Data Sufficiency.</li></ul>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>General English, Analytical & Logical Reasoning, Quantitative, Data Interpretation & Data Sufficiency.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://snaptest.org/" target="_blank">Official SNAP Website</a>',
+        subjects: [
+            {id: 'eng', name: 'General English'},
+            {id: 'reasoning', name: 'Analytical & Logical Reasoning'},
+            {id: 'quant', name: 'Quantitative, DI & DS'}
+        ]
+    },
+
+    // ==========================================
+    // LAW (CONTINUED)
+    // ==========================================
+    'ailet': {
+        name: 'AILET',
+        category_id: 'law',
+        short_description: 'All India Law Entrance Test.',
+        about: 'Conducted by National Law University Delhi for admission to its law programs.',
+        pattern: '<ul><li><b>UG:</b> English, Current Affairs & GK, Logical Reasoning</li><li><b>PG:</b> Law subjects</li></ul>',
+        eligibility: '<p>10+2 / LLB depending on program.</p>',
+        syllabus: '<p>English Language, Current Affairs & General Knowledge, Logical Reasoning.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://nationallawuniversitydelhi.in/" target="_blank">Official AILET Website</a>',
+        subjects: [
+            {id: 'ug-eng', name: 'UG: English Language'},
+            {id: 'ug-ca', name: 'UG: Current Affairs & GK'},
+            {id: 'ug-lr', name: 'UG: Logical Reasoning'},
+            {id: 'pg-law', name: 'PG: Law Subjects'}
+        ]
+    },
+
+    // ==========================================
+    // UNIVERSITY
+    // ==========================================
+    'cuet-ug': {
+        name: 'CUET UG',
+        category_id: 'university',
+        short_description: 'Common University Entrance Test (UG).',
+        about: 'Single-window opportunity to students to seek admission in any of the Central Universities (CUs) across the country.',
+        pattern: '<ul><li><b>Components:</b> Language Tests, Domain-Specific Subjects, General Aptitude Test</li></ul>',
+        eligibility: '<p>10+2 pass.</p>',
+        syllabus: '<p>Syllabus mapped to Class 12 NCERT for domain subjects.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
+        subjects: [
+            {id: 'lang', name: 'Language Test (e.g. English, Hindi)'},
+            {id: 'domain-sci', name: 'Domain: Science (Physics, Chemistry, Bio, Math)'},
+            {id: 'domain-com', name: 'Domain: Commerce (Accounts, Business, Econ)'},
+            {id: 'domain-hum', name: 'Domain: Humanities (History, Pol Sci, Geo)'},
+            {id: 'general', name: 'General Test'}
+        ]
+    },
+    'cuet-pg': {
+        name: 'CUET PG',
+        category_id: 'university',
+        short_description: 'Common University Entrance Test (PG).',
+        about: 'National level entrance exam for postgraduate admissions across central, state, and private universities.',
+        pattern: '<ul><li><b>Format:</b> Large list of specific test papers based on PG disciplines.</li></ul><p><i>Note: Refer to NTA CUET PG Test Paper Codes.</i></p>',
+        eligibility: '<p>Graduation.</p>',
+        syllabus: '<p>Discipline-specific undergraduate level syllabus.</p>',
+        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
+        subjects: [
+            {id: 'pg-sci', name: 'Science (Physics, Chem, Math, Bio)'},
+            {id: 'pg-com', name: 'Commerce & Management'},
+            {id: 'pg-hum', name: 'Humanities (History, Pol Sci, Literature)'},
+            {id: 'pg-law', name: 'Law'},
+            {id: 'pg-edu', name: 'Education'}
+        ]
+    }
+
+
 window.getExamData = function(slug) {
     if (window.MOCK_EXAM_DATA[slug]) {
         return window.MOCK_EXAM_DATA[slug];
