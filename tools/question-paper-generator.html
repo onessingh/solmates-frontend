@@ -505,7 +505,7 @@ Output strictly in JSON format as an array of sections:
 ]
 Note: Set "options" to null or an empty array if the question is subjective. For subjective questions, you MUST provide a brief point-wise hint or marking scheme in the "answer" field. Make the questions realistic for the exam type.`;
 
-        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
             try {

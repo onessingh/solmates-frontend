@@ -61,7 +61,7 @@
   window.safeStorage = window.localStorage;
   window.safeSessionStorage = window.sessionStorage;
 })();
-window.SOL_APP_VERSION = '120.3';
+window.SOL_APP_VERSION = '120.4';
 
 // Completely hide dark mode from printers
 window.addEventListener('beforeprint', function() {
