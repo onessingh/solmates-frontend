@@ -460,6 +460,21 @@
         throw new Error("Invalid response format from AI");
     }
 
+    function shuffleOptions(questions) {
+      return questions.map(q => {
+        const correctAnswer = q.options[q.correct];
+        // Shuffle the options array
+        const shuffled = [...q.options];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        // Find the new index of the correct answer
+        const newCorrect = shuffled.indexOf(correctAnswer);
+        return { ...q, options: shuffled, correct: newCorrect };
+      });
+    }
+
     let generatedQuestions = [];
     let answeredCount = 0;
     let userAnswers = [];
@@ -522,6 +537,7 @@ Output ONLY a valid JSON array, nothing else:
         
         if (generatedQuestions.length === 0) throw new Error("No questions generated.");
         
+        generatedQuestions = shuffleOptions(generatedQuestions);
         renderQuestions();
         document.getElementById('loader').style.display = 'none';
         

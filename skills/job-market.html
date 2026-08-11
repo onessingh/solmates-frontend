@@ -172,14 +172,15 @@ Output strictly in the following JSON format and nothing else:
   "key_drivers": ["Driver 1", "Driver 2"],
   "advice": "Strategic advice for job seekers..."
 }`;
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
+        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks. No ** asterisks.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
             try {
                 const data = safeParseJSON(resText);
                 renderDashboard(data);
             } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr);
+                console.error("JSON Parse Error:", parseErr, resText.substring(0, 200));
+                // Try to extract any usable data
                 throw new Error("Invalid response format");
             }
         } else {

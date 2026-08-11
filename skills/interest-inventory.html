@@ -459,6 +459,21 @@
         throw new Error("Invalid response format from AI");
     }
 
+    function shuffleOptions(questions) {
+      return questions.map(q => {
+        const correctAnswer = q.options[q.correct];
+        // Shuffle the options array
+        const shuffled = [...q.options];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        // Find the new index of the correct answer
+        const newCorrect = shuffled.indexOf(correctAnswer);
+        return { ...q, options: shuffled, correct: newCorrect };
+      });
+    }
+
     let generatedQuestions = [];
     let answeredCount = 0;
     let userAnswers = [];
@@ -521,6 +536,7 @@ Output ONLY a valid JSON array, nothing else:
         
         if (generatedQuestions.length === 0) throw new Error("No questions generated.");
         
+        generatedQuestions = shuffleOptions(generatedQuestions);
         renderQuestions();
         document.getElementById('loader').style.display = 'none';
         
@@ -654,13 +670,30 @@ Output ONLY a valid JSON array, nothing else:
       while (retries >= 0) {
         try {
           const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} → Answer: ${a.selected}`).join('\n');
-          const prompt = `You are a career counselor. The user completed an interest inventory test. Here are their responses (question → answer selected):
+          const prompt = `You are a career counselor. Analyze the user's interest inventory answers below.
 
+User's responses:
 ${answersText}
 
-Based on these ACTUAL responses above, determine the user's career interests, Holland Code type (RIASEC), and suggest 2-3 suitable career paths.
-Write a helpful summary in 3-4 sentences in English. Then after two blank lines, write "Hinglish:" and the same summary in Hinglish.
-Be specific about the career types that match their answers. DO NOT say "no responses provided". DO NOT use ** asterisks.`;
+Based on ONLY these actual answers:
+1. Identify their Holland Code (RIASEC) types - list 2-3 dominant codes (e.g., "Artistic (A)", "Social (S)", "Investigative (I)")
+2. For EACH Holland Code, explain in 1-2 sentences what it means and how the user's answers showed this interest.
+3. Suggest 3-5 specific career paths that match their profile.
+4. Give 1 short motivational line.
+
+Format like this:
+YOUR HOLLAND CODE: [e.g., "ASI" or "Artistic-Social-Investigative"]
+
+[Code 1 - full name]: [What it means + why this user shows it]
+[Code 2 - full name]: [What it means + why this user shows it]
+...
+
+RECOMMENDED CAREERS: [Career 1], [Career 2], [Career 3], [Career 4], [Career 5]
+
+MOTIVATION: [Short encouraging line]
+
+Then after two blank lines, write "Hinglish:" and the same analysis in Hinglish.
+DO NOT use ** asterisks anywhere.`;
           
           const res = await window.solmatesAPI.sendChatMessage(prompt, []);
           const loaderEl = document.getElementById('final-loader');
