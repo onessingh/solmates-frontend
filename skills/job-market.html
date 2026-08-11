@@ -67,6 +67,23 @@
     .back-btn { background: var(--border) !important; color: var(--text) !important; }
   </style>
   <script>
+    function safeParseJSON(text) {
+        let clean = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+        // Remove raw control characters (like actual newlines) that break JSON.parse
+        clean = clean.replace(/[\x00-\x1F]+/g, " ");
+        let s1 = clean.indexOf('['); let e1 = clean.lastIndexOf(']');
+        let s2 = clean.indexOf('{'); let e2 = clean.lastIndexOf('}');
+        let start = -1, end = -1;
+        if (s1 !== -1 && e1 !== -1 && s2 !== -1 && e2 !== -1) {
+            if (s1 < s2 && e1 > e2) { start = s1; end = e1; }
+            else { start = s2; end = e2; }
+        } else if (s1 !== -1 && e1 !== -1) { start = s1; end = e1; }
+        else if (s2 !== -1 && e2 !== -1) { start = s2; end = e2; }
+        if (start !== -1 && end !== -1) clean = clean.substring(start, end + 1);
+        clean = clean.replace(/,\s*([\]}])/g, '$1');
+        return JSON.parse(clean);
+    }
+
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
       if (savedTheme) {
@@ -143,12 +160,7 @@ Output strictly in the following JSON format and nothing else:
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            let jsonStr = resText;
-            jsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
-            let start = jsonStr.indexOf('{');
-            let end = jsonStr.lastIndexOf('}');
-            if (start !== -1 && end !== -1) jsonStr = jsonStr.substring(start, end + 1);
-            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1');
+            let parsed;
             try {
                 const data = JSON.parse(jsonStr);
                 renderDashboard(data);
