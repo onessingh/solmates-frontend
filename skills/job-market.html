@@ -88,6 +88,7 @@
             if (char === ']' || char === '}') {
                 try {
                     let attempt = clean.substring(0, i).replace(/,\s*([\]}])/g, '$1');
+                    if (clean[0] === '[' && char === '}') attempt += ']';
                     attempt = attempt.replace(/[\x00-\x1F]+/g, " ");
                     return JSON.parse(attempt);
                 } catch (e) {
@@ -171,7 +172,7 @@ Output strictly in the following JSON format and nothing else:
   "key_drivers": ["Driver 1", "Driver 2"],
   "advice": "Strategic advice for job seekers..."
 }`;
-        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Keep your response concise to avoid cutoff. Limit output length. Keep Hinglish explanations to exactly 1 short sentence.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
             let parsed;
