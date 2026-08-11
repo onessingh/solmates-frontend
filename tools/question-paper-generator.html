@@ -265,6 +265,12 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    @media print {
+      body { background: white; color: black; }
+      .header-bar, .controls-bar, #setup-mode { display: none !important; }
+      .container { max-width: 100%; margin: 0; padding: 0; }
+      .paper-container { border: none; box-shadow: none; margin: 0; padding: 0; background: white !important; }
+    }
   </style>
 
   <!-- Dark Mode Native OS Integration -->
@@ -279,6 +285,8 @@
     }
     .form-control { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
     .form-control:focus { background: #1e293b !important; }
+    .btn-main { background: #c0962d !important; color: #1e293b !important; }
+    .btn-main:hover { background: #d4a732 !important; }
     .btn-secondary { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
     .btn-secondary:hover { background: #475569 !important; }
     .loader-overlay { background: rgba(15, 23, 42, 0.8) !important; }
@@ -301,11 +309,11 @@
       }
     })();
   </script>
+  <script src="/js/api-client.js?v=113.3" defer></script>
 </head>
 <body>
 
   <div class="header-bar">
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
     <h1><i class="fas fa-file-alt" style="color: var(--accent);"></i> AI Question Paper Generator</h1>
   </div>
 
@@ -426,6 +434,7 @@
 
   <script>
     window.onload = () => {
+      window.solmatesAPI = new SolmatesAPI();
       const urlParams = new URLSearchParams(window.location.search);
       const fields = ['exam', 'subject', 'unit', 'marks', 'duration', 'difficulty'];
       fields.forEach(f => {
@@ -439,90 +448,93 @@
       }
     };
 
-    function generatePaper() {
+    async function generatePaper() {
       const exam = document.getElementById('exam').value || 'MOCK EXAM';
       const subject = document.getElementById('subject').value || 'General Subject';
       const marks = document.getElementById('marks').value || '100';
       const duration = document.getElementById('duration').value || '120';
+      const qCount = parseInt(document.getElementById('q-count').value);
+      const pattern = document.getElementById('pattern').value;
+      const topic = document.getElementById('unit').value || 'Syllabus';
+      const difficulty = document.getElementById('difficulty').value;
       
       document.getElementById('loader').style.display = 'flex';
       
-      setTimeout(() => {
-        document.getElementById('p-exam').innerText = `${exam} Examination`;
-        document.getElementById('p-subject').innerText = `SUBJECT: ${subject.toUpperCase()}`;
-        document.getElementById('p-marks').innerText = marks;
-        document.getElementById('p-time').innerText = duration >= 60 ? `${duration/60} hours` : `${duration} mins`;
-        
-        buildMockPaper();
-        
+      document.getElementById('p-exam').innerText = `${exam} Examination`;
+      document.getElementById('p-subject').innerText = `SUBJECT: ${subject.toUpperCase()}`;
+      document.getElementById('p-marks').innerText = marks;
+      document.getElementById('p-time').innerText = duration >= 60 ? `${duration/60} hours` : `${duration} mins`;
+
+      try {
+        const prompt = `Generate a question paper for ${exam}, Subject: ${subject}, Topic: ${topic}.
+Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
+Output strictly in JSON format as an array of sections:
+[
+  {
+    "sectionTitle": "SECTION A (Objective Type)",
+    "questions": [
+      {
+        "qNum": 1,
+        "text": "Question text?",
+        "options": ["(A) Opt 1", "(B) Opt 2", "(C) Opt 3", "(D) Opt 4"], 
+        "marks": 1,
+        "answer": "(A) Opt 1 - Explanation"
+      }
+    ]
+  }
+]
+Note: Set "options" to null or an empty array if the question is subjective. Make the questions realistic for the exam type.`;
+
+        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        if (res.success && res.reply) {
+            const rawJson = res.reply.match(/\[[\s\S]*\]/);
+            if(rawJson) {
+                const sections = JSON.parse(rawJson[0]);
+                renderPaper(sections);
+            } else {
+                throw new Error("Invalid response format");
+            }
+        } else {
+            throw new Error("Failed to generate paper");
+        }
+
         document.getElementById('loader').style.display = 'none';
         document.getElementById('setup-mode').style.display = 'none';
         document.getElementById('result-mode').style.display = 'block';
         window.scrollTo(0,0);
-      }, 3000);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to generate paper. Please try again.');
+        document.getElementById('loader').style.display = 'none';
+      }
     }
 
-    function buildMockPaper() {
-      const qCount = parseInt(document.getElementById('q-count').value);
-      const pattern = document.getElementById('pattern').value;
-      const topic = document.getElementById('unit').value || 'Syllabus';
-
+    function renderPaper(sections) {
       let pBody = '';
       let kBody = '';
 
-      if (pattern.includes('Mixed') || pattern.includes('MCQ')) {
-        pBody += `<div class="section-title">SECTION A (Objective Type)</div>`;
-        let qNum = 1;
-        let limit = pattern.includes('MCQ') ? qCount : Math.floor(qCount * 0.4);
-        
-        for(let i=0; i<limit; i++) {
-          pBody += `
-            <div class="paper-question">
-              <div class="q-number">${qNum}.</div>
-              <div class="q-text">
-                Which of the following principles governs the application in ${topic}?
-                <div class="q-options">
-                  <div>(A) Principle X</div>
-                  <div>(B) Principle Y</div>
-                  <div>(C) Principle Z</div>
-                  <div>(D) None of the above</div>
-                </div>
-              </div>
-              <div class="q-marks">[1]</div>
-            </div>
-          `;
-          kBody += `<div><strong>Q${qNum}.</strong> (B) Principle Y - <em>Basic conceptual application.</em></div>`;
-          qNum++;
-        }
-
-        if (pattern.includes('Mixed')) {
-          pBody += `<div class="section-title">SECTION B (Subjective)</div>`;
-          for(let i=qNum; i<=qCount; i++) {
-            let m = (i % 2 === 0) ? 3 : 5;
-            pBody += `
-              <div class="paper-question">
-                <div class="q-number">${i}.</div>
-                <div class="q-text">Explain the significance of ${topic} with relevant examples and derive the standard equation where applicable.</div>
-                <div class="q-marks">[${m}]</div>
-              </div>
-            `;
-            kBody += `<div><br><strong>Q${i}.</strong> Mention definition (1 mark), derivation steps (2 marks), and 2 examples (2 marks).</div>`;
+      sections.forEach(sec => {
+        pBody += `<div class="section-title">${sec.sectionTitle}</div>`;
+        sec.questions.forEach(q => {
+          let optsHtml = '';
+          if (q.options && q.options.length > 0) {
+            optsHtml = `<div class="q-options">` + q.options.map(o => `<div>${o}</div>`).join('') + `</div>`;
           }
-        }
-      } else {
-        // Subjective Only
-        pBody += `<div class="section-title">SECTION A (Descriptive Questions)</div>`;
-        for(let i=1; i<=qCount; i++) {
+          
           pBody += `
             <div class="paper-question">
-              <div class="q-number">${i}.</div>
-              <div class="q-text">Discuss the main features and applications related to ${topic}. Provide a detailed critical analysis.</div>
-              <div class="q-marks">[10]</div>
+              <div class="q-number">${q.qNum}.</div>
+              <div class="q-text">
+                ${q.text}
+                ${optsHtml}
+              </div>
+              <div class="q-marks">[${q.marks}]</div>
             </div>
           `;
-          kBody += `<div><br><strong>Q${i}.</strong> Intro (2m), Features (4m), Analysis (4m).</div>`;
-        }
-      }
+          
+          kBody += `<div><strong>Q${q.qNum}.</strong> ${q.answer}</div><br>`;
+        });
+      });
 
       document.getElementById('paper-body').innerHTML = pBody;
       document.getElementById('key-body').innerHTML = kBody;
@@ -545,7 +557,17 @@
     }
     
     function attemptPaper() {
-      alert("This will load the paper into the Quiz/Exam Attempt interface.");
+      alert("Attempt Mode Enabled!\nYou can now interact with MCQs. For subjective questions, write answers in your notebook.");
+      const opts = document.querySelectorAll('.q-options div');
+      opts.forEach(opt => {
+        opt.style.cursor = 'pointer';
+        opt.onclick = function() {
+          let siblings = this.parentElement.children;
+          for(let s of siblings) { s.style.fontWeight = 'normal'; s.style.color = 'inherit'; }
+          this.style.fontWeight = 'bold';
+          this.style.color = 'var(--accent)';
+        }
+      });
     }
   </script>
 </body>

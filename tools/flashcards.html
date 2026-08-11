@@ -259,6 +259,7 @@
     <meta name="twitter:description" content="Access the Smart Flashcards and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="twitter:image" content="/preview.png">
     <link rel="manifest" href="/manifest.json">
+    <script src="../js/api-client.js"></script>
     <!-- [AUTO-SEO-END] -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
 </head>
@@ -362,6 +363,7 @@
 
     // Load from local storage on init
     window.onload = () => {
+      window.solmatesAPI = new SolmatesAPI();
       const saved = localStorage.getItem('solmates_flashcards');
       if (saved) {
         try {
@@ -443,26 +445,54 @@
       `).reverse().join('');
     }
 
-    function generateWithAI() {
+    async function generateWithAI() {
       const topic = prompt("Enter topic (e.g. UGC NET -> Management -> Marketing -> Consumer Behaviour)");
       if(!topic) return;
       
       const countStr = prompt("How many cards to generate? (e.g. 5, 10, 20)", "5");
       const count = parseInt(countStr) || 5;
       
-      alert(`Generating ${count} flashcards for: ${topic}... (Mocking AI Response)`);
+      const prevText = document.querySelector('button[onclick="generateWithAI()"]').innerHTML;
+      document.querySelector('button[onclick="generateWithAI()"]').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating...`;
+      document.querySelector('button[onclick="generateWithAI()"]').disabled = true;
       
-      setTimeout(() => {
-        for(let i=1; i<=count; i++) {
-          deck.push({
-            id: Date.now() + i,
-            front: `Generated Question ${i} for ${topic}`,
-            back: `AI Generated Answer ${i} with explanation.`
-          });
+      try {
+        const promptText = `Generate exactly ${count} flashcards for the topic: "${topic}".
+Output strictly in the following JSON array format, and nothing else:
+[
+  {
+    "front": "Question or Topic",
+    "back": "Answer or Explanation"
+  }
+]`;
+        
+        const responseText = await window.solmatesAPI.sendChatMessage(promptText, []);
+        let jsonStr = responseText;
+        if(jsonStr.includes('\`\`\`json')) {
+            jsonStr = jsonStr.split('\`\`\`json')[1].split('\`\`\`')[0].trim();
+        } else if(jsonStr.includes('\`\`\`')) {
+            jsonStr = jsonStr.split('\`\`\`')[1].split('\`\`\`')[0].trim();
         }
+
+        const cards = JSON.parse(jsonStr);
+        
+        cards.forEach(card => {
+          deck.push({
+            id: Date.now() + Math.random(),
+            front: card.front,
+            back: card.back
+          });
+        });
+        
         saveDeck();
-        alert(`${count} flashcards generated and saved!`);
-      }, 1500);
+        alert(`${cards.length} flashcards generated and saved!`);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to generate flashcards. Please try again.');
+      } finally {
+        document.querySelector('button[onclick="generateWithAI()"]').innerHTML = prevText;
+        document.querySelector('button[onclick="generateWithAI()"]').disabled = false;
+      }
     }
 
     // STUDY LOGIC

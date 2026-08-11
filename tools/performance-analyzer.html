@@ -189,6 +189,8 @@
     }
     .ai-summary { background: rgba(94, 92, 230, 0.1) !important; }
     .topic-item { background: #1e293b !important; border-color: #334155 !important; }
+    .btn-main { background: #5e5ce6 !important; color: white !important; }
+    .btn-main:hover { background: #4b49b8 !important; }
     .back-btn { background: var(--border) !important; color: var(--text) !important; }
   </style>
   <script>
@@ -208,7 +210,6 @@
 <body>
 
   <div class="header-bar">
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
     <h1><i class="fas fa-chart-pie" style="color: var(--accent);"></i> Exam Performance Analyzer</h1>
   </div>
 
@@ -217,10 +218,22 @@
     <!-- Initial State (Before Loading Data) -->
     <div class="panel import-state" id="import-view">
       <i class="fas fa-file-import"></i>
-      <h2>No Performance Data Found</h2>
-      <p>Take an AI generated MCQ quiz, attempt a question paper, or import your test results to view your performance analysis.</p>
+      <h2>Analyze Your Performance</h2>
+      <p>Enter the exam details below to generate a diagnostic report of your recent attempts. (Currently uses sample diagnostic logic)</p>
+      
+      <div style="max-width: 400px; margin: 0 auto 20px auto; text-align: left;">
+        <div style="margin-bottom: 15px;">
+          <label style="display:block; margin-bottom:5px; font-weight: 600;">Exam Name</label>
+          <input type="text" id="sim-exam" placeholder="e.g. JEE Main, UPSC" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text);" value="UGC NET">
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display:block; margin-bottom:5px; font-weight: 600;">Subject / Course</label>
+          <input type="text" id="sim-subject" placeholder="e.g. Physics, History" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text);" value="Management">
+        </div>
+      </div>
+
       <button class="btn-main" onclick="loadMockData()">
-        <i class="fas fa-magic"></i> Load Sample Analysis
+        <i class="fas fa-magic"></i> Generate Diagnostic Report
       </button>
     </div>
 
@@ -229,8 +242,8 @@
       
       <div style="display: flex; justify-content: space-between; align-items: flex-end;">
         <div>
-          <h2 style="color: var(--primary); margin-bottom: 5px;">UGC NET Management (Paper 2)</h2>
-          <p style="color: var(--light); font-size: 0.9rem;">Analysis based on recent 50 questions attempt.</p>
+          <h2 id="dash-title" style="color: var(--primary); margin-bottom: 5px;">Exam Analysis</h2>
+          <p style="color: var(--light); font-size: 0.9rem;">Analysis based on your recent 50-question mock attempt.</p>
         </div>
       </div>
 
@@ -263,10 +276,10 @@
           <h2><i class="fas fa-brain"></i> AI Performance Summary</h2>
           <div class="ai-summary">
             <h4><i class="fas fa-robot"></i> Insights</h4>
-            <p>You have a strong grasp of <strong>Marketing Management</strong> and <strong>Business Environment</strong>. However, your accuracy drops significantly in numerical questions related to <strong>Financial Management</strong>.</p>
+            <p id="ai-insight-text">You have a strong grasp of <strong>Marketing Management</strong> and <strong>Business Environment</strong>. However, your accuracy drops significantly in numerical questions related to <strong>Financial Management</strong>.</p>
             <p><strong>Recommendations:</strong></p>
             <ul>
-              <li>Revise key formulas for Financial Management (Cost of Capital).</li>
+              <li>Revise key formulas and theoretical foundations.</li>
               <li>Practice 20 numerical-only MCQs to build confidence.</li>
               <li>Your average time per question is good (45s), keep up this pacing.</li>
             </ul>
@@ -284,7 +297,7 @@
           <div class="topic-list">
             <div class="topic-item">
               <div class="topic-info">
-                <span class="topic-name">Marketing</span>
+                <span class="topic-name" id="topic1-name">Marketing</span>
                 <span class="topic-meta">15 questions • 85% Acc.</span>
               </div>
               <div class="topic-score score-high">A</div>
@@ -292,7 +305,7 @@
             
             <div class="topic-item">
               <div class="topic-info">
-                <span class="topic-name">HR Management</span>
+                <span class="topic-name" id="topic2-name">HR Management</span>
                 <span class="topic-meta">12 questions • 75% Acc.</span>
               </div>
               <div class="topic-score score-high">B+</div>
@@ -300,20 +313,20 @@
 
             <div class="topic-item">
               <div class="topic-info">
-                <span class="topic-name">Economics</span>
+                <span class="topic-name" id="topic3-name">Economics</span>
                 <span class="topic-meta">10 questions • 50% Acc.</span>
                 <br>
-                <a href="mcq-generator.html?subject=Management&topic=Economics" class="recommendation-btn">Practice Economics</a>
+                <a href="mcq-generator.html" id="prac-btn-1" class="recommendation-btn">Practice Topic</a>
               </div>
               <div class="topic-score score-med">C</div>
             </div>
 
             <div class="topic-item" style="border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.02);">
               <div class="topic-info">
-                <span class="topic-name">Financial Mgmt</span>
+                <span class="topic-name" id="topic4-name">Financial Mgmt</span>
                 <span class="topic-meta">13 questions • 30% Acc.</span>
                 <br>
-                <a href="mcq-generator.html?subject=Management&topic=Financial Management" class="recommendation-btn" style="background: var(--danger);">Generate Hard MCQs</a>
+                <a href="mcq-generator.html" id="prac-btn-2" class="recommendation-btn" style="background: var(--danger);">Generate Hard MCQs</a>
               </div>
               <div class="topic-score score-low">F</div>
             </div>
@@ -328,16 +341,32 @@
 
   <script>
     function loadMockData() {
+      const exam = document.getElementById('sim-exam').value || 'MOCK EXAM';
+      const subject = document.getElementById('sim-subject').value || 'Subject';
+      
       document.getElementById('import-view').style.display = 'none';
       const dash = document.getElementById('dashboard-view');
       dash.style.display = 'flex';
       
+      document.getElementById('dash-title').innerText = `${exam} - ${subject} Analysis`;
+      
+      // Update dynamic text based on subject
+      document.getElementById('ai-insight-text').innerHTML = `You have a strong grasp of core concepts in <strong>${subject}</strong>. However, your accuracy drops significantly in application-based numerical questions.`;
+      
+      document.getElementById('topic1-name').innerText = `Intro to ${subject}`;
+      document.getElementById('topic2-name').innerText = `Advanced ${subject}`;
+      document.getElementById('topic3-name').innerText = `Applied ${subject}`;
+      document.getElementById('topic4-name').innerText = `Complex Problems`;
+
+      document.getElementById('prac-btn-1').href = `mcq-generator.html?subject=${encodeURIComponent(subject)}&topic=Applied`;
+      document.getElementById('prac-btn-2').href = `mcq-generator.html?subject=${encodeURIComponent(subject)}&topic=Complex`;
+
       setTimeout(() => {
-        initChart();
+        initChart(subject);
       }, 100);
     }
 
-    function initChart() {
+    function initChart(subject) {
       const ctx = document.getElementById('topicChart').getContext('2d');
       const isDark = document.documentElement.classList.contains('dark') || localStorage.getItem('solmates_theme') === 'dark';
       const textColor = isDark ? '#f8fafc' : '#1d1d1f';
@@ -346,7 +375,7 @@
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Marketing', 'HR Mgmt', 'Economics', 'Financial Mgmt'],
+          labels: [`Intro to ${subject}`, `Adv. ${subject}`, `Applied ${subject}`, 'Complex'],
           datasets: [{
             label: 'Accuracy %',
             data: [85, 75, 50, 30],
