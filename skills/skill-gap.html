@@ -332,10 +332,11 @@ Output strictly in the following JSON format and nothing else:
         const resText = res.message || res.reply;
         if (res.success && resText) {
             let jsonStr = resText;
-            const match = resText.match(/\\{\\s*"[\\s\\S]*\\}\\s*/);
-            if (match) {
-                jsonStr = match[0];
-            }
+            jsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
+            let start = jsonStr.indexOf('{');
+            let end = jsonStr.lastIndexOf('}');
+            if (start !== -1 && end !== -1) jsonStr = jsonStr.substring(start, end + 1);
+            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1');
             try {
                 const parsed = JSON.parse(jsonStr);
                 renderResults(parsed);

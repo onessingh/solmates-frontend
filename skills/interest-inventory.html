@@ -485,7 +485,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       
       element.classList.add('selected');
       answeredCount++;
-      userAnswers.push({ q: q.q, selected: opt });
+      userAnswers.push({ q: q.q, selected: q.options[oIdx] });
       if(answeredCount === generatedQuestions.length) generateFinalAnalysis();
       
       options.forEach((opt, idx) => {
