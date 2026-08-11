@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Exam Overview - Solmates</title>
-  <script src="/config.js?v=2.3"></script>
-  <script src="/js/api-client.js?v=2.3"></script>
-  <script src="/js/exam-context.js?v=2.3"></script>
-  <script src="/js/exam-data.js?v=2.3"></script>
+  <script src="/config.js?v=2.4"></script>
+  <script src="/js/api-client.js?v=2.4"></script>
+  <script src="/js/exam-context.js?v=2.4"></script>
+  <script src="/js/exam-data.js?v=2.4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -493,6 +493,7 @@
       }
     }
   
+    
     html.dark body {
       --bg-body: #0f172a;
       --bg-nav: rgba(15, 23, 42, 0.85);
@@ -505,24 +506,28 @@
     html.dark .subject-selector-box select {
       background-color: #1e293b;
       color: #f8fafc;
+      border-color: #475569;
     }
     html.dark .subject-selector-box select:focus {
       background-color: #0f172a;
+      border-color: #60a5fa;
     }
+    html.dark .tab-btn { color: #cbd5e1; }
     html.dark .tab-btn.active {
       background: #1e3a8a;
+      color: #93c5fd;
     }
     html.dark .content-section h3 i {
       background: #1e3a8a;
     }
     html.dark .tools-header .active-context {
       background: #1e3a8a;
+      color: #93c5fd;
     }
     html.dark .exam-badge {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
     }
-
-  
     html.dark .top-nav { background: rgba(15, 23, 42, 0.85); border-bottom-color: #334155; }
     html.dark .brand { background: none; -webkit-text-fill-color: #f8fafc; color: #f8fafc; }
     html.dark .kit-cta-btn { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3); }

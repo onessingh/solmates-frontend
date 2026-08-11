@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Smart Study Kit | Exam Prep AI</title>
-  <script src="/config.js?v=2.3"></script>
-  <script src="/js/api-client.js?v=2.3"></script>
-  <script src="/js/exam-context.js?v=2.3"></script>
+  <script src="/config.js?v=2.4"></script>
+  <script src="/js/api-client.js?v=2.4"></script>
+  <script src="/js/exam-context.js?v=2.4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/global-lockdown.css">
@@ -325,6 +325,7 @@
       .q-nav-btn { width: 32px; height: 32px; font-size: 0.78rem; }
     }
   
+    
     html.dark body {
       --bg: #0f172a;
       --card: #1e293b;
@@ -333,30 +334,27 @@
       --muted: #94a3b8;
       --nav-bg: rgba(15, 23, 42, 0.85);
     }
-    html.dark .diff-btn { color: #f8fafc; border-color: #334155; }
-    html.dark .diff-btn:hover, html.dark .diff-btn.active { background: #334155; }
+    html.dark .diff-btn { background: #1e293b; color: #cbd5e1; border-color: #475569; }
+    html.dark .diff-btn:hover, html.dark .diff-btn.active { background: #1e3a8a; color: #93c5fd; border-color: #2563eb; }
     html.dark .tool-item { background: #1e293b; }
     html.dark .tool-item .ti-icon { background: #1e3a8a; color: #60a5fa; }
     html.dark .sg-chunk { background: #0f172a; }
     html.dark .sg-chunk h4 { color: #f8fafc; }
     html.dark .mcq-card { background: #0f172a; }
-    html.dark .opt { background: #1e293b; color: #f8fafc; }
-    html.dark .opt:hover { background: #334155; }
+    html.dark .opt { background: #1e293b !important; color: #f8fafc !important; border-color: #475569 !important; }
+    html.dark .opt:hover { background: #334155 !important; border-color: #64748b !important; }
     html.dark .flashcard-inner { background: #1e293b; }
     html.dark .flashcard-front, html.dark .flashcard-back { background: #1e293b; }
     html.dark .fc-controls button { background: #334155; color: #f8fafc; }
     html.dark .tools-section h3 i { background: #1e3a8a; }
     html.dark .result-bar { background: #0f172a; }
-
-  
     html.dark .top-nav { background: rgba(15, 23, 42, 0.85); border-bottom-color: #334155; }
     html.dark .brand { background: none; -webkit-text-fill-color: #f8fafc; color: #f8fafc; }
-    html.dark #dl-all-btn { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
-    html.dark .download-pdf-btn { background: #334155 !important; color: #f8fafc !important; border: 1px solid #475569 !important; }
-    html.dark .opt { background: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
-    html.dark .opt:hover { background: #334155 !important; }
-    html.dark .kb-key { background: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
-    html.dark .tab-btn { color: #94a3b8; }
+    html.dark #dl-all-btn { background: #1e293b !important; color: #93c5fd !important; border-color: #334155 !important; }
+    html.dark .dl-btn { background: #1e293b !important; color: #93c5fd !important; border: 1.5px solid #475569 !important; }
+    html.dark .dl-btn:hover { background: #334155 !important; border-color: #64748b !important; }
+    html.dark .kb-key { background: #1e293b !important; color: #f8fafc !important; border-color: #475569 !important; }
+    html.dark .tab-btn { color: #cbd5e1; }
     html.dark .tab-btn.active { background: #1e3a8a; color: #93c5fd; }
     html.dark .mcq-score-badge { background: #1e3a8a; color: #93c5fd; }
 
