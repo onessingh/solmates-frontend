@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Exam Overview - Solmates</title>
-  <script src="/config.js"></script>
-  <script src="/js/api-client.js"></script>
-  <script src="/js/exam-context.js"></script>
-  <script src="/js/exam-data.js"></script>
+  <script src="/config.js?v=2.2"></script>
+  <script src="/js/api-client.js?v=2.2"></script>
+  <script src="/js/exam-context.js?v=2.2"></script>
+  <script src="/js/exam-data.js?v=2.2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -492,7 +492,71 @@
         pointer-events: none;
       }
     }
+  
+    html.dark body {
+      --bg-body: #0f172a;
+      --bg-nav: rgba(15, 23, 42, 0.85);
+      --bg-card: #1e293b;
+      --border-color: #334155;
+      --brand-primary: #f8fafc;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+    html.dark .subject-selector-box select {
+      background-color: #1e293b;
+      color: #f8fafc;
+    }
+    html.dark .subject-selector-box select:focus {
+      background-color: #0f172a;
+    }
+    html.dark .tab-btn.active {
+      background: #1e3a8a;
+    }
+    html.dark .content-section h3 i {
+      background: #1e3a8a;
+    }
+    html.dark .tools-header .active-context {
+      background: #1e3a8a;
+    }
+    html.dark .exam-badge {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
   </style>
+
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff">
+  <script id="color-scheme-sync">
+    (function() {
+        function updateMetaColorScheme() {
+            var meta = document.querySelector('meta[name="color-scheme"]');
+            var themeMeta = document.querySelector('meta[name="theme-color"]');
+            if (!meta) return;
+            var theme = localStorage.getItem('solmates_theme');
+            if (theme === 'dark') {
+                meta.setAttribute('content', 'dark only');
+                if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
+                document.documentElement.style.colorScheme = 'dark';
+                document.documentElement.classList.add('dark');
+            } else if (theme === 'light') {
+                meta.setAttribute('content', 'light only');
+                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+                document.documentElement.style.colorScheme = 'light';
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        updateMetaColorScheme();
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'solmates_theme') updateMetaColorScheme();
+        });
+        var originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'solmates_theme') updateMetaColorScheme();
+        };
+    })();
+  </script>
+
 </head>
 <body>
   <nav class="top-nav">

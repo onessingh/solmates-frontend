@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Smart Study Kit | Exam Prep AI</title>
-  <script src="/config.js"></script>
-  <script src="/js/api-client.js"></script>
-  <script src="/js/exam-context.js"></script>
+  <script src="/config.js?v=2.2"></script>
+  <script src="/js/api-client.js?v=2.2"></script>
+  <script src="/js/exam-context.js?v=2.2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/global-lockdown.css">
@@ -324,7 +324,65 @@
       .mock-question-nav { gap: 6px; }
       .q-nav-btn { width: 32px; height: 32px; font-size: 0.78rem; }
     }
+  
+    html.dark body {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --nav-bg: rgba(15, 23, 42, 0.85);
+    }
+    html.dark .diff-btn { color: #f8fafc; border-color: #334155; }
+    html.dark .diff-btn:hover, html.dark .diff-btn.active { background: #334155; }
+    html.dark .tool-item { background: #1e293b; }
+    html.dark .tool-item .ti-icon { background: #1e3a8a; color: #60a5fa; }
+    html.dark .sg-chunk { background: #0f172a; }
+    html.dark .sg-chunk h4 { color: #f8fafc; }
+    html.dark .mcq-card { background: #0f172a; }
+    html.dark .opt { background: #1e293b; color: #f8fafc; }
+    html.dark .opt:hover { background: #334155; }
+    html.dark .flashcard-inner { background: #1e293b; }
+    html.dark .flashcard-front, html.dark .flashcard-back { background: #1e293b; }
+    html.dark .fc-controls button { background: #334155; color: #f8fafc; }
+    html.dark .tools-section h3 i { background: #1e3a8a; }
+    html.dark .result-bar { background: #0f172a; }
+
   </style>
+
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff">
+  <script id="color-scheme-sync">
+    (function() {
+        function updateMetaColorScheme() {
+            var meta = document.querySelector('meta[name="color-scheme"]');
+            var themeMeta = document.querySelector('meta[name="theme-color"]');
+            if (!meta) return;
+            var theme = localStorage.getItem('solmates_theme');
+            if (theme === 'dark') {
+                meta.setAttribute('content', 'dark only');
+                if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
+                document.documentElement.style.colorScheme = 'dark';
+                document.documentElement.classList.add('dark');
+            } else if (theme === 'light') {
+                meta.setAttribute('content', 'light only');
+                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+                document.documentElement.style.colorScheme = 'light';
+                document.documentElement.classList.remove('dark');
+            }
+        }
+        updateMetaColorScheme();
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'solmates_theme') updateMetaColorScheme();
+        });
+        var originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            originalSetItem.apply(this, arguments);
+            if (key === 'solmates_theme') updateMetaColorScheme();
+        };
+    })();
+  </script>
+
 </head>
 <body>
 
