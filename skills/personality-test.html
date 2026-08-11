@@ -672,11 +672,19 @@ Output ONLY a valid JSON array, nothing else:
       let retries = 2;
       while (retries >= 0) {
         try {
-          const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} → Answer: ${a.selected}`).join('\n');
-          const prompt = `Analyze these personality assessment responses and determine the user's personality traits.
-Responses: ${answersText}
-Provide a thoughtful analysis in English (2-3 sentences). Then leave two blank lines. Then write the same analysis in Hinglish.
-DO NOT use ** asterisks.`;
+          const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} → ${a.selected}`).join('\n');
+          const prompt = `You are a personality expert. Analyze these situational judgment test responses and return ONLY a JSON object, nothing else:
+
+${answersText}
+
+Return this exact JSON (no markdown, no code blocks):
+{
+  "personality_type": "2-3 word label like Empathetic Leader or Analytical Thinker",
+  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
+  "trait_summary_en": "2 sentences in English describing their personality strengths based on their actual choices",
+  "trait_summary_hi": "Same 2 sentences in Hinglish",
+  "career_fit": "3 suitable career paths comma-separated"
+}`;
           
           const res = await window.solmatesAPI.sendChatMessage(prompt, []);
           const loaderEl = document.getElementById('final-loader');
@@ -684,19 +692,31 @@ DO NOT use ** asterisks.`;
           
           let analysis = (res.message || res.reply || '').replace(/\*\*/g, '');
           
-          // Parse structured analysis
-        const lines = analysis.split('\n').map(l => l.trim()).filter(Boolean);
-        let personalityType = '', keywords = [], traitSummaryEng = '', careerFit = '', traitSummaryHin = '';
-        lines.forEach(line => {
-          if (line.startsWith('PERSONALITY TYPE:')) personalityType = line.replace('PERSONALITY TYPE:', '').trim();
-          else if (line.startsWith('KEYWORDS:')) keywords = line.replace('KEYWORDS:', '').split('|').map(k => k.trim()).filter(Boolean);
-          else if (line.startsWith('TRAIT SUMMARY:')) traitSummaryEng = line.replace('TRAIT SUMMARY:', '').trim();
-          else if (line.startsWith('CAREER FIT:')) careerFit = line.replace('CAREER FIT:', '').trim();
-          else if (line.startsWith('Hinglish:')) traitSummaryHin = line.replace('Hinglish:', '').trim();
-        });
-        // Fallback if structured parsing fails
-        if (!personalityType) personalityType = 'Your Personality';
-        if (!keywords.length) keywords = [];
+          // Parse the JSON response
+          let personalityType = '', keywords = [], traitSummaryEng = '', careerFit = '', traitSummaryHin = '';
+          try {
+            let parsed = safeParseJSON(analysis);
+            personalityType = parsed.personality_type || '';
+            keywords = Array.isArray(parsed.keywords) ? parsed.keywords : [];
+            traitSummaryEng = parsed.trait_summary_en || '';
+            traitSummaryHin = parsed.trait_summary_hi || '';
+            careerFit = parsed.career_fit || '';
+          } catch(e) {
+            // Fallback: try plain text parsing
+            const lines = analysis.split('\n').map(l => l.trim()).filter(Boolean);
+            lines.forEach(line => {
+              if (line.startsWith('PERSONALITY TYPE:')) personalityType = line.replace('PERSONALITY TYPE:', '').trim();
+              else if (line.startsWith('KEYWORDS:')) keywords = line.replace('KEYWORDS:', '').split('|').map(k => k.trim()).filter(Boolean);
+              else if (line.startsWith('TRAIT SUMMARY:')) traitSummaryEng = line.replace('TRAIT SUMMARY:', '').trim();
+              else if (line.startsWith('CAREER FIT:')) careerFit = line.replace('CAREER FIT:', '').trim();
+              else if (line.startsWith('Hinglish:')) traitSummaryHin = line.replace('Hinglish:', '').trim();
+            });
+            // Last fallback
+            if (!personalityType && !traitSummaryEng) {
+              traitSummaryEng = analysis.substring(0, 300);
+              personalityType = 'Your Personality';
+            }
+          }
         
         const keywordChips = keywords.map(k => `<span style="display:inline-block;background:rgba(0,113,227,0.1);color:var(--accent);border:1px solid rgba(0,113,227,0.3);padding:5px 14px;border-radius:20px;font-weight:600;font-size:0.9rem;margin:4px;">${k}</span>`).join('');
         
@@ -704,7 +724,7 @@ DO NOT use ** asterisks.`;
           <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
             <div style="text-align:center; padding-bottom:15px; border-bottom: 1px solid var(--border); margin-bottom:15px;">
               <div style="font-size:2.5rem; margin-bottom:8px;">🧠</div>
-              <h2 style="color: var(--accent); font-size:1.4rem; margin-bottom:5px;">${personalityType}</h2>
+              <h2 style="color: var(--accent); font-size:1.4rem; margin-bottom:5px;">${personalityType || 'Your Personality'}</h2>
               <p style="color:var(--light); font-size:0.85rem;">Your Personality Profile</p>
             </div>
             ${keywordChips.length ? `<div style="text-align:center; margin-bottom:18px;">${keywordChips}</div>` : ''}
@@ -714,7 +734,7 @@ DO NOT use ** asterisks.`;
           </div>
         `;
         container.insertAdjacentHTML('beforeend', resHtml);
-          return; // success, exit loop
+          return; // success
         } catch (err) {
           console.error('Final analysis attempt failed:', err);
           retries--;
