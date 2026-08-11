@@ -307,15 +307,125 @@
             let char = clean[i - 1];
             if (char === ']' || char === '}') {
                 try {
-        generatedQuestions = [];
-        let remaining = count;
-        let batchSize = 3; // Small batch to guarantee no truncation with massive dual-language explanations
+                    let attempt = clean.substring(0, i).replace(/,\s*([\]}])/g, '$1');
+                    if (clean[0] === '[' && char === '}') attempt += ']';
+                    attempt = attempt.replace(/[\x00-\x1F]+/g, " ");
+                    return JSON.parse(attempt);
+                } catch (e) {
+                    // Ignore and continue shrinking the string from the right
+                }
+            }
+        }
+        throw new Error("Invalid response format from AI");
+    }
+
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        document.documentElement.style.colorScheme = savedTheme;
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
+          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        }
+      }
+    })();
+  </script>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js?v=113.3" defer></script>
+</head>
+<body>
+
+  <div class="header-bar">
+    
+    <h1><i class="fas fa-compass" style="color: var(--accent);"></i> Interest Inventory</h1>
+  </div>
+
+  <div class="container">
+    
+    <!-- Setup Mode -->
+    <div id="setup-mode">
+      <div class="input-card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Inventory Parameters</h3>
         
-        while (remaining > 0) {
-            let currentBatch = Math.min(remaining, batchSize);
-            document.getElementById('loader-msg').innerText = `Generating questions (${generatedQuestions.length} / ${count})...`;
-            
-            const prompt = `Generate exactly ${currentBatch} multiple-choice Interest Inventory questions.
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Framework</label>
+            <select id="framework" class="form-control">
+              <option value="Holland Codes (RIASEC)" selected>Holland Codes (RIASEC)</option>
+              <option value="Career Discovery">Career Discovery</option>
+              <option value="Hobbies & Leisure">Hobbies & Leisure</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Target Audience</label>
+            <select id="audience" class="form-control">
+              <option value="High School Student" selected>High School Student</option>
+              <option value="College Student">College Student</option>
+              <option value="Working Professional">Working Professional</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Number of Questions</label>
+          <select id="q-count" class="form-control">
+            <option value="5">5 Questions</option>
+            <option value="10" selected>10 Questions</option>
+            <option value="15">15 Questions</option>
+          </select>
+        </div>
+
+        <button class="btn-main" style="margin-top: 25px;" onclick="generateTest()">
+          <i class="fas fa-magic"></i> Generate Inventory
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-overlay">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary);">Crafting Questions...</h3>
+      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Analyzing parameters...</p>
+    </div>
+
+    <!-- Result Mode -->
+    <div id="result-mode">
+      
+
+      <div id="progress-tracker" style="text-align: right; margin-bottom: 15px; font-weight: 600; color: var(--accent); font-size: 0.95rem;"></div>
+      <div id="questions-container">
+        <!-- MCQs injected here -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    window.onload = () => {
+      window.solmatesAPI = new SolmatesAPI();
+    };
+
+    let generatedQuestions = [];
+    let answeredCount = 0;
+    let userAnswers = [];
+
+    async function generateTest() {
+      const count = parseInt(document.getElementById('q-count').value);
+      
+      answeredCount = 0; userAnswers = []; score = 0;
+      document.getElementById('loader').style.display = 'flex';
+      
+      generatedQuestions = [];
+      let remaining = count;
+      let batchSize = 3; 
+      
+      try {
+          while (remaining > 0) {
+              let currentBatch = Math.min(remaining, batchSize);
+              document.getElementById('loader-msg').innerText = `Generating questions (${generatedQuestions.length} / ${count})...`;
+              
+              const prompt = `Generate exactly ${currentBatch} multiple-choice Interest Inventory questions.
 Framework: ${framework}. Target Audience: ${audience}.
 Since this interactive UI requires a 'correct' answer for highlighting, please formulate these as 'Career/Interest Knowledge' questions, or 'Situational Match' questions where one option is clearly the most aligned or factually correct based on the framework.
 Output strictly in the following JSON array format, and nothing else:
@@ -330,45 +440,40 @@ Output strictly in the following JSON array format, and nothing else:
   }
 ]
 Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
-            
-            const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: DO NOT use ** asterisks. Always provide both English and Hinglish explanations.", []);
-            
-            if (res.success && (res.message || res.reply)) {
-                try {
-                    let parsed = safeParseJSON(res.message || res.reply);
-                    if (parsed.questions) parsed = parsed.questions;
-                    if (Array.isArray(parsed)) {
-                        generatedQuestions = generatedQuestions.concat(parsed);
-                    }
-                } catch(e) {
-                    console.error("Batch parsing failed, skipping batch", e);
-                }
-            }
-            remaining -= currentBatch;
-        }
-        
-        if (generatedQuestions.length === 0) throw new Error("Failed to generate any valid questions.");
-        
-        renderQuestions();
-
-        
-        document.getElementById('loader').style.display = 'none';
-        
-      const progressEl = document.getElementById('progress-tracker');
-      if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
-        
-        document.getElementById('setup-mode').style.display = 'none';
-        document.getElementById('result-mode').style.display = 'block';
-        history.pushState({view: 'result'}, '', '');
-        window.scrollTo(0,0);
+              
+              const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: DO NOT use ** asterisks. Always provide both English and Hinglish explanations.", []);
+              
+              if (res.success && (res.message || res.reply)) {
+                  try {
+                      let parsed = safeParseJSON(res.message || res.reply);
+                      if (parsed.questions) parsed = parsed.questions;
+                      if (Array.isArray(parsed)) {
+                          generatedQuestions = generatedQuestions.concat(parsed);
+                      }
+                  } catch(e) {
+                      console.error("Batch parsing failed, skipping batch", e);
+                  }
+              }
+              remaining -= currentBatch;
+          }
+          
+          if (generatedQuestions.length === 0) throw new Error("Failed to generate any valid questions.");
+          
+          renderQuestions();
+          
+          document.getElementById('loader').style.display = 'none';
+          
+          const progressEl = document.getElementById('progress-tracker');
+          if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
+          
+          document.getElementById('setup-mode').style.display = 'none';
+          document.getElementById('result-mode').style.display = 'block';
+          history.pushState({view: 'result'}, '', '');
+          window.scrollTo(0,0);
       } catch (err) {
           console.error(err);
-          alert('Failed to generate inventory: ' + (err.message || 'Unknown error'));
+          alert('Failed to generate test: ' + (err.message || 'Unknown error'));
           document.getElementById('loader').style.display = 'none';
-        
-      const progressEl = document.getElementById('progress-tracker');
-      if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
-        
       }
     }
 
@@ -418,10 +523,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       const isCorrect = (oIdx === q.correct);
       
       answeredCount++;
-      
-      const progressEl = document.getElementById('progress-tracker');
-      if (progressEl) progressEl.innerText = `${answeredCount} out of ${generatedQuestions.length} completed`;
-        
+      const progressEl = document.getElementById('progress-tracker'); if (progressEl) progressEl.innerText = `${answeredCount} out of ${generatedQuestions.length} completed`;
       
       userAnswers.push({ q: q.q, selected: q.options[oIdx] });
       if(answeredCount === generatedQuestions.length) generateFinalAnalysis();
