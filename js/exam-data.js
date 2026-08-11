@@ -238,7 +238,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> General Studies I, General Studies II / CSAT</li><li><b>Mains:</b> General Hindi, Essay, GS I to VI</li><li><b>Interview</b></li></ul>',
         eligibility: '<p>Bachelor degree, with post-specific conditions where applicable.</p>',
         syllabus: '<p>History, Indian & UP Culture, Geography, Indian Polity, Governance, Economy, Science & Technology, Environment, Current Affairs, Uttar Pradesh Specific Knowledge.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://uppsc.up.nic.in/" target="_blank">Official UPPSC Website</a>',
         subjects: [
           {
@@ -283,7 +283,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> General Studies</li><li><b>Mains:</b> General Hindi, GS I, GS II, Optional Subject</li><li><b>Interview</b></li></ul>',
         eligibility: '<p>Bachelor degree.</p>',
         syllabus: '<p>Indian & Bihar History, Geography, Polity, Economy, Science, Mental Ability.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://bpsc.bihar.gov.in/" target="_blank">Official BPSC Website</a>',
         subjects: [
           {
@@ -412,7 +412,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Tier I:</b> GI & Reasoning, GA, Quant, English</li><li><b>Tier II:</b> Paper I (Compulsory), Paper II (Statistics), Paper III (Finance)</li></ul>',
         eligibility: '<p>Graduation degree.</p>',
         syllabus: '<p>Mathematical Abilities, Reasoning, English, General Awareness, Computer Knowledge, Data Entry Speed Test.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 't1-reasoning', name: 'Tier I: Reasoning'},
@@ -432,7 +432,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Tier I:</b> Objective (English, Reasoning, Quant, GA)</li><li><b>Tier II:</b> Objective + Skill/Typing Test</li></ul>',
         eligibility: '<p>10+2 / Higher Secondary.</p>',
         syllabus: '<p>English Language, General Intelligence, Quantitative Aptitude, General Awareness, Computer Knowledge.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 't1', name: 'Tier I: All Subjects'},
@@ -448,7 +448,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Session I:</b> Numerical & Mathematical Ability, Reasoning</li><li><b>Session II:</b> General Awareness, English Language</li></ul>',
         eligibility: '<p>Matriculation (10th pass).</p>',
         syllabus: '<p>Numerical & Mathematical Ability, Reasoning Ability & Problem Solving, General Awareness, English Language & Comprehension.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 'session1', name: 'Session I: Numerical & Reasoning'},
@@ -467,7 +467,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Quant, Reasoning</li><li><b>Mains:</b> Reasoning & Computer, English, Data Analysis, General/Economy Awareness + Descriptive</li><li><b>Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Standard banking syllabus including Data Analysis, Reasoning, English, and current Banking Awareness.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://www.ibps.in/" target="_blank">Official IBPS Website</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English Language'},
@@ -488,7 +488,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Quant, Reasoning</li><li><b>Mains:</b> Reasoning & Computer, Data Analysis, GA, English + Descriptive</li><li><b>Group Exercise / Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Banking awareness, high-level reasoning, data interpretation, English comprehension.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English Language'},
@@ -509,7 +509,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Phase I:</b> General Awareness, English, Quant, Reasoning</li><li><b>Phase II:</b> ESI, English Writing, Finance & Management</li><li><b>Interview</b></li></ul>',
         eligibility: '<p>Graduation with minimum 60% marks.</p>',
         syllabus: '<p>Economic & Social Issues (ESI), Finance & Management (F&M), English Writing Skills.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://opportunities.rbi.org.in/" target="_blank">Official RBI Website</a>',
         subjects: [
             {id: 'phase1-ga', name: 'Phase I: General Awareness'},
@@ -533,7 +533,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Exam:</b> Physics, Chemistry, Biology (Botany & Zoology)</li></ul>',
         eligibility: '<p>10+2/equivalent with required subjects.</p>',
         syllabus: '<p>Physics, Chemistry, Botany, Zoology (Class 11 & 12 NCERT).</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://neet.nta.nic.in/" target="_blank">Official NEET NTA Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -555,7 +555,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper 1:</b> Physics, Chemistry, Mathematics (B.E./B.Tech)</li><li><b>Paper 2A/2B:</b> Mathematics, Aptitude, Drawing/Planning</li></ul>',
         eligibility: '<p>10+2 with PCM.</p>',
         syllabus: '<p>Physics, Chemistry, Mathematics.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://jeemain.nta.nic.in/" target="_blank">Official JEE Main Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -573,7 +573,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>General Aptitude</b> (Compulsory)</li><li><b>Subject Paper</b> (Out of 30 disciplines)</li></ul>',
         eligibility: '<p>Graduation in Engineering/Technology/Science/Arts/Commerce.</p>',
         syllabus: '<p>Based on the chosen engineering/science discipline.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://gate2026.iitg.ac.in/" target="_blank">Official GATE Website</a>',
         subjects: [
           {
@@ -1083,7 +1083,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>VARC:</b> Verbal Ability & Reading Comprehension</li><li><b>DILR:</b> Data Interpretation & Logical Reasoning</li><li><b>QA:</b> Quantitative Ability</li></ul>',
         eligibility: '<p>Bachelor degree with 50% marks.</p>',
         syllabus: '<p>VARC, DILR, QA.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://iimcat.ac.in/" target="_blank">Official CAT Website</a>',
         subjects: [
             {id: 'varc', name: 'VARC'},
@@ -1104,7 +1104,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> English Language, Current Affairs, Legal Reasoning, Logical Reasoning, Quantitative Techniques.</li></ul>',
         eligibility: '<p>10+2 with 45% marks.</p>',
         syllabus: '<p>Comprehension-based questions across all 5 sections.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://consortiumofnlus.ac.in/" target="_blank">Official CLAT Website</a>',
         subjects: [
             {id: 'english', name: 'English Language'},
@@ -1127,7 +1127,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> Paper I (GS), Paper II (CSAT)</li><li><b>Mains:</b> Marathi, English, Essay, GS I-IV, Optional</li></ul><p><i>Note: Subject to latest revised scheme.</i></p>',
         eligibility: '<p>Bachelor degree or equivalent.</p>',
         syllabus: '<p>History of Maharashtra, Geography of Maharashtra, Constitution, Economy, Agriculture, Science & Tech.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://mpsc.gov.in/" target="_blank">Official MPSC Website</a>',
         subjects: [
           {
@@ -1268,7 +1268,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> General Knowledge and General Science</li><li><b>Mains:</b> GS I, GS II, GS III, General Hindi & English</li></ul>',
         eligibility: '<p>Bachelor degree or equivalent.</p>',
         syllabus: '<p>History, Art & Culture of Rajasthan, Indian History, Economy, Polity, Public Administration, Ethics.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://rpsc.rajasthan.gov.in/" target="_blank">Official RPSC Website</a>',
         subjects: [
           {
@@ -1301,7 +1301,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBE:</b> GI & Reasoning, GK, Mathematics, English/Hindi</li><li><b>PET/PST</b> & Medical Exam</li></ul>',
         eligibility: '<p>10th pass / Matriculation.</p>',
         syllabus: '<p>General Intelligence, General Awareness, Elementary Mathematics, English/Hindi.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 'cbe-gi', name: 'General Intelligence & Reasoning'},
@@ -1318,7 +1318,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I:</b> GI, GK, Quant, English</li><li><b>PET/PST</b></li><li><b>Paper II:</b> English Language & Comprehension</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General Intelligence, GK, Quantitative Aptitude, English Comprehension.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 'paper1-gi', name: 'Paper I: General Intelligence'},
@@ -1340,7 +1340,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Numerical Ability, Reasoning</li><li><b>Mains:</b> General/Financial Awareness, General English, Reasoning, Quant</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Reasoning, Quantitative Aptitude, English, Banking Awareness.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://www.ibps.in/" target="_blank">Official IBPS Website</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English'},
@@ -1360,7 +1360,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Numerical Ability, Reasoning</li><li><b>Mains:</b> GA, English, Quant, Reasoning</li><li><b>Local Language Test</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General/Financial Awareness, English, Quantitative Aptitude, Reasoning Ability.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English'},
@@ -1380,7 +1380,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> Reasoning, English, Computer, Quant, Decision Making, ESI, ARD, GA</li><li><b>Mains:</b> Paper I (English), Paper II (ESI, ARD, Specialist)</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Economic & Social Issues (ESI), Agriculture & Rural Development (ARD).</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://www.nabard.org/" target="_blank">Official NABARD Website</a>',
         subjects: [
             {id: 'pre', name: 'Prelims: Common Subjects'},
@@ -1401,7 +1401,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT 1 & 2:</b> General Awareness, Mathematics, General Intelligence & Reasoning</li><li><b>Skill Test / CBAT</b></li></ul>',
         eligibility: '<p>10+2 or Graduation depending on the post.</p>',
         syllabus: '<p>Mathematics, Reasoning, General Awareness (History, Geography, Polity, Science).</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
             {id: 'ga', name: 'General Awareness'},
@@ -1417,7 +1417,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT:</b> General Science, Maths, Reasoning, GA</li><li><b>PET</b></li></ul>',
         eligibility: '<p>10th pass / ITI.</p>',
         syllabus: '<p>General Science (Physics, Chemistry, Biology), Mathematics, Reasoning.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
             {id: 'science', name: 'General Science'},
@@ -1434,7 +1434,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT 1:</b> Maths, Mental Ability, Science, GA</li><li><b>CBT 2:</b> Part A (Maths, Reasoning, Basic Science/Engg), Part B (Trade)</li><li><b>CBAT</b></li></ul>',
         eligibility: '<p>Matriculation / ITI / Diploma.</p>',
         syllabus: '<p>Basic Science & Engineering, Trade-specific subjects.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
             {id: 'cbt1', name: 'CBT 1: All Subjects'},
@@ -1454,7 +1454,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I:</b> Mathematics</li><li><b>Paper II:</b> General Ability Test (English & GK)</li><li><b>SSB Interview</b></li></ul>',
         eligibility: '<p>10+2. Age limit as per current notification.</p>',
         syllabus: '<p>Mathematics (Algebra, Matrices, Calculus, Vectors), English, GK (Physics, Chemistry, History, Geography).</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
             {id: 'math', name: 'Paper I: Mathematics'},
@@ -1470,7 +1470,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>IMA/INA/AFA:</b> English, GK, Elementary Maths</li><li><b>OTA:</b> English, GK</li><li><b>SSB Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>English, GK, Elementary Mathematics.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
             {id: 'eng', name: 'English'},
@@ -1486,7 +1486,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>AFCAT:</b> General Awareness, English, Numerical Ability, Reasoning, Military Aptitude</li><li><b>AFSB Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General Awareness, English, Numerical Ability, Reasoning, Military Aptitude.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://careerairforce.gov.in/" target="_blank">Official AFCAT Website</a>',
         subjects: [
             {id: 'eng', name: 'English'},
@@ -1503,7 +1503,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CEE:</b> Common Entrance Exam (Subjects vary by trade)</li><li><b>Physical & Medical</b></li></ul>',
         eligibility: '<p>10th/12th depending on the specific trade.</p>',
         syllabus: '<p>General Knowledge, General Science, Mathematics, Logical Reasoning (Varies by trade).</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://joinindianarmy.nic.in/" target="_blank">Official Indian Army Website</a>',
         subjects: [
             {id: 'gd-gk', name: 'GD: General Knowledge'},
@@ -1526,7 +1526,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT:</b> Multiple choice questions covering all MBBS subjects.</li></ul><p><i>Note: Refer to latest NBEMS information bulletin for exact pattern.</i></p>',
         eligibility: '<p>MBBS degree/provisional pass and internship requirements as per NBEMS.</p>',
         syllabus: '<p>Pre-clinical, Para-clinical, and Clinical subjects of MBBS curriculum.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://natboard.edu.in/" target="_blank">Official NBEMS Website</a>',
         subjects: [
           {
@@ -1615,7 +1615,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT:</b> Covers all 19 MBBS subjects.</li></ul>',
         eligibility: '<p>MBBS.</p>',
         syllabus: '<p>Pre-clinical, Para-clinical, and Clinical subjects.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://aiimsexams.ac.in/" target="_blank">Official AIIMS Exams Website</a>',
         subjects: [
             {id: 'pre-clinical', name: 'Pre-clinical Subjects'},
@@ -1635,7 +1635,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper 1 & Paper 2:</b> Both compulsory. Each covers Physics, Chemistry, and Mathematics.</li></ul>',
         eligibility: '<p>Must clear JEE Main cutoff.</p>',
         syllabus: '<p>Advanced level Physics, Chemistry, and Mathematics.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://jeeadv.ac.in/" target="_blank">Official JEE Advanced Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -1651,7 +1651,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Physics, Chemistry, English Proficiency, Logical Reasoning, Mathematics/Biology.</li></ul>',
         eligibility: '<p>10+2 with Physics, Chemistry, and Math/Biology with adequate marks.</p>',
         syllabus: '<p>Physics, Chemistry, Math/Bio, English, Logical Reasoning.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://www.bitsadmission.com/" target="_blank">Official BITS Admission Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -1674,7 +1674,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Part A:</b> General Aptitude</li><li><b>Part B:</b> Subject-based</li><li><b>Part C:</b> Higher-order analytical questions</li></ul>',
         eligibility: '<p>M.Sc. or equivalent degree.</p>',
         syllabus: '<p>Chemical Sciences, Earth Sciences, Life Sciences, Mathematical Sciences, Physical Sciences.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://csirnet.nta.ac.in/" target="_blank">Official CSIR NET Website</a>',
         subjects: [
             {id: 'chemical', name: 'Chemical Sciences'},
@@ -1692,7 +1692,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I (I-V):</b> CDP, Languages, Maths, EVS</li><li><b>Paper II (VI-VIII):</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
         eligibility: '<p>B.Ed / D.El.Ed.</p>',
         syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://ctet.nic.in/" target="_blank">Official CTET Website</a>',
         subjects: [
             {id: 'paper1', name: 'Paper I (Classes I to V)'},
@@ -1708,7 +1708,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I (I-V):</b> CDP, Languages, Maths, EVS</li><li><b>Paper II (VI-VIII):</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
         eligibility: '<p>B.Ed / BTC / D.El.Ed.</p>',
         syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://updeled.gov.in/" target="_blank">Official UP Basic Education Portal</a>',
         subjects: [
             {id: 'paper1', name: 'Paper I (Classes I to V)'},
@@ -1724,7 +1724,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Level I:</b> CDP, Languages, Maths, EVS</li><li><b>Level II:</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
         eligibility: '<p>B.Ed / B.S.T.C.</p>',
         syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://rajeduboard.rajasthan.gov.in/" target="_blank">Official BSER Website</a>',
         subjects: [
             {id: 'level1', name: 'Level I'},
@@ -1744,7 +1744,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Verbal Ability, Decision Making, Quant & DI, General Knowledge.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Verbal Ability, Logical Reasoning, Decision Making, Quantitative Aptitude, Data Interpretation, General Knowledge.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://xatonline.in/" target="_blank">Official XAT Website</a>',
         subjects: [
             {id: 'verbal', name: 'Verbal Ability & Logical Reasoning'},
@@ -1761,7 +1761,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Quant & DI, Logical Reasoning, Language Comprehension, GA, Innovation & Entrepreneurship.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Quantitative Techniques, Logical Reasoning, Language, General Awareness, Innovation & Entrepreneurship.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://exams.nta.ac.in/CMAT/" target="_blank">Official CMAT Website</a>',
         subjects: [
             {id: 'quant', name: 'Quantitative Techniques & DI'},
@@ -1779,7 +1779,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Language, Intelligence, Mathematical Skills, Data Analysis, Economy/Business Environment.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Language Comprehension, Intelligence & Critical Reasoning, Mathematical Skills, Data Analysis & Sufficiency, Economic & Business Environment.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://mat.aima.in/" target="_blank">Official MAT Website</a>',
         subjects: [
             {id: 'lang', name: 'Language Comprehension'},
@@ -1797,7 +1797,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> General English, Analytical & Logical Reasoning, Quantitative/DI/Data Sufficiency.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General English, Analytical & Logical Reasoning, Quantitative, Data Interpretation & Data Sufficiency.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://snaptest.org/" target="_blank">Official SNAP Website</a>',
         subjects: [
             {id: 'eng', name: 'General English'},
@@ -1817,7 +1817,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>UG:</b> English, Current Affairs & GK, Logical Reasoning</li><li><b>PG:</b> Law subjects</li></ul>',
         eligibility: '<p>10+2 / LLB depending on program.</p>',
         syllabus: '<p>English Language, Current Affairs & General Knowledge, Logical Reasoning.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://nationallawuniversitydelhi.in/" target="_blank">Official AILET Website</a>',
         subjects: [
             {id: 'ug-eng', name: 'UG: English Language'},
@@ -1838,7 +1838,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Components:</b> Language Tests, Domain-Specific Subjects, General Aptitude Test</li></ul>',
         eligibility: '<p>10+2 pass.</p>',
         syllabus: '<p>Syllabus mapped to Class 12 NCERT for domain subjects.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
         subjects: [
             {id: 'lang', name: 'Section IA & IB: Languages'},
@@ -1874,7 +1874,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Format:</b> Large list of specific test papers based on PG disciplines.</li></ul><p><i>Note: Refer to NTA CUET PG Test Paper Codes.</i></p>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Discipline-specific undergraduate level syllabus.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
+        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
         links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
         subjects: [
             {id: 'pg-physics', name: 'Physics'},
@@ -1924,7 +1924,7 @@ window.getExamData = function(slug) {
         pattern: '<p>Exam pattern details are currently being verified from ' + currentYear + ' official documents.</p>',
         eligibility: '<p>Please refer to the official notification for exact eligibility criteria.</p>',
         syllabus: '<p>Syllabus mapped directly to official sources.</p>',
-        dates: '<p>Dates dynamically updated for the <b>' + currentYear + ' session</b>.<br><i>Check Official Links for exact calendar.</i></p>',
+        dates: '<p>Specific dates are released in the latest official notification.<br><i>Check Official Links for exact calendar.</i></p>',
         links: '<p>Official links provided below when available.</p>',
         subjects: [
             { id: 'paper-1', name: 'Paper 1 (General/Aptitude)' },
