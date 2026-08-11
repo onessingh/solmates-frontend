@@ -522,10 +522,17 @@
 
     // Connect to Backend API for AI and direct Frontend APIs for Wikipedia
     async function generateContent() {
-      const input = document.getElementById('topicInput').value.trim();
+      let input = document.getElementById('topicInput').value.trim();
+      const exam = document.getElementById('ctxExam').value.trim();
+      const subject = document.getElementById('ctxSubject').value.trim();
+
       if (!input) {
-        alert("Please enter a topic to study!");
-        return;
+        if (subject) input = subject;
+        else if (exam) input = exam;
+        else {
+          alert("Please enter a topic, subject, or exam to study!");
+          return;
+        }
       }
 
       currentTopic = input;

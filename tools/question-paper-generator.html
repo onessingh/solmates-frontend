@@ -505,6 +505,7 @@ Note: Set "options" to null or an empty array if the question is subjective. Mak
         document.getElementById('loader').style.display = 'none';
         document.getElementById('setup-mode').style.display = 'none';
         document.getElementById('result-mode').style.display = 'block';
+        history.pushState({view: 'result'}, '', '');
         window.scrollTo(0,0);
       } catch (err) {
         console.error(err);
@@ -555,10 +556,22 @@ Note: Set "options" to null or an empty array if the question is subjective. Mak
     }
 
     function backToSetup() {
-      document.getElementById('result-mode').style.display = 'none';
-      document.getElementById('setup-mode').style.display = 'block';
-      document.getElementById('answer-key').style.display = 'none';
+      if (history.state && history.state.view === 'result') {
+        history.back();
+      } else {
+        document.getElementById('result-mode').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'block';
+        document.getElementById('answer-key').style.display = 'none';
+      }
     }
+
+    window.addEventListener('popstate', function(e) {
+      if (!e.state || e.state.view !== 'result') {
+        document.getElementById('result-mode').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'block';
+        document.getElementById('answer-key').style.display = 'none';
+      }
+    });
     
     function attemptPaper() {
       alert("Attempt Mode Enabled!\nYou can now interact with MCQs. For subjective questions, write answers in your notebook.");

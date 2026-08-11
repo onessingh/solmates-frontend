@@ -400,9 +400,6 @@
         <!-- MCQs injected here -->
       </div>
       
-      <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
-        <button class="btn-secondary" onclick="exportToAnalyzer()"><i class="fas fa-chart-line"></i> View in Performance Analyzer</button>
-      </div>
     </div>
 
   </div>
@@ -475,6 +472,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         document.getElementById('loader').style.display = 'none';
         document.getElementById('setup-mode').style.display = 'none';
         document.getElementById('result-mode').style.display = 'block';
+        history.pushState({view: 'result'}, '', '');
         window.scrollTo(0,0);
       } catch (err) {
           console.error(err);
@@ -548,9 +546,20 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
     }
 
     function backToSetup() {
-      document.getElementById('result-mode').style.display = 'none';
-      document.getElementById('setup-mode').style.display = 'block';
+      if (history.state && history.state.view === 'result') {
+        history.back();
+      } else {
+        document.getElementById('result-mode').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'block';
+      }
     }
+
+    window.addEventListener('popstate', function(e) {
+      if (!e.state || e.state.view !== 'result') {
+        document.getElementById('result-mode').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'block';
+      }
+    });
 
     function startQuiz() {
       alert('This will launch the Quiz UI with these ' + generatedQuestions.length + ' questions.');
