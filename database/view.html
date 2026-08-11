@@ -6,17 +6,17 @@
   <meta name="supported-color-schemes" content="light">
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=3.0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MBA Study Material, PYQs & Class Materials | SOLMATES</title>
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=126.0"></script>
-  <script src="/js/uptime-helper.js?v=104.2"></script>
-  <script src="/js/api-client.js?v=104.2"></script>
-  <script src="/js/sol-cache.js?v=99.0"></script>
-  <script src="/js/prefetch-helper.js?v=104.2"></script>
+  <script src="/config.js?v=3.0"></script>
+  <script src="/js/uptime-helper.js?v=3.0"></script>
+  <script src="/js/api-client.js?v=3.0"></script>
+  <script src="/js/sol-cache.js?v=3.0"></script>
+  <script src="/js/prefetch-helper.js?v=3.0"></script>
   <script>
     // [v104.4] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
@@ -492,7 +492,7 @@
           navStack = [{ name: `Semester ${semester}`, folderId: null }, { name: urlName || 'Folder', folderId: urlFolderId }];
         } else navStack = [{ name: `Semester ${semester}`, folderId: null }];
         window.history.replaceState({ stack: [...navStack], folderId, semester }, '', window.location.href);
-        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${semester}`;
+        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} ï¿½ Semester ${semester}`;
         updateBreadcrumb();
         loadContent();
       } else {
@@ -507,7 +507,7 @@
       if (CATEGORY === 'youtube') { window.location.href = `/database/youtube-browse?semester=${s}`; return; }
       semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
       history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);
-      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${s}`;
+      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} ï¿½ Semester ${s}`;
       updateBreadcrumb();
       if (window.solmatesAPI.isAdminLoggedIn()) document.getElementById('adminBar').style.display = 'flex';
       await loadContent();
@@ -869,7 +869,7 @@
         if (!semester) {
           renderSemesters(true); // true = don't push state
         } else {
-          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${semester}`;
+          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} ï¿½ Semester ${semester}`;
           updateBreadcrumb();
           loadContent();
         }

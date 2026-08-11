@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=3.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unlock PDF - Smart PDF Solutions</title>
@@ -16,8 +16,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     <link rel="stylesheet" href="/tools/pdf-tools/common.css">
-  <script src="/js/webview-fix.js?v=89.0"></script>
-  <script src="/js/sol-cache.js?v=89.0"></script>
+  <script src="/js/webview-fix.js?v=3.0"></script>
+  <script src="/js/sol-cache.js?v=3.0"></script>
 
 <style>
 
@@ -267,7 +267,7 @@ async function handleFile(file) {
         // We use pdf-lib for this as it's reliable for meta-checks
         const doc = await PDFLib.PDFDocument.load(arrayBuffer.slice(0));
         processedPdfBytes = await doc.save();
-        showResult('<strong>? 100% Unlocked!</strong> This PDF had only permission restrictions or no security — removed instantly.');
+        showResult('<strong>? 100% Unlocked!</strong> This PDF had only permission restrictions or no security ï¿½ removed instantly.');
     } catch(e) {
         // Locked with Open Password
         loadingOverlay.style.display = 'none';

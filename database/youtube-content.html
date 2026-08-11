@@ -7,14 +7,14 @@
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=3.0">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Videos - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=123.0"></script>
-  <script src="/js/uptime-helper.js?v=101.0"></script>
-  <script src="/js/api-client.js?v=116.2"></script>
+  <script src="/config.js?v=3.0"></script>
+  <script src="/js/uptime-helper.js?v=3.0"></script>
+  <script src="/js/api-client.js?v=3.0"></script>
   <style>
 
     :root {
@@ -1172,7 +1172,7 @@
     
     .breadcrumb { display: none !important; margin: 0 !important; padding: 0 !important; height: 0 !important; border: none !important; overflow: hidden !important; }
 </style>
-  <script src="/js/sol-cache.js?v=96.0"></script>
+  <script src="/js/sol-cache.js?v=3.0"></script>
 
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
@@ -1537,7 +1537,7 @@
       // Update title, sub and breadcrumbs
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} ï¿½ Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       // Reset Search Input on Navigation
@@ -1574,7 +1574,7 @@
       // Update title, sub and breadcrumbs
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} ï¿½ Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       try {
@@ -1632,7 +1632,7 @@
 
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} ï¿½ Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
@@ -1652,7 +1652,7 @@
       }
 
       if (NO_CONTENT && isAdmin) {
-        showEmpty('Empty — Add Content', 'Use the buttons above to add playlist folders or video links.');
+        showEmpty('Empty ï¿½ Add Content', 'Use the buttons above to add playlist folders or video links.');
         return;
       }
 
@@ -1697,7 +1697,7 @@
           // Restore original state
           const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
           document.getElementById('pageTitle').innerText = displayPageName;
-          document.getElementById('pageSub').innerText = `${CAT_LABEL} · Semester ${SEMESTER}`;
+          document.getElementById('pageSub').innerText = `${CAT_LABEL} ï¿½ Semester ${SEMESTER}`;
           buildBreadcrumb();
           
           document.getElementById('loadingState').style.display = 'block';
@@ -1944,7 +1944,7 @@
         if (folders.length === 0 && items.length === 0) {
           if (isStale) return; // Wait for fresh
           showEmpty(
-            isAdmin ? 'Empty — Add Content' : 'No Videos Available',
+            isAdmin ? 'Empty ï¿½ Add Content' : 'No Videos Available',
             isAdmin ? 'Use buttons above to add playlist folders or video links.' : 'No videos uploaded yet. Check back later!'
           );
           return;
