@@ -489,9 +489,12 @@ Note: Set "options" to null or an empty array if the question is subjective. Mak
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            const rawJson = resText.match(/\[[\s\S]*\]/);
-            if(rawJson) {
-                const sections = JSON.parse(rawJson[0]);
+            let start = resText.indexOf('[');
+            let end = resText.lastIndexOf(']');
+            if(start !== -1 && end !== -1) {
+                let jsonStr = resText.substring(start, end + 1);
+                jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
+                const sections = JSON.parse(jsonStr);
                 renderPaper(sections);
             } else {
                 throw new Error("Invalid response format");

@@ -469,12 +469,13 @@ Output strictly in the following JSON array format, and nothing else:
         
         const responseText = await window.solmatesAPI.sendChatMessage(promptText, []);
         let jsonStr = typeof responseText === 'object' ? (responseText.message || responseText.reply || "") : responseText;
-        if(jsonStr.includes('```json')) {
-            jsonStr = jsonStr.split('```json')[1].split('```')[0].trim();
-        } else if(jsonStr.includes('```')) {
-            jsonStr = jsonStr.split('```')[1].split('```')[0].trim();
+        let start = jsonStr.indexOf('[');
+        let end = jsonStr.lastIndexOf(']');
+        if(start !== -1 && end !== -1) {
+            jsonStr = jsonStr.substring(start, end + 1);
+            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
         }
-
+        
         const cards = JSON.parse(jsonStr);
         
         cards.forEach(card => {
