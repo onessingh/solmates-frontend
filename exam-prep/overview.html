@@ -8,40 +8,124 @@
   <script src="/js/api-client.js"></script>
   <script src="/js/exam-context.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/global-lockdown.css">
   <style>
-    /* Add basic styling here similar to index */
-    body { font-family: sans-serif; background: #f8fafc; color: #334155; margin: 0; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    h1 { margin-top: 0; }
-    .btn { display: inline-block; background: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
+    :root {
+      --bg-body: #f5f5f7;
+      --text-main: #1d1d1f;
+      --text-muted: #86868b;
+      --bg-nav: #ffffff;
+      --bg-card: #ffffff;
+      --border-color: #e5e5ea;
+      --brand-primary: #0f2b46;
+      --brand-accent: #0071e3;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; }
+    
+    /* Top Navigation (Reused from main site) */
+    .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--bg-nav); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+    .brand { font-size: 1.2rem; font-weight: 700; color: var(--brand-primary); text-decoration: none; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--brand-primary); }
+    .btn-back { background: var(--brand-primary); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+    
+    .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    
+    .exam-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+    
+    .exam-header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 30px; }
+    .exam-header h1 { color: var(--brand-primary); margin: 0 0 10px 0; font-size: 2.2rem; }
+    .badge { display: inline-block; background: #eef2ff; color: var(--brand-accent); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 15px; }
+    
+    .section-title { font-size: 1.2rem; color: var(--brand-primary); margin: 25px 0 15px 0; display: flex; align-items: center; gap: 10px; }
+    .section-title i { color: var(--brand-accent); }
+    
+    p { color: var(--text-main); line-height: 1.6; font-size: 1rem; margin-bottom: 20px; }
+    
+    .cta-container { margin-top: 40px; text-align: center; }
+    .btn-primary { display: inline-block; background: var(--brand-accent); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; transition: background 0.2s; border: none; cursor: pointer; }
+    .btn-primary:hover { background: #005bb5; }
+    
+    .loading-state { text-align: center; padding: 60px; color: var(--text-muted); font-size: 1.1rem; }
   </style>
 </head>
 <body>
+  <nav class="top-nav">
+    <a href="/" class="brand">SOLMATES</a>
+    <div class="nav-links">
+      <a href="/exam-prep/index.html">Exam Prep</a>
+    </div>
+    <a href="/exam-prep/index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
+  </nav>
+
   <div class="container" id="content">
-    Loading...
+    <div class="exam-card loading-state">
+      <i class="fas fa-spinner fa-spin"></i> Loading Exam Profile...
+    </div>
   </div>
+
   <script>
+    // Exact same fallback list as index.html so it can render locally if API fails
+    const mockExams = [
+        { id: 'upsc-cse', name: 'UPSC CSE', slug: 'upsc-cse', category_id: 'government', short_description: 'Civil Services Examination for IAS, IPS, IFS and other central services.', full_description: 'The Civil Services Examination (CSE) is a nationwide competitive examination in India conducted by the Union Public Service Commission for recruitment to higher Civil Services of the Government of India.', exam_pattern: 'Preliminary Exam (Objective), Main Exam (Written), and Interview (Personality Test).' },
+        { id: 'ssc-cgl', name: 'SSC CGL', slug: 'ssc-cgl', category_id: 'ssc', short_description: 'Staff Selection Commission Combined Graduate Level Examination.', full_description: 'SSC CGL is an examination conducted to recruit staff to various posts in ministries, departments and organisations of the Government of India.', exam_pattern: 'Tier-I (Objective), Tier-II (Objective + Skill Test).' },
+        { id: 'ibps-po', name: 'IBPS PO', slug: 'ibps-po', category_id: 'banking', short_description: 'Institute of Banking Personnel Selection Probationary Officer exam.', full_description: 'IBPS PO is a national-level recruitment exam conducted to recruit Probationary Officers and Management Trainees in participating public sector banks.', exam_pattern: 'Preliminary Exam, Main Exam, and Interview.' },
+        { id: 'ugc-net', name: 'UGC NET', slug: 'ugc-net', category_id: 'teaching', short_description: 'University Grants Commission National Eligibility Test for Assistant Professor and JRF.', full_description: 'UGC NET is an examination to determine eligibility for the post of Assistant Professor and/or Junior Research Fellowship award in Indian universities and colleges.', exam_pattern: 'Paper 1 (General Aptitude) and Paper 2 (Subject Specific) conducted via CBT mode.' },
+        { id: 'cat', name: 'CAT', slug: 'cat', category_id: 'management', short_description: 'Common Admission Test for IIMs and other top B-Schools.', full_description: 'The Common Admission Test (CAT) is a computer-based test for admission in graduate management programs.', exam_pattern: 'Verbal Ability and Reading Comprehension (VARC), Data Interpretation and Logical Reasoning (DILR), and Quantitative Ability (QA).' }
+    ];
+
     async function loadOverview() {
       const slug = new URLSearchParams(window.location.search).get('exam');
       if(!slug) return window.location.href = 'index.html';
       
+      let exam = null;
       try {
         const res = await fetch('/api/exams/' + slug);
-        const exam = await res.json();
-        
-        document.getElementById('content').innerHTML = `
-          <h1>${exam.name}</h1>
-          <p>${exam.full_description || exam.short_description || 'No description available.'}</p>
-          
-          <h3>Exam Pattern</h3>
-          <p>${exam.exam_pattern || 'TBA'}</p>
-          
-          <a href="subjects.html?exam=${exam.id}" class="btn">Select Subject & Continue <i class="fas fa-arrow-right"></i></a>
-        `;
+        if (res.ok) {
+            exam = await res.json();
+        }
       } catch (err) {
-        document.getElementById('content').innerHTML = 'Error loading exam.';
+        console.error("API failed, falling back to mock", err);
       }
+      
+      if (!exam || Object.keys(exam).length === 0) {
+          // Fallback to mock data
+          exam = mockExams.find(e => e.slug === slug);
+          
+          if (!exam) {
+              // If it's a seeded exam that isn't in mockExams, just generate a generic one
+              exam = {
+                  id: slug,
+                  name: slug.toUpperCase().replace('-', ' '),
+                  short_description: 'Exam details are currently being updated.',
+                  full_description: 'We are currently adding detailed syllabus, patterns, and PYQs for this exam. You can still proceed to select a subject and launch the AI tools.',
+                  exam_pattern: 'TBA'
+              };
+          }
+      }
+      
+      document.getElementById('content').innerHTML = `
+        <div class="exam-card">
+            <div class="exam-header">
+                <span class="badge"><i class="fas fa-bookmark"></i> ${exam.category_id ? exam.category_id.toUpperCase() : 'EXAM PREP'}</span>
+                <h1>${exam.name}</h1>
+                <p style="font-size: 1.1rem; color: var(--text-muted);">${exam.short_description || ''}</p>
+            </div>
+            
+            <h3 class="section-title"><i class="fas fa-info-circle"></i> Overview</h3>
+            <p>${exam.full_description || exam.short_description || 'No detailed description available yet.'}</p>
+            
+            <h3 class="section-title"><i class="fas fa-list-ul"></i> Exam Pattern</h3>
+            <p>${exam.exam_pattern || 'Exam pattern details are currently being updated.'}</p>
+            
+            <div class="cta-container">
+                <a href="subjects.html?exam=${exam.id}" class="btn-primary">Continue to Subjects <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
+            </div>
+        </div>
+      `;
     }
+    
     window.onload = loadOverview;
   </script>
 </body>
