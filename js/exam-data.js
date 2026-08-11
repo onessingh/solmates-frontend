@@ -488,7 +488,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Quant, Reasoning</li><li><b>Mains:</b> Reasoning & Computer, Data Analysis, GA, English + Descriptive</li><li><b>Group Exercise / Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Banking awareness, high-level reasoning, data interpretation, English comprehension.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Schedule - Not specified',
         links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English Language'},
@@ -509,7 +509,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Phase I:</b> General Awareness, English, Quant, Reasoning</li><li><b>Phase II:</b> ESI, English Writing, Finance & Management</li><li><b>Interview</b></li></ul>',
         eligibility: '<p>Graduation with minimum 60% marks.</p>',
         syllabus: '<p>Economic & Social Issues (ESI), Finance & Management (F&M), English Writing Skills.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Result Out - Not specified',
         links: '<a href="https://opportunities.rbi.org.in/" target="_blank">Official RBI Website</a>',
         subjects: [
             {id: 'phase1-ga', name: 'Phase I: General Awareness'},
@@ -1104,7 +1104,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> English Language, Current Affairs, Legal Reasoning, Logical Reasoning, Quantitative Techniques.</li></ul>',
         eligibility: '<p>10+2 with 45% marks.</p>',
         syllabus: '<p>Comprehension-based questions across all 5 sections.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Tentative Schedule - Not specified',
         links: '<a href="https://consortiumofnlus.ac.in/" target="_blank">Official CLAT Website</a>',
         subjects: [
             {id: 'english', name: 'English Language'},
@@ -1340,7 +1340,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Numerical Ability, Reasoning</li><li><b>Mains:</b> General/Financial Awareness, General English, Reasoning, Quant</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Reasoning, Quantitative Aptitude, English, Banking Awareness.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Cancelled - Not specified',
         links: '<a href="https://www.ibps.in/" target="_blank">Official IBPS Website</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English'},
@@ -1360,7 +1360,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> English, Numerical Ability, Reasoning</li><li><b>Mains:</b> GA, English, Quant, Reasoning</li><li><b>Local Language Test</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General/Financial Awareness, English, Quantitative Aptitude, Reasoning Ability.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Prelims Exam Date - 1 & 2 August 2026',
         links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
         subjects: [
             {id: 'pre-eng', name: 'Prelims: English'},
@@ -1380,7 +1380,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> Reasoning, English, Computer, Quant, Decision Making, ESI, ARD, GA</li><li><b>Mains:</b> Paper I (English), Paper II (ESI, ARD, Specialist)</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Economic & Social Issues (ESI), Agriculture & Rural Development (ARD).</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Mains Admit Card Out - Not specified',
         links: '<a href="https://www.nabard.org/" target="_blank">Official NABARD Website</a>',
         subjects: [
             {id: 'pre', name: 'Prelims: Common Subjects'},
@@ -1401,7 +1401,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT 1 & 2:</b> General Awareness, Mathematics, General Intelligence & Reasoning</li><li><b>Skill Test / CBAT</b></li></ul>',
         eligibility: '<p>10+2 or Graduation depending on the post.</p>',
         syllabus: '<p>Mathematics, Reasoning, General Awareness (History, Geography, Polity, Science).</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Notification Out - Not specified',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
             {id: 'ga', name: 'General Awareness'},
@@ -1417,7 +1417,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT:</b> General Science, Maths, Reasoning, GA</li><li><b>PET</b></li></ul>',
         eligibility: '<p>10th pass / ITI.</p>',
         syllabus: '<p>General Science (Physics, Chemistry, Biology), Mathematics, Reasoning.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Application Window Closes - Not specified',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
             {id: 'science', name: 'General Science'},
@@ -1526,7 +1526,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT:</b> Multiple choice questions covering all MBBS subjects.</li></ul><p><i>Note: Refer to latest NBEMS information bulletin for exact pattern.</i></p>',
         eligibility: '<p>MBBS degree/provisional pass and internship requirements as per NBEMS.</p>',
         syllabus: '<p>Pre-clinical, Para-clinical, and Clinical subjects of MBBS curriculum.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Application Process Begins - Not specified',
         links: '<a href="https://natboard.edu.in/" target="_blank">Official NBEMS Website</a>',
         subjects: [
           {
@@ -1615,7 +1615,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT:</b> Covers all 19 MBBS subjects.</li></ul>',
         eligibility: '<p>MBBS.</p>',
         syllabus: '<p>Pre-clinical, Para-clinical, and Clinical subjects.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam City Intimation Slip Out - Not specified',
         links: '<a href="https://aiimsexams.ac.in/" target="_blank">Official AIIMS Exams Website</a>',
         subjects: [
             {id: 'pre-clinical', name: 'Pre-clinical Subjects'},
