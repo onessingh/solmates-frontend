@@ -60,6 +60,7 @@
     .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 1.1rem; grid-column: 1 / -1; }
     
     @media (min-width: 768px) {
+      .mobile-exams-container { display: none !important; }
       .container { flex-direction: row; align-items: flex-start; }
       .categories-section { flex: 0 0 250px; position: sticky; top: 80px; }
       .category-grid { grid-template-columns: 1fr; gap: 10px; }
@@ -70,12 +71,8 @@
   </style>
 </head>
 <body>
-  <nav class="top-nav">
-    <a href="/" class="brand">SOLMATES</a>
-    <div class="nav-links">
-      <a href="/tools#academic">Tools</a>
-    </div>
-    <a href="/tools" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
+  <nav class="top-nav" style="justify-content: center;">
+    <span class="brand" style="text-align: center;">EXAM PREP AI</span>
   </nav>
 
   <div class="hero">
@@ -496,39 +493,68 @@
     function renderCategories() {
         const container = document.getElementById('category-grid');
         container.innerHTML = categories.map(cat => `
-            <div class="category-card" id="cat-btn-${cat.id}" onclick="selectCategory('${cat.id}', '${cat.name}')">
-                <i class="fas ${cat.icon}"></i>
-                <span>${cat.name}</span>
+            <div class="category-wrapper" style="margin-bottom: 10px;">
+                <div class="category-card" id="cat-btn-${cat.id}" onclick="selectCategory('${cat.id}', '${cat.name}')">
+                    <i class="fas ${cat.icon}"></i>
+                    <span>${cat.name}</span>
+                </div>
+                <div class="mobile-exams-container exam-grid" id="mobile-exams-${cat.id}" style="display: none; padding: 15px 0;"></div>
             </div>
         `).join('');
     }
 
     function selectCategory(catId, catName) {
-        // Update active styling
-        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+        const isMobile = window.innerWidth < 768;
+        
         const activeBtn = document.getElementById('cat-btn-' + catId);
-        if(activeBtn) activeBtn.classList.add('active');
-        
-        // Show exams section
-        document.getElementById('exams-section').style.display = 'block';
-        document.getElementById('selected-category-title').innerText = catName + ' Exams';
-        
+        const mobileContainer = document.getElementById('mobile-exams-' + catId);
+
         // Filter exams
         const filtered = allExams.filter(e => e.category_id === catId);
         
-        const container = document.getElementById('exams-container');
+        let html = '';
         if (filtered.length === 0) {
-            container.innerHTML = '<div class="empty-state">No exams found in this category yet.</div>';
-            return;
+            html = '<div class="empty-state" style="grid-column: 1 / -1;">No exams found in this category yet.</div>';
+        } else {
+            html = filtered.map(exam => `
+              <a href="/exam-prep/overview.html?exam=${exam.slug}" class="exam-card">
+                <h3>${exam.name}</h3>
+                <p>${exam.short_description || 'Prepare with AI tailored specifically for this exam.'}</p>
+                <div class="cta">Select Exam <i class="fas fa-arrow-right"></i></div>
+              </a>
+            `).join('');
         }
-        
-        container.innerHTML = filtered.map(exam => `
-          <a href="/exam-prep/overview.html?exam=${exam.slug}" class="exam-card">
-            <h3>${exam.name}</h3>
-            <p>${exam.short_description || 'Prepare with AI tailored specifically for this exam.'}</p>
-            <div class="cta">Select Exam <i class="fas fa-arrow-right"></i></div>
-          </a>
-        `).join('');
+
+        if (isMobile) {
+            // Toggle accordion logic
+            if (activeBtn && activeBtn.classList.contains('active')) {
+                // It was open, so close it
+                activeBtn.classList.remove('active');
+                if (mobileContainer) mobileContainer.style.display = 'none';
+            } else {
+                // Close all others
+                document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.mobile-exams-container').forEach(c => c.style.display = 'none');
+                
+                // Open this one
+                if(activeBtn) activeBtn.classList.add('active');
+                if (mobileContainer) {
+                    mobileContainer.innerHTML = html;
+                    mobileContainer.style.display = 'grid'; // mobile layout
+                }
+            }
+        } else {
+            // Desktop logic
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+            if(activeBtn) activeBtn.classList.add('active');
+            
+            document.getElementById('exams-section').style.display = 'block';
+            document.getElementById('selected-category-title').innerText = catName + ' Exams';
+            document.getElementById('exams-container').innerHTML = html;
+            
+            // Just ensure all mobile containers are hidden
+            document.querySelectorAll('.mobile-exams-container').forEach(c => c.style.display = 'none');
+        }
     }
 
     window.onload = loadExams;

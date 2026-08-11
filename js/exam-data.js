@@ -354,8 +354,7 @@ window.MOCK_EXAM_DATA = {
             {id: 'logical', name: 'Logical Reasoning'},
             {id: 'quant', name: 'Quantitative Techniques'}
         ]
-    }
-};
+    },
 
 
     // ==========================================
@@ -915,7 +914,7 @@ window.MOCK_EXAM_DATA = {
             {id: 'pg-edu', name: 'Education'}
         ]
     }
-
+};
 
 window.getExamData = function(slug) {
     if (window.MOCK_EXAM_DATA[slug]) {
