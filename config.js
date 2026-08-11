@@ -61,7 +61,7 @@
   window.safeStorage = window.localStorage;
   window.safeSessionStorage = window.sessionStorage;
 })();
-window.SOL_APP_VERSION = '117.8';
+window.SOL_APP_VERSION = '117.9';
 // Floating Mobile Debug Console (v113.2)
 (function() {
   const urlParams = new URLSearchParams(window.location.search);
