@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Smart Study Kit | Exam Prep AI</title>
-  <script src="/config.js?v=3.0"></script>
-  <script src="/js/api-client.js?v=3.0"></script>
-  <script src="/js/exam-context.js?v=3.0"></script>
+  <script src="/config.js?v=3.1"></script>
+  <script src="/js/api-client.js?v=3.1"></script>
+  <script src="/js/exam-context.js?v=3.1"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/global-lockdown.css">
@@ -665,6 +665,7 @@ function setProgress(id, state) { // state: 'loading' | 'done' | 'pending'
 }
 
 async function generateAll() {
+  genData = { guide: null, flash: [], mcq: [], mock: [], apt: [] };
   const btn = document.getElementById('gen-btn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Generating...';
@@ -1044,6 +1045,7 @@ function renderAptitude(qs) {
 
 function revealApt(i) {
   const el = document.getElementById('apt-ans-' + i);
+  if (!el) return;
   el.classList.add('revealed');
   el.innerHTML = `<i class="fas fa-check-circle"></i> <strong>Answer:</strong> ${genData.apt[i].answer}`;
 }
