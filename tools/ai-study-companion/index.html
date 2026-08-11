@@ -23,6 +23,10 @@
     }
     
     @media print {
+      * {
+        backdrop-filter: none !important;
+        filter: none !important;
+      }
       body {
         background: var(--bg-card);
         color: #000;
