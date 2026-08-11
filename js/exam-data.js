@@ -1651,7 +1651,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Physics, Chemistry, English Proficiency, Logical Reasoning, Mathematics/Biology.</li></ul>',
         eligibility: '<p>10+2 with Physics, Chemistry, and Math/Biology with adequate marks.</p>',
         syllabus: '<p>Physics, Chemistry, Math/Bio, English, Logical Reasoning.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Date - 2025',
         links: '<a href="https://www.bitsadmission.com/" target="_blank">Official BITS Admission Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -1674,7 +1674,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Part A:</b> General Aptitude</li><li><b>Part B:</b> Subject-based</li><li><b>Part C:</b> Higher-order analytical questions</li></ul>',
         eligibility: '<p>M.Sc. or equivalent degree.</p>',
         syllabus: '<p>Chemical Sciences, Earth Sciences, Life Sciences, Mathematical Sciences, Physical Sciences.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Prelims Admit Card Release - 2025',
         links: '<a href="https://csirnet.nta.ac.in/" target="_blank">Official CSIR NET Website</a>',
         subjects: [
             {id: 'chemical', name: 'Chemical Sciences'},
@@ -1692,7 +1692,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I (I-V):</b> CDP, Languages, Maths, EVS</li><li><b>Paper II (VI-VIII):</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
         eligibility: '<p>B.Ed / D.El.Ed.</p>',
         syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Mains Exam Date - 2023-24',
         links: '<a href="https://ctet.nic.in/" target="_blank">Official CTET Website</a>',
         subjects: [
             {id: 'paper1', name: 'Paper I (Classes I to V)'},
@@ -1708,7 +1708,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I (I-V):</b> CDP, Languages, Maths, EVS</li><li><b>Paper II (VI-VIII):</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
         eligibility: '<p>B.Ed / BTC / D.El.Ed.</p>',
         syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Application Form Release - 2024',
         links: '<a href="https://updeled.gov.in/" target="_blank">Official UP Basic Education Portal</a>',
         subjects: [
             {id: 'paper1', name: 'Paper I (Classes I to V)'},
@@ -1724,7 +1724,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Level I:</b> CDP, Languages, Maths, EVS</li><li><b>Level II:</b> CDP, Languages, Maths/Science OR Social Studies</li></ul>',
         eligibility: '<p>B.Ed / B.S.T.C.</p>',
         syllabus: '<p>Child Development & Pedagogy, Languages, Math/Science/Social Studies.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Result Out - 2026',
         links: '<a href="https://rajeduboard.rajasthan.gov.in/" target="_blank">Official BSER Website</a>',
         subjects: [
             {id: 'level1', name: 'Level I'},
@@ -1744,7 +1744,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Verbal Ability, Decision Making, Quant & DI, General Knowledge.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Verbal Ability, Logical Reasoning, Decision Making, Quantitative Aptitude, Data Interpretation, General Knowledge.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Calendar Release - 2026',
         links: '<a href="https://xatonline.in/" target="_blank">Official XAT Website</a>',
         subjects: [
             {id: 'verbal', name: 'Verbal Ability & Logical Reasoning'},
@@ -1761,7 +1761,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Quant & DI, Logical Reasoning, Language Comprehension, GA, Innovation & Entrepreneurship.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Quantitative Techniques, Logical Reasoning, Language, General Awareness, Innovation & Entrepreneurship.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Development Assistant LPT Result Out - 2026',
         links: '<a href="https://exams.nta.ac.in/CMAT/" target="_blank">Official CMAT Website</a>',
         subjects: [
             {id: 'quant', name: 'Quantitative Techniques & DI'},
@@ -1779,7 +1779,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> Language, Intelligence, Mathematical Skills, Data Analysis, Economy/Business Environment.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>Language Comprehension, Intelligence & Critical Reasoning, Mathematical Skills, Data Analysis & Sufficiency, Economic & Business Environment.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Mains Exam Date Out - 2026',
         links: '<a href="https://mat.aima.in/" target="_blank">Official MAT Website</a>',
         subjects: [
             {id: 'lang', name: 'Language Comprehension'},
@@ -1797,7 +1797,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Sections:</b> General English, Analytical & Logical Reasoning, Quantitative/DI/Data Sufficiency.</li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General English, Analytical & Logical Reasoning, Quantitative, Data Interpretation & Data Sufficiency.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Date Revised - 2026',
         links: '<a href="https://snaptest.org/" target="_blank">Official SNAP Website</a>',
         subjects: [
             {id: 'eng', name: 'General English'},
