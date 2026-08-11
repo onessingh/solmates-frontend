@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learning Path Generator â€” SOLMATES</title>
+  <title>Learning Path Generator — SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
 
@@ -195,7 +195,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -216,16 +216,16 @@
 })();
 </script>
     <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="Access the Learning Path Generator â€” SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="description" content="Access the Learning Path Generator — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Learning, Path, Generator, SOLMATES">
     <meta name="author" content="Shivarn Singh">
-    <meta property="og:title" content="Learning Path Generator â€” SOLMATES">
-    <meta property="og:description" content="Access the Learning Path Generator â€” SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta property="og:title" content="Learning Path Generator — SOLMATES">
+    <meta property="og:description" content="Access the Learning Path Generator — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta property="og:image" content="/preview.png">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Learning Path Generator â€” SOLMATES">
-    <meta name="twitter:description" content="Access the Learning Path Generator â€” SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="twitter:title" content="Learning Path Generator — SOLMATES">
+    <meta name="twitter:description" content="Access the Learning Path Generator — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="twitter:image" content="/preview.png">
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
@@ -275,7 +275,7 @@
         <div id="modulesContainer"></div>
 
         <div style="margin-top:20px; padding:15px; background: var(--bg-card-hover); border-radius:10px; color: var(--text-main);">
-          <b>ðŸ’¡ AI Advice:</b> <span id="adviceText"></span>
+          <b>?? AI Advice:</b> <span id="adviceText"></span>
         </div>
 
         <button class="btn-primary" onclick="location.reload()">Create Another Path</button>
@@ -312,8 +312,8 @@
           document.getElementById('modulesContainer').innerHTML = modules.map(m => `
         <div class="module-box">
           <h3>${m.moduleName}</h3>
-          <div style="margin: 10px 0;"><b>Key Topics:</b><br> ${m.topics.map(t => `â€¢ ${t}`).join('<br>')}</div>
-          <div><b>Suggested Resources:</b><br> ${m.resources.map(r => `â€¢ <i>${r}</i>`).join('<br>')}</div>
+          <div style="margin: 10px 0;"><b>Key Topics:</b><br> ${m.topics.map(t => `• ${t}`).join('<br>')}</div>
+          <div><b>Suggested Resources:</b><br> ${m.resources.map(r => `• <i>${r}</i>`).join('<br>')}</div>
         </div>
       `).join('');
 

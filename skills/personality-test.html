@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personality Assessment â€” SOLMATES</title>
+  <title>Personality Assessment — SOLMATES</title>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -295,7 +295,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -316,16 +316,16 @@
 })();
 </script>
     <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="Access the Personality Assessment â€” SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="description" content="Access the Personality Assessment — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Personality, Assessment, SOLMATES">
     <meta name="author" content="Shivarn Singh">
-    <meta property="og:title" content="Personality Assessment â€” SOLMATES">
-    <meta property="og:description" content="Access the Personality Assessment â€” SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta property="og:title" content="Personality Assessment — SOLMATES">
+    <meta property="og:description" content="Access the Personality Assessment — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta property="og:image" content="/preview.png">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Personality Assessment â€” SOLMATES">
-    <meta name="twitter:description" content="Access the Personality Assessment â€” SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="twitter:title" content="Personality Assessment — SOLMATES">
+    <meta name="twitter:description" content="Access the Personality Assessment — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="twitter:image" content="/preview.png">
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
@@ -344,7 +344,7 @@
       <!-- SETUP CARD -->
       <div id="setupStep" class="card">
         <h1><i class="fas fa-user-circle"></i> Personality Assessment</h1>
-        <div class="apple-sub">Myers-Briggs Style AI Assessment Â· 10 introspective questions</div>
+        <div class="apple-sub">Myers-Briggs Style AI Assessment · 10 introspective questions</div>
         <button class="btn btn-primary" id="startTestBtn" style="width:100%; padding:16px;">
           <i class="fas fa-play"></i> start assessment
         </button>
@@ -368,7 +368,7 @@
           <div class="question-text" id="questionText"></div>
           <div class="options" id="optionsContainer"></div>
         </div>
-        <button class="btn btn-primary" id="nextBtn" style="width:100%;">next question â†’</button>
+        <button class="btn btn-primary" id="nextBtn" style="width:100%;">next question ?</button>
         <div id="testError" class="error-msg hidden"></div>
       </div>
 
@@ -396,20 +396,20 @@
     const MBTI_DETAILS = {
       'INTJ': { name: 'Architect', summary: 'Strategic thinkers with a plan for everything. They are imaginative yet decisive, ambitious yet private, and amazingly curious, but they do not squander their energy.' },
       'INTP': { name: 'Logician', summary: 'Innovative inventors with an unquenchable thirst for knowledge. They love patterns, have a keen eye for spotting discrepancies, and an almost insatiable appetite for logic.' },
-      'ENTJ': { name: 'Commander', summary: 'Bold, imaginative and strong-willed leaders, always finding a way â€“ or making one. They project charisma and confidence, and exercise authority in a way that draws crowds together.' },
-      'ENTP': { name: 'Debater', summary: 'Smart and curious thinkers who cannot resist an intellectual challenge. They are the ultimate devilâ€™s advocates, thriving on the process of shredding arguments and beliefs.' },
+      'ENTJ': { name: 'Commander', summary: 'Bold, imaginative and strong-willed leaders, always finding a way – or making one. They project charisma and confidence, and exercise authority in a way that draws crowds together.' },
+      'ENTP': { name: 'Debater', summary: 'Smart and curious thinkers who cannot resist an intellectual challenge. They are the ultimate devil’s advocates, thriving on the process of shredding arguments and beliefs.' },
       'INFJ': { name: 'Advocate', summary: 'Quiet and mystical, yet very inspiring and tireless idealists. They have an inborn sense of idealism and morality, but what sets them apart is that they are not idle dreamers.' },
       'INFP': { name: 'Mediator', summary: 'Poetic, kind and altruistic people, always eager to help a good cause. They are true idealists, always looking for the hint of good in even the worst of people and events.' },
       'ENFJ': { name: 'Protagonist', summary: 'Charismatic and inspiring leaders, able to mesmerize their listeners. They are natural-born leaders, full of passion and charisma, reaching out and inspiring others to achieve.' },
       'ENFP': { name: 'Campaigner', summary: 'Enthusiastic, creative and sociable free spirits, who can always find a reason to smile. They are independent and energetic, seeking emotional connections and freedom.' },
       'ISTJ': { name: 'Logistician', summary: 'Practical and fact-minded individuals, whose reliability cannot be doubted. They are the most abundant personality type, making up around 13% of the population.' },
       'ISFJ': { name: 'Defender', summary: 'Very dedicated and warm protectors, always ready to defend their loved ones. They are unique in that they are often quiet and reserved, but have well-developed people skills.' },
-      'ESTJ': { name: 'Executive', summary: 'Excellent administrators, unsurpassed at managing things â€“ or people. They represent tradition and order, utilizing their understanding of what is right and socially acceptable.' },
+      'ESTJ': { name: 'Executive', summary: 'Excellent administrators, unsurpassed at managing things – or people. They represent tradition and order, utilizing their understanding of what is right and socially acceptable.' },
       'ESFJ': { name: 'Consul', summary: 'Extraordinarily caring, social and popular people, always eager to help. They are social creatures, and thrive on staying up to date with what their friends are doing.' },
       'ISTP': { name: 'Virtuoso', summary: 'Bold and practical experimenters, masters of all kinds of tools. They love to explore with their hands and their eyes, touching and examining the world around them.' },
       'ISFP': { name: 'Adventurer', summary: 'Flexible and charming artists, always ready to explore and experience something new. They are true artists, but not necessarily in the typical sense; they use aesthetics and design.' },
       'ESTP': { name: 'Entrepreneur', summary: 'Smart, energetic and very perceptive people, who truly enjoy living on the edge. They have a blunt, earthy humor, and love being the center of attention.' },
-      'ESFP': { name: 'Entertainer', summary: 'Spontaneous, energetic and enthusiastic people â€“ life is never boring around them. They love the spotlight, and the entire world is a stage for their energy.' }
+      'ESFP': { name: 'Entertainer', summary: 'Spontaneous, energetic and enthusiastic people – life is never boring around them. They love the spotlight, and the entire world is a stage for their energy.' }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -455,7 +455,7 @@
           container.appendChild(optDiv);
         });
 
-        nextBtn.textContent = currentIdx === questions.length - 1 ? 'Submit Assessment' : 'Next Question â†’';
+        nextBtn.textContent = currentIdx === questions.length - 1 ? 'Submit Assessment' : 'Next Question ?';
       }
 
       startTestBtn.onclick = async () => {

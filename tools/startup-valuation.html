@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -212,7 +212,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -323,17 +323,17 @@
       
       <div class="val-main">
         <div class="val-label">Estimated Blended Valuation</div>
-        <div class="val-number" id="resAvgVal">₹0</div>
+        <div class="val-number" id="resAvgVal">?0</div>
         <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 8px;">(Average of Revenue & EBITDA Methods)</div>
       </div>
 
       <div class="summary-grid">
         <div class="stat-box">
-          <div class="stat-val" id="resRevVal">₹0</div>
+          <div class="stat-val" id="resRevVal">?0</div>
           <div class="stat-label">Valuation (by Revenue)</div>
         </div>
         <div class="stat-box ebitda">
-          <div class="stat-val" id="resEbitdaVal">₹0</div>
+          <div class="stat-val" id="resEbitdaVal">?0</div>
           <div class="stat-label">Valuation (by EBITDA)</div>
         </div>
       </div>
@@ -353,14 +353,14 @@
 <script>
   // Format Currency (Indian format)
   function formatMoney(num) {
-    if (num < 0) return '-₹' + Math.abs(num).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-    return '₹' + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    if (num < 0) return '-?' + Math.abs(num).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    return '?' + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
   }
 
   // Format Large Currency (Cr/Lakh)
   function formatLargeMoney(num) {
-    if (num < 0) return '-₹' + formatLargeNum(Math.abs(num));
-    return '₹' + formatLargeNum(num);
+    if (num < 0) return '-?' + formatLargeNum(Math.abs(num));
+    return '?' + formatLargeNum(num);
   }
 
   function formatLargeNum(num) {

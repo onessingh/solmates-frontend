@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -241,7 +241,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -335,21 +335,21 @@
       
       <div class="emi-card">
         <div class="emi-label">Equated Monthly Installment (EMI)</div>
-        <div class="emi-val" id="resEmi">₹0</div>
+        <div class="emi-val" id="resEmi">?0</div>
       </div>
 
       <div class="summary-grid">
         <div class="stat-box" style="border-left: 4px solid var(--primary);">
           <div class="stat-label">Total Principal</div>
-          <div class="stat-val" id="resPrincipal">₹0</div>
+          <div class="stat-val" id="resPrincipal">?0</div>
         </div>
         <div class="stat-box" style="border-left: 4px solid var(--accent);">
           <div class="stat-label">Total Interest Payable</div>
-          <div class="stat-val" id="resInterest">₹0</div>
+          <div class="stat-val" id="resInterest">?0</div>
         </div>
         <div class="stat-box" style="grid-column: span 2; border-left: 4px solid var(--success);">
           <div class="stat-label">Total Payment (Principal + Interest)</div>
-          <div class="stat-val" id="resTotal">₹0</div>
+          <div class="stat-val" id="resTotal">?0</div>
         </div>
       </div>
 
@@ -416,7 +416,7 @@
   }
 
   function formatMoney(num) {
-    return '₹' + Math.round(num).toLocaleString('en-IN');
+    return '?' + Math.round(num).toLocaleString('en-IN');
   }
 
   // Initialize Chart
@@ -522,10 +522,10 @@
   }
 
   function clearResults() {
-    document.getElementById('resEmi').textContent = '₹0';
-    document.getElementById('resPrincipal').textContent = '₹0';
-    document.getElementById('resInterest').textContent = '₹0';
-    document.getElementById('resTotal').textContent = '₹0';
+    document.getElementById('resEmi').textContent = '?0';
+    document.getElementById('resPrincipal').textContent = '?0';
+    document.getElementById('resInterest').textContent = '?0';
+    document.getElementById('resTotal').textContent = '?0';
     breakdownChart.data.datasets[0].data = [1, 0];
     breakdownChart.update();
     document.getElementById('tableBody').innerHTML = '';

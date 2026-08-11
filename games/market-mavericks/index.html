@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -152,7 +152,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -198,7 +198,7 @@
 <div id="screen-welcome" class="w-full max-w-md glass-card p-6 md:p-8 text-center">
     <h1 class="text-2xl md:text-3xl font-bold mb-2">Market <span class="gradient-text">Mavericks</span></h1>
     <p class="text-slate-500 dark:text-slate-400 mb-2 text-sm">Virtual trading game. React to AI-generated news. Highest portfolio wins!</p>
-    <p class="text-xs text-green-600 font-semibold mb-6">Up to 4 players • ₹10,000 virtual budget</p>
+    <p class="text-xs text-green-600 font-semibold mb-6">Up to 4 players � ?10,000 virtual budget</p>
     <div class="flex items-center justify-center gap-3 mb-8 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
         <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg" id="welcome-avatar">?</div>
         <div class="text-left">
@@ -291,17 +291,17 @@
     <!-- Market indicator -->
     <div class="text-center mb-4">
         <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Expected market impact</p>
-        <div id="market-indicator" class="text-2xl font-bold">📈</div>
+        <div id="market-indicator" class="text-2xl font-bold">??</div>
         <p id="impact-text" class="text-sm font-semibold mt-1"></p>
     </div>
 
     <!-- Trading buttons -->
     <div id="trade-buttons" class="flex gap-3">
-        <button class="trade-btn buy-btn" onclick="placeTrade('buy')">📈 Invest</button>
-        <button class="trade-btn hold-btn" onclick="placeTrade('hold')">⏸ Hold</button>
-        <button class="trade-btn sell-btn" onclick="placeTrade('sell')">📉 Withdraw</button>
+        <button class="trade-btn buy-btn" onclick="placeTrade('buy')">?? Invest</button>
+        <button class="trade-btn hold-btn" onclick="placeTrade('hold')">? Hold</button>
+        <button class="trade-btn sell-btn" onclick="placeTrade('sell')">?? Withdraw</button>
     </div>
-    <div id="trade-submitted" class="hidden text-center text-green-600 font-semibold mt-4">✅ Trade placed! Waiting for others...</div>
+    <div id="trade-submitted" class="hidden text-center text-green-600 font-semibold mt-4">? Trade placed! Waiting for others...</div>
     <div id="waiting-count" class="text-center text-slate-500 dark:text-slate-400 text-sm mt-2"></div>
 </div>
 
@@ -311,7 +311,7 @@
     <p id="result-change" class="text-center text-3xl font-black mb-4"></p>
     <div id="result-players" class="flex flex-col gap-3 mb-6"></div>
     <div id="next-event-btn" class="hidden">
-        <button onclick="hostNextEvent()" class="w-full btn-primary p-4 font-semibold">Next Event →</button>
+        <button onclick="hostNextEvent()" class="w-full btn-primary p-4 font-semibold">Next Event ?</button>
     </div>
     <p id="waiting-next-event" class="hidden text-center text-slate-500 dark:text-slate-400 text-sm font-medium">Waiting for host...</p>
 </div>

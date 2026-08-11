@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -141,7 +141,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -199,9 +199,9 @@
 
     <div style="text-align: center; margin-top: 2rem;">
         <select id="rotateAngle" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); margin-right: 1rem; font-size: 1rem;">
-            <option value="90">90Â° Clockwise</option>
-            <option value="180">180Â° Clockwise</option>
-            <option value="270">270Â° Clockwise</option>
+            <option value="90">90° Clockwise</option>
+            <option value="180">180° Clockwise</option>
+            <option value="270">270° Clockwise</option>
         </select>
         <button id="rotateBtn" class="btn-primary" disabled>
             <i data-lucide="play"></i> Rotate PDF

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -390,7 +390,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -673,7 +673,7 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
 
       try {
-        // FIX: Use addSOLItem so data goes to sol_youtube → visible in sem*.html pages
+        // FIX: Use addSOLItem so data goes to sol_youtube ? visible in sem*.html pages
         const videoPayload = { title: data.title, videoUrl: data.url, subject: data.subject || null, description: data.description || '' };
         const response = await solmatesAPI.addSOLItem('youtube', semester, videoPayload);
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -993,7 +993,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -1066,7 +1066,7 @@
         style="display:none">
         <i class="fas fa-folder-plus"></i> New Folder
       </button>
-      <!-- FIX 5: Renamed to btnNewFolderDefault — used for non-elearning categories -->
+      <!-- FIX 5: Renamed to btnNewFolderDefault � used for non-elearning categories -->
       <button class="btn-create btn-folder" id="btnNewFolderDefault" onclick="openModal('folderModal', 'folder')"
         style="display:none">
         <i class="fas fa-folder-plus"></i> New Folder
@@ -1124,7 +1124,7 @@
   </div>
 
   <script>
-    // ── URL Params ────────────────────────────────────────────────────────────
+    // -- URL Params ------------------------------------------------------------
     const params = new URLSearchParams(window.location.search);
 
     // Robust escaping for JS event handlers
@@ -1163,7 +1163,7 @@
       'professor': 'Class Materials'
     };
 
-    // ── Breadcrumb ────────────────────────────────────────────────────────────
+    // -- Breadcrumb ------------------------------------------------------------
     function buildBreadcrumb() {
       const bc = document.getElementById('breadcrumb');
       if (!bc) return;
@@ -1184,7 +1184,7 @@
     `;
     }
 
-    // ── Init ──────────────────────────────────────────────────────────────────
+    // -- Init ------------------------------------------------------------------
     async function init() {
       isNavigating = false;
 
@@ -1195,7 +1195,7 @@
         }
         if (!window.solmatesAPI) {
           document.getElementById('grid').innerHTML =
-            '<div class="empty" style="color:#ef4444">⚠️ API failed to load. Check your connection.</div>';
+            '<div class="empty" style="color:#ef4444">?? API failed to load. Check your connection.</div>';
           return;
         }
       }
@@ -1229,10 +1229,10 @@
           const icon = isEBook ? 'fa-book' : 'fa-play-circle';
           const label = isEBook ? 'E-Books' : 'Video Lessons';
           titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${FOLDER_NAME}`;
-          document.getElementById('pageSub').innerText = `${label} · ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          document.getElementById('pageSub').innerText = `${label} � ${ordinals[SEMESTER] || SEMESTER} Semester`;
         } else {
           titleEl.innerText = FOLDER_NAME;
-          document.getElementById('pageSub').innerText = `${CAT_LABELS[CATEGORY] || CATEGORY} · ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          document.getElementById('pageSub').innerText = `${CAT_LABELS[CATEGORY] || CATEGORY} � ${ordinals[SEMESTER] || SEMESTER} Semester`;
         }
       }
       buildBreadcrumb();
@@ -1418,7 +1418,7 @@
             ${isAdmin ? `<div class="btn-del-folder" onclick="event.stopPropagation(); window.deleteFolder('${f.id}', '${esc(f.name)}')"><i class="fas fa-trash"></i></div>` : ''}
             ${isAdmin ? `<div class="edit-btn" style="left:58px; background:rgba(100,116,139,0.9);" onclick="event.stopPropagation(); window.toggleHide('folder', '${f.id}', '${esc(f.name)}')"><i class="fas ${isHidden ? 'fa-eye-slash' : 'fa-eye'}"></i></div>` : ''}
             <div style="display:flex; align-items:center; width:100%; margin-bottom:12px; gap:8px">
-                ${isAdmin ? '<div class="drag-handle">⋮⋮</div>' : ''}
+                ${isAdmin ? '<div class="drag-handle">??</div>' : ''}
                 <div class="subject-name" style="flex:1; ${isHidden ? 'opacity:0.5;' : ''}">
                     <i class="fas ${mainIconClass}"></i>
                     <h3 style="margin:0">${displayName}</h3>
@@ -1466,7 +1466,7 @@
           card.setAttribute('data-type', 'item');
           card.innerHTML = `
           <div style="display:flex; align-items:center; gap:8px; width:100%">
-            ${isAdmin ? '<div class="drag-handle">⋮⋮</div>' : ''}
+            ${isAdmin ? '<div class="drag-handle">??</div>' : ''}
             <i class="fas fa-file-alt" style="font-size:32px; color:#3b82f6"></i>
             <h3 style="flex:1; margin:0">${displayTitle}</h3>
           </div>
@@ -1769,7 +1769,7 @@
       }
     };
 
-    // ── Real-time (Socket.io) ─────────────────────────────────────────────────
+    // -- Real-time (Socket.io) -------------------------------------------------
     (function () {
       if (typeof io === 'undefined') return;
       try {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -94,7 +94,7 @@
                 if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
                 document.documentElement.style.colorScheme = 'dark';
                 document.documentElement.classList.add('dark');
-                if (darkStyle) darkStyle.setAttribute('media', 'all');
+                if (darkStyle) darkStyle.setAttribute('media', 'screen');
             } else if (theme === 'light') {
                 meta.setAttribute('content', 'light only');
                 if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -140,7 +140,7 @@
 <div id="screen-welcome" class="w-full max-w-md glass-card p-6 md:p-8 text-center">
     <h1 class="text-2xl md:text-3xl font-bold mb-2">Shark <span class="gradient-text">Pitch</span></h1>
     <p class="text-slate-500 dark:text-slate-400 mb-2 text-sm">AI gives everyone a business challenge. You write your pitch. AI judges all answers!</p>
-    <p class="text-xs text-amber-600 font-semibold mb-6">Up to 4 players • AI Judged</p>
+    <p class="text-xs text-amber-600 font-semibold mb-6">Up to 4 players � AI Judged</p>
     <div class="flex items-center justify-center gap-3 mb-8 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
         <div class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-lg" id="welcome-avatar">?</div>
         <div class="text-left">
@@ -226,14 +226,14 @@
         <div class="countdown-ring" id="pitch-timer">90</div>
     </div>
     <div class="challenge-box">
-        <p class="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">🦈 The Challenge</p>
+        <p class="text-xs text-amber-600 font-bold uppercase tracking-wider mb-1">?? The Challenge</p>
         <p id="pitch-challenge" class="font-bold text-slate-800 dark:text-slate-100 text-lg leading-relaxed">Loading challenge...</p>
     </div>
     <label class="block text-sm text-slate-500 dark:text-slate-400 mb-2 font-medium">Your Answer / Pitch</label>
     <textarea id="pitch-input" class="pitch-textarea" placeholder="Write your answer here... Be creative and specific!"></textarea>
     <button onclick="submitPitch()" class="w-full btn-primary p-4 font-semibold shadow-sm mt-4" id="btn-submit-pitch">Submit Answer</button>
     <div id="waiting-for-others" class="hidden mt-4 text-center text-slate-500 dark:text-slate-400 font-medium">
-        <p>✅ Answer submitted! Waiting for others...</p>
+        <p>? Answer submitted! Waiting for others...</p>
         <div id="submitted-count" class="text-sm mt-2">1 / 1 submitted</div>
     </div>
 </div>
@@ -256,7 +256,7 @@
     </div>
     <div id="results-list" class="flex flex-col gap-4 mb-6"></div>
     <div id="next-round-btn" class="hidden">
-        <button onclick="hostNextRound()" class="w-full btn-primary p-4 font-semibold shadow-sm">Next Round →</button>
+        <button onclick="hostNextRound()" class="w-full btn-primary p-4 font-semibold shadow-sm">Next Round ?</button>
     </div>
     <p id="waiting-next" class="hidden text-center text-slate-500 dark:text-slate-400 text-sm font-medium">Waiting for host to start next round...</p>
 </div>

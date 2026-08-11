@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -191,7 +191,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -349,7 +349,7 @@
             card.innerHTML = `
                 <img src="${page.thumbnail}" style="max-width: 90%; max-height: 70%; border: 1px solid var(--border-color); pointer-events: none;">
                 <div style="position: absolute; bottom: 35px; font-size: 10px; font-weight: 700;">Page ${page.originalIndex + 1}</div>
-                <button class="remove-btn" onclick="removePage(${currentIdx})" title="Remove Page">×</button>
+                <button class="remove-btn" onclick="removePage(${currentIdx})" title="Remove Page">�</button>
                 <div style="position: absolute; bottom: 0; left: 0; width: 100%; display: flex; gap: 1px; background: #eee; border-top: 1px solid var(--border); border-radius: 0 0 0.75rem 0.75rem; overflow: hidden;">
                     <button onclick="movePage(${currentIdx}, -1)" style="flex: 1; border: none; background: var(--bg-card); padding: 5px; cursor: pointer;" ${currentIdx === 0 ? 'disabled style="opacity:0.3"' : ''} title="Move Left">
                         <i data-lucide="chevron-left" style="width: 14px;"></i>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -269,7 +269,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -539,7 +539,7 @@
     const analyst = data.analyst || '';
     const date = data.date ? new Date(data.date).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) : '';
     document.getElementById('phBiz').textContent = biz;
-    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' · ');
+    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' � ');
     window.print();
   }
 

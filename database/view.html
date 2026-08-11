@@ -1,4 +1,4 @@
-﻿<html lang="en" translate="no">
+<html lang="en" translate="no">
 <head>
 
   <meta name="theme-color" content="#ffffff">
@@ -325,7 +325,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -492,7 +492,7 @@
           navStack = [{ name: `Semester ${semester}`, folderId: null }, { name: urlName || 'Folder', folderId: urlFolderId }];
         } else navStack = [{ name: `Semester ${semester}`, folderId: null }];
         window.history.replaceState({ stack: [...navStack], folderId, semester }, '', window.location.href);
-        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${semester}`;
+        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} � Semester ${semester}`;
         updateBreadcrumb();
         loadContent();
       } else {
@@ -507,7 +507,7 @@
       if (CATEGORY === 'youtube') { window.location.href = `/database/youtube-browse?semester=${s}`; return; }
       semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
       history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);
-      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${s}`;
+      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} � Semester ${s}`;
       updateBreadcrumb();
       if (window.solmatesAPI.isAdminLoggedIn()) document.getElementById('adminBar').style.display = 'flex';
       await loadContent();
@@ -729,7 +729,7 @@
     function deleteItem(id) { if (confirm('Delete?')) window.solmatesAPI.deleteSOLItem(CATEGORY, semester, id).then(() => window.location.reload()); }
     function editFolderName(id, old) { const n = prompt('New name:', old); if (n) window.solmatesAPI.updateSOLFolder(id, { name: n }).then(() => window.location.reload()); }
     
-    // ── Admin Move Logic ────────────────────────────────────────────────────────
+    // -- Admin Move Logic --------------------------------------------------------
     let movingType = null;
     let movingEntity = null;
 
@@ -754,7 +754,7 @@
           children.forEach(c => {
             if (movingType === 'folder' && c.id === movingEntity.id) return;
             const cleanName = c.name.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
-            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '├─ ' : '');
+            const prefix = '&nbsp;&nbsp;'.repeat(depth * 3) + (depth > 0 ? '+- ' : '');
             optionsHtml += `<option value="${c.id}">${prefix}${cleanName}</option>`;
             optionsHtml += buildFolderTree(list, c.id, depth + 1);
           });
@@ -806,7 +806,7 @@
       } catch (e) { alert('Error: ' + e.message); }
     }
     
-    // ── Long-Press Lock Logic ───────────────────────────────────────────────────
+    // -- Long-Press Lock Logic ---------------------------------------------------
     function setupLongPress(card, fId) {
       if (!window.solmatesAPI.isAdminLoggedIn()) return;
       
@@ -869,7 +869,7 @@
         if (!semester) {
           renderSemesters(true); // true = don't push state
         } else {
-          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} — Semester ${semester}`;
+          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} � Semester ${semester}`;
           updateBreadcrumb();
           loadContent();
         }

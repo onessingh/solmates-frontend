@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -365,7 +365,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -522,10 +522,10 @@
           });
       };
 
-      const hasInvalidChars = (text) => /[*#¥€¢%×@₹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
+      const hasInvalidChars = (text) => /[*#���%�@?&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
 
       if (hasInvalidChars(formData.get('userName')) || hasInvalidChars(formData.get('userRequirement'))) {
-          alert('Special characters like * # ¥ € ¢ % × @ ₹ & are not allowed in the form.');
+          alert('Special characters like * # � � � % � @ ? & are not allowed in the form.');
           return;
       }
 
@@ -539,11 +539,11 @@
 
       try {
         // 1. Prepare Message Text
-        const text = `🚀 *New Custom Service Request*\n\n` +
-                     `👤 *Name:* ${formData.get('userName')}\n` +
-                     `📞 *Contact:* ${formData.get('userContact')}\n` +
-                     `🛠 *Service:* ${formData.get('serviceType')}\n\n` +
-                     `📝 *Requirements:*\n${formData.get('userRequirement')}`;
+        const text = `?? *New Custom Service Request*\n\n` +
+                     `?? *Name:* ${formData.get('userName')}\n` +
+                     `?? *Contact:* ${formData.get('userContact')}\n` +
+                     `?? *Service:* ${formData.get('serviceType')}\n\n` +
+                     `?? *Requirements:*\n${formData.get('userRequirement')}`;
 
         // 2. Send Text Message
         const msgResponse = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
@@ -563,7 +563,7 @@
           const fileForm = new FormData();
           fileForm.append('chat_id', TG_CHAT_ID);
           fileForm.append('document', file);
-          fileForm.append('caption', `📁 Reference file from ${formData.get('userName')}`);
+          fileForm.append('caption', `?? Reference file from ${formData.get('userName')}`);
 
           await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument`, {
             method: 'POST',
@@ -571,13 +571,13 @@
           });
         }
 
-        alert('✅ Your request has been sent! We will get back to you soon on WhatsApp/Email.');
+        alert('? Your request has been sent! We will get back to you soon on WhatsApp/Email.');
         form.reset();
         updateFileInfo({files: []});
 
       } catch (error) {
         console.error(error);
-        alert('❌ Error sending request. Please try again or contact us via WhatsApp directly.');
+        alert('? Error sending request. Please try again or contact us via WhatsApp directly.');
       } finally {
         btn.classList.remove('loading');
         btn.disabled = false;

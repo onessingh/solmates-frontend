@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -220,7 +220,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -318,7 +318,7 @@
           </div>
           <div class="tr-row">
             <span class="tr-label">Revenue required for target:</span>
-            <span class="tr-val" id="trRev">₹0</span>
+            <span class="tr-val" id="trRev">?0</span>
           </div>
         </div>
       </div>
@@ -333,13 +333,13 @@
           <div class="stat-label">Break-even Units</div>
         </div>
         <div class="stat-box">
-          <div class="stat-val" id="resRev">₹0</div>
+          <div class="stat-val" id="resRev">?0</div>
           <div class="stat-label">Break-even Revenue</div>
         </div>
       </div>
       <div class="summary-grid">
          <div class="stat-box" style="padding: 12px;">
-          <div class="stat-val" id="resCM" style="font-size: 1.2rem;">₹0</div>
+          <div class="stat-val" id="resCM" style="font-size: 1.2rem;">?0</div>
           <div class="stat-label" style="font-size: 0.75rem;">Contribution Margin</div>
         </div>
         <div class="stat-box" style="padding: 12px;">
@@ -412,7 +412,7 @@
               let label = context.dataset.label || '';
               if (label) { label += ': '; }
               if (context.parsed.y !== null) {
-                label += '₹' + context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                label += '?' + context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
               }
               return label;
             }
@@ -425,9 +425,9 @@
           grid: { display: false }
         },
         y: {
-          title: { display: true, text: 'Amount (₹)', color: '#86868b', font: { size: 11 } },
+          title: { display: true, text: 'Amount (?)', color: '#86868b', font: { size: 11 } },
           grid: { color: '#f0f0f2' },
-          ticks: { callback: function(value) { return '₹' + value.toLocaleString(); } }
+          ticks: { callback: function(value) { return '?' + value.toLocaleString(); } }
         }
       }
     }
@@ -463,12 +463,12 @@
       document.getElementById('resRev').style.color = 'var(--danger)';
     } else {
       document.getElementById('resUnits').textContent = beUnits.toLocaleString();
-      document.getElementById('resRev').textContent = '₹' + beRev.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:2});
+      document.getElementById('resRev').textContent = '?' + beRev.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:2});
       document.getElementById('resUnits').style.color = '';
       document.getElementById('resRev').style.color = '';
     }
 
-    document.getElementById('resCM').textContent = '₹' + cm.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:2});
+    document.getElementById('resCM').textContent = '?' + cm.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:2});
     document.getElementById('resCMRatio').textContent = cmRatio.toFixed(1) + '%';
     
     // Target Profit
@@ -476,7 +476,7 @@
       const targetUnits = Math.ceil((fixed + target) / cm);
       const targetRev = targetUnits * price;
       document.getElementById('trUnits').textContent = targetUnits.toLocaleString();
-      document.getElementById('trRev').textContent = '₹' + targetRev.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:2});
+      document.getElementById('trRev').textContent = '?' + targetRev.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:2});
       document.getElementById('targetResults').style.display = 'block';
     } else {
       document.getElementById('targetResults').style.display = 'none';

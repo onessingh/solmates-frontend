@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -179,7 +179,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -239,14 +239,14 @@
           <div class="form-group">
             <label>Target Monthly Income</label>
             <div class="input-wrapper">
-              <span class="input-prefix">₹</span>
+              <span class="input-prefix">?</span>
               <input type="number" id="hr-income" class="form-control with-prefix" placeholder="e.g., 20000" value="20000">
             </div>
           </div>
           <div class="form-group">
             <label>Monthly Expenses (Software, WiFi, etc.)</label>
             <div class="input-wrapper">
-              <span class="input-prefix">₹</span>
+              <span class="input-prefix">?</span>
               <input type="number" id="hr-expenses" class="form-control with-prefix" placeholder="e.g., 2000" value="2000">
             </div>
           </div>
@@ -276,14 +276,14 @@
           
           <div class="result-panel" id="hr-result-panel">
             <span class="result-label">Your Minimum Hourly Rate</span>
-            <div class="result-value" id="hr-rate-out">₹0</div>
+            <div class="result-value" id="hr-rate-out">?0</div>
             <div class="result-subtext">Never charge below this amount!</div>
 
             <div class="breakdown-box">
               <h4 style="margin-bottom: 10px; color: #166534;">The Math:</h4>
               <div class="breakdown-item">
                 <span>Total Monthly Goal (Income + Exp):</span>
-                <strong id="hr-math-total">₹0</strong>
+                <strong id="hr-math-total">?0</strong>
               </div>
               <div class="breakdown-item">
                 <span>Total Work Hours per Month:</span>
@@ -344,7 +344,7 @@
           
           <div class="result-panel" id="me-result-panel" style="background: #f4f8fc; border-color: #d1e1f0;">
             <span class="result-label" style="color: #0071e3;">Recommended Project Price</span>
-            <div class="result-value" id="me-rate-out" style="color: var(--primary); font-size: 2rem;">₹0 - ₹0</div>
+            <div class="result-value" id="me-rate-out" style="color: var(--primary); font-size: 2rem;">?0 - ?0</div>
             
             <div class="breakdown-box" style="margin-top: 25px;">
               <h4 style="margin-bottom: 10px; color: #0071e3;">Pro Tip for this Service:</h4>
@@ -400,8 +400,8 @@
       document.getElementById('hr-empty').style.display = 'none';
       document.getElementById('hr-result-panel').style.display = 'block';
 
-      document.getElementById('hr-rate-out').innerText = `₹${Math.ceil(hourlyRate).toLocaleString('en-IN')}`;
-      document.getElementById('hr-math-total').innerText = `₹${Math.ceil(totalGoal).toLocaleString('en-IN')}`;
+      document.getElementById('hr-rate-out').innerText = `?${Math.ceil(hourlyRate).toLocaleString('en-IN')}`;
+      document.getElementById('hr-math-total').innerText = `?${Math.ceil(totalGoal).toLocaleString('en-IN')}`;
       document.getElementById('hr-math-hours').innerText = `${Math.round(hoursPerMonth)} hrs`;
       document.getElementById('hr-math-billable').innerText = `${Math.round(billableHours)} hrs`;
     }
@@ -471,7 +471,7 @@
           html += `
             <label style="font-weight: normal; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
               <input type="checkbox" class="me-addon-checkbox" data-price="${addon.price}">
-              <span>${addon.label} <strong style="color:var(--accent);">+₹${addon.price.toLocaleString('en-IN')}</strong></span>
+              <span>${addon.label} <strong style="color:var(--accent);">+?${addon.price.toLocaleString('en-IN')}</strong></span>
             </label>
           `;
         });
@@ -499,7 +499,7 @@
 
       const finalMin = result.min + addonTotal;
       const finalMax = result.max + addonTotal;
-      const rangeText = `₹${finalMin.toLocaleString('en-IN')} - ₹${finalMax.toLocaleString('en-IN')}`;
+      const rangeText = `?${finalMin.toLocaleString('en-IN')} - ?${finalMax.toLocaleString('en-IN')}`;
 
       document.getElementById('me-empty').style.display = 'none';
       document.getElementById('me-result-panel').style.display = 'block';

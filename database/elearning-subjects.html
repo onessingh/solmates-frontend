@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -792,7 +792,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -916,7 +916,7 @@
 
         const ordinals = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
         document.getElementById('semBreadcrumb').innerText = `Semester ${SEMESTER}`;
-        document.getElementById('pageDesc').innerText = `${ordinals[SEMESTER] || SEMESTER} Semester — Select a subject to access its E-Book`;
+        document.getElementById('pageDesc').innerText = `${ordinals[SEMESTER] || SEMESTER} Semester � Select a subject to access its E-Book`;
 
         function switchTab(tab) {
             if (isNavigating) return;
@@ -975,7 +975,7 @@
                 }
                 if (!window.solmatesAPI) {
                     document.getElementById('grid').innerHTML =
-                        '<div class="loading" style="color:#ef4444">⚠️ API failed to load. Check your connection.</div>';
+                        '<div class="loading" style="color:#ef4444">?? API failed to load. Check your connection.</div>';
                     return;
                 }
             }
@@ -1066,7 +1066,7 @@
                     card.setAttribute('data-id', subject.id);
                     card.innerHTML = `
           <div style="display:flex; align-items:center; width:100%; margin-bottom:12px; gap:8px">
-              ${isAdmin ? '<div class="drag-handle">⋮⋮</div>' : ''}
+              ${isAdmin ? '<div class="drag-handle">??</div>' : ''}
               <div class="subject-name" style="flex:1">
                   <i class="fas ${isGeneric ? 'fa-folder' : 'fa-book'}"></i>
                   <h3 style="margin:0">${cleanName}</h3>

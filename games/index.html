@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -623,7 +623,7 @@
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'all');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
@@ -715,7 +715,7 @@
                 <div class="icon-box bg-red"><i data-lucide="zap"></i></div>
                 <div class="game-info">
                     <h3>Rapid Fire</h3>
-                    <p>Speed quiz â€” fastest correct answer wins the round.</p>
+                    <p>Speed quiz — fastest correct answer wins the round.</p>
                 </div>
                 <span class="status-badge status-live">Play</span>
             </a>
@@ -799,7 +799,7 @@
 
         function hasInvalidChars(text) {
             // Block specific special chars or if there are 2 or more 'x's (case-insensitive)
-            return /[*#Â¥â‚¬Â¢%Ã—@â‚¹&]/.test(text) || (text.match(/x/gi) || []).length >= 2;
+            return /[*#¥€¢%×@?&]/.test(text) || (text.match(/x/gi) || []).length >= 2;
         }
 
         function openProfileModal() {
@@ -814,7 +814,7 @@
             
             if (hasInvalidChars(name)) {
                 const err = document.getElementById('profanity-error');
-                err.textContent = "Characters like * # Â¥ â‚¬ Â¢ % Ã— @ â‚¹ & are not allowed.";
+                err.textContent = "Characters like * # ¥ € ¢ % × @ ? & are not allowed.";
                 err.style.display = 'block';
                 return;
             }
