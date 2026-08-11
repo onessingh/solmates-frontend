@@ -440,16 +440,32 @@
         const startObj = attempt.indexOf('{');
         const endObj = attempt.lastIndexOf('}');
         
-        let firstArr = (start !== -1 && end !== -1 && start < end) ? start : Infinity;
-        let firstObj = (startObj !== -1 && endObj !== -1 && startObj < endObj) ? startObj : Infinity;
+        let firstArr = (start !== -1) ? start : Infinity;
+        let firstObj = (startObj !== -1) ? startObj : Infinity;
         
         if (firstArr < firstObj && firstArr !== Infinity) {
-            attempt = attempt.substring(start, end + 1);
+            // It's likely an array. 
+            // If we don't have a matching end, just slice from start
+            attempt = attempt.substring(start, end !== -1 ? end + 1 : attempt.length);
         } else if (firstObj !== Infinity) {
-            attempt = attempt.substring(startObj, endObj + 1);
+            // It's likely an object.
+            attempt = attempt.substring(startObj, endObj !== -1 ? endObj + 1 : attempt.length);
         }
         
-        attempt = attempt.replace(/,\s*([\}\]])/g, '$1');
+        attempt = attempt.replace(/,\s*([\}\]])/g, '$1'); // clean trailing commas
+        
+        // Very aggressive bracket repair for truncated JSON
+        try { return JSON.parse(attempt); } catch(e1) {}
+        try { return JSON.parse(attempt + ']'); } catch(e2) {}
+        try { return JSON.parse(attempt + ']}'); } catch(e3) {}
+        try { return JSON.parse(attempt + ']}'); } catch(e4) {}
+        try { return JSON.parse(attempt + '}]'); } catch(e5) {}
+        try { return JSON.parse(attempt + '}}]'); } catch(e6) {}
+        try { return JSON.parse(attempt + '"}'); } catch(e7) {}
+        try { return JSON.parse(attempt + '"]'); } catch(e8) {}
+        try { return JSON.parse(attempt + '"}]'); } catch(e9) {}
+        
+        // If all fail, throw the original error
         return JSON.parse(attempt);
     }
     
@@ -486,7 +502,13 @@
       document.getElementById('p-time').innerText = duration >= 60 ? `${duration/60} hours` : `${duration} mins`;
 
       try {
-        const prompt = `Generate a question paper for ${exam}, Subject: ${subject}, Topic: ${topic}.
+        let retries = 2;
+      let success = false;
+      let sections = null;
+      
+      while (retries >= 0 && !success) {
+        try {
+            const prompt = `Generate a question paper for ${exam}, Subject: ${subject}, Topic: ${topic}.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
 Output strictly in JSON format as an array of sections:
 [
@@ -505,20 +527,23 @@ Output strictly in JSON format as an array of sections:
 ]
 Note: Set "options" to null or an empty array if the question is subjective. For subjective questions, you MUST provide a brief point-wise hint or marking scheme in the "answer" field. Make the questions realistic for the exam type.`;
 
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
-        const resText = res.message || res.reply;
-        if (res.success && resText) {
-            try {
-                let sections = safeParseJSON(resText);
-                if (sections.sections) sections = sections.sections; // Handle if AI wrapped it in an object
-                renderPaper(sections);
-            } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr, resText.substring(0, 200));
-                throw new Error("Invalid response format from AI");
+            const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
+            const resText = res.message || res.reply;
+            if (res.success && resText) {
+                sections = safeParseJSON(resText);
+                if (sections.sections) sections = sections.sections;
+                success = true;
+            } else {
+                throw new Error("Failed response");
             }
-        } else {
-            throw new Error("Failed to generate paper");
+        } catch (e) {
+            retries--;
+            console.error("Retry attempt failed:", e);
+            if (retries < 0) throw e;
         }
+      }
+      
+      renderPaper(sections);
 
         document.getElementById('loader').style.display = 'none';
         document.getElementById('setup-mode').style.display = 'none';

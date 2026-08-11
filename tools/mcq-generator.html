@@ -413,16 +413,32 @@
         const startObj = attempt.indexOf('{');
         const endObj = attempt.lastIndexOf('}');
         
-        let firstArr = (start !== -1 && end !== -1 && start < end) ? start : Infinity;
-        let firstObj = (startObj !== -1 && endObj !== -1 && startObj < endObj) ? startObj : Infinity;
+        let firstArr = (start !== -1) ? start : Infinity;
+        let firstObj = (startObj !== -1) ? startObj : Infinity;
         
         if (firstArr < firstObj && firstArr !== Infinity) {
-            attempt = attempt.substring(start, end + 1);
+            // It's likely an array. 
+            // If we don't have a matching end, just slice from start
+            attempt = attempt.substring(start, end !== -1 ? end + 1 : attempt.length);
         } else if (firstObj !== Infinity) {
-            attempt = attempt.substring(startObj, endObj + 1);
+            // It's likely an object.
+            attempt = attempt.substring(startObj, endObj !== -1 ? endObj + 1 : attempt.length);
         }
         
-        attempt = attempt.replace(/,\s*([\}\]])/g, '$1');
+        attempt = attempt.replace(/,\s*([\}\]])/g, '$1'); // clean trailing commas
+        
+        // Very aggressive bracket repair for truncated JSON
+        try { return JSON.parse(attempt); } catch(e1) {}
+        try { return JSON.parse(attempt + ']'); } catch(e2) {}
+        try { return JSON.parse(attempt + ']}'); } catch(e3) {}
+        try { return JSON.parse(attempt + ']}'); } catch(e4) {}
+        try { return JSON.parse(attempt + '}]'); } catch(e5) {}
+        try { return JSON.parse(attempt + '}}]'); } catch(e6) {}
+        try { return JSON.parse(attempt + '"}'); } catch(e7) {}
+        try { return JSON.parse(attempt + '"]'); } catch(e8) {}
+        try { return JSON.parse(attempt + '"}]'); } catch(e9) {}
+        
+        // If all fail, throw the original error
         return JSON.parse(attempt);
     }
     
