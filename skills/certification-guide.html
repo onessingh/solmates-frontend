@@ -221,22 +221,33 @@
   <script>
     function safeParseJSON(text) {
         let clean = text.replace(/\`\`\`json/gi, '').replace(/\`\`\`/g, '').trim();
-        clean = clean.replace(/[\x00-\x1F]+/g, " "); // Strip control chars including newlines
         
-        let match = clean.match(/\[\s*\{[\s\S]*\}\s*\]/) || clean.match(/\{\s*"[\s\S]*\}\s*/);
-        if (match) {
-            clean = match[0];
-        } else {
-            let s1 = clean.indexOf('['); let e1 = clean.lastIndexOf(']');
-            let s2 = clean.indexOf('{'); let e2 = clean.lastIndexOf('}');
-            if (s1 !== -1 && e1 !== -1 && s2 !== -1 && e2 !== -1) {
-                if (s1 < s2 && e1 > e2) clean = clean.substring(s1, e1 + 1);
-                else clean = clean.substring(s2, e2 + 1);
-            } else if (s1 !== -1 && e1 !== -1) clean = clean.substring(s1, e1 + 1);
-            else if (s2 !== -1 && e2 !== -1) clean = clean.substring(s2, e2 + 1);
+        let firstBracket = clean.search(/\[\s*\{/);
+        let firstBrace = clean.search(/\{\s*"/);
+        let isArray = firstBracket !== -1 && (firstBrace === -1 || firstBracket < firstBrace);
+        let startIdx = isArray ? firstBracket : firstBrace;
+        
+        if (startIdx === -1) {
+            startIdx = clean.indexOf(clean.indexOf('[') !== -1 ? '[' : '{');
         }
-        clean = clean.replace(/,\s*([\]}])/g, '$1');
-        return JSON.parse(clean);
+        
+        if (startIdx !== -1) {
+            clean = clean.substring(startIdx);
+        }
+        
+        for (let i = clean.length; i > 0; i--) {
+            let char = clean[i - 1];
+            if (char === ']' || char === '}') {
+                try {
+                    let attempt = clean.substring(0, i).replace(/,\s*([\]}])/g, '$1');
+                    attempt = attempt.replace(/[\x00-\x1F]+/g, " ");
+                    return JSON.parse(attempt);
+                } catch (e) {
+                    // Ignore and continue shrinking the string from the right
+                }
+            }
+        }
+        throw new Error("Could not extract valid JSON");
     }
 
     (function() {
