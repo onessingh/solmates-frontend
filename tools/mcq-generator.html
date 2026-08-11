@@ -456,8 +456,9 @@ Output strictly in the following JSON array format, and nothing else:
 Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
 
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
-        if (res.success && res.reply) {
-            const rawJson = res.reply.match(/\[[\s\S]*\]/);
+        const resText = res.message || res.reply;
+        if (res.success && resText) {
+            const rawJson = resText.match(/\[[\s\S]*\]/);
             if(rawJson) {
                 generatedQuestions = JSON.parse(rawJson[0]);
             } else {
