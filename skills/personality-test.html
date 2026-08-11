@@ -264,6 +264,31 @@
     
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .exp-toggle-btn {
+      margin-top: 15px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: rgba(0, 113, 227, 0.05);
+      color: var(--accent);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .exp-toggle-btn:hover { background: rgba(0, 113, 227, 0.12); }
+    .exp-english { line-height: 1.7; }
+    .exp-divider {
+      height: 2px;
+      background: linear-gradient(to right, var(--accent), transparent);
+      margin: 14px 0;
+      border-radius: 2px;
+    }
+    .exp-hinglish { line-height: 1.7; color: var(--text); }
+
 
   </style>
 
@@ -403,92 +428,117 @@
   </div>
 
   <script>
-    window.onload = () => {
-      window.solmatesAPI = new SolmatesAPI();
-    };
+    function safeParseJSON(text) {
+        let clean = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+        
+        let firstBracket = clean.search(/\[\s*\{/);
+        let firstBrace = clean.search(/\{\s*"/);
+        let isArray = firstBracket !== -1 && (firstBrace === -1 || firstBracket < firstBrace);
+        let startIdx = isArray ? firstBracket : firstBrace;
+        
+        if (startIdx === -1) {
+            startIdx = clean.indexOf(clean.indexOf('[') !== -1 ? '[' : '{');
+        }
+        
+        if (startIdx !== -1) {
+            clean = clean.substring(startIdx);
+        }
+        
+        for (let i = clean.length; i > 0; i--) {
+            let char = clean[i - 1];
+            if (char === ']' || char === '}') {
+                try {
+                    let attempt = clean.substring(0, i).replace(/,\s*([\]}])/g, '$1');
+                    if (clean[0] === '[' && char === '}') attempt += ']';
+                    attempt = attempt.replace(/[\x00-\x1F]+/g, " ");
+                    return JSON.parse(attempt);
+                } catch (e) {
+                    // continue shrinking
+                }
+            }
+        }
+        throw new Error("Invalid response format from AI");
+    }
 
     let generatedQuestions = [];
     let answeredCount = 0;
     let userAnswers = [];
+    
 
     async function generateTest() {
       const count = parseInt(document.getElementById('q-count').value);
-      const framework = document.getElementById('framework').value; const context = document.getElementById('context').value;
+      const framework = document.getElementById('framework').value;
+      const context = document.getElementById('context').value;
       
-      answeredCount = 0; userAnswers = []; score = 0;
+      answeredCount = 0; userAnswers = []; 
       document.getElementById('loader').style.display = 'flex';
-      
       generatedQuestions = [];
       let remaining = count;
-      let batchSize = 3; 
+      const batchSize = 3;
       
       try {
-          while (remaining > 0) {
-              let currentBatch = Math.min(remaining, batchSize);
-              document.getElementById('loader-msg').innerText = `Generating questions (${generatedQuestions.length} / ${count})...`;
-              
-              const prompt = `Generate exactly ${currentBatch} multiple-choice Situational Judgment Test (SJT) or Personality Assessment questions.
+        while (remaining > 0) {
+          const currentBatch = Math.min(remaining, batchSize);
+          document.getElementById('loader-msg').innerText = `Generating questions (${generatedQuestions.length} / ${count})...`;
+          
+          const prompt = `Generate exactly ${currentBatch} situational judgment / personality assessment questions.
 Framework: ${framework}. Context: ${context}.
-Since this requires a 'correct' answer, make the questions situational where one option is generally considered the most adaptive, healthy, or professional response according to psychology and management principles.
-Output strictly in the following JSON array format, and nothing else:
+Each question must have a clear most-adaptive answer according to psychology/management principles.
+Output ONLY a valid JSON array, nothing else:
 [
   {
     "id": 1,
     "q": "Scenario text...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correct": 1, 
-    "explanation": "Provide a detailed explanation. First write it in English. Then, add exactly TWO blank lines (\n\n\n). Then, write 'Hinglish: ' and provide the exact same explanation in Hinglish. Be descriptive and point-wise.",
+    "correct": 1,
+    "explanation": "Write explanation in English first. Then leave exactly two blank lines. Then write: Hinglish: <same explanation in Hinglish>.",
     "tag": "${framework}"
   }
 ]
-Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
-              
-              const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: DO NOT use ** asterisks. Always provide both English and Hinglish explanations.", []);
-              
-              if (res.success && (res.message || res.reply)) {
-                  try {
-                      let parsed = safeParseJSON(res.message || res.reply);
-                      if (parsed.questions) parsed = parsed.questions;
-                      if (Array.isArray(parsed)) {
-                          generatedQuestions = generatedQuestions.concat(parsed);
-                      }
-                  } catch(e) {
-                      console.error("Batch parsing failed, skipping batch", e);
-                  }
-              }
-              remaining -= currentBatch;
+"correct" must be an integer index (0-3).`;
+          
+          const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nIMPORTANT: Do NOT use ** asterisks anywhere. Provide English explanation first, then two blank lines, then Hinglish.", []);
+          
+          if (res.success && (res.message || res.reply)) {
+            try {
+              let parsed = safeParseJSON(res.message || res.reply);
+              if (parsed.questions) parsed = parsed.questions;
+              if (Array.isArray(parsed)) generatedQuestions = generatedQuestions.concat(parsed);
+            } catch(e) {
+              console.error("Batch parse error:", e);
+            }
           }
-          
-          if (generatedQuestions.length === 0) throw new Error("Failed to generate any valid questions.");
-          
-          renderQuestions();
-          
-          document.getElementById('loader').style.display = 'none';
-          
-          const progressEl = document.getElementById('progress-tracker');
-          if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
-          
-          document.getElementById('setup-mode').style.display = 'none';
-          document.getElementById('result-mode').style.display = 'block';
-          history.pushState({view: 'result'}, '', '');
-          window.scrollTo(0,0);
+          remaining -= currentBatch;
+        }
+        
+        if (generatedQuestions.length === 0) throw new Error("No questions generated.");
+        
+        renderQuestions();
+        document.getElementById('loader').style.display = 'none';
+        
+        const progressEl = document.getElementById('progress-tracker');
+        if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
+        
+        document.getElementById('setup-mode').style.display = 'none';
+        document.getElementById('result-mode').style.display = 'block';
+        history.pushState({view: 'result'}, '', '');
+        window.scrollTo(0, 0);
       } catch (err) {
-          console.error(err);
-          alert('Failed to generate test: ' + (err.message || 'Unknown error'));
-          document.getElementById('loader').style.display = 'none';
+        console.error(err);
+        document.getElementById('loader').style.display = 'none';
+        alert('Could not generate test. Please check your connection and try again.');
       }
     }
 
     function renderQuestions() {
       const container = document.getElementById('questions-container');
-      
       let html = '';
       generatedQuestions.forEach((q, index) => {
         let optionsHtml = '';
         q.options.forEach((opt, oIdx) => {
           optionsHtml += `
             <div class="mcq-option" onclick="selectOption(this, ${index}, ${oIdx})">
-              <span style="font-weight: 600; width: 25px;">${String.fromCharCode(65 + oIdx)}.</span> 
+              <span style="font-weight: 600; min-width: 25px;">${String.fromCharCode(65 + oIdx)}.</span> 
               <span>${opt}</span>
             </div>
           `;
@@ -501,64 +551,89 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
               <span class="mcq-tag"><i class="fas fa-tag"></i> ${q.tag}</span>
             </div>
             <div class="mcq-question">${q.q}</div>
-            <div class="mcq-options">
-              ${optionsHtml}
-            </div>
-            <button class="btn-secondary" id="exp-btn-${index}" onclick="document.getElementById('exp-${index}').classList.toggle('show'); this.querySelector('i').classList.toggle('fa-chevron-up'); this.querySelector('i').classList.toggle('fa-chevron-down');" style="margin-top: 15px; width: 100%; display: none; justify-content: space-between; align-items: center; border: 1px solid var(--accent); color: var(--accent); background: rgba(0,113,227,0.05);">
+            <div class="mcq-options">${optionsHtml}</div>
+            <button class="exp-toggle-btn" id="exp-btn-${index}" onclick="toggleExp(${index})" style="display:none;">
               <span>View Explanation</span> <i class="fas fa-chevron-down"></i>
             </button>
-            <div class="mcq-explanation" id="exp-${index}">
-              <strong>Explanation:</strong><br>
-              ${q.explanation}
-            </div>
+            <div class="mcq-explanation" id="exp-${index}"></div>
           </div>
         `;
       });
       container.innerHTML = html;
     }
 
+    function toggleExp(idx) {
+      const expDiv = document.getElementById('exp-' + idx);
+      const btn = document.getElementById('exp-btn-' + idx);
+      const icon = btn.querySelector('i');
+      expDiv.classList.toggle('show');
+      icon.classList.toggle('fa-chevron-down');
+      icon.classList.toggle('fa-chevron-up');
+    }
+
     function selectOption(element, qIndex, oIdx) {
       const card = document.getElementById(`qcard-${qIndex}`);
       const options = card.querySelectorAll('.mcq-option');
       
-      if(card.classList.contains('answered')) return;
+      if (card.classList.contains('answered')) return;
       card.classList.add('answered');
       
       const q = generatedQuestions[qIndex];
       const isCorrect = (oIdx === q.correct);
       
       answeredCount++;
-      const progressEl = document.getElementById('progress-tracker'); if (progressEl) progressEl.innerText = `${answeredCount} out of ${generatedQuestions.length} completed`;
       
-      userAnswers.push({ q: q.q, selected: q.options[oIdx] });
+      
+      const progressEl = document.getElementById('progress-tracker');
+      if (progressEl) progressEl.innerText = `${answeredCount} out of ${generatedQuestions.length} completed`;
+      
       if(answeredCount === generatedQuestions.length) generateFinalAnalysis();
       
       options.forEach((opt, idx) => {
         opt.style.pointerEvents = 'none';
-        if(idx === q.correct) {
-            opt.classList.add("correct");
-            opt.style.backgroundColor = "rgba(52, 199, 89, 0.1)";
-            opt.style.borderColor = "var(--success)";
-            opt.innerHTML += ' <i class="fas fa-check-circle" style="color: var(--success); margin-left: auto;"></i>';
+        if (idx === q.correct) {
+          opt.classList.add('correct');
+          opt.style.backgroundColor = 'rgba(52, 199, 89, 0.1)';
+          opt.style.borderColor = 'var(--success)';
+          opt.innerHTML += ' <i class="fas fa-check-circle" style="color: var(--success); margin-left: auto;"></i>';
         }
       });
 
       if (!isCorrect) {
-          element.classList.add("incorrect");
-          element.style.backgroundColor = "rgba(255, 59, 48, 0.1)";
-          element.style.borderColor = "var(--danger)";
-          element.innerHTML += ' <i class="fas fa-times-circle" style="color: var(--danger); margin-left: auto;"></i>';
+        element.classList.add('incorrect');
+        element.style.backgroundColor = 'rgba(255, 59, 48, 0.1)';
+        element.style.borderColor = 'var(--danger)';
+        element.innerHTML += ' <i class="fas fa-times-circle" style="color: var(--danger); margin-left: auto;"></i>';
       }
 
+      // Build explanation with proper English / Hinglish spacing
+      let rawExp = q.explanation ? q.explanation.replace(/\*\*/g, '').trim() : 'No explanation available.';
+      // Split on "Hinglish:" to add visual gap
+      let expHtml;
+      if (rawExp.includes('Hinglish:')) {
+        const [eng, hin] = rawExp.split('Hinglish:');
+        expHtml = `<div class="exp-english">${eng.trim().replace(/\n/g, '<br>')}</div>
+                   <div class="exp-divider"></div>
+                   <div class="exp-hinglish"><strong>Hinglish:</strong> ${hin.trim().replace(/\n/g, '<br>')}</div>`;
+      } else {
+        expHtml = rawExp.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+      }
+      
       const expDiv = document.getElementById(`exp-${qIndex}`);
-      let cleanExp = q.explanation ? q.explanation.replace(/\*\*/g, '') : '';
-      cleanExp = cleanExp.replace(/\n/g, '<br>');
-      expDiv.innerHTML = '<strong>Explanation:</strong><br><br>' + cleanExp;
-      document.getElementById(`exp-btn-${qIndex}`).style.display = 'flex';
+      expDiv.innerHTML = expHtml;
+      
+      const btn = document.getElementById(`exp-btn-${qIndex}`);
+      if (btn) btn.style.display = 'flex';
     }
 
+    
     async function generateFinalAnalysis() {
       const container = document.getElementById('questions-container');
+      
+      // Remove any existing final-loader first to avoid duplicates
+      const existing = document.getElementById('final-loader');
+      if (existing) existing.remove();
+      
       const loaderHtml = `
         <div id="final-loader" class="mcq-card" style="text-align: center; margin-top: 30px;">
           <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;"></i>
@@ -567,22 +642,39 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       `;
       container.insertAdjacentHTML('beforeend', loaderHtml);
       
-      try {
-        const answersText = JSON.stringify(userAnswers);
-        const prompt = `Analyze the following test responses and provide a final evaluation for the user in a short, inspiring paragraph. Write it in English first, then write it in Hinglish. Responses: ${answersText}`;
-        
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
-        document.getElementById('final-loader').remove();
-        
-        const resHtml = `
-          <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
-            <h2 style="color: var(--primary); margin-bottom: 15px; text-align: center;"><i class="fas fa-star" style="color: #c0962d;"></i> Final Analysis</h2>
-            <div style="font-size: 1.05rem; color: var(--text); line-height: 1.6; white-space: pre-wrap;">${res.message || res.reply}</div>
-          </div>
-        `;
-        container.insertAdjacentHTML('beforeend', resHtml);
-      } catch (err) {
-        console.error(err); document.getElementById('final-loader').innerHTML = '<p style="color: var(--danger);">Failed to load analysis. <button onclick="generateFinalAnalysis()" style="background:none;border:none;color:var(--accent);text-decoration:underline;cursor:pointer;">Retry</button></p>';
+      let retries = 2;
+      while (retries >= 0) {
+        try {
+          const answersText = JSON.stringify(userAnswers.map(a => ({q: a.q, ans: a.selected})));
+          const prompt = `Analyze these personality assessment responses and determine the user's personality traits.
+Responses: ${answersText}
+Provide a thoughtful analysis in English (2-3 sentences). Then leave two blank lines. Then write the same analysis in Hinglish.
+DO NOT use ** asterisks.`;
+          
+          const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+          const loaderEl = document.getElementById('final-loader');
+          if (loaderEl) loaderEl.remove();
+          
+          let analysis = (res.message || res.reply || '').replace(/\*\*/g, '');
+          
+          const resHtml = `
+            <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
+              <h2 style="color: var(--primary); margin-bottom: 15px; text-align: center;"><i class="fas fa-star" style="color: #c0962d;"></i> Final Analysis</h2>
+              <div style="font-size: 1.05rem; color: var(--text); line-height: 1.8; white-space: pre-wrap;">${analysis}</div>
+            </div>
+          `;
+          container.insertAdjacentHTML('beforeend', resHtml);
+          return; // success, exit loop
+        } catch (err) {
+          console.error('Final analysis attempt failed:', err);
+          retries--;
+          if (retries < 0) {
+            const loaderEl = document.getElementById('final-loader');
+            if (loaderEl) {
+              loaderEl.innerHTML = '<p style="color: var(--danger);">Could not load analysis. <button onclick="generateFinalAnalysis()" style="background:none;border:none;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:1rem;">Tap to Retry</button></p>';
+            }
+          }
+        }
       }
     }
 
