@@ -33,3 +33,9 @@ input, textarea, select {
   background-color: var(--bg-card-hover, var(--bg-card, var(--card, #ffffff)));
   color: var(--text-main, var(--text, #111111));
 }
+
+
+/* 6. Dark Mode Placeholder Visibility */
+html.dark ::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
+html.dark ::-webkit-input-placeholder { color: #94a3b8 !important; opacity: 1 !important; }
+html.dark ::-moz-placeholder { color: #94a3b8 !important; opacity: 1 !important; }
