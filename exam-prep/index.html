@@ -32,19 +32,23 @@
     .btn-back { background: var(--brand-primary); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
     
     /* Main Content */
-    .hero { text-align: center; padding: 60px 20px 40px; }
-    .hero h1 { font-size: 2.5rem; color: var(--brand-primary); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px; }
+    .hero { text-align: center; padding: 40px 20px 20px; }
+    .hero h1 { font-size: 2.2rem; color: var(--brand-primary); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .hero p { font-size: 1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 20px; }
     
-    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 60px; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 60px; display: flex; flex-direction: column; gap: 30px; }
     
-    .controls { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 30px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
-    
-    .search-box { flex: 1; min-width: 250px; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 1rem; outline: none; transition: border-color 0.2s; }
-    .search-box:focus { border-color: var(--brand-accent); }
-    
-    .category-select { padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 1rem; outline: none; background: white; cursor: pointer; min-width: 200px; }
-    
+    /* Categories Grid */
+    .categories-section h2 { font-size: 1.2rem; color: var(--brand-primary); margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    .category-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; color: var(--text-main); font-weight: 600; font-size: 0.95rem; }
+    .category-card:hover, .category-card.active { border-color: var(--brand-accent); background: #eef2ff; color: var(--brand-accent); }
+    .category-card i { display: block; font-size: 1.5rem; margin-bottom: 8px; color: var(--text-muted); }
+    .category-card:hover i, .category-card.active i { color: var(--brand-accent); }
+
+    /* Exams Grid */
+    .exams-section { display: none; }
+    .exams-section h2 { font-size: 1.5rem; color: var(--brand-primary); margin-bottom: 20px; }
     .exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     
     .exam-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 25px; border-radius: 16px; text-decoration: none; color: inherit; transition: all 0.3s ease; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
@@ -54,6 +58,15 @@
     .exam-card .cta { font-size: 0.85rem; font-weight: 600; color: var(--brand-accent); display: flex; align-items: center; gap: 5px; }
     
     .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 1.1rem; grid-column: 1 / -1; }
+    
+    @media (min-width: 768px) {
+      .container { flex-direction: row; align-items: flex-start; }
+      .categories-section { flex: 0 0 250px; position: sticky; top: 80px; }
+      .category-grid { grid-template-columns: 1fr; gap: 10px; }
+      .category-card { text-align: left; display: flex; align-items: center; gap: 15px; padding: 12px 15px; }
+      .category-card i { margin-bottom: 0; font-size: 1.2rem; }
+      .exams-section { flex: 1; }
+    }
   </style>
 </head>
 <body>
@@ -67,38 +80,45 @@
 
   <div class="hero">
     <h1><i class="fas fa-graduation-cap"></i> Exam Prep AI</h1>
-    <p>Select your target examination to customize the AI tools, study materials, and mock generators for your specific syllabus.</p>
+    <p>Select your target category to explore tailored AI tools, study materials, and mock generators.</p>
   </div>
   
   <div class="container">
-    <div class="controls">
-      <input type="text" id="search" class="search-box" placeholder="Search exams (e.g. UGC NET, UPSC...)" oninput="filterExams()">
-      <select id="category" class="category-select" onchange="filterExams()">
-        <option value="all">All Categories</option>
-        <option value="government">Government / Civil Services</option>
-        <option value="ssc">SSC</option>
-        <option value="banking">Banking</option>
-        <option value="railways">Railways</option>
-        <option value="defence">Defence</option>
-        <option value="medical">Medical</option>
-        <option value="engineering">Engineering</option>
-        <option value="teaching">Teaching / Research</option>
-        <option value="management">Management</option>
-        <option value="law">Law</option>
-        <option value="university">University Entrance</option>
-      </select>
+    <div class="categories-section">
+      <h2>Categories</h2>
+      <div class="category-grid" id="category-grid">
+        <!-- Categories will be rendered here -->
+      </div>
     </div>
     
-    <div id="exams-container" class="exam-grid">
-      <!-- Loading state -->
-      <div class="empty-state"><i class="fas fa-spinner fa-spin"></i> Loading exams...</div>
+    <div class="exams-section" id="exams-section">
+      <h2 id="selected-category-title">Select a Category</h2>
+      <div id="exams-container" class="exam-grid">
+        <!-- Exams will be rendered here -->
+      </div>
     </div>
   </div>
 
   <script>
     let allExams = [];
+    
+    const categories = [
+        { id: 'government', name: 'Government / Civil Services', icon: 'fa-landmark' },
+        { id: 'ssc', name: 'SSC', icon: 'fa-users-cog' },
+        { id: 'banking', name: 'Banking', icon: 'fa-piggy-bank' },
+        { id: 'railways', name: 'Railways', icon: 'fa-train' },
+        { id: 'defence', name: 'Defence', icon: 'fa-shield-alt' },
+        { id: 'medical', name: 'Medical', icon: 'fa-stethoscope' },
+        { id: 'engineering', name: 'Engineering', icon: 'fa-cogs' },
+        { id: 'teaching', name: 'Teaching / Research', icon: 'fa-chalkboard-teacher' },
+        { id: 'management', name: 'Management', icon: 'fa-briefcase' },
+        { id: 'law', name: 'Law', icon: 'fa-balance-scale' },
+        { id: 'university', name: 'University Entrance', icon: 'fa-university' }
+    ];
 
     async function loadExams() {
+      renderCategories();
+      
       try {
         const res = await fetch('/api/exams');
         if (res.ok) {
@@ -114,26 +134,40 @@
                 { name: 'IBPS PO', slug: 'ibps-po', category_id: 'banking', short_description: 'Institute of Banking Personnel Selection Probationary Officer exam.' }
             ];
         }
-        filterExams();
+        
+        // Auto-select first category that has exams, or just default to teaching
+        selectCategory('teaching', 'Teaching / Research');
       } catch (err) {
         console.error(err);
-        document.getElementById('exams-container').innerHTML = '<div class="empty-state">Unable to load exams right now.</div>';
       }
     }
 
-    function filterExams() {
-        const query = document.getElementById('search').value.toLowerCase();
-        const cat = document.getElementById('category').value;
+    function renderCategories() {
+        const container = document.getElementById('category-grid');
+        container.innerHTML = categories.map(cat => `
+            <div class="category-card" id="cat-btn-${cat.id}" onclick="selectCategory('${cat.id}', '${cat.name}')">
+                <i class="fas ${cat.icon}"></i>
+                <span>${cat.name}</span>
+            </div>
+        `).join('');
+    }
+
+    function selectCategory(catId, catName) {
+        // Update active styling
+        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+        const activeBtn = document.getElementById('cat-btn-' + catId);
+        if(activeBtn) activeBtn.classList.add('active');
         
-        const filtered = allExams.filter(e => {
-            const matchSearch = e.name.toLowerCase().includes(query) || (e.short_description && e.short_description.toLowerCase().includes(query));
-            const matchCat = cat === 'all' || e.category_id === cat;
-            return matchSearch && matchCat;
-        });
+        // Show exams section
+        document.getElementById('exams-section').style.display = 'block';
+        document.getElementById('selected-category-title').innerText = catName + ' Exams';
+        
+        // Filter exams
+        const filtered = allExams.filter(e => e.category_id === catId);
         
         const container = document.getElementById('exams-container');
         if (filtered.length === 0) {
-            container.innerHTML = '<div class="empty-state">No exams found matching your search.</div>';
+            container.innerHTML = '<div class="empty-state">No exams found in this category yet.</div>';
             return;
         }
         
