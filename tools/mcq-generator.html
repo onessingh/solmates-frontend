@@ -265,6 +265,29 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+  
+    .exp-toggle-btn {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 15px;
+      color: var(--primary);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .exp-toggle-btn:hover {
+      background: var(--card);
+      border-color: var(--primary);
+    }
+    .exp-toggle-btn.open .fa-chevron-down {
+      transform: rotate(180deg);
+    }
   </style>
 
   <!-- Dark Mode Native OS Integration -->
@@ -389,11 +412,7 @@
 
     <!-- Result Mode -->
     <div id="result-mode">
-      <div class="controls-bar">
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-secondary" onclick="generateMCQs()"><i class="fas fa-redo"></i> Regenerate</button>
-        </div>
-      </div>
+      
 
       <div id="questions-container">
         <!-- MCQs injected here -->
@@ -482,6 +501,7 @@ Output strictly in the following JSON array format, and nothing else:
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correct": 1, 
     "explanation": "Explanation for why option index 1 is correct.",
+    "hinglish_explanation": "Wahi same explanation asan Hinglish me."
     "tag": "${difficulty}"
   }
 ]
@@ -543,10 +563,10 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
             <div class="mcq-options">
               ${optionsHtml}
             </div>
-            <div class="mcq-explanation" id="exp-${index}">
-              <strong>Explanation:</strong><br>
-              ${q.explanation}
-            </div>
+            <button class="exp-toggle-btn" id="exp-btn-${index}" onclick="toggleExp(${index})" style="display:none;">
+              <span>View Explanation</span> <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="mcq-explanation" id="exp-${index}"></div>
           </div>
         `;
       });
@@ -577,7 +597,32 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       });
 
       if(document.getElementById('include-exp').checked) {
-        document.getElementById(`exp-${qIndex}`).classList.add('show');
+        const btn = document.getElementById(`exp-btn-${qIndex}`);
+        if (btn) btn.style.display = 'flex';
+        
+        const expDiv = document.getElementById(`exp-${qIndex}`);
+        let eng = q.explanation || "";
+        let hin = q.hinglish_explanation || "";
+        
+        let expHtml = "<strong>Explanation:</strong><br><br>";
+        if (eng) expHtml += `${eng}<br><br>`;
+        if (hin) expHtml += `<div style="color:var(--primary); font-size:0.95rem;">${hin}</div>`;
+        
+        expDiv.innerHTML = expHtml;
+      }
+    }
+
+    function toggleExp(idx) {
+      const btn = document.getElementById(`exp-btn-${idx}`);
+      const exp = document.getElementById(`exp-${idx}`);
+      if(exp.classList.contains('show')) {
+        exp.classList.remove('show');
+        btn.classList.remove('open');
+        btn.querySelector('span').innerText = 'View Explanation';
+      } else {
+        exp.classList.add('show');
+        btn.classList.add('open');
+        btn.querySelector('span').innerText = 'Hide Explanation';
       }
     }
 
