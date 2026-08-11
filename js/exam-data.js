@@ -238,7 +238,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> General Studies I, General Studies II / CSAT</li><li><b>Mains:</b> General Hindi, Essay, GS I to VI</li><li><b>Interview</b></li></ul>',
         eligibility: '<p>Bachelor degree, with post-specific conditions where applicable.</p>',
         syllabus: '<p>History, Indian & UP Culture, Geography, Indian Polity, Governance, Economy, Science & Technology, Environment, Current Affairs, Uttar Pradesh Specific Knowledge.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: null - null',
         links: '<a href="https://uppsc.up.nic.in/" target="_blank">Official UPPSC Website</a>',
         subjects: [
           {
@@ -412,7 +412,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Tier I:</b> GI & Reasoning, GA, Quant, English</li><li><b>Tier II:</b> Paper I (Compulsory), Paper II (Statistics), Paper III (Finance)</li></ul>',
         eligibility: '<p>Graduation degree.</p>',
         syllabus: '<p>Mathematical Abilities, Reasoning, English, General Awareness, Computer Knowledge, Data Entry Speed Test.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Notification Release - 2026',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 't1-reasoning', name: 'Tier I: Reasoning'},
@@ -432,7 +432,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Tier I:</b> Objective (English, Reasoning, Quant, GA)</li><li><b>Tier II:</b> Objective + Skill/Typing Test</li></ul>',
         eligibility: '<p>10+2 / Higher Secondary.</p>',
         syllabus: '<p>English Language, General Intelligence, Quantitative Aptitude, General Awareness, Computer Knowledge.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Possible Delay - null',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
             {id: 't1', name: 'Tier I: All Subjects'},
@@ -533,7 +533,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Exam:</b> Physics, Chemistry, Biology (Botany & Zoology)</li></ul>',
         eligibility: '<p>10+2/equivalent with required subjects.</p>',
         syllabus: '<p>Physics, Chemistry, Botany, Zoology (Class 11 & 12 NCERT).</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Application - 2026',
         links: '<a href="https://neet.nta.nic.in/" target="_blank">Official NEET NTA Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -555,7 +555,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper 1:</b> Physics, Chemistry, Mathematics (B.E./B.Tech)</li><li><b>Paper 2A/2B:</b> Mathematics, Aptitude, Drawing/Planning</li></ul>',
         eligibility: '<p>10+2 with PCM.</p>',
         syllabus: '<p>Physics, Chemistry, Mathematics.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Session 2 - 2026',
         links: '<a href="https://jeemain.nta.nic.in/" target="_blank">Official JEE Main Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -1127,7 +1127,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> Paper I (GS), Paper II (CSAT)</li><li><b>Mains:</b> Marathi, English, Essay, GS I-IV, Optional</li></ul><p><i>Note: Subject to latest revised scheme.</i></p>',
         eligibility: '<p>Bachelor degree or equivalent.</p>',
         syllabus: '<p>History of Maharashtra, Geography of Maharashtra, Constitution, Economy, Agriculture, Science & Tech.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Prelims Result - 2026',
         links: '<a href="https://mpsc.gov.in/" target="_blank">Official MPSC Website</a>',
         subjects: [
           {
@@ -1268,7 +1268,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Prelims:</b> General Knowledge and General Science</li><li><b>Mains:</b> GS I, GS II, GS III, General Hindi & English</li></ul>',
         eligibility: '<p>Bachelor degree or equivalent.</p>',
         syllabus: '<p>History, Art & Culture of Rajasthan, Indian History, Economy, Polity, Public Administration, Ethics.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Group B Cut Off - 2026',
         links: '<a href="https://rpsc.rajasthan.gov.in/" target="_blank">Official RPSC Website</a>',
         subjects: [
           {
@@ -1838,7 +1838,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Components:</b> Language Tests, Domain-Specific Subjects, General Aptitude Test</li></ul>',
         eligibility: '<p>10+2 pass.</p>',
         syllabus: '<p>Syllabus mapped to Class 12 NCERT for domain subjects.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Centre Rule Change - 2026',
         links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
         subjects: [
             {id: 'lang', name: 'Section IA & IB: Languages'},
