@@ -331,11 +331,11 @@
       document.getElementById('loader').style.display = 'flex';
       
       try {
-        const prompt = \`Create a detailed learning path for the goal: "\${goal}".
-Current level: \${level}. Time commitment: \${time}.
+        const prompt = `Create a detailed learning path for the goal: "${goal}".
+Current level: ${level}. Time commitment: ${time}.
 Output strictly in the following JSON format and nothing else:
 {
-  "title": "Learning Path: \${goal}",
+  "title": "Learning Path: ${goal}",
   "duration": "Estimated total duration",
   "modules": [
     {
@@ -345,7 +345,7 @@ Output strictly in the following JSON format and nothing else:
       "milestone": "Key milestone/project to complete"
     }
   ]
-}\`;
+}`;
 
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
@@ -377,24 +377,24 @@ Output strictly in the following JSON format and nothing else:
     function renderResults(data) {
       const container = document.getElementById('result-container');
       
-      let html = \`<div class="dashboard-card">
-        <h3>\${data.title}</h3>
-        <p style="color: var(--light);"><i class="fas fa-clock"></i> Estimated Duration: \${data.duration}</p>
-      </div>\`;
+      let html = `<div class="dashboard-card">
+        <h3>${data.title}</h3>
+        <p style="color: var(--light);"><i class="fas fa-clock"></i> Estimated Duration: ${data.duration}</p>
+      </div>`;
       
       data.modules.forEach(m => {
         let resHtml = '<ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">';
-        m.resources.forEach(r => { resHtml += \`<li style="font-size:0.9rem;">\${r}</li>\`; });
+        m.resources.forEach(r => { resHtml += `<li style="font-size:0.9rem;">${r}</li>`; });
         resHtml += '</ul>';
 
-        html += \`
+        html += `
           <div class="module-card">
-            <div class="module-week">\${m.week}</div>
-            <div class="module-title">\${m.topic}</div>
-            \${resHtml}
-            <div class="module-milestone"><i class="fas fa-flag-checkered"></i> Milestone: \${m.milestone}</div>
+            <div class="module-week">${m.week}</div>
+            <div class="module-title">${m.topic}</div>
+            ${resHtml}
+            <div class="module-milestone"><i class="fas fa-flag-checkered"></i> Milestone: ${m.milestone}</div>
           </div>
-        \`;
+        `;
       });
 
       container.innerHTML = html;

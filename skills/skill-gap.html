@@ -327,11 +327,11 @@
       document.getElementById('loader').style.display = 'flex';
       
       try {
-        const prompt = \`Perform a skill gap analysis for a user aiming to become a "\${role}".
-Their current skills: \${skills}. Experience: \${exp}.
+        const prompt = `Perform a skill gap analysis for a user aiming to become a "${role}".
+Their current skills: ${skills}. Experience: ${exp}.
 Output strictly in the following JSON format and nothing else:
 {
-  "title": "Skill Gap Analysis for \${role}",
+  "title": "Skill Gap Analysis for ${role}",
   "missingSkills": [
     {
       "skill": "Skill Name",
@@ -343,7 +343,7 @@ Output strictly in the following JSON format and nothing else:
     "Step 1...",
     "Step 2..."
   ]
-}\`;
+}`;
 
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
@@ -377,34 +377,34 @@ Output strictly in the following JSON format and nothing else:
       
       let skillsHtml = '';
       data.missingSkills.forEach(s => {
-        skillsHtml += \`
+        skillsHtml += `
           <div class="skill-card">
             <div>
-              <span class="skill-title">\${s.skill}</span>
-              <span class="skill-importance">\${s.importance}</span>
+              <span class="skill-title">${s.skill}</span>
+              <span class="skill-importance">${s.importance}</span>
             </div>
-            <div class="skill-desc">\${s.howToAcquire}</div>
+            <div class="skill-desc">${s.howToAcquire}</div>
           </div>
-        \`;
+        `;
       });
 
       let planHtml = '<ul class="action-plan">';
       data.actionPlan.forEach(p => {
-        planHtml += \`<li>\${p}</li>\`;
+        planHtml += `<li>${p}</li>`;
       });
       planHtml += '</ul>';
 
-      container.innerHTML = \`
+      container.innerHTML = `
         <div class="dashboard-card">
-          <h3>\${data.title}</h3>
+          <h3>${data.title}</h3>
           <p style="margin-bottom: 20px; color: var(--light);">Here are the key skills you need to develop to reach your goal.</p>
-          \${skillsHtml}
+          ${skillsHtml}
         </div>
         <div class="dashboard-card">
           <h3>Action Plan</h3>
-          \${planHtml}
+          ${planHtml}
         </div>
-      \`;
+      `;
     }
 
     window.addEventListener('popstate', function(e) {

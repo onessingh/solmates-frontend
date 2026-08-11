@@ -315,11 +315,11 @@
       document.getElementById('loader').style.display = 'flex';
       
       try {
-        const prompt = \`Suggest top 3 certifications for the field: "\${domain}".
-Experience Level: \${experience}.
+        const prompt = `Suggest top 3 certifications for the field: "${domain}".
+Experience Level: ${experience}.
 Output strictly in the following JSON format and nothing else:
 {
-  "domain": "\${domain}",
+  "domain": "${domain}",
   "certifications": [
     {
       "name": "Certification Name",
@@ -330,7 +330,7 @@ Output strictly in the following JSON format and nothing else:
       "description": "Brief description of the certification and its value."
     }
   ]
-}\`;
+}`;
 
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
@@ -362,33 +362,33 @@ Output strictly in the following JSON format and nothing else:
     function renderResults(data) {
       const container = document.getElementById('result-container');
       
-      let html = \`<h3 style="margin-bottom: 15px; color: var(--primary);">Top Certifications for \${data.domain}</h3>\`;
+      let html = `<h3 style="margin-bottom: 15px; color: var(--primary);">Top Certifications for ${data.domain}</h3>`;
       
       data.certifications.forEach(cert => {
-        html += \`
+        html += `
           <div class="cert-card">
             <div class="cert-header">
-              <span class="cert-title">\${cert.name}</span>
-              <span class="cert-provider">\${cert.provider}</span>
+              <span class="cert-title">${cert.name}</span>
+              <span class="cert-provider">${cert.provider}</span>
             </div>
-            <div class="cert-desc">\${cert.description}</div>
+            <div class="cert-desc">${cert.description}</div>
             
             <div class="cert-meta">
               <div class="meta-item">
                 <i class="fas fa-signal"></i>
-                \${cert.difficulty}
+                ${cert.difficulty}
               </div>
               <div class="meta-item">
                 <i class="fas fa-clock"></i>
-                \${cert.prepTime}
+                ${cert.prepTime}
               </div>
               <div class="meta-item">
                 <i class="fas fa-tag"></i>
-                \${cert.costEst}
+                ${cert.costEst}
               </div>
             </div>
           </div>
-        \`;
+        `;
       });
 
       container.innerHTML = html;

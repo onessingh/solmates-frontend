@@ -327,8 +327,8 @@
       document.getElementById('loader').style.display = 'flex';
       
       try {
-        const prompt = \`Generate 3 unique project ideas using the following tech stack: \${stack}.
-Difficulty: \${difficulty}. Focus: \${focus}.
+        const prompt = `Generate 3 unique project ideas using the following tech stack: ${stack}.
+Difficulty: ${difficulty}. Focus: ${focus}.
 Output strictly in the following JSON format and nothing else:
 {
   "ideas": [
@@ -340,7 +340,7 @@ Output strictly in the following JSON format and nothing else:
       "techStack": ["Tech1", "Tech2"]
     }
   ]
-}\`;
+}`;
 
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
@@ -376,24 +376,24 @@ Output strictly in the following JSON format and nothing else:
       
       data.ideas.forEach(idea => {
         let featureHtml = '<ul class="feature-list">';
-        idea.features.forEach(f => { featureHtml += \`<li>\${f}</li>\`; });
+        idea.features.forEach(f => { featureHtml += `<li>${f}</li>`; });
         featureHtml += '</ul>';
 
         let tagsHtml = '<div class="tech-tags">';
-        idea.techStack.forEach(t => { tagsHtml += \`<span class="tech-tag">\${t}</span>\`; });
+        idea.techStack.forEach(t => { tagsHtml += `<span class="tech-tag">${t}</span>`; });
         tagsHtml += '</div>';
 
-        html += \`
+        html += `
           <div class="idea-card">
             <div class="idea-header">
-              <span class="idea-title">\${idea.name}</span>
-              <span class="idea-difficulty">\${idea.difficulty}</span>
+              <span class="idea-title">${idea.name}</span>
+              <span class="idea-difficulty">${idea.difficulty}</span>
             </div>
-            <div class="idea-desc">\${idea.description}</div>
-            \${featureHtml}
-            \${tagsHtml}
+            <div class="idea-desc">${idea.description}</div>
+            ${featureHtml}
+            ${tagsHtml}
           </div>
-        \`;
+        `;
       });
 
       container.innerHTML = html;
