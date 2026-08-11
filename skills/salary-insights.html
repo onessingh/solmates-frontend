@@ -184,7 +184,7 @@ Output strictly in the following JSON format and nothing else:
         window.scrollTo(0,0);
       } catch (err) {
           console.error(err);
-          alert('Failed to generate insights. Please try again.');
+          alert('Failed to generate insights: ' + (err.message || 'Unknown error'));
           document.getElementById('loader').style.display = 'none';
       }
     }

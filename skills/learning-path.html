@@ -355,7 +355,7 @@ Output strictly in the following JSON format and nothing else:
                 parsed = safeParseJSON(resText);
                 renderResults(parsed);
             } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr, "\\nRaw String:", jsonStr);
+                console.error("JSON Parse Error:", parseErr, "\\nRaw String:", resText);
                 throw new Error("Invalid response format from AI");
             }
         } else {
@@ -369,7 +369,7 @@ Output strictly in the following JSON format and nothing else:
         window.scrollTo(0,0);
       } catch (err) {
           console.error(err);
-          alert('Failed to generate path. Please try again.');
+          alert('Failed to generate path: ' + (err.message || 'Unknown error'));
           document.getElementById('loader').style.display = 'none';
       }
     }

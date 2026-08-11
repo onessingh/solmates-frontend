@@ -429,7 +429,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
                 if (parsed.questions) parsed = parsed.questions;
                 generatedQuestions = parsed;
             } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr, "\nRaw String:", jsonStr);
+                console.error("JSON Parse Error:", parseErr, "\nRaw String:", resText);
                 throw new Error("Invalid response format from AI");
             }
         } else {
@@ -445,7 +445,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         window.scrollTo(0,0);
       } catch (err) {
           console.error(err);
-          alert('Failed to generate inventory. Please try again.');
+          alert('Failed to generate inventory: ' + (err.message || 'Unknown error'));
           document.getElementById('loader').style.display = 'none';
       }
     }
