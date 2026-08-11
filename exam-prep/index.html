@@ -121,8 +121,13 @@
       
       try {
         const res = await fetch('/api/exams');
+        let fetchedExams = [];
         if (res.ok) {
-            allExams = await res.json();
+            fetchedExams = await res.json();
+        }
+        
+        if (fetchedExams && fetchedExams.length > 0) {
+            allExams = fetchedExams;
         } else {
             // Mock data fallback if backend is empty/down
             allExams = [
