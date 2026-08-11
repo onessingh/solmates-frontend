@@ -42,7 +42,7 @@
 
     /* ====== HEADER HERO ====== */
     .kit-hero {
-      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%); color: white;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: white;
       padding: 85px 20px 35px; text-align: center; position: relative; overflow: hidden;
     }
     .kit-hero::before {
@@ -276,7 +276,29 @@
     .prog-item.done i { color: var(--success); }
     .prog-item.loading i { color: var(--brand); animation: spin 1s linear infinite; }
     .prog-item.pending i { color: #cbd5e1; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* ====== INDIVIDUAL TOOLS SECTION ====== */
+    .tools-section {
+      background: var(--card); border-radius: 20px; border: 1px solid var(--border);
+      padding: 28px 25px; margin-top: 30px;
+    }
+    .tools-section h3 { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700;
+      color: var(--text); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+    .tools-section h3 i { color: var(--brand); background: #eff6ff; padding: 8px; border-radius: 10px; }
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .tool-item {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding: 20px 12px; border-radius: 14px; border: 1.5px solid var(--border);
+      background: white; text-decoration: none; color: var(--text);
+      transition: all 0.25s; gap: 10px;
+    }
+    .tool-item:hover { border-color: var(--brand); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(37,99,235,0.12); }
+    .tool-item .ti-icon { width: 46px; height: 46px; border-radius: 12px; background: #eff6ff;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--brand);
+      transition: all 0.25s; }
+    .tool-item:hover .ti-icon { background: var(--brand); color: white; }
+    .tool-item span { font-family: var(--font-head); font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .tool-item small { font-size: 0.75rem; color: var(--muted); }
+    @media (max-width: 640px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } .tools-section { padding: 20px 15px; } }
 
     @media (max-width: 640px) {
       .action-bar { flex-direction: column; align-items: stretch; padding: 16px; }
@@ -465,6 +487,38 @@
     </div>
   </div>
 
+  <!-- INDIVIDUAL TOOLS SECTION -->
+  <div class="tools-section" id="indiv-tools" style="display:none;">
+    <h3><i class="fas fa-rocket"></i> Open Individual Tools</h3>
+    <div class="tools-grid">
+      <a href="/tools/ai-study-companion/index.html" class="tool-item">
+        <div class="ti-icon"><i class="fas fa-robot"></i></div>
+        <span>AI Study Guide</span>
+        <small>Ask doubts & notes</small>
+      </a>
+      <a href="/tools/question-paper-generator.html" class="tool-item">
+        <div class="ti-icon"><i class="fas fa-file-signature"></i></div>
+        <span>Mock Generator</span>
+        <small>Create custom tests</small>
+      </a>
+      <a href="/tools/flashcards.html" class="tool-item">
+        <div class="ti-icon"><i class="fas fa-layer-group"></i></div>
+        <span>Smart Flashcards</span>
+        <small>Active recall</small>
+      </a>
+      <a href="/tools/mcq-generator.html" class="tool-item">
+        <div class="ti-icon"><i class="fas fa-check-double"></i></div>
+        <span>MCQ Practice</span>
+        <small>Topic-wise quizzes</small>
+      </a>
+      <a href="/skills/aptitude-test.html" class="tool-item">
+        <div class="ti-icon"><i class="fas fa-bolt"></i></div>
+        <span>Aptitude & Speed</span>
+        <small>Solving speed</small>
+      </a>
+    </div>
+  </div>
+
 </div><!-- /container -->
 
 <script>
@@ -503,6 +557,15 @@ function setDifficulty(d, el) {
   difficulty = d;
   document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
+  // Auto regenerate if content already exists
+  const hasContent = genData.flash.length || genData.mcq.length || genData.mock.length;
+  if (hasContent) {
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:12px 24px;border-radius:30px;font-size:0.9rem;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3)';
+    toast.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>  Regenerating for ' + d + ' difficulty...';
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.remove(); generateAll(); }, 800);
+  }
 }
 
 function switchTab(id, btn) {
@@ -540,6 +603,8 @@ async function generateAll() {
   btn.disabled = false;
   btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
   document.getElementById('dl-all-btn').style.display = 'flex';
+  document.getElementById('indiv-tools').style.display = 'block';
+  document.getElementById('indiv-tools').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 async function callAI(prompt, retries = 2) {

@@ -347,8 +347,8 @@
       justify-content: center;
       gap: 12px;
       width: 100%;
-      padding: 18px 30px;
-      background: var(--brand-gradient);
+      padding: 20px 30px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
       color: white;
       border: none;
       border-radius: 14px;
@@ -357,12 +357,22 @@
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 6px 25px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(37,99,235,0.2);
       margin-bottom: 20px;
       text-decoration: none;
       letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
     }
-    .kit-cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(37,99,235,0.45); }
+    .kit-cta-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transition: left 0.5s;
+    }
+    .kit-cta-btn:hover::after { left: 150%; }
+    .kit-cta-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(15,23,42,0.5), 0 0 0 1px rgba(37,99,235,0.3); }
     .kit-cta-btn i { font-size: 1.3rem; }
     .kit-cta-subtext { text-align: center; font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: -14px; margin-bottom: 18px; color: var(--text-muted); }
 
