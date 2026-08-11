@@ -61,7 +61,24 @@
   window.safeStorage = window.localStorage;
   window.safeSessionStorage = window.sessionStorage;
 })();
-window.SOL_APP_VERSION = '118.0';
+window.SOL_APP_VERSION = '118.1';
+
+// Completely hide dark mode from printers
+window.addEventListener('beforeprint', function() {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
+    const darkStyle = document.getElementById('solmates-dark-style');
+    if (darkStyle) darkStyle.disabled = true;
+});
+window.addEventListener('afterprint', function() {
+    const savedTheme = localStorage.getItem('solmates_theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) darkStyle.disabled = false;
+    }
+});
 // Floating Mobile Debug Console (v113.2)
 (function() {
   const urlParams = new URLSearchParams(window.location.search);
