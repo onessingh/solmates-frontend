@@ -1434,7 +1434,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CBT 1:</b> Maths, Mental Ability, Science, GA</li><li><b>CBT 2:</b> Part A (Maths, Reasoning, Basic Science/Engg), Part B (Trade)</li><li><b>CBAT</b></li></ul>',
         eligibility: '<p>Matriculation / ITI / Diploma.</p>',
         syllabus: '<p>Basic Science & Engineering, Trade-specific subjects.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Date - 1 & 2 Aug 2026',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
             {id: 'cbt1', name: 'CBT 1: All Subjects'},
@@ -1454,7 +1454,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper I:</b> Mathematics</li><li><b>Paper II:</b> General Ability Test (English & GK)</li><li><b>SSB Interview</b></li></ul>',
         eligibility: '<p>10+2. Age limit as per current notification.</p>',
         syllabus: '<p>Mathematics (Algebra, Matrices, Calculus, Vectors), English, GK (Physics, Chemistry, History, Geography).</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Notification - 2026',
         links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
             {id: 'math', name: 'Paper I: Mathematics'},
@@ -1470,7 +1470,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>IMA/INA/AFA:</b> English, GK, Elementary Maths</li><li><b>OTA:</b> English, GK</li><li><b>SSB Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>English, GK, Elementary Mathematics.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Date - 2026',
         links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
             {id: 'eng', name: 'English'},
@@ -1486,7 +1486,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>AFCAT:</b> General Awareness, English, Numerical Ability, Reasoning, Military Aptitude</li><li><b>AFSB Interview</b></li></ul>',
         eligibility: '<p>Graduation.</p>',
         syllabus: '<p>General Awareness, English, Numerical Ability, Reasoning, Military Aptitude.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Notification - 2026',
         links: '<a href="https://careerairforce.gov.in/" target="_blank">Official AFCAT Website</a>',
         subjects: [
             {id: 'eng', name: 'English'},
@@ -1503,7 +1503,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>CEE:</b> Common Entrance Exam (Subjects vary by trade)</li><li><b>Physical & Medical</b></li></ul>',
         eligibility: '<p>10th/12th depending on the specific trade.</p>',
         syllabus: '<p>General Knowledge, General Science, Mathematics, Logical Reasoning (Varies by trade).</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Application Form - 3 Aug 2026',
         links: '<a href="https://joinindianarmy.nic.in/" target="_blank">Official Indian Army Website</a>',
         subjects: [
             {id: 'gd-gk', name: 'GD: General Knowledge'},
@@ -1635,7 +1635,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper 1 & Paper 2:</b> Both compulsory. Each covers Physics, Chemistry, and Mathematics.</li></ul>',
         eligibility: '<p>Must clear JEE Main cutoff.</p>',
         syllabus: '<p>Advanced level Physics, Chemistry, and Mathematics.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Notification - 2026',
         links: '<a href="https://jeeadv.ac.in/" target="_blank">Official JEE Advanced Website</a>',
         subjects: [
             {id: 'physics', name: 'Physics'},
@@ -1817,7 +1817,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>UG:</b> English, Current Affairs & GK, Logical Reasoning</li><li><b>PG:</b> Law subjects</li></ul>',
         eligibility: '<p>10+2 / LLB depending on program.</p>',
         syllabus: '<p>English Language, Current Affairs & General Knowledge, Logical Reasoning.</p>',
-        dates: '<p>Exact calendar dates are announced periodically by the conducting body. Please check the official links for the latest schedule.</p>',
+        dates: '<p>UPDATE: Exam Date - 13 Dec 2027',
         links: '<a href="https://nationallawuniversitydelhi.in/" target="_blank">Official AILET Website</a>',
         subjects: [
             {id: 'ug-eng', name: 'UG: English Language'},
