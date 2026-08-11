@@ -615,6 +615,7 @@
     }
 
     let lastClickTime = 0;
+    let lastTapTarget = null;
     const handleTap = (e) => {
       // Exclude notepad elements and form controls
       if (
@@ -631,20 +632,23 @@
       }
 
       const now = Date.now();
-      if (now - lastClickTime > 600) {
-        clickCount = 0; // Reset if too much wall-clock time has passed (fixes alert pause bug)
+      if (now - lastClickTime > 600 || e.target !== lastTapTarget) {
+        clickCount = 0; // Reset if too much time passed or clicked a different element
       }
       lastClickTime = now;
+      lastTapTarget = e.target;
       
       clickCount++;
       if (clickTimeout) clearTimeout(clickTimeout);
 
       clickTimeout = setTimeout(() => {
         clickCount = 0;
+        lastTapTarget = null;
       }, 600);
 
       if (clickCount >= 3) {
         clickCount = 0;
+        lastTapTarget = null;
         window.showSolmatesNotepad();
       }
     };

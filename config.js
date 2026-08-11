@@ -315,13 +315,13 @@ if (typeof document !== "undefined") {
           if (!document.querySelector('link[href*="floating-notepad.css"]')) {
               const link = document.createElement('link');
               link.rel = 'stylesheet';
-              link.href = '/css/floating-notepad.css?v=117.0';
+              link.href = '/css/floating-notepad.css?v=117.1';
               document.head.appendChild(link);
           }
           // D. Inject E-Notepad JS
           if (!document.querySelector('script[src*="floating-notepad.js"]')) {
               const script = document.createElement('script');
-              script.src = '/js/floating-notepad.js?v=117.0';
+              script.src = '/js/floating-notepad.js?v=117.1';
               script.defer = true;
               document.head.appendChild(script);
           }
