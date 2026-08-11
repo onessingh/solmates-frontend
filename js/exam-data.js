@@ -1,4 +1,4 @@
-
+const currentYear = new Date().getFullYear();
 window.MOCK_EXAM_DATA = {
     // ==========================================
     // GOVERNMENT EXAMS
@@ -11,7 +11,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Preliminary:</b> 2 Objective type papers (General Studies I and CSAT). 200 marks each.</li><li><b>Mains:</b> 9 Written papers (2 qualifying languages, 1 Essay, 4 General Studies, 2 Optional Subject papers). Total 1750 marks.</li><li><b>Interview:</b> Personality Test (275 marks).</li></ul>',
         eligibility: '<p>Candidates must hold a graduation degree from a recognized university. Age limit: 21 to 32 years for General category (relaxations apply for OBC/SC/ST). Maximum 6 attempts for General.</p>',
         syllabus: '<p><b>Prelims:</b> Current events, History, Geography, Polity, Economy, Environment, Science. CSAT: Comprehension, reasoning, basic numeracy.<br><b>Mains:</b> Indian Heritage and Culture, History and Geography of the World and Society, Governance, Constitution, Social Justice and International relations, Technology, Economic Development, Bio-diversity, Environment, Security and Disaster Management, Ethics, Integrity and Aptitude.</p>',
-        dates: '<p><b>Notification:</b> Feb 2024<br><b>Prelims Exam:</b> May 26, 2024<br><b>Mains Exam:</b> September 20, 2024 (5 days)</p>',
+        dates: '<p><b>Notification:</b> Feb ' + currentYear + '<br><b>Prelims Exam:</b> May 26, ' + currentYear + '<br><b>Mains Exam:</b> September 20, ' + currentYear + ' (5 days)</p>',
         links: '<a href="https://upsc.gov.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official UPSC Website</a>',
         subjects: [
             { id: 'pre-gs1', name: 'Prelims: General Studies Paper I' },
@@ -60,7 +60,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Preliminary:</b> 2 Objective type papers (General Studies I and II).</li><li><b>Mains:</b> 8 Written papers (General Hindi, Essay, GS I, II, III, IV, V, VI). (Optional subjects removed recently).</li><li><b>Interview:</b> Personality Test (100 marks).</li></ul>',
         eligibility: '<p>Graduation degree from a recognized university. Age limit: 21 to 40 years for General category.</p>',
         syllabus: '<p><b>Prelims:</b> History, Geography, Polity, Economy, Current Affairs, UP Specific GK. <b>Mains:</b> GS I to IV similar to UPSC, GS V & VI are exclusively UP Specific knowledge (History, Geography, Economy, Polity of UP).</p>',
-        dates: '<p><b>Notification:</b> Jan 2024<br><b>Prelims Exam:</b> July 2024 (Tentative)<br><b>Mains Exam:</b> October 2024</p>',
+        dates: '<p><b>Notification:</b> Jan ' + currentYear + '<br><b>Prelims Exam:</b> July ' + currentYear + ' (Tentative)<br><b>Mains Exam:</b> October ' + currentYear + '</p>',
         links: '<a href="https://uppsc.up.nic.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official UPPSC Website</a>',
         subjects: [
             { id: 'pre-gs1', name: 'Prelims: General Studies Paper I' },
@@ -87,7 +87,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Tier-I:</b> Computer Based Examination (Objective) - 100 questions, 200 marks, 60 minutes.</li><li><b>Tier-II:</b> Computer Based Examination. Paper I is compulsory for all. Paper II (Statistics) for JSO. Paper III (Finance/Economics) for AAO.</li></ul>',
         eligibility: '<p>Bachelor’s Degree from a recognized University. Age limit varies from 18 to 32 years depending on the specific post applied for.</p>',
         syllabus: '<p><b>Tier-I:</b> General Intelligence and Reasoning, General Awareness, Quantitative Aptitude, English Comprehension.<br><b>Tier-II:</b> Mathematical Abilities, Reasoning, English Language, General Awareness, Computer Knowledge.</p>',
-        dates: '<p><b>Notification:</b> June 2024<br><b>Tier I Exam:</b> Sept-Oct 2024<br><b>Tier II Exam:</b> December 2024</p>',
+        dates: '<p><b>Notification:</b> June ' + currentYear + '<br><b>Tier I Exam:</b> Sept-Oct ' + currentYear + '<br><b>Tier II Exam:</b> December ' + currentYear + '</p>',
         links: '<a href="https://ssc.nic.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official SSC Website</a>',
         subjects: [
             { id: 't1-reasoning', name: 'Tier I: General Intelligence & Reasoning' },
@@ -116,7 +116,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Preliminary:</b> 100 Objective questions, 100 marks, 60 minutes.</li><li><b>Main:</b> 155 Objective questions (200 marks) + Descriptive Paper (25 marks), total 3.5 hours.</li><li><b>Interview:</b> 100 marks.</li></ul>',
         eligibility: '<p>A Degree (Graduation) in any discipline from a University recognized by the Govt. of India. Age Limit: 20 to 30 years.</p>',
         syllabus: '<p><b>Prelims:</b> English Language, Quantitative Aptitude, Reasoning Ability.<br><b>Mains:</b> Reasoning & Computer Aptitude, General/Economy/Banking Awareness, English Language, Data Analysis & Interpretation. Descriptive: Letter Writing & Essay.</p>',
-        dates: '<p><b>Notification:</b> August 2024<br><b>Prelims Exam:</b> Oct 2024<br><b>Mains Exam:</b> Nov 2024</p>',
+        dates: '<p><b>Notification:</b> August ' + currentYear + '<br><b>Prelims Exam:</b> Oct ' + currentYear + '<br><b>Mains Exam:</b> Nov ' + currentYear + '</p>',
         links: '<a href="https://ibps.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official IBPS Website</a>',
         subjects: [
             { id: 'pre-english', name: 'Prelims: English Language' },
@@ -142,7 +142,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Mode:</b> Pen and Paper based (Offline)</li><li><b>Questions:</b> 200 MCQs (Attempt 180). Total 720 marks.</li><li><b>Marking Scheme:</b> +4 for correct, -1 for incorrect.</li><li><b>Duration:</b> 3 hours 20 minutes.</li></ul>',
         eligibility: '<p>Candidate must have passed 10+2 with Physics, Chemistry, Biology/Biotechnology, and English. Minimum age: 17 years.</p>',
         syllabus: '<p>Based on Class 11 and 12 NCERT curriculum for Physics, Chemistry, and Biology (Botany & Zoology).</p>',
-        dates: '<p><b>Exam Date:</b> May 5, 2024<br><b>Results:</b> June 2024</p>',
+        dates: '<p><b>Exam Date:</b> May 5, ' + currentYear + '<br><b>Results:</b> June ' + currentYear + '</p>',
         links: '<a href="https://neet.nta.nic.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official NEET Website</a>',
         subjects: [
             { id: 'physics-11', name: 'Physics (Class 11)' },
@@ -172,7 +172,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper 1 (B.E./B.Tech):</b> Physics, Chemistry, Maths. 90 Questions (Attempt 75). Total 300 marks.</li><li><b>Marking Scheme:</b> +4 for correct, -1 for incorrect.</li></ul>',
         eligibility: '<p>Passed 10+2 examination with Physics, Mathematics, and Chemistry/Biology/Biotech. No age limit.</p>',
         syllabus: '<p>Based on Class 11 and 12 CBSE curriculum for Physics, Chemistry, and Mathematics.</p>',
-        dates: '<p><b>Session 1:</b> January 2024<br><b>Session 2:</b> April 2024</p>',
+        dates: '<p><b>Session 1:</b> January ' + currentYear + '<br><b>Session 2:</b> April ' + currentYear + '</p>',
         links: '<a href="https://jeemain.nta.nic.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official JEE Main Website</a>',
         subjects: [
             { id: 'math-algebra', name: 'Mathematics: Algebra' },
@@ -202,7 +202,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Mode:</b> Computer Based Test (CBT)</li><li><b>Sections:</b> VARC, DILR, QA.</li><li><b>Duration:</b> 120 minutes (40 min per section).</li><li><b>Questions:</b> 66 questions. Total 198 marks (+3 correct, -1 incorrect).</li></ul>',
         eligibility: '<p>Bachelor’s degree with at least 50% marks (45% for SC/ST/PwD). No age limit.</p>',
         syllabus: '<p><b>VARC:</b> Reading Comprehension, Para Jumbles, Verbal Reasoning. <b>DILR:</b> Tables, Graphs, Puzzles, Arrangements. <b>QA:</b> Arithmetic, Algebra, Geometry, Number System, Modern Math.</p>',
-        dates: '<p><b>Notification:</b> July 2024<br><b>Exam Date:</b> November 24, 2024</p>',
+        dates: '<p><b>Notification:</b> July ' + currentYear + '<br><b>Exam Date:</b> November 24, ' + currentYear + '</p>',
         links: '<a href="https://iimcat.ac.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official CAT Website</a>',
         subjects: [
             { id: 'varc-rc', name: 'VARC: Reading Comprehension' },
@@ -229,7 +229,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Mode:</b> Offline (Pen and Paper)</li><li><b>Questions:</b> 120 Comprehension-based Multiple Choice Questions.</li><li><b>Duration:</b> 2 Hours (120 minutes).</li><li><b>Marking Scheme:</b> +1 for correct, -0.25 for incorrect.</li></ul>',
         eligibility: '<p>Passed 10+2 or equivalent examination with a minimum of 45% marks. No upper age limit.</p>',
         syllabus: '<p>English Language, Current Affairs including General Knowledge, Legal Reasoning, Logical Reasoning, and Quantitative Techniques (Basic Maths).</p>',
-        dates: '<p><b>Exam Date:</b> December 1, 2024</p>',
+        dates: '<p><b>Exam Date:</b> December 1, ' + currentYear + '</p>',
         links: '<a href="https://consortiumofnlus.ac.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official CLAT Website</a>',
         subjects: [
             { id: 'english', name: 'English Language' },
@@ -252,7 +252,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Mode:</b> CBT</li><li><b>Paper 1:</b> 50 questions (100 marks)</li><li><b>Paper 2:</b> 100 questions (200 marks)</li><li><b>Duration:</b> 3 hours total. No negative marking.</li></ul>',
         eligibility: '<p>Master’s Degree with at least 55% marks. Max age for JRF is 30. No age limit for Assistant Professor.</p>',
         syllabus: '<p>Paper 1: Teaching & Research Aptitude. Paper 2: Based on selected PG subject.</p>',
-        dates: '<p><b>Cycle 1:</b> June 2024<br><b>Cycle 2:</b> December 2024</p>',
+        dates: '<p><b>Cycle 1:</b> June ' + currentYear + '<br><b>Cycle 2:</b> December ' + currentYear + '</p>',
         links: '<a href="https://ugcnet.nta.nic.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official UGC NET Website</a>',
         subjects: [
             { id: '00', name: 'Paper 1 (General Paper on Teaching & Research Aptitude)' },
