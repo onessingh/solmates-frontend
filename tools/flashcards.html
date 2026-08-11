@@ -468,15 +468,24 @@ Output strictly in the following JSON array format, and nothing else:
 ]`;
         
         const responseText = await window.solmatesAPI.sendChatMessage(promptText, []);
-        let jsonStr = typeof responseText === 'object' ? (responseText.message || responseText.reply || "") : responseText;
-        let start = jsonStr.indexOf('[');
-        let end = jsonStr.lastIndexOf(']');
-        if(start !== -1 && end !== -1) {
-            jsonStr = jsonStr.substring(start, end + 1);
-            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
-        }
-        
-        const cards = JSON.parse(jsonStr);
+        let res = typeof responseText === 'object' ? responseText : { success: true, message: responseText };
+        let resText = res.message || res.reply || responseText;
+
+        if (res.success && resText) {
+            let jsonStr = resText;
+            const match = resText.match(/\[\s*\{[\s\S]*\}\s*\]/) || resText.match(/\{\s*"[\s\S]*\}\s*/);
+            if (match) {
+                jsonStr = match[0];
+            } else {
+                let start = resText.indexOf('[');
+                let end = resText.lastIndexOf(']');
+                if (start !== -1 && end !== -1) jsonStr = resText.substring(start, end + 1);
+            }
+            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1');
+            try {
+                let parsed = JSON.parse(jsonStr);
+                if (parsed.cards) parsed = parsed.cards;
+                const cards = parsed;
         
         cards.forEach(card => {
           deck.push({
@@ -485,6 +494,13 @@ Output strictly in the following JSON array format, and nothing else:
             back: card.back
           });
         });
+            } catch (err) {
+                console.error("Parse error:", err, jsonStr);
+                throw new Error("Invalid format from AI");
+            }
+        } else {
+            throw new Error("Failed to generate");
+        }
         
         saveDeck();
         alert(`${cards.length} flashcards generated and saved!`);

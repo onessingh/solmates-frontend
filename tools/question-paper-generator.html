@@ -487,15 +487,24 @@ Note: Set "options" to null or an empty array if the question is subjective. Mak
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            let start = resText.indexOf('[');
-            let end = resText.lastIndexOf(']');
-            if(start !== -1 && end !== -1) {
-                let jsonStr = resText.substring(start, end + 1);
-                jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
-                const sections = JSON.parse(jsonStr);
-                renderPaper(sections);
+            let jsonStr = resText;
+            // Attempt to extract JSON from markdown or raw text
+            const match = resText.match(/\[\s*\{[\s\S]*\}\s*\]/) || resText.match(/\{\s*"[\s\S]*\}\s*/);
+            if (match) {
+                jsonStr = match[0];
             } else {
-                throw new Error("Invalid response format");
+                let start = resText.indexOf('[');
+                let end = resText.lastIndexOf(']');
+                if (start !== -1 && end !== -1) jsonStr = resText.substring(start, end + 1);
+            }
+            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
+            try {
+                let sections = JSON.parse(jsonStr);
+                if (sections.sections) sections = sections.sections; // Handle if AI wrapped it in an object
+                renderPaper(sections);
+            } catch (parseErr) {
+                console.error("JSON Parse Error:", parseErr, "\nRaw String:", jsonStr);
+                throw new Error("Invalid response format from AI");
             }
         } else {
             throw new Error("Failed to generate paper");
