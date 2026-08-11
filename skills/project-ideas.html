@@ -360,7 +360,6 @@ Output strictly in the following JSON format and nothing else:
         const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            let parsed;
             try {
                 parsed = safeParseJSON(resText);
                 renderResults(parsed);

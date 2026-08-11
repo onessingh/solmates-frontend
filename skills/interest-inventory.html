@@ -502,9 +502,18 @@ Output ONLY a valid JSON array, nothing else:
             try {
               let parsed = safeParseJSON(res.message || res.reply);
               if (parsed.questions) parsed = parsed.questions;
-              if (Array.isArray(parsed)) generatedQuestions = generatedQuestions.concat(parsed);
+              if (Array.isArray(parsed)) {
+                generatedQuestions = generatedQuestions.concat(parsed);
+              }
             } catch(e) {
-              console.error("Batch parse error:", e);
+              console.error("Batch parse error, retrying:", e);
+              // Retry this batch once more silently
+              try {
+                const retryRes = await window.solmatesAPI.sendChatMessage(prompt + " Respond ONLY with a JSON array.", []);
+                let retryParsed = safeParseJSON(retryRes.message || retryRes.reply || '');
+                if (retryParsed.questions) retryParsed = retryParsed.questions;
+                if (Array.isArray(retryParsed)) generatedQuestions = generatedQuestions.concat(retryParsed);
+              } catch(e2) { console.warn("Retry batch also failed."); }
             }
           }
           remaining -= currentBatch;
@@ -644,11 +653,14 @@ Output ONLY a valid JSON array, nothing else:
       let retries = 2;
       while (retries >= 0) {
         try {
-          const answersText = JSON.stringify(userAnswers.map(a => ({q: a.q, ans: a.selected})));
-          const prompt = `Based on these interest inventory responses, determine the user's career interests and Holland Code type.
-Responses: ${answersText}
-Provide a helpful career-interest summary in English (2-3 sentences). Then leave two blank lines. Then write the same in Hinglish.
-DO NOT use ** asterisks.`;
+          const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} → Answer: ${a.selected}`).join('\n');
+          const prompt = `You are a career counselor. The user completed an interest inventory test. Here are their responses (question → answer selected):
+
+${answersText}
+
+Based on these ACTUAL responses above, determine the user's career interests, Holland Code type (RIASEC), and suggest 2-3 suitable career paths.
+Write a helpful summary in 3-4 sentences in English. Then after two blank lines, write "Hinglish:" and the same summary in Hinglish.
+Be specific about the career types that match their answers. DO NOT say "no responses provided". DO NOT use ** asterisks.`;
           
           const res = await window.solmatesAPI.sendChatMessage(prompt, []);
           const loaderEl = document.getElementById('final-loader');

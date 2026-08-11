@@ -170,9 +170,8 @@ Output strictly in the following JSON format and nothing else:
         const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            let parsed;
             try {
-                const data = JSON.parse(jsonStr);
+                const data = safeParseJSON(resText);
                 renderDashboard(data);
             } catch (parseErr) {
                 console.error("JSON Parse Error:", parseErr);
@@ -187,7 +186,9 @@ Output strictly in the following JSON format and nothing else:
         window.scrollTo(0,0);
       } catch (err) {
           console.error(err);
-          alert('Failed to generate insights: ' + (err.message || 'Unknown error'));
+          document.getElementById('loader').style.display = 'none';
+        document.getElementById('result-mode').style.display = 'block';
+        document.getElementById('result-mode').innerHTML = `<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;"></i><h3 style="color:var(--primary)">Could not load insights</h3><p style="color:var(--light);margin:10px 0;">The AI response was not in the expected format. Please try again.</p><button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin-top:10px;">Try Again</button></div>`;
           document.getElementById('loader').style.display = 'none';
       }
     }

@@ -511,9 +511,18 @@ Output ONLY a valid JSON array, nothing else:
             try {
               let parsed = safeParseJSON(res.message || res.reply);
               if (parsed.questions) parsed = parsed.questions;
-              if (Array.isArray(parsed)) generatedQuestions = generatedQuestions.concat(parsed);
+              if (Array.isArray(parsed)) {
+                generatedQuestions = generatedQuestions.concat(parsed);
+              }
             } catch(e) {
-              console.error("Batch parse error:", e);
+              console.error("Batch parse error, retrying:", e);
+              // Retry this batch once more silently
+              try {
+                const retryRes = await window.solmatesAPI.sendChatMessage(prompt + " Respond ONLY with a JSON array.", []);
+                let retryParsed = safeParseJSON(retryRes.message || retryRes.reply || '');
+                if (retryParsed.questions) retryParsed = retryParsed.questions;
+                if (Array.isArray(retryParsed)) generatedQuestions = generatedQuestions.concat(retryParsed);
+              } catch(e2) { console.warn("Retry batch also failed."); }
             }
           }
           remaining -= currentBatch;
