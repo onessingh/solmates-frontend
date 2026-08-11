@@ -3189,7 +3189,7 @@ window.MOCK_EXAM_DATA = {
             name: 'Other: Other NTA-Listed Postgraduate Papers'
           }
         ]
-    
+    },
     // DU SOL MBA
     // ==========================================
     "sol-mba-sem1": {
