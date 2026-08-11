@@ -16,39 +16,219 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle:<br>Notification: Feb ' + currentYear + '<br>Prelims: May ' + currentYear + '<br>Mains: Sept ' + currentYear + '</p>',
         links: '<a href="https://www.upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
-            {id: 'pre-gs1', name: 'Prelims: General Studies Paper I'},
-            {id: 'pre-csat', name: 'Prelims: CSAT (Paper II)'},
-            {id: 'mains-essay', name: 'Mains: Essay'},
-            {id: 'mains-gs1', name: 'Mains: GS I'},
-            {id: 'mains-gs2', name: 'Mains: GS II'},
-            {id: 'mains-gs3', name: 'Mains: GS III'},
-            {id: 'mains-gs4', name: 'Mains: GS IV'},
-            {id: 'opt-agriculture', name: 'Optional: Agriculture'},
-            {id: 'opt-animal', name: 'Optional: Animal Husbandry & Vet Science'},
-            {id: 'opt-anthropology', name: 'Optional: Anthropology'},
-            {id: 'opt-botany', name: 'Optional: Botany'},
-            {id: 'opt-chemistry', name: 'Optional: Chemistry'},
-            {id: 'opt-civil', name: 'Optional: Civil Engineering'},
-            {id: 'opt-commerce', name: 'Optional: Commerce & Accountancy'},
-            {id: 'opt-economics', name: 'Optional: Economics'},
-            {id: 'opt-electrical', name: 'Optional: Electrical Engineering'},
-            {id: 'opt-geography', name: 'Optional: Geography'},
-            {id: 'opt-geology', name: 'Optional: Geology'},
-            {id: 'opt-history', name: 'Optional: History'},
-            {id: 'opt-law', name: 'Optional: Law'},
-            {id: 'opt-management', name: 'Optional: Management'},
-            {id: 'opt-mathematics', name: 'Optional: Mathematics'},
-            {id: 'opt-mechanical', name: 'Optional: Mechanical Engineering'},
-            {id: 'opt-medical', name: 'Optional: Medical Science'},
-            {id: 'opt-philosophy', name: 'Optional: Philosophy'},
-            {id: 'opt-physics', name: 'Optional: Physics'},
-            {id: 'opt-psir', name: 'Optional: PSIR'},
-            {id: 'opt-psychology', name: 'Optional: Psychology'},
-            {id: 'opt-pubad', name: 'Optional: Public Administration'},
-            {id: 'opt-sociology', name: 'Optional: Sociology'},
-            {id: 'opt-statistics', name: 'Optional: Statistics'},
-            {id: 'opt-zoology', name: 'Optional: Zoology'}
-        ]
+          {
+                    id: 'gs1',
+                    name: 'General Studies I'
+          },
+          {
+                    id: 'gs2',
+                    name: 'General Studies II'
+          },
+          {
+                    id: 'gs3',
+                    name: 'General Studies III'
+          },
+          {
+                    id: 'gs4',
+                    name: 'General Studies IV'
+          },
+          {
+                    id: 'essay',
+                    name: 'Essay'
+          },
+          {
+                    id: 'opt-agri',
+                    name: 'Optional: Agriculture'
+          },
+          {
+                    id: 'opt-animal',
+                    name: 'Optional: Animal Husbandry and Veterinary Science'
+          },
+          {
+                    id: 'opt-anthro',
+                    name: 'Optional: Anthropology'
+          },
+          {
+                    id: 'opt-botany',
+                    name: 'Optional: Botany'
+          },
+          {
+                    id: 'opt-chem',
+                    name: 'Optional: Chemistry'
+          },
+          {
+                    id: 'opt-civil',
+                    name: 'Optional: Civil Engineering'
+          },
+          {
+                    id: 'opt-commerce',
+                    name: 'Optional: Commerce and Accountancy'
+          },
+          {
+                    id: 'opt-econ',
+                    name: 'Optional: Economics'
+          },
+          {
+                    id: 'opt-ee',
+                    name: 'Optional: Electrical Engineering'
+          },
+          {
+                    id: 'opt-geog',
+                    name: 'Optional: Geography'
+          },
+          {
+                    id: 'opt-geol',
+                    name: 'Optional: Geology'
+          },
+          {
+                    id: 'opt-hist',
+                    name: 'Optional: History'
+          },
+          {
+                    id: 'opt-law',
+                    name: 'Optional: Law'
+          },
+          {
+                    id: 'opt-manage',
+                    name: 'Optional: Management'
+          },
+          {
+                    id: 'opt-math',
+                    name: 'Optional: Mathematics'
+          },
+          {
+                    id: 'opt-mech',
+                    name: 'Optional: Mechanical Engineering'
+          },
+          {
+                    id: 'opt-med',
+                    name: 'Optional: Medical Science'
+          },
+          {
+                    id: 'opt-phil',
+                    name: 'Optional: Philosophy'
+          },
+          {
+                    id: 'opt-phys',
+                    name: 'Optional: Physics'
+          },
+          {
+                    id: 'opt-psir',
+                    name: 'Optional: Political Science and IR'
+          },
+          {
+                    id: 'opt-psych',
+                    name: 'Optional: Psychology'
+          },
+          {
+                    id: 'opt-pubad',
+                    name: 'Optional: Public Administration'
+          },
+          {
+                    id: 'opt-soc',
+                    name: 'Optional: Sociology'
+          },
+          {
+                    id: 'opt-stats',
+                    name: 'Optional: Statistics'
+          },
+          {
+                    id: 'opt-zoo',
+                    name: 'Optional: Zoology'
+          },
+          {
+                    id: 'opt-lit-assamese',
+                    name: 'Literature: Assamese'
+          },
+          {
+                    id: 'opt-lit-bengali',
+                    name: 'Literature: Bengali'
+          },
+          {
+                    id: 'opt-lit-bodo',
+                    name: 'Literature: Bodo'
+          },
+          {
+                    id: 'opt-lit-dogri',
+                    name: 'Literature: Dogri'
+          },
+          {
+                    id: 'opt-lit-gujarati',
+                    name: 'Literature: Gujarati'
+          },
+          {
+                    id: 'opt-lit-hindi',
+                    name: 'Literature: Hindi'
+          },
+          {
+                    id: 'opt-lit-kannada',
+                    name: 'Literature: Kannada'
+          },
+          {
+                    id: 'opt-lit-kashmiri',
+                    name: 'Literature: Kashmiri'
+          },
+          {
+                    id: 'opt-lit-konkani',
+                    name: 'Literature: Konkani'
+          },
+          {
+                    id: 'opt-lit-maithili',
+                    name: 'Literature: Maithili'
+          },
+          {
+                    id: 'opt-lit-malayalam',
+                    name: 'Literature: Malayalam'
+          },
+          {
+                    id: 'opt-lit-manipuri',
+                    name: 'Literature: Manipuri'
+          },
+          {
+                    id: 'opt-lit-marathi',
+                    name: 'Literature: Marathi'
+          },
+          {
+                    id: 'opt-lit-nepali',
+                    name: 'Literature: Nepali'
+          },
+          {
+                    id: 'opt-lit-odia',
+                    name: 'Literature: Odia'
+          },
+          {
+                    id: 'opt-lit-punjabi',
+                    name: 'Literature: Punjabi'
+          },
+          {
+                    id: 'opt-lit-sanskrit',
+                    name: 'Literature: Sanskrit'
+          },
+          {
+                    id: 'opt-lit-santhali',
+                    name: 'Literature: Santhali'
+          },
+          {
+                    id: 'opt-lit-sindhi',
+                    name: 'Literature: Sindhi'
+          },
+          {
+                    id: 'opt-lit-tamil',
+                    name: 'Literature: Tamil'
+          },
+          {
+                    id: 'opt-lit-telugu',
+                    name: 'Literature: Telugu'
+          },
+          {
+                    id: 'opt-lit-urdu',
+                    name: 'Literature: Urdu'
+          },
+          {
+                    id: 'opt-lit-english',
+                    name: 'Literature: English'
+          }
+]
     },
     'uppsc': {
         name: 'UPPSC PCS',
@@ -61,17 +241,39 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
         links: '<a href="https://uppsc.up.nic.in/" target="_blank">Official UPPSC Website</a>',
         subjects: [
-            {id: 'pre-gs1', name: 'Prelims: General Studies I'},
-            {id: 'pre-gs2', name: 'Prelims: General Studies II'},
-            {id: 'mains-hindi', name: 'Mains: General Hindi'},
-            {id: 'mains-essay', name: 'Mains: Essay'},
-            {id: 'mains-gs1', name: 'Mains: GS I'},
-            {id: 'mains-gs2', name: 'Mains: GS II'},
-            {id: 'mains-gs3', name: 'Mains: GS III'},
-            {id: 'mains-gs4', name: 'Mains: GS IV'},
-            {id: 'mains-gs5', name: 'Mains: GS V (UP Specific)'},
-            {id: 'mains-gs6', name: 'Mains: GS VI (UP Specific)'}
-        ]
+          {
+                    id: 'gs1',
+                    name: 'General Studies I'
+          },
+          {
+                    id: 'gs2',
+                    name: 'General Studies II'
+          },
+          {
+                    id: 'gs3',
+                    name: 'General Studies III'
+          },
+          {
+                    id: 'gs4',
+                    name: 'General Studies IV'
+          },
+          {
+                    id: 'gs5',
+                    name: 'General Studies V (UP Special)'
+          },
+          {
+                    id: 'gs6',
+                    name: 'General Studies VI (UP Special)'
+          },
+          {
+                    id: 'essay',
+                    name: 'Essay'
+          },
+          {
+                    id: 'hindi',
+                    name: 'General Hindi'
+          }
+]
     },
     'bpsc': {
         name: 'BPSC CCE',
@@ -84,12 +286,119 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
         links: '<a href="https://bpsc.bihar.gov.in/" target="_blank">Official BPSC Website</a>',
         subjects: [
-            {id: 'pre-gs', name: 'Prelims: General Studies'},
-            {id: 'mains-hindi', name: 'Mains: General Hindi'},
-            {id: 'mains-gs1', name: 'Mains: GS I'},
-            {id: 'mains-gs2', name: 'Mains: GS II'},
-            {id: 'opt', name: 'Optional Subject (Various)'}
-        ]
+          {
+                    id: 'gs1',
+                    name: 'General Studies I'
+          },
+          {
+                    id: 'gs2',
+                    name: 'General Studies II'
+          },
+          {
+                    id: 'essay',
+                    name: 'Essay'
+          },
+          {
+                    id: 'opt-agri',
+                    name: 'Optional: Agriculture'
+          },
+          {
+                    id: 'opt-anthro',
+                    name: 'Optional: Anthropology'
+          },
+          {
+                    id: 'opt-chem',
+                    name: 'Optional: Chemistry'
+          },
+          {
+                    id: 'opt-commerce',
+                    name: 'Optional: Commerce & Accountancy'
+          },
+          {
+                    id: 'opt-econ',
+                    name: 'Optional: Economics'
+          },
+          {
+                    id: 'opt-geog',
+                    name: 'Optional: Geography'
+          },
+          {
+                    id: 'opt-geol',
+                    name: 'Optional: Geology'
+          },
+          {
+                    id: 'opt-hist',
+                    name: 'Optional: History'
+          },
+          {
+                    id: 'opt-ls',
+                    name: 'Optional: Labour and Social Welfare (LSW)'
+          },
+          {
+                    id: 'opt-law',
+                    name: 'Optional: Law'
+          },
+          {
+                    id: 'opt-manage',
+                    name: 'Optional: Management'
+          },
+          {
+                    id: 'opt-math',
+                    name: 'Optional: Mathematics'
+          },
+          {
+                    id: 'opt-mech',
+                    name: 'Optional: Mechanical Engineering'
+          },
+          {
+                    id: 'opt-phil',
+                    name: 'Optional: Philosophy'
+          },
+          {
+                    id: 'opt-phys',
+                    name: 'Optional: Physics'
+          },
+          {
+                    id: 'opt-psir',
+                    name: 'Optional: Political Science and IR'
+          },
+          {
+                    id: 'opt-psych',
+                    name: 'Optional: Psychology'
+          },
+          {
+                    id: 'opt-pubad',
+                    name: 'Optional: Public Administration'
+          },
+          {
+                    id: 'opt-soc',
+                    name: 'Optional: Sociology'
+          },
+          {
+                    id: 'opt-stats',
+                    name: 'Optional: Statistics'
+          },
+          {
+                    id: 'opt-zoo',
+                    name: 'Optional: Zoology'
+          },
+          {
+                    id: 'opt-hindi',
+                    name: 'Optional: Hindi Language and Lit.'
+          },
+          {
+                    id: 'opt-eng',
+                    name: 'Optional: English Language and Lit.'
+          },
+          {
+                    id: 'opt-urdu',
+                    name: 'Optional: Urdu Language and Lit.'
+          },
+          {
+                    id: 'opt-maithili',
+                    name: 'Optional: Maithili Language and Lit.'
+          }
+]
     },
 
     // ==========================================
@@ -821,17 +1130,135 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
         links: '<a href="https://mpsc.gov.in/" target="_blank">Official MPSC Website</a>',
         subjects: [
-            {id: 'pre-gs', name: 'Prelims: General Studies'},
-            {id: 'pre-csat', name: 'Prelims: CSAT'},
-            {id: 'mains-marathi', name: 'Mains: Marathi'},
-            {id: 'mains-english', name: 'Mains: English'},
-            {id: 'mains-essay', name: 'Mains: Essay'},
-            {id: 'mains-gs1', name: 'Mains: GS I'},
-            {id: 'mains-gs2', name: 'Mains: GS II'},
-            {id: 'mains-gs3', name: 'Mains: GS III'},
-            {id: 'mains-gs4', name: 'Mains: GS IV'},
-            {id: 'mains-opt', name: 'Mains: Optional Subject'}
-        ]
+          {
+                    id: 'gs1',
+                    name: 'General Studies I'
+          },
+          {
+                    id: 'gs2',
+                    name: 'General Studies II'
+          },
+          {
+                    id: 'gs3',
+                    name: 'General Studies III'
+          },
+          {
+                    id: 'gs4',
+                    name: 'General Studies IV'
+          },
+          {
+                    id: 'essay',
+                    name: 'Essay'
+          },
+          {
+                    id: 'marathi',
+                    name: 'Marathi Language'
+          },
+          {
+                    id: 'english',
+                    name: 'English Language'
+          },
+          {
+                    id: 'opt-agri',
+                    name: 'Optional: Agriculture'
+          },
+          {
+                    id: 'opt-animal',
+                    name: 'Optional: Animal Husbandry & Vet Science'
+          },
+          {
+                    id: 'opt-anthro',
+                    name: 'Optional: Anthropology'
+          },
+          {
+                    id: 'opt-botany',
+                    name: 'Optional: Botany'
+          },
+          {
+                    id: 'opt-chem',
+                    name: 'Optional: Chemistry'
+          },
+          {
+                    id: 'opt-civil',
+                    name: 'Optional: Civil Engineering'
+          },
+          {
+                    id: 'opt-commerce',
+                    name: 'Optional: Commerce & Accountancy'
+          },
+          {
+                    id: 'opt-econ',
+                    name: 'Optional: Economics'
+          },
+          {
+                    id: 'opt-ee',
+                    name: 'Optional: Electrical Engineering'
+          },
+          {
+                    id: 'opt-geog',
+                    name: 'Optional: Geography'
+          },
+          {
+                    id: 'opt-geol',
+                    name: 'Optional: Geology'
+          },
+          {
+                    id: 'opt-hist',
+                    name: 'Optional: History'
+          },
+          {
+                    id: 'opt-law',
+                    name: 'Optional: Law'
+          },
+          {
+                    id: 'opt-math',
+                    name: 'Optional: Mathematics'
+          },
+          {
+                    id: 'opt-mech',
+                    name: 'Optional: Mechanical Engineering'
+          },
+          {
+                    id: 'opt-med',
+                    name: 'Optional: Medical Science'
+          },
+          {
+                    id: 'opt-phil',
+                    name: 'Optional: Philosophy'
+          },
+          {
+                    id: 'opt-phys',
+                    name: 'Optional: Physics'
+          },
+          {
+                    id: 'opt-psir',
+                    name: 'Optional: Political Science and IR'
+          },
+          {
+                    id: 'opt-psych',
+                    name: 'Optional: Psychology'
+          },
+          {
+                    id: 'opt-pubad',
+                    name: 'Optional: Public Administration'
+          },
+          {
+                    id: 'opt-soc',
+                    name: 'Optional: Sociology'
+          },
+          {
+                    id: 'opt-stats',
+                    name: 'Optional: Statistics'
+          },
+          {
+                    id: 'opt-zoo',
+                    name: 'Optional: Zoology'
+          },
+          {
+                    id: 'opt-marathi-lit',
+                    name: 'Optional: Marathi Literature'
+          }
+]
     },
     'rpsc': {
         name: 'RPSC RAS',
@@ -844,12 +1271,23 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
         links: '<a href="https://rpsc.rajasthan.gov.in/" target="_blank">Official RPSC Website</a>',
         subjects: [
-            {id: 'pre-gk', name: 'Prelims: GK & General Science'},
-            {id: 'mains-gs1', name: 'Mains: GS I'},
-            {id: 'mains-gs2', name: 'Mains: GS II'},
-            {id: 'mains-gs3', name: 'Mains: GS III'},
-            {id: 'mains-lang', name: 'Mains: General Hindi & English'}
-        ]
+          {
+                    id: 'gs1',
+                    name: 'General Studies I (History, Economy, Sociology, Management)'
+          },
+          {
+                    id: 'gs2',
+                    name: 'General Studies II (Admin Ethics, Science, Earth Science)'
+          },
+          {
+                    id: 'gs3',
+                    name: 'General Studies III (Polity, PubAd, Sports, Law)'
+          },
+          {
+                    id: 'gs4',
+                    name: 'General Hindi and General English'
+          }
+]
     },
 
     // ==========================================
@@ -1091,19 +1529,83 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
         links: '<a href="https://natboard.edu.in/" target="_blank">Official NBEMS Website</a>',
         subjects: [
-            {id: 'anatomy', name: 'Anatomy'},
-            {id: 'physiology', name: 'Physiology'},
-            {id: 'biochem', name: 'Biochemistry'},
-            {id: 'pathology', name: 'Pathology'},
-            {id: 'pharmacology', name: 'Pharmacology'},
-            {id: 'microbio', name: 'Microbiology'},
-            {id: 'forensic', name: 'Forensic Medicine'},
-            {id: 'community', name: 'Community Medicine'},
-            {id: 'medicine', name: 'General Medicine'},
-            {id: 'surgery', name: 'General Surgery'},
-            {id: 'obgyn', name: 'Obstetrics & Gynecology'},
-            {id: 'peds', name: 'Pediatrics'}
-        ]
+          {
+                    id: 'anatomy',
+                    name: 'Anatomy'
+          },
+          {
+                    id: 'physio',
+                    name: 'Physiology'
+          },
+          {
+                    id: 'biochem',
+                    name: 'Biochemistry'
+          },
+          {
+                    id: 'patho',
+                    name: 'Pathology'
+          },
+          {
+                    id: 'pharma',
+                    name: 'Pharmacology'
+          },
+          {
+                    id: 'micro',
+                    name: 'Microbiology'
+          },
+          {
+                    id: 'fmt',
+                    name: 'Forensic Medicine and Toxicology'
+          },
+          {
+                    id: 'psm',
+                    name: 'Social and Preventive Medicine (PSM)'
+          },
+          {
+                    id: 'ent',
+                    name: 'ENT'
+          },
+          {
+                    id: 'opthal',
+                    name: 'Ophthalmology'
+          },
+          {
+                    id: 'medicine',
+                    name: 'General Medicine'
+          },
+          {
+                    id: 'surgery',
+                    name: 'General Surgery'
+          },
+          {
+                    id: 'obgyn',
+                    name: 'Obstetrics and Gynaecology'
+          },
+          {
+                    id: 'paeds',
+                    name: 'Paediatrics'
+          },
+          {
+                    id: 'ortho',
+                    name: 'Orthopaedics'
+          },
+          {
+                    id: 'derma',
+                    name: 'Dermatology & Venereology'
+          },
+          {
+                    id: 'psych',
+                    name: 'Psychiatry'
+          },
+          {
+                    id: 'radio',
+                    name: 'Radiodiagnosis & Radiotherapy'
+          },
+          {
+                    id: 'anes',
+                    name: 'Anaesthesia'
+          }
+]
     },
     'ini-cet': {
         name: 'INI-CET',
