@@ -13,7 +13,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Preliminary Examination:</b> Paper I (General Studies), Paper II (CSAT)</li><li><b>Main Examination:</b> Paper A & B (Qualifying Languages), Essay, GS I, II, III, IV, Optional Paper I & II.</li><li><b>Personality Test / Interview</b></li></ul>',
         eligibility: '<p>Graduate degree or equivalent, subject to UPSC current notification conditions. Age/category conditions vary by notification.</p>',
         syllabus: '<p><b>GS I:</b> Indian Heritage & Culture, History, Geography, Society<br><b>GS II:</b> Governance, Constitution, Polity, Social Justice, International Relations<br><b>GS III:</b> Technology, Economic Development, Biodiversity, Environment, Security, Disaster Management<br><b>GS IV:</b> Ethics, Integrity and Aptitude</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle:<br>Notification: Feb ' + currentYear + '<br>Prelims: May ' + currentYear + '<br>Mains: Sept ' + currentYear + '</p>',
+        dates: '<p>Tentative schedule for ' + currentYear + ' cycle:<br>Notification: Feb ' + currentYear + '<br>Prelims: May ' + currentYear + '<br>Mains: Sept ' + currentYear + '</p>',
         links: '<a href="https://www.upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
           {
@@ -714,7 +714,7 @@ window.MOCK_EXAM_DATA = {
         pattern: '<ul><li><b>Paper 1:</b> General Aptitude (50 Questions)</li><li><b>Paper 2:</b> Subject-specific (100 Questions)</li></ul>',
         eligibility: '<p>Master Degree with at least 55% marks.</p>',
         syllabus: '<p>Paper 1 covers Teaching Aptitude, Research Aptitude, Comprehension, Communication, Mathematical Reasoning, Logical Reasoning, DI, ICT, Environment, Higher Education System. Paper 2 covers specific subjects.</p>',
-        dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle (June and December sessions).</p>',
+        dates: '<p>Tentative schedule for ' + currentYear + ' cycle (June and December sessions).</p>',
         links: '<a href="https://ugcnet.nta.nic.in/" target="_blank">Official UGC NET Website</a>',
         subjects: [
           {
