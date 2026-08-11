@@ -569,6 +569,8 @@ Output ONLY a valid JSON array, nothing else:
       generatedQuestions.forEach((q, index) => {
         let optionsHtml = '';
         q.options.forEach((opt, oIdx) => {
+          // Strip any leading letter labels the AI may have added (A., B., A), 1., etc.)
+          opt = String(opt).replace(/^\s*[A-Da-d][.):]\s*/,'').replace(/^\s*option\s*[A-Da-d][.:]?\s*/i,'').trim();
           optionsHtml += `
             <div class="mcq-option" onclick="selectOption(this, ${index}, ${oIdx})">
               <span style="font-weight: 600; min-width: 25px;">${String.fromCharCode(65 + oIdx)}.</span> 

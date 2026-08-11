@@ -560,6 +560,8 @@ Output ONLY a valid JSON array, nothing else:
       generatedQuestions.forEach((q, index) => {
         let optionsHtml = '';
         q.options.forEach((opt, oIdx) => {
+          // Strip any leading letter labels the AI may have added (A., B., A), 1., etc.)
+          opt = String(opt).replace(/^\s*[A-Da-d][.):]\s*/,'').replace(/^\s*option\s*[A-Da-d][.:]?\s*/i,'').trim();
           optionsHtml += `
             <div class="mcq-option" onclick="selectOption(this, ${index}, ${oIdx})">
               <span style="font-weight: 600; min-width: 25px;">${String.fromCharCode(65 + oIdx)}.</span> 
@@ -670,30 +672,24 @@ Output ONLY a valid JSON array, nothing else:
       while (retries >= 0) {
         try {
           const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} → Answer: ${a.selected}`).join('\n');
-          const prompt = `You are a career counselor. Analyze the user's interest inventory answers below.
-
-User's responses:
+          const prompt = `You are a career counselor. Based on these interest inventory responses:
 ${answersText}
 
-Based on ONLY these actual answers:
-1. Identify their Holland Code (RIASEC) types - list 2-3 dominant codes (e.g., "Artistic (A)", "Social (S)", "Investigative (I)")
-2. For EACH Holland Code, explain in 1-2 sentences what it means and how the user's answers showed this interest.
-3. Suggest 3-5 specific career paths that match their profile.
-4. Give 1 short motivational line.
+Return a SHORT career interest analysis in this EXACT format:
 
-Format like this:
-YOUR HOLLAND CODE: [e.g., "ASI" or "Artistic-Social-Investigative"]
+HOLLAND CODE: [2-3 letter code, e.g. "ASI" or "RIC"]
+CODE FULL NAME: [e.g. "Artistic - Social - Investigative"]
 
-[Code 1 - full name]: [What it means + why this user shows it]
-[Code 2 - full name]: [What it means + why this user shows it]
-...
+INTEREST TRAITS: [trait1] | [trait2] | [trait3] | [trait4]
+(Each: 1-2 words, e.g. Creative, People-oriented, Analytical, Hands-on)
 
-RECOMMENDED CAREERS: [Career 1], [Career 2], [Career 3], [Career 4], [Career 5]
+CAREER SUMMARY: [2 sentences in English about what fields suit them]
 
-MOTIVATION: [Short encouraging line]
+TOP CAREERS: [Career 1] | [Career 2] | [Career 3] | [Career 4] | [Career 5]
 
-Then after two blank lines, write "Hinglish:" and the same analysis in Hinglish.
-DO NOT use ** asterisks anywhere.`;
+Hinglish: [Same CAREER SUMMARY in Hinglish in 2 sentences]
+
+Do NOT use ** asterisks.`;
           
           const res = await window.solmatesAPI.sendChatMessage(prompt, []);
           const loaderEl = document.getElementById('final-loader');
@@ -701,13 +697,35 @@ DO NOT use ** asterisks anywhere.`;
           
           let analysis = (res.message || res.reply || '').replace(/\*\*/g, '');
           
-          const resHtml = `
-            <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
-              <h2 style="color: var(--primary); margin-bottom: 15px; text-align: center;"><i class="fas fa-star" style="color: #c0962d;"></i> Final Analysis</h2>
-              <div style="font-size: 1.05rem; color: var(--text); line-height: 1.8; white-space: pre-wrap;">${analysis}</div>
+          const lines2 = analysis.split('\n').map(l => l.trim()).filter(Boolean);
+        let hollandCode = '', codeFullName = '', interestTraits = [], careerSummaryEng = '', topCareers = [], careerSummaryHin = '';
+        lines2.forEach(line => {
+          if (line.startsWith('HOLLAND CODE:')) hollandCode = line.replace('HOLLAND CODE:', '').trim();
+          else if (line.startsWith('CODE FULL NAME:')) codeFullName = line.replace('CODE FULL NAME:', '').trim();
+          else if (line.startsWith('INTEREST TRAITS:')) interestTraits = line.replace('INTEREST TRAITS:', '').split('|').map(k => k.trim()).filter(Boolean);
+          else if (line.startsWith('CAREER SUMMARY:')) careerSummaryEng = line.replace('CAREER SUMMARY:', '').trim();
+          else if (line.startsWith('TOP CAREERS:')) topCareers = line.replace('TOP CAREERS:', '').split('|').map(k => k.trim()).filter(Boolean);
+          else if (line.startsWith('Hinglish:')) careerSummaryHin = line.replace('Hinglish:', '').trim();
+        });
+        if (!hollandCode) hollandCode = '---';
+        
+        const traitChips = interestTraits.map(k => `<span style="display:inline-block;background:rgba(52,199,89,0.1);color:var(--success);border:1px solid rgba(52,199,89,0.3);padding:5px 14px;border-radius:20px;font-weight:600;font-size:0.9rem;margin:4px;">${k}</span>`).join('');
+        const careerPills = topCareers.map(c => `<span style="display:inline-block;background:rgba(0,113,227,0.1);color:var(--accent);border:1px solid rgba(0,113,227,0.25);padding:6px 14px;border-radius:20px;font-size:0.9rem;margin:4px;">${c}</span>`).join('');
+        
+        const resHtml = `
+          <div class="mcq-card" style="border: 2px solid var(--success); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
+            <div style="text-align:center; padding-bottom:15px; border-bottom: 1px solid var(--border); margin-bottom:15px;">
+              <div style="font-size:2.5rem; margin-bottom:8px;">🎯</div>
+              <div style="font-size:2rem; font-weight:800; color:var(--accent); letter-spacing:4px; margin-bottom:5px;">${hollandCode}</div>
+              <p style="color:var(--light); font-size:0.9rem;">${codeFullName || 'Your Interest Profile'}</p>
             </div>
-          `;
-          container.insertAdjacentHTML('beforeend', resHtml);
+            ${traitChips.length ? `<div style="text-align:center; margin-bottom:18px;">${traitChips}</div>` : ''}
+            ${careerSummaryEng ? `<div style="font-size:1rem; color:var(--text); line-height:1.7; margin-bottom:12px;">${careerSummaryEng}</div>` : ''}
+            ${careerSummaryHin ? `<div style="font-size:0.95rem; color:var(--light); line-height:1.7; border-top:1px solid var(--border); padding-top:12px; margin-bottom:15px;">${careerSummaryHin}</div>` : ''}
+            ${careerPills.length ? `<div style="border-top:1px solid var(--border);padding-top:12px;"><strong style="color:var(--primary);display:block;margin-bottom:8px;">💼 Top Career Matches:</strong><div style="display:flex;flex-wrap:wrap;">${careerPills}</div></div>` : ''}
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', resHtml);
           return; // success, exit loop
         } catch (err) {
           console.error('Final analysis attempt failed:', err);

@@ -561,6 +561,8 @@ Output ONLY a valid JSON array, nothing else:
       generatedQuestions.forEach((q, index) => {
         let optionsHtml = '';
         q.options.forEach((opt, oIdx) => {
+          // Strip any leading letter labels the AI may have added (A., B., A), 1., etc.)
+          opt = String(opt).replace(/^\s*[A-Da-d][.):]\s*/,'').replace(/^\s*option\s*[A-Da-d][.:]?\s*/i,'').trim();
           optionsHtml += `
             <div class="mcq-option" onclick="selectOption(this, ${index}, ${oIdx})">
               <span style="font-weight: 600; min-width: 25px;">${String.fromCharCode(65 + oIdx)}.</span> 
@@ -682,13 +684,36 @@ DO NOT use ** asterisks.`;
           
           let analysis = (res.message || res.reply || '').replace(/\*\*/g, '');
           
-          const resHtml = `
-            <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
-              <h2 style="color: var(--primary); margin-bottom: 15px; text-align: center;"><i class="fas fa-star" style="color: #c0962d;"></i> Final Analysis</h2>
-              <div style="font-size: 1.05rem; color: var(--text); line-height: 1.8; white-space: pre-wrap;">${analysis}</div>
+          // Parse structured analysis
+        const lines = analysis.split('\n').map(l => l.trim()).filter(Boolean);
+        let personalityType = '', keywords = [], traitSummaryEng = '', careerFit = '', traitSummaryHin = '';
+        lines.forEach(line => {
+          if (line.startsWith('PERSONALITY TYPE:')) personalityType = line.replace('PERSONALITY TYPE:', '').trim();
+          else if (line.startsWith('KEYWORDS:')) keywords = line.replace('KEYWORDS:', '').split('|').map(k => k.trim()).filter(Boolean);
+          else if (line.startsWith('TRAIT SUMMARY:')) traitSummaryEng = line.replace('TRAIT SUMMARY:', '').trim();
+          else if (line.startsWith('CAREER FIT:')) careerFit = line.replace('CAREER FIT:', '').trim();
+          else if (line.startsWith('Hinglish:')) traitSummaryHin = line.replace('Hinglish:', '').trim();
+        });
+        // Fallback if structured parsing fails
+        if (!personalityType) personalityType = 'Your Personality';
+        if (!keywords.length) keywords = [];
+        
+        const keywordChips = keywords.map(k => `<span style="display:inline-block;background:rgba(0,113,227,0.1);color:var(--accent);border:1px solid rgba(0,113,227,0.3);padding:5px 14px;border-radius:20px;font-weight:600;font-size:0.9rem;margin:4px;">${k}</span>`).join('');
+        
+        const resHtml = `
+          <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
+            <div style="text-align:center; padding-bottom:15px; border-bottom: 1px solid var(--border); margin-bottom:15px;">
+              <div style="font-size:2.5rem; margin-bottom:8px;">🧠</div>
+              <h2 style="color: var(--accent); font-size:1.4rem; margin-bottom:5px;">${personalityType}</h2>
+              <p style="color:var(--light); font-size:0.85rem;">Your Personality Profile</p>
             </div>
-          `;
-          container.insertAdjacentHTML('beforeend', resHtml);
+            ${keywordChips.length ? `<div style="text-align:center; margin-bottom:18px;">${keywordChips}</div>` : ''}
+            ${traitSummaryEng ? `<div style="font-size:1rem; color:var(--text); line-height:1.7; margin-bottom:12px;">${traitSummaryEng}</div>` : ''}
+            ${traitSummaryHin ? `<div style="font-size:0.95rem; color:var(--light); line-height:1.7; border-top:1px solid var(--border); padding-top:12px; margin-bottom:12px;">${traitSummaryHin}</div>` : ''}
+            ${careerFit ? `<div style="background:rgba(52,199,89,0.08); border:1px solid rgba(52,199,89,0.3); border-radius:10px; padding:12px 15px;"><strong style="color:var(--success);">💼 Career Fit:</strong> <span style="color:var(--text);">${careerFit}</span></div>` : ''}
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', resHtml);
           return; // success, exit loop
         } catch (err) {
           console.error('Final analysis attempt failed:', err);
