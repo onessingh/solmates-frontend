@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -345,6 +345,31 @@
         <p>Evaluate logical, numerical, and verbal reasoning dynamically with <b>Mate AI</b>.</p>
 
         <div class="input-grp">
+          <label>Test Mode</label>
+          <select id="testMode" onchange="toggleTestModeInputs()">
+            <option value="random" selected>Random Test</option>
+            <option value="exam">Exam Test</option>
+            <option value="subject">Subject Test</option>
+            <option value="topic">Topic Test</option>
+          </select>
+        </div>
+
+        <div id="examContextGroup" style="display: none; background: var(--bg-card-hover); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
+          <div class="input-grp" id="grpExam" style="display: none;">
+            <label>Exam Name</label>
+            <input type="text" id="examName" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.95rem; background: var(--bg-card);" placeholder="e.g. UGC NET">
+          </div>
+          <div class="input-grp" id="grpSubject" style="display: none;">
+            <label>Subject</label>
+            <input type="text" id="subjectName" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.95rem; background: var(--bg-card);" placeholder="e.g. Management">
+          </div>
+          <div class="input-grp" id="grpTopic" style="display: none; margin-bottom: 0;">
+            <label>Topic</label>
+            <input type="text" id="topicName" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.95rem; background: var(--bg-card);" placeholder="e.g. Marketing">
+          </div>
+        </div>
+
+        <div class="input-grp">
           <label>Difficulty Level</label>
           <select id="diffLevel">
             <option value="easy">Easy</option>
@@ -382,6 +407,9 @@
       <div id="resultStep" class="card hidden">
         <h1 style="text-align: center;">Results</h1>
         <div class="result-score" id="scoreDiv">0%</div>
+        <div style="text-align: center; margin-top: 15px;">
+          <a href="../tools/performance-analyzer.html?load=true" class="btn-primary" style="display: inline-block; background: #c0962d; text-decoration: none; padding: 10px 20px; font-size: 0.9rem;"><i class="fas fa-chart-line"></i> Open in Performance Analyzer</a>
+        </div>
         <div id="reviewContainer" style="margin-top: 20px;"></div>
         <button class="btn-primary" id="retakeBtn" style="margin-top: 20px;">Retake Test</button>
       </div>
@@ -404,6 +432,34 @@
   <script src="/js/uptime-helper.js?v=101.0"></script>
   <script src="/js/api-client.js"></script>
   <script>
+    function toggleTestModeInputs() {
+      const mode = document.getElementById('testMode').value;
+      const grp = document.getElementById('examContextGroup');
+      const gExam = document.getElementById('grpExam');
+      const gSubj = document.getElementById('grpSubject');
+      const gTopc = document.getElementById('grpTopic');
+      
+      if(mode === 'random') {
+        grp.style.display = 'none';
+      } else {
+        grp.style.display = 'block';
+        gExam.style.display = 'none';
+        gSubj.style.display = 'none';
+        gTopc.style.display = 'none';
+        
+        if(mode === 'exam') {
+          gExam.style.display = 'block';
+        } else if(mode === 'subject') {
+          gExam.style.display = 'block';
+          gSubj.style.display = 'block';
+        } else if(mode === 'topic') {
+          gExam.style.display = 'block';
+          gSubj.style.display = 'block';
+          gTopc.style.display = 'block';
+        }
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       let sessionId, questions = [], answers = [], currentIdx = 0;
 
@@ -419,7 +475,20 @@
         try {
           const difficulty = document.getElementById('diffLevel').value;
           const count = parseInt(document.getElementById('qCount').value) || 10;
-          const res = await window.solmatesAPI.generateAIToolData('aptitude-test', { difficulty, count });
+          const mode = document.getElementById('testMode').value;
+          
+          let examContext = "";
+          if (mode !== 'random') {
+            const exam = document.getElementById('examName').value;
+            const sub = document.getElementById('subjectName').value;
+            const top = document.getElementById('topicName').value;
+            examContext = `Mode: ${mode}, Exam: ${exam}, Subject: ${sub}, Topic: ${top}`;
+          }
+
+          // Mocking the context injection into API payload:
+          const payload = { difficulty, count, examContext };
+          
+          const res = await window.solmatesAPI.generateAIToolData('aptitude-test', payload);
           if (!res.success) throw new Error();
           questions = res.data.questions;
           sessionId = res.data.sessionId;

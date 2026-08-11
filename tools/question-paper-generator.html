@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="screen and (prefers-color-scheme: dark)" content="#0f172a">
+  <meta name="color-scheme" content="light only">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Question Paper Generator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --accent: #c0962d;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --danger: #ff3b30;
+      --glass: rgba(255, 255, 255, 0.7);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Header */
+    .header-bar {
+      background: var(--card);
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .back-btn { position: absolute; left: 20px; text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; background: #f0f4f8; padding: 8px 16px; border-radius: 20px; transition: 0.2s; }
+    .back-btn:hover { background: #e1e8f0; }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 15px;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Input Form View */
+    #setup-mode {
+      animation: fadeIn 0.3s;
+    }
+    
+    .input-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 15px;
+    }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 600px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #fafafa;
+      transition: all 0.2s;
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      background: var(--card);
+      box-shadow: 0 0 0 3px rgba(192, 150, 45, 0.1);
+    }
+    
+    .btn-main {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(15, 43, 70, 0.3);
+      background: #1a3c5e;
+    }
+    
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #e1e8f0;
+    }
+    
+    /* Result View */
+    #result-mode {
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+    
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      background: var(--card);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    /* Paper Template */
+    .paper-container {
+      background: #ffffff;
+      color: #000000;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+    }
+    .paper-header {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .paper-header h2 { font-size: 1.8rem; margin-bottom: 5px; text-transform: uppercase; }
+    .paper-header h3 { font-size: 1.4rem; font-weight: normal; margin-bottom: 10px; }
+    .paper-meta {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .paper-instructions {
+      text-align: left;
+      font-size: 0.95rem;
+      border: 1px solid #000;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .paper-section {
+      margin-bottom: 30px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+      text-decoration: underline;
+    }
+    .paper-question {
+      display: flex;
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+    .q-number {
+      width: 40px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .q-text {
+      flex: 1;
+    }
+    .q-marks {
+      width: 60px;
+      text-align: right;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .q-options {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+    .q-options div {
+      margin-bottom: 5px;
+    }
+    
+    .answer-key {
+      display: none;
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 2px dashed var(--border);
+    }
+    .answer-key h3 { color: #15803d; margin-bottom: 15px; }
+
+    .loader-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      display: none;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e1e8f0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+  </style>
+
+  <!-- Dark Mode Native OS Integration -->
+  <style id="solmates-dark-style" media="screen and (prefers-color-scheme: dark)">
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --light: #94a3b8;
+      --border: #334155;
+      --primary: #f8fafc;
+    }
+    .form-control { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
+    .form-control:focus { background: #1e293b !important; }
+    .btn-secondary { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
+    .btn-secondary:hover { background: #475569 !important; }
+    .loader-overlay { background: rgba(15, 23, 42, 0.8) !important; }
+    .back-btn { background: var(--border) !important; color: var(--text) !important; }
+    /* We keep the paper template white in dark mode for a realistic feel, but add a dark variant optionally */
+    .paper-container.dark-mode-override {
+      background: #e2e8f0;
+    }
+  </style>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        document.documentElement.style.colorScheme = savedTheme;
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
+          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        }
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <div class="header-bar">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <h1><i class="fas fa-file-alt" style="color: var(--accent);"></i> AI Question Paper Generator</h1>
+  </div>
+
+  <div class="container">
+    
+    <!-- Setup Mode -->
+    <div id="setup-mode">
+      <div class="input-card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Paper Specification</h3>
+        
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Exam / Board</label>
+            <input type="text" id="exam" class="form-control" placeholder="e.g. CBSE Class 12, UPSC, CAT" value="CBSE Class 12">
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" id="subject" class="form-control" placeholder="e.g. Physics, Economics" value="Physics">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Unit / Syllabus Area (Optional)</label>
+          <input type="text" id="unit" class="form-control" placeholder="e.g. Entire Syllabus, or Optics" value="Entire Syllabus">
+        </div>
+
+        <div class="grid-3">
+          <div class="form-group">
+            <label>Total Marks</label>
+            <input type="number" id="marks" class="form-control" value="70">
+          </div>
+          <div class="form-group">
+            <label>Duration (Mins)</label>
+            <input type="number" id="duration" class="form-control" value="180">
+          </div>
+          <div class="form-group">
+            <label>Total Questions</label>
+            <input type="number" id="q-count" class="form-control" value="15">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Difficulty Mix</label>
+            <select id="difficulty" class="form-control">
+              <option value="Standard">Standard Board Pattern (Mix)</option>
+              <option value="Easy">Beginner / Easy</option>
+              <option value="Hard">Advanced / Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Question Pattern</label>
+            <select id="pattern" class="form-control">
+              <option value="Mixed">Mixed (MCQ, Short, Long)</option>
+              <option value="MCQ Only">Objective / MCQ Only</option>
+              <option value="Subjective Only">Subjective Only</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-main" style="margin-top: 25px;" onclick="generatePaper()">
+          <i class="fas fa-magic"></i> Generate Paper
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-overlay">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary);">Drafting Question Paper...</h3>
+      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Structuring sections and verifying marks...</p>
+    </div>
+
+    <!-- Result Mode -->
+    <div id="result-mode">
+      <div class="controls-bar">
+        <div>
+          <button class="btn-secondary" onclick="backToSetup()"><i class="fas fa-arrow-left"></i> Edit Config</button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-secondary" onclick="toggleAnswerKey()"><i class="fas fa-key"></i> Show Answer Key</button>
+          <button class="btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+          <button class="btn-main" style="padding: 10px 20px;" onclick="attemptPaper()"><i class="fas fa-pencil-alt"></i> Attempt</button>
+        </div>
+      </div>
+
+      <div class="paper-container" id="paper-doc">
+        <div class="paper-header">
+          <h2 id="p-exam">CBSE Class 12 Board Examination</h2>
+          <h3 id="p-subject">SUBJECT: PHYSICS</h3>
+          <div class="paper-meta">
+            <div>Time Allowed: <span id="p-time">3 hours</span></div>
+            <div>Maximum Marks: <span id="p-marks">70</span></div>
+          </div>
+          <div class="paper-instructions">
+            <strong>General Instructions:</strong><br>
+            (i) All questions are compulsory. There may be internal choices in some questions.<br>
+            (ii) The paper is divided into sections based on your selected pattern.<br>
+            (iii) Read the questions carefully before answering.
+          </div>
+        </div>
+
+        <div id="paper-body">
+          <!-- Sections and questions will be injected here -->
+        </div>
+
+        <div class="answer-key" id="answer-key">
+          <h3><i class="fas fa-check-circle"></i> Answer Key & Solutions</h3>
+          <div id="key-body">
+            <!-- Answers injected here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fields = ['exam', 'subject', 'unit', 'marks', 'duration', 'difficulty'];
+      fields.forEach(f => {
+        if (urlParams.has(f)) {
+          const el = document.getElementById(f);
+          if (el) el.value = urlParams.get(f);
+        }
+      });
+      if(urlParams.has('question_count')) {
+        document.getElementById('q-count').value = urlParams.get('question_count');
+      }
+    };
+
+    function generatePaper() {
+      const exam = document.getElementById('exam').value || 'MOCK EXAM';
+      const subject = document.getElementById('subject').value || 'General Subject';
+      const marks = document.getElementById('marks').value || '100';
+      const duration = document.getElementById('duration').value || '120';
+      
+      document.getElementById('loader').style.display = 'flex';
+      
+      setTimeout(() => {
+        document.getElementById('p-exam').innerText = `${exam} Examination`;
+        document.getElementById('p-subject').innerText = `SUBJECT: ${subject.toUpperCase()}`;
+        document.getElementById('p-marks').innerText = marks;
+        document.getElementById('p-time').innerText = duration >= 60 ? `${duration/60} hours` : `${duration} mins`;
+        
+        buildMockPaper();
+        
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'none';
+        document.getElementById('result-mode').style.display = 'block';
+        window.scrollTo(0,0);
+      }, 3000);
+    }
+
+    function buildMockPaper() {
+      const qCount = parseInt(document.getElementById('q-count').value);
+      const pattern = document.getElementById('pattern').value;
+      const topic = document.getElementById('unit').value || 'Syllabus';
+
+      let pBody = '';
+      let kBody = '';
+
+      if (pattern.includes('Mixed') || pattern.includes('MCQ')) {
+        pBody += `<div class="section-title">SECTION A (Objective Type)</div>`;
+        let qNum = 1;
+        let limit = pattern.includes('MCQ') ? qCount : Math.floor(qCount * 0.4);
+        
+        for(let i=0; i<limit; i++) {
+          pBody += `
+            <div class="paper-question">
+              <div class="q-number">${qNum}.</div>
+              <div class="q-text">
+                Which of the following principles governs the application in ${topic}?
+                <div class="q-options">
+                  <div>(A) Principle X</div>
+                  <div>(B) Principle Y</div>
+                  <div>(C) Principle Z</div>
+                  <div>(D) None of the above</div>
+                </div>
+              </div>
+              <div class="q-marks">[1]</div>
+            </div>
+          `;
+          kBody += `<div><strong>Q${qNum}.</strong> (B) Principle Y - <em>Basic conceptual application.</em></div>`;
+          qNum++;
+        }
+
+        if (pattern.includes('Mixed')) {
+          pBody += `<div class="section-title">SECTION B (Subjective)</div>`;
+          for(let i=qNum; i<=qCount; i++) {
+            let m = (i % 2 === 0) ? 3 : 5;
+            pBody += `
+              <div class="paper-question">
+                <div class="q-number">${i}.</div>
+                <div class="q-text">Explain the significance of ${topic} with relevant examples and derive the standard equation where applicable.</div>
+                <div class="q-marks">[${m}]</div>
+              </div>
+            `;
+            kBody += `<div><br><strong>Q${i}.</strong> Mention definition (1 mark), derivation steps (2 marks), and 2 examples (2 marks).</div>`;
+          }
+        }
+      } else {
+        // Subjective Only
+        pBody += `<div class="section-title">SECTION A (Descriptive Questions)</div>`;
+        for(let i=1; i<=qCount; i++) {
+          pBody += `
+            <div class="paper-question">
+              <div class="q-number">${i}.</div>
+              <div class="q-text">Discuss the main features and applications related to ${topic}. Provide a detailed critical analysis.</div>
+              <div class="q-marks">[10]</div>
+            </div>
+          `;
+          kBody += `<div><br><strong>Q${i}.</strong> Intro (2m), Features (4m), Analysis (4m).</div>`;
+        }
+      }
+
+      document.getElementById('paper-body').innerHTML = pBody;
+      document.getElementById('key-body').innerHTML = kBody;
+    }
+
+    function toggleAnswerKey() {
+      const el = document.getElementById('answer-key');
+      if(el.style.display === 'block') {
+        el.style.display = 'none';
+      } else {
+        el.style.display = 'block';
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function backToSetup() {
+      document.getElementById('result-mode').style.display = 'none';
+      document.getElementById('setup-mode').style.display = 'block';
+      document.getElementById('answer-key').style.display = 'none';
+    }
+    
+    function attemptPaper() {
+      alert("This will load the paper into the Quiz/Exam Attempt interface.");
+    }
+  </script>
+</body>
+</html>

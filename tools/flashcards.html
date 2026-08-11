@@ -282,7 +282,12 @@
           <label>Back (Answer / Explanation)</label>
           <textarea id="card-back" class="form-control" rows="3" placeholder="e.g. Mitochondria. It generates most of the chemical energy needed..."></textarea>
         </div>
-        <button class="btn-main" onclick="addCard()">Add to Deck</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-main" onclick="addCard()" style="flex: 1;">Add to Deck</button>
+          <button class="btn-secondary" onclick="generateWithAI()" style="flex: 1; border: 1px solid var(--accent); color: var(--accent); display: flex; justify-content: center; align-items: center; gap: 8px;">
+            <i class="fas fa-magic"></i> Generate with AI
+          </button>
+        </div>
       </div>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
@@ -436,6 +441,28 @@
           <button class="del-btn" onclick="deleteCard(${card.id})"><i class="fas fa-trash"></i></button>
         </div>
       `).reverse().join('');
+    }
+
+    function generateWithAI() {
+      const topic = prompt("Enter topic (e.g. UGC NET -> Management -> Marketing -> Consumer Behaviour)");
+      if(!topic) return;
+      
+      const countStr = prompt("How many cards to generate? (e.g. 5, 10, 20)", "5");
+      const count = parseInt(countStr) || 5;
+      
+      alert(`Generating ${count} flashcards for: ${topic}... (Mocking AI Response)`);
+      
+      setTimeout(() => {
+        for(let i=1; i<=count; i++) {
+          deck.push({
+            id: Date.now() + i,
+            front: `Generated Question ${i} for ${topic}`,
+            back: `AI Generated Answer ${i} with explanation.`
+          });
+        }
+        saveDeck();
+        alert(`${count} flashcards generated and saved!`);
+      }, 1500);
     }
 
     // STUDY LOGIC

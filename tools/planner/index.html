@@ -1169,11 +1169,17 @@
         </div>
       </div>
 
-      <!-- Semester Planner -->
+      <!-- Semester/Exam Planner -->
       <div class="planner-section">
-        <div class="section-header">
-          <i class="fas fa-calendar-plus"></i>
-          <h2>Semester Planner</h2>
+        <div class="section-header" style="justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-calendar-plus"></i>
+            <h2>Planner Setup</h2>
+          </div>
+          <select id="plannerMode" class="form-control" style="width: auto; padding: 6px 10px; font-size: 13px;" onchange="togglePlannerMode()">
+            <option value="semester">Semester Mode</option>
+            <option value="exam">Exam Prep Mode</option>
+          </select>
         </div>
         <form id="semesterForm" class="semester-form">
           <div class="form-group">
@@ -1478,6 +1484,26 @@
   </div>
 
   <script>
+    function togglePlannerMode() {
+      const mode = document.getElementById('plannerMode').value;
+      const nameLabel = document.querySelector('label[for="semesterName"]');
+      const nameInput = document.getElementById('semesterName');
+      const coursesLabel = document.querySelector('label[for="courses"]');
+      const coursesInput = document.getElementById('courses');
+      
+      if (mode === 'exam') {
+        nameLabel.textContent = 'Exam Target';
+        nameInput.placeholder = 'e.g., UGC NET, CFA Level 1';
+        coursesLabel.textContent = 'Subjects/Topics (comma separated)';
+        coursesInput.placeholder = 'e.g., Marketing, Finance, Ethics';
+      } else {
+        nameLabel.textContent = 'Semester Name';
+        nameInput.placeholder = 'e.g., Fall 2024';
+        coursesLabel.textContent = 'Courses (comma separated)';
+        coursesInput.placeholder = 'e.g., Finance, Marketing';
+      }
+    }
+
     // ========== GLOBAL VARIABLES ==========
     let editingAssignmentId = null;
     let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
