@@ -3307,8 +3307,12 @@ window.MOCK_EXAM_DATA = {
             { id: "sem4-s1", name: "Strategy: Strategic Capability Building and Innovation" },
             { id: "sem4-s2", name: "Strategy: Strategic Management in Social Enterprises" },
             { id: "sem4-s3", name: "Strategy: International Business Strategy" },
-            { id: "sem4-s4", name: "Strategy: Strategic Management of Startups" },
-            { id: "sem4-s5", name: "Strategy: Strategic Innovation in Health Care and Education" }
+            { id: "sem4-s4", name: "Strategy: Strategic Management of Startups" },            { id: "sem4-s5", name: "Strategy: Strategic Innovation in Health Care and Education" },
+            { id: "sem4-a1", name: "Additional: Predictive Analytics and Big Data" },
+            { id: "sem4-a2", name: "Additional: Artificial Intelligence and Deep Learning" },
+            { id: "sem4-a3", name: "Additional: Managing HR in Start-ups" },
+            { id: "sem4-a4", name: "Additional: Economics of Innovation" },
+            { id: "sem4-a5", name: "Additional: Business Process Re-engineering" }
         ]
     }
 };
