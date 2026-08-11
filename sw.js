@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v114.8 - NUCLEAR REFRESH)
+ * SOLMATES Service Worker (v114.9 - NUCLEAR REFRESH)
  * Handles background push notifications and offline caching.
  */
 
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v6';
+const CACHE_NAME = 'solmates-cache-v7';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
