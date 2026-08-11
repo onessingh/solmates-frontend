@@ -267,14 +267,131 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle.</p>',
         links: '<a href="https://gate2026.iitg.ac.in/" target="_blank">Official GATE Website</a>',
         subjects: [
-            {id: 'ga', name: 'General Aptitude (Common)'},
-            {id: 'cs', name: 'CS - Computer Science & IT'},
-            {id: 'me', name: 'ME - Mechanical Engineering'},
-            {id: 'ce', name: 'CE - Civil Engineering'},
-            {id: 'ee', name: 'EE - Electrical Engineering'},
-            {id: 'ec', name: 'EC - Electronics & Comm'},
-            {id: 'da', name: 'DA - Data Science & AI'}
-        ]
+          {
+                    id: 'ga',
+                    name: 'General Aptitude (Common for all)'
+          },
+          {
+                    id: 'ae',
+                    name: 'AE - Aerospace Engineering'
+          },
+          {
+                    id: 'ag',
+                    name: 'AG - Agricultural Engineering'
+          },
+          {
+                    id: 'ar',
+                    name: 'AR - Architecture and Planning'
+          },
+          {
+                    id: 'bm',
+                    name: 'BM - Biomedical Engineering'
+          },
+          {
+                    id: 'bt',
+                    name: 'BT - Biotechnology'
+          },
+          {
+                    id: 'ce',
+                    name: 'CE - Civil Engineering'
+          },
+          {
+                    id: 'ch',
+                    name: 'CH - Chemical Engineering'
+          },
+          {
+                    id: 'cs',
+                    name: 'CS - Computer Science and Information Technology'
+          },
+          {
+                    id: 'cy',
+                    name: 'CY - Chemistry'
+          },
+          {
+                    id: 'da',
+                    name: 'DA - Data Science and Artificial Intelligence'
+          },
+          {
+                    id: 'ec',
+                    name: 'EC - Electronics and Communication Engineering'
+          },
+          {
+                    id: 'ee',
+                    name: 'EE - Electrical Engineering'
+          },
+          {
+                    id: 'es',
+                    name: 'ES - Environmental Science and Engineering'
+          },
+          {
+                    id: 'ey',
+                    name: 'EY - Ecology and Evolution'
+          },
+          {
+                    id: 'ge',
+                    name: 'GE - Geomatics Engineering'
+          },
+          {
+                    id: 'gg',
+                    name: 'GG - Geology and Geophysics'
+          },
+          {
+                    id: 'in',
+                    name: 'IN - Instrumentation Engineering'
+          },
+          {
+                    id: 'ma',
+                    name: 'MA - Mathematics'
+          },
+          {
+                    id: 'me',
+                    name: 'ME - Mechanical Engineering'
+          },
+          {
+                    id: 'mn',
+                    name: 'MN - Mining Engineering'
+          },
+          {
+                    id: 'mt',
+                    name: 'MT - Metallurgical Engineering'
+          },
+          {
+                    id: 'nm',
+                    name: 'NM - Naval Architecture and Marine Engineering'
+          },
+          {
+                    id: 'pe',
+                    name: 'PE - Petroleum Engineering'
+          },
+          {
+                    id: 'ph',
+                    name: 'PH - Physics'
+          },
+          {
+                    id: 'pi',
+                    name: 'PI - Production and Industrial Engineering'
+          },
+          {
+                    id: 'st',
+                    name: 'ST - Statistics'
+          },
+          {
+                    id: 'tf',
+                    name: 'TF - Textile Engineering and Fibre Science'
+          },
+          {
+                    id: 'xe',
+                    name: 'XE - Engineering Sciences'
+          },
+          {
+                    id: 'xh',
+                    name: 'XH - Humanities and Social Sciences'
+          },
+          {
+                    id: 'xl',
+                    name: 'XL - Life Sciences'
+          }
+]
     },
 
     // ==========================================
@@ -291,26 +408,359 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>Dates dynamically updated for ' + currentYear + ' cycle (June and December sessions).</p>',
         links: '<a href="https://ugcnet.nta.nic.in/" target="_blank">Official UGC NET Website</a>',
         subjects: [
-            {id: '00', name: 'Paper 1 (General Paper)'},
-            {id: '01', name: '001 Economics'},
-            {id: '02', name: '002 Political Science'},
-            {id: '03', name: '003 Philosophy'},
-            {id: '04', name: '004 Psychology'},
-            {id: '05', name: '005 Sociology'},
-            {id: '06', name: '006 History'},
-            {id: '08', name: '008 Commerce'},
-            {id: '09', name: '009 Education'},
-            {id: '17', name: '017 Management'},
-            {id: '20', name: '020 Hindi'},
-            {id: '30', name: '030 English'},
-            {id: '58', name: '058 Law'},
-            {id: '87', name: '087 Computer Science and Applications'},
-            {id: '104', name: '104 Disaster Management'},
-            {id: '105', name: '105 Ayurveda Biology'},
-            {id: '106', name: '106 Forestry'},
-            {id: '107', name: '107 Statistics'}
-            // Expanded to 87 officially
-        ]
+          {
+                    id: '00',
+                    name: 'Paper 1 (General Paper)'
+          },
+          {
+                    id: '01',
+                    name: '001 Economics'
+          },
+          {
+                    id: '02',
+                    name: '002 Political Science'
+          },
+          {
+                    id: '03',
+                    name: '003 Philosophy'
+          },
+          {
+                    id: '04',
+                    name: '004 Psychology'
+          },
+          {
+                    id: '05',
+                    name: '005 Sociology'
+          },
+          {
+                    id: '06',
+                    name: '006 History'
+          },
+          {
+                    id: '07',
+                    name: '007 Anthropology'
+          },
+          {
+                    id: '08',
+                    name: '008 Commerce'
+          },
+          {
+                    id: '09',
+                    name: '009 Education'
+          },
+          {
+                    id: '10',
+                    name: '010 Social Work'
+          },
+          {
+                    id: '11',
+                    name: '011 Defence and Strategic Studies'
+          },
+          {
+                    id: '12',
+                    name: '012 Home Science'
+          },
+          {
+                    id: '14',
+                    name: '014 Public Administration'
+          },
+          {
+                    id: '15',
+                    name: '015 Population Studies'
+          },
+          {
+                    id: '16',
+                    name: '016 Music'
+          },
+          {
+                    id: '17',
+                    name: '017 Management'
+          },
+          {
+                    id: '18',
+                    name: '018 Maithili'
+          },
+          {
+                    id: '19',
+                    name: '019 Bengali'
+          },
+          {
+                    id: '20',
+                    name: '020 Hindi'
+          },
+          {
+                    id: '21',
+                    name: '021 Kannada'
+          },
+          {
+                    id: '22',
+                    name: '022 Malayalam'
+          },
+          {
+                    id: '23',
+                    name: '023 Odia'
+          },
+          {
+                    id: '24',
+                    name: '024 Punjabi'
+          },
+          {
+                    id: '25',
+                    name: '025 Sanskrit'
+          },
+          {
+                    id: '26',
+                    name: '026 Tamil'
+          },
+          {
+                    id: '27',
+                    name: '027 Telugu'
+          },
+          {
+                    id: '28',
+                    name: '028 Urdu'
+          },
+          {
+                    id: '29',
+                    name: '029 Arabic'
+          },
+          {
+                    id: '30',
+                    name: '030 English'
+          },
+          {
+                    id: '31',
+                    name: '031 Linguistics'
+          },
+          {
+                    id: '32',
+                    name: '032 Chinese'
+          },
+          {
+                    id: '33',
+                    name: '033 Dogri'
+          },
+          {
+                    id: '34',
+                    name: '034 Nepali'
+          },
+          {
+                    id: '35',
+                    name: '035 Manipuri'
+          },
+          {
+                    id: '36',
+                    name: '036 Assamese'
+          },
+          {
+                    id: '37',
+                    name: '037 Gujarati'
+          },
+          {
+                    id: '38',
+                    name: '038 Marathi'
+          },
+          {
+                    id: '39',
+                    name: '039 French'
+          },
+          {
+                    id: '40',
+                    name: '040 Spanish'
+          },
+          {
+                    id: '41',
+                    name: '041 Russian'
+          },
+          {
+                    id: '42',
+                    name: '042 Persian'
+          },
+          {
+                    id: '43',
+                    name: '043 Rajasthani'
+          },
+          {
+                    id: '44',
+                    name: '044 German'
+          },
+          {
+                    id: '45',
+                    name: '045 Japanese'
+          },
+          {
+                    id: '46',
+                    name: '046 Adult Education'
+          },
+          {
+                    id: '47',
+                    name: '047 Physical Education'
+          },
+          {
+                    id: '49',
+                    name: '049 Arab Culture and Islamic Studies'
+          },
+          {
+                    id: '50',
+                    name: '050 Indian Culture'
+          },
+          {
+                    id: '55',
+                    name: '055 Labour Welfare'
+          },
+          {
+                    id: '58',
+                    name: '058 Law'
+          },
+          {
+                    id: '59',
+                    name: '059 Library and Information Science'
+          },
+          {
+                    id: '60',
+                    name: '060 Buddhist, Jaina, Gandhian and Peace Studies'
+          },
+          {
+                    id: '62',
+                    name: '062 Comparative Study of Religions'
+          },
+          {
+                    id: '63',
+                    name: '063 Mass Communication and Journalism'
+          },
+          {
+                    id: '65',
+                    name: '065 Performing Arts'
+          },
+          {
+                    id: '66',
+                    name: '066 Museology & Conservation'
+          },
+          {
+                    id: '67',
+                    name: '067 Archaeology'
+          },
+          {
+                    id: '68',
+                    name: '068 Criminology'
+          },
+          {
+                    id: '70',
+                    name: '070 Tribal and Regional Language/Literature'
+          },
+          {
+                    id: '71',
+                    name: '071 Folk Literature'
+          },
+          {
+                    id: '72',
+                    name: '072 Comparative Literature'
+          },
+          {
+                    id: '73',
+                    name: '073 Sanskrit Traditional Subjects'
+          },
+          {
+                    id: '74',
+                    name: '074 Women Studies'
+          },
+          {
+                    id: '79',
+                    name: '079 Visual Arts'
+          },
+          {
+                    id: '80',
+                    name: '080 Geography'
+          },
+          {
+                    id: '81',
+                    name: '081 Social Medicine & Community Health'
+          },
+          {
+                    id: '82',
+                    name: '082 Forensic Science'
+          },
+          {
+                    id: '83',
+                    name: '083 Pali'
+          },
+          {
+                    id: '84',
+                    name: '084 Kashmiri'
+          },
+          {
+                    id: '85',
+                    name: '085 Konkani'
+          },
+          {
+                    id: '87',
+                    name: '087 Computer Science and Applications'
+          },
+          {
+                    id: '88',
+                    name: '088 Electronic Science'
+          },
+          {
+                    id: '89',
+                    name: '089 Environmental Sciences'
+          },
+          {
+                    id: '90',
+                    name: '090 Politics including International Relations'
+          },
+          {
+                    id: '91',
+                    name: '091 Prakrit'
+          },
+          {
+                    id: '92',
+                    name: '092 Human Rights and Duties'
+          },
+          {
+                    id: '93',
+                    name: '093 Tourism Administration and Management'
+          },
+          {
+                    id: '94',
+                    name: '094 Bodo'
+          },
+          {
+                    id: '95',
+                    name: '095 Santali'
+          },
+          {
+                    id: '100',
+                    name: '100 Yoga'
+          },
+          {
+                    id: '101',
+                    name: '101 Sindhi'
+          },
+          {
+                    id: '102',
+                    name: '102 Hindu Studies'
+          },
+          {
+                    id: '103',
+                    name: '103 Indian Knowledge System'
+          },
+          {
+                    id: '104',
+                    name: '104 Disaster Management'
+          },
+          {
+                    id: '105',
+                    name: '105 Ayurveda Biology'
+          },
+          {
+                    id: '106',
+                    name: '106 Forestry'
+          },
+          {
+                    id: '107',
+                    name: '107 Statistics'
+          }
+]
     },
 
     // ==========================================
