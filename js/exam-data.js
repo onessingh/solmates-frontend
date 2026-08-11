@@ -17,218 +17,242 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://www.upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
           {
-                    id: 'gs1',
-                    name: 'General Studies I'
+            id: 'prelims-general-studies-paper-i',
+            name: 'Prelims: General Studies Paper I'
           },
           {
-                    id: 'gs2',
-                    name: 'General Studies II'
+            id: 'prelims-csat-general-studies-paper-ii',
+            name: 'Prelims: CSAT / General Studies Paper II'
           },
           {
-                    id: 'gs3',
-                    name: 'General Studies III'
+            id: 'mains-indian-language',
+            name: 'Mains: Indian Language'
           },
           {
-                    id: 'gs4',
-                    name: 'General Studies IV'
+            id: 'mains-english',
+            name: 'Mains: English'
           },
           {
-                    id: 'essay',
-                    name: 'Essay'
+            id: 'mains-essay',
+            name: 'Mains: Essay'
           },
           {
-                    id: 'opt-agri',
-                    name: 'Optional: Agriculture'
+            id: 'mains-general-studies-i',
+            name: 'Mains: General Studies I'
           },
           {
-                    id: 'opt-animal',
-                    name: 'Optional: Animal Husbandry and Veterinary Science'
+            id: 'mains-general-studies-ii',
+            name: 'Mains: General Studies II'
           },
           {
-                    id: 'opt-anthro',
-                    name: 'Optional: Anthropology'
+            id: 'mains-general-studies-iii',
+            name: 'Mains: General Studies III'
           },
           {
-                    id: 'opt-botany',
-                    name: 'Optional: Botany'
+            id: 'mains-general-studies-iv',
+            name: 'Mains: General Studies IV'
           },
           {
-                    id: 'opt-chem',
-                    name: 'Optional: Chemistry'
+            id: 'mains-optional-subject-paper-i',
+            name: 'Mains: Optional Subject Paper I'
           },
           {
-                    id: 'opt-civil',
-                    name: 'Optional: Civil Engineering'
+            id: 'mains-optional-subject-paper-ii',
+            name: 'Mains: Optional Subject Paper II'
           },
           {
-                    id: 'opt-commerce',
-                    name: 'Optional: Commerce and Accountancy'
+            id: 'optional-subjects-agriculture',
+            name: 'Optional Subjects: Agriculture'
           },
           {
-                    id: 'opt-econ',
-                    name: 'Optional: Economics'
+            id: 'optional-subjects-animal-husbandry-veterinary-science',
+            name: 'Optional Subjects: Animal Husbandry & Veterinary Science'
           },
           {
-                    id: 'opt-ee',
-                    name: 'Optional: Electrical Engineering'
+            id: 'optional-subjects-anthropology',
+            name: 'Optional Subjects: Anthropology'
           },
           {
-                    id: 'opt-geog',
-                    name: 'Optional: Geography'
+            id: 'optional-subjects-botany',
+            name: 'Optional Subjects: Botany'
           },
           {
-                    id: 'opt-geol',
-                    name: 'Optional: Geology'
+            id: 'optional-subjects-chemistry',
+            name: 'Optional Subjects: Chemistry'
           },
           {
-                    id: 'opt-hist',
-                    name: 'Optional: History'
+            id: 'optional-subjects-civil-engineering',
+            name: 'Optional Subjects: Civil Engineering'
           },
           {
-                    id: 'opt-law',
-                    name: 'Optional: Law'
+            id: 'optional-subjects-commerce-accountancy',
+            name: 'Optional Subjects: Commerce & Accountancy'
           },
           {
-                    id: 'opt-manage',
-                    name: 'Optional: Management'
+            id: 'optional-subjects-economics',
+            name: 'Optional Subjects: Economics'
           },
           {
-                    id: 'opt-math',
-                    name: 'Optional: Mathematics'
+            id: 'optional-subjects-electrical-engineering',
+            name: 'Optional Subjects: Electrical Engineering'
           },
           {
-                    id: 'opt-mech',
-                    name: 'Optional: Mechanical Engineering'
+            id: 'optional-subjects-geography',
+            name: 'Optional Subjects: Geography'
           },
           {
-                    id: 'opt-med',
-                    name: 'Optional: Medical Science'
+            id: 'optional-subjects-geology',
+            name: 'Optional Subjects: Geology'
           },
           {
-                    id: 'opt-phil',
-                    name: 'Optional: Philosophy'
+            id: 'optional-subjects-history',
+            name: 'Optional Subjects: History'
           },
           {
-                    id: 'opt-phys',
-                    name: 'Optional: Physics'
+            id: 'optional-subjects-law',
+            name: 'Optional Subjects: Law'
           },
           {
-                    id: 'opt-psir',
-                    name: 'Optional: Political Science and IR'
+            id: 'optional-subjects-management',
+            name: 'Optional Subjects: Management'
           },
           {
-                    id: 'opt-psych',
-                    name: 'Optional: Psychology'
+            id: 'optional-subjects-mathematics',
+            name: 'Optional Subjects: Mathematics'
           },
           {
-                    id: 'opt-pubad',
-                    name: 'Optional: Public Administration'
+            id: 'optional-subjects-mechanical-engineering',
+            name: 'Optional Subjects: Mechanical Engineering'
           },
           {
-                    id: 'opt-soc',
-                    name: 'Optional: Sociology'
+            id: 'optional-subjects-medical-science',
+            name: 'Optional Subjects: Medical Science'
           },
           {
-                    id: 'opt-stats',
-                    name: 'Optional: Statistics'
+            id: 'optional-subjects-philosophy',
+            name: 'Optional Subjects: Philosophy'
           },
           {
-                    id: 'opt-zoo',
-                    name: 'Optional: Zoology'
+            id: 'optional-subjects-physics',
+            name: 'Optional Subjects: Physics'
           },
           {
-                    id: 'opt-lit-assamese',
-                    name: 'Literature: Assamese'
+            id: 'optional-subjects-political-science-international-relations',
+            name: 'Optional Subjects: Political Science & International Relations'
           },
           {
-                    id: 'opt-lit-bengali',
-                    name: 'Literature: Bengali'
+            id: 'optional-subjects-psychology',
+            name: 'Optional Subjects: Psychology'
           },
           {
-                    id: 'opt-lit-bodo',
-                    name: 'Literature: Bodo'
+            id: 'optional-subjects-public-administration',
+            name: 'Optional Subjects: Public Administration'
           },
           {
-                    id: 'opt-lit-dogri',
-                    name: 'Literature: Dogri'
+            id: 'optional-subjects-sociology',
+            name: 'Optional Subjects: Sociology'
           },
           {
-                    id: 'opt-lit-gujarati',
-                    name: 'Literature: Gujarati'
+            id: 'optional-subjects-statistics',
+            name: 'Optional Subjects: Statistics'
           },
           {
-                    id: 'opt-lit-hindi',
-                    name: 'Literature: Hindi'
+            id: 'optional-subjects-zoology',
+            name: 'Optional Subjects: Zoology'
           },
           {
-                    id: 'opt-lit-kannada',
-                    name: 'Literature: Kannada'
+            id: 'literature-optionals-assamese',
+            name: 'Literature Optionals: Assamese'
           },
           {
-                    id: 'opt-lit-kashmiri',
-                    name: 'Literature: Kashmiri'
+            id: 'literature-optionals-bengali',
+            name: 'Literature Optionals: Bengali'
           },
           {
-                    id: 'opt-lit-konkani',
-                    name: 'Literature: Konkani'
+            id: 'literature-optionals-bodo',
+            name: 'Literature Optionals: Bodo'
           },
           {
-                    id: 'opt-lit-maithili',
-                    name: 'Literature: Maithili'
+            id: 'literature-optionals-dogri',
+            name: 'Literature Optionals: Dogri'
           },
           {
-                    id: 'opt-lit-malayalam',
-                    name: 'Literature: Malayalam'
+            id: 'literature-optionals-english',
+            name: 'Literature Optionals: English'
           },
           {
-                    id: 'opt-lit-manipuri',
-                    name: 'Literature: Manipuri'
+            id: 'literature-optionals-gujarati',
+            name: 'Literature Optionals: Gujarati'
           },
           {
-                    id: 'opt-lit-marathi',
-                    name: 'Literature: Marathi'
+            id: 'literature-optionals-hindi',
+            name: 'Literature Optionals: Hindi'
           },
           {
-                    id: 'opt-lit-nepali',
-                    name: 'Literature: Nepali'
+            id: 'literature-optionals-kannada',
+            name: 'Literature Optionals: Kannada'
           },
           {
-                    id: 'opt-lit-odia',
-                    name: 'Literature: Odia'
+            id: 'literature-optionals-kashmiri',
+            name: 'Literature Optionals: Kashmiri'
           },
           {
-                    id: 'opt-lit-punjabi',
-                    name: 'Literature: Punjabi'
+            id: 'literature-optionals-konkani',
+            name: 'Literature Optionals: Konkani'
           },
           {
-                    id: 'opt-lit-sanskrit',
-                    name: 'Literature: Sanskrit'
+            id: 'literature-optionals-maithili',
+            name: 'Literature Optionals: Maithili'
           },
           {
-                    id: 'opt-lit-santhali',
-                    name: 'Literature: Santhali'
+            id: 'literature-optionals-malayalam',
+            name: 'Literature Optionals: Malayalam'
           },
           {
-                    id: 'opt-lit-sindhi',
-                    name: 'Literature: Sindhi'
+            id: 'literature-optionals-manipuri',
+            name: 'Literature Optionals: Manipuri'
           },
           {
-                    id: 'opt-lit-tamil',
-                    name: 'Literature: Tamil'
+            id: 'literature-optionals-marathi',
+            name: 'Literature Optionals: Marathi'
           },
           {
-                    id: 'opt-lit-telugu',
-                    name: 'Literature: Telugu'
+            id: 'literature-optionals-nepali',
+            name: 'Literature Optionals: Nepali'
           },
           {
-                    id: 'opt-lit-urdu',
-                    name: 'Literature: Urdu'
+            id: 'literature-optionals-odia',
+            name: 'Literature Optionals: Odia'
           },
           {
-                    id: 'opt-lit-english',
-                    name: 'Literature: English'
+            id: 'literature-optionals-punjabi',
+            name: 'Literature Optionals: Punjabi'
+          },
+          {
+            id: 'literature-optionals-sanskrit',
+            name: 'Literature Optionals: Sanskrit'
+          },
+          {
+            id: 'literature-optionals-santhali',
+            name: 'Literature Optionals: Santhali'
+          },
+          {
+            id: 'literature-optionals-sindhi',
+            name: 'Literature Optionals: Sindhi'
+          },
+          {
+            id: 'literature-optionals-tamil',
+            name: 'Literature Optionals: Tamil'
+          },
+          {
+            id: 'literature-optionals-telugu',
+            name: 'Literature Optionals: Telugu'
+          },
+          {
+            id: 'literature-optionals-urdu',
+            name: 'Literature Optionals: Urdu'
           }
-]
+        ]
     },
     'uppsc': {
         name: 'UPPSC PCS',
@@ -242,38 +266,42 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://uppsc.up.nic.in/" target="_blank">Official UPPSC Website</a>',
         subjects: [
           {
-                    id: 'gs1',
-                    name: 'General Studies I'
+            id: 'prelims-general-studies-i',
+            name: 'Prelims: General Studies I'
           },
           {
-                    id: 'gs2',
-                    name: 'General Studies II'
+            id: 'prelims-general-studies-ii-csat',
+            name: 'Prelims: General Studies II / CSAT'
           },
           {
-                    id: 'gs3',
-                    name: 'General Studies III'
+            id: 'mains-general-hindi',
+            name: 'Mains: General Hindi'
           },
           {
-                    id: 'gs4',
-                    name: 'General Studies IV'
+            id: 'mains-essay',
+            name: 'Mains: Essay'
           },
           {
-                    id: 'gs5',
-                    name: 'General Studies V (UP Special)'
+            id: 'mains-general-studies-i',
+            name: 'Mains: General Studies I'
           },
           {
-                    id: 'gs6',
-                    name: 'General Studies VI (UP Special)'
+            id: 'mains-general-studies-ii',
+            name: 'Mains: General Studies II'
           },
           {
-                    id: 'essay',
-                    name: 'Essay'
+            id: 'mains-general-studies-iii',
+            name: 'Mains: General Studies III'
           },
           {
-                    id: 'hindi',
-                    name: 'General Hindi'
+            id: 'mains-general-studies-iv',
+            name: 'Mains: General Studies IV'
+          },
+          {
+            id: 'mains-optional-subject-s-as-prescribed-by-current-scheme',
+            name: 'Mains: Optional Subject(s) — as prescribed by current scheme'
           }
-]
+        ]
     },
     'bpsc': {
         name: 'BPSC CCE',
@@ -287,118 +315,126 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://bpsc.bihar.gov.in/" target="_blank">Official BPSC Website</a>',
         subjects: [
           {
-                    id: 'gs1',
-                    name: 'General Studies I'
+            id: 'prelims-general-studies',
+            name: 'Prelims: General Studies'
           },
           {
-                    id: 'gs2',
-                    name: 'General Studies II'
+            id: 'mains-general-hindi',
+            name: 'Mains: General Hindi'
           },
           {
-                    id: 'essay',
-                    name: 'Essay'
+            id: 'mains-general-studies-i',
+            name: 'Mains: General Studies I'
           },
           {
-                    id: 'opt-agri',
-                    name: 'Optional: Agriculture'
+            id: 'mains-general-studies-ii',
+            name: 'Mains: General Studies II'
           },
           {
-                    id: 'opt-anthro',
-                    name: 'Optional: Anthropology'
+            id: 'mains-optional-subject',
+            name: 'Mains: Optional Subject'
           },
           {
-                    id: 'opt-chem',
-                    name: 'Optional: Chemistry'
+            id: 'optional-subjects-agriculture',
+            name: 'Optional Subjects: Agriculture'
           },
           {
-                    id: 'opt-commerce',
-                    name: 'Optional: Commerce & Accountancy'
+            id: 'optional-subjects-animal-husbandry-veterinary-science',
+            name: 'Optional Subjects: Animal Husbandry & Veterinary Science'
           },
           {
-                    id: 'opt-econ',
-                    name: 'Optional: Economics'
+            id: 'optional-subjects-anthropology',
+            name: 'Optional Subjects: Anthropology'
           },
           {
-                    id: 'opt-geog',
-                    name: 'Optional: Geography'
+            id: 'optional-subjects-botany',
+            name: 'Optional Subjects: Botany'
           },
           {
-                    id: 'opt-geol',
-                    name: 'Optional: Geology'
+            id: 'optional-subjects-chemistry',
+            name: 'Optional Subjects: Chemistry'
           },
           {
-                    id: 'opt-hist',
-                    name: 'Optional: History'
+            id: 'optional-subjects-civil-engineering',
+            name: 'Optional Subjects: Civil Engineering'
           },
           {
-                    id: 'opt-ls',
-                    name: 'Optional: Labour and Social Welfare (LSW)'
+            id: 'optional-subjects-commerce-accountancy',
+            name: 'Optional Subjects: Commerce & Accountancy'
           },
           {
-                    id: 'opt-law',
-                    name: 'Optional: Law'
+            id: 'optional-subjects-economics',
+            name: 'Optional Subjects: Economics'
           },
           {
-                    id: 'opt-manage',
-                    name: 'Optional: Management'
+            id: 'optional-subjects-electrical-engineering',
+            name: 'Optional Subjects: Electrical Engineering'
           },
           {
-                    id: 'opt-math',
-                    name: 'Optional: Mathematics'
+            id: 'optional-subjects-geography',
+            name: 'Optional Subjects: Geography'
           },
           {
-                    id: 'opt-mech',
-                    name: 'Optional: Mechanical Engineering'
+            id: 'optional-subjects-geology',
+            name: 'Optional Subjects: Geology'
           },
           {
-                    id: 'opt-phil',
-                    name: 'Optional: Philosophy'
+            id: 'optional-subjects-history',
+            name: 'Optional Subjects: History'
           },
           {
-                    id: 'opt-phys',
-                    name: 'Optional: Physics'
+            id: 'optional-subjects-labour-social-welfare',
+            name: 'Optional Subjects: Labour & Social Welfare'
           },
           {
-                    id: 'opt-psir',
-                    name: 'Optional: Political Science and IR'
+            id: 'optional-subjects-law',
+            name: 'Optional Subjects: Law'
           },
           {
-                    id: 'opt-psych',
-                    name: 'Optional: Psychology'
+            id: 'optional-subjects-management',
+            name: 'Optional Subjects: Management'
           },
           {
-                    id: 'opt-pubad',
-                    name: 'Optional: Public Administration'
+            id: 'optional-subjects-mathematics',
+            name: 'Optional Subjects: Mathematics'
           },
           {
-                    id: 'opt-soc',
-                    name: 'Optional: Sociology'
+            id: 'optional-subjects-mechanical-engineering',
+            name: 'Optional Subjects: Mechanical Engineering'
           },
           {
-                    id: 'opt-stats',
-                    name: 'Optional: Statistics'
+            id: 'optional-subjects-philosophy',
+            name: 'Optional Subjects: Philosophy'
           },
           {
-                    id: 'opt-zoo',
-                    name: 'Optional: Zoology'
+            id: 'optional-subjects-physics',
+            name: 'Optional Subjects: Physics'
           },
           {
-                    id: 'opt-hindi',
-                    name: 'Optional: Hindi Language and Lit.'
+            id: 'optional-subjects-political-science-international-relations',
+            name: 'Optional Subjects: Political Science & International Relations'
           },
           {
-                    id: 'opt-eng',
-                    name: 'Optional: English Language and Lit.'
+            id: 'optional-subjects-psychology',
+            name: 'Optional Subjects: Psychology'
           },
           {
-                    id: 'opt-urdu',
-                    name: 'Optional: Urdu Language and Lit.'
+            id: 'optional-subjects-public-administration',
+            name: 'Optional Subjects: Public Administration'
           },
           {
-                    id: 'opt-maithili',
-                    name: 'Optional: Maithili Language and Lit.'
+            id: 'optional-subjects-sociology',
+            name: 'Optional Subjects: Sociology'
+          },
+          {
+            id: 'optional-subjects-statistics',
+            name: 'Optional Subjects: Statistics'
+          },
+          {
+            id: 'optional-subjects-zoology',
+            name: 'Optional Subjects: Zoology'
           }
-]
+        ]
     },
 
     // ==========================================
@@ -415,13 +451,46 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Notification Release - 2026',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
-            {id: 't1-reasoning', name: 'Tier I: Reasoning'},
-            {id: 't1-ga', name: 'Tier I: General Awareness'},
-            {id: 't1-quant', name: 'Tier I: Quantitative Aptitude'},
-            {id: 't1-eng', name: 'Tier I: English'},
-            {id: 't2-paper1', name: 'Tier II: Paper I (Compulsory)'},
-            {id: 't2-stats', name: 'Tier II: Statistics'},
-            {id: 't2-finance', name: 'Tier II: Finance & Economics'}
+          {
+            id: 'prelims-general-studies',
+            name: 'Prelims: General Studies'
+          },
+          {
+            id: 'prelims-csat',
+            name: 'Prelims: CSAT'
+          },
+          {
+            id: 'mains-marathi',
+            name: 'Mains: Marathi'
+          },
+          {
+            id: 'mains-english',
+            name: 'Mains: English'
+          },
+          {
+            id: 'mains-essay',
+            name: 'Mains: Essay'
+          },
+          {
+            id: 'mains-general-studies-i',
+            name: 'Mains: General Studies I'
+          },
+          {
+            id: 'mains-general-studies-ii',
+            name: 'Mains: General Studies II'
+          },
+          {
+            id: 'mains-general-studies-iii',
+            name: 'Mains: General Studies III'
+          },
+          {
+            id: 'mains-general-studies-iv',
+            name: 'Mains: General Studies IV'
+          },
+          {
+            id: 'mains-optional-prescribed-subject-papers',
+            name: 'Mains: Optional / prescribed subject papers'
+          }
         ]
     },
     'ssc-chsl': {
@@ -435,9 +504,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Possible Delay - null',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
-            {id: 't1', name: 'Tier I: All Subjects'},
-            {id: 't2', name: 'Tier II: All Subjects'},
-            {id: 'typing', name: 'Skill/Typing Test'}
+          {
+            id: 'prelims-general-knowledge-general-science',
+            name: 'Prelims: General Knowledge & General Science'
+          },
+          {
+            id: 'mains-general-studies-i',
+            name: 'Mains: General Studies I'
+          },
+          {
+            id: 'mains-general-studies-ii',
+            name: 'Mains: General Studies II'
+          },
+          {
+            id: 'mains-general-studies-iii',
+            name: 'Mains: General Studies III'
+          },
+          {
+            id: 'mains-general-hindi-general-english',
+            name: 'Mains: General Hindi & General English'
+          }
         ]
     },
     'ssc-mts': {
@@ -451,8 +537,54 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Notification Release - null',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
-            {id: 'session1', name: 'Session I: Numerical & Reasoning'},
-            {id: 'session2', name: 'Session II: English & GA'}
+          {
+            id: 'tier-i-general-intelligence-reasoning',
+            name: 'Tier I: General Intelligence & Reasoning'
+          },
+          {
+            id: 'tier-i-general-awareness',
+            name: 'Tier I: General Awareness'
+          },
+          {
+            id: 'tier-i-quantitative-aptitude',
+            name: 'Tier I: Quantitative Aptitude'
+          },
+          {
+            id: 'tier-i-english-comprehension',
+            name: 'Tier I: English Comprehension'
+          },
+          {
+            id: 'tier-ii-mathematical-abilities',
+            name: 'Tier Ii: Mathematical Abilities'
+          },
+          {
+            id: 'tier-ii-reasoning-general-intelligence',
+            name: 'Tier Ii: Reasoning & General Intelligence'
+          },
+          {
+            id: 'tier-ii-english-language-comprehension',
+            name: 'Tier Ii: English Language & Comprehension'
+          },
+          {
+            id: 'tier-ii-general-awareness',
+            name: 'Tier Ii: General Awareness'
+          },
+          {
+            id: 'tier-ii-computer-knowledge',
+            name: 'Tier Ii: Computer Knowledge'
+          },
+          {
+            id: 'tier-ii-data-entry-speed-test',
+            name: 'Tier Ii: Data Entry Speed Test'
+          },
+          {
+            id: 'additional-papers-statistics',
+            name: 'Additional Papers: Statistics'
+          },
+          {
+            id: 'additional-papers-general-studies-finance-economics',
+            name: 'Additional Papers: General Studies — Finance & Economics'
+          }
         ]
     },
 
@@ -470,14 +602,46 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Application Start - null',
         links: '<a href="https://www.ibps.in/" target="_blank">Official IBPS Website</a>',
         subjects: [
-            {id: 'pre-eng', name: 'Prelims: English Language'},
-            {id: 'pre-quant', name: 'Prelims: Quantitative Aptitude'},
-            {id: 'pre-reason', name: 'Prelims: Reasoning Ability'},
-            {id: 'mains-reason-comp', name: 'Mains: Reasoning & Computer Aptitude'},
-            {id: 'mains-eng', name: 'Mains: English Language'},
-            {id: 'mains-data', name: 'Mains: Data Analysis & Interpretation'},
-            {id: 'mains-ga', name: 'Mains: General/Economy/Banking Awareness'},
-            {id: 'mains-desc', name: 'Mains: Descriptive Paper (English)'}
+          {
+            id: 'tier-i-english-language',
+            name: 'Tier I: English Language'
+          },
+          {
+            id: 'tier-i-general-intelligence',
+            name: 'Tier I: General Intelligence'
+          },
+          {
+            id: 'tier-i-quantitative-aptitude',
+            name: 'Tier I: Quantitative Aptitude'
+          },
+          {
+            id: 'tier-i-general-awareness',
+            name: 'Tier I: General Awareness'
+          },
+          {
+            id: 'tier-ii-mathematical-abilities',
+            name: 'Tier Ii: Mathematical Abilities'
+          },
+          {
+            id: 'tier-ii-reasoning-general-intelligence',
+            name: 'Tier Ii: Reasoning & General Intelligence'
+          },
+          {
+            id: 'tier-ii-english-language-comprehension',
+            name: 'Tier Ii: English Language & Comprehension'
+          },
+          {
+            id: 'tier-ii-general-awareness',
+            name: 'Tier Ii: General Awareness'
+          },
+          {
+            id: 'tier-ii-computer-knowledge',
+            name: 'Tier Ii: Computer Knowledge'
+          },
+          {
+            id: 'tier-ii-skill-test-typing-test',
+            name: 'Tier Ii: Skill Test / Typing Test'
+          }
         ]
     },
     'sbi-po': {
@@ -491,14 +655,22 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Schedule - Not specified',
         links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
         subjects: [
-            {id: 'pre-eng', name: 'Prelims: English Language'},
-            {id: 'pre-quant', name: 'Prelims: Quantitative Aptitude'},
-            {id: 'pre-reason', name: 'Prelims: Reasoning Ability'},
-            {id: 'mains-reason-comp', name: 'Mains: Reasoning & Computer Aptitude'},
-            {id: 'mains-data', name: 'Mains: Data Analysis & Interpretation'},
-            {id: 'mains-ga', name: 'Mains: General/Economy/Banking Awareness'},
-            {id: 'mains-eng', name: 'Mains: English Language'},
-            {id: 'mains-desc', name: 'Mains: Descriptive Test'}
+          {
+            id: 'session-i-numerical-mathematical-ability',
+            name: 'Session I: Numerical & Mathematical Ability'
+          },
+          {
+            id: 'session-i-reasoning-ability-problem-solving',
+            name: 'Session I: Reasoning Ability & Problem Solving'
+          },
+          {
+            id: 'session-ii-general-awareness',
+            name: 'Session Ii: General Awareness'
+          },
+          {
+            id: 'session-ii-english-language-comprehension',
+            name: 'Session Ii: English Language & Comprehension'
+          }
         ]
     },
     'rbi-grade-b': {
@@ -512,13 +684,22 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Result Out - Not specified',
         links: '<a href="https://opportunities.rbi.org.in/" target="_blank">Official RBI Website</a>',
         subjects: [
-            {id: 'phase1-ga', name: 'Phase I: General Awareness'},
-            {id: 'phase1-eng', name: 'Phase I: English'},
-            {id: 'phase1-quant', name: 'Phase I: Quantitative Aptitude'},
-            {id: 'phase1-reason', name: 'Phase I: Reasoning'},
-            {id: 'phase2-esi', name: 'Phase II: Economic & Social Issues'},
-            {id: 'phase2-eng', name: 'Phase II: English (Writing Skills)'},
-            {id: 'phase2-fm', name: 'Phase II: Finance & Management'}
+          {
+            id: 'general-intelligence-reasoning',
+            name: 'General Intelligence & Reasoning'
+          },
+          {
+            id: 'general-knowledge-general-awareness',
+            name: 'General Knowledge & General Awareness'
+          },
+          {
+            id: 'elementary-mathematics',
+            name: 'Elementary Mathematics'
+          },
+          {
+            id: 'english-hindi',
+            name: 'English / Hindi'
+          }
         ]
     },
 
@@ -536,11 +717,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Application - 2026',
         links: '<a href="https://neet.nta.nic.in/" target="_blank">Official NEET NTA Website</a>',
         subjects: [
-            {id: 'physics', name: 'Physics'},
-            {id: 'chemistry', name: 'Chemistry'},
-            {id: 'botany', name: 'Botany'},
-            {id: 'zoology', name: 'Zoology'},
-            {id: 'mock', name: 'Full Length Mocks'}
+          {
+            id: 'paper-i-general-intelligence-reasoning',
+            name: 'Paper I: General Intelligence & Reasoning'
+          },
+          {
+            id: 'paper-i-general-knowledge-general-awareness',
+            name: 'Paper I: General Knowledge & General Awareness'
+          },
+          {
+            id: 'paper-i-quantitative-aptitude',
+            name: 'Paper I: Quantitative Aptitude'
+          },
+          {
+            id: 'paper-i-english-comprehension',
+            name: 'Paper I: English Comprehension'
+          },
+          {
+            id: 'paper-ii-english-language-comprehension',
+            name: 'Paper Ii: English Language & Comprehension'
+          }
         ]
     },
 
@@ -558,11 +754,38 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Session 2 - 2026',
         links: '<a href="https://jeemain.nta.nic.in/" target="_blank">Official JEE Main Website</a>',
         subjects: [
-            {id: 'physics', name: 'Physics'},
-            {id: 'chemistry', name: 'Chemistry'},
-            {id: 'mathematics', name: 'Mathematics'},
-            {id: 'aptitude', name: 'Aptitude Test (B.Arch)'},
-            {id: 'drawing', name: 'Drawing Test (B.Arch)'}
+          {
+            id: 'prelims-english-language',
+            name: 'Prelims: English Language'
+          },
+          {
+            id: 'prelims-quantitative-aptitude',
+            name: 'Prelims: Quantitative Aptitude'
+          },
+          {
+            id: 'prelims-reasoning-ability',
+            name: 'Prelims: Reasoning Ability'
+          },
+          {
+            id: 'mains-reasoning-computer-aptitude',
+            name: 'Mains: Reasoning & Computer Aptitude'
+          },
+          {
+            id: 'mains-english-language',
+            name: 'Mains: English Language'
+          },
+          {
+            id: 'mains-data-analysis-interpretation',
+            name: 'Mains: Data Analysis & Interpretation'
+          },
+          {
+            id: 'mains-general-economy-banking-awareness',
+            name: 'Mains: General Economy / Banking Awareness'
+          },
+          {
+            id: 'descriptive-english-language-essay-letter',
+            name: 'Descriptive: English Language — Essay / Letter'
+          }
         ]
     },
     'gate': {
@@ -577,130 +800,34 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://gate2026.iitg.ac.in/" target="_blank">Official GATE Website</a>',
         subjects: [
           {
-                    id: 'ga',
-                    name: 'General Aptitude (Common for all)'
+            id: 'prelims-english-language',
+            name: 'Prelims: English Language'
           },
           {
-                    id: 'ae',
-                    name: 'AE - Aerospace Engineering'
+            id: 'prelims-numerical-ability',
+            name: 'Prelims: Numerical Ability'
           },
           {
-                    id: 'ag',
-                    name: 'AG - Agricultural Engineering'
+            id: 'prelims-reasoning-ability',
+            name: 'Prelims: Reasoning Ability'
           },
           {
-                    id: 'ar',
-                    name: 'AR - Architecture and Planning'
+            id: 'mains-general-financial-awareness',
+            name: 'Mains: General / Financial Awareness'
           },
           {
-                    id: 'bm',
-                    name: 'BM - Biomedical Engineering'
+            id: 'mains-general-english',
+            name: 'Mains: General English'
           },
           {
-                    id: 'bt',
-                    name: 'BT - Biotechnology'
+            id: 'mains-reasoning-ability',
+            name: 'Mains: Reasoning Ability'
           },
           {
-                    id: 'ce',
-                    name: 'CE - Civil Engineering'
-          },
-          {
-                    id: 'ch',
-                    name: 'CH - Chemical Engineering'
-          },
-          {
-                    id: 'cs',
-                    name: 'CS - Computer Science and Information Technology'
-          },
-          {
-                    id: 'cy',
-                    name: 'CY - Chemistry'
-          },
-          {
-                    id: 'da',
-                    name: 'DA - Data Science and Artificial Intelligence'
-          },
-          {
-                    id: 'ec',
-                    name: 'EC - Electronics and Communication Engineering'
-          },
-          {
-                    id: 'ee',
-                    name: 'EE - Electrical Engineering'
-          },
-          {
-                    id: 'es',
-                    name: 'ES - Environmental Science and Engineering'
-          },
-          {
-                    id: 'ey',
-                    name: 'EY - Ecology and Evolution'
-          },
-          {
-                    id: 'ge',
-                    name: 'GE - Geomatics Engineering'
-          },
-          {
-                    id: 'gg',
-                    name: 'GG - Geology and Geophysics'
-          },
-          {
-                    id: 'in',
-                    name: 'IN - Instrumentation Engineering'
-          },
-          {
-                    id: 'ma',
-                    name: 'MA - Mathematics'
-          },
-          {
-                    id: 'me',
-                    name: 'ME - Mechanical Engineering'
-          },
-          {
-                    id: 'mn',
-                    name: 'MN - Mining Engineering'
-          },
-          {
-                    id: 'mt',
-                    name: 'MT - Metallurgical Engineering'
-          },
-          {
-                    id: 'nm',
-                    name: 'NM - Naval Architecture and Marine Engineering'
-          },
-          {
-                    id: 'pe',
-                    name: 'PE - Petroleum Engineering'
-          },
-          {
-                    id: 'ph',
-                    name: 'PH - Physics'
-          },
-          {
-                    id: 'pi',
-                    name: 'PI - Production and Industrial Engineering'
-          },
-          {
-                    id: 'st',
-                    name: 'ST - Statistics'
-          },
-          {
-                    id: 'tf',
-                    name: 'TF - Textile Engineering and Fibre Science'
-          },
-          {
-                    id: 'xe',
-                    name: 'XE - Engineering Sciences'
-          },
-          {
-                    id: 'xh',
-                    name: 'XH - Humanities and Social Sciences'
-          },
-          {
-                    id: 'xl',
-                    name: 'XL - Life Sciences'
+            id: 'mains-quantitative-aptitude',
+            name: 'Mains: Quantitative Aptitude'
           }
-]
+        ]
     },
 
     // ==========================================
@@ -718,358 +845,38 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://ugcnet.nta.nic.in/" target="_blank">Official UGC NET Website</a>',
         subjects: [
           {
-                    id: '00',
-                    name: 'Paper 1 (General Paper)'
+            id: 'prelims-english-language',
+            name: 'Prelims: English Language'
           },
           {
-                    id: '01',
-                    name: '001 Economics'
+            id: 'prelims-quantitative-aptitude',
+            name: 'Prelims: Quantitative Aptitude'
           },
           {
-                    id: '02',
-                    name: '002 Political Science'
+            id: 'prelims-reasoning-ability',
+            name: 'Prelims: Reasoning Ability'
           },
           {
-                    id: '03',
-                    name: '003 Philosophy'
+            id: 'mains-reasoning-computer-aptitude',
+            name: 'Mains: Reasoning & Computer Aptitude'
           },
           {
-                    id: '04',
-                    name: '004 Psychology'
+            id: 'mains-data-analysis-interpretation',
+            name: 'Mains: Data Analysis & Interpretation'
           },
           {
-                    id: '05',
-                    name: '005 Sociology'
+            id: 'mains-general-economy-banking-awareness',
+            name: 'Mains: General / Economy / Banking Awareness'
           },
           {
-                    id: '06',
-                    name: '006 History'
+            id: 'mains-english-language',
+            name: 'Mains: English Language'
           },
           {
-                    id: '07',
-                    name: '007 Anthropology'
-          },
-          {
-                    id: '08',
-                    name: '008 Commerce'
-          },
-          {
-                    id: '09',
-                    name: '009 Education'
-          },
-          {
-                    id: '10',
-                    name: '010 Social Work'
-          },
-          {
-                    id: '11',
-                    name: '011 Defence and Strategic Studies'
-          },
-          {
-                    id: '12',
-                    name: '012 Home Science'
-          },
-          {
-                    id: '14',
-                    name: '014 Public Administration'
-          },
-          {
-                    id: '15',
-                    name: '015 Population Studies'
-          },
-          {
-                    id: '16',
-                    name: '016 Music'
-          },
-          {
-                    id: '17',
-                    name: '017 Management'
-          },
-          {
-                    id: '18',
-                    name: '018 Maithili'
-          },
-          {
-                    id: '19',
-                    name: '019 Bengali'
-          },
-          {
-                    id: '20',
-                    name: '020 Hindi'
-          },
-          {
-                    id: '21',
-                    name: '021 Kannada'
-          },
-          {
-                    id: '22',
-                    name: '022 Malayalam'
-          },
-          {
-                    id: '23',
-                    name: '023 Odia'
-          },
-          {
-                    id: '24',
-                    name: '024 Punjabi'
-          },
-          {
-                    id: '25',
-                    name: '025 Sanskrit'
-          },
-          {
-                    id: '26',
-                    name: '026 Tamil'
-          },
-          {
-                    id: '27',
-                    name: '027 Telugu'
-          },
-          {
-                    id: '28',
-                    name: '028 Urdu'
-          },
-          {
-                    id: '29',
-                    name: '029 Arabic'
-          },
-          {
-                    id: '30',
-                    name: '030 English'
-          },
-          {
-                    id: '31',
-                    name: '031 Linguistics'
-          },
-          {
-                    id: '32',
-                    name: '032 Chinese'
-          },
-          {
-                    id: '33',
-                    name: '033 Dogri'
-          },
-          {
-                    id: '34',
-                    name: '034 Nepali'
-          },
-          {
-                    id: '35',
-                    name: '035 Manipuri'
-          },
-          {
-                    id: '36',
-                    name: '036 Assamese'
-          },
-          {
-                    id: '37',
-                    name: '037 Gujarati'
-          },
-          {
-                    id: '38',
-                    name: '038 Marathi'
-          },
-          {
-                    id: '39',
-                    name: '039 French'
-          },
-          {
-                    id: '40',
-                    name: '040 Spanish'
-          },
-          {
-                    id: '41',
-                    name: '041 Russian'
-          },
-          {
-                    id: '42',
-                    name: '042 Persian'
-          },
-          {
-                    id: '43',
-                    name: '043 Rajasthani'
-          },
-          {
-                    id: '44',
-                    name: '044 German'
-          },
-          {
-                    id: '45',
-                    name: '045 Japanese'
-          },
-          {
-                    id: '46',
-                    name: '046 Adult Education'
-          },
-          {
-                    id: '47',
-                    name: '047 Physical Education'
-          },
-          {
-                    id: '49',
-                    name: '049 Arab Culture and Islamic Studies'
-          },
-          {
-                    id: '50',
-                    name: '050 Indian Culture'
-          },
-          {
-                    id: '55',
-                    name: '055 Labour Welfare'
-          },
-          {
-                    id: '58',
-                    name: '058 Law'
-          },
-          {
-                    id: '59',
-                    name: '059 Library and Information Science'
-          },
-          {
-                    id: '60',
-                    name: '060 Buddhist, Jaina, Gandhian and Peace Studies'
-          },
-          {
-                    id: '62',
-                    name: '062 Comparative Study of Religions'
-          },
-          {
-                    id: '63',
-                    name: '063 Mass Communication and Journalism'
-          },
-          {
-                    id: '65',
-                    name: '065 Performing Arts'
-          },
-          {
-                    id: '66',
-                    name: '066 Museology & Conservation'
-          },
-          {
-                    id: '67',
-                    name: '067 Archaeology'
-          },
-          {
-                    id: '68',
-                    name: '068 Criminology'
-          },
-          {
-                    id: '70',
-                    name: '070 Tribal and Regional Language/Literature'
-          },
-          {
-                    id: '71',
-                    name: '071 Folk Literature'
-          },
-          {
-                    id: '72',
-                    name: '072 Comparative Literature'
-          },
-          {
-                    id: '73',
-                    name: '073 Sanskrit Traditional Subjects'
-          },
-          {
-                    id: '74',
-                    name: '074 Women Studies'
-          },
-          {
-                    id: '79',
-                    name: '079 Visual Arts'
-          },
-          {
-                    id: '80',
-                    name: '080 Geography'
-          },
-          {
-                    id: '81',
-                    name: '081 Social Medicine & Community Health'
-          },
-          {
-                    id: '82',
-                    name: '082 Forensic Science'
-          },
-          {
-                    id: '83',
-                    name: '083 Pali'
-          },
-          {
-                    id: '84',
-                    name: '084 Kashmiri'
-          },
-          {
-                    id: '85',
-                    name: '085 Konkani'
-          },
-          {
-                    id: '87',
-                    name: '087 Computer Science and Applications'
-          },
-          {
-                    id: '88',
-                    name: '088 Electronic Science'
-          },
-          {
-                    id: '89',
-                    name: '089 Environmental Sciences'
-          },
-          {
-                    id: '90',
-                    name: '090 Politics including International Relations'
-          },
-          {
-                    id: '91',
-                    name: '091 Prakrit'
-          },
-          {
-                    id: '92',
-                    name: '092 Human Rights and Duties'
-          },
-          {
-                    id: '93',
-                    name: '093 Tourism Administration and Management'
-          },
-          {
-                    id: '94',
-                    name: '094 Bodo'
-          },
-          {
-                    id: '95',
-                    name: '095 Santali'
-          },
-          {
-                    id: '100',
-                    name: '100 Yoga'
-          },
-          {
-                    id: '101',
-                    name: '101 Sindhi'
-          },
-          {
-                    id: '102',
-                    name: '102 Hindu Studies'
-          },
-          {
-                    id: '103',
-                    name: '103 Indian Knowledge System'
-          },
-          {
-                    id: '104',
-                    name: '104 Disaster Management'
-          },
-          {
-                    id: '105',
-                    name: '105 Ayurveda Biology'
-          },
-          {
-                    id: '106',
-                    name: '106 Forestry'
-          },
-          {
-                    id: '107',
-                    name: '107 Statistics'
+            id: 'descriptive-english-language',
+            name: 'Descriptive: English Language'
           }
-]
+        ]
     },
 
     // ==========================================
@@ -1086,10 +893,38 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Schedule - April and November',
         links: '<a href="https://iimcat.ac.in/" target="_blank">Official CAT Website</a>',
         subjects: [
-            {id: 'varc', name: 'VARC'},
-            {id: 'dilr', name: 'DILR'},
-            {id: 'qa', name: 'QA'},
-            {id: 'mock', name: 'Full Mock Test'}
+          {
+            id: 'prelims-english-language',
+            name: 'Prelims: English Language'
+          },
+          {
+            id: 'prelims-numerical-ability',
+            name: 'Prelims: Numerical Ability'
+          },
+          {
+            id: 'prelims-reasoning-ability',
+            name: 'Prelims: Reasoning Ability'
+          },
+          {
+            id: 'mains-general-financial-awareness',
+            name: 'Mains: General / Financial Awareness'
+          },
+          {
+            id: 'mains-general-english',
+            name: 'Mains: General English'
+          },
+          {
+            id: 'mains-quantitative-aptitude',
+            name: 'Mains: Quantitative Aptitude'
+          },
+          {
+            id: 'mains-reasoning-ability-computer-aptitude',
+            name: 'Mains: Reasoning Ability & Computer Aptitude'
+          },
+          {
+            id: 'other-local-language',
+            name: 'Other: Local Language'
+          }
         ]
     },
 
@@ -1107,11 +942,42 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Tentative Schedule - Not specified',
         links: '<a href="https://consortiumofnlus.ac.in/" target="_blank">Official CLAT Website</a>',
         subjects: [
-            {id: 'english', name: 'English Language'},
-            {id: 'ca', name: 'Current Affairs & GK'},
-            {id: 'legal', name: 'Legal Reasoning'},
-            {id: 'logical', name: 'Logical Reasoning'},
-            {id: 'quant', name: 'Quantitative Techniques'}
+          {
+            id: 'phase-i-general-awareness',
+            name: 'Phase I: General Awareness'
+          },
+          {
+            id: 'phase-i-english-language',
+            name: 'Phase I: English Language'
+          },
+          {
+            id: 'phase-i-quantitative-aptitude',
+            name: 'Phase I: Quantitative Aptitude'
+          },
+          {
+            id: 'phase-i-reasoning',
+            name: 'Phase I: Reasoning'
+          },
+          {
+            id: 'phase-i-economic-social-issues',
+            name: 'Phase I: Economic & Social Issues'
+          },
+          {
+            id: 'phase-i-english-writing-skills',
+            name: 'Phase I: English — Writing Skills'
+          },
+          {
+            id: 'phase-i-finance-management',
+            name: 'Phase I: Finance & Management'
+          },
+          {
+            id: 'specialist-streams-economics-depr',
+            name: 'Specialist Streams: Economics — DEPR'
+          },
+          {
+            id: 'specialist-streams-statistics-data-science-dsim',
+            name: 'Specialist Streams: Statistics / Data Science — DSIM'
+          }
         ]
     },
 
@@ -1131,134 +997,102 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://mpsc.gov.in/" target="_blank">Official MPSC Website</a>',
         subjects: [
           {
-                    id: 'gs1',
-                    name: 'General Studies I'
+            id: 'prelims-reasoning',
+            name: 'Prelims: Reasoning'
           },
           {
-                    id: 'gs2',
-                    name: 'General Studies II'
+            id: 'prelims-english-language',
+            name: 'Prelims: English Language'
           },
           {
-                    id: 'gs3',
-                    name: 'General Studies III'
+            id: 'prelims-computer-knowledge',
+            name: 'Prelims: Computer Knowledge'
           },
           {
-                    id: 'gs4',
-                    name: 'General Studies IV'
+            id: 'prelims-quantitative-aptitude',
+            name: 'Prelims: Quantitative Aptitude'
           },
           {
-                    id: 'essay',
-                    name: 'Essay'
+            id: 'prelims-decision-making',
+            name: 'Prelims: Decision Making'
           },
           {
-                    id: 'marathi',
-                    name: 'Marathi Language'
+            id: 'prelims-economic-social-issues',
+            name: 'Prelims: Economic & Social Issues'
           },
           {
-                    id: 'english',
-                    name: 'English Language'
+            id: 'prelims-agriculture-rural-development',
+            name: 'Prelims: Agriculture & Rural Development'
           },
           {
-                    id: 'opt-agri',
-                    name: 'Optional: Agriculture'
+            id: 'prelims-general-awareness',
+            name: 'Prelims: General Awareness'
           },
           {
-                    id: 'opt-animal',
-                    name: 'Optional: Animal Husbandry & Vet Science'
+            id: 'mains-general-english',
+            name: 'Mains: General English'
           },
           {
-                    id: 'opt-anthro',
-                    name: 'Optional: Anthropology'
+            id: 'mains-economic-social-issues',
+            name: 'Mains: Economic & Social Issues'
           },
           {
-                    id: 'opt-botany',
-                    name: 'Optional: Botany'
+            id: 'mains-agriculture-rural-development',
+            name: 'Mains: Agriculture & Rural Development'
           },
           {
-                    id: 'opt-chem',
-                    name: 'Optional: Chemistry'
+            id: 'specialist-streams-agriculture',
+            name: 'Specialist Streams: Agriculture'
           },
           {
-                    id: 'opt-civil',
-                    name: 'Optional: Civil Engineering'
+            id: 'specialist-streams-agriculture-engineering',
+            name: 'Specialist Streams: Agriculture Engineering'
           },
           {
-                    id: 'opt-commerce',
-                    name: 'Optional: Commerce & Accountancy'
+            id: 'specialist-streams-land-development',
+            name: 'Specialist Streams: Land Development'
           },
           {
-                    id: 'opt-econ',
-                    name: 'Optional: Economics'
+            id: 'specialist-streams-fisheries',
+            name: 'Specialist Streams: Fisheries'
           },
           {
-                    id: 'opt-ee',
-                    name: 'Optional: Electrical Engineering'
+            id: 'specialist-streams-food-processing',
+            name: 'Specialist Streams: Food Processing'
           },
           {
-                    id: 'opt-geog',
-                    name: 'Optional: Geography'
+            id: 'specialist-streams-forestry',
+            name: 'Specialist Streams: Forestry'
           },
           {
-                    id: 'opt-geol',
-                    name: 'Optional: Geology'
+            id: 'specialist-streams-environmental-science',
+            name: 'Specialist Streams: Environmental Science'
           },
           {
-                    id: 'opt-hist',
-                    name: 'Optional: History'
+            id: 'specialist-streams-finance',
+            name: 'Specialist Streams: Finance'
           },
           {
-                    id: 'opt-law',
-                    name: 'Optional: Law'
+            id: 'specialist-streams-computer-it',
+            name: 'Specialist Streams: Computer / IT'
           },
           {
-                    id: 'opt-math',
-                    name: 'Optional: Mathematics'
+            id: 'specialist-streams-economics',
+            name: 'Specialist Streams: Economics'
           },
           {
-                    id: 'opt-mech',
-                    name: 'Optional: Mechanical Engineering'
+            id: 'specialist-streams-statistics',
+            name: 'Specialist Streams: Statistics'
           },
           {
-                    id: 'opt-med',
-                    name: 'Optional: Medical Science'
+            id: 'specialist-streams-legal',
+            name: 'Specialist Streams: Legal'
           },
           {
-                    id: 'opt-phil',
-                    name: 'Optional: Philosophy'
-          },
-          {
-                    id: 'opt-phys',
-                    name: 'Optional: Physics'
-          },
-          {
-                    id: 'opt-psir',
-                    name: 'Optional: Political Science and IR'
-          },
-          {
-                    id: 'opt-psych',
-                    name: 'Optional: Psychology'
-          },
-          {
-                    id: 'opt-pubad',
-                    name: 'Optional: Public Administration'
-          },
-          {
-                    id: 'opt-soc',
-                    name: 'Optional: Sociology'
-          },
-          {
-                    id: 'opt-stats',
-                    name: 'Optional: Statistics'
-          },
-          {
-                    id: 'opt-zoo',
-                    name: 'Optional: Zoology'
-          },
-          {
-                    id: 'opt-marathi-lit',
-                    name: 'Optional: Marathi Literature'
+            id: 'specialist-streams-other-notified-disciplines',
+            name: 'Specialist Streams: Other notified disciplines'
           }
-]
+        ]
     },
     'rpsc': {
         name: 'RPSC RAS',
@@ -1272,22 +1106,26 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://rpsc.rajasthan.gov.in/" target="_blank">Official RPSC Website</a>',
         subjects: [
           {
-                    id: 'gs1',
-                    name: 'General Studies I (History, Economy, Sociology, Management)'
+            id: 'general-awareness',
+            name: 'General Awareness'
           },
           {
-                    id: 'gs2',
-                    name: 'General Studies II (Admin Ethics, Science, Earth Science)'
+            id: 'mathematics',
+            name: 'Mathematics'
           },
           {
-                    id: 'gs3',
-                    name: 'General Studies III (Polity, PubAd, Sports, Law)'
+            id: 'general-intelligence-reasoning',
+            name: 'General Intelligence & Reasoning'
           },
           {
-                    id: 'gs4',
-                    name: 'General Hindi and General English'
+            id: 'post-specific-typing-skill-test',
+            name: 'Post-specific: Typing Skill Test'
+          },
+          {
+            id: 'post-specific-computer-based-aptitude-test',
+            name: 'Post-specific: Computer Based Aptitude Test'
           }
-]
+        ]
     },
 
     // ==========================================
@@ -1304,10 +1142,22 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Prelims Result - null',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
-            {id: 'cbe-gi', name: 'General Intelligence & Reasoning'},
-            {id: 'cbe-gk', name: 'General Knowledge & Awareness'},
-            {id: 'cbe-math', name: 'Elementary Mathematics'},
-            {id: 'cbe-lang', name: 'English / Hindi'}
+          {
+            id: 'general-science',
+            name: 'General Science'
+          },
+          {
+            id: 'mathematics',
+            name: 'Mathematics'
+          },
+          {
+            id: 'general-intelligence-reasoning',
+            name: 'General Intelligence & Reasoning'
+          },
+          {
+            id: 'general-awareness-current-affairs',
+            name: 'General Awareness & Current Affairs'
+          }
         ]
     },
     'ssc-cpo': {
@@ -1321,11 +1171,42 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Group B Cut Off - null',
         links: '<a href="https://ssc.gov.in/" target="_blank">Official SSC Website</a>',
         subjects: [
-            {id: 'paper1-gi', name: 'Paper I: General Intelligence'},
-            {id: 'paper1-gk', name: 'Paper I: General Knowledge'},
-            {id: 'paper1-quant', name: 'Paper I: Quantitative Aptitude'},
-            {id: 'paper1-eng', name: 'Paper I: English Comprehension'},
-            {id: 'paper2-eng', name: 'Paper II: English Language & Comprehension'}
+          {
+            id: 'cbt-1-mathematics',
+            name: 'Cbt 1: Mathematics'
+          },
+          {
+            id: 'cbt-1-mental-ability',
+            name: 'Cbt 1: Mental Ability'
+          },
+          {
+            id: 'cbt-1-general-science',
+            name: 'Cbt 1: General Science'
+          },
+          {
+            id: 'cbt-1-general-awareness-current-affairs',
+            name: 'Cbt 1: General Awareness & Current Affairs'
+          },
+          {
+            id: 'cbt-2-mathematics',
+            name: 'Cbt 2: Mathematics'
+          },
+          {
+            id: 'cbt-2-general-intelligence-reasoning',
+            name: 'Cbt 2: General Intelligence & Reasoning'
+          },
+          {
+            id: 'cbt-2-basic-science-engineering',
+            name: 'Cbt 2: Basic Science & Engineering'
+          },
+          {
+            id: 'cbt-2-general-awareness',
+            name: 'Cbt 2: General Awareness'
+          },
+          {
+            id: 'part-b-trade-specific-subject',
+            name: 'Part B: Trade-Specific Subject'
+          }
         ]
     },
 
@@ -1343,13 +1224,38 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Cancelled - Not specified',
         links: '<a href="https://www.ibps.in/" target="_blank">Official IBPS Website</a>',
         subjects: [
-            {id: 'pre-eng', name: 'Prelims: English'},
-            {id: 'pre-num', name: 'Prelims: Numerical Ability'},
-            {id: 'pre-reason', name: 'Prelims: Reasoning'},
-            {id: 'mains-ga', name: 'Mains: General/Financial Awareness'},
-            {id: 'mains-eng', name: 'Mains: General English'},
-            {id: 'mains-reason', name: 'Mains: Reasoning Ability'},
-            {id: 'mains-quant', name: 'Mains: Quantitative Aptitude'}
+          {
+            id: 'paper-i-mathematics',
+            name: 'Paper I: Mathematics'
+          },
+          {
+            id: 'paper-ii-english',
+            name: 'Paper Ii: English'
+          },
+          {
+            id: 'paper-ii-physics',
+            name: 'Paper Ii: Physics'
+          },
+          {
+            id: 'paper-ii-chemistry',
+            name: 'Paper Ii: Chemistry'
+          },
+          {
+            id: 'paper-ii-general-science',
+            name: 'Paper Ii: General Science'
+          },
+          {
+            id: 'paper-ii-history',
+            name: 'Paper Ii: History'
+          },
+          {
+            id: 'paper-ii-geography',
+            name: 'Paper Ii: Geography'
+          },
+          {
+            id: 'paper-ii-current-events',
+            name: 'Paper Ii: Current Events'
+          }
         ]
     },
     'sbi-clerk': {
@@ -1363,13 +1269,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Prelims Exam Date - 1 & 2 August 2026',
         links: '<a href="https://sbi.co.in/web/careers" target="_blank">Official SBI Careers</a>',
         subjects: [
-            {id: 'pre-eng', name: 'Prelims: English'},
-            {id: 'pre-num', name: 'Prelims: Numerical Ability'},
-            {id: 'pre-reason', name: 'Prelims: Reasoning'},
-            {id: 'mains-ga', name: 'Mains: General/Financial Awareness'},
-            {id: 'mains-eng', name: 'Mains: General English'},
-            {id: 'mains-quant', name: 'Mains: Quantitative Aptitude'},
-            {id: 'mains-reason', name: 'Mains: Reasoning & Computer Aptitude'}
+          {
+            id: 'ima-ina-afa-english',
+            name: 'Ima / Ina / Afa: English'
+          },
+          {
+            id: 'ima-ina-afa-general-knowledge',
+            name: 'Ima / Ina / Afa: General Knowledge'
+          },
+          {
+            id: 'ima-ina-afa-elementary-mathematics',
+            name: 'Ima / Ina / Afa: Elementary Mathematics'
+          },
+          {
+            id: 'ota-english',
+            name: 'Ota: English'
+          },
+          {
+            id: 'ota-general-knowledge',
+            name: 'Ota: General Knowledge'
+          }
         ]
     },
     'nabard': {
@@ -1383,10 +1302,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Mains Admit Card Out - Not specified',
         links: '<a href="https://www.nabard.org/" target="_blank">Official NABARD Website</a>',
         subjects: [
-            {id: 'pre', name: 'Prelims: Common Subjects'},
-            {id: 'mains-eng', name: 'Mains: General English'},
-            {id: 'mains-esi-ard', name: 'Mains: ESI & ARD'},
-            {id: 'mains-specialist', name: 'Mains: Specialist Discipline'}
+          {
+            id: 'general-awareness',
+            name: 'General Awareness'
+          },
+          {
+            id: 'english',
+            name: 'English'
+          },
+          {
+            id: 'numerical-ability',
+            name: 'Numerical Ability'
+          },
+          {
+            id: 'reasoning',
+            name: 'Reasoning'
+          },
+          {
+            id: 'military-aptitude',
+            name: 'Military Aptitude'
+          }
         ]
     },
 
@@ -1404,9 +1339,74 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Notification Out - Not specified',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
-            {id: 'ga', name: 'General Awareness'},
-            {id: 'math', name: 'Mathematics'},
-            {id: 'reasoning', name: 'General Intelligence & Reasoning'}
+          {
+            id: 'general-duty-general-knowledge',
+            name: 'General Duty: General Knowledge'
+          },
+          {
+            id: 'general-duty-general-science',
+            name: 'General Duty: General Science'
+          },
+          {
+            id: 'general-duty-mathematics',
+            name: 'General Duty: Mathematics'
+          },
+          {
+            id: 'general-duty-logical-reasoning',
+            name: 'General Duty: Logical Reasoning'
+          },
+          {
+            id: 'technical-general-knowledge',
+            name: 'Technical: General Knowledge'
+          },
+          {
+            id: 'technical-general-science',
+            name: 'Technical: General Science'
+          },
+          {
+            id: 'technical-mathematics',
+            name: 'Technical: Mathematics'
+          },
+          {
+            id: 'technical-physics',
+            name: 'Technical: Physics'
+          },
+          {
+            id: 'technical-chemistry',
+            name: 'Technical: Chemistry'
+          },
+          {
+            id: 'technical-technical-subject',
+            name: 'Technical: Technical Subject'
+          },
+          {
+            id: 'office-assistant-store-keeper-general-knowledge',
+            name: 'Office Assistant / Store Keeper: General Knowledge'
+          },
+          {
+            id: 'office-assistant-store-keeper-general-science',
+            name: 'Office Assistant / Store Keeper: General Science'
+          },
+          {
+            id: 'office-assistant-store-keeper-mathematics',
+            name: 'Office Assistant / Store Keeper: Mathematics'
+          },
+          {
+            id: 'office-assistant-store-keeper-computer',
+            name: 'Office Assistant / Store Keeper: Computer'
+          },
+          {
+            id: 'office-assistant-store-keeper-general-reasoning',
+            name: 'Office Assistant / Store Keeper: General Reasoning'
+          },
+          {
+            id: 'office-assistant-store-keeper-english',
+            name: 'Office Assistant / Store Keeper: English'
+          },
+          {
+            id: 'other-trades-trade-specific-subjects',
+            name: 'Other Trades: Trade-Specific Subjects'
+          }
         ]
     },
     'rrb-group-d': {
@@ -1420,10 +1420,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Application Window Closes - Not specified',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
-            {id: 'science', name: 'General Science'},
-            {id: 'math', name: 'Mathematics'},
-            {id: 'reasoning', name: 'Reasoning'},
-            {id: 'ga', name: 'General Awareness & Current Affairs'}
+          {
+            id: 'physics',
+            name: 'Physics'
+          },
+          {
+            id: 'chemistry',
+            name: 'Chemistry'
+          },
+          {
+            id: 'biology',
+            name: 'Biology'
+          },
+          {
+            id: 'biology-botany',
+            name: 'Biology: Botany'
+          },
+          {
+            id: 'biology-zoology',
+            name: 'Biology: Zoology'
+          }
         ]
     },
     'rrb-alp': {
@@ -1437,9 +1453,82 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Date - 1 & 2 Aug 2026',
         links: '<a href="https://rrb.indianrailways.gov.in/" target="_blank">Official RRB Website</a>',
         subjects: [
-            {id: 'cbt1', name: 'CBT 1: All Subjects'},
-            {id: 'cbt2-parta', name: 'CBT 2: Part A (Maths, Reasoning, Science)'},
-            {id: 'cbt2-partb', name: 'CBT 2: Part B (Trade-specific)'}
+          {
+            id: 'anatomy',
+            name: 'Anatomy'
+          },
+          {
+            id: 'physiology',
+            name: 'Physiology'
+          },
+          {
+            id: 'biochemistry',
+            name: 'Biochemistry'
+          },
+          {
+            id: 'pathology',
+            name: 'Pathology'
+          },
+          {
+            id: 'pharmacology',
+            name: 'Pharmacology'
+          },
+          {
+            id: 'microbiology',
+            name: 'Microbiology'
+          },
+          {
+            id: 'forensic-medicine',
+            name: 'Forensic Medicine'
+          },
+          {
+            id: 'community-medicine',
+            name: 'Community Medicine'
+          },
+          {
+            id: 'general-medicine',
+            name: 'General Medicine'
+          },
+          {
+            id: 'pediatrics',
+            name: 'Pediatrics'
+          },
+          {
+            id: 'dermatology',
+            name: 'Dermatology'
+          },
+          {
+            id: 'psychiatry',
+            name: 'Psychiatry'
+          },
+          {
+            id: 'radiodiagnosis',
+            name: 'Radiodiagnosis'
+          },
+          {
+            id: 'anesthesiology',
+            name: 'Anesthesiology'
+          },
+          {
+            id: 'general-surgery',
+            name: 'General Surgery'
+          },
+          {
+            id: 'orthopedics',
+            name: 'Orthopedics'
+          },
+          {
+            id: 'ent',
+            name: 'ENT'
+          },
+          {
+            id: 'ophthalmology',
+            name: 'Ophthalmology'
+          },
+          {
+            id: 'obstetrics-gynecology',
+            name: 'Obstetrics & Gynecology'
+          }
         ]
     },
 
@@ -1457,9 +1546,82 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Notification - 2026',
         links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
-            {id: 'math', name: 'Paper I: Mathematics'},
-            {id: 'gat-eng', name: 'Paper II: English'},
-            {id: 'gat-gk', name: 'Paper II: General Knowledge'}
+          {
+            id: 'anatomy',
+            name: 'Anatomy'
+          },
+          {
+            id: 'physiology',
+            name: 'Physiology'
+          },
+          {
+            id: 'biochemistry',
+            name: 'Biochemistry'
+          },
+          {
+            id: 'pathology',
+            name: 'Pathology'
+          },
+          {
+            id: 'pharmacology',
+            name: 'Pharmacology'
+          },
+          {
+            id: 'microbiology',
+            name: 'Microbiology'
+          },
+          {
+            id: 'forensic-medicine',
+            name: 'Forensic Medicine'
+          },
+          {
+            id: 'community-medicine',
+            name: 'Community Medicine'
+          },
+          {
+            id: 'general-medicine',
+            name: 'General Medicine'
+          },
+          {
+            id: 'pediatrics',
+            name: 'Pediatrics'
+          },
+          {
+            id: 'dermatology',
+            name: 'Dermatology'
+          },
+          {
+            id: 'psychiatry',
+            name: 'Psychiatry'
+          },
+          {
+            id: 'radiodiagnosis',
+            name: 'Radiodiagnosis'
+          },
+          {
+            id: 'anesthesiology',
+            name: 'Anesthesiology'
+          },
+          {
+            id: 'general-surgery',
+            name: 'General Surgery'
+          },
+          {
+            id: 'orthopedics',
+            name: 'Orthopedics'
+          },
+          {
+            id: 'ent',
+            name: 'ENT'
+          },
+          {
+            id: 'ophthalmology',
+            name: 'Ophthalmology'
+          },
+          {
+            id: 'obstetrics-gynecology',
+            name: 'Obstetrics & Gynecology'
+          }
         ]
     },
     'cds': {
@@ -1473,9 +1635,42 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Date - 2026',
         links: '<a href="https://upsc.gov.in/" target="_blank">Official UPSC Website</a>',
         subjects: [
-            {id: 'eng', name: 'English'},
-            {id: 'gk', name: 'General Knowledge'},
-            {id: 'math', name: 'Elementary Mathematics'}
+          {
+            id: 'physics',
+            name: 'Physics'
+          },
+          {
+            id: 'chemistry',
+            name: 'Chemistry'
+          },
+          {
+            id: 'mathematics',
+            name: 'Mathematics'
+          },
+          {
+            id: 'mathematics',
+            name: 'Mathematics'
+          },
+          {
+            id: 'aptitude-test',
+            name: 'Aptitude Test'
+          },
+          {
+            id: 'drawing-test',
+            name: 'Drawing Test'
+          },
+          {
+            id: 'mathematics',
+            name: 'Mathematics'
+          },
+          {
+            id: 'aptitude-test',
+            name: 'Aptitude Test'
+          },
+          {
+            id: 'planning',
+            name: 'Planning'
+          }
         ]
     },
     'afcat': {
@@ -1489,10 +1684,18 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Notification - 2026',
         links: '<a href="https://careerairforce.gov.in/" target="_blank">Official AFCAT Website</a>',
         subjects: [
-            {id: 'eng', name: 'English'},
-            {id: 'ga', name: 'General Awareness'},
-            {id: 'num', name: 'Numerical Ability'},
-            {id: 'reasoning', name: 'Reasoning & Military Aptitude'}
+          {
+            id: 'physics',
+            name: 'Physics'
+          },
+          {
+            id: 'chemistry',
+            name: 'Chemistry'
+          },
+          {
+            id: 'mathematics',
+            name: 'Mathematics'
+          }
         ]
     },
     'agniveer': {
@@ -1506,12 +1709,130 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Application Form - 3 Aug 2026',
         links: '<a href="https://joinindianarmy.nic.in/" target="_blank">Official Indian Army Website</a>',
         subjects: [
-            {id: 'gd-gk', name: 'GD: General Knowledge'},
-            {id: 'gd-sci', name: 'GD: General Science'},
-            {id: 'gd-math', name: 'GD: Mathematics'},
-            {id: 'gd-reasoning', name: 'GD: Logical Reasoning'},
-            {id: 'tech-phy', name: 'Tech: Physics'},
-            {id: 'tech-chem', name: 'Tech: Chemistry'}
+          {
+            id: 'common-general-aptitude',
+            name: 'Common: General Aptitude'
+          },
+          {
+            id: 'test-papers-aerospace-engineering',
+            name: 'Test Papers: Aerospace Engineering'
+          },
+          {
+            id: 'test-papers-agricultural-engineering',
+            name: 'Test Papers: Agricultural Engineering'
+          },
+          {
+            id: 'test-papers-architecture-planning',
+            name: 'Test Papers: Architecture & Planning'
+          },
+          {
+            id: 'test-papers-biomedical-engineering',
+            name: 'Test Papers: Biomedical Engineering'
+          },
+          {
+            id: 'test-papers-biotechnology',
+            name: 'Test Papers: Biotechnology'
+          },
+          {
+            id: 'test-papers-civil-engineering',
+            name: 'Test Papers: Civil Engineering'
+          },
+          {
+            id: 'test-papers-chemical-engineering',
+            name: 'Test Papers: Chemical Engineering'
+          },
+          {
+            id: 'test-papers-computer-science-information-technology',
+            name: 'Test Papers: Computer Science & Information Technology'
+          },
+          {
+            id: 'test-papers-chemistry',
+            name: 'Test Papers: Chemistry'
+          },
+          {
+            id: 'test-papers-data-science-artificial-intelligence',
+            name: 'Test Papers: Data Science & Artificial Intelligence'
+          },
+          {
+            id: 'test-papers-electronics-communication-engineering',
+            name: 'Test Papers: Electronics & Communication Engineering'
+          },
+          {
+            id: 'test-papers-electrical-engineering',
+            name: 'Test Papers: Electrical Engineering'
+          },
+          {
+            id: 'test-papers-environmental-science-engineering',
+            name: 'Test Papers: Environmental Science & Engineering'
+          },
+          {
+            id: 'test-papers-ecology-evolution',
+            name: 'Test Papers: Ecology & Evolution'
+          },
+          {
+            id: 'test-papers-geomatics-engineering',
+            name: 'Test Papers: Geomatics Engineering'
+          },
+          {
+            id: 'test-papers-geology-geophysics',
+            name: 'Test Papers: Geology & Geophysics'
+          },
+          {
+            id: 'test-papers-instrumentation-engineering',
+            name: 'Test Papers: Instrumentation Engineering'
+          },
+          {
+            id: 'test-papers-mathematics',
+            name: 'Test Papers: Mathematics'
+          },
+          {
+            id: 'test-papers-mechanical-engineering',
+            name: 'Test Papers: Mechanical Engineering'
+          },
+          {
+            id: 'test-papers-mining-engineering',
+            name: 'Test Papers: Mining Engineering'
+          },
+          {
+            id: 'test-papers-naval-architecture-marine-engineering',
+            name: 'Test Papers: Naval Architecture & Marine Engineering'
+          },
+          {
+            id: 'test-papers-petroleum-engineering',
+            name: 'Test Papers: Petroleum Engineering'
+          },
+          {
+            id: 'test-papers-physics',
+            name: 'Test Papers: Physics'
+          },
+          {
+            id: 'test-papers-production-industrial-engineering',
+            name: 'Test Papers: Production & Industrial Engineering'
+          },
+          {
+            id: 'test-papers-metallurgical-engineering',
+            name: 'Test Papers: Metallurgical Engineering'
+          },
+          {
+            id: 'test-papers-statistics',
+            name: 'Test Papers: Statistics'
+          },
+          {
+            id: 'test-papers-textile-engineering-fibre-science',
+            name: 'Test Papers: Textile Engineering & Fibre Science'
+          },
+          {
+            id: 'test-papers-engineering-sciences',
+            name: 'Test Papers: Engineering Sciences'
+          },
+          {
+            id: 'test-papers-humanities-social-sciences',
+            name: 'Test Papers: Humanities & Social Sciences'
+          },
+          {
+            id: 'test-papers-life-sciences',
+            name: 'Test Papers: Life Sciences'
+          }
         ]
     },
 
@@ -1530,82 +1851,30 @@ window.MOCK_EXAM_DATA = {
         links: '<a href="https://natboard.edu.in/" target="_blank">Official NBEMS Website</a>',
         subjects: [
           {
-                    id: 'anatomy',
-                    name: 'Anatomy'
+            id: 'physics',
+            name: 'Physics'
           },
           {
-                    id: 'physio',
-                    name: 'Physiology'
+            id: 'chemistry',
+            name: 'Chemistry'
           },
           {
-                    id: 'biochem',
-                    name: 'Biochemistry'
+            id: 'english-proficiency',
+            name: 'English Proficiency'
           },
           {
-                    id: 'patho',
-                    name: 'Pathology'
+            id: 'logical-reasoning',
+            name: 'Logical Reasoning'
           },
           {
-                    id: 'pharma',
-                    name: 'Pharmacology'
+            id: 'mathematics',
+            name: 'Mathematics'
           },
           {
-                    id: 'micro',
-                    name: 'Microbiology'
-          },
-          {
-                    id: 'fmt',
-                    name: 'Forensic Medicine and Toxicology'
-          },
-          {
-                    id: 'psm',
-                    name: 'Social and Preventive Medicine (PSM)'
-          },
-          {
-                    id: 'ent',
-                    name: 'ENT'
-          },
-          {
-                    id: 'opthal',
-                    name: 'Ophthalmology'
-          },
-          {
-                    id: 'medicine',
-                    name: 'General Medicine'
-          },
-          {
-                    id: 'surgery',
-                    name: 'General Surgery'
-          },
-          {
-                    id: 'obgyn',
-                    name: 'Obstetrics and Gynaecology'
-          },
-          {
-                    id: 'paeds',
-                    name: 'Paediatrics'
-          },
-          {
-                    id: 'ortho',
-                    name: 'Orthopaedics'
-          },
-          {
-                    id: 'derma',
-                    name: 'Dermatology & Venereology'
-          },
-          {
-                    id: 'psych',
-                    name: 'Psychiatry'
-          },
-          {
-                    id: 'radio',
-                    name: 'Radiodiagnosis & Radiotherapy'
-          },
-          {
-                    id: 'anes',
-                    name: 'Anaesthesia'
+            id: 'biology-stream-biology',
+            name: 'Biology Stream: Biology'
           }
-]
+        ]
     },
     'ini-cet': {
         name: 'INI-CET',
@@ -1618,9 +1887,394 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam City Intimation Slip Out - Not specified',
         links: '<a href="https://aiimsexams.ac.in/" target="_blank">Official AIIMS Exams Website</a>',
         subjects: [
-            {id: 'pre-clinical', name: 'Pre-clinical Subjects'},
-            {id: 'para-clinical', name: 'Para-clinical Subjects'},
-            {id: 'clinical', name: 'Clinical Subjects'}
+          {
+            id: 'paper-1-teaching-aptitude',
+            name: 'Paper 1: Teaching Aptitude'
+          },
+          {
+            id: 'paper-1-research-aptitude',
+            name: 'Paper 1: Research Aptitude'
+          },
+          {
+            id: 'paper-1-comprehension',
+            name: 'Paper 1: Comprehension'
+          },
+          {
+            id: 'paper-1-communication',
+            name: 'Paper 1: Communication'
+          },
+          {
+            id: 'paper-1-mathematical-reasoning-aptitude',
+            name: 'Paper 1: Mathematical Reasoning & Aptitude'
+          },
+          {
+            id: 'paper-1-logical-reasoning',
+            name: 'Paper 1: Logical Reasoning'
+          },
+          {
+            id: 'paper-1-data-interpretation',
+            name: 'Paper 1: Data Interpretation'
+          },
+          {
+            id: 'paper-1-information-communication-technology',
+            name: 'Paper 1: Information & Communication Technology'
+          },
+          {
+            id: 'paper-1-people-development-environment',
+            name: 'Paper 1: People, Development & Environment'
+          },
+          {
+            id: 'paper-1-higher-education-system',
+            name: 'Paper 1: Higher Education System'
+          },
+          {
+            id: 'paper-1-economics',
+            name: 'Paper 1: Economics'
+          },
+          {
+            id: 'paper-1-political-science',
+            name: 'Paper 1: Political Science'
+          },
+          {
+            id: 'paper-1-philosophy',
+            name: 'Paper 1: Philosophy'
+          },
+          {
+            id: 'paper-1-psychology',
+            name: 'Paper 1: Psychology'
+          },
+          {
+            id: 'paper-1-sociology',
+            name: 'Paper 1: Sociology'
+          },
+          {
+            id: 'paper-1-history',
+            name: 'Paper 1: History'
+          },
+          {
+            id: 'paper-1-anthropology',
+            name: 'Paper 1: Anthropology'
+          },
+          {
+            id: 'paper-1-commerce',
+            name: 'Paper 1: Commerce'
+          },
+          {
+            id: 'paper-1-education',
+            name: 'Paper 1: Education'
+          },
+          {
+            id: 'paper-1-social-work',
+            name: 'Paper 1: Social Work'
+          },
+          {
+            id: 'paper-1-defence-strategic-studies',
+            name: 'Paper 1: Defence & Strategic Studies'
+          },
+          {
+            id: 'paper-1-home-science',
+            name: 'Paper 1: Home Science'
+          },
+          {
+            id: 'paper-1-public-administration',
+            name: 'Paper 1: Public Administration'
+          },
+          {
+            id: 'paper-1-population-studies',
+            name: 'Paper 1: Population Studies'
+          },
+          {
+            id: 'paper-1-music',
+            name: 'Paper 1: Music'
+          },
+          {
+            id: 'paper-1-management',
+            name: 'Paper 1: Management'
+          },
+          {
+            id: 'paper-1-maithili',
+            name: 'Paper 1: Maithili'
+          },
+          {
+            id: 'paper-1-bengali',
+            name: 'Paper 1: Bengali'
+          },
+          {
+            id: 'paper-1-hindi',
+            name: 'Paper 1: Hindi'
+          },
+          {
+            id: 'paper-1-kannada',
+            name: 'Paper 1: Kannada'
+          },
+          {
+            id: 'paper-1-malayalam',
+            name: 'Paper 1: Malayalam'
+          },
+          {
+            id: 'paper-1-odia',
+            name: 'Paper 1: Odia'
+          },
+          {
+            id: 'paper-1-punjabi',
+            name: 'Paper 1: Punjabi'
+          },
+          {
+            id: 'paper-1-sanskrit',
+            name: 'Paper 1: Sanskrit'
+          },
+          {
+            id: 'paper-1-tamil',
+            name: 'Paper 1: Tamil'
+          },
+          {
+            id: 'paper-1-telugu',
+            name: 'Paper 1: Telugu'
+          },
+          {
+            id: 'paper-1-urdu',
+            name: 'Paper 1: Urdu'
+          },
+          {
+            id: 'paper-1-arabic',
+            name: 'Paper 1: Arabic'
+          },
+          {
+            id: 'paper-1-english',
+            name: 'Paper 1: English'
+          },
+          {
+            id: 'paper-1-linguistics',
+            name: 'Paper 1: Linguistics'
+          },
+          {
+            id: 'paper-1-chinese',
+            name: 'Paper 1: Chinese'
+          },
+          {
+            id: 'paper-1-dogri',
+            name: 'Paper 1: Dogri'
+          },
+          {
+            id: 'paper-1-nepali',
+            name: 'Paper 1: Nepali'
+          },
+          {
+            id: 'paper-1-manipuri',
+            name: 'Paper 1: Manipuri'
+          },
+          {
+            id: 'paper-1-assamese',
+            name: 'Paper 1: Assamese'
+          },
+          {
+            id: 'paper-1-gujarati',
+            name: 'Paper 1: Gujarati'
+          },
+          {
+            id: 'paper-1-marathi',
+            name: 'Paper 1: Marathi'
+          },
+          {
+            id: 'paper-1-french',
+            name: 'Paper 1: French'
+          },
+          {
+            id: 'paper-1-spanish',
+            name: 'Paper 1: Spanish'
+          },
+          {
+            id: 'paper-1-russian',
+            name: 'Paper 1: Russian'
+          },
+          {
+            id: 'paper-1-persian',
+            name: 'Paper 1: Persian'
+          },
+          {
+            id: 'paper-1-rajasthani',
+            name: 'Paper 1: Rajasthani'
+          },
+          {
+            id: 'paper-1-german',
+            name: 'Paper 1: German'
+          },
+          {
+            id: 'paper-1-japanese',
+            name: 'Paper 1: Japanese'
+          },
+          {
+            id: 'paper-1-adult-education',
+            name: 'Paper 1: Adult Education'
+          },
+          {
+            id: 'paper-1-physical-education',
+            name: 'Paper 1: Physical Education'
+          },
+          {
+            id: 'paper-1-arab-culture-islamic-studies',
+            name: 'Paper 1: Arab Culture & Islamic Studies'
+          },
+          {
+            id: 'paper-1-indian-culture',
+            name: 'Paper 1: Indian Culture'
+          },
+          {
+            id: 'paper-1-labour-welfare-hrm-industrial-relations',
+            name: 'Paper 1: Labour Welfare / HRM / Industrial Relations'
+          },
+          {
+            id: 'paper-1-law',
+            name: 'Paper 1: Law'
+          },
+          {
+            id: 'paper-1-library-information-science',
+            name: 'Paper 1: Library & Information Science'
+          },
+          {
+            id: 'paper-1-buddhist-jaina-gandhian-peace-studies',
+            name: 'Paper 1: Buddhist, Jaina, Gandhian & Peace Studies'
+          },
+          {
+            id: 'paper-1-comparative-study-of-religions',
+            name: 'Paper 1: Comparative Study of Religions'
+          },
+          {
+            id: 'paper-1-mass-communication-journalism',
+            name: 'Paper 1: Mass Communication & Journalism'
+          },
+          {
+            id: 'paper-1-performing-arts',
+            name: 'Paper 1: Performing Arts'
+          },
+          {
+            id: 'paper-1-museology-conservation',
+            name: 'Paper 1: Museology & Conservation'
+          },
+          {
+            id: 'paper-1-archaeology',
+            name: 'Paper 1: Archaeology'
+          },
+          {
+            id: 'paper-1-criminology',
+            name: 'Paper 1: Criminology'
+          },
+          {
+            id: 'paper-1-tribal-regional-language-literature',
+            name: 'Paper 1: Tribal & Regional Language / Literature'
+          },
+          {
+            id: 'paper-1-folk-literature',
+            name: 'Paper 1: Folk Literature'
+          },
+          {
+            id: 'paper-1-comparative-literature',
+            name: 'Paper 1: Comparative Literature'
+          },
+          {
+            id: 'paper-1-sanskrit-traditional-subjects',
+            name: 'Paper 1: Sanskrit Traditional Subjects'
+          },
+          {
+            id: 'paper-1-women-studies',
+            name: 'Paper 1: Women Studies'
+          },
+          {
+            id: 'paper-1-visual-arts',
+            name: 'Paper 1: Visual Arts'
+          },
+          {
+            id: 'paper-1-geography',
+            name: 'Paper 1: Geography'
+          },
+          {
+            id: 'paper-1-social-medicine-community-health',
+            name: 'Paper 1: Social Medicine & Community Health'
+          },
+          {
+            id: 'paper-1-forensic-science',
+            name: 'Paper 1: Forensic Science'
+          },
+          {
+            id: 'paper-1-pali',
+            name: 'Paper 1: Pali'
+          },
+          {
+            id: 'paper-1-kashmiri',
+            name: 'Paper 1: Kashmiri'
+          },
+          {
+            id: 'paper-1-konkani',
+            name: 'Paper 1: Konkani'
+          },
+          {
+            id: 'paper-1-computer-science-applications',
+            name: 'Paper 1: Computer Science & Applications'
+          },
+          {
+            id: 'paper-1-electronic-science',
+            name: 'Paper 1: Electronic Science'
+          },
+          {
+            id: 'paper-1-environmental-sciences',
+            name: 'Paper 1: Environmental Sciences'
+          },
+          {
+            id: 'paper-1-international-area-studies',
+            name: 'Paper 1: International & Area Studies'
+          },
+          {
+            id: 'paper-1-prakrit',
+            name: 'Paper 1: Prakrit'
+          },
+          {
+            id: 'paper-1-human-rights-duties',
+            name: 'Paper 1: Human Rights & Duties'
+          },
+          {
+            id: 'paper-1-tourism-administration-management',
+            name: 'Paper 1: Tourism Administration & Management'
+          },
+          {
+            id: 'paper-1-bodo',
+            name: 'Paper 1: Bodo'
+          },
+          {
+            id: 'paper-1-santali',
+            name: 'Paper 1: Santali'
+          },
+          {
+            id: 'paper-1-yoga',
+            name: 'Paper 1: Yoga'
+          },
+          {
+            id: 'paper-1-sindhi',
+            name: 'Paper 1: Sindhi'
+          },
+          {
+            id: 'paper-1-hindu-studies',
+            name: 'Paper 1: Hindu Studies'
+          },
+          {
+            id: 'paper-1-indian-knowledge-system',
+            name: 'Paper 1: Indian Knowledge System'
+          },
+          {
+            id: 'paper-1-disaster-management',
+            name: 'Paper 1: Disaster Management'
+          },
+          {
+            id: 'paper-1-ayurveda-biology',
+            name: 'Paper 1: Ayurveda Biology'
+          },
+          {
+            id: 'paper-1-forestry',
+            name: 'Paper 1: Forestry'
+          },
+          {
+            id: 'paper-1-statistics',
+            name: 'Paper 1: Statistics'
+          }
         ]
     },
 
@@ -1638,9 +2292,30 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Notification - 2026',
         links: '<a href="https://jeeadv.ac.in/" target="_blank">Official JEE Advanced Website</a>',
         subjects: [
-            {id: 'physics', name: 'Physics'},
-            {id: 'chemistry', name: 'Chemistry'},
-            {id: 'math', name: 'Mathematics'}
+          {
+            id: 'chemical-sciences',
+            name: 'Chemical Sciences'
+          },
+          {
+            id: 'earth-atmospheric-ocean-planetary-sciences',
+            name: 'Earth, Atmospheric, Ocean & Planetary Sciences'
+          },
+          {
+            id: 'life-sciences',
+            name: 'Life Sciences'
+          },
+          {
+            id: 'mathematical-sciences',
+            name: 'Mathematical Sciences'
+          },
+          {
+            id: 'physical-sciences',
+            name: 'Physical Sciences'
+          },
+          {
+            id: 'common-general-aptitude',
+            name: 'Common: General Aptitude'
+          }
         ]
     },
     'bitsat': {
@@ -1654,12 +2329,46 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Date - 2025',
         links: '<a href="https://www.bitsadmission.com/" target="_blank">Official BITS Admission Website</a>',
         subjects: [
-            {id: 'physics', name: 'Physics'},
-            {id: 'chemistry', name: 'Chemistry'},
-            {id: 'math', name: 'Mathematics'},
-            {id: 'bio', name: 'Biology'},
-            {id: 'eng', name: 'English Proficiency'},
-            {id: 'lr', name: 'Logical Reasoning'}
+          {
+            id: 'paper-i-child-development-pedagogy',
+            name: 'Paper I: Child Development & Pedagogy'
+          },
+          {
+            id: 'paper-i-language-i',
+            name: 'Paper I: Language I'
+          },
+          {
+            id: 'paper-i-language-ii',
+            name: 'Paper I: Language II'
+          },
+          {
+            id: 'paper-i-mathematics',
+            name: 'Paper I: Mathematics'
+          },
+          {
+            id: 'paper-i-environmental-studies',
+            name: 'Paper I: Environmental Studies'
+          },
+          {
+            id: 'paper-ii-child-development-pedagogy',
+            name: 'Paper Ii: Child Development & Pedagogy'
+          },
+          {
+            id: 'paper-ii-language-i',
+            name: 'Paper Ii: Language I'
+          },
+          {
+            id: 'paper-ii-language-ii',
+            name: 'Paper Ii: Language II'
+          },
+          {
+            id: 'paper-ii-mathematics-science',
+            name: 'Paper Ii: Mathematics & Science'
+          },
+          {
+            id: 'paper-ii-social-studies-social-science',
+            name: 'Paper Ii: Social Studies / Social Science'
+          }
         ]
     },
 
@@ -1677,11 +2386,46 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Prelims Admit Card Release - 2025',
         links: '<a href="https://csirnet.nta.ac.in/" target="_blank">Official CSIR NET Website</a>',
         subjects: [
-            {id: 'chemical', name: 'Chemical Sciences'},
-            {id: 'earth', name: 'Earth, Atmospheric, Ocean and Planetary Sciences'},
-            {id: 'life', name: 'Life Sciences'},
-            {id: 'math', name: 'Mathematical Sciences'},
-            {id: 'physical', name: 'Physical Sciences'}
+          {
+            id: 'paper-i-child-development-pedagogy',
+            name: 'Paper I: Child Development & Pedagogy'
+          },
+          {
+            id: 'paper-i-language-i',
+            name: 'Paper I: Language I'
+          },
+          {
+            id: 'paper-i-language-ii',
+            name: 'Paper I: Language II'
+          },
+          {
+            id: 'paper-i-mathematics',
+            name: 'Paper I: Mathematics'
+          },
+          {
+            id: 'paper-i-environmental-studies',
+            name: 'Paper I: Environmental Studies'
+          },
+          {
+            id: 'paper-ii-child-development-pedagogy',
+            name: 'Paper Ii: Child Development & Pedagogy'
+          },
+          {
+            id: 'paper-ii-language-i',
+            name: 'Paper Ii: Language I'
+          },
+          {
+            id: 'paper-ii-language-ii',
+            name: 'Paper Ii: Language II'
+          },
+          {
+            id: 'paper-ii-mathematics-science',
+            name: 'Paper Ii: Mathematics & Science'
+          },
+          {
+            id: 'paper-ii-social-studies-social-science',
+            name: 'Paper Ii: Social Studies / Social Science'
+          }
         ]
     },
     'ctet': {
@@ -1695,9 +2439,46 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Mains Exam Date - 2023-24',
         links: '<a href="https://ctet.nic.in/" target="_blank">Official CTET Website</a>',
         subjects: [
-            {id: 'paper1', name: 'Paper I (Classes I to V)'},
-            {id: 'paper2-math', name: 'Paper II (Mathematics & Science)'},
-            {id: 'paper2-sst', name: 'Paper II (Social Studies)'}
+          {
+            id: 'level-i-child-development-pedagogy',
+            name: 'Level I: Child Development & Pedagogy'
+          },
+          {
+            id: 'level-i-language-i',
+            name: 'Level I: Language I'
+          },
+          {
+            id: 'level-i-language-ii',
+            name: 'Level I: Language II'
+          },
+          {
+            id: 'level-i-mathematics',
+            name: 'Level I: Mathematics'
+          },
+          {
+            id: 'level-i-environmental-studies',
+            name: 'Level I: Environmental Studies'
+          },
+          {
+            id: 'level-ii-child-development-pedagogy',
+            name: 'Level Ii: Child Development & Pedagogy'
+          },
+          {
+            id: 'level-ii-language-i',
+            name: 'Level Ii: Language I'
+          },
+          {
+            id: 'level-ii-language-ii',
+            name: 'Level Ii: Language II'
+          },
+          {
+            id: 'level-ii-mathematics-science',
+            name: 'Level Ii: Mathematics & Science'
+          },
+          {
+            id: 'level-ii-social-studies',
+            name: 'Level Ii: Social Studies'
+          }
         ]
     },
     'uptet': {
@@ -1711,9 +2492,18 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Application Form Release - 2024',
         links: '<a href="https://updeled.gov.in/" target="_blank">Official UP Basic Education Portal</a>',
         subjects: [
-            {id: 'paper1', name: 'Paper I (Classes I to V)'},
-            {id: 'paper2-math', name: 'Paper II (Maths & Science)'},
-            {id: 'paper2-sst', name: 'Paper II (Social Studies)'}
+          {
+            id: 'varc-verbal-ability-reading-comprehension',
+            name: 'VARC — Verbal Ability & Reading Comprehension'
+          },
+          {
+            id: 'dilr-data-interpretation-logical-reasoning',
+            name: 'DILR — Data Interpretation & Logical Reasoning'
+          },
+          {
+            id: 'qa-quantitative-ability',
+            name: 'QA — Quantitative Ability'
+          }
         ]
     },
     'reet': {
@@ -1727,9 +2517,22 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Result Out - 2026',
         links: '<a href="https://rajeduboard.rajasthan.gov.in/" target="_blank">Official BSER Website</a>',
         subjects: [
-            {id: 'level1', name: 'Level I'},
-            {id: 'level2-math', name: 'Level II (Maths & Science)'},
-            {id: 'level2-sst', name: 'Level II (Social Studies)'}
+          {
+            id: 'verbal-ability-logical-reasoning',
+            name: 'Verbal Ability & Logical Reasoning'
+          },
+          {
+            id: 'decision-making',
+            name: 'Decision Making'
+          },
+          {
+            id: 'quantitative-aptitude-data-interpretation',
+            name: 'Quantitative Aptitude & Data Interpretation'
+          },
+          {
+            id: 'general-knowledge',
+            name: 'General Knowledge'
+          }
         ]
     },
 
@@ -1747,10 +2550,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Calendar Release - 2026',
         links: '<a href="https://xatonline.in/" target="_blank">Official XAT Website</a>',
         subjects: [
-            {id: 'verbal', name: 'Verbal Ability & Logical Reasoning'},
-            {id: 'dm', name: 'Decision Making'},
-            {id: 'quant', name: 'Quantitative Aptitude & DI'},
-            {id: 'gk', name: 'General Knowledge'}
+          {
+            id: 'quantitative-techniques-data-interpretation',
+            name: 'Quantitative Techniques & Data Interpretation'
+          },
+          {
+            id: 'logical-reasoning',
+            name: 'Logical Reasoning'
+          },
+          {
+            id: 'language-comprehension',
+            name: 'Language Comprehension'
+          },
+          {
+            id: 'general-awareness',
+            name: 'General Awareness'
+          },
+          {
+            id: 'innovation-entrepreneurship',
+            name: 'Innovation & Entrepreneurship'
+          }
         ]
     },
     'cmat': {
@@ -1764,11 +2583,26 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Development Assistant LPT Result Out - 2026',
         links: '<a href="https://exams.nta.ac.in/CMAT/" target="_blank">Official CMAT Website</a>',
         subjects: [
-            {id: 'quant', name: 'Quantitative Techniques & DI'},
-            {id: 'lr', name: 'Logical Reasoning'},
-            {id: 'lang', name: 'Language Comprehension'},
-            {id: 'ga', name: 'General Awareness'},
-            {id: 'ie', name: 'Innovation & Entrepreneurship'}
+          {
+            id: 'language-comprehension',
+            name: 'Language Comprehension'
+          },
+          {
+            id: 'intelligence-critical-reasoning',
+            name: 'Intelligence & Critical Reasoning'
+          },
+          {
+            id: 'mathematical-skills',
+            name: 'Mathematical Skills'
+          },
+          {
+            id: 'data-analysis-sufficiency',
+            name: 'Data Analysis & Sufficiency'
+          },
+          {
+            id: 'economic-business-environment',
+            name: 'Economic & Business Environment'
+          }
         ]
     },
     'mat': {
@@ -1782,11 +2616,18 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Mains Exam Date Out - 2026',
         links: '<a href="https://mat.aima.in/" target="_blank">Official MAT Website</a>',
         subjects: [
-            {id: 'lang', name: 'Language Comprehension'},
-            {id: 'intelligence', name: 'Intelligence & Critical Reasoning'},
-            {id: 'math', name: 'Mathematical Skills'},
-            {id: 'data', name: 'Data Analysis & Sufficiency'},
-            {id: 'eco', name: 'Economic & Business Environment'}
+          {
+            id: 'general-english',
+            name: 'General English'
+          },
+          {
+            id: 'analytical-logical-reasoning',
+            name: 'Analytical & Logical Reasoning'
+          },
+          {
+            id: 'quantitative-data-interpretation-data-sufficiency',
+            name: 'Quantitative, Data Interpretation & Data Sufficiency'
+          }
         ]
     },
     'snap': {
@@ -1800,9 +2641,82 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Date Revised - 2026',
         links: '<a href="https://snaptest.org/" target="_blank">Official SNAP Website</a>',
         subjects: [
-            {id: 'eng', name: 'General English'},
-            {id: 'reasoning', name: 'Analytical & Logical Reasoning'},
-            {id: 'quant', name: 'Quantitative, DI & DS'}
+          {
+            id: 'clat-ug-english-language',
+            name: 'Clat Ug: English Language'
+          },
+          {
+            id: 'clat-ug-current-affairs-general-knowledge',
+            name: 'Clat Ug: Current Affairs & General Knowledge'
+          },
+          {
+            id: 'clat-ug-legal-reasoning',
+            name: 'Clat Ug: Legal Reasoning'
+          },
+          {
+            id: 'clat-ug-logical-reasoning',
+            name: 'Clat Ug: Logical Reasoning'
+          },
+          {
+            id: 'clat-ug-quantitative-techniques',
+            name: 'Clat Ug: Quantitative Techniques'
+          },
+          {
+            id: 'clat-pg-constitutional-law',
+            name: 'Clat Pg: Constitutional Law'
+          },
+          {
+            id: 'clat-pg-jurisprudence',
+            name: 'Clat Pg: Jurisprudence'
+          },
+          {
+            id: 'clat-pg-contract-law',
+            name: 'Clat Pg: Contract Law'
+          },
+          {
+            id: 'clat-pg-torts',
+            name: 'Clat Pg: Torts'
+          },
+          {
+            id: 'clat-pg-criminal-law',
+            name: 'Clat Pg: Criminal Law'
+          },
+          {
+            id: 'clat-pg-family-law',
+            name: 'Clat Pg: Family Law'
+          },
+          {
+            id: 'clat-pg-property-law',
+            name: 'Clat Pg: Property Law'
+          },
+          {
+            id: 'clat-pg-company-law',
+            name: 'Clat Pg: Company Law'
+          },
+          {
+            id: 'clat-pg-public-international-law',
+            name: 'Clat Pg: Public International Law'
+          },
+          {
+            id: 'clat-pg-tax-law',
+            name: 'Clat Pg: Tax Law'
+          },
+          {
+            id: 'clat-pg-environmental-law',
+            name: 'Clat Pg: Environmental Law'
+          },
+          {
+            id: 'clat-pg-labour-industrial-law',
+            name: 'Clat Pg: Labour & Industrial Law'
+          },
+          {
+            id: 'clat-pg-intellectual-property-law',
+            name: 'Clat Pg: Intellectual Property Law'
+          },
+          {
+            id: 'clat-pg-other-areas-prescribed-by-current-clat-pg-syllabus',
+            name: 'Clat Pg: Other areas prescribed by current CLAT PG syllabus'
+          }
         ]
     },
 
@@ -1820,10 +2734,74 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Date - 13 Dec 2027',
         links: '<a href="https://nationallawuniversitydelhi.in/" target="_blank">Official AILET Website</a>',
         subjects: [
-            {id: 'ug-eng', name: 'UG: English Language'},
-            {id: 'ug-ca', name: 'UG: Current Affairs & GK'},
-            {id: 'ug-lr', name: 'UG: Logical Reasoning'},
-            {id: 'pg-law', name: 'PG: Law Subjects'}
+          {
+            id: 'ailet-ug-english-language',
+            name: 'Ailet Ug: English Language'
+          },
+          {
+            id: 'ailet-ug-current-affairs-general-knowledge',
+            name: 'Ailet Ug: Current Affairs & General Knowledge'
+          },
+          {
+            id: 'ailet-ug-logical-reasoning',
+            name: 'Ailet Ug: Logical Reasoning'
+          },
+          {
+            id: 'ailet-pg-constitutional-law',
+            name: 'Ailet Pg: Constitutional Law'
+          },
+          {
+            id: 'ailet-pg-jurisprudence',
+            name: 'Ailet Pg: Jurisprudence'
+          },
+          {
+            id: 'ailet-pg-contract-law',
+            name: 'Ailet Pg: Contract Law'
+          },
+          {
+            id: 'ailet-pg-torts',
+            name: 'Ailet Pg: Torts'
+          },
+          {
+            id: 'ailet-pg-criminal-law',
+            name: 'Ailet Pg: Criminal Law'
+          },
+          {
+            id: 'ailet-pg-family-law',
+            name: 'Ailet Pg: Family Law'
+          },
+          {
+            id: 'ailet-pg-property-law',
+            name: 'Ailet Pg: Property Law'
+          },
+          {
+            id: 'ailet-pg-company-law',
+            name: 'Ailet Pg: Company Law'
+          },
+          {
+            id: 'ailet-pg-international-law',
+            name: 'Ailet Pg: International Law'
+          },
+          {
+            id: 'ailet-pg-environmental-law',
+            name: 'Ailet Pg: Environmental Law'
+          },
+          {
+            id: 'ailet-pg-intellectual-property-law',
+            name: 'Ailet Pg: Intellectual Property Law'
+          },
+          {
+            id: 'ailet-pg-labour-law',
+            name: 'Ailet Pg: Labour Law'
+          },
+          {
+            id: 'ailet-pg-tax-law',
+            name: 'Ailet Pg: Tax Law'
+          },
+          {
+            id: 'ailet-pg-other-current-law-subjects',
+            name: 'Ailet Pg: Other current law subjects'
+          }
         ]
     },
 
@@ -1841,29 +2819,178 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Centre Rule Change - 2026',
         links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
         subjects: [
-            {id: 'lang', name: 'Section IA & IB: Languages'},
-            {id: 'ug-accountancy', name: 'Accountancy / Book Keeping'},
-            {id: 'ug-agriculture', name: 'Agriculture'},
-            {id: 'ug-anthropology', name: 'Anthropology'},
-            {id: 'ug-biology', name: 'Biology / Biological Studies'},
-            {id: 'ug-business', name: 'Business Studies'},
-            {id: 'ug-chemistry', name: 'Chemistry'},
-            {id: 'ug-cs', name: 'Computer Science / Informatics Practices'},
-            {id: 'ug-economics', name: 'Economics / Business Economics'},
-            {id: 'ug-env', name: 'Environmental Science'},
-            {id: 'ug-fine-arts', name: 'Fine Arts'},
-            {id: 'ug-geography', name: 'Geography'},
-            {id: 'ug-history', name: 'History'},
-            {id: 'ug-home-science', name: 'Home Science'},
-            {id: 'ug-legal', name: 'Legal Studies'},
-            {id: 'ug-mass-media', name: 'Mass Media Studies'},
-            {id: 'ug-math', name: 'Mathematics / Applied Mathematics'},
-            {id: 'ug-pe', name: 'Physical Education'},
-            {id: 'ug-physics', name: 'Physics'},
-            {id: 'ug-pol-science', name: 'Political Science'},
-            {id: 'ug-psychology', name: 'Psychology'},
-            {id: 'ug-sociology', name: 'Sociology'},
-            {id: 'general', name: 'Section III: General Test'}
+          {
+            id: 'language-subjects-english',
+            name: 'Language Subjects: English'
+          },
+          {
+            id: 'language-subjects-hindi',
+            name: 'Language Subjects: Hindi'
+          },
+          {
+            id: 'language-subjects-assamese',
+            name: 'Language Subjects: Assamese'
+          },
+          {
+            id: 'language-subjects-bengali',
+            name: 'Language Subjects: Bengali'
+          },
+          {
+            id: 'language-subjects-gujarati',
+            name: 'Language Subjects: Gujarati'
+          },
+          {
+            id: 'language-subjects-kannada',
+            name: 'Language Subjects: Kannada'
+          },
+          {
+            id: 'language-subjects-malayalam',
+            name: 'Language Subjects: Malayalam'
+          },
+          {
+            id: 'language-subjects-marathi',
+            name: 'Language Subjects: Marathi'
+          },
+          {
+            id: 'language-subjects-odia',
+            name: 'Language Subjects: Odia'
+          },
+          {
+            id: 'language-subjects-punjabi',
+            name: 'Language Subjects: Punjabi'
+          },
+          {
+            id: 'language-subjects-tamil',
+            name: 'Language Subjects: Tamil'
+          },
+          {
+            id: 'language-subjects-telugu',
+            name: 'Language Subjects: Telugu'
+          },
+          {
+            id: 'language-subjects-urdu',
+            name: 'Language Subjects: Urdu'
+          },
+          {
+            id: 'language-subjects-other-nta-listed-languages',
+            name: 'Language Subjects: Other NTA-listed languages'
+          },
+          {
+            id: 'domain-subjects-accountancy',
+            name: 'Domain Subjects: Accountancy'
+          },
+          {
+            id: 'domain-subjects-agriculture',
+            name: 'Domain Subjects: Agriculture'
+          },
+          {
+            id: 'domain-subjects-anthropology',
+            name: 'Domain Subjects: Anthropology'
+          },
+          {
+            id: 'domain-subjects-biology',
+            name: 'Domain Subjects: Biology'
+          },
+          {
+            id: 'domain-subjects-business-studies',
+            name: 'Domain Subjects: Business Studies'
+          },
+          {
+            id: 'domain-subjects-chemistry',
+            name: 'Domain Subjects: Chemistry'
+          },
+          {
+            id: 'domain-subjects-computer-science-informatics-practices',
+            name: 'Domain Subjects: Computer Science / Informatics Practices'
+          },
+          {
+            id: 'domain-subjects-economics',
+            name: 'Domain Subjects: Economics'
+          },
+          {
+            id: 'domain-subjects-environmental-science',
+            name: 'Domain Subjects: Environmental Science'
+          },
+          {
+            id: 'domain-subjects-fine-arts',
+            name: 'Domain Subjects: Fine Arts'
+          },
+          {
+            id: 'domain-subjects-geography',
+            name: 'Domain Subjects: Geography'
+          },
+          {
+            id: 'domain-subjects-history',
+            name: 'Domain Subjects: History'
+          },
+          {
+            id: 'domain-subjects-home-science',
+            name: 'Domain Subjects: Home Science'
+          },
+          {
+            id: 'domain-subjects-knowledge-traditions',
+            name: 'Domain Subjects: Knowledge Traditions'
+          },
+          {
+            id: 'domain-subjects-legal-studies',
+            name: 'Domain Subjects: Legal Studies'
+          },
+          {
+            id: 'domain-subjects-mass-media-studies',
+            name: 'Domain Subjects: Mass Media Studies'
+          },
+          {
+            id: 'domain-subjects-mathematics-applied-mathematics',
+            name: 'Domain Subjects: Mathematics / Applied Mathematics'
+          },
+          {
+            id: 'domain-subjects-physical-education',
+            name: 'Domain Subjects: Physical Education'
+          },
+          {
+            id: 'domain-subjects-physics',
+            name: 'Domain Subjects: Physics'
+          },
+          {
+            id: 'domain-subjects-political-science',
+            name: 'Domain Subjects: Political Science'
+          },
+          {
+            id: 'domain-subjects-psychology',
+            name: 'Domain Subjects: Psychology'
+          },
+          {
+            id: 'domain-subjects-sociology',
+            name: 'Domain Subjects: Sociology'
+          },
+          {
+            id: 'domain-subjects-other-nta-listed-domain-subjects',
+            name: 'Domain Subjects: Other NTA-listed domain subjects'
+          },
+          {
+            id: 'general-aptitude-test-general-knowledge',
+            name: 'General Aptitude Test: General Knowledge'
+          },
+          {
+            id: 'general-aptitude-test-current-affairs',
+            name: 'General Aptitude Test: Current Affairs'
+          },
+          {
+            id: 'general-aptitude-test-general-mental-ability',
+            name: 'General Aptitude Test: General Mental Ability'
+          },
+          {
+            id: 'general-aptitude-test-numerical-ability',
+            name: 'General Aptitude Test: Numerical Ability'
+          },
+          {
+            id: 'general-aptitude-test-quantitative-reasoning',
+            name: 'General Aptitude Test: Quantitative Reasoning'
+          },
+          {
+            id: 'general-aptitude-test-logical-analytical-reasoning',
+            name: 'General Aptitude Test: Logical & Analytical Reasoning'
+          }
         ]
     },
     'cuet-pg': {
@@ -1877,35 +3004,190 @@ window.MOCK_EXAM_DATA = {
         dates: '<p>UPDATE: Exam Centre Rule - null',
         links: '<a href="https://exams.nta.ac.in/" target="_blank">Official CUET Website</a>',
         subjects: [
-            {id: 'pg-physics', name: 'Physics'},
-            {id: 'pg-chem', name: 'Chemistry'},
-            {id: 'pg-math', name: 'Mathematics'},
-            {id: 'pg-bio', name: 'Biology / Life Sciences'},
-            {id: 'pg-biochem', name: 'Biochemistry'},
-            {id: 'pg-env', name: 'Environmental Science'},
-            {id: 'pg-cs', name: 'Computer Science'},
-            {id: 'pg-stats', name: 'Statistics'},
-            {id: 'pg-commerce', name: 'Commerce'},
-            {id: 'pg-management', name: 'Management & Business Admin'},
-            {id: 'pg-finance', name: 'Finance & Accounting'},
-            {id: 'pg-history', name: 'History'},
-            {id: 'pg-pol-science', name: 'Political Science'},
-            {id: 'pg-philosophy', name: 'Philosophy'},
-            {id: 'pg-sociology', name: 'Sociology'},
-            {id: 'pg-psychology', name: 'Psychology'},
-            {id: 'pg-geography', name: 'Geography'},
-            {id: 'pg-english', name: 'English'},
-            {id: 'pg-hindi', name: 'Hindi'},
-            {id: 'pg-social-work', name: 'Social Work'},
-            {id: 'pg-edu', name: 'Education / M.Ed'},
-            {id: 'pg-pe', name: 'Physical Education'},
-            {id: 'pg-law', name: 'Law (LLM)'},
-            {id: 'pg-fine-arts', name: 'Fine Arts / Performing Arts'},
-            {id: 'pg-agriculture', name: 'Agriculture'},
-            {id: 'pg-engg', name: 'Engineering / Technology'},
-            {id: 'pg-lib-science', name: 'Library Science'},
-            {id: 'pg-mass-comm', name: 'Journalism & Mass Comm'},
-            {id: 'pg-tourism', name: 'Tourism'}
+          {
+            id: 'science-physics',
+            name: 'Science: Physics'
+          },
+          {
+            id: 'science-chemistry',
+            name: 'Science: Chemistry'
+          },
+          {
+            id: 'science-mathematics',
+            name: 'Science: Mathematics'
+          },
+          {
+            id: 'science-statistics',
+            name: 'Science: Statistics'
+          },
+          {
+            id: 'science-biology',
+            name: 'Science: Biology'
+          },
+          {
+            id: 'science-botany',
+            name: 'Science: Botany'
+          },
+          {
+            id: 'science-zoology',
+            name: 'Science: Zoology'
+          },
+          {
+            id: 'science-biochemistry',
+            name: 'Science: Biochemistry'
+          },
+          {
+            id: 'science-biotechnology',
+            name: 'Science: Biotechnology'
+          },
+          {
+            id: 'science-environmental-science',
+            name: 'Science: Environmental Science'
+          },
+          {
+            id: 'science-life-sciences',
+            name: 'Science: Life Sciences'
+          },
+          {
+            id: 'science-geology',
+            name: 'Science: Geology'
+          },
+          {
+            id: 'science-computer-science',
+            name: 'Science: Computer Science'
+          },
+          {
+            id: 'commerce-management-commerce',
+            name: 'Commerce / Management: Commerce'
+          },
+          {
+            id: 'commerce-management-management',
+            name: 'Commerce / Management: Management'
+          },
+          {
+            id: 'commerce-management-business-administration',
+            name: 'Commerce / Management: Business Administration'
+          },
+          {
+            id: 'commerce-management-finance',
+            name: 'Commerce / Management: Finance'
+          },
+          {
+            id: 'commerce-management-accounting',
+            name: 'Commerce / Management: Accounting'
+          },
+          {
+            id: 'humanities-history',
+            name: 'Humanities: History'
+          },
+          {
+            id: 'humanities-political-science',
+            name: 'Humanities: Political Science'
+          },
+          {
+            id: 'humanities-philosophy',
+            name: 'Humanities: Philosophy'
+          },
+          {
+            id: 'humanities-sociology',
+            name: 'Humanities: Sociology'
+          },
+          {
+            id: 'humanities-psychology',
+            name: 'Humanities: Psychology'
+          },
+          {
+            id: 'humanities-geography',
+            name: 'Humanities: Geography'
+          },
+          {
+            id: 'humanities-english',
+            name: 'Humanities: English'
+          },
+          {
+            id: 'humanities-hindi',
+            name: 'Humanities: Hindi'
+          },
+          {
+            id: 'humanities-sanskrit',
+            name: 'Humanities: Sanskrit'
+          },
+          {
+            id: 'humanities-other-languages',
+            name: 'Humanities: Other Languages'
+          },
+          {
+            id: 'social-sciences-economics',
+            name: 'Social Sciences: Economics'
+          },
+          {
+            id: 'social-sciences-social-work',
+            name: 'Social Sciences: Social Work'
+          },
+          {
+            id: 'social-sciences-education',
+            name: 'Social Sciences: Education'
+          },
+          {
+            id: 'social-sciences-public-administration',
+            name: 'Social Sciences: Public Administration'
+          },
+          {
+            id: 'social-sciences-anthropology',
+            name: 'Social Sciences: Anthropology'
+          },
+          {
+            id: 'law-law',
+            name: 'Law: Law'
+          },
+          {
+            id: 'media-journalism',
+            name: 'Media: Journalism'
+          },
+          {
+            id: 'media-mass-communication',
+            name: 'Media: Mass Communication'
+          },
+          {
+            id: 'library-information-library-information-science',
+            name: 'Library / Information: Library & Information Science'
+          },
+          {
+            id: 'performing-fine-arts-music',
+            name: 'Performing / Fine Arts: Music'
+          },
+          {
+            id: 'performing-fine-arts-dance',
+            name: 'Performing / Fine Arts: Dance'
+          },
+          {
+            id: 'performing-fine-arts-fine-arts',
+            name: 'Performing / Fine Arts: Fine Arts'
+          },
+          {
+            id: 'performing-fine-arts-theatre',
+            name: 'Performing / Fine Arts: Theatre'
+          },
+          {
+            id: 'other-agriculture',
+            name: 'Other: Agriculture'
+          },
+          {
+            id: 'other-physical-education',
+            name: 'Other: Physical Education'
+          },
+          {
+            id: 'other-tourism',
+            name: 'Other: Tourism'
+          },
+          {
+            id: 'other-engineering-related-disciplines',
+            name: 'Other: Engineering-related disciplines'
+          },
+          {
+            id: 'other-other-nta-listed-postgraduate-test-papers',
+            name: 'Other: Other NTA-listed postgraduate test papers'
+          }
         ]
     }
 };
