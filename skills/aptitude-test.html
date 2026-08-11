@@ -307,130 +307,15 @@
             let char = clean[i - 1];
             if (char === ']' || char === '}') {
                 try {
-                    let attempt = clean.substring(0, i).replace(/,\s*([\]}])/g, '$1');
-                    if (clean[0] === '[' && char === '}') attempt += ']';
-                    attempt = attempt.replace(/[\x00-\x1F]+/g, " ");
-                    return JSON.parse(attempt);
-                } catch (e) {
-                    // Ignore and continue shrinking the string from the right
-                }
-            }
-        }
-        throw new Error("Invalid response format from AI");
-    }
-
-    (function() {
-      const savedTheme = localStorage.getItem('solmates_theme');
-      if (savedTheme) {
-        document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
-        }
-      }
-    })();
-  </script>
-  <script src="/config.js"></script>
-  <script src="/js/api-client.js?v=113.3" defer></script>
-</head>
-<body>
-
-  <div class="header-bar">
-    
-    <h1><i class="fas fa-brain" style="color: var(--accent);"></i> Aptitude Test</h1>
-  </div>
-
-  <div class="container">
-    
-    <!-- Setup Mode -->
-    <div id="setup-mode">
-      <div class="input-card">
-        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Test Parameters</h3>
+        generatedQuestions = [];
+        let remaining = count;
+        let batchSize = 3; // Small batch to guarantee no truncation with massive dual-language explanations
         
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Category</label>
-            <select id="category" class="form-control">
-              <option value="Quantitative Aptitude" selected>Quantitative Aptitude</option>
-              <option value="Logical Reasoning">Logical Reasoning</option>
-              <option value="Verbal Ability">Verbal Ability</option>
-              <option value="Data Interpretation">Data Interpretation</option>
-              <option value="Mixed">Mixed</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Topic (Optional)</label>
-            <input type="text" id="topic" class="form-control" placeholder="e.g. Percentages, Blood Relations">
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Difficulty</label>
-            <select id="difficulty" class="form-control">
-              <option value="Easy">Easy</option>
-              <option value="Medium" selected>Medium</option>
-              <option value="Hard">Hard</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Number of Questions</label>
-            <select id="q-count" class="form-control">
-              <option value="5">5 Questions</option>
-              <option value="10" selected>10 Questions</option>
-              <option value="15">15 Questions</option>
-              <option value="20">20 Questions</option>
-            </select>
-          </div>
-        </div>
-
-        <button class="btn-main" style="margin-top: 25px;" onclick="generateTest()">
-          <i class="fas fa-magic"></i> Generate Test
-        </button>
-      </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div id="loader" class="loader-overlay">
-      <div class="spinner"></div>
-      <h3 style="color: var(--primary);">Crafting Questions...</h3>
-      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Analyzing parameters...</p>
-    </div>
-
-    <!-- Result Mode -->
-    <div id="result-mode">
-      
-
-      <div id="progress-tracker" style="text-align: right; margin-bottom: 15px; font-weight: 600; color: var(--accent); font-size: 0.95rem;"></div>
-      <div id="questions-container">
-        <!-- MCQs injected here -->
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    window.onload = () => {
-      window.solmatesAPI = new SolmatesAPI();
-    };
-
-    let generatedQuestions = [];
-    let score = 0;
-    let answeredCount = 0;
-
-    async function generateTest() {
-      const category = document.getElementById('category').value;
-      const topic = document.getElementById('topic').value || 'General';
-      const count = parseInt(document.getElementById('q-count').value);
-      const difficulty = document.getElementById('difficulty').value;
-      
-      score = 0; answeredCount = 0;
-      document.getElementById('loader').style.display = 'flex';
-      document.getElementById('loader-msg').innerText = `Generating ${category} questions...`;
-      
-      try {
-        const prompt = `Generate exactly ${count} multiple-choice aptitude test questions.
+        while (remaining > 0) {
+            let currentBatch = Math.min(remaining, batchSize);
+            document.getElementById('loader-msg').innerText = `Generating questions (${generatedQuestions.length} / ${count})...`;
+            
+            const prompt = `Generate exactly ${currentBatch} multiple-choice aptitude test questions.
 Category: ${category}. Topic: ${topic}. Difficulty: ${difficulty}.
 Output strictly in the following JSON array format, and nothing else:
 [
@@ -439,32 +324,38 @@ Output strictly in the following JSON array format, and nothing else:
     "q": "Question text...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correct": 1, 
-    "explanation": "Provide a genuine, detailed point-wise explanation in English and Hinglish. Do NOT use markdown asterisks.",
+    "explanation": "Provide a detailed explanation. First write it in English. Then, write 'Hinglish: ' and provide the exact same explanation in Hinglish. Be descriptive and point-wise.",
     "tag": "${category}"
   }
 ]
 Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
-
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: You MUST provide genuine point-wise details/explanations in English and Hinglish. DO NOT use ** asterisks. Keep output concise enough to avoid truncation.", []);
-        const resText = res.message || res.reply;
-        if (res.success && resText) {
-            let parsed;
-            try {
-                parsed = safeParseJSON(resText);
-                if (parsed.questions) parsed = parsed.questions;
-                generatedQuestions = parsed;
-            } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr, "\nRaw String:", resText);
-                throw new Error("Parse Error: " + parseErr.message);
+            
+            const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: DO NOT use ** asterisks. Always provide both English and Hinglish explanations.", []);
+            
+            if (res.success && (res.message || res.reply)) {
+                try {
+                    let parsed = safeParseJSON(res.message || res.reply);
+                    if (parsed.questions) parsed = parsed.questions;
+                    if (Array.isArray(parsed)) {
+                        generatedQuestions = generatedQuestions.concat(parsed);
+                    }
+                } catch(e) {
+                    console.error("Batch parsing failed, skipping batch", e);
+                }
             }
-        } else {
-            throw new Error("Failed to generate questions");
+            remaining -= currentBatch;
         }
-
+        
+        if (generatedQuestions.length === 0) throw new Error("Failed to generate any valid questions.");
+        
         renderQuestions();
+
         
         document.getElementById('loader').style.display = 'none';
-        document.getElementById('progress-tracker').innerText = `0 out of ${generatedQuestions.length} completed`;
+        
+      const progressEl = document.getElementById('progress-tracker');
+      if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
+        
         document.getElementById('setup-mode').style.display = 'none';
         document.getElementById('result-mode').style.display = 'block';
         history.pushState({view: 'result'}, '', '');
@@ -473,7 +364,10 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
           console.error(err);
           alert('Failed to generate test: ' + (err.message || 'Unknown error'));
           document.getElementById('loader').style.display = 'none';
-        document.getElementById('progress-tracker').innerText = `0 out of ${generatedQuestions.length} completed`;
+        
+      const progressEl = document.getElementById('progress-tracker');
+      if (progressEl) progressEl.innerText = `0 out of ${generatedQuestions.length} completed`;
+        
       }
     }
 
@@ -522,21 +416,36 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       const q = generatedQuestions[qIndex];
       const isCorrect = (oIdx === q.correct);
       
-      element.classList.add('selected');
       answeredCount++;
       if(isCorrect) score++;
+      
+      const progressEl = document.getElementById('progress-tracker');
+      if (progressEl) progressEl.innerText = `${answeredCount} out of ${generatedQuestions.length} completed`;
+        
       if(answeredCount === generatedQuestions.length) showFinalResult();
       
       options.forEach((opt, idx) => {
-        if(idx === q.correct) {
-          opt.classList.add('correct');
-        } else if (idx === oIdx && !isCorrect) {
-          opt.classList.add('incorrect');
-        }
         opt.style.pointerEvents = 'none';
+        if(idx === q.correct) {
+            opt.classList.add("correct");
+            opt.style.backgroundColor = "rgba(52, 199, 89, 0.1)";
+            opt.style.borderColor = "var(--success)";
+            opt.innerHTML += ' <i class="fas fa-check-circle" style="color: var(--success); margin-left: auto;"></i>';
+        }
       });
 
-      document.getElementById(`exp-${qIndex}`).classList.add('show');
+      if (!isCorrect) {
+          element.classList.add("incorrect");
+          element.style.backgroundColor = "rgba(255, 59, 48, 0.1)";
+          element.style.borderColor = "var(--danger)";
+          element.innerHTML += ' <i class="fas fa-times-circle" style="color: var(--danger); margin-left: auto;"></i>';
+      }
+
+      const expDiv = document.getElementById(`exp-${qIndex}`);
+      let cleanExp = q.explanation ? q.explanation.replace(/\*\*/g, '') : '';
+      cleanExp = cleanExp.replace(/\n/g, '<br>');
+      expDiv.innerHTML = '<strong>Explanation:</strong><br><br>' + cleanExp;
+      expDiv.classList.add('show');
     }
 
     
