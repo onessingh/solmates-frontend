@@ -8,84 +8,148 @@
   <script src="/js/api-client.js"></script>
   <script src="/js/exam-context.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/global-lockdown.css">
   <style>
-    body { font-family: sans-serif; background: #f8fafc; color: #334155; margin: 0; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-    .card { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; }
-    .card:hover { border-color: #3b82f6; }
+    :root {
+      --bg-body: #f5f5f7;
+      --text-main: #1d1d1f;
+      --text-muted: #86868b;
+      --bg-nav: #ffffff;
+      --bg-card: #ffffff;
+      --border-color: #e5e5ea;
+      --brand-primary: #0f2b46;
+      --brand-accent: #0071e3;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; }
+    
+    /* Top Navigation */
+    .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--bg-nav); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+    .brand { font-size: 1.2rem; font-weight: 700; color: var(--brand-primary); text-decoration: none; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--brand-primary); }
+    .btn-back { background: var(--brand-primary); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+    
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 { font-size: 2rem; color: var(--brand-primary); margin-bottom: 10px; }
+    .header p { color: var(--text-muted); font-size: 1.1rem; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .card:hover { border-color: var(--brand-accent); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+    .card h3 { color: var(--brand-primary); margin: 0 0 5px 0; font-size: 1.2rem; }
+    .card i { font-size: 2rem; color: var(--brand-accent); margin-bottom: 15px; }
+    
+    .loading-state { text-align: center; padding: 60px; color: var(--text-muted); font-size: 1.1rem; grid-column: 1 / -1; }
+    
+    #tools-section { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
+  <nav class="top-nav">
+    <a href="/" class="brand">SOLMATES</a>
+    <div class="nav-links">
+      <a href="/exam-prep/index.html">Exam Prep</a>
+    </div>
+    <a href="javascript:history.back()" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
+  </nav>
+
   <div class="container">
-    <h1>Select Subject</h1>
-    <div class="grid" id="subjects-container">Loading...</div>
+    <div class="header" id="page-header">
+      <h1>Select Subject / Paper</h1>
+      <p>Choose a specific paper or subject to configure the AI tools.</p>
+    </div>
     
-    <div id="tools-section" style="display:none; margin-top: 40px;">
-      <h2>Available AI Tools for <span id="sel-sub"></span></h2>
+    <div class="grid" id="subjects-container">
+      <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading subjects...</div>
+    </div>
+    
+    <div id="tools-section" style="display:none; margin-top: 20px;">
+      <div class="header">
+        <h1 style="font-size: 1.8rem;">Available Tools</h1>
+        <p>AI Context Active: <strong id="sel-sub" style="color: var(--brand-accent);"></strong></p>
+      </div>
       <div class="grid" id="tools-container"></div>
     </div>
   </div>
   
   <script>
     let currentExamId = '';
+    
+    const mockSubjects = [
+        { id: 'paper-1-general', name: 'Paper 1 (General Aptitude)', icon: 'fa-brain' },
+        { id: 'paper-2-core', name: 'Paper 2 (Core Subject)', icon: 'fa-book-open' },
+        { id: 'quant', name: 'Quantitative Aptitude', icon: 'fa-calculator' },
+        { id: 'reasoning', name: 'Logical Reasoning', icon: 'fa-puzzle-piece' },
+        { id: 'english', name: 'Verbal / English', icon: 'fa-language' },
+        { id: 'gk', name: 'General Knowledge', icon: 'fa-globe-asia' }
+    ];
+
     async function loadSubjects() {
       currentExamId = new URLSearchParams(window.location.search).get('exam');
       if(!currentExamId) return window.location.href = 'index.html';
       
+      let subjects = [];
       try {
         const res = await fetch('/api/exams/' + currentExamId + '/subjects');
-        const subjects = await res.json();
-        
-        const container = document.getElementById('subjects-container');
-        if(subjects.length === 0) {
-            container.innerHTML = '<p>No subjects found. Select default tools.</p>';
-            selectSubject(null, 'General');
-            return;
+        if (res.ok) {
+            subjects = await res.json();
         }
-        
-        container.innerHTML = subjects.map(sub => `
-          <div class="card" onclick="selectSubject('${sub.id}', '${sub.name}')">
-            <h3>${sub.name}</h3>
-          </div>
-        `).join('');
       } catch (err) {
-        document.getElementById('subjects-container').innerHTML = 'Error loading subjects.';
+        console.error("API failed, falling back to mock subjects", err);
       }
+      
+      if (!subjects || subjects.length === 0) {
+          subjects = mockSubjects;
+      }
+      
+      const container = document.getElementById('subjects-container');
+      container.innerHTML = subjects.map(sub => `
+        <div class="card" onclick="selectSubject('${sub.id}', '${sub.name}')">
+          <i class="fas ${sub.icon || 'fa-book'}"></i>
+          <h3>${sub.name}</h3>
+        </div>
+      `).join('');
     }
     
     async function selectSubject(subId, subName) {
+      // Hide subjects, show tools
+      document.getElementById('page-header').style.display = 'none';
       document.getElementById('subjects-container').style.display = 'none';
       document.getElementById('tools-section').style.display = 'block';
-      document.getElementById('sel-sub').innerText = subName;
+      document.getElementById('sel-sub').innerText = currentExamId.toUpperCase() + ' - ' + subName;
       
-      // Save Context
-      ExamContextManager.setContext(currentExamId, 'Selected Exam', subId, subName);
+      // Save Context globally
+      ExamContextManager.setContext(currentExamId, currentExamId, subId, subName);
       
-      // Load mapped tools
+      let tools = [];
       try {
-        let query = '/api/exams/tools/mapped?examId=' + currentExamId;
-        if (subId) query += '&subjectId=' + subId;
-        
+        let query = '/api/exams/tools/mapped?examId=' + currentExamId + '&subjectId=' + subId;
         const res = await fetch(query);
-        const tools = await res.json();
-        
-        // For testing, hardcode fallback if empty
-        const fallbackTools = [
-          { name: 'AI Study Companion', url: '/tools/ai-study-companion/index.html', icon: 'fa-robot' },
-          { name: 'AI MCQ Generator', url: '/tools/mcq-generator.html', icon: 'fa-list-ol' },
-          { name: 'AI Question Paper Generator', url: '/tools/question-paper-generator.html', icon: 'fa-file-alt' }
-        ];
-        
-        const displayTools = tools.length > 0 ? tools : fallbackTools;
-        
-        document.getElementById('tools-container').innerHTML = displayTools.map(t => `
-          <a href="${t.url}" class="card" style="text-decoration:none; color:inherit; text-align:center;">
-            <i class="fas ${t.icon || 'fa-tools'}" style="font-size:2rem; color:#3b82f6; margin-bottom:10px;"></i>
-            <h3>${t.name}</h3>
-          </a>
-        `).join('');
+        if (res.ok) tools = await res.json();
       } catch(e) {}
+      
+      if (!tools || tools.length === 0) {
+          tools = [
+            { name: 'AI Study Companion', url: '/tools/ai-study-companion/index.html', icon: 'fa-robot' },
+            { name: 'AI MCQ Generator', url: '/tools/mcq-generator.html', icon: 'fa-list-ol' },
+            { name: 'Question Paper Generator', url: '/tools/question-paper-generator.html', icon: 'fa-file-alt' },
+            { name: 'Smart Flashcards', url: '/tools/flashcards.html', icon: 'fa-layer-group' },
+            { name: 'Aptitude Test', url: '/skills/aptitude-test.html', icon: 'fa-stopwatch' }
+          ];
+      }
+      
+      document.getElementById('tools-container').innerHTML = tools.map(t => `
+        <a href="${t.url}" class="card">
+          <i class="fas ${t.icon || 'fa-tools'}"></i>
+          <h3>${t.name}</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Launch Tool <i class="fas fa-arrow-right"></i></span>
+        </a>
+      `).join('');
     }
     
     window.onload = loadSubjects;
