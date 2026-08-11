@@ -3189,9 +3189,129 @@ window.MOCK_EXAM_DATA = {
             name: 'Other: Other NTA-Listed Postgraduate Papers'
           }
         ]
+    
+    // DU SOL MBA
+    // ==========================================
+    "sol-mba-sem1": {
+        name: "Semester 1",
+        category_id: "sol-mba",
+        short_description: "DU SOL MBA Semester 1 Core Subjects",
+        about: "Distance learning MBA from Delhi University School of Open Learning (Semester 1).",
+        pattern: "<ul><li><b>Core Subjects:</b> 8 Papers</li></ul>",
+        eligibility: "<p>Enrolled in DU SOL MBA.</p>",
+        syllabus: "<p>Core foundational subjects for management.</p>",
+        dates: "<p>Check SOL Website</p>",
+        links: "<a href=\"https://sol.du.ac.in/\" target=\"_blank\">Official SOL Website</a>",
+        subjects: [
+            { id: "sem1-ob", name: "Organisational Behavior" },
+            { id: "sem1-da", name: "Data Analysis and Decision Tools" },
+            { id: "sem1-me", name: "Managerial Economics" },
+            { id: "sem1-am", name: "Accounting for Managers" },
+            { id: "sem1-mm", name: "Marketing Management" },
+            { id: "sem1-hr", name: "Human Resource Management" },
+            { id: "sem1-bc", name: "Business Communication" },
+            { id: "sem1-it", name: "Information Technology Management" }
+        ]
+    },
+    "sol-mba-sem2": {
+        name: "Semester 2",
+        category_id: "sol-mba",
+        short_description: "DU SOL MBA Semester 2 Core Subjects",
+        about: "Distance learning MBA from Delhi University School of Open Learning (Semester 2).",
+        pattern: "<ul><li><b>Core Subjects:</b> 8 Papers</li></ul>",
+        eligibility: "<p>Cleared Sem 1.</p>",
+        syllabus: "<p>Core intermediate subjects for management.</p>",
+        dates: "<p>Check SOL Website</p>",
+        links: "<a href=\"https://sol.du.ac.in/\" target=\"_blank\">Official SOL Website</a>",
+        subjects: [
+            { id: "sem2-oec", name: "Organisation Effectiveness and Change" },
+            { id: "sem2-dmo", name: "Decision Modelling and Optimisation" },
+            { id: "sem2-eeb", name: "Economic Environment of Business" },
+            { id: "sem2-cf", name: "Corporate Finance" },
+            { id: "sem2-ma", name: "Management Accounting" },
+            { id: "sem2-pom", name: "Production and Operations Management" },
+            { id: "sem2-mr", name: "Marketing Research" },
+            { id: "sem2-mis", name: "Management of Information Systems" }
+        ]
+    },
+    "sol-mba-sem3": {
+        name: "Semester 3",
+        category_id: "sol-mba",
+        short_description: "DU SOL MBA Semester 3 (Core + Electives)",
+        about: "Distance learning MBA from Delhi University School of Open Learning (Semester 3).",
+        pattern: "<ul><li><b>Core + Specializations:</b> Finance, Marketing, HR</li></ul>",
+        eligibility: "<p>Enrolled in Year 2.</p>",
+        syllabus: "<p>Core and Elective subjects.</p>",
+        dates: "<p>Check SOL Website</p>",
+        links: "<a href=\"https://sol.du.ac.in/\" target=\"_blank\">Official SOL Website</a>",
+        subjects: [
+            { id: "sem3-c1", name: "Core: Business Ethics and Sustainability" },
+            { id: "sem3-c2", name: "Core: Strategic Analysis" },
+            { id: "sem3-c3", name: "Core: Entrepreneurship, Creativity and Innovation" },
+            { id: "sem3-f1", name: "Finance: Security Analysis and Portfolio Management" },
+            { id: "sem3-f2", name: "Finance: International Financial Management" },
+            { id: "sem3-f3", name: "Finance: Financial Derivatives" },
+            { id: "sem3-f4", name: "Finance: Financial Markets and Institutions" },
+            { id: "sem3-f5", name: "Finance: Mergers and Corporate Restructuring" },
+            { id: "sem3-m1", name: "Marketing: Consumer Behavior" },
+            { id: "sem3-m2", name: "Marketing: Advertising Management" },
+            { id: "sem3-m3", name: "Marketing: Services Marketing" },
+            { id: "sem3-m4", name: "Marketing: Brand Management" },
+            { id: "sem3-m5", name: "Marketing: Digital Marketing" },
+            { id: "sem3-hr1", name: "OB & HRM: Performance Management and Training" },
+            { id: "sem3-hr2", name: "OB & HRM: Compensation and Rewards Management" },
+            { id: "sem3-hr3", name: "OB & HRM: Human Resource Development" },
+            { id: "sem3-hr4", name: "OB & HRM: Cross Cultural and Global Management" },
+            { id: "sem3-hr5", name: "OB & HRM: Leadership, Power and Politics" },
+            { id: "sem3-a1", name: "Additional: Predictive Analytics and Big Data" },
+            { id: "sem3-a2", name: "Additional: Artificial Intelligence and Deep Learning" },
+            { id: "sem3-a3", name: "Additional: Managing HR in Start-ups" },
+            { id: "sem3-a4", name: "Additional: Economics of Innovation" },
+            { id: "sem3-a5", name: "Additional: Business Process Re-engineering" }
+        ]
+    },
+    "sol-mba-sem4": {
+        name: "Semester 4",
+        category_id: "sol-mba",
+        short_description: "DU SOL MBA Semester 4 (Core + Electives)",
+        about: "Distance learning MBA from Delhi University School of Open Learning (Semester 4).",
+        pattern: "<ul><li><b>Core + Specializations:</b> Finance, Marketing, HR, Ops</li></ul>",
+        eligibility: "<p>Cleared Sem 3.</p>",
+        syllabus: "<p>Core and Elective subjects.</p>",
+        dates: "<p>Check SOL Website</p>",
+        links: "<a href=\"https://sol.du.ac.in/\" target=\"_blank\">Official SOL Website</a>",
+        subjects: [
+            { id: "sem4-c1", name: "Core: Legal Environment of Business" },
+            { id: "sem4-c2", name: "Core: Strategic Management" },
+            { id: "sem4-c3", name: "Core: Global Business Management" },
+            { id: "sem4-f1", name: "Finance: Quantitative Analysis of Financial Decisions" },
+            { id: "sem4-f2", name: "Finance: Merchant Banking and Financial Services" },
+            { id: "sem4-f3", name: "Finance: Financial Risk Management" },
+            { id: "sem4-f4", name: "Finance: Fixed Income Securities" },
+            { id: "sem4-f5", name: "Finance: Financial Reporting" },
+            { id: "sem4-m1", name: "Marketing: Competitive Marketing" },
+            { id: "sem4-m2", name: "Marketing: Business Marketing" },
+            { id: "sem4-m3", name: "Marketing: Sales Force Management" },
+            { id: "sem4-m4", name: "Marketing: Marketing Analytics" },
+            { id: "sem4-m5", name: "Marketing: Rural Marketing" },
+            { id: "sem4-hr1", name: "OB & HRM: Human Resource Metrics and Analytics" },
+            { id: "sem4-hr2", name: "OB & HRM: Managing Interpersonal and Group Processes" },
+            { id: "sem4-hr3", name: "OB & HRM: Counseling Skills for Managers" },
+            { id: "sem4-hr4", name: "OB & HRM: Management of Industrial Relations" },
+            { id: "sem4-hr5", name: "OB & HRM: Negotiation and Influence Skills" },
+            { id: "sem4-o1", name: "Ops: Operations Strategy" },
+            { id: "sem4-o2", name: "Ops: Technology, Innovation and New Product Management" },
+            { id: "sem4-o3", name: "Ops: System Optimization and Management Science" },
+            { id: "sem4-o4", name: "Ops: Supply Chain Analytics" },
+            { id: "sem4-o5", name: "Ops: Supply Chain Management" },
+            { id: "sem4-s1", name: "Strategy: Strategic Capability Building and Innovation" },
+            { id: "sem4-s2", name: "Strategy: Strategic Management in Social Enterprises" },
+            { id: "sem4-s3", name: "Strategy: International Business Strategy" },
+            { id: "sem4-s4", name: "Strategy: Strategic Management of Startups" },
+            { id: "sem4-s5", name: "Strategy: Strategic Innovation in Health Care and Education" }
+        ]
     }
 };
-
 window.getExamData = function(slug) {
     if (window.MOCK_EXAM_DATA[slug]) {
         return window.MOCK_EXAM_DATA[slug];

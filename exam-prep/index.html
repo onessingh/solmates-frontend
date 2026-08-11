@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Exam Prep AI - Solmates</title>
-  <script src="/config.js?v=3.6"></script>
-  <script src="/js/api-client.js?v=3.6"></script>
-  <script src="/js/exam-data.js?v=3.6"></script>
-  <script src="/js/exam-context.js?v=3.6"></script>
+  <script src="/config.js?v=3.7"></script>
+  <script src="/js/api-client.js?v=3.7"></script>
+  <script src="/js/exam-data.js?v=3.7"></script>
+  <script src="/js/exam-context.js?v=3.7"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/global-lockdown.css">
   <style>
@@ -200,9 +200,9 @@
         
         
         let localExams = [];
-        if (window.solmatesExamData) {
-            localExams = Object.keys(window.solmatesExamData).map(k => {
-                const e = window.solmatesExamData[k];
+        if (window.MOCK_EXAM_DATA) {
+            localExams = Object.keys(window.MOCK_EXAM_DATA).map(k => {
+                const e = window.MOCK_EXAM_DATA[k];
                 return {
                     id: k,
                     name: e.name,
