@@ -695,7 +695,7 @@ async function generateMCQ(ctx) {
   setProgress('mcq', 'loading');
   document.getElementById('mcq-content').innerHTML = loadingHTML('Generating MCQ questions...');
   const data = await callAI(`Create 20 multiple choice questions for: ${ctx}.
-Return JSON: { "questions": [{ "q": "...", "options": ["A...","B...","C...","D..."], "correct": 0, "explanation": "..." }] }
+Return JSON: { "questions": [{ "q": "...", "options": ["A...","B...","C...","D..."], "correct": 0 }] }
 correct is the 0-based index of the correct option. Make distractors plausible.`);
 
   if (data?.questions?.length) {
@@ -723,7 +723,6 @@ function renderMCQ(qs) {
             <span class="opt-icon">${optLabels[oi]}</span> ${opt}
           </div>`).join('')}
       </div>
-      <div class="mcq-explanation" id="exp-${qi}">💡 <strong>Explanation:</strong> ${q.explanation}</div>
     </div>`).join('');
   document.getElementById('mcq-content').innerHTML = html;
   mcqAnswered = {}; mcqScore = 0;
@@ -967,7 +966,6 @@ function downloadPane(pane) {
         el.classList.remove('correct-ans', 'wrong-ans');
         if (oi === q.correct) el.classList.add('correct-ans');
       });
-      document.getElementById(`exp-${qi}`)?.classList.add('show');
     });
   }
   const content = document.getElementById('pane-' + pane).innerHTML;
