@@ -1,371 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="screen and (prefers-color-scheme: dark)" content="#0f172a">
   <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
-  <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Company Culture Finder — SOLMATES</title>
+  <title>Company Culture | SOLMATES</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-      background: var(--bg-body) !important;
-      color: var(--text-main) !important;
-    }
-
-    .top-nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      height: 52px;
-      background: var(--bg-nav);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 1000;
-    }
-
-    .nav-logo {
-      font-weight: 600;
-      font-size: 1.25rem;
-    }
-
-    .back-link {
-      text-decoration: none;
-      color: #0071e3;
-      font-weight: 500;
-    }
-
-    .page-content {
-      padding: 92px 24px 48px;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border-radius: 20px;
-      padding: 36px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin: 15px 0 5px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    .btn-primary {
-      background: #0071e3;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      width: 100%;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .match-card {
-      background: var(--bg-card);
-      border: 1px solid #e0e0e0;
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .c-name {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: var(--brand-primary);
-      margin-bottom: 5px;
-    }
-
-    .c-vibe {
-      color: #0071e3;
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-
-    .pro-con-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .pro-col h4 {
-      color: #28a745;
-      margin-bottom: 5px;
-    }
-
-    .con-col h4 {
-      color: #dc3545;
-      margin-bottom: 5px;
-    }
-
-    .pro-con-grid ul {
-      padding-left: 15px;
-      font-size: 0.9rem;
-    }
-
-    .interview-q {
-      background: var(--bg-card-hover);
-      padding: 20px;
-      border-radius: 15px;
-      border-left: 5px solid #ffc107;
-      margin-top: 25px;
-    }
-    
   
-
-    /* Dark Mode Native OS Integration */
-    :root {
-      --bg-body: #ffffff;
-      --text-main: #111111;
-      --text-muted: #555555;
-      --text-lighter: #666666;
-      --bg-nav: rgba(255, 255, 255, 0.98);
-      --bg-card: #ffffff;
-      --bg-card-hover: #f9f9fb;
-      --border-color: #eeeeee;
-      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
-      --brand-primary: #0f2b46;
-      --brand-accent: #c0962d;
-    }
-
-    /* dark mode moved */
+  <style>
+    :root { --primary: #0f2b46; --accent: #0071e3; --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --light: #86868b; --border: #e5e5ea; --success: #34c759; --danger: #ff3b30; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
     
-    input, select, textarea {
-      background: var(--bg-card-hover) !important;
-      color: var(--text-main) !important;
-      border: 1px solid var(--border-color) !important;
-      outline: none;
-    }
-    input::placeholder, textarea::placeholder {
-      color: var(--text-muted) !important;
-      opacity: 0.7;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: #0071e3 !important;
-      box-shadow: 0 0 0 2px rgba(0,113,227,0.2);
-    }
+    .header-bar { background: var(--card); padding: 15px 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; display: flex; justify-content: center; align-items: center; }
+    .header-bar h1 { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+    .back-btn { position: absolute; left: 20px; text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; background: #f0f4f8; padding: 8px 16px; border-radius: 20px; transition: 0.2s; }
+    .back-btn:hover { background: #e1e8f0; }
 
-    </style>
-  <script src="/js/sol-cache.js?v=91.0"></script>
-
-
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
-      }
-      .top-nav { border-bottom: 1px solid var(--border-color) !important; }
+    .container { max-width: 800px; margin: 30px auto; padding: 0 15px; width: 100%; flex: 1; display: flex; flex-direction: column; }
     
-</style>
-<script>
+    #setup-mode { animation: fadeIn 0.3s; }
+    .input-card { background: var(--card); border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 20px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: #fafafa; transition: all 0.2s; outline: none; }
+    .form-control:focus { border-color: var(--accent); background: var(--card); box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1); }
+    
+    .btn-main { background: var(--accent); color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 113, 227, 0.3); }
+    
+    .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px 15px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { background: #e1e8f0; }
+    
+    #result-mode { display: none; animation: fadeIn 0.3s; }
+    
+    .controls-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+    
+    .dashboard-card { background: var(--card); border-radius: 16px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+    .dashboard-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    
+    .list-item { padding: 12px 15px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
+    .list-item strong { color: var(--primary); }
+
+    .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; z-index: 1000; display: none; }
+    .spinner { width: 50px; height: 50px; border: 5px solid #e1e8f0; border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <style id="solmates-dark-style" media="screen" disabled>
+    :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --light: #94a3b8; --border: #334155; --primary: #f8fafc; }
+    .form-control { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
+    .form-control:focus { background: #1e293b !important; }
+    .btn-secondary { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
+    .btn-secondary:hover { background: #475569 !important; }
+    .list-item { background: #334155 !important; border-color: #475569 !important; }
+    .loader-overlay { background: rgba(15, 23, 42, 0.8) !important; }
+    .back-btn { background: var(--border) !important; color: var(--text) !important; }
+  </style>
+  <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
       if (savedTheme) {
         document.documentElement.style.colorScheme = savedTheme;
         const darkStyle = document.getElementById('solmates-dark-style');
         if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
           else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
         }
       }
     })();
   </script>
-<script id="color-scheme-sync">
-(function() {
-    function updateMetaColorScheme() {
-        var meta = document.querySelector('meta[name="color-scheme"]');
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
-        var darkStyle = document.getElementById('solmates-dark-style');
-        if (!meta) return;
-        var theme = localStorage.getItem('solmates_theme');
-        if (theme === 'dark') {
-            meta.setAttribute('content', 'dark only');
-            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
-            document.documentElement.style.colorScheme = 'dark';
-            document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'screen');
-        } else if (theme === 'light') {
-            meta.setAttribute('content', 'light only');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
-            document.documentElement.style.colorScheme = 'light';
-            document.documentElement.classList.remove('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'not all');
-        }
-    }
-    updateMetaColorScheme();
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'solmates_theme') updateMetaColorScheme();
-    });
-    var originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
-        if (key === 'solmates_theme') updateMetaColorScheme();
-    };
-})();
-</script>
-    <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="Access the Company Culture Finder — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Company, Culture, Finder, SOLMATES">
-    <meta name="author" content="Shivarn Singh">
-    <meta property="og:title" content="Company Culture Finder — SOLMATES">
-    <meta property="og:description" content="Access the Company Culture Finder — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta property="og:image" content="/preview.png">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Company Culture Finder — SOLMATES">
-    <meta name="twitter:description" content="Access the Company Culture Finder — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="twitter:image" content="/preview.png">
-    <link rel="manifest" href="/manifest.json">
-    <!-- [AUTO-SEO-END] -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js?v=113.3" defer></script>
 </head>
-
 <body>
-
-  <header class="top-nav" style="justify-content: center;">
-    <span class="nav-logo" style="cursor: default;">Company Culture Finder</span>
-  </header>
-
-  <div class="page-content">
-    <div class="container">
-      <div id="setupStep" class="card">
-        <h1><i class="fas fa-building"></i> Company Culture Matcher</h1>
-        <p>Tell the AI your core work values, and it will match you with the perfect company archetype.</p>
-
-        <label>What do you value most in a workplace?</label>
-        <input type="text" id="targetValues" placeholder="e.g. Work-life balance, Fully Remote, Fast-paced Startup">
-
-        <label>Your Industry</label>
-        <input type="text" id="targetInd" placeholder="e.g. Tech, Finance, Healthcare">
-
-        <button class="btn-primary" id="startBtn">Find My Match</button>
-      </div>
-
-      <div id="loadingStep" class="card hidden" style="text-align: center;">
-        <h3>Analyzing organizational structures...</h3>
-      </div>
-
-      <div id="resultStep" class="card hidden">
-        <h1 style="text-align: center; margin-bottom: 30px;">Your Top Culture Matches</h1>
-
-        <div id="matchesContainer"></div>
-
-        <div class="interview-q">
-          <h3><i class="fas fa-question-circle"></i> Culture Questions to Ask During Your Interview</h3>
-          <ul id="qList" style="margin-top: 10px; padding-left: 20px;"></ul>
+  <div class="header-bar">
+    <a href="/skills/index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+    <h1><i class="fas fa-building" style="color: var(--accent);"></i> Company Culture Finder</h1>
+  </div>
+  <div class="container">
+    <div id="setup-mode">
+      <div class="input-card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Search Criteria</h3>
+        <div class="form-group">
+          <label>Company Name or Industry</label>
+          <input type="text" id="company" class="form-control" placeholder="e.g. Google, Remote Startups, Tech Giants" value="Tech Giants">
         </div>
-
-        <button class="btn-primary" onclick="location.reload()" style="margin-top: 30px;">Try New Values</button>
+        <button class="btn-main" style="margin-top: 25px;" onclick="generateInsights()">
+          <i class="fas fa-magic"></i> Analyze Culture
+        </button>
       </div>
     </div>
+    <div id="loader" class="loader-overlay">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary);">Analyzing Workplace Data...</h3>
+      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Fetching employee sentiment...</p>
+    </div>
+    <div id="result-mode">
+      <div class="controls-bar">
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" onclick="resetForm()"><i class="fas fa-redo"></i> New Search</button>
+        </div>
+      </div>
+      <div id="dashboard-container"></div>
+    </div>
   </div>
-
-  <script src="/config.js?v=118.0"></script>
-  <script src="/js/uptime-helper.js?v=101.0"></script>
-  <script src="/js/api-client.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('startBtn').onclick = async () => {
-        const val = document.getElementById('targetValues').value;
-        const ind = document.getElementById('targetInd').value;
-        if (!val) return alert("Please enter your values.");
-
-        document.getElementById('setupStep').classList.add('hidden');
-        document.getElementById('loadingStep').classList.remove('hidden');
-
-        try {
-          const res = await window.solmatesAPI.generateAIToolData('company-culture', {
-            values: val,
-            industry: ind
-          });
-          if (!res.success) throw new Error();
-
-          const { matches, interviewQuestionsToAsk } = res.data;
-
-          document.getElementById('matchesContainer').innerHTML = matches.map(m => `
-        <div class="match-card">
-          <div class="c-name">${m.companyName}</div>
-          <div class="c-vibe">${m.cultureVibe}</div>
-          <p style="margin-bottom: 15px; color: var(--text-muted);"><i>Why it matches:</i> ${m.whyItMatches}</p>
-          
-          <div class="pro-con-grid">
-            <div class="pro-col">
-              <h4>Pros</h4>
-              <ul>${m.pros.map(p => `<li>${p}</li>`).join('')}</ul>
-            </div>
-            <div class="con-col">
-              <h4>Trade-offs</h4>
-              <ul>${m.cons.map(c => `<li>${c}</li>`).join('')}</ul>
-            </div>
+    window.onload = () => { window.solmatesAPI = new SolmatesAPI(); };
+    async function generateInsights() {
+      const company = document.getElementById('company').value || 'Tech Companies';
+      
+      document.getElementById('loader').style.display = 'flex';
+      document.getElementById('loader-msg').innerText = `Analyzing culture for ${company}...`;
+      
+      try {
+        const prompt = `Analyze the workplace culture for: ${company}.
+Output strictly in the following JSON format and nothing else:
+{
+  "summary": "Detailed summary of the work environment...",
+  "work_life_balance": "Excellent / Moderate / Intense...",
+  "pros": ["Pro 1", "Pro 2"],
+  "cons": ["Con 1", "Con 2"],
+  "values": ["Innovation", "Collaboration"]
+}`;
+        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        const resText = res.message || res.reply;
+        if (res.success && resText) {
+            let jsonStr = resText;
+            const match = resText.match(/\\{\\s*"[\\s\\S]*\\}\\s*/);
+            if (match) { jsonStr = match[0]; }
+            else {
+                let start = resText.indexOf('{');
+                let end = resText.lastIndexOf('}');
+                if (start !== -1 && end !== -1) jsonStr = resText.substring(start, end + 1);
+            }
+            try {
+                const data = JSON.parse(jsonStr);
+                renderDashboard(data);
+            } catch (parseErr) {
+                console.error("JSON Parse Error:", parseErr);
+                throw new Error("Invalid response format");
+            }
+        } else {
+            throw new Error("Failed to fetch insights");
+        }
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'none';
+        document.getElementById('result-mode').style.display = 'block';
+        window.scrollTo(0,0);
+      } catch (err) {
+          console.error(err);
+          alert('Failed to generate insights. Please try again.');
+          document.getElementById('loader').style.display = 'none';
+      }
+    }
+    function renderDashboard(data) {
+      let html = `
+        <div class="dashboard-card">
+          <div class="dashboard-title"><i class="fas fa-info-circle"></i> Culture Overview</div>
+          <p style="line-height: 1.6; margin-bottom: 15px;">${data.summary}</p>
+          <div style="background: rgba(0, 113, 227, 0.1); padding: 15px; border-radius: 8px; color: var(--accent); font-weight: 600;">
+            <i class="fas fa-balance-scale"></i> Work-Life Balance: ${data.work_life_balance}
           </div>
         </div>
-      `).join('');
-
-          document.getElementById('qList').innerHTML = interviewQuestionsToAsk.map(q => `<li>${q}</li>`).join('');
-
-          document.getElementById('loadingStep').classList.add('hidden');
-          document.getElementById('resultStep').classList.remove('hidden');
-        } catch (e) {
-          alert("Error generating API data"); location.reload();
-        }
-      };
-    });
+      `;
+      
+      const gridHtml = `
+        <div class="grid-2">
+          <div class="dashboard-card">
+            <div class="dashboard-title"><i class="fas fa-check-circle" style="color: var(--success);"></i> Top Pros</div>
+            <ul style="margin-left: 20px; line-height: 1.8;">${data.pros.map(s => `<li>${s}</li>`).join('')}</ul>
+          </div>
+          <div class="dashboard-card">
+            <div class="dashboard-title"><i class="fas fa-times-circle" style="color: var(--danger);"></i> Common Cons</div>
+            <ul style="margin-left: 20px; line-height: 1.8;">${data.cons.map(s => `<li>${s}</li>`).join('')}</ul>
+          </div>
+        </div>
+      `;
+      html += gridHtml;
+      
+      if(data.values && data.values.length) {
+        let valHtml = data.values.map(s => `<span style="display:inline-block; background: var(--bg); border: 1px solid var(--border); padding: 5px 12px; border-radius: 20px; margin: 0 10px 10px 0; font-size: 0.9rem;">${s}</span>`).join('');
+        html += `<div class="dashboard-card"><div class="dashboard-title"><i class="fas fa-heart"></i> Core Values</div><div>${valHtml}</div></div>`;
+      }
+      
+      document.getElementById('dashboard-container').innerHTML = html;
+    }
+    function resetForm() { document.getElementById('result-mode').style.display = 'none'; document.getElementById('setup-mode').style.display = 'block'; }
   </script>
 </body>
-
 </html>

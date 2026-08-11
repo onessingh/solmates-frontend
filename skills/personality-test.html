@@ -1,551 +1,514 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="screen and (prefers-color-scheme: dark)" content="#0f172a">
   <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
-  <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personality Assessment — SOLMATES</title>
-  <!-- Font Awesome -->
+  <title>Personality Test | SOLMATES Skills</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
   <style>
-
-    /* APPLE-INSPIRED DESIGN */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --danger: #ff3b30;
+      --glass: rgba(255, 255, 255, 0.7);
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-      background: var(--bg-body) !important;
-      color: var(--text-main) !important;
-      line-height: 1.4;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .top-nav {
-      position: fixed;
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Header */
+    .header-bar {
+      background: var(--card);
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
       top: 0;
-      width: 100%;
-      height: 52px;
-      background: var(--bg-nav);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 1000;
-      font-size: 14px;
+      gap: 10px;
     }
-
-    .nav-logo {
-      font-weight: 600;
-      font-size: 1.25rem;
-      letter-spacing: -0.02em;
-    }
-
-    .back-link {
-      text-decoration: none;
-      color: white;
-      font-weight: 500;
-      font-size: 13px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #0f2b46;
-      padding: 6px 15px;
-      border-radius: 20px;
-      transition: 0.3s;
-    }
-
-    .back-link:hover {
-      background: #1a3c5e;
-      transform: translateY(-1px);
-    }
-
-    .page-content {
-      padding: 92px 24px 48px;
-      min-height: 100vh;
-    }
+    .back-btn { position: absolute; left: 20px; text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; background: #f0f4f8; padding: 8px 16px; border-radius: 20px; transition: 0.2s; }
+    .back-btn:hover { background: #e1e8f0; }
 
     .container {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: var(--bg-card);
-      backdrop-filter: blur(18px);
-      border-radius: 36px;
-      padding: 36px 32px;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-      transition: all 0.25s ease;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 650;
-      margin-bottom: 6px;
-    }
-
-    .apple-sub {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 28px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-primary {
-      background: #0071e3;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #0077ed;
-      transform: scale(1.02);
-    }
-
-    .btn-primary:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .spinner {
-      width: 52px;
-      height: 52px;
-      border: 4px solid #e9e9ed;
-      border-top-color: #0071e3;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 20px;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .loading-card {
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    .question-box {
-      background: var(--bg-body);
-      border-radius: 28px;
-      padding: 28px;
-      border: 1px solid #f0f0f3;
-      margin-bottom: 24px;
-    }
-
-    .question-text {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-    }
-
-    .options {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 15px;
+      width: 100%;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-
-    .option {
-      padding: 18px 24px;
-      background: var(--bg-card-hover);
-      border: 1.5px solid var(--border-color);
-      border-radius: 34px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .option:hover {
-      background: var(--bg-body);
-      border-color: #0071e3;
-    }
-
-    .option.selected {
-      background: rgba(0, 113, 227, 0.1);
-      border-color: #0071e3;
-    }
-
-    .result-score {
-      font-size: 5rem;
-      font-weight: 700;
-      text-align: center;
-      color: #0071e3;
-    }
-
-    .error-msg {
-      background: var(--bg-card-hover);
-      padding: 16px;
-      color: #bf3b3b;
-      border-radius: 20px;
-      margin-top: 20px;
-      text-align: center;
     }
     
-  
-
-    /* Dark Mode Native OS Integration */
-    :root {
-      --bg-body: #ffffff;
-      --text-main: #111111;
-      --text-muted: #555555;
-      --text-lighter: #666666;
-      --bg-nav: rgba(255, 255, 255, 0.98);
-      --bg-card: #ffffff;
-      --bg-card-hover: #f9f9fb;
-      --border-color: #eeeeee;
-      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
-      --brand-primary: #0f2b46;
-      --brand-accent: #c0962d;
+    /* Input Form View */
+    #setup-mode {
+      animation: fadeIn 0.3s;
     }
-
-    /* dark mode moved */
     
-    input, select, textarea {
-      background: var(--bg-card-hover) !important;
-      color: var(--text-main) !important;
-      border: 1px solid var(--border-color) !important;
+    .input-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    @media (max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #fafafa;
+      transition: all 0.2s;
       outline: none;
     }
-    input::placeholder, textarea::placeholder {
-      color: var(--text-muted) !important;
-      opacity: 0.7;
+    .form-control:focus {
+      border-color: var(--accent);
+      background: var(--card);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
     }
-    input:focus, select:focus, textarea:focus {
-      border-color: #0071e3 !important;
-      box-shadow: 0 0 0 2px rgba(0,113,227,0.2);
-    }
-
-    </style>
-  <script src="/js/sol-cache.js?v=91.0"></script>
-
-
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
-      }
-      .top-nav { border-bottom: 1px solid var(--border-color) !important; }
     
-</style>
-<script>
+    .btn-main {
+      background: var(--accent);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 113, 227, 0.3);
+    }
+    
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #e1e8f0;
+    }
+    
+    /* Result View */
+    #result-mode {
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+    
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      background: var(--card);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .mcq-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .mcq-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: var(--light);
+    }
+    .mcq-tag {
+      background: rgba(0, 113, 227, 0.1);
+      color: var(--accent);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    .mcq-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+    .mcq-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .mcq-option {
+      padding: 12px 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mcq-option:hover {
+      background: rgba(0, 113, 227, 0.05);
+      border-color: rgba(0, 113, 227, 0.3);
+    }
+    .mcq-option.selected {
+      background: rgba(0, 113, 227, 0.1);
+      border-color: var(--accent);
+    }
+    .mcq-option.correct {
+      background: rgba(52, 199, 89, 0.1);
+      border-color: var(--success);
+      color: #15803d;
+    }
+    .mcq-option.incorrect {
+      background: rgba(255, 59, 48, 0.1);
+      border-color: var(--danger);
+      color: #b91c1c;
+    }
+    
+    .mcq-explanation {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+    
+    .mcq-explanation.show {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    
+    .loader-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      z-index: 1000;
+      display: none;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e1e8f0;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+  </style>
+
+  <!-- Dark Mode Native OS Integration -->
+  <style id="solmates-dark-style" media="screen and (prefers-color-scheme: dark)">
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --light: #94a3b8;
+      --border: #334155;
+      --primary: #f8fafc;
+    }
+    .form-control { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
+    .form-control:focus { background: #1e293b !important; }
+    .btn-secondary { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
+    .btn-secondary:hover { background: #475569 !important; }
+    .mcq-explanation { background: #0f172a !important; color: #cbd5e1 !important; }
+    .mcq-tag { background: rgba(0, 113, 227, 0.2) !important; color: #60a5fa !important; }
+    .loader-overlay { background: rgba(15, 23, 42, 0.8) !important; }
+    .back-btn { background: var(--border) !important; color: var(--text) !important; }
+  </style>
+  <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
       if (savedTheme) {
         document.documentElement.style.colorScheme = savedTheme;
         const darkStyle = document.getElementById('solmates-dark-style');
         if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
           else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
         }
       }
     })();
   </script>
-<script id="color-scheme-sync">
-(function() {
-    function updateMetaColorScheme() {
-        var meta = document.querySelector('meta[name="color-scheme"]');
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
-        var darkStyle = document.getElementById('solmates-dark-style');
-        if (!meta) return;
-        var theme = localStorage.getItem('solmates_theme');
-        if (theme === 'dark') {
-            meta.setAttribute('content', 'dark only');
-            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
-            document.documentElement.style.colorScheme = 'dark';
-            document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'screen');
-        } else if (theme === 'light') {
-            meta.setAttribute('content', 'light only');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
-            document.documentElement.style.colorScheme = 'light';
-            document.documentElement.classList.remove('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'not all');
-        }
-    }
-    updateMetaColorScheme();
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'solmates_theme') updateMetaColorScheme();
-    });
-    var originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
-        if (key === 'solmates_theme') updateMetaColorScheme();
-    };
-})();
-</script>
-    <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="Access the Personality Assessment — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Personality, Assessment, SOLMATES">
-    <meta name="author" content="Shivarn Singh">
-    <meta property="og:title" content="Personality Assessment — SOLMATES">
-    <meta property="og:description" content="Access the Personality Assessment — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta property="og:image" content="/preview.png">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Personality Assessment — SOLMATES">
-    <meta name="twitter:description" content="Access the Personality Assessment — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="twitter:image" content="/preview.png">
-    <link rel="manifest" href="/manifest.json">
-    <!-- [AUTO-SEO-END] -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js?v=113.3" defer></script>
 </head>
-
 <body>
 
-  <header class="top-nav" style="justify-content: center;">
-    <span class="nav-logo" style="cursor: default;">Personality Assessment</span>
-  </header>
-
-  <div class="page-content">
-    <div class="container">
-
-      <!-- SETUP CARD -->
-      <div id="setupStep" class="card">
-        <h1><i class="fas fa-user-circle"></i> Personality Assessment</h1>
-        <div class="apple-sub">Myers-Briggs Style AI Assessment · 10 introspective questions</div>
-        <button class="btn btn-primary" id="startTestBtn" style="width:100%; padding:16px;">
-          <i class="fas fa-play"></i> start assessment
-        </button>
-        <div id="setupError" class="error-msg hidden"></div>
-      </div>
-
-      <!-- LOADING CARD -->
-      <div id="loadingStep" class="card hidden">
-        <div class="loading-card">
-          <div class="spinner"></div>
-          <div id="loadingTitle" style="font-weight:600; margin-bottom:6px;">Generating your profile...</div>
-          <div style="color: var(--text-muted); font-size:0.9rem;">Mate AI is analyzing...</div>
-        </div>
-      </div>
-
-      <!-- TEST CARD -->
-      <div id="testStep" class="card hidden">
-        <div style="text-align: right; margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);" id="progressLabel">
-        </div>
-        <div class="question-box">
-          <div class="question-text" id="questionText"></div>
-          <div class="options" id="optionsContainer"></div>
-        </div>
-        <button class="btn btn-primary" id="nextBtn" style="width:100%;">next question ?</button>
-        <div id="testError" class="error-msg hidden"></div>
-      </div>
-
-      <!-- RESULT CARD -->
-      <div id="resultStep" class="card hidden" style="text-align:center;">
-        <h1><i class="fas fa-star"></i> Your Result</h1>
-        <div class="apple-sub">Based on your answers to the AI-generated scenarios</div>
-        <div class="result-score" id="mbtiScore">INTP</div>
-        <h2 id="mbtiTitle" style="margin-top: 10px; color: var(--text-main); letter-spacing: -0.01em;">The Logician</h2>
-        <p style="margin: 20px 0; color: var(--text-main); font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;"
-          id="mbtiDesc"></p>
-
-        <button class="btn btn-primary" id="retakeBtn" style="margin-top:20px; width:100%;">
-          <i class="fas fa-redo"></i> retake with new questions
-        </button>
-      </div>
-
-    </div>
+  <div class="header-bar">
+    <a href="/skills/index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+    <h1><i class="fas fa-user-circle" style="color: var(--accent);"></i> Personality Test</h1>
   </div>
 
-  <script src="/config.js?v=118.0"></script>
-  <script src="/js/uptime-helper.js?v=101.0"></script>
-  <script src="/js/api-client.js"></script>
-  <script>
-    const MBTI_DETAILS = {
-      'INTJ': { name: 'Architect', summary: 'Strategic thinkers with a plan for everything. They are imaginative yet decisive, ambitious yet private, and amazingly curious, but they do not squander their energy.' },
-      'INTP': { name: 'Logician', summary: 'Innovative inventors with an unquenchable thirst for knowledge. They love patterns, have a keen eye for spotting discrepancies, and an almost insatiable appetite for logic.' },
-      'ENTJ': { name: 'Commander', summary: 'Bold, imaginative and strong-willed leaders, always finding a way – or making one. They project charisma and confidence, and exercise authority in a way that draws crowds together.' },
-      'ENTP': { name: 'Debater', summary: 'Smart and curious thinkers who cannot resist an intellectual challenge. They are the ultimate devil’s advocates, thriving on the process of shredding arguments and beliefs.' },
-      'INFJ': { name: 'Advocate', summary: 'Quiet and mystical, yet very inspiring and tireless idealists. They have an inborn sense of idealism and morality, but what sets them apart is that they are not idle dreamers.' },
-      'INFP': { name: 'Mediator', summary: 'Poetic, kind and altruistic people, always eager to help a good cause. They are true idealists, always looking for the hint of good in even the worst of people and events.' },
-      'ENFJ': { name: 'Protagonist', summary: 'Charismatic and inspiring leaders, able to mesmerize their listeners. They are natural-born leaders, full of passion and charisma, reaching out and inspiring others to achieve.' },
-      'ENFP': { name: 'Campaigner', summary: 'Enthusiastic, creative and sociable free spirits, who can always find a reason to smile. They are independent and energetic, seeking emotional connections and freedom.' },
-      'ISTJ': { name: 'Logistician', summary: 'Practical and fact-minded individuals, whose reliability cannot be doubted. They are the most abundant personality type, making up around 13% of the population.' },
-      'ISFJ': { name: 'Defender', summary: 'Very dedicated and warm protectors, always ready to defend their loved ones. They are unique in that they are often quiet and reserved, but have well-developed people skills.' },
-      'ESTJ': { name: 'Executive', summary: 'Excellent administrators, unsurpassed at managing things – or people. They represent tradition and order, utilizing their understanding of what is right and socially acceptable.' },
-      'ESFJ': { name: 'Consul', summary: 'Extraordinarily caring, social and popular people, always eager to help. They are social creatures, and thrive on staying up to date with what their friends are doing.' },
-      'ISTP': { name: 'Virtuoso', summary: 'Bold and practical experimenters, masters of all kinds of tools. They love to explore with their hands and their eyes, touching and examining the world around them.' },
-      'ISFP': { name: 'Adventurer', summary: 'Flexible and charming artists, always ready to explore and experience something new. They are true artists, but not necessarily in the typical sense; they use aesthetics and design.' },
-      'ESTP': { name: 'Entrepreneur', summary: 'Smart, energetic and very perceptive people, who truly enjoy living on the edge. They have a blunt, earthy humor, and love being the center of attention.' },
-      'ESFP': { name: 'Entertainer', summary: 'Spontaneous, energetic and enthusiastic people – life is never boring around them. They love the spotlight, and the entire world is a stage for their energy.' }
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      let sessionId = null;
-      let questions = [];
-      let answers = [];
-      let currentIdx = 0;
-
-      const setupStep = document.getElementById('setupStep');
-      const loadingStep = document.getElementById('loadingStep');
-      const testStep = document.getElementById('testStep');
-      const resultStep = document.getElementById('resultStep');
-
-      const startTestBtn = document.getElementById('startTestBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const retakeBtn = document.getElementById('retakeBtn');
-
-      function showError(step, message) {
-        const el = document.getElementById(`${step}Error`);
-        if (el) { el.textContent = message; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 5000); }
-      }
-
-      function renderQuestion() {
-        if (currentIdx >= questions.length) { submitTest(); return; }
-        const q = questions[currentIdx];
-
-        document.getElementById('progressLabel').textContent = `Question ${currentIdx + 1} of ${questions.length}`;
-        document.getElementById('questionText').textContent = q.text;
-
-        const container = document.getElementById('optionsContainer');
-        container.innerHTML = '';
-
-        q.options.forEach((optStr, i) => {
-          const optDiv = document.createElement('div');
-          optDiv.className = 'option';
-          if (answers[currentIdx] === i) optDiv.classList.add('selected');
-          optDiv.textContent = optStr;
-          optDiv.onclick = () => {
-            container.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-            optDiv.classList.add('selected');
-            answers[currentIdx] = i;
-          };
-          container.appendChild(optDiv);
-        });
-
-        nextBtn.textContent = currentIdx === questions.length - 1 ? 'Submit Assessment' : 'Next Question ?';
-      }
-
-      startTestBtn.onclick = async () => {
-        setupStep.classList.add('hidden');
-        document.getElementById('loadingTitle').textContent = 'Generating unique MBTI scenario questions...';
-        loadingStep.classList.remove('hidden');
-
-        try {
-          const res = await window.solmatesAPI.generateAIToolData('personality-test');
-          if (!res.success) throw new Error(res.error);
-
-          questions = res.data.questions;
-          sessionId = res.data.sessionId;
-          answers = new Array(questions.length).fill(null);
-          currentIdx = 0;
-
-          loadingStep.classList.add('hidden');
-          testStep.classList.remove('hidden');
-          renderQuestion();
-        } catch (err) {
-          console.error(err);
-          loadingStep.classList.add('hidden');
-          setupStep.classList.remove('hidden');
-          showError('setup', 'Failed to generate questions. Please try again.');
-        }
-      };
-
-      nextBtn.onclick = () => {
-        if (answers[currentIdx] === null) {
-          showError('test', 'Please explicitly select an option.');
-          return;
-        }
-        currentIdx++;
-        renderQuestion();
-      };
-
-      async function submitTest() {
-        testStep.classList.add('hidden');
-        document.getElementById('loadingTitle').textContent = 'Analyzing your personality profile...';
-        loadingStep.classList.remove('hidden');
-
-        try {
-          const res = await window.solmatesAPI.submitAIToolResult(sessionId, answers);
-          if (!res.success) throw new Error(res.error);
-
-          const details = MBTI_DETAILS[res.mbtiType] || { name: 'Unique Profile', summary: 'You have a unique personality profile characterized by a balanced set of traits.' };
-
-          const fullForms = {
-            'E': 'Extraversion', 'I': 'Introversion',
-            'S': 'Sensing', 'N': 'Intuition',
-            'T': 'Thinking', 'F': 'Feeling',
-            'J': 'Judging', 'P': 'Perceiving'
-          };
-
-          document.getElementById('mbtiScore').textContent = res.mbtiType;
-          document.getElementById('mbtiTitle').textContent = `The ${details.name}`;
-          document.getElementById('mbtiDesc').innerHTML = `
-        <div style="margin-bottom: 24px; font-size: 1.1rem; color: var(--text-main);">${details.summary}</div>
+  <div class="container">
+    
+    <!-- Setup Mode -->
+    <div id="setup-mode">
+      <div class="input-card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Test Parameters</h3>
         
-        <div style="text-align: left; background: var(--bg-card-hover); padding: 20px; border-radius: 20px; border: 1px solid var(--border-color);">
-          <h4 style="margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Your Trait Breakdown</h4>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; color: var(--text-main);">
-            <div><strong>${fullForms['E']} (E):</strong> ${res.counts.E}</div>
-            <div><strong>${fullForms['I']} (I):</strong> ${res.counts.I}</div>
-            <div><strong>${fullForms['S']} (S):</strong> ${res.counts.S}</div>
-            <div><strong>${fullForms['N']} (N):</strong> ${res.counts.N}</div>
-            <div><strong>${fullForms['T']} (T):</strong> ${res.counts.T}</div>
-            <div><strong>${fullForms['F']} (F):</strong> ${res.counts.F}</div>
-            <div><strong>${fullForms['J']} (J):</strong> ${res.counts.J}</div>
-            <div><strong>${fullForms['P']} (P):</strong> ${res.counts.P}</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Framework</label>
+            <select id="framework" class="form-control">
+              <option value="Situational Judgment (Workplace)" selected>Situational Judgment (Workplace)</option>
+              <option value="Emotional Intelligence (EQ)">Emotional Intelligence (EQ)</option>
+              <option value="Leadership & Management">Leadership & Management</option>
+              <option value="Interpersonal Skills">Interpersonal Skills</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Context</label>
+            <select id="context" class="form-control">
+              <option value="Professional" selected>Professional</option>
+              <option value="Social">Social / Personal</option>
+              <option value="Academic">Academic</option>
+            </select>
           </div>
         </div>
-      `;
 
-          loadingStep.classList.add('hidden');
-          resultStep.classList.remove('hidden');
-        } catch (err) {
-          console.error(err);
-          loadingStep.classList.add('hidden');
-          testStep.classList.remove('hidden');
-          showError('test', 'Evaluation failed.');
+        <div class="form-group">
+          <label>Number of Questions</label>
+          <select id="q-count" class="form-control">
+            <option value="5">5 Questions</option>
+            <option value="10" selected>10 Questions</option>
+            <option value="15">15 Questions</option>
+          </select>
+        </div>
+
+        <button class="btn-main" style="margin-top: 25px;" onclick="generateTest()">
+          <i class="fas fa-magic"></i> Generate Test
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-overlay">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary);">Crafting Scenarios...</h3>
+      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Analyzing parameters...</p>
+    </div>
+
+    <!-- Result Mode -->
+    <div id="result-mode">
+      <div class="controls-bar">
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" onclick="generateTest()"><i class="fas fa-redo"></i> Regenerate</button>
+        </div>
+      </div>
+
+      <div id="questions-container">
+        <!-- MCQs injected here -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    window.onload = () => {
+      window.solmatesAPI = new SolmatesAPI();
+    };
+
+    let generatedQuestions = [];
+
+    async function generateTest() {
+      const framework = document.getElementById('framework').value;
+      const context = document.getElementById('context').value;
+      const count = parseInt(document.getElementById('q-count').value);
+      
+      document.getElementById('loader').style.display = 'flex';
+      document.getElementById('loader-msg').innerText = `Generating ${framework} scenarios...`;
+      
+      try {
+        const prompt = `Generate exactly ${count} multiple-choice Situational Judgment Test (SJT) or Personality Assessment questions.
+Framework: ${framework}. Context: ${context}.
+Since this requires a 'correct' answer, make the questions situational where one option is generally considered the most adaptive, healthy, or professional response according to psychology and management principles.
+Output strictly in the following JSON array format, and nothing else:
+[
+  {
+    "id": 1,
+    "q": "Scenario text...",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correct": 1, 
+    "explanation": "Explanation for why this behavior is the most constructive/adaptive.",
+    "tag": "${framework}"
+  }
+]
+Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
+
+        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        const resText = res.message || res.reply;
+        if (res.success && resText) {
+            let jsonStr = resText;
+            const match = resText.match(/\[\s*\{[\s\S]*\}\s*\]/) || resText.match(/\{\s*"[\s\S]*\}\s*/);
+            if (match) {
+                jsonStr = match[0];
+            } else {
+                let start = resText.indexOf('[');
+                let end = resText.lastIndexOf(']');
+                if (start !== -1 && end !== -1) jsonStr = resText.substring(start, end + 1);
+            }
+            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1');
+            try {
+                let parsed = JSON.parse(jsonStr);
+                if (parsed.questions) parsed = parsed.questions;
+                generatedQuestions = parsed;
+            } catch (parseErr) {
+                console.error("JSON Parse Error:", parseErr, "\nRaw String:", jsonStr);
+                throw new Error("Invalid response format from AI");
+            }
+        } else {
+            throw new Error("Failed to generate questions");
         }
-      }
 
-      retakeBtn.onclick = () => {
-        resultStep.classList.add('hidden');
-        setupStep.classList.remove('hidden');
-      };
+        renderQuestions();
+        
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'none';
+        document.getElementById('result-mode').style.display = 'block';
+        history.pushState({view: 'result'}, '', '');
+        window.scrollTo(0,0);
+      } catch (err) {
+          console.error(err);
+          alert('Failed to generate test. Please try again.');
+          document.getElementById('loader').style.display = 'none';
+      }
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-container');
+      
+      let html = '';
+      generatedQuestions.forEach((q, index) => {
+        let optionsHtml = '';
+        q.options.forEach((opt, oIdx) => {
+          optionsHtml += `
+            <div class="mcq-option" onclick="selectOption(this, ${index}, ${oIdx})">
+              <span style="font-weight: 600; width: 25px;">${String.fromCharCode(65 + oIdx)}.</span> 
+              <span>${opt}</span>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="mcq-card" id="qcard-${index}">
+            <div class="mcq-header">
+              <span>Q${index + 1}</span>
+              <span class="mcq-tag"><i class="fas fa-tag"></i> ${q.tag}</span>
+            </div>
+            <div class="mcq-question">${q.q}</div>
+            <div class="mcq-options">
+              ${optionsHtml}
+            </div>
+            <div class="mcq-explanation" id="exp-${index}">
+              <strong>Explanation:</strong><br>
+              ${q.explanation}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function selectOption(element, qIndex, oIdx) {
+      const card = document.getElementById(`qcard-${qIndex}`);
+      const options = card.querySelectorAll('.mcq-option');
+      
+      if(card.classList.contains('answered')) return;
+      card.classList.add('answered');
+      
+      const q = generatedQuestions[qIndex];
+      const isCorrect = (oIdx === q.correct);
+      
+      element.classList.add('selected');
+      
+      options.forEach((opt, idx) => {
+        if(idx === q.correct) {
+          opt.classList.add('correct');
+        } else if (idx === oIdx && !isCorrect) {
+          opt.classList.add('incorrect');
+        }
+        opt.style.pointerEvents = 'none';
+      });
+
+      document.getElementById(`exp-${qIndex}`).classList.add('show');
+    }
+
+    window.addEventListener('popstate', function(e) {
+      if (!e.state || e.state.view !== 'result') {
+        document.getElementById('result-mode').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'block';
+      }
     });
   </script>
 </body>
-
 </html>

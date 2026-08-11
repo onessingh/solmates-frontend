@@ -1,375 +1,401 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="screen and (prefers-color-scheme: dark)" content="#0f172a">
   <meta name="color-scheme" content="light only">
-  <meta name="supported-color-schemes" content="light">
-  <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=111.9">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Ideas Generator — SOLMATES</title>
+  <title>Project Ideas Generator | SOLMATES Tools</title>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=112.3">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
   <style>
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --primary: #0f2b46;
+      --accent: #0071e3;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #1d1d1f;
+      --light: #86868b;
+      --border: #e5e5ea;
+      --success: #34c759;
+      --danger: #ff3b30;
+      --glass: rgba(255, 255, 255, 0.7);
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-      background: var(--bg-body) !important;
-      color: var(--text-main) !important;
-    }
-
-    .top-nav {
-      position: fixed;
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Header */
+    .header-bar {
+      background: var(--card);
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      position: sticky;
       top: 0;
-      width: 100%;
-      height: 52px;
-      background: var(--bg-nav);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid #ddd;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 1000;
+      gap: 10px;
     }
-
-    .nav-logo {
-      font-weight: 600;
-      font-size: 1.25rem;
-    }
-
-    .back-link {
-      text-decoration: none;
-      color: #0071e3;
-      font-weight: 500;
-    }
-
-    .page-content {
-      padding: 92px 24px 48px;
-      min-height: 100vh;
-    }
+    .back-btn { position: absolute; left: 20px; text-decoration: none; color: var(--primary); font-weight: 600; font-size: 0.9rem; background: #f0f4f8; padding: 8px 16px; border-radius: 20px; transition: 0.2s; }
+    .back-btn:hover { background: #e1e8f0; }
 
     .container {
       max-width: 800px;
-      margin: 0 auto;
+      margin: 30px auto;
+      padding: 0 15px;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
-
-    .card {
-      background: var(--bg-card);
-      border-radius: 20px;
-      padding: 36px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    
+    /* Input Form View */
+    #setup-mode { animation: fadeIn 0.3s; }
+    
+    .input-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
     }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
     }
-
-    label {
-      font-weight: bold;
+    @media (max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
       display: block;
-      margin: 15px 0 5px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text);
     }
-
-    input,
-    select {
+    .form-control {
       width: 100%;
       padding: 12px;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      border: 1px solid #ccc;
       font-size: 1rem;
-    }
-
-    .btn-primary {
-      background: #0071e3;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      width: 100%;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .project-card {
-      border: 1px solid var(--border-color);
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      background: var(--bg-card);
-    }
-
-    .project-card h3 {
-      color: var(--brand-primary);
-      margin-bottom: 10px;
-      font-size: 1.4rem;
-    }
-
-    .badge-diff {
-      display: inline-block;
-      padding: 5px 12px;
-      border-radius: 15px;
-      background: var(--bg-card-hover);
-      font-size: 0.85rem;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-
-    .p-section {
-      margin-bottom: 15px;
-    }
-
-    .p-section strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text-main);
-    }
-
-    .tech-tag {
-      display: inline-block;
-      padding: 4px 10px;
-      background: var(--bg-card-hover);
-      color: #0071e3;
-      border-radius: 5px;
-      font-size: 0.85rem;
-      margin-right: 5px;
-      margin-bottom: 5px;
-    }
-    
-  
-
-    /* Dark Mode Native OS Integration */
-    :root {
-      --bg-body: #ffffff;
-      --text-main: #111111;
-      --text-muted: #555555;
-      --text-lighter: #666666;
-      --bg-nav: rgba(255, 255, 255, 0.98);
-      --bg-card: #ffffff;
-      --bg-card-hover: #f9f9fb;
-      --border-color: #eeeeee;
-      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
-      --brand-primary: #0f2b46;
-      --brand-accent: #c0962d;
-    }
-
-    /* dark mode moved */
-    
-    input, select, textarea {
-      background: var(--bg-card-hover) !important;
-      color: var(--text-main) !important;
-      border: 1px solid var(--border-color) !important;
+      background: #fafafa;
+      transition: all 0.2s;
       outline: none;
     }
-    input::placeholder, textarea::placeholder {
-      color: var(--text-muted) !important;
-      opacity: 0.7;
+    .form-control:focus {
+      border-color: var(--accent);
+      background: var(--card);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
     }
-    input:focus, select:focus, textarea:focus {
-      border-color: #0071e3 !important;
-      box-shadow: 0 0 0 2px rgba(0,113,227,0.2);
-    }
-
-    </style>
-  <script src="/js/sol-cache.js?v=91.0"></script>
-
-
-<style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
-
-      :root {
-        --bg-body: #0f172a;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --text-lighter: #cbd5e1;
-        --bg-nav: rgba(15, 23, 42, 0.98);
-        --bg-card: #1e293b;
-        --bg-card-hover: #334155;
-        --border-color: #334155;
-        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
-        --brand-primary: #f8fafc;
-        --brand-accent: #c0962d;
-      }
-      .top-nav { border-bottom: 1px solid var(--border-color) !important; }
     
-</style>
-<script>
+    .btn-main {
+      background: var(--accent);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 113, 227, 0.3);
+    }
+    
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #e1e8f0;
+    }
+    
+    /* Result View */
+    #result-mode { display: none; animation: fadeIn 0.3s; }
+    
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      background: var(--card);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .idea-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .idea-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .idea-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+    .idea-difficulty { font-size: 0.8rem; background: rgba(0,113,227,0.1); color: var(--accent); padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+    .idea-desc { color: var(--text); margin-bottom: 15px; line-height: 1.5; font-size: 0.95rem; }
+    
+    .feature-list { list-style-type: disc; margin-left: 20px; margin-bottom: 15px; color: var(--text); font-size: 0.9rem; }
+    
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech-tag { background: #f0f4f8; border: 1px solid var(--border); padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; color: var(--text); }
+    
+    .loader-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      z-index: 1000;
+      display: none;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e1e8f0;
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+  </style>
+
+  <style id="solmates-dark-style" media="screen" disabled>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --light: #94a3b8;
+      --border: #334155;
+      --primary: #f8fafc;
+    }
+    .form-control { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
+    .form-control:focus { background: #1e293b !important; }
+    .btn-secondary { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
+    .btn-secondary:hover { background: #475569 !important; }
+    .idea-difficulty { background: rgba(0, 113, 227, 0.2) !important; color: #60a5fa !important; }
+    .tech-tag { background: #334155 !important; color: #f8fafc !important; }
+    .loader-overlay { background: rgba(15, 23, 42, 0.8) !important; }
+    .back-btn { background: var(--border) !important; color: var(--text) !important; }
+  </style>
+  <script>
     (function() {
       const savedTheme = localStorage.getItem('solmates_theme');
       if (savedTheme) {
         document.documentElement.style.colorScheme = savedTheme;
         const darkStyle = document.getElementById('solmates-dark-style');
         if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          if (savedTheme === 'dark') { darkStyle.media = 'screen'; darkStyle.disabled = false; }
           else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
         }
       }
     })();
   </script>
-<script id="color-scheme-sync">
-(function() {
-    function updateMetaColorScheme() {
-        var meta = document.querySelector('meta[name="color-scheme"]');
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
-        var darkStyle = document.getElementById('solmates-dark-style');
-        if (!meta) return;
-        var theme = localStorage.getItem('solmates_theme');
-        if (theme === 'dark') {
-            meta.setAttribute('content', 'dark only');
-            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
-            document.documentElement.style.colorScheme = 'dark';
-            document.documentElement.classList.add('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'screen');
-        } else if (theme === 'light') {
-            meta.setAttribute('content', 'light only');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
-            document.documentElement.style.colorScheme = 'light';
-            document.documentElement.classList.remove('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'not all');
-        }
-    }
-    updateMetaColorScheme();
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'solmates_theme') updateMetaColorScheme();
-    });
-    var originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
-        if (key === 'solmates_theme') updateMetaColorScheme();
-    };
-})();
-</script>
-    <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="Access the Project Ideas Generator — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Project, Ideas, Generator, SOLMATES">
-    <meta name="author" content="Shivarn Singh">
-    <meta property="og:title" content="Project Ideas Generator — SOLMATES">
-    <meta property="og:description" content="Access the Project Ideas Generator — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta property="og:image" content="/preview.png">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Project Ideas Generator — SOLMATES">
-    <meta name="twitter:description" content="Access the Project Ideas Generator — SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="twitter:image" content="/preview.png">
-    <link rel="manifest" href="/manifest.json">
-    <!-- [AUTO-SEO-END] -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js?v=113.3" defer></script>
 </head>
-
 <body>
 
-  <header class="top-nav" style="justify-content: center;">
-    <span class="nav-logo" style="cursor: default;">Project Ideas Generator</span>
-  </header>
-
-  <div class="page-content">
-    <div class="container">
-      <div id="setupStep" class="card">
-        <h1><i class="fas fa-lightbulb"></i> Project Ideas Generator</h1>
-        <p>Need portfolio projects? AI will generate 3 highly impressive real-world project ideas based on your domain.
-        </p>
-
-        <label>Target Domain / Area</label>
-        <input type="text" id="targetDom" placeholder="e.g. Data Visualization, Full-Stack Web, Cybersecurity">
-
-        <label>Current Skill Level</label>
-        <select id="currLev">
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
-
-        <button class="btn-primary" id="startBtn">Generate Projects</button>
-      </div>
-
-      <div id="loadingStep" class="card hidden" style="text-align: center;">
-        <h3>Brainstorming with AI...</h3>
-      </div>
-
-      <div id="resultStep" class="card hidden">
-        <h1 style="text-align: center; margin-bottom: 30px;">Your Custom Project Ideas</h1>
-
-        <div id="projectsContainer"></div>
-
-        <div
-          style="background: var(--bg-card-hover); border-left: 5px solid #0071e3; padding: 20px; border-radius: 10px; margin-top: 30px;">
-          <h3><i class="fas fa-briefcase"></i> Portfolio Advice</h3>
-          <p id="advTxt" style="margin-top: 10px;"></p>
-        </div>
-
-        <button class="btn-primary" onclick="location.reload()">Generate More</button>
-      </div>
-    </div>
+  <div class="header-bar">
+    <a href="/skills/index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+    <h1><i class="fas fa-lightbulb" style="color: var(--accent);"></i> Project Ideas Generator</h1>
   </div>
 
-  <script src="/config.js?v=118.0"></script>
-  <script src="/js/uptime-helper.js?v=101.0"></script>
-  <script src="/js/api-client.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('startBtn').onclick = async () => {
-        const dom = document.getElementById('targetDom').value;
-        if (!dom) return alert("Please enter a domain.");
+  <div class="container">
+    
+    <div id="setup-mode">
+      <div class="input-card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Project Parameters</h3>
+        
+        <div class="form-group">
+          <label>Tech Stack / Languages</label>
+          <input type="text" id="tech-stack" class="form-control" placeholder="e.g. React, Node.js, MongoDB" value="React, Node.js, MongoDB">
+        </div>
 
-        document.getElementById('setupStep').classList.add('hidden');
-        document.getElementById('loadingStep').classList.remove('hidden');
-
-        try {
-          const res = await window.solmatesAPI.generateAIToolData('project-ideas', {
-            domain: dom,
-            level: document.getElementById('currLev').value
-          });
-          if (!res.success) throw new Error();
-
-          const { projects, portfolioAdvice } = res.data;
-
-          document.getElementById('advTxt').textContent = portfolioAdvice;
-
-          document.getElementById('projectsContainer').innerHTML = projects.map(p => `
-        <div class="project-card">
-          <h3>${p.title}</h3>
-          <span class="badge-diff"><i class="fas fa-hammer"></i> ${p.difficulty}</span>
-          
-          <div class="p-section">
-            <strong>Description</strong>
-            ${p.description}
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Project Difficulty</label>
+            <select id="difficulty" class="form-control">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate" selected>Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
           </div>
-          
-          <div class="p-section">
-            <strong>Tech Stack</strong>
-            ${p.techStack.map(t => `<span class="tech-tag">${t}</span>`).join('')}
-          </div>
-          
-          <div class="p-section">
-            <strong>Learning Outcomes</strong>
-            <ul style="padding-left: 20px;">
-              ${p.learningOutcomes.map(o => `<li>${o}</li>`).join('')}
-            </ul>
+          <div class="form-group">
+            <label>Primary Focus</label>
+            <select id="focus" class="form-control">
+              <option value="Frontend">Frontend</option>
+              <option value="Backend">Backend</option>
+              <option value="Full Stack" selected>Full Stack</option>
+              <option value="AI / ML">AI / ML</option>
+            </select>
           </div>
         </div>
-      `).join('');
 
-          document.getElementById('loadingStep').classList.add('hidden');
-          document.getElementById('resultStep').classList.remove('hidden');
-        } catch (e) {
-          alert("Error generating API data"); location.reload();
+        <button class="btn-main" style="margin-top: 25px;" onclick="generateIdeas()">
+          <i class="fas fa-magic"></i> Generate Ideas
+        </button>
+      </div>
+    </div>
+
+    <div id="loader" class="loader-overlay">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary);">Brainstorming Ideas...</h3>
+      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Finding the best projects for your stack...</p>
+    </div>
+
+    <div id="result-mode">
+      <div class="controls-bar">
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" onclick="generateIdeas()"><i class="fas fa-redo"></i> Regenerate</button>
+        </div>
+      </div>
+
+      <div id="result-container">
+        <!-- Results injected here -->
+      </div>
+      
+    </div>
+
+  </div>
+
+  <script>
+    window.onload = () => {
+      window.solmatesAPI = new SolmatesAPI();
+    };
+
+    async function generateIdeas() {
+      const stack = document.getElementById('tech-stack').value;
+      const difficulty = document.getElementById('difficulty').value;
+      const focus = document.getElementById('focus').value;
+      
+      document.getElementById('loader').style.display = 'flex';
+      
+      try {
+        const prompt = \`Generate 3 unique project ideas using the following tech stack: \${stack}.
+Difficulty: \${difficulty}. Focus: \${focus}.
+Output strictly in the following JSON format and nothing else:
+{
+  "ideas": [
+    {
+      "name": "Project Name",
+      "description": "Short overview of the project.",
+      "features": ["Feature 1", "Feature 2"],
+      "difficulty": "Difficulty Level",
+      "techStack": ["Tech1", "Tech2"]
+    }
+  ]
+}\`;
+
+        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        const resText = res.message || res.reply;
+        if (res.success && resText) {
+            let jsonStr = resText;
+            const match = resText.match(/\\{\\s*"[\\s\\S]*\\}\\s*/);
+            if (match) {
+                jsonStr = match[0];
+            }
+            try {
+                const parsed = JSON.parse(jsonStr);
+                renderResults(parsed);
+            } catch (parseErr) {
+                console.error("JSON Parse Error:", parseErr, "\\nRaw String:", jsonStr);
+                throw new Error("Invalid response format from AI");
+            }
+        } else {
+            throw new Error("Failed to generate ideas");
         }
-      };
+        
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'none';
+        document.getElementById('result-mode').style.display = 'block';
+        history.pushState({view: 'result'}, '', '');
+        window.scrollTo(0,0);
+      } catch (err) {
+          console.error(err);
+          alert('Failed to generate ideas. Please try again.');
+          document.getElementById('loader').style.display = 'none';
+      }
+    }
+
+    function renderResults(data) {
+      const container = document.getElementById('result-container');
+      
+      let html = '';
+      
+      data.ideas.forEach(idea => {
+        let featureHtml = '<ul class="feature-list">';
+        idea.features.forEach(f => { featureHtml += \`<li>\${f}</li>\`; });
+        featureHtml += '</ul>';
+
+        let tagsHtml = '<div class="tech-tags">';
+        idea.techStack.forEach(t => { tagsHtml += \`<span class="tech-tag">\${t}</span>\`; });
+        tagsHtml += '</div>';
+
+        html += \`
+          <div class="idea-card">
+            <div class="idea-header">
+              <span class="idea-title">\${idea.name}</span>
+              <span class="idea-difficulty">\${idea.difficulty}</span>
+            </div>
+            <div class="idea-desc">\${idea.description}</div>
+            \${featureHtml}
+            \${tagsHtml}
+          </div>
+        \`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    window.addEventListener('popstate', function(e) {
+      if (!e.state || e.state.view !== 'result') {
+        document.getElementById('result-mode').style.display = 'none';
+        document.getElementById('setup-mode').style.display = 'block';
+      }
     });
   </script>
 </body>
-
 </html>
