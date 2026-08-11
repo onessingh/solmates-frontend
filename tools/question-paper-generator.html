@@ -432,6 +432,27 @@
   </div>
 
   <script>
+    function safeParseJSON(text) {
+        if (!text) throw new Error("Empty response");
+        let attempt = text.trim();
+        const start = attempt.indexOf('[');
+        const end = attempt.lastIndexOf(']');
+        const startObj = attempt.indexOf('{');
+        const endObj = attempt.lastIndexOf('}');
+        
+        let firstArr = (start !== -1 && end !== -1 && start < end) ? start : Infinity;
+        let firstObj = (startObj !== -1 && endObj !== -1 && startObj < endObj) ? startObj : Infinity;
+        
+        if (firstArr < firstObj && firstArr !== Infinity) {
+            attempt = attempt.substring(start, end + 1);
+        } else if (firstObj !== Infinity) {
+            attempt = attempt.substring(startObj, endObj + 1);
+        }
+        
+        attempt = attempt.replace(/,\s*([\}\]])/g, '$1');
+        return JSON.parse(attempt);
+    }
+    
     window.onload = () => {
       window.solmatesAPI = new SolmatesAPI();
       const urlParams = new URLSearchParams(window.location.search);
@@ -487,23 +508,12 @@ Note: Set "options" to null or an empty array if the question is subjective. For
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            let jsonStr = resText;
-            // Attempt to extract JSON from markdown or raw text
-            const match = resText.match(/\[\s*\{[\s\S]*\}\s*\]/) || resText.match(/\{\s*"[\s\S]*\}\s*/);
-            if (match) {
-                jsonStr = match[0];
-            } else {
-                let start = resText.indexOf('[');
-                let end = resText.lastIndexOf(']');
-                if (start !== -1 && end !== -1) jsonStr = resText.substring(start, end + 1);
-            }
-            jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1'); // Remove trailing commas
             try {
-                let sections = JSON.parse(jsonStr);
+                let sections = safeParseJSON(resText);
                 if (sections.sections) sections = sections.sections; // Handle if AI wrapped it in an object
                 renderPaper(sections);
             } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr, "\nRaw String:", jsonStr);
+                console.error("JSON Parse Error:", parseErr, resText.substring(0, 200));
                 throw new Error("Invalid response format from AI");
             }
         } else {
@@ -517,7 +527,8 @@ Note: Set "options" to null or an empty array if the question is subjective. For
         window.scrollTo(0,0);
       } catch (err) {
         console.error(err);
-        alert('Failed to generate paper. Please try again.');
+        document.getElementById('result-mode').style.display = 'block';
+        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format. Please try again.</p><button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
         document.getElementById('loader').style.display = 'none';
       }
     }
