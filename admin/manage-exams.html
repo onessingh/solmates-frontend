@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Exams</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    .btn { background: #3b82f6; color: white; padding: 5px 10px; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Manage Exams</h1>
+  <a href="../admin-dashboard.html">Back to Dashboard</a>
+  
+  <h3>Create New Exam</h3>
+  <input type="text" id="name" placeholder="Exam Name (e.g. UGC NET)">
+  <input type="text" id="slug" placeholder="Slug (e.g. ugc-net)">
+  <input type="text" id="cat" placeholder="Category (e.g. management)">
+  <button class="btn" onclick="addExam()">Add Exam</button>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Name</th><th>Slug</th><th>Actions</th></tr>
+    </thead>
+    <tbody id="exam-list"></tbody>
+  </table>
+  
+  <script>
+    function addExam() {
+        alert('API integration pending. This is a scaffold.');
+    }
+  </script>
+</body>
+</html>

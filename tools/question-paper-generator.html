@@ -470,6 +470,18 @@
     }
     
     window.onload = () => {
+      if (typeof ExamContextManager !== 'undefined') {
+        const ctx = ExamContextManager.getContext();
+        if (ctx) {
+          const badge = document.getElementById('exam-context-badge');
+          if (badge) {
+            badge.style.display = 'inline-block';
+            document.getElementById('ec-text').innerText = ctx.exam_name + " - " + ctx.subject_name;
+          }
+          document.getElementById('exam').value = ctx.exam_name;
+          document.getElementById('subject').value = ctx.subject_name;
+        }
+      }
       window.solmatesAPI = new SolmatesAPI();
       const urlParams = new URLSearchParams(window.location.search);
       const fields = ['exam', 'subject', 'unit', 'marks', 'duration', 'difficulty'];
@@ -508,7 +520,8 @@
       
       while (retries >= 0 && !success) {
         try {
-            const prompt = `Generate a question paper for ${exam}, Subject: ${subject}, Topic: ${topic}.
+            const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
+            const prompt = ctxPrompt + `Generate a question paper for ${exam}, Subject: ${subject}, Topic: ${topic}.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
 Output strictly in JSON format as an array of sections:
 [

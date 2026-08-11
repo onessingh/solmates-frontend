@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Subject - Solmates</title>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js"></script>
+  <script src="/js/exam-context.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: sans-serif; background: #f8fafc; color: #334155; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+    .card { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; }
+    .card:hover { border-color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Select Subject</h1>
+    <div class="grid" id="subjects-container">Loading...</div>
+    
+    <div id="tools-section" style="display:none; margin-top: 40px;">
+      <h2>Available AI Tools for <span id="sel-sub"></span></h2>
+      <div class="grid" id="tools-container"></div>
+    </div>
+  </div>
+  
+  <script>
+    let currentExamId = '';
+    async function loadSubjects() {
+      currentExamId = new URLSearchParams(window.location.search).get('exam');
+      if(!currentExamId) return window.location.href = 'index.html';
+      
+      try {
+        const res = await fetch('/api/exams/' + currentExamId + '/subjects');
+        const subjects = await res.json();
+        
+        const container = document.getElementById('subjects-container');
+        if(subjects.length === 0) {
+            container.innerHTML = '<p>No subjects found. Select default tools.</p>';
+            selectSubject(null, 'General');
+            return;
+        }
+        
+        container.innerHTML = subjects.map(sub => `
+          <div class="card" onclick="selectSubject('${sub.id}', '${sub.name}')">
+            <h3>${sub.name}</h3>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('subjects-container').innerHTML = 'Error loading subjects.';
+      }
+    }
+    
+    async function selectSubject(subId, subName) {
+      document.getElementById('subjects-container').style.display = 'none';
+      document.getElementById('tools-section').style.display = 'block';
+      document.getElementById('sel-sub').innerText = subName;
+      
+      // Save Context
+      ExamContextManager.setContext(currentExamId, 'Selected Exam', subId, subName);
+      
+      // Load mapped tools
+      try {
+        let query = '/api/exams/tools/mapped?examId=' + currentExamId;
+        if (subId) query += '&subjectId=' + subId;
+        
+        const res = await fetch(query);
+        const tools = await res.json();
+        
+        // For testing, hardcode fallback if empty
+        const fallbackTools = [
+          { name: 'AI Study Companion', url: '/tools/ai-study-companion/index.html', icon: 'fa-robot' },
+          { name: 'AI MCQ Generator', url: '/tools/mcq-generator.html', icon: 'fa-list-ol' },
+          { name: 'AI Question Paper Generator', url: '/tools/question-paper-generator.html', icon: 'fa-file-alt' }
+        ];
+        
+        const displayTools = tools.length > 0 ? tools : fallbackTools;
+        
+        document.getElementById('tools-container').innerHTML = displayTools.map(t => `
+          <a href="${t.url}" class="card" style="text-decoration:none; color:inherit; text-align:center;">
+            <i class="fas ${t.icon || 'fa-tools'}" style="font-size:2rem; color:#3b82f6; margin-bottom:10px;"></i>
+            <h3>${t.name}</h3>
+          </a>
+        `).join('');
+      } catch(e) {}
+    }
+    
+    window.onload = loadSubjects;
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Overview - Solmates</title>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js"></script>
+  <script src="/js/exam-context.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Add basic styling here similar to index */
+    body { font-family: sans-serif; background: #f8fafc; color: #334155; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    h1 { margin-top: 0; }
+    .btn { display: inline-block; background: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container" id="content">
+    Loading...
+  </div>
+  <script>
+    async function loadOverview() {
+      const slug = new URLSearchParams(window.location.search).get('exam');
+      if(!slug) return window.location.href = 'index.html';
+      
+      try {
+        const res = await fetch('/api/exams/' + slug);
+        const exam = await res.json();
+        
+        document.getElementById('content').innerHTML = `
+          <h1>${exam.name}</h1>
+          <p>${exam.full_description || exam.short_description || 'No description available.'}</p>
+          
+          <h3>Exam Pattern</h3>
+          <p>${exam.exam_pattern || 'TBA'}</p>
+          
+          <a href="subjects.html?exam=${exam.id}" class="btn">Select Subject & Continue <i class="fas fa-arrow-right"></i></a>
+        `;
+      } catch (err) {
+        document.getElementById('content').innerHTML = 'Error loading exam.';
+      }
+    }
+    window.onload = loadOverview;
+  </script>
+</body>
+</html>

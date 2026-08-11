@@ -462,6 +462,16 @@
     }
     
     window.onload = () => {
+      if (typeof ExamContextManager !== 'undefined') {
+        const ctx = ExamContextManager.getContext();
+        if (ctx) {
+          const badge = document.getElementById('exam-context-badge');
+          if (badge) {
+            badge.style.display = 'inline-block';
+            document.getElementById('ec-text').innerText = ctx.exam_name + " - " + ctx.subject_name;
+          }
+        }
+      }
       window.solmatesAPI = new SolmatesAPI();
       const urlParams = new URLSearchParams(window.location.search);
       const fields = ['exam', 'subject', 'topic', 'difficulty', 'language'];
