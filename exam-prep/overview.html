@@ -11,119 +11,248 @@
   <link rel="stylesheet" href="/css/global-lockdown.css">
   <style>
     :root {
-      --bg-body: #f5f5f7;
-      --text-main: #1d1d1f;
-      --text-muted: #86868b;
+      --bg-body: #f8fafc;
       --bg-nav: #ffffff;
       --bg-card: #ffffff;
-      --border-color: #e5e5ea;
+      --border-color: #e2e8f0;
       --brand-primary: #0f2b46;
-      --brand-accent: #0071e3;
+      --brand-accent: #3b82f6;
+      --brand-accent-hover: #2563eb;
+      --text-main: #334155;
+      --text-muted: #64748b;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; }
     
-    /* Top Navigation (Reused from main site) */
-    .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--bg-nav); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
-    .brand { font-size: 1.2rem; font-weight: 700; color: var(--brand-primary); text-decoration: none; letter-spacing: 1px; }
-    .nav-links { display: flex; gap: 20px; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-    .nav-links a:hover { color: var(--brand-primary); }
-    .btn-back { background: var(--brand-primary); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+    /* Top Navigation */
+    .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg-nav); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .brand { font-size: 1.25rem; font-weight: 800; color: var(--brand-primary); text-decoration: none; letter-spacing: 0.5px; }
+    .btn-back { background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .btn-back:hover { background: #e2e8f0; }
+
+    .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
     
-    .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    /* Header Section */
+    .exam-header { background: var(--brand-primary); color: white; padding: 40px; border-radius: 12px 12px 0 0; position: relative; overflow: hidden; }
+    .exam-header h1 { margin: 0 0 10px 0; font-size: 2.5rem; font-weight: 800; }
+    .exam-header p { margin: 0; font-size: 1.1rem; opacity: 0.9; max-width: 600px; line-height: 1.5; }
+    .exam-badge { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Tabs */
+    .exam-nav { background: white; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; overflow-x: auto; scrollbar-width: none; }
+    .exam-nav::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 1; padding: 15px 20px; border: none; background: none; font-size: 1rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .tab-btn:hover { color: var(--brand-primary); background: #f8fafc; }
+    .tab-btn.active { color: var(--brand-accent); border-bottom-color: var(--brand-accent); background: white; }
+
+    /* Content Area */
+    .exam-content { background: white; padding: 40px; border-radius: 0 0 12px 12px; border: 1px solid var(--border-color); border-top: none; min-height: 300px; }
+    .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+    .tab-pane.active { display: block; }
     
-    .exam-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+    .content-section h3 { color: var(--brand-primary); font-size: 1.3rem; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .content-section p { line-height: 1.7; margin-bottom: 20px; font-size: 1.05rem; }
     
-    .exam-header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 30px; }
-    .exam-header h1 { color: var(--brand-primary); margin: 0 0 10px 0; font-size: 2.2rem; }
-    .badge { display: inline-block; background: #eef2ff; color: var(--brand-accent); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 15px; }
+    /* Subject Selector Section */
+    .subject-selector-box { margin-top: 40px; background: white; padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .subject-selector-box h2 { margin-top: 0; color: var(--brand-primary); font-size: 1.5rem; margin-bottom: 15px; }
+    .select-wrapper { position: relative; margin-bottom: 20px; }
+    .select-wrapper select { width: 100%; padding: 15px 20px; font-size: 1.1rem; border: 2px solid var(--border-color); border-radius: 8px; appearance: none; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 20px center; cursor: pointer; transition: border-color 0.2s; color: var(--text-main); font-weight: 500; }
+    .select-wrapper select:focus { outline: none; border-color: var(--brand-accent); }
     
-    .section-title { font-size: 1.2rem; color: var(--brand-primary); margin: 25px 0 15px 0; display: flex; align-items: center; gap: 10px; }
-    .section-title i { color: var(--brand-accent); }
+    /* Tools Grid */
+    #tools-section { margin-top: 30px; display: none; animation: slideUp 0.4s ease; border-top: 1px solid var(--border-color); padding-top: 30px; }
+    .tools-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+    .tools-header h3 { margin: 0; color: var(--brand-primary); font-size: 1.3rem; }
+    .tools-header .active-context { font-size: 0.9rem; color: var(--brand-accent); font-weight: 600; background: #eff6ff; padding: 5px 12px; border-radius: 20px; }
     
-    p { color: var(--text-main); line-height: 1.6; font-size: 1rem; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .tool-card { background: white; border: 1px solid var(--border-color); padding: 25px 20px; border-radius: 12px; text-decoration: none; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s ease; position: relative; overflow: hidden; }
+    .tool-card:hover { border-color: var(--brand-accent); transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .tool-card i { font-size: 2.5rem; color: var(--brand-accent); margin-bottom: 15px; }
+    .tool-card h4 { color: var(--text-main); margin: 0 0 8px 0; font-size: 1.1rem; }
+    .tool-card .action-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 5px; }
     
-    .cta-container { margin-top: 40px; text-align: center; }
-    .btn-primary { display: inline-block; background: var(--brand-accent); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; transition: background 0.2s; border: none; cursor: pointer; }
-    .btn-primary:hover { background: #005bb5; }
-    
-    .loading-state { text-align: center; padding: 60px; color: var(--text-muted); font-size: 1.1rem; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
   <nav class="top-nav">
     <a href="/" class="brand">SOLMATES</a>
-    <div class="nav-links">
-      <a href="/exam-prep/index.html">Exam Prep</a>
-    </div>
-    <a href="/exam-prep/index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back</a>
+    <a href="/exam-prep/index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Exams</a>
   </nav>
 
-  <div class="container" id="content">
-    <div class="exam-card loading-state">
-      <i class="fas fa-spinner fa-spin"></i> Loading Exam Profile...
+  <div class="container" id="loading-container">
+    <div style="text-align: center; padding: 100px; color: var(--text-muted); font-size: 1.2rem;">
+      <i class="fas fa-circle-notch fa-spin fa-2x" style="margin-bottom: 15px; color: var(--brand-accent);"></i><br>
+      Loading Exam Profile...
     </div>
   </div>
 
+  <div class="container" id="main-container" style="display: none;">
+    <!-- Rendered dynamically -->
+  </div>
+
   <script>
-    // Exact same fallback list as index.html so it can render locally if API fails
-    const mockExams = [
-        { id: 'upsc-cse', name: 'UPSC CSE', slug: 'upsc-cse', category_id: 'government', short_description: 'Civil Services Examination for IAS, IPS, IFS and other central services.', full_description: 'The Civil Services Examination (CSE) is a nationwide competitive examination in India conducted by the Union Public Service Commission for recruitment to higher Civil Services of the Government of India.', exam_pattern: 'Preliminary Exam (Objective), Main Exam (Written), and Interview (Personality Test).' },
-        { id: 'ssc-cgl', name: 'SSC CGL', slug: 'ssc-cgl', category_id: 'ssc', short_description: 'Staff Selection Commission Combined Graduate Level Examination.', full_description: 'SSC CGL is an examination conducted to recruit staff to various posts in ministries, departments and organisations of the Government of India.', exam_pattern: 'Tier-I (Objective), Tier-II (Objective + Skill Test).' },
-        { id: 'ibps-po', name: 'IBPS PO', slug: 'ibps-po', category_id: 'banking', short_description: 'Institute of Banking Personnel Selection Probationary Officer exam.', full_description: 'IBPS PO is a national-level recruitment exam conducted to recruit Probationary Officers and Management Trainees in participating public sector banks.', exam_pattern: 'Preliminary Exam, Main Exam, and Interview.' },
-        { id: 'ugc-net', name: 'UGC NET', slug: 'ugc-net', category_id: 'teaching', short_description: 'University Grants Commission National Eligibility Test for Assistant Professor and JRF.', full_description: 'UGC NET is an examination to determine eligibility for the post of Assistant Professor and/or Junior Research Fellowship award in Indian universities and colleges.', exam_pattern: 'Paper 1 (General Aptitude) and Paper 2 (Subject Specific) conducted via CBT mode.' },
-        { id: 'cat', name: 'CAT', slug: 'cat', category_id: 'management', short_description: 'Common Admission Test for IIMs and other top B-Schools.', full_description: 'The Common Admission Test (CAT) is a computer-based test for admission in graduate management programs.', exam_pattern: 'Verbal Ability and Reading Comprehension (VARC), Data Interpretation and Logical Reasoning (DILR), and Quantitative Ability (QA).' }
-    ];
+    const mockExamsData = {
+        'ugc-net': {
+            name: 'UGC NET',
+            category_id: 'teaching',
+            short_description: 'University Grants Commission National Eligibility Test for Assistant Professor and JRF.',
+            about: 'The UGC NET (National Eligibility Test) is conducted by the NTA on behalf of the University Grants Commission to determine the eligibility of Indian nationals for the post of Assistant Professor and/or Junior Research Fellowship (JRF) in Indian universities and colleges. It is one of the most prestigious exams for aspirants seeking a career in academia and research.',
+            pattern: '<ul><li><b>Mode:</b> Computer Based Test (CBT)</li><li><b>Paper 1:</b> 50 questions (100 marks) - Tests teaching & research aptitude, reasoning, comprehension.</li><li><b>Paper 2:</b> 100 questions (200 marks) - Based on the subject selected by the candidate.</li><li><b>Duration:</b> 3 hours (180 minutes) without any break between Paper 1 & 2.</li><li><b>Marking Scheme:</b> +2 for each correct answer. No negative marking for incorrect answers.</li></ul>',
+            eligibility: '<p>Candidates must have secured at least 55% marks (without rounding off) in Master’s Degree OR equivalent examination from recognized universities. For JRF, the maximum age limit is 30 years (relaxations apply). There is no upper age limit for applying for Assistant Professor.</p>',
+            syllabus: '<p>The syllabus consists of a common Paper 1 (Teaching and Research Aptitude) which is mandatory for all, and Paper 2 which is subject-specific. Paper 1 covers Teaching Aptitude, Research Aptitude, Comprehension, Communication, Mathematical Reasoning, Logical Reasoning, Data Interpretation, ICT, People & Environment, and Higher Education System.</p>',
+            dates: '<p>The exam is conducted twice a year, typically in June and December. Notifications are usually released 2-3 months prior to the exam date.</p>',
+            links: '<a href="https://ugcnet.nta.nic.in/" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Official UGC NET Website</a>',
+            subjects: [{"id":"00","name":"Paper 1 (General Paper on Teaching & Research Aptitude)"},{"id":"01","name":"Economics"},{"id":"02","name":"Political Science"},{"id":"03","name":"Philosophy"},{"id":"04","name":"Psychology"},{"id":"05","name":"Sociology"},{"id":"06","name":"History"},{"id":"07","name":"Anthropology"},{"id":"08","name":"Commerce"},{"id":"09","name":"Education"},{"id":"10","name":"Social Work"},{"id":"11","name":"Defence and Strategic Studies"},{"id":"12","name":"Home Science"},{"id":"14","name":"Public Administration"},{"id":"15","name":"Population Studies"},{"id":"16","name":"Music"},{"id":"17","name":"Management"},{"id":"18","name":"Maithili"},{"id":"19","name":"Bengali"},{"id":"20","name":"Hindi"},{"id":"21","name":"Kannada"},{"id":"22","name":"Malayalam"},{"id":"23","name":"Odia"},{"id":"24","name":"Punjabi"},{"id":"25","name":"Sanskrit"},{"id":"26","name":"Tamil"},{"id":"27","name":"Telugu"},{"id":"28","name":"Urdu"},{"id":"29","name":"Arabic"},{"id":"30","name":"English"},{"id":"31","name":"Linguistics"},{"id":"32","name":"Chinese"},{"id":"33","name":"Dogri"},{"id":"34","name":"Nepali"},{"id":"35","name":"Manipuri"},{"id":"36","name":"Assamese"},{"id":"37","name":"Gujarati"},{"id":"38","name":"Marathi"},{"id":"39","name":"French"},{"id":"40","name":"Spanish"},{"id":"41","name":"Russian"},{"id":"42","name":"Persian"},{"id":"43","name":"Rajasthani"},{"id":"44","name":"German"},{"id":"45","name":"Japanese"},{"id":"46","name":"Adult Education/ Continuing Education"},{"id":"47","name":"Physical Education"},{"id":"49","name":"Arab Culture and Islamic Studies"},{"id":"50","name":"Indian Culture"},{"id":"55","name":"Labour Welfare/Personnel Management"},{"id":"58","name":"Law"},{"id":"59","name":"Library and Information Science"},{"id":"60","name":"Buddhist, Jaina, Gandhian and Peace Studies"},{"id":"62","name":"Comparative Study of Religions"},{"id":"63","name":"Mass Communication and Journalism"},{"id":"65","name":"Performing Arts - Dance/Drama/Theatre"},{"id":"66","name":"Museology & Conservation"},{"id":"67","name":"Archaeology"},{"id":"68","name":"Criminology"},{"id":"70","name":"Tribal and Regional Language/Literature"},{"id":"71","name":"Folk Literature"},{"id":"72","name":"Comparative Literature"},{"id":"73","name":"Sanskrit Traditional Subjects"},{"id":"74","name":"Women Studies"},{"id":"79","name":"Visual Arts (including Drawing & Painting)"},{"id":"80","name":"Geography"},{"id":"81","name":"Social Medicine & Community Health"},{"id":"82","name":"Forensic Science"},{"id":"83","name":"Pali"},{"id":"84","name":"Kashmiri"},{"id":"85","name":"Konkani"},{"id":"87","name":"Computer Science and Applications"},{"id":"88","name":"Electronic Science"},{"id":"89","name":"Environmental Sciences"},{"id":"90","name":"International and Area Studies"},{"id":"91","name":"Prakrit"},{"id":"92","name":"Human Rights and Duties"},{"id":"93","name":"Tourism Administration and Management"},{"id":"94","name":"Bodo"},{"id":"95","name":"Santali"},{"id":"100","name":"Yoga"},{"id":"101","name":"Sindhi"},{"id":"102","name":"Hindu Studies"},{"id":"103","name":"Indian Knowledge System"}]
+        }
+    };
+
+    let currentExamId = '';
+    let examData = null;
 
     async function loadOverview() {
-      const slug = new URLSearchParams(window.location.search).get('exam');
-      if(!slug) return window.location.href = 'index.html';
+      currentExamId = new URLSearchParams(window.location.search).get('exam');
+      if(!currentExamId) return window.location.href = 'index.html';
       
-      let exam = null;
-      try {
-        const res = await fetch('/api/exams/' + slug);
-        if (res.ok) {
-            exam = await res.json();
-        }
-      } catch (err) {
-        console.error("API failed, falling back to mock", err);
+      // Simulate API fetch (since backend is empty, we prioritize our rich mock data)
+      examData = mockExamsData[currentExamId];
+      
+      if (!examData) {
+          // Generic fallback for non-UGC-NET exams
+          examData = {
+              name: currentExamId.toUpperCase().replace('-', ' '),
+              category_id: 'general',
+              short_description: 'Select your subject to access the AI tools.',
+              about: 'Detailed information for this exam is currently being updated in our database.',
+              pattern: 'Information TBA',
+              eligibility: 'Information TBA',
+              syllabus: 'Information TBA',
+              dates: 'Information TBA',
+              links: 'No links available yet.',
+              subjects: [
+                  { id: 'paper-1', name: 'Paper 1 (General)' },
+                  { id: 'paper-2', name: 'Paper 2 (Core Subject)' },
+                  { id: 'quant', name: 'Quantitative Aptitude' },
+                  { id: 'reasoning', name: 'Logical Reasoning' },
+                  { id: 'english', name: 'Verbal / English' }
+              ]
+          };
       }
       
-      if (!exam || Object.keys(exam).length === 0) {
-          // Fallback to mock data
-          exam = mockExams.find(e => e.slug === slug);
-          
-          if (!exam) {
-              // If it's a seeded exam that isn't in mockExams, just generate a generic one
-              exam = {
-                  id: slug,
-                  name: slug.toUpperCase().replace('-', ' '),
-                  short_description: 'Exam details are currently being updated.',
-                  full_description: 'We are currently adding detailed syllabus, patterns, and PYQs for this exam. You can still proceed to select a subject and launch the AI tools.',
-                  exam_pattern: 'TBA'
-              };
-          }
-      }
-      
-      document.getElementById('content').innerHTML = `
-        <div class="exam-card">
+      renderPage();
+    }
+    
+    function renderPage() {
+        document.getElementById('loading-container').style.display = 'none';
+        const main = document.getElementById('main-container');
+        main.style.display = 'block';
+        
+        main.innerHTML = `
             <div class="exam-header">
-                <span class="badge"><i class="fas fa-bookmark"></i> ${exam.category_id ? exam.category_id.toUpperCase() : 'EXAM PREP'}</span>
-                <h1>${exam.name}</h1>
-                <p style="font-size: 1.1rem; color: var(--text-muted);">${exam.short_description || ''}</p>
+                <div class="exam-badge">${examData.category_id}</div>
+                <h1>${examData.name}</h1>
+                <p>${examData.short_description}</p>
             </div>
             
-            <h3 class="section-title"><i class="fas fa-info-circle"></i> Overview</h3>
-            <p>${exam.full_description || exam.short_description || 'No detailed description available yet.'}</p>
-            
-            <h3 class="section-title"><i class="fas fa-list-ul"></i> Exam Pattern</h3>
-            <p>${exam.exam_pattern || 'Exam pattern details are currently being updated.'}</p>
-            
-            <div class="cta-container">
-                <a href="/exam-prep/subjects.html?exam=${exam.id}" class="btn-primary">Continue to Subjects <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
+            <div class="exam-nav">
+                <button class="tab-btn active" onclick="switchTab('about')">About Exam</button>
+                <button class="tab-btn" onclick="switchTab('pattern')">Exam Pattern</button>
+                <button class="tab-btn" onclick="switchTab('eligibility')">Eligibility</button>
+                <button class="tab-btn" onclick="switchTab('syllabus')">Syllabus</button>
+                <button class="tab-btn" onclick="switchTab('dates')">Important Dates</button>
+                <button class="tab-btn" onclick="switchTab('links')">Official Links</button>
             </div>
-        </div>
-      `;
+            
+            <div class="exam-content">
+                <div id="tab-about" class="tab-pane active content-section">
+                    <h3><i class="fas fa-info-circle"></i> About ${examData.name}</h3>
+                    ${examData.about}
+                </div>
+                <div id="tab-pattern" class="tab-pane content-section">
+                    <h3><i class="fas fa-list-ol"></i> Exam Pattern</h3>
+                    ${examData.pattern}
+                </div>
+                <div id="tab-eligibility" class="tab-pane content-section">
+                    <h3><i class="fas fa-user-check"></i> Eligibility Criteria</h3>
+                    ${examData.eligibility}
+                </div>
+                <div id="tab-syllabus" class="tab-pane content-section">
+                    <h3><i class="fas fa-book-open"></i> Syllabus Overview</h3>
+                    ${examData.syllabus}
+                </div>
+                <div id="tab-dates" class="tab-pane content-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Important Dates</h3>
+                    ${examData.dates}
+                </div>
+                <div id="tab-links" class="tab-pane content-section">
+                    <h3><i class="fas fa-link"></i> Official Links</h3>
+                    ${examData.links}
+                </div>
+            </div>
+            
+            <div class="subject-selector-box">
+                <h2>Configure AI Tools</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Select your specific subject or paper to load the AI tools tailored for that context.</p>
+                
+                <div class="select-wrapper">
+                    <select id="subject-dropdown" onchange="onSubjectSelected(this)">
+                        <option value="" disabled selected>-- Select a Subject / Paper --</option>
+                        ${examData.subjects.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+                    </select>
+                </div>
+                
+                <div id="tools-section">
+                    <div class="tools-header">
+                        <h3>Available Tools</h3>
+                        <div class="active-context" id="context-badge">Subject Selected</div>
+                    </div>
+                    <div class="grid" id="tools-container"></div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        
+        event.target.classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+    }
+    
+    function onSubjectSelected(selectElement) {
+        const subId = selectElement.value;
+        const subName = selectElement.options[selectElement.selectedIndex].text;
+        
+        if (!subId) return;
+        
+        document.getElementById('tools-section').style.display = 'block';
+        document.getElementById('context-badge').innerHTML = `<i class="fas fa-check-circle"></i> ${subName}`;
+        
+        // Save Context globally for the AI tools to read
+        ExamContextManager.setContext(currentExamId, examData.name, subId, subName);
+        
+        // Hardcoded generic tools for now since we don't have the mapping endpoint live
+        const tools = [
+            { name: 'AI Study Companion', url: '/tools/ai-study-companion/index.html', icon: 'fa-robot' },
+            { name: 'AI MCQ Generator', url: '/tools/mcq-generator.html', icon: 'fa-list-ol' },
+            { name: 'Paper Generator', url: '/tools/question-paper-generator.html', icon: 'fa-file-alt' },
+            { name: 'Smart Flashcards', url: '/tools/flashcards.html', icon: 'fa-layer-group' },
+            { name: 'Aptitude Test', url: '/skills/aptitude-test.html', icon: 'fa-stopwatch' }
+        ];
+        
+        document.getElementById('tools-container').innerHTML = tools.map(t => `
+            <a href="${t.url}" class="tool-card">
+              <i class="fas ${t.icon}"></i>
+              <h4>${t.name}</h4>
+              <span class="action-text">Launch <i class="fas fa-arrow-right"></i></span>
+            </a>
+        `).join('');
+        
+        // Scroll down to tools smoothly
+        document.getElementById('tools-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
     
     window.onload = loadOverview;
