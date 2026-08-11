@@ -804,7 +804,7 @@ function selectMCQ(qi, oi) {
     if (i === q.correct) el.classList.add('correct-ans');
     else if (i === oi && oi !== q.correct) el.classList.add('wrong-ans');
   });
-  document.getElementById(`exp-${qi}`).classList.add('show');
+  document.getElementById(`exp-${qi}`)?.classList.add('show');
   if (oi === q.correct) { mcqScore++; document.getElementById('mcq-score').textContent = mcqScore; }
   const card = document.getElementById(`mcq-card-${qi}`);
   card.classList.add(oi === q.correct ? 'correct' : 'wrong');
