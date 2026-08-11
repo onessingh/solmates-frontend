@@ -305,7 +305,7 @@
 <body>
 
   <div class="header-bar">
-    <a href="/skills/index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+    
     <h1><i class="fas fa-user-circle" style="color: var(--accent);"></i> Personality Test</h1>
   </div>
 
@@ -360,11 +360,7 @@
 
     <!-- Result Mode -->
     <div id="result-mode">
-      <div class="controls-bar">
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-secondary" onclick="generateTest()"><i class="fas fa-redo"></i> Regenerate</button>
-        </div>
-      </div>
+      
 
       <div id="questions-container">
         <!-- MCQs injected here -->
@@ -379,12 +375,15 @@
     };
 
     let generatedQuestions = [];
+    let answeredCount = 0;
+    let userAnswers = [];
 
     async function generateTest() {
       const framework = document.getElementById('framework').value;
       const context = document.getElementById('context').value;
       const count = parseInt(document.getElementById('q-count').value);
       
+      answeredCount = 0; userAnswers = [];
       document.getElementById('loader').style.display = 'flex';
       document.getElementById('loader-msg').innerText = `Generating ${framework} scenarios...`;
       
@@ -399,7 +398,7 @@ Output strictly in the following JSON array format, and nothing else:
     "q": "Scenario text...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correct": 1, 
-    "explanation": "Explanation for why this behavior is the most constructive/adaptive.",
+    "explanation": "Provide the detailed explanation in English, followed by a paragraph explaining it in Hinglish.",
     "tag": "${framework}"
   }
 ]
@@ -409,14 +408,10 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         const resText = res.message || res.reply;
         if (res.success && resText) {
             let jsonStr = resText;
-            const match = resText.match(/\[\s*\{[\s\S]*\}\s*\]/) || resText.match(/\{\s*"[\s\S]*\}\s*/);
-            if (match) {
-                jsonStr = match[0];
-            } else {
-                let start = resText.indexOf('[');
-                let end = resText.lastIndexOf(']');
-                if (start !== -1 && end !== -1) jsonStr = resText.substring(start, end + 1);
-            }
+            jsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
+            let start = jsonStr.indexOf('[');
+            let end = jsonStr.lastIndexOf(']');
+            if (start !== -1 && end !== -1) jsonStr = jsonStr.substring(start, end + 1);
             jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1');
             try {
                 let parsed = JSON.parse(jsonStr);
@@ -490,6 +485,9 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       const isCorrect = (oIdx === q.correct);
       
       element.classList.add('selected');
+      answeredCount++;
+      userAnswers.push({ q: q.q, selected: opt });
+      if(answeredCount === generatedQuestions.length) generateFinalAnalysis();
       
       options.forEach((opt, idx) => {
         if(idx === q.correct) {
@@ -501,6 +499,36 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       });
 
       document.getElementById(`exp-${qIndex}`).classList.add('show');
+    }
+
+    
+    async function generateFinalAnalysis() {
+      const container = document.getElementById('questions-container');
+      const loaderHtml = `
+        <div id="final-loader" class="mcq-card" style="text-align: center; margin-top: 30px;">
+          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;"></i>
+          <p style="color: var(--primary); font-weight: 600;">Analyzing your responses...</p>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', loaderHtml);
+      
+      try {
+        const answersText = JSON.stringify(userAnswers);
+        const prompt = `Analyze the following test responses and provide a final evaluation for the user in a short, inspiring paragraph (English and Hinglish). Responses: ${answersText}`;
+        
+        const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+        document.getElementById('final-loader').remove();
+        
+        const resHtml = `
+          <div class="mcq-card" style="border: 2px solid var(--accent); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
+            <h2 style="color: var(--primary); margin-bottom: 15px; text-align: center;"><i class="fas fa-star" style="color: #c0962d;"></i> Final Analysis</h2>
+            <div style="font-size: 1.05rem; color: var(--text); line-height: 1.6; white-space: pre-wrap;">${res.message || res.reply}</div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', resHtml);
+      } catch (err) {
+        document.getElementById('final-loader').innerHTML = '<p style="color: red;">Failed to load analysis.</p>';
+      }
     }
 
     window.addEventListener('popstate', function(e) {
