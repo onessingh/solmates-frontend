@@ -21,15 +21,18 @@
       --text-color: #333333;
       --border: #eaeaea;
     }
-    
     @media print {
       * {
         backdrop-filter: none !important;
         filter: none !important;
+        color: #000 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
       }
       body {
-        background: var(--bg-card);
-        color: #000;
+        background: #fff !important;
+        color: #000 !important;
       }
       .navbar, .search-box, .toolbar, .tabs, .floating-bubbles {
         display: none !important;
