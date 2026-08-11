@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Smart Study Kit | Exam Prep AI</title>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js"></script>
+  <script src="/js/exam-context.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/global-lockdown.css">
+  <style>
+    :root {
+      --brand: #2563eb;
+      --brand-dark: #1e40af;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --border: rgba(226,232,240,0.8);
+      --text: #1e293b;
+      --muted: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      --font-head: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ====== NAVBAR ====== */
+    .top-nav {
+      position: fixed; top: 0; width: 100%; height: 60px;
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); display: flex;
+      align-items: center; justify-content: center;
+      z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .brand { font-family: var(--font-head); font-size: 1.25rem; font-weight: 800;
+      background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* ====== HEADER HERO ====== */
+    .kit-hero {
+      background: var(--gradient); color: white;
+      padding: 90px 20px 40px; text-align: center; position: relative; overflow: hidden;
+    }
+    .kit-hero::before {
+      content: ''; position: absolute; top: -40%; right: -10%; width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(59,130,246,0.3), transparent 70%); border-radius: 50%;
+    }
+    .kit-hero .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2);
+      padding: 5px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.5px; margin-bottom: 12px;
+    }
+    .kit-hero h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; margin-bottom: 8px; }
+    .kit-hero p { opacity: 0.85; font-size: 1rem; max-width: 500px; margin: 0 auto 20px; }
+    .kit-hero .meta-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .meta-chip { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15);
+      padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; }
+
+    /* ====== MAIN CONTAINER ====== */
+    .container { max-width: 960px; margin: 0 auto; padding: 25px 15px 80px; }
+
+    /* ====== DIFFICULTY + GENERATE BAR ====== */
+    .action-bar {
+      background: var(--card); border-radius: 16px; padding: 20px 25px;
+      border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      display: flex; align-items: center; justify-content: space-between; gap: 15px;
+      flex-wrap: wrap; margin-bottom: 25px;
+    }
+    .difficulty-group { display: flex; gap: 8px; align-items: center; }
+    .diff-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+    .diff-btn {
+      padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: white; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      color: var(--muted); transition: all 0.2s;
+    }
+    .diff-btn.active { border-color: var(--brand); color: var(--brand); background: #eff6ff; }
+    .generate-all-btn {
+      background: var(--gradient); color: white; border: none; padding: 12px 28px;
+      border-radius: 12px; font-family: var(--font-head); font-size: 1rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 10px;
+      transition: all 0.3s; box-shadow: 0 4px 15px rgba(37,99,235,0.35);
+    }
+    .generate-all-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37,99,235,0.4); }
+    .generate-all-btn:disabled { opacity: 0.7; transform: none; cursor: not-allowed; }
+    .download-all-btn {
+      background: white; color: var(--brand); border: 2px solid var(--brand);
+      padding: 11px 20px; border-radius: 12px; font-family: var(--font-head);
+      font-size: 0.9rem; font-weight: 700; cursor: pointer; display: flex;
+      align-items: center; gap: 8px; transition: all 0.2s; display: none;
+    }
+    .download-all-btn:hover { background: #eff6ff; }
+
+    /* ====== TABS ====== */
+    .tabs-wrapper { background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+      padding: 6px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex: 0 0 auto; padding: 11px 18px; border: none; background: transparent;
+      font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+      color: var(--muted); cursor: pointer; border-radius: 12px;
+      transition: all 0.25s; display: flex; align-items: center; gap: 7px; white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--brand); background: #f8fafc; }
+    .tab-btn.active { color: var(--brand); background: #eff6ff; }
+    .tab-btn .count {
+      background: var(--brand); color: white; font-size: 0.7rem;
+      padding: 1px 7px; border-radius: 10px; display: none;
+    }
+    .tab-btn.has-data .count { display: inline; }
+
+    /* ====== PANE ====== */
+    .pane { display: none; animation: fadeUp 0.4s ease; }
+    .pane.active { display: block; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ====== PANE HEADER ====== */
+    .pane-header {
+      background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+      padding: 20px 25px; margin-bottom: 15px; display: flex;
+      align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .pane-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 10px; }
+    .pane-title i { color: var(--brand); background: #eff6ff; padding: 9px; border-radius: 10px; }
+    .dl-btn {
+      background: white; border: 1.5px solid var(--border); color: var(--text);
+      padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all 0.2s;
+    }
+    .dl-btn:hover { border-color: var(--brand); color: var(--brand); }
+
+    /* ====== SKELETON ====== */
+    .skeleton-wrap { display: flex; flex-direction: column; gap: 12px; }
+    .skeleton { background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
+      background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 10px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ====== STUDY GUIDE ====== */
+    .study-guide-card {
+      background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+      padding: 30px; line-height: 1.8;
+    }
+    .study-guide-card h2 { font-family: var(--font-head); color: var(--brand-dark); font-size: 1.4rem; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #eff6ff; }
+    .study-guide-card h2:first-child { margin-top: 0; }
+    .study-guide-card h3 { font-family: var(--font-head); color: var(--text); font-size: 1.1rem; margin: 16px 0 8px; }
+    .study-guide-card p { color: var(--text); margin-bottom: 12px; font-size: 1rem; }
+    .study-guide-card ul { padding-left: 20px; margin-bottom: 12px; }
+    .study-guide-card ul li { margin-bottom: 8px; }
+    .study-guide-card strong { color: var(--brand-dark); }
+
+    /* ====== FLASHCARDS ====== */
+    .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .flashcard {
+      height: 180px; perspective: 1000px; cursor: pointer;
+    }
+    .flashcard-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+    .fc-front, .fc-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 16px; padding: 20px; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center;
+    }
+    .fc-front {
+      background: var(--card); border: 1px solid var(--border);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    }
+    .fc-front .card-label { font-size: 0.7rem; font-weight: 700; color: var(--brand); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .fc-front .card-q { font-family: var(--font-head); font-size: 1rem; font-weight: 600; color: var(--text); }
+    .fc-back {
+      background: var(--gradient); transform: rotateY(180deg);
+    }
+    .fc-back .card-a { color: white; font-size: 0.95rem; line-height: 1.6; }
+    .fc-hint { font-size: 0.7rem; color: var(--muted); margin-top: 10px; }
+    .flashcard-stats { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .fc-stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 18px; font-size: 0.9rem; font-weight: 600; }
+
+    /* ====== MCQ ====== */
+    .mcq-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .score-pill { background: #eff6ff; color: var(--brand); font-weight: 700; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; }
+    .mcq-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 25px; margin-bottom: 16px; transition: box-shadow 0.2s;
+    }
+    .mcq-card.correct { border-color: var(--success); background: #f0fdf4; }
+    .mcq-card.wrong { border-color: var(--danger); background: #fef2f2; }
+    .mcq-qnum { font-size: 0.75rem; font-weight: 700; color: var(--brand); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .mcq-question { font-weight: 600; font-size: 1rem; margin-bottom: 18px; line-height: 1.6; }
+    .mcq-options { display: flex; flex-direction: column; gap: 10px; }
+    .mcq-opt {
+      padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: white; cursor: pointer; font-size: 0.95rem; transition: all 0.2s;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .mcq-opt:hover:not(.selected):not(.disabled) { border-color: var(--brand); background: #eff6ff; }
+    .mcq-opt.correct-ans { border-color: var(--success); background: #f0fdf4; color: #065f46; font-weight: 600; }
+    .mcq-opt.wrong-ans { border-color: var(--danger); background: #fef2f2; color: #991b1b; }
+    .mcq-opt .opt-icon { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+    .mcq-explanation { margin-top: 15px; padding: 12px 16px; background: #fffbeb; border-radius: 10px; border-left: 3px solid var(--warning); font-size: 0.9rem; display: none; }
+    .mcq-explanation.show { display: block; }
+
+    /* ====== MOCK TEST ====== */
+    .mock-timer {
+      background: var(--gradient); color: white; border-radius: 16px;
+      padding: 18px 25px; margin-bottom: 20px; display: flex;
+      align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    .timer-display { font-family: var(--font-head); font-size: 2rem; font-weight: 800; letter-spacing: 2px; }
+    .timer-label { font-size: 0.85rem; opacity: 0.8; }
+    .mock-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    .mock-btn {
+      padding: 10px 20px; border-radius: 10px; border: none; font-family: var(--font-body);
+      font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .mock-btn.primary { background: white; color: var(--brand); }
+    .mock-btn.danger { background: rgba(239,68,68,0.2); color: white; }
+    .mock-question-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .q-nav-btn { width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: white; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .q-nav-btn.answered { background: var(--brand); border-color: var(--brand); color: white; }
+    .q-nav-btn.current { border-color: var(--warning); background: #fffbeb; }
+    .mock-submit-btn { 
+      background: var(--gradient); color: white; border: none; padding: 14px 35px;
+      border-radius: 12px; font-family: var(--font-head); font-size: 1.1rem; font-weight: 700;
+      cursor: pointer; margin-top: 20px; width: 100%; transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(37,99,235,0.3);
+    }
+    .mock-result-card {
+      background: var(--card); border-radius: 20px; border: 1px solid var(--border);
+      padding: 40px; text-align: center; display: none;
+    }
+    .mock-result-card.show { display: block; }
+    .result-score { font-family: var(--font-head); font-size: 4rem; font-weight: 800; color: var(--brand); }
+    .result-label { font-size: 1.1rem; color: var(--muted); margin-bottom: 20px; }
+    .result-bars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px; }
+    .result-bar { background: #eff6ff; border-radius: 12px; padding: 15px; }
+    .result-bar .val { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; color: var(--brand); }
+    .result-bar .lbl { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+
+    /* ====== APTITUDE ====== */
+    .aptitude-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 25px; margin-bottom: 16px;
+    }
+    .aptitude-card .apt-type { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--warning); margin-bottom: 8px; }
+    .aptitude-card .apt-q { font-weight: 600; font-size: 1rem; margin-bottom: 15px; line-height: 1.6; }
+    .apt-answer-box { background: #f8fafc; border-radius: 10px; padding: 12px 16px; cursor: pointer; font-size: 0.9rem; color: var(--muted); border: 1.5px dashed var(--border); transition: all 0.2s; }
+    .apt-answer-box.revealed { background: #f0fdf4; border-style: solid; border-color: var(--success); color: #065f46; font-weight: 600; }
+
+    /* ====== LOADING STATE ====== */
+    .loading-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .loading-state i { font-size: 2.5rem; color: var(--brand); margin-bottom: 15px; }
+    .loading-state p { font-size: 1rem; font-weight: 500; }
+    .loading-dots::after { content: ''; animation: dots 1.5s infinite; }
+    @keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+
+    /* ====== EMPTY STATE ====== */
+    .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+    .empty-state i { font-size: 3rem; margin-bottom: 15px; color: #cbd5e1; }
+
+    /* ====== PROGRESS BAR ====== */
+    .gen-progress { background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 25px; margin-bottom: 20px; display: none; }
+    .gen-progress.show { display: block; }
+    .gen-progress h4 { font-family: var(--font-head); font-size: 1rem; margin-bottom: 15px; }
+    .progress-items { display: flex; flex-direction: column; gap: 10px; }
+    .prog-item { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; }
+    .prog-item i { width: 20px; text-align: center; }
+    .prog-item.done i { color: var(--success); }
+    .prog-item.loading i { color: var(--brand); animation: spin 1s linear infinite; }
+    .prog-item.pending i { color: #cbd5e1; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .action-bar { flex-direction: column; align-items: stretch; }
+      .generate-all-btn { justify-content: center; }
+      .result-bars { grid-template-columns: 1fr; }
+      .pane-header { flex-direction: column; align-items: flex-start; }
+      .flashcard-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="brand">EXAM PREP AI</span>
+</nav>
+
+<div class="kit-hero">
+  <div class="badge"><i class="fas fa-bolt"></i> Smart Study Kit</div>
+  <h1 id="hero-title">Generating Your Study Kit</h1>
+  <p id="hero-sub">AI-powered study materials tailored to your subject</p>
+  <div class="meta-chips">
+    <span class="meta-chip" id="chip-exam"><i class="fas fa-graduation-cap"></i> Loading...</span>
+    <span class="meta-chip" id="chip-subject"><i class="fas fa-book"></i> Loading...</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <div class="difficulty-group">
+      <span class="diff-label">Difficulty:</span>
+      <button class="diff-btn active" onclick="setDifficulty('easy', this)">Easy</button>
+      <button class="diff-btn" onclick="setDifficulty('medium', this)">Medium</button>
+      <button class="diff-btn" onclick="setDifficulty('hard', this)">Hard</button>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="download-all-btn" id="dl-all-btn" onclick="downloadAll()">
+        <i class="fas fa-download"></i> Download Full Kit
+      </button>
+      <button class="generate-all-btn" id="gen-btn" onclick="generateAll()">
+        <i class="fas fa-bolt"></i> Generate Study Kit
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="gen-progress" id="gen-progress">
+    <h4>⚡ Generating your personalized study materials...</h4>
+    <div class="progress-items">
+      <div class="prog-item pending" id="prog-guide"><i class="fas fa-circle-notch"></i> <span>Study Guide</span></div>
+      <div class="prog-item pending" id="prog-flash"><i class="fas fa-circle-notch"></i> <span>Flashcards</span></div>
+      <div class="prog-item pending" id="prog-mcq"><i class="fas fa-circle-notch"></i> <span>MCQ Practice</span></div>
+      <div class="prog-item pending" id="prog-mock"><i class="fas fa-circle-notch"></i> <span>Mock Test</span></div>
+      <div class="prog-item pending" id="prog-apt"><i class="fas fa-circle-notch"></i> <span>Aptitude Questions</span></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-wrapper">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('guide', this)">
+        <i class="fas fa-book-open"></i> Study Guide <span class="count" id="c-guide">✓</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('flash', this)">
+        <i class="fas fa-layer-group"></i> Flashcards <span class="count" id="c-flash">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('mcq', this)">
+        <i class="fas fa-check-double"></i> MCQ Practice <span class="count" id="c-mcq">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('mock', this)">
+        <i class="fas fa-file-signature"></i> Mock Test <span class="count" id="c-mock">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('apt', this)">
+        <i class="fas fa-bolt"></i> Aptitude <span class="count" id="c-apt">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- STUDY GUIDE -->
+  <div class="pane active" id="pane-guide">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fas fa-book-open"></i> Study Guide</div>
+      <button class="dl-btn" onclick="downloadPane('guide')"><i class="fas fa-download"></i> Download PDF</button>
+    </div>
+    <div id="guide-content">
+      <div class="empty-state">
+        <i class="fas fa-book-open"></i>
+        <p>Click <strong>"Generate Study Kit"</strong> to get AI-curated notes for your subject.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="pane" id="pane-flash">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fas fa-layer-group"></i> Flashcards</div>
+      <button class="dl-btn" onclick="downloadPane('flash')"><i class="fas fa-download"></i> Download PDF</button>
+    </div>
+    <div class="flashcard-stats" id="fc-stats" style="display:none;">
+      <div class="fc-stat">📚 <span id="fc-total">0</span> Cards</div>
+      <div class="fc-stat">✅ <span id="fc-known">0</span> Known</div>
+      <div class="fc-stat">🔁 Tap to Flip</div>
+    </div>
+    <div id="flash-content">
+      <div class="empty-state">
+        <i class="fas fa-layer-group"></i>
+        <p>Flashcards will appear here after generation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MCQ PRACTICE -->
+  <div class="pane" id="pane-mcq">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fas fa-check-double"></i> MCQ Practice</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <div class="score-pill">Score: <span id="mcq-score">0</span>/<span id="mcq-total">0</span></div>
+        <button class="dl-btn" onclick="downloadPane('mcq')"><i class="fas fa-download"></i> Download PDF</button>
+      </div>
+    </div>
+    <div id="mcq-content">
+      <div class="empty-state">
+        <i class="fas fa-check-double"></i>
+        <p>MCQ questions will appear here after generation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOCK TEST -->
+  <div class="pane" id="pane-mock">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fas fa-file-signature"></i> Mock Test</div>
+      <button class="dl-btn" onclick="downloadPane('mock')"><i class="fas fa-download"></i> Download PDF</button>
+    </div>
+    <div id="mock-timer-wrap" style="display:none;">
+      <div class="mock-timer">
+        <div>
+          <div class="timer-label">⏱️ Time Remaining</div>
+          <div class="timer-display" id="timer-display">30:00</div>
+        </div>
+        <div class="mock-controls">
+          <button class="mock-btn primary" id="timer-toggle" onclick="toggleTimer()"><i class="fas fa-play"></i> Start</button>
+          <button class="mock-btn danger" onclick="submitMock()"><i class="fas fa-flag-checkered"></i> Submit</button>
+        </div>
+      </div>
+      <div class="mock-question-nav" id="q-nav"></div>
+    </div>
+    <div class="mock-result-card" id="mock-result"></div>
+    <div id="mock-content">
+      <div class="empty-state">
+        <i class="fas fa-file-signature"></i>
+        <p>Mock test questions will appear here after generation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- APTITUDE -->
+  <div class="pane" id="pane-apt">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fas fa-bolt"></i> Aptitude Questions</div>
+      <button class="dl-btn" onclick="downloadPane('apt')"><i class="fas fa-download"></i> Download PDF</button>
+    </div>
+    <div id="apt-content">
+      <div class="empty-state">
+        <i class="fas fa-bolt"></i>
+        <p>Aptitude questions will appear here after generation.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+let examId = '', examName = '', subjectId = '', subjectName = '';
+let difficulty = 'medium';
+let genData = { guide: null, flash: [], mcq: [], mock: [], apt: [] };
+let mcqAnswered = {}, mcqScore = 0;
+let mockAnswers = {}, timerInterval = null, timerSeconds = 1800, timerRunning = false;
+let knownCards = new Set();
+
+// Init
+window.onload = () => {
+  const params = new URLSearchParams(window.location.search);
+  examId = params.get('exam') || '';
+  subjectId = params.get('subject') || '';
+
+  // Fallback from ExamContextManager
+  if (!examId && window.ExamContextManager) {
+    const ctx = ExamContextManager.getContext();
+    if (ctx) { examId = ctx.examId; examName = ctx.examName; subjectId = ctx.subjectId; subjectName = ctx.subjectName; }
+  } else {
+    examName = params.get('examName') ? decodeURIComponent(params.get('examName')) : examId.toUpperCase();
+    subjectName = params.get('subjectName') ? decodeURIComponent(params.get('subjectName')) : subjectId;
+  }
+
+  document.getElementById('chip-exam').innerHTML = `<i class="fas fa-graduation-cap"></i> ${examName}`;
+  document.getElementById('chip-subject').innerHTML = `<i class="fas fa-book"></i> ${subjectName}`;
+  document.getElementById('hero-title').textContent = subjectName || 'Smart Study Kit';
+  document.getElementById('hero-sub').textContent = `AI-powered study materials for ${examName}`;
+
+  // Auto-generate on load
+  setTimeout(generateAll, 500);
+};
+
+function setDifficulty(d, el) {
+  difficulty = d;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pane-' + id).classList.add('active');
+}
+
+function setProgress(id, state) { // state: 'loading' | 'done' | 'pending'
+  const el = document.getElementById('prog-' + id);
+  el.className = 'prog-item ' + state;
+  const icon = el.querySelector('i');
+  if (state === 'loading') icon.className = 'fas fa-circle-notch';
+  else if (state === 'done') icon.className = 'fas fa-check-circle';
+  else icon.className = 'fas fa-circle';
+}
+
+async function generateAll() {
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Generating...';
+  document.getElementById('gen-progress').classList.add('show');
+  document.getElementById('dl-all-btn').style.display = 'none';
+
+  const ctx = `Exam: ${examName}, Subject: ${subjectName}, Difficulty: ${difficulty}`;
+
+  // Run all 5 in sequence to avoid overloading
+  await generateGuide(ctx);
+  await generateFlash(ctx);
+  await generateMCQ(ctx);
+  await generateMock(ctx);
+  await generateApt(ctx);
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
+  document.getElementById('dl-all-btn').style.display = 'flex';
+}
+
+async function callAI(prompt) {
+  if (!window.solmatesAPI) window.solmatesAPI = new SolmatesAPI();
+  const res = await window.solmatesAPI.sendChatMessage(prompt + '\n\nCRITICAL: Respond ONLY with valid JSON. No markdown, no code fences.', []);
+  const text = res?.candidates?.[0]?.content?.parts?.[0]?.text || res?.text || res || '';
+  try {
+    const cleaned = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(cleaned);
+  } catch(e) { return null; }
+}
+
+// ===== STUDY GUIDE =====
+async function generateGuide(ctx) {
+  setProgress('guide', 'loading');
+  document.getElementById('guide-content').innerHTML = loadingHTML('Generating study guide...');
+  const data = await callAI(`You are an expert teacher. Generate a comprehensive study guide for: ${ctx}.
+Return JSON: { "title": "...", "sections": [{ "heading": "...", "content": "...", "keyPoints": ["..."] }] }
+Include 5-6 sections: Overview, Core Concepts, Key Topics, Important Formulas/Facts, Common Mistakes, Exam Tips.`);
+
+  if (data?.sections) {
+    genData.guide = data;
+    let html = `<div class="study-guide-card">`;
+    data.sections.forEach(s => {
+      html += `<h2>${s.heading}</h2><p>${s.content}</p>`;
+      if (s.keyPoints?.length) {
+        html += `<ul>${s.keyPoints.map(p => `<li>${p}</li>`).join('')}</ul>`;
+      }
+    });
+    html += `</div>`;
+    document.getElementById('guide-content').innerHTML = html;
+    document.querySelector('.tab-btn:nth-child(1)').classList.add('has-data');
+    setProgress('guide', 'done');
+  } else {
+    document.getElementById('guide-content').innerHTML = errorHTML('guide');
+    setProgress('guide', 'done');
+  }
+}
+
+// ===== FLASHCARDS =====
+async function generateFlash(ctx) {
+  setProgress('flash', 'loading');
+  document.getElementById('flash-content').innerHTML = loadingHTML('Generating flashcards...');
+  const data = await callAI(`Create 15 flashcards for exam preparation: ${ctx}.
+Return JSON: { "cards": [{ "question": "...", "answer": "...", "category": "..." }] }
+Make questions clear and concise. Answers should be 1-3 sentences max.`);
+
+  if (data?.cards?.length) {
+    genData.flash = data.cards;
+    document.getElementById('c-flash').textContent = data.cards.length;
+    document.querySelector('.tab-btn:nth-child(2)').classList.add('has-data');
+    document.getElementById('fc-total').textContent = data.cards.length;
+    document.getElementById('fc-stats').style.display = 'flex';
+    renderFlashcards(data.cards);
+    setProgress('flash', 'done');
+  } else {
+    document.getElementById('flash-content').innerHTML = errorHTML('flash');
+    setProgress('flash', 'done');
+  }
+}
+
+function renderFlashcards(cards) {
+  const html = `<div class="flashcard-grid">${cards.map((c, i) => `
+    <div class="flashcard" id="fc-${i}" onclick="flipCard(${i})">
+      <div class="flashcard-inner">
+        <div class="fc-front">
+          <div class="card-label"><i class="fas fa-tag"></i> ${c.category || 'Concept'}</div>
+          <div class="card-q">${c.question}</div>
+          <div class="fc-hint">Tap to reveal answer</div>
+        </div>
+        <div class="fc-back">
+          <div class="card-a">${c.answer}</div>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+  document.getElementById('flash-content').innerHTML = html;
+}
+
+function flipCard(i) {
+  const card = document.getElementById('fc-' + i);
+  card.classList.toggle('flipped');
+  if (card.classList.contains('flipped') && !knownCards.has(i)) {
+    knownCards.add(i);
+    document.getElementById('fc-known').textContent = knownCards.size;
+  }
+}
+
+// ===== MCQ =====
+async function generateMCQ(ctx) {
+  setProgress('mcq', 'loading');
+  document.getElementById('mcq-content').innerHTML = loadingHTML('Generating MCQ questions...');
+  const data = await callAI(`Create 20 multiple choice questions for: ${ctx}.
+Return JSON: { "questions": [{ "q": "...", "options": ["A...","B...","C...","D..."], "correct": 0, "explanation": "..." }] }
+correct is the 0-based index of the correct option. Make distractors plausible.`);
+
+  if (data?.questions?.length) {
+    genData.mcq = data.questions;
+    document.getElementById('c-mcq').textContent = data.questions.length;
+    document.getElementById('mcq-total').textContent = data.questions.length;
+    document.querySelector('.tab-btn:nth-child(3)').classList.add('has-data');
+    renderMCQ(data.questions);
+    setProgress('mcq', 'done');
+  } else {
+    document.getElementById('mcq-content').innerHTML = errorHTML('mcq');
+    setProgress('mcq', 'done');
+  }
+}
+
+function renderMCQ(qs) {
+  const optLabels = ['A','B','C','D'];
+  const html = qs.map((q, qi) => `
+    <div class="mcq-card" id="mcq-card-${qi}">
+      <div class="mcq-qnum">Question ${qi+1} of ${qs.length}</div>
+      <div class="mcq-question">${q.q}</div>
+      <div class="mcq-options">
+        ${q.options.map((opt, oi) => `
+          <div class="mcq-opt" id="opt-${qi}-${oi}" onclick="selectMCQ(${qi}, ${oi})">
+            <span class="opt-icon">${optLabels[oi]}</span> ${opt}
+          </div>`).join('')}
+      </div>
+      <div class="mcq-explanation" id="exp-${qi}">💡 <strong>Explanation:</strong> ${q.explanation}</div>
+    </div>`).join('');
+  document.getElementById('mcq-content').innerHTML = html;
+  mcqAnswered = {}; mcqScore = 0;
+  document.getElementById('mcq-score').textContent = 0;
+}
+
+function selectMCQ(qi, oi) {
+  if (mcqAnswered[qi] !== undefined) return;
+  const q = genData.mcq[qi];
+  mcqAnswered[qi] = oi;
+  const opts = document.querySelectorAll(`[id^="opt-${qi}-"]`);
+  opts.forEach((el, i) => {
+    el.style.cursor = 'default';
+    if (i === q.correct) el.classList.add('correct-ans');
+    else if (i === oi && oi !== q.correct) el.classList.add('wrong-ans');
+  });
+  document.getElementById(`exp-${qi}`).classList.add('show');
+  if (oi === q.correct) { mcqScore++; document.getElementById('mcq-score').textContent = mcqScore; }
+  const card = document.getElementById(`mcq-card-${qi}`);
+  card.classList.add(oi === q.correct ? 'correct' : 'wrong');
+}
+
+// ===== MOCK TEST =====
+async function generateMock(ctx) {
+  setProgress('mock', 'loading');
+  document.getElementById('mock-content').innerHTML = loadingHTML('Generating mock test...');
+  const data = await callAI(`Create a 15-question mock test for: ${ctx}. Make it like an actual exam paper.
+Return JSON: { "duration": 30, "questions": [{ "q": "...", "options": ["A...","B...","C...","D..."], "correct": 0 }] }`);
+
+  if (data?.questions?.length) {
+    genData.mock = data.questions;
+    timerSeconds = (data.duration || 30) * 60;
+    document.getElementById('c-mock').textContent = data.questions.length;
+    document.querySelector('.tab-btn:nth-child(4)').classList.add('has-data');
+    renderMockTest(data.questions);
+    setProgress('mock', 'done');
+  } else {
+    document.getElementById('mock-content').innerHTML = errorHTML('mock');
+    setProgress('mock', 'done');
+  }
+}
+
+function renderMockTest(qs) {
+  const optLabels = ['A','B','C','D'];
+  document.getElementById('mock-timer-wrap').style.display = 'block';
+  updateTimerDisplay();
+
+  // Question navigation
+  const navHtml = qs.map((_, i) => `<button class="q-nav-btn" id="qnav-${i}" onclick="scrollToMockQ(${i})">${i+1}</button>`).join('');
+  document.getElementById('q-nav').innerHTML = navHtml;
+
+  const html = qs.map((q, qi) => `
+    <div class="mcq-card" id="mock-q-${qi}" style="scroll-margin-top:20px;">
+      <div class="mcq-qnum">Q${qi+1}</div>
+      <div class="mcq-question">${q.q}</div>
+      <div class="mcq-options">
+        ${q.options.map((opt, oi) => `
+          <div class="mcq-opt" id="mock-opt-${qi}-${oi}" onclick="selectMock(${qi}, ${oi})">
+            <span class="opt-icon">${optLabels[oi]}</span> ${opt}
+          </div>`).join('')}
+      </div>
+    </div>`).join('') + `<button class="mock-submit-btn" onclick="submitMock()"><i class="fas fa-flag-checkered"></i> Submit Test</button>`;
+  document.getElementById('mock-content').innerHTML = html;
+  mockAnswers = {};
+}
+
+function scrollToMockQ(i) {
+  document.getElementById('mock-q-' + i)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.q-nav-btn').forEach(b => b.classList.remove('current'));
+  document.getElementById('qnav-' + i)?.classList.add('current');
+}
+
+function selectMock(qi, oi) {
+  // Deselect previous
+  const prev = mockAnswers[qi];
+  if (prev !== undefined) document.getElementById(`mock-opt-${qi}-${prev}`)?.classList.remove('correct-ans');
+  mockAnswers[qi] = oi;
+  document.querySelectorAll(`[id^="mock-opt-${qi}-"]`).forEach(el => el.classList.remove('correct-ans'));
+  document.getElementById(`mock-opt-${qi}-${oi}`)?.classList.add('correct-ans');
+  document.getElementById('qnav-' + qi)?.classList.add('answered');
+}
+
+function toggleTimer() {
+  timerRunning = !timerRunning;
+  const btn = document.getElementById('timer-toggle');
+  if (timerRunning) {
+    btn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= 0) { clearInterval(timerInterval); submitMock(); }
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+    btn.innerHTML = '<i class="fas fa-play"></i> Resume';
+  }
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+  document.getElementById('timer-display').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function submitMock() {
+  clearInterval(timerInterval); timerRunning = false;
+  const qs = genData.mock;
+  let correct = 0, wrong = 0, skipped = 0;
+  qs.forEach((q, i) => {
+    const ans = mockAnswers[i];
+    if (ans === undefined) skipped++;
+    else if (ans === q.correct) correct++;
+    else wrong++;
+  });
+  const score = Math.round((correct / qs.length) * 100);
+  const resultEl = document.getElementById('mock-result');
+  resultEl.innerHTML = `
+    <div class="result-score">${score}%</div>
+    <div class="result-label">${score >= 70 ? '🎉 Great Performance!' : score >= 40 ? '💪 Keep Practicing!' : '📚 More Study Needed'}</div>
+    <div class="result-bars">
+      <div class="result-bar"><div class="val" style="color:var(--success)">${correct}</div><div class="lbl">Correct</div></div>
+      <div class="result-bar"><div class="val" style="color:var(--danger)">${wrong}</div><div class="lbl">Wrong</div></div>
+      <div class="result-bar"><div class="val" style="color:var(--muted)">${skipped}</div><div class="lbl">Skipped</div></div>
+    </div>
+    <button onclick="reviewMock()" style="margin-top:20px; padding:12px 30px; background:var(--gradient); color:white; border:none; border-radius:12px; font-family:var(--font-head); font-size:1rem; font-weight:700; cursor:pointer;">Review Answers</button>`;
+  resultEl.classList.add('show');
+  resultEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+function reviewMock() {
+  const qs = genData.mock;
+  qs.forEach((q, qi) => {
+    const ans = mockAnswers[qi];
+    document.querySelectorAll(`[id^="mock-opt-${qi}-"]`).forEach((el, oi) => {
+      el.classList.remove('correct-ans', 'wrong-ans');
+      el.style.cursor = 'default';
+      if (oi === q.correct) el.classList.add('correct-ans');
+      else if (oi === ans && ans !== q.correct) el.classList.add('wrong-ans');
+    });
+  });
+  document.getElementById('mock-result').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===== APTITUDE =====
+async function generateApt(ctx) {
+  setProgress('apt', 'loading');
+  document.getElementById('apt-content').innerHTML = loadingHTML('Generating aptitude questions...');
+  const data = await callAI(`Create 15 aptitude/reasoning questions relevant to: ${ctx}. Include logical reasoning, analytical, and subject-specific aptitude.
+Return JSON: { "questions": [{ "type": "Logical Reasoning", "q": "...", "answer": "..." }] }`);
+
+  if (data?.questions?.length) {
+    genData.apt = data.questions;
+    document.getElementById('c-apt').textContent = data.questions.length;
+    document.querySelector('.tab-btn:nth-child(5)').classList.add('has-data');
+    renderAptitude(data.questions);
+    setProgress('apt', 'done');
+  } else {
+    document.getElementById('apt-content').innerHTML = errorHTML('apt');
+    setProgress('apt', 'done');
+  }
+}
+
+function renderAptitude(qs) {
+  const html = qs.map((q, i) => `
+    <div class="aptitude-card">
+      <div class="apt-type"><i class="fas fa-brain"></i> ${q.type || 'Aptitude'}</div>
+      <div class="apt-q">Q${i+1}. ${q.q}</div>
+      <div class="apt-answer-box" id="apt-ans-${i}" onclick="revealApt(${i})">
+        <i class="fas fa-eye"></i> Tap to reveal answer
+      </div>
+    </div>`).join('');
+  document.getElementById('apt-content').innerHTML = html;
+}
+
+function revealApt(i) {
+  const el = document.getElementById('apt-ans-' + i);
+  el.classList.add('revealed');
+  el.innerHTML = `<i class="fas fa-check-circle"></i> <strong>Answer:</strong> ${genData.apt[i].answer}`;
+}
+
+// ===== PDF DOWNLOAD =====
+function downloadPane(pane) {
+  const titles = { guide: 'Study Guide', flash: 'Flashcards', mcq: 'MCQ Practice', mock: 'Mock Test', apt: 'Aptitude Questions' };
+  const printWin = window.open('', '_blank');
+  const content = document.getElementById('pane-' + pane).innerHTML;
+  printWin.document.write(`<!DOCTYPE html><html><head><title>${examName} — ${subjectName} — ${titles[pane]}</title>
+    <style>
+      * { box-sizing: border-box; } body { font-family: Arial, sans-serif; padding: 30px; max-width: 800px; margin: 0 auto; }
+      h1 { color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; }
+      .flashcard { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 8px; }
+      .fc-back { background: #f0f4f8; }
+      .mcq-card { margin: 15px 0; border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
+      .pane-header, .tab-btn, .dl-btn, .apt-answer-box, nav, .mock-timer, .q-nav-btn, .mock-submit-btn, .action-bar, .tabs-wrapper { display: none !important; }
+      .mcq-explanation { display: block !important; }
+      .correct-ans { background: #f0fdf4 !important; border: 1px solid #10b981 !important; }
+      @media print { body { padding: 15px; } }
+    </style></head><body>
+    <h1>${examName} — ${subjectName} — ${titles[pane]}</h1>
+    ${content}
+    </body></html>`);
+  printWin.document.close();
+  setTimeout(() => printWin.print(), 500);
+}
+
+function downloadAll() {
+  const printWin = window.open('', '_blank');
+  const sections = ['guide', 'flash', 'mcq', 'apt'].map(p =>
+    `<h2 style="margin-top:40px; color:#1e3a8a; border-bottom:2px solid #1e3a8a; padding-bottom:8px;">${{ guide:'Study Guide', flash:'Flashcards', mcq:'MCQ Practice', apt:'Aptitude' }[p]}</h2>` +
+    document.getElementById('pane-' + p).querySelector('[id$="-content"]').innerHTML
+  ).join('');
+  printWin.document.write(`<!DOCTYPE html><html><head><title>${examName} — ${subjectName} — Full Study Kit</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 30px; max-width: 800px; margin: 0 auto; }
+      h1 { color: #1e3a8a; } h2 { color: #1e3a8a; }
+      .mcq-card, .aptitude-card { margin: 12px 0; border: 1px solid #ccc; padding: 12px; border-radius: 8px; }
+      .pane-header, .tab-btn, .dl-btn, .apt-answer-box { display: none !important; }
+      .mcq-explanation, .revealed { display: block !important; }
+    </style></head><body>
+    <h1>📚 Smart Study Kit — ${examName} | ${subjectName}</h1>
+    ${sections}</body></html>`);
+  printWin.document.close();
+  setTimeout(() => printWin.print(), 500);
+}
+
+function loadingHTML(msg) {
+  return `<div class="loading-state"><i class="fas fa-circle-notch fa-spin"></i><p class="loading-dots">${msg}</p></div>`;
+}
+function errorHTML(pane) {
+  return `<div class="empty-state"><i class="fas fa-exclamation-circle" style="color:var(--danger)"></i>
+    <p>Could not generate content. <button onclick="generateAll()" style="color:var(--brand);background:none;border:none;cursor:pointer;font-weight:600;">Try Again</button></p></div>`;
+}
+</script>
+</body>
+</html>

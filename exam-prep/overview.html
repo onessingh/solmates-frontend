@@ -340,6 +340,35 @@
       gap: 6px;
     }
     
+    /* Study Kit CTA */
+    .kit-cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 18px 30px;
+      background: var(--brand-gradient);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      margin-bottom: 20px;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+    }
+    .kit-cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(37,99,235,0.45); }
+    .kit-cta-btn i { font-size: 1.3rem; }
+    .kit-cta-subtext { text-align: center; font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: -14px; margin-bottom: 18px; color: var(--text-muted); }
+
+    .tools-divider { text-align: center; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 5px 0 18px; display: flex; align-items: center; gap: 10px; }
+    .tools-divider::before, .tools-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
     .grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
@@ -561,10 +590,19 @@
                 </div>
                 
                 <div id="tools-section">
-                    <div class="tools-header">
-                        <h3><i class="fas fa-rocket" style="color: var(--brand-accent); margin-right: 8px;"></i> Smart Tools</h3>
+                    <div class="tools-header" style="margin-bottom: 18px;">
+                        <h3><i class="fas fa-rocket" style="color: var(--brand-accent); margin-right: 8px;"></i> Study Tools</h3>
                         <div class="active-context" id="context-badge">Context Loaded</div>
                     </div>
+
+                    <!-- PRIMARY CTA -->
+                    <a id="kit-cta" href="#" class="kit-cta-btn">
+                        <i class="fas fa-bolt"></i>
+                        ⚡ Generate Smart Study Kit
+                    </a>
+                    <p class="kit-cta-subtext">AI generates Study Guide, Flashcards, MCQs, Mock Test &amp; Aptitude — all in one click</p>
+
+                    <div class="tools-divider">or open individual tools</div>
                     <div class="grid" id="tools-container"></div>
                 </div>
             </div>
@@ -595,20 +633,24 @@
         if(window.ExamContextManager) {
             window.ExamContextManager.setContext(currentExamId, examData.name, subId, subName);
         }
+
+        // Update Kit CTA link
+        const kitUrl = `/exam-prep/study-kit.html?exam=${encodeURIComponent(currentExamId)}&subject=${encodeURIComponent(subId)}&examName=${encodeURIComponent(examData.name)}&subjectName=${encodeURIComponent(subName)}`;
+        document.getElementById('kit-cta').href = kitUrl;
         
         const tools = [
-            { name: 'AI Study Guide', url: '/tools/ai-study-companion/index.html', icon: 'fa-robot', desc: 'Ask doubts & generate notes' },
-            { name: 'Mock Generator', url: '/tools/question-paper-generator.html', icon: 'fa-file-signature', desc: 'Create custom full tests' },
-            { name: 'Smart Flashcards', url: '/tools/flashcards.html', icon: 'fa-layer-group', desc: 'Active recall practice' },
-            { name: 'MCQ Practice', url: '/tools/mcq-generator.html', icon: 'fa-check-double', desc: 'Topic-wise quizzes' },
-            { name: 'Aptitude & Speed', url: '/skills/aptitude-test.html', icon: 'fa-bolt', desc: 'Enhance solving speed' }
+            { name: 'AI Study Guide', url: '/tools/ai-study-companion/index.html', icon: 'fa-robot' },
+            { name: 'Mock Generator', url: '/tools/question-paper-generator.html', icon: 'fa-file-signature' },
+            { name: 'Smart Flashcards', url: '/tools/flashcards.html', icon: 'fa-layer-group' },
+            { name: 'MCQ Practice', url: '/tools/mcq-generator.html', icon: 'fa-check-double' },
+            { name: 'Aptitude & Speed', url: '/skills/aptitude-test.html', icon: 'fa-bolt' }
         ];
         
         document.getElementById('tools-container').innerHTML = tools.map(t => `
             <a href="${t.url}" class="tool-card">
               <div class="tool-icon-wrap"><i class="fas ${t.icon}"></i></div>
               <h4>${t.name}</h4>
-              <span class="action-text">Launch Tool <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i></span>
+              <span class="action-text">Open <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i></span>
             </a>
         `).join('');
         
