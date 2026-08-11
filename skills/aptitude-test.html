@@ -421,6 +421,7 @@
 
     async function generateTest() {
       const count = parseInt(document.getElementById('q-count').value);
+      const category = document.getElementById('category').value; const topic = document.getElementById('topic').value; const difficulty = document.getElementById('difficulty').value;
       
       answeredCount = 0; userAnswers = []; score = 0;
       document.getElementById('loader').style.display = 'flex';
@@ -443,7 +444,7 @@ Output strictly in the following JSON array format, and nothing else:
     "q": "Question text...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correct": 1, 
-    "explanation": "Provide a detailed explanation. First write it in English. Then, write 'Hinglish: ' and provide the exact same explanation in Hinglish. Be descriptive and point-wise.",
+    "explanation": "Provide a detailed explanation. First write it in English. Then, add exactly TWO blank lines (\n\n\n). Then, write 'Hinglish: ' and provide the exact same explanation in Hinglish. Be descriptive and point-wise.",
     "tag": "${category}"
   }
 ]
@@ -510,6 +511,9 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
             <div class="mcq-options">
               ${optionsHtml}
             </div>
+            <button class="btn-secondary" id="exp-btn-${index}" onclick="document.getElementById('exp-${index}').classList.toggle('show'); this.querySelector('i').classList.toggle('fa-chevron-up'); this.querySelector('i').classList.toggle('fa-chevron-down');" style="margin-top: 15px; width: 100%; display: none; justify-content: space-between; align-items: center; border: 1px solid var(--accent); color: var(--accent); background: rgba(0,113,227,0.05);">
+              <span>View Explanation</span> <i class="fas fa-chevron-down"></i>
+            </button>
             <div class="mcq-explanation" id="exp-${index}">
               <strong>Explanation:</strong><br>
               ${q.explanation}
@@ -559,7 +563,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
       let cleanExp = q.explanation ? q.explanation.replace(/\*\*/g, '') : '';
       cleanExp = cleanExp.replace(/\n/g, '<br>');
       expDiv.innerHTML = '<strong>Explanation:</strong><br><br>' + cleanExp;
-      expDiv.classList.add('show');
+      document.getElementById(`exp-btn-${qIndex}`).style.display = 'flex';
     }
 
     function showFinalResult() {
