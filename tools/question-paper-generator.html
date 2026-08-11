@@ -482,7 +482,7 @@ Output strictly in JSON format as an array of sections:
     ]
   }
 ]
-Note: Set "options" to null or an empty array if the question is subjective. Make the questions realistic for the exam type.`;
+Note: Set "options" to null or an empty array if the question is subjective. For subjective questions, you MUST provide a brief point-wise hint or marking scheme in the "answer" field. Make the questions realistic for the exam type.`;
 
         const res = await window.solmatesAPI.sendChatMessage(prompt, []);
         const resText = res.message || res.reply;
@@ -532,6 +532,8 @@ Note: Set "options" to null or an empty array if the question is subjective. Mak
           let optsHtml = '';
           if (q.options && q.options.length > 0) {
             optsHtml = `<div class="q-options">` + q.options.map(o => `<div>${o}</div>`).join('') + `</div>`;
+          } else {
+            optsHtml = '<div style="margin-top: 15px; border-bottom: 1px dashed var(--border); width: 100%; height: 20px;"></div><div style="margin-top: 15px; border-bottom: 1px dashed var(--border); width: 100%; height: 20px;"></div>';
           }
           
           pBody += `
@@ -545,7 +547,7 @@ Note: Set "options" to null or an empty array if the question is subjective. Mak
             </div>
           `;
           
-          kBody += `<div><strong>Q${q.qNum}.</strong> ${q.answer}</div><br>`;
+          kBody += `<div style="white-space: pre-wrap; margin-bottom: 10px;"><strong>Q${q.qNum}.</strong> ${q.answer || 'Answer not provided'}</div>`;
         });
       });
 
