@@ -522,10 +522,10 @@
           });
       };
 
-      const hasInvalidChars = (text) => /[*#���%�@?&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
+      const hasInvalidChars = (text) => /[\*\#\$\!\^\%\~\@\?\&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
 
       if (hasInvalidChars(formData.get('userName')) || hasInvalidChars(formData.get('userRequirement'))) {
-          alert('Special characters like * # � � � % � @ ? & are not allowed in the form.');
+          alert('Special characters like * # $ ! ^ % ~ @ ? & are not allowed in the form.');
           return;
       }
 

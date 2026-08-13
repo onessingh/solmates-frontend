@@ -1537,7 +1537,7 @@
       // Update title, sub and breadcrumbs
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} • Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       // Reset Search Input on Navigation
@@ -1574,7 +1574,7 @@
       // Update title, sub and breadcrumbs
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} • Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       try {
@@ -1632,7 +1632,7 @@
 
       const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim();
       document.getElementById('pageTitle').innerText = displayPageName;
-      document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
+      document.getElementById('pageSub').innerText = `${CAT_LABEL} • Semester ${SEMESTER}`;
       buildBreadcrumb();
 
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
@@ -1652,7 +1652,7 @@
       }
 
       if (NO_CONTENT && isAdmin) {
-        showEmpty('Empty � Add Content', 'Use the buttons above to add playlist folders or video links.');
+        showEmpty('Empty • Add Content', 'Use the buttons above to add playlist folders or video links.');
         return;
       }
 
@@ -1697,7 +1697,7 @@
           // Restore original state
           const displayPageName = FOLDER_NAME.replace(/\[FOLDER\]/gi, '').replace(/\[TOPIC_FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').trim();
           document.getElementById('pageTitle').innerText = displayPageName;
-          document.getElementById('pageSub').innerText = `${CAT_LABEL} � Semester ${SEMESTER}`;
+          document.getElementById('pageSub').innerText = `${CAT_LABEL} • Semester ${SEMESTER}`;
           buildBreadcrumb();
           
           document.getElementById('loadingState').style.display = 'block';
@@ -1944,7 +1944,7 @@
         if (folders.length === 0 && items.length === 0) {
           if (isStale) return; // Wait for fresh
           showEmpty(
-            isAdmin ? 'Empty � Add Content' : 'No Videos Available',
+            isAdmin ? 'Empty • Add Content' : 'No Videos Available',
             isAdmin ? 'Use buttons above to add playlist folders or video links.' : 'No videos uploaded yet. Check back later!'
           );
           return;

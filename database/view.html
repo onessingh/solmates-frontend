@@ -492,7 +492,7 @@
           navStack = [{ name: `Semester ${semester}`, folderId: null }, { name: urlName || 'Folder', folderId: urlFolderId }];
         } else navStack = [{ name: `Semester ${semester}`, folderId: null }];
         window.history.replaceState({ stack: [...navStack], folderId, semester }, '', window.location.href);
-        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} � Semester ${semester}`;
+        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${semester}`;
         updateBreadcrumb();
         loadContent();
       } else {
@@ -507,7 +507,7 @@
       if (CATEGORY === 'youtube') { window.location.href = `/database/youtube-browse?semester=${s}`; return; }
       semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
       history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);
-      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} � Semester ${s}`;
+      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${s}`;
       updateBreadcrumb();
       if (window.solmatesAPI.isAdminLoggedIn()) document.getElementById('adminBar').style.display = 'flex';
       await loadContent();
@@ -869,7 +869,7 @@
         if (!semester) {
           renderSemesters(true); // true = don't push state
         } else {
-          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} � Semester ${semester}`;
+          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${semester}`;
           updateBreadcrumb();
           loadContent();
         }

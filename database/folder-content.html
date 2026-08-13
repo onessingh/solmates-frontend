@@ -1066,7 +1066,7 @@
         style="display:none">
         <i class="fas fa-folder-plus"></i> New Folder
       </button>
-      <!-- FIX 5: Renamed to btnNewFolderDefault � used for non-elearning categories -->
+      <!-- FIX 5: Renamed to btnNewFolderDefault • used for non-elearning categories -->
       <button class="btn-create btn-folder" id="btnNewFolderDefault" onclick="openModal('folderModal', 'folder')"
         style="display:none">
         <i class="fas fa-folder-plus"></i> New Folder
@@ -1229,10 +1229,10 @@
           const icon = isEBook ? 'fa-book' : 'fa-play-circle';
           const label = isEBook ? 'E-Books' : 'Video Lessons';
           titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${FOLDER_NAME}`;
-          document.getElementById('pageSub').innerText = `${label} � ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          document.getElementById('pageSub').innerText = `${label} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         } else {
           titleEl.innerText = FOLDER_NAME;
-          document.getElementById('pageSub').innerText = `${CAT_LABELS[CATEGORY] || CATEGORY} � ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          document.getElementById('pageSub').innerText = `${CAT_LABELS[CATEGORY] || CATEGORY} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         }
       }
       buildBreadcrumb();

@@ -307,7 +307,7 @@
     </div>
     <div class="meta-group">
       <label>Analyst / Team</label>
-      <input class="meta-input" type="text" id="analystName" placeholder="e.g. Group 4 — MBA Sem 3" oninput="autoSave()">
+      <input class="meta-input" type="text" id="analystName" placeholder="e.g. Group 4 - MBA Sem 3" oninput="autoSave()">
     </div>
     <div class="meta-group" style="max-width:160px;">
       <label>Date</label>
@@ -486,7 +486,7 @@
     const analyst = data.analyst || '';
     const date = data.date ? new Date(data.date).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) : '';
     document.getElementById('phBiz').textContent = biz;
-    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' · ');
+    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' â€¢ ');
     window.print();
   }
 
