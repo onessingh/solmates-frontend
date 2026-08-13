@@ -4420,6 +4420,7 @@
               msgDiv.appendChild(bodyWrapper);
               resolve();
             });
+          });
         } else {
           content.innerHTML = isFormatted ? formatHubReply(text) : text;
           msgDiv.innerHTML = sender === 'ai' ? avatar : '';
