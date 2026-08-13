@@ -4318,6 +4318,18 @@
 
               let results = [];
               let seenTitles = new Set();
+              
+              // 0. Extract explicit markdown links from the AI's own response
+              const mdRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+              let match;
+              while ((match = mdRegex.exec(text)) !== null) {
+                const title = match[1];
+                const url = match[2];
+                if (!seenTitles.has(title.toLowerCase())) {
+                  seenTitles.add(title.toLowerCase());
+                  results.push({ name: title, url: url, score: 999, category: 'direct' });
+                }
+              }
 
               const processItems = (items, categoryStr) => {
                 if (!Array.isArray(items)) return;
