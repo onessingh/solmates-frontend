@@ -472,21 +472,40 @@
         knowledgeItems.forEach(item => {
             html += `
                 <div class="knowledge-item" id="item-${item.id}">
-                    ${item.title ? `<span class="item-title">${item.title}</span>` : ''}
-                    <div class="item-content">${item.content}</div>
-                    <div class="item-actions">
-                        <button class="btn-action btn-edit" onclick="editItem('${item.id}')" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-action btn-delete" onclick="deleteItem('${item.id}')" title="Delete">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                    <div class="item-header" onclick="toggleContent('${item.id}')" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                        <span class="item-title" style="margin-bottom: 0;">${item.title || 'Knowledge Snippet'}</span>
+                        <div class="item-actions" style="margin-top: 0; display: flex; align-items: center;" onclick="event.stopPropagation()">
+                            <button class="btn-action btn-edit" onclick="editItem('${item.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="deleteItem('${item.id}')" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <i class="fas fa-chevron-down toggle-icon" id="icon-${item.id}" style="color: var(--text-lighter); margin-left: 10px;"></i>
+                        </div>
+                    </div>
+                    <div class="item-content-wrapper" id="content-${item.id}" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                        <div class="item-content">${item.content}</div>
                     </div>
                 </div>
             `;
         });
         html += '</div>';
         container.innerHTML = html;
+    }
+
+    function toggleContent(id) {
+        const content = document.getElementById(`content-${id}`);
+        const icon = document.getElementById(`icon-${id}`);
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        } else {
+            content.style.display = 'none';
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
     }
 
     // Form Handling
