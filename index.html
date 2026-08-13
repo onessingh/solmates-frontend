@@ -4894,7 +4894,7 @@
       formatted = formatted
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<strong>$1</strong>');
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="res-link" style="margin: 0 4px; vertical-align: middle;"><i class="fas fa-external-link-alt"></i> $1</a>');
         
       let finalParts = formatted.split(/<\/div>/);
       let finalText = finalParts.map(part => {
