@@ -383,6 +383,7 @@
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </head>
 <body>
   <style>
@@ -470,12 +471,18 @@
             return;
         }
 
+        // Sort by order before rendering
+        knowledgeItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+
         let html = '<div class="knowledge-list">';
         knowledgeItems.forEach(item => {
             html += `
                 <div class="knowledge-item" id="item-${item.id}">
                     <div class="item-header" onclick="toggleContent('${item.id}')" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
-                        <span class="item-title" style="margin-bottom: 0;">${item.title || 'Knowledge Snippet'}</span>
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-grip-vertical drag-handle" style="cursor: grab; color: #64748b; margin-right: 15px;" onclick="event.stopPropagation()"></i>
+                            <span class="item-title" style="margin-bottom: 0;">${item.title || 'Knowledge Snippet'}</span>
+                        </div>
                         <div class="item-actions" style="margin-top: 0; display: flex; align-items: center;" onclick="event.stopPropagation()">
                             <button class="btn-action btn-edit" onclick="editItem('${item.id}')" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -494,6 +501,37 @@
         });
         html += '</div>';
         container.innerHTML = html;
+
+        // Initialize Sortable
+        const listEl = container.querySelector('.knowledge-list');
+        if (listEl) {
+            Sortable.create(listEl, {
+                handle: '.drag-handle',
+                animation: 150,
+                onEnd: async function() {
+                    const itemEls = listEl.querySelectorAll('.knowledge-item');
+                    const newOrder = Array.from(itemEls).map(el => el.id.replace('item-', ''));
+                    
+                    try {
+                        const token = localStorage.getItem('solmates_admin_token') || localStorage.getItem('solmates_token');
+                        const res = await fetch('/api/admin/content/ai-knowledge/reorder/bulk', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token
+                            },
+                            body: JSON.stringify({ orderedIds: newOrder })
+                        });
+                        const data = await res.json();
+                        if (!data.success) {
+                            alert('Failed to save order: ' + data.error);
+                        }
+                    } catch (e) {
+                        console.error('Reorder failed', e);
+                    }
+                }
+            });
+        }
     }
 
     function toggleContent(id) {
