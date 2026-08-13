@@ -4361,7 +4361,25 @@
                       } else if (item.videoId) {
                          url = `/database/view-video?v=${item.videoId}`;
                       } else if (category === 'ai-knowledge') {
-                         url = `/database/ai-knowledge`;
+                         let extractedUrl = null;
+                         if (item.content) {
+                            const mdMatch = /\[[^\]]+\]\(([^)]+)\)/.exec(item.content);
+                            if (mdMatch) extractedUrl = mdMatch[1];
+                            else {
+                               const htmlMatch = /href=(['"])(.*?)\1/.exec(item.content);
+                               if (htmlMatch) extractedUrl = htmlMatch[2];
+                               else {
+                                  const rawMatch = /(https?:\/\/[^\s]+)/.exec(item.content);
+                                  if (rawMatch) extractedUrl = rawMatch[1];
+                                  else {
+                                     const relMatch = /(\/database\/[^\s]+)/.exec(item.content);
+                                     if (relMatch) extractedUrl = relMatch[1];
+                                  }
+                               }
+                            }
+                         }
+                         if (extractedUrl) url = extractedUrl;
+                         else return; // Skip if no real link is found in snippet
                       } else {
                          url = `/database/view?category=${category}`;
                       }
