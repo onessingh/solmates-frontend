@@ -4322,9 +4322,10 @@
               const processItems = (items, categoryStr) => {
                 if (!Array.isArray(items)) return;
                 items.forEach(item => {
-                  if (!item.title) return;
-                  const titleLower = item.title.toLowerCase();
-                  const descLower = item.desc ? item.desc.toLowerCase() : '';
+                  const titleLower = item.title ? item.title.toLowerCase() : '';
+                  const descLower = item.desc ? item.desc.toLowerCase() : (item.content ? item.content.toLowerCase() : '');
+                  
+                  if (!titleLower && !descLower) return;
                   
                   let matchScore = 0;
                   keywords.forEach(kw => {
@@ -4332,25 +4333,29 @@
                     if (descLower.includes(kw)) matchScore += 1;
                   });
                   
-                  if (matchScore > 0 && !seenTitles.has(titleLower)) {
-                    seenTitles.add(titleLower);
-                    
-                    let category = categoryStr || '';
-                    let url = '';
-                    
-                    if (item.link) {
-                       url = item.link;
-                    } else if (item.drive_link && (category === 'notes' || category === 'pyqs')) {
-                       url = `/database/view-pdf?url=${encodeURIComponent(item.drive_link)}&title=${encodeURIComponent(item.title)}`;
-                    } else if (item.videoId) {
-                       url = `/database/view-video?v=${item.videoId}`;
-                    } else if (category === 'ai-knowledge') {
-                       url = `/database/ai-knowledge`;
-                    } else {
-                       url = `/database/view?category=${category}`;
+                  if (matchScore > 0) {
+                    // Use title if available, otherwise truncate content
+                    const displayName = item.title ? item.title : (item.content ? item.content.substring(0, 30) + '...' : 'Related Resource');
+                    if (!seenTitles.has(displayName)) {
+                      seenTitles.add(displayName);
+                      
+                      let category = categoryStr || '';
+                      let url = '';
+                      
+                      if (item.link) {
+                         url = item.link;
+                      } else if (item.drive_link && (category === 'notes' || category === 'pyqs')) {
+                         url = `/database/view-pdf?url=${encodeURIComponent(item.drive_link)}&title=${encodeURIComponent(displayName)}`;
+                      } else if (item.videoId) {
+                         url = `/database/view-video?v=${item.videoId}`;
+                      } else if (category === 'ai-knowledge') {
+                         url = `/database/ai-knowledge`;
+                      } else {
+                         url = `/database/view?category=${category}`;
+                      }
+                      
+                      results.push({ name: displayName, url: url, score: matchScore, category: category });
                     }
-                    
-                    results.push({ name: item.title, url: url, score: matchScore, category: category });
                   }
                 });
               };
@@ -4408,6 +4413,10 @@
                 });
                 content.appendChild(resDiv);
               }
+              msgDiv.appendChild(bodyWrapper);
+              resolve();
+            }).catch(err => {
+              console.error('Resource linker error:', err);
               msgDiv.appendChild(bodyWrapper);
               resolve();
             });
