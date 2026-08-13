@@ -4299,21 +4299,83 @@
           }
 
           animPromise.then(() => {
-            // ========== v6.0 RESOURCE LINKER ==========
-            const RESOURCE_MAP = {
-              'marketing': { name: 'Marketing Management Notes', url: '/database?subject=marketing' },
-              'finance': { name: 'Financial Accounting Notes', url: '/database?subject=finance' },
-              'economics': { name: 'Managerial Economics', url: '/database?subject=economics' },
-              'statistics': { name: 'Business Statistics', url: '/database?subject=statistics' },
-              'resume': { name: 'Resume Builder Tool', url: '/tools' },
-              'placement': { name: 'Placement Prep Hub', url: '/database' }
-            };
+            // ========== v6.0 DYNAMIC RESOURCE LINKER ==========
+            function extractKeywords(text) {
+              const stopWords = ['this','that','with','from','your','what','when','where','how','why','and','the','for','are','can','will','not','have','has','had','about','these','those','then','than','there','their'];
+              const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
+              const keywords = words.filter(w => w.length >= 4 && !stopWords.includes(w));
+              return [...new Set(keywords)]; 
+            }
 
-            let relatedLinks = [];
-            const lowerText = text.toLowerCase();
-            for (let key in RESOURCE_MAP) {
-              if (lowerText.includes(key)) {
-                relatedLinks.push(RESOURCE_MAP[key]);
+            function searchLocalDatabase(text) {
+              const keywords = extractKeywords(text);
+              if(keywords.length === 0) return [];
+              
+              let results = [];
+              let seenTitles = new Set();
+              
+              for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key.startsWith('solcache_v2_content_')) {
+                  try {
+                    const raw = sessionStorage.getItem(key);
+                    const parsed = JSON.parse(raw);
+                    if (parsed && parsed.data && Array.isArray(parsed.data)) {
+                      parsed.data.forEach(item => {
+                        if (!item.title) return;
+                        const titleLower = item.title.toLowerCase();
+                        const descLower = item.desc ? item.desc.toLowerCase() : '';
+                        
+                        let matchScore = 0;
+                        keywords.forEach(kw => {
+                          if (titleLower.includes(kw)) matchScore += 2;
+                          if (descLower.includes(kw)) matchScore += 1;
+                        });
+                        
+                        if (matchScore > 0 && !seenTitles.has(titleLower)) {
+                          seenTitles.add(titleLower);
+                          
+                          const parts = key.split('_');
+                          let category = parts.length > 3 ? parts[3] : '';
+                          let url = '';
+                          
+                          if (item.link) {
+                             url = item.link;
+                          } else if (item.drive_link && (category === 'notes' || category === 'pyqs')) {
+                             url = `/database/view-pdf?url=${encodeURIComponent(item.drive_link)}&title=${encodeURIComponent(item.title)}`;
+                          } else if (item.videoId) {
+                             url = `/database/view-video?v=${item.videoId}`;
+                          } else if (category === 'ai-knowledge') {
+                             url = `/database/ai-knowledge`;
+                          } else {
+                             url = `/database/view?category=${category}`;
+                          }
+                          
+                          results.push({ name: item.title, url: url, score: matchScore, category: category });
+                        }
+                      });
+                    }
+                  } catch (e) {}
+                }
+              }
+              
+              results.sort((a, b) => b.score - a.score);
+              return results.slice(0, 4);
+            }
+
+            let relatedLinks = searchLocalDatabase(text);
+
+            if (relatedLinks.length === 0) {
+              // Fallback to basic generic mapping if cache is empty
+              const RESOURCE_MAP = {
+                'marketing': { name: 'Marketing Management Notes', url: '/database?subject=marketing' },
+                'finance': { name: 'Financial Accounting Notes', url: '/database?subject=finance' },
+                'economics': { name: 'Managerial Economics', url: '/database?subject=economics' },
+                'resume': { name: 'Resume Builder Tool', url: '/tools' }
+              };
+              const lowerText = text.toLowerCase();
+              for (let key in RESOURCE_MAP) {
+                if (lowerText.includes(key)) relatedLinks.push(RESOURCE_MAP[key]);
               }
             }
 
