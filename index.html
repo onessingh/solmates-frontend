@@ -4301,20 +4301,24 @@
           animPromise.then(() => {
             // ========== v6.0 DYNAMIC RESOURCE LINKER ==========
             function extractKeywords(text) {
-              const stopWords = ['this','that','with','from','your','what','when','where','how','why','and','the','for','are','can','will','not','have','has','had','about','these','those','then','than','there','their'];
+              const stopWords = ['this','that','with','from','your','what','when','where','how','why','and','the','for','are','can','will','not','have','has','had','about','these','those','then','than','there','their','please','tell','explain'];
               const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
               const keywords = words.filter(w => w.length >= 4 && !stopWords.includes(w));
               return [...new Set(keywords)]; 
             }
 
-            function searchLocalDatabase(text) {
+            async function searchLocalDatabase(text) {
               const keywords = extractKeywords(text);
               if(keywords.length === 0) return [];
               
+              // Ensure AI Knowledge is cached for admins so it can be searched
+              if (localStorage.getItem('solmates_token') && window.solmatesAPI) {
+                 try { await window.solmatesAPI.getSOLContent('ai-knowledge', '0'); } catch(e) {}
+              }
+
               let results = [];
               let seenTitles = new Set();
 
-              // Helper to process items
               const processItems = (items, categoryStr) => {
                 if (!Array.isArray(items)) return;
                 items.forEach(item => {
@@ -4380,35 +4384,33 @@
               return results.slice(0, 4);
             }
 
-            let relatedLinks = searchLocalDatabase(text);
-
-            if (relatedLinks.length === 0) {
-              // Fallback to basic generic mapping if cache is empty
-              const RESOURCE_MAP = {
-                'marketing': { name: 'Marketing Management Notes', url: '/database?subject=marketing' },
-                'finance': { name: 'Financial Accounting Notes', url: '/database?subject=finance' },
-                'economics': { name: 'Managerial Economics', url: '/database?subject=economics' },
-                'resume': { name: 'Resume Builder Tool', url: '/tools' }
-              };
-              const lowerText = text.toLowerCase();
-              for (let key in RESOURCE_MAP) {
-                if (lowerText.includes(key)) relatedLinks.push(RESOURCE_MAP[key]);
+            searchLocalDatabase(text).then(relatedLinks => {
+              if (relatedLinks.length === 0) {
+                const RESOURCE_MAP = {
+                  'marketing': { name: 'Marketing Management Notes', url: '/database?subject=marketing' },
+                  'finance': { name: 'Financial Accounting Notes', url: '/database?subject=finance' },
+                  'economics': { name: 'Managerial Economics', url: '/database?subject=economics' },
+                  'resume': { name: 'Resume Builder Tool', url: '/tools' }
+                };
+                const lowerText = text.toLowerCase();
+                for (let key in RESOURCE_MAP) {
+                  if (lowerText.includes(key)) relatedLinks.push(RESOURCE_MAP[key]);
+                }
               }
-            }
 
-            if (relatedLinks.length > 0) {
-              const resDiv = document.createElement('div');
-              resDiv.className = 'suggested-resources';
-              resDiv.innerHTML = `<span class="res-label">📚 Related Resources</span><div class="res-links"></div>`;
-              const linksCont = resDiv.querySelector('.res-links');
-              relatedLinks.forEach(link => {
-                linksCont.innerHTML += `<a href="${link.url}" class="res-link"><i class="fas fa-external-link-alt"></i> ${link.name}</a>`;
-              });
-              content.appendChild(resDiv);
-            }
-            msgDiv.appendChild(bodyWrapper);
-            resolve();
-          });
+              if (relatedLinks.length > 0) {
+                const resDiv = document.createElement('div');
+                resDiv.className = 'suggested-resources';
+                resDiv.innerHTML = `<span class="res-label">📚 Related Resources</span><div class="res-links"></div>`;
+                const linksCont = resDiv.querySelector('.res-links');
+                relatedLinks.forEach(link => {
+                  linksCont.innerHTML += `<a href="${link.url}" class="res-link"><i class="fas fa-external-link-alt"></i> ${link.name}</a>`;
+                });
+                content.appendChild(resDiv);
+              }
+              msgDiv.appendChild(bodyWrapper);
+              resolve();
+            });
         } else {
           content.innerHTML = isFormatted ? formatHubReply(text) : text;
           msgDiv.innerHTML = sender === 'ai' ? avatar : '';
