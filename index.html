@@ -4313,49 +4313,66 @@
               
               let results = [];
               let seenTitles = new Set();
+
+              // Helper to process items
+              const processItems = (items, categoryStr) => {
+                if (!Array.isArray(items)) return;
+                items.forEach(item => {
+                  if (!item.title) return;
+                  const titleLower = item.title.toLowerCase();
+                  const descLower = item.desc ? item.desc.toLowerCase() : '';
+                  
+                  let matchScore = 0;
+                  keywords.forEach(kw => {
+                    if (titleLower.includes(kw)) matchScore += 2;
+                    if (descLower.includes(kw)) matchScore += 1;
+                  });
+                  
+                  if (matchScore > 0 && !seenTitles.has(titleLower)) {
+                    seenTitles.add(titleLower);
+                    
+                    let category = categoryStr || '';
+                    let url = '';
+                    
+                    if (item.link) {
+                       url = item.link;
+                    } else if (item.drive_link && (category === 'notes' || category === 'pyqs')) {
+                       url = `/database/view-pdf?url=${encodeURIComponent(item.drive_link)}&title=${encodeURIComponent(item.title)}`;
+                    } else if (item.videoId) {
+                       url = `/database/view-video?v=${item.videoId}`;
+                    } else if (category === 'ai-knowledge') {
+                       url = `/database/ai-knowledge`;
+                    } else {
+                       url = `/database/view?category=${category}`;
+                    }
+                    
+                    results.push({ name: item.title, url: url, score: matchScore, category: category });
+                  }
+                });
+              };
               
+              // 1. Search sessionStorage
               for (let i = 0; i < sessionStorage.length; i++) {
                 const key = sessionStorage.key(i);
                 if (key.startsWith('solcache_v2_content_')) {
                   try {
                     const raw = sessionStorage.getItem(key);
                     const parsed = JSON.parse(raw);
-                    if (parsed && parsed.data && Array.isArray(parsed.data)) {
-                      parsed.data.forEach(item => {
-                        if (!item.title) return;
-                        const titleLower = item.title.toLowerCase();
-                        const descLower = item.desc ? item.desc.toLowerCase() : '';
-                        
-                        let matchScore = 0;
-                        keywords.forEach(kw => {
-                          if (titleLower.includes(kw)) matchScore += 2;
-                          if (descLower.includes(kw)) matchScore += 1;
-                        });
-                        
-                        if (matchScore > 0 && !seenTitles.has(titleLower)) {
-                          seenTitles.add(titleLower);
-                          
-                          const parts = key.split('_');
-                          let category = parts.length > 3 ? parts[3] : '';
-                          let url = '';
-                          
-                          if (item.link) {
-                             url = item.link;
-                          } else if (item.drive_link && (category === 'notes' || category === 'pyqs')) {
-                             url = `/database/view-pdf?url=${encodeURIComponent(item.drive_link)}&title=${encodeURIComponent(item.title)}`;
-                          } else if (item.videoId) {
-                             url = `/database/view-video?v=${item.videoId}`;
-                          } else if (category === 'ai-knowledge') {
-                             url = `/database/ai-knowledge`;
-                          } else {
-                             url = `/database/view?category=${category}`;
-                          }
-                          
-                          results.push({ name: item.title, url: url, score: matchScore, category: category });
-                        }
-                      });
-                    }
+                    const parts = key.split('_');
+                    const category = parts.length > 3 ? parts[3] : '';
+                    if (parsed && parsed.data) processItems(parsed.data, category);
                   } catch (e) {}
+                }
+              }
+
+              // 2. Search window._solDataCache.content (Prefetcher cache)
+              if (window._solDataCache && window._solDataCache.content) {
+                for (let key in window._solDataCache.content) {
+                   try {
+                     const parsed = window._solDataCache.content[key];
+                     const category = key.split('_')[0]; // key is category_semester
+                     if (parsed && parsed.data) processItems(parsed.data, category);
+                   } catch(e) {}
                 }
               }
               
