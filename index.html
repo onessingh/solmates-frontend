@@ -4420,19 +4420,6 @@
             }
 
             searchLocalDatabase(text).then(relatedLinks => {
-              if (relatedLinks.length === 0) {
-                const RESOURCE_MAP = {
-                  'marketing': { name: 'Marketing Management Notes', url: '/database?subject=marketing' },
-                  'finance': { name: 'Financial Accounting Notes', url: '/database?subject=finance' },
-                  'economics': { name: 'Managerial Economics', url: '/database?subject=economics' },
-                  'resume': { name: 'Resume Builder Tool', url: '/tools' }
-                };
-                const lowerText = text.toLowerCase();
-                for (let key in RESOURCE_MAP) {
-                  if (lowerText.includes(key)) relatedLinks.push(RESOURCE_MAP[key]);
-                }
-              }
-
               if (relatedLinks.length > 0) {
                 const resDiv = document.createElement('div');
                 resDiv.className = 'suggested-resources';
