@@ -7,16 +7,16 @@
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=73.0">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=74.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Books - SOLMATES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="/config.js?v=73.0"></script>
-    <script src="/js/uptime-helper.js?v=73.0"></script>
-    <script src="/js/api-client.js?v=73.0"></script>
-    <script src="/js/sol-cache.js?v=73.0"></script>
-    <script src="/js/prefetch-helper.js?v=73.0"></script>
+    <script src="/config.js?v=74.0"></script>
+    <script src="/js/uptime-helper.js?v=74.0"></script>
+    <script src="/js/api-client.js?v=74.0"></script>
+    <script src="/js/sol-cache.js?v=74.0"></script>
+    <script src="/js/prefetch-helper.js?v=74.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
@@ -763,6 +763,11 @@
         .tab-btn.active { background: #334155 !important; color: #f8fafc !important; }
         .course-card { background: #1e293b !important; border-color: #334155 !important; }
         .module-card { background: #1e293b !important; border-color: #334155 !important; }
+        /* Modal dark mode */
+        #createModal > div { background: #1e293b !important; border-color: #334155 !important; }
+        #createModal input { background: #0f172a !important; color: #f8fafc !important; border-color: #475569 !important; }
+        #createModal button:first-of-type { background: #38bdf8 !important; color: #0f172a !important; }
+        #createModal button:last-of-type { background: #334155 !important; color: #f8fafc !important; }
 
       
 </style>
@@ -884,19 +889,19 @@
     <!-- Modals -->
     <div id="createModal"
         style="position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
-        <div style="background:white; padding:30px; border-radius:18px; width:90%; max-width:380px;">
+        <div style="background:var(--bg-card, #ffffff); padding:30px; border-radius:18px; width:90%; max-width:380px; border: 1px solid var(--border-color, #eee);">
             <h2 style="font-size:19px; margin-bottom:20px; color:var(--primary);"><i class="fas fa-folder-plus"></i> New
                 Subject</h2>
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-size:13px; color: var(--text-lighter); margin-bottom:8px;">Subject Name</label>
                 <input type="text" id="newFolderName" placeholder="e.g. MARKETING MANAGEMENT"
-                    style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; font-size:14px; outline:none;">
+                    style="width:100%; padding:12px; border:1px solid var(--border-color, #ddd); border-radius:10px; font-size:14px; outline:none; background:var(--bg-card-hover, #f9f9fb); color:var(--text-main, #111);">
             </div>
             <div style="display:flex; gap:12px;">
                 <button id="createFolderSubmit" onclick="createFolder()"
-                    style="flex:1; background:var(--primary); color:white; border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">Create</button>
+                    style="flex:1; background:var(--brand-primary, #0f2b46); color:white; border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">Create</button>
                 <button onclick="closeModal('createModal')"
-                    style="flex:1; background:#eee; color:var(--text-main); border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">Cancel</button>
+                    style="flex:1; background:var(--border-color, #eee); color:var(--text-main, #333); border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">Cancel</button>
             </div>
         </div>
     </div>

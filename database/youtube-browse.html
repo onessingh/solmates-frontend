@@ -7,17 +7,17 @@
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=73.0">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=74.0">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Videos - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <script src="/config.js?v=73.0"></script>
-  <script src="/js/uptime-helper.js?v=73.0"></script>
-  <script src="/js/api-client.js?v=73.0"></script>
-  <script src="/js/sol-cache.js?v=73.0"></script>
-  <script src="/js/prefetch-helper.js?v=73.0"></script>
+  <script src="/config.js?v=74.0"></script>
+  <script src="/js/uptime-helper.js?v=74.0"></script>
+  <script src="/js/api-client.js?v=74.0"></script>
+  <script src="/js/sol-cache.js?v=74.0"></script>
+  <script src="/js/prefetch-helper.js?v=74.0"></script>
   <style>
 
     :root {
@@ -760,15 +760,6 @@
       gap: 12px;
     }
 
-    .btn-modal {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
     .btn-modal.primary {
       background: var(--primary);
       color: white;
@@ -776,6 +767,17 @@
 
     .btn-modal.cancel {
       background: var(--border-color);
+      color: var(--text-main);
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      background: var(--bg-card-hover, #f9f9fb);
       color: var(--text-main);
     }
 
@@ -808,7 +810,7 @@
     
     .breadcrumb { display: none !important; margin: 0 !important; padding: 0 !important; height: 0 !important; border: none !important; overflow: hidden !important; }
 </style>
-  <script src="/js/sol-cache.js?v=73.0"></script>
+  <script src="/js/sol-cache.js?v=74.0"></script>
 
 
 <style id="solmates-dark-style" media="(prefers-color-scheme: dark)">
@@ -881,6 +883,13 @@
         .tab-btn.active { background: #334155 !important; color: #f8fafc !important; }
         .course-card { background: #1e293b !important; border-color: #334155 !important; }
         .module-card { background: #1e293b !important; border-color: #334155 !important; }
+        /* Modal dark mode */
+        .modal-box { background: #1e293b !important; border: 1px solid #334155 !important; }
+        .modal-box h2 { color: #f8fafc !important; }
+        .field label { color: #cbd5e1 !important; }
+        .field input { background: #0f172a !important; color: #f8fafc !important; border-color: #475569 !important; }
+        .btn-modal.primary { background: #38bdf8 !important; color: #0f172a !important; }
+        .btn-modal.cancel { background: #334155 !important; color: #f8fafc !important; }
 
 
 </style>
