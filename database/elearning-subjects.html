@@ -7,16 +7,16 @@
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=77.0">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=78.0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Books - SOLMATES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="/config.js?v=77.0"></script>
-    <script src="/js/uptime-helper.js?v=77.0"></script>
-    <script src="/js/api-client.js?v=77.0"></script>
-    <script src="/js/sol-cache.js?v=77.0"></script>
-    <script src="/js/prefetch-helper.js?v=77.0"></script>
+    <script src="/config.js?v=78.0"></script>
+    <script src="/js/uptime-helper.js?v=78.0"></script>
+    <script src="/js/api-client.js?v=78.0"></script>
+    <script src="/js/sol-cache.js?v=78.0"></script>
+    <script src="/js/prefetch-helper.js?v=78.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
@@ -637,30 +637,6 @@
             left: 0;
             width: 100%;
             height: 180px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #00ff00;
-            font-family: monospace;
-            padding: 10px;
-            font-size: 11px;
-            overflow-y: auto;
-            z-index: 9999;
-            display: none;
-            border-top: 2px solid #3b82f6;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        #debugConsole p {
-            margin-bottom: 4px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 2px;
-        }
-
-        .debug-err {
-            color: #ff5555;
-            font-weight: bold;
-        }
-
-        .debug-warn {
             color: #ffff55;
         }
 
@@ -836,9 +812,7 @@
 </head>
 
 <body>
-    <div id="debugConsole"></div>
-    <div class="debug-close" id="debugClose" onclick="toggleDebugConsole()">Close Debug</div>
-    <div id="debugReport" onclick="copyDebugReport()">Copy Report</div>
+
 
     <header class="top-nav">
         <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">SOLMATES</div>
@@ -1228,24 +1202,7 @@
             }
         }
 
-        // Debug Essentials
-        window.copyDebugReport = function () {
-            const logs = Array.from(document.querySelectorAll('#debugConsole p')).map(p => p.innerText).join('\n');
-            navigator.clipboard.writeText(`URL: ${window.location.href}\nLOGS:\n${logs}`).then(() => alert('Copied!'));
-        };
-        window.toggleDebugConsole = function () {
-            const v = document.getElementById('debugConsole').style.display === 'block' ? 'none' : 'block';
-            document.getElementById('debugConsole').style.display = v;
-            document.getElementById('debugClose').style.display = v;
-            document.getElementById('debugReport').style.display = v;
-        };
-        (function () {
-            const c = document.getElementById('debugConsole');
-            function log(m, t) { const p = document.createElement('p'); if (t) p.className = 'debug-' + t; p.innerText = `[${new Date().toLocaleTimeString()}] ${m}`; c.appendChild(p); c.scrollTop = c.scrollHeight; }
-            console.log = (...a) => log(a.join(' ')); console.error = (...a) => { log(a.join(' '), 'err'); toggleDebugConsole(); };
-            window.onerror = (m) => { log(m, 'err'); if (document.getElementById('debugConsole').style.display !== 'block') toggleDebugConsole(); };
-        })();
-        document.addEventListener('keydown', e => { if (e.altKey && e.key.toLowerCase() === 'd') toggleDebugConsole(); });
+
 
         // Reset navigation lock when page is shown (handles Back button BFCache)
         window.addEventListener('pageshow', (event) => {

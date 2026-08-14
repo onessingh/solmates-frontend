@@ -7,16 +7,16 @@
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=77.0">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=78.0">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Folder - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=77.0"></script>
-  <script src="/js/uptime-helper.js?v=77.0"></script>
-  <script src="/js/api-client.js?v=77.0"></script>
-  <script src="/js/sol-cache.js?v=77.0"></script>
-  <script src="/js/prefetch-helper.js?v=77.0"></script>
+  <script src="/config.js?v=78.0"></script>
+  <script src="/js/uptime-helper.js?v=78.0"></script>
+  <script src="/js/api-client.js?v=78.0"></script>
+  <script src="/js/sol-cache.js?v=78.0"></script>
+  <script src="/js/prefetch-helper.js?v=78.0"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <style>
@@ -840,31 +840,6 @@
       left: 0;
       width: 100%;
       height: 180px;
-      background: rgba(0, 0, 0, 0.9);
-      color: #00ff00;
-      font-family: monospace;
-      padding: 10px;
-      font-size: 11px;
-      overflow-y: auto;
-      z-index: 9999;
-      display: none;
-      border-top: 2px solid #3b82f6;
-      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    #debugConsole p {
-      margin-bottom: 4px;
-      border-bottom: 1px solid #333;
-      padding-bottom: 2px;
-    }
-
-    .debug-err {
-      color: #ff5555;
-      font-weight: bold;
-    }
-
-    .debug-warn {
-      color: #ffff55;
     }
 
     .debug-close {
@@ -971,6 +946,7 @@
         .field input { background: #0f172a !important; color: #f8fafc !important; border-color: #475569 !important; }
         .btn-primary { background: #38bdf8 !important; color: #0f172a !important; }
         .btn-primary.btn-cancel { background: #334155 !important; color: #f8fafc !important; }
+        .page-header h1 i { color: #facc15 !important; }
 
       
 </style>
@@ -1038,9 +1014,7 @@
 </head>
 
 <body>
-  <div id="debugConsole"></div>
-  <div class="debug-close" id="debugClose" onclick="toggleDebugConsole()">Close Debug</div>
-  <div id="debugReport" onclick="copyDebugReport()">Copy Report</div>
+
 
   <header class="top-nav">
     <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">SOLMATES</div>
