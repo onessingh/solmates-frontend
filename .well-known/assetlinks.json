@@ -6,5 +6,13 @@
       "package_name": "in.solmates.www.twa",
       "sha256_cert_fingerprints": ["44:FE:60:7C:95:CA:2D:26:61:D4:F6:4F:18:A8:D3:E4:D0:00:06:D5:78:A7:84:42:64:FD:42:3A:DB:4E:D9:29"]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "in.solmates.twa",
+      "sha256_cert_fingerprints": ["7B:E8:E0:25:D5:63:B6:B7:55:B4:11:66:CE:1F:D1:6B:CB:61:C1:C4:81:F9:B1:D0:25:D1:B1:B8:C8:66:B6:42"]
+    }
   }
 ]
