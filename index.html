@@ -5245,37 +5245,12 @@
           }
         });
 
-        // Do NOT await serviceWorker.ready — it can block indefinitely on first load
-        // Subscription happens in background after 5s
-        setTimeout(async () => {
-          if (typeof Notification === 'undefined' || typeof Notification.requestPermission !== 'function') return;
-          if (Notification.permission !== 'granted') {
-            const permission = await Notification.requestPermission();
-            if (permission !== 'granted') return;
-          }
-
-          if (window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
-            const manual = localStorage.getItem('sol_subscribed_sems');
-            const browsing = localStorage.getItem('solmates_active_semester');
-            let semesters = ['all'];
-            if (manual) { try { semesters = JSON.parse(manual); } catch (e) { } }
-            else if (browsing) { semesters = [browsing]; }
-
-            const currentSemestersStr = JSON.stringify(semesters);
-            const lastSubscribedStr = localStorage.getItem('solmates_push_last_subscribed_list');
-            if (lastSubscribedStr === currentSemestersStr && localStorage.getItem('sol_notif_enabled') === 'true') {
-              if (window.solmatesAPI.silentPushTokenRefresh) window.solmatesAPI.silentPushTokenRefresh();
-              return;
-            }
-
-            await window.solmatesAPI.subscribeToPush(semesters)
-              .then(() => {
-                localStorage.setItem('solmates_push_last_subscribed_list', currentSemestersStr);
-                localStorage.setItem('sol_notif_enabled', 'true');
-              })
-              .catch(() => {});
-          }
-        }, 5000);
+        // Removed 5-second setTimeout auto-prompt to comply with mobile browser policies
+        // Users will now only subscribe via direct interaction (e.g. Bell icon on notification.html)
+        if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
+          // Attempt silent token refresh for already subscribed users
+          window.solmatesAPI.silentPushTokenRefresh();
+        }
       } catch (e) {
         console.warn('[Push Home] Failed:', e);
       }
