@@ -2823,7 +2823,7 @@
         outline: none;
       }
 </style>
-<style id="theme-dark-style" media="(prefers-color-scheme: dark)">
+<style id="theme-dark-style" media="not all">
 
       :root {
         --bg-body: #0f172a;
@@ -5271,7 +5271,7 @@
       } else if (currentMedia === 'not all') {
         isDarkCurrently = false;
       } else {
-        isDarkCurrently = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDarkCurrently = false; // Default to light mode for new users
       }
       
       const newTheme = isDarkCurrently ? 'light' : 'dark';
@@ -5290,8 +5290,8 @@
       } else if (theme === 'light') {
         icon.className = 'fas fa-moon';
       } else {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        icon.className = isDark ? 'far fa-sun' : 'fas fa-moon';
+        // Default is light, so show moon icon
+        icon.className = 'fas fa-moon';
       }
     }
     
