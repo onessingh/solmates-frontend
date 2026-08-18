@@ -24,7 +24,7 @@ class AIGameConnector {
         let attempts = 0;
         
         try {
-            while (finalQuestions.length < count && attempts < 2) {
+            while (finalQuestions.length < count && attempts < 4) {
                 attempts++;
                 const needed = count - finalQuestions.length;
                 console.log(`[AI Connector] Requesting fresh questions for ${subject} (Attempt ${attempts})...`);
@@ -47,6 +47,8 @@ class AIGameConnector {
                 
                 if (data.success && data.data && data.data.questions) {
                     let validQs = data.data.questions.filter(q => {
+                        const qText = q.question || q.q || "";
+                        if (qText.trim().length <= 5) return false;
                         const opts = q.options || [];
                         if (opts.length < 2) return false;
                         const fakeCount = opts.filter(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2).length;

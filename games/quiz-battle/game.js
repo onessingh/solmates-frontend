@@ -175,11 +175,7 @@ async function createRoom() {
             
             // Map AI output to game expected format (q: text, options: [], a: index)
             if (aiData && aiData.length > 0) {
-                finalPool = aiData.filter(q => {
-                    const qText = q.question || q.q || "";
-                    const opts = q.options || [];
-                    return qText.trim().length > 5 && opts.length >= 2;
-                }).map(q => {
+                finalPool = aiData.map(q => {
                     // Check if AI gave 'answer' string instead of index
                     let correctIdx = 0;
                     if (typeof q.answer === 'string' && q.options) {
