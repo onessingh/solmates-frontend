@@ -80,6 +80,11 @@
                 if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
                 document.documentElement.style.colorScheme = 'light';
                 document.documentElement.classList.remove('dark');
+            } else {
+                meta.setAttribute('content', 'light only');
+                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+                document.documentElement.style.colorScheme = 'light';
+                document.documentElement.classList.remove('dark');
             }
         }
         updateMetaColorScheme();
