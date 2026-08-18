@@ -50,7 +50,7 @@ class AIGameConnector {
                         const qText = q.question || q.q || "";
                         if (qText.trim().length <= 5) return false;
                         const opts = q.options || [];
-                        if (opts.length < 2) return false;
+                        if (!Array.isArray(opts) || opts.length < 2) return false;
                         const fakeCount = opts.filter(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2).length;
                         if (fakeCount === opts.length) return false;
                         return true;
@@ -62,7 +62,7 @@ class AIGameConnector {
                 }
             }
 
-            if (finalQuestions.length > 0) {
+            if (finalQuestions.length >= count) {
                 finalQuestions = finalQuestions.slice(0, count);
                 localStorage.setItem(storageKey, JSON.stringify({
                     timestamp: Date.now(),
@@ -71,7 +71,7 @@ class AIGameConnector {
                 console.log(`[AI Connector] Returning ${finalQuestions.length} AI questions.`);
                 return finalQuestions;
             } else {
-                throw new Error('AI returned 0 valid questions');
+                throw new Error(`AI generated only ${finalQuestions.length} valid questions, needed ${count}`);
             }
         } catch (error) {
             console.warn(`[AI Connector] AI Generation failed: ${error.message}. Falling back to offline database...`);
