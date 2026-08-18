@@ -228,6 +228,10 @@
         var darkStyle = document.getElementById('solmates-dark-style');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
+        if (!theme) {
+            theme = 'light';
+            localStorage.setItem('solmates_theme', 'light');
+        }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
             if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
