@@ -1656,8 +1656,7 @@
 
     .greeting-text {
       position: relative;
-      font-size: 15px;
-      line-height: 1.4;
+      font-size: 16px;
       font-weight: 600;
       color: var(--brand-primary);
       text-align: center;
@@ -1667,9 +1666,10 @@
       opacity: 0.9;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       transition: opacity 0.3s ease;
-      white-space: normal;
-      width: 90vw;
-      max-width: 500px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 90vw;
     }
 
     .search-container {
@@ -3637,59 +3637,59 @@
     let currentSessionId = null;
     const CHAT_SESSIONS_KEY = 'solmates_chat_sessions';
 
-    const GREETINGS_MORNING = [
+        const GREETINGS_MORNING = [
       "Good Morning! Aaj kya crack karein? 🎯",
       "Shubh Prabhat! Chalo padhte hain. ☕",
       "Morning! Aaj ka goal kya hai? 📚",
-      "Rise and shine! I'm ready to help. ✨",
+      "Rise and shine! Ready to help. ✨",
       "Hey buddy! Padhai shuru karein? 🚀",
-      "Good Morning! Ready to dominate the day? 🔥",
-      "Start your morning with some fresh learning! 📖",
-      "Utho aur shuru ho jao! Manzil intezaar kar rahi hai. 🏃‍♂️",
-      "Naya din, naye challenges! Let's go! 💪",
-      "Good morning boss! Aaj phod dena hai. 💯",
-      "Wake up! Aaj kuch naya seekhne ka din hai. 🌅",
-      "Breakfast done? Aaja ab dimaag ghisate hain! 🥞",
-      "Morning champ! Ready for the hustle? 💼",
-      "Aalas chhodo, kitabein uthao! Good Morning! ☀️",
-      "Today is your opportunity to build the tomorrow you want! 🚀",
-      "Good morning! Aaj kitne chapters finish karne hain? 📖",
-      "Suraj nikal gaya, syllabus kab niklega? Chalo shuru karein! 🌞",
-      "Fresh morning, fresh mindset! Let's conquer. 🏔️",
-      "Hey buddy! Ek strong coffee aur ek solid chapter? ☕",
-      "Good morning! Sapne bade hain, mehnat bhi badi karni padegi. 🌟",
-      "Uth gaye? Toh ab action ka time hai! 🎬",
-      "Morning hustle! Be a better version of yourself today. 📈",
-      "Let's make today productive and awesome! ⚡",
-      "Good Morning! Aaj ka plan set hai? 📅",
-      "New morning, new energy. Kitabein kholo! 📘"
+      "Morning! Ready to dominate? 🔥",
+      "Start with fresh learning! 📖",
+      "Utho aur shuru ho jao! 🏃‍♂️",
+      "Naya din, naye challenges! 💪",
+      "Good morning boss! Phod dena hai. 💯",
+      "Wake up! Kuch naya seekhte hain. 🌅",
+      "Breakfast done? Let's study! 🥞",
+      "Morning champ! Ready for hustle? 💼",
+      "Aalas chhodo, kitabein uthao! ☀️",
+      "Build your tomorrow, today! 🚀",
+      "Good morning! Chapters finish karein? 📖",
+      "Suraj nikal gaya, syllabus kab? 🌞",
+      "Fresh morning, fresh mindset! 🏔️",
+      "Strong coffee aur ek chapter? ☕",
+      "Sapne bade, mehnat badi! 🌟",
+      "Uth gaye? Action ka time hai! 🎬",
+      "Morning hustle! Let's go! 📈",
+      "Make today productive! ⚡",
+      "Good Morning! Plan set hai? 📅",
+      "New morning, new energy! 📘"
     ];
     const GREETINGS_EVENING = [
       "Good Evening! Chai aur revision? ☕📚",
       "Evening buddy! Kuch naya seekhein? 🌟",
       "Hey! Aaj ka din kaisa raha? 🤝",
       "Ready for evening sessions? 📖",
-      "Good Evening! What's on your mind tonight? 📝",
-      "Success is 1% luck, 99% preparation! 🏆",
-      "Shaam ho gayi, par hustle abhi baki hai! 🌆",
-      "Evening vibes! Chalo syllabus niptate hain. 🎒",
-      "Thak gaye kya? Thoda aur push karo! 💪",
-      "Good Evening! Ek aur ghanta padh lein? ⏳",
-      "Snacks ready? Chalo padhai shuru karein! 🍿",
-      "Sunset and study! Perfect combination. 🌇",
-      "Don't stop when you're tired. Stop when you're done! 🔥",
-      "Shaam ka time, sabse prime! Let's focus. 🧠",
-      "Aakhri push! Din khatam hone se pehle kuch bada karte hain. 🎯",
-      "Good evening! Chai pee li? Ab notes khol lo! ☕",
-      "Din nikal gaya, but aaj ki padhai abhi baaki hai. ⏳",
-      "Evening study session! Keep distractions away. 📵",
-      "Bheed se alag banna hai, toh padhna padega! 💪",
-      "Good Evening! Revision ka waqt ho gaya hai. 🔄",
-      "Din kaisa bhi gaya ho, shaam productive honi chahiye! 🌆",
-      "Thoda break lo, and back to hustle! 🚶‍♂️",
-      "Good evening champ! Aaj kitna cover kiya? 📊",
-      "Hawa mast chal rahi hai, padhai bhi mast honi chahiye! 🌬️",
-      "Evening wrap-up! Jo bacha hai wo pura karein. ✅"
+      "What's on your mind tonight? 📝",
+      "1% luck, 99% preparation! 🏆",
+      "Shaam ho gayi, hustle baki hai! 🌆",
+      "Evening vibes! Syllabus niptao. 🎒",
+      "Thak gaye? Thoda aur push karo! 💪",
+      "Good Evening! Ek ghanta aur? ⏳",
+      "Snacks ready? Padhai shuru! 🍿",
+      "Sunset and study! Perfect. 🌇",
+      "Stop when you're done! 🔥",
+      "Shaam ka time, sabse prime! 🧠",
+      "Aakhri push! Kuch bada karte hain. 🎯",
+      "Chai pee li? Ab notes khol lo! ☕",
+      "Din gaya, padhai abhi baaki hai. ⏳",
+      "Evening session! No distractions. 📵",
+      "Alag banna hai to padhna padega! 💪",
+      "Revision ka waqt ho gaya hai. 🔄",
+      "Shaam productive honi chahiye! 🌆",
+      "Thoda break, and back to hustle! 🚶‍♂️",
+      "Good evening champ! Kitna cover kiya? 📊",
+      "Hawa mast, padhai bhi mast! 🌬️",
+      "Evening wrap-up! Finish it. ✅"
     ];
     const GREETINGS_NIGHT = [
       "Raat gayi, par padhai nahi! 🦉💡",
@@ -3698,24 +3698,24 @@
       "Late night study session? 💻",
       "Good Night buddy! Sona kab hai? 🚀",
       "Dream big, study bigger! ✨",
-      "Finish strong before you sleep! 🏁",
-      "Shor kam, focus zyada! Raat ka fayda uthao. 🤫",
-      "Neend aa rahi hai? Ek aur topic bas! ☕",
+      "Finish strong before sleeping! 🏁",
+      "Shor kam, focus zyada! 🤫",
+      "Neend aa rahi? Ek topic bas! ☕",
       "Midnight motivation! You got this! 🌌",
-      "Jo sote hain wo khote hain. Keep grinding! 🛡️",
-      "Raaton ki neend gawa kar hi success milti hai! 🏆",
-      "Good night? Not yet! Abhi syllabus baki hai. 📚",
-      "Peaceful night, perfect time for deep focus! 🧘‍♂️",
-      "You are one step closer to your dream. Keep going! 💡",
-      "Duniya so rahi hai, aur aap apne sapne bun rahe ho. Respect! 🫡",
-      "Raat ki shanti me syllabus tez khatam hota hai! 🤫",
-      "Ek coffee aur ek chapter? Deal? ☕📖",
-      "Night focus mode! No notifications, only studying. 📵",
-      "Sone se pehle din ka target complete kar lena. 🎯",
-      "Good night wali feel aa rahi hai? Muh dho lo, padhna hai! 🚰",
-      "Late night grind! Yehi mehnat rang layegi. 🌈",
-      "You're doing great! Thoda aur push karo. 🚀",
-      "Aadhi raat, aadhi kitabein. Let's finish them! 📚",
+      "Jo sote hain wo khote hain! 🛡️",
+      "Raaton ki neend gawa kar success! 🏆",
+      "Good night? Abhi syllabus baki hai. 📚",
+      "Peaceful night, deep focus! 🧘‍♂️",
+      "One step closer to your dream! 💡",
+      "Duniya so rahi, aap padh rahe. Respect! 🫡",
+      "Raat ki shanti, syllabus tez! 🤫",
+      "Ek coffee aur ek chapter? ☕📖",
+      "Night focus! Only studying. 📵",
+      "Target complete karke sona! 🎯",
+      "Neend aa rahi? Muh dho lo! 🚰",
+      "Late night grind! Mehnat rang layegi. 🌈",
+      "Doing great! Thoda aur push karo. 🚀",
+      "Aadhi raat, aadhi kitabein! 📚",
       "Shh! Study in progress... 🤫💡"
     ];
     const GREETINGS_AFTERNOON = [
@@ -3724,26 +3724,26 @@
       "Afternoon! Taiyari kaisi chal rahi? 📝",
       "Lunch break done? Back to work! 🏗️",
       "Check out today's market news! 📉",
-      "Good Afternoon! Need a study boost? 🚀",
+      "Good Afternoon! Need a boost? 🚀",
       "Keep moving forward! 🧗",
-      "Dopahar ki neend bhagao, dhyan lagao! ☀️",
-      "Lunch ke baad wali neend? No chance! Let's study. ☕",
-      "Half day is gone, half is still left! Make it count. ⏳",
-      "Afternoon slump? Take a deep breath and start! 🌬️",
-      "Chalo bache hue tasks niptate hain! 📋",
-      "Good Afternoon! Don't lose the momentum. 🏃‍♀️",
-      "Productivity on high alert! Let's go! 🚨",
-      "Thoda aur focus, you are doing great! 👍",
-      "Dopahar ho gayi! Padhai me focus maintain rakho. 🎯",
-      "Lunch thoda heavy tha? Koi na, easy topic utha lo! 🍔",
-      "Good afternoon! Ek quick power nap and then back to books? 💤",
-      "Neend ko bolo bye, career ko bolo hi! 👋",
-      "Sun is shining, and you should be studying! ☀️",
-      "Afternoon grind is tough, but you are tougher! 💪",
-      "Good Afternoon! Break lamba ho gaya, ab padhai shuru! ⏱️",
-      "Boring topics ko dopahar me nipta lo! 🥱",
-      "Keep your focus sharp this afternoon! 🗡️",
-      "Din aage badh raha hai, kya aapka syllabus bhi? 🚶‍♂️"
+      "Dopahar ki neend bhagao! ☀️",
+      "Lunch wali neend? No chance! ☕",
+      "Half day gone! Make it count. ⏳",
+      "Afternoon slump? Deep breath! 🌬️",
+      "Bache hue tasks niptate hain! 📋",
+      "Don't lose the momentum. 🏃‍♀️",
+      "Productivity on high alert! 🚨",
+      "Thoda aur focus, doing great! 👍",
+      "Dopahar ho gayi! Focus maintain rakho. 🎯",
+      "Lunch heavy tha? Easy topic uthao! 🍔",
+      "Quick power nap, then books? 💤",
+      "Neend ko bye, career ko hi! 👋",
+      "Sun is shining, keep studying! ☀️",
+      "Afternoon grind is tough! 💪",
+      "Break lamba ho gaya, ab padhai! ⏱️",
+      "Boring topics abhi nipta lo! 🥱",
+      "Keep your focus sharp today! 🗡️",
+      "Din badh raha, syllabus bhi? 🚶‍♂️"
     ];
 
     const SEARCH_SUGGESTIONS_MOBILE = [
