@@ -327,7 +327,7 @@ function connectToHost(hostId) {
                 showResult(data.correctIdx, data.scores);
             } else if(data.type === 'GAME_OVER') {
                 roomState.correctCounts = data.correctCounts || {};
-                showLeaderboard(data.scores);
+                showLeaderboard(data.scores, data.totalQ);
             }
         });
         
@@ -438,12 +438,17 @@ function startGame() {
     if(!isHost) return;
     
     // Use the pool that was already built in createRoom()
-    const pool = roomState.pool || [];
-    if (pool.length === 0) { alert("No questions found. Please create a new room."); return; }
+    let finalPool = roomState.pool || [];
+    const fallbackPool = roomState.fallbackPool || [];
+    if (finalPool.length === 0) { alert("No questions found. Please create a new room."); return; }
     
     const qCount = roomState.maxQs || 10;
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-    roomState.questions = shuffled.slice(0, Math.min(qCount, shuffled.length));
+    
+    // Shuffle final pool
+    finalPool = finalPool.sort(() => Math.random() - 0.5);
+    
+    // Slice to exact requested count
+    roomState.questions = finalPool.slice(0, qCount);
     roomState.currentQ = 0;
     
     broadcast({ type: 'START_GAME', questions: roomState.questions });
@@ -461,7 +466,7 @@ function startGameUI() {
 
 function sendNextQuestion() {
     if(roomState.currentQ >= roomState.questions.length) {
-        broadcast({ type: 'GAME_OVER', scores: roomState.scores, correctCounts: roomState.correctCounts });
+        broadcast({ type: 'GAME_OVER', scores: roomState.scores, correctCounts: roomState.correctCounts, totalQ: roomState.questions.length });
         showLeaderboard(roomState.scores);
         return;
     }
@@ -609,14 +614,14 @@ function showResult(correctIdx, scores) {
     }
 }
 
-function showLeaderboard(scores) {
+function showLeaderboard(scores, passedTotalQ = null) {
     roomState.gameOver = true;
     hideAllScreens();
     document.getElementById('screen-leaderboard').classList.remove('hidden');
     
     const list = document.getElementById('leaderboard-list');
     list.innerHTML = '';
-    const totalQ = roomState.questions.length;
+    const totalQ = passedTotalQ !== null ? passedTotalQ : (roomState.questions ? roomState.questions.length : 0);
     
     // Sort players by score; disconnected go to bottom
     const sorted = [...roomState.players].sort((a,b) => {

@@ -20,64 +20,69 @@ class AIGameConnector {
     async getQuestions(gameType, subject, count = 5, fallbackData = []) {
         const storageKey = `solmates_game_${gameType}_${subject.replace(/\s+/g, '_')}`;
         
+        let finalQuestions = [];
+        let attempts = 0;
+        
         try {
-            console.log(`[AI Connector] Requesting fresh questions for ${subject}...`);
-            
-            const response = await fetch(this.backendUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    toolType: 'game-questions',
-                    gameType: gameType,
-                    subject: subject,
-                    count: count,
-                    difficulty: 'Medium'
-                })
-            });
+            while (finalQuestions.length < count && attempts < 2) {
+                attempts++;
+                const needed = count - finalQuestions.length;
+                console.log(`[AI Connector] Requesting fresh questions for ${subject} (Attempt ${attempts})...`);
+                
+                const response = await fetch(this.backendUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        toolType: 'game-questions',
+                        gameType: gameType,
+                        subject: subject,
+                        count: needed + 5,
+                        difficulty: 'Medium'
+                    })
+                });
 
-            if (!response.ok) throw new Error('AI Backend returned error');
-            
-            const data = await response.json();
-            
-            if (data.success && data.data && data.data.questions) {
-                console.log(`[AI Connector] Successfully generated ${data.data.questions.length} questions!`);
-                // Save offline for fallback
+                if (!response.ok) throw new Error('AI Backend returned error');
+                
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.questions) {
+                    let validQs = data.data.questions.filter(q => {
+                        const opts = q.options || [];
+                        if (opts.length < 2) return false;
+                        const fakeCount = opts.filter(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2).length;
+                        if (fakeCount === opts.length) return false;
+                        return true;
+                    });
+                    
+                    finalQuestions = finalQuestions.concat(validQs);
+                } else {
+                    break;
+                }
+            }
+
+            if (finalQuestions.length > 0) {
+                finalQuestions = finalQuestions.slice(0, count);
                 localStorage.setItem(storageKey, JSON.stringify({
                     timestamp: Date.now(),
-                    questions: data.data.questions
+                    questions: finalQuestions
                 }));
-                let finalQuestions = data.data.questions.filter(q => {
-                    // Reject questions with fake options like "A", "B", "C", "D"
-                    const opts = q.options || [];
-                    if (opts.length < 2) return false;
-                    const fakeCount = opts.filter(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2).length;
-                    if (fakeCount === opts.length) return false; // ALL options are fake
-                    return true;
-                });
-                console.log(`[AI Connector] ${finalQuestions.length} valid questions after filtering`);
-                if (finalQuestions.length < count) {
-                    const needed = count - finalQuestions.length;
-                    const extra = fallbackData.slice(0, needed);
-                    finalQuestions = finalQuestions.concat(extra);
-                }
-                return finalQuestions.slice(0, count);
+                console.log(`[AI Connector] Returning ${finalQuestions.length} AI questions.`);
+                return finalQuestions;
             } else {
-                throw new Error('Invalid AI data structure');
+                throw new Error('AI returned 0 valid questions');
             }
         } catch (error) {
             console.warn(`[AI Connector] AI Generation failed: ${error.message}. Falling back to offline database...`);
             
-            // 1. Try LocalStorage Offline Data First
             const offlineData = localStorage.getItem(storageKey);
             if (offlineData) {
                 const parsed = JSON.parse(offlineData);
-                console.log(`[AI Connector] Loaded from Offline Storage (Stored on: ${new Date(parsed.timestamp).toLocaleString()})`);
-                return parsed.questions;
+                console.log(`[AI Connector] Loaded from Offline Storage`);
+                return parsed.questions.slice(0, count);
             }
             
-            // 2. Try Static Fallback (data.js/json)
             console.log(`[AI Connector] No offline data found. Using static fallback database.`);
-            return fallbackData;
+            return fallbackData.slice(0, count);
         }
     }
 }
