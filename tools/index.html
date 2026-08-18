@@ -1157,6 +1157,13 @@ padding-bottom: 10px;
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
+        } else {
+            // Force light mode for new users to override OS dark mode in PWA status bar
+            meta.setAttribute('content', 'light only');
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+            document.documentElement.style.colorScheme = 'light';
+            document.documentElement.classList.remove('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'not all');
         }
     }
     updateMetaColorScheme();
