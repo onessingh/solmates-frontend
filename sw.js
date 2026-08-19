@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v92';
+const CACHE_NAME = 'solmates-cache-v93';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -128,7 +128,7 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             }).catch(() => {
                 // Fallback for offline if not cached
-                if (event.request.headers.get('accept').includes('text/html')) {
+                if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
                     return caches.match('/offline.html');
                 }
                 return Response.error();
