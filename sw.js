@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v93';
+const CACHE_NAME = 'solmates-cache-v94';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -99,8 +99,11 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     if (event.request.method !== 'GET' || event.request.url.includes('/api/') || url.origin !== self.location.origin) return;
     
+    // Use ignoreSearch for root navigations so /?source=pwa matches /
+    const matchOptions = { ignoreSearch: url.pathname === '/' };
+    
     event.respondWith(
-        caches.match(event.request).then((response) => {
+        caches.match(event.request, matchOptions).then((response) => {
             // Cache hit - return response
             if (response) {
                 // Fetch in background to update cache (stale-while-revalidate)
@@ -129,9 +132,14 @@ self.addEventListener('fetch', (event) => {
             }).catch(() => {
                 // Fallback for offline if not cached
                 if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
-                    return caches.match('/offline.html');
+                    return caches.match('/offline.html').then(offlineRes => {
+                        return offlineRes || new Response(
+                            "<html><body style='background:#0f172a;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;text-align:center;'><h2>You are offline</h2><p>Please check your internet connection.</p></body></html>", 
+                            { status: 503, headers: { 'Content-Type': 'text/html' } }
+                        );
+                    });
                 }
-                return Response.error();
+                return new Response("Offline", { status: 503 });
             });
         })
     );

@@ -308,20 +308,20 @@ if (typeof document !== "undefined") {
           if (!document.querySelector('link[href*="global-lockdown.css"]')) {
               const link = document.createElement('link');
               link.rel = 'stylesheet';
-              link.href = '/css/global-lockdown.css?v=93';
+              link.href = '/css/global-lockdown.css?v=94';
               document.head.appendChild(link);
           }
           // C. Inject E-Notepad CSS
           if (!document.querySelector('link[href*="floating-notepad.css"]')) {
               const link = document.createElement('link');
               link.rel = 'stylesheet';
-              link.href = '/css/floating-notepad.css?v=93';
+              link.href = '/css/floating-notepad.css?v=94';
               document.head.appendChild(link);
           }
           // D. Inject E-Notepad JS
           if (!document.querySelector('script[src*="floating-notepad.js"]')) {
               const script = document.createElement('script');
-              script.src = '/js/floating-notepad.js?v=93';
+              script.src = '/js/floating-notepad.js?v=94';
               script.defer = true;
               document.head.appendChild(script);
           }
