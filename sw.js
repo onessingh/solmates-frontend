@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v115.7 - NUCLEAR REFRESH)
+ * SOLMATES Service Worker (v115.8 - NUCLEAR REFRESH)
  * Handles background push notifications and offline caching.
  */
 
@@ -12,14 +12,14 @@ self.addEventListener('push', function(event) {
             body: data.body || 'New update from SOLMATES!',
             icon: data.icon || '/android-chrome-192x192.png',
             badge: data.badge || '/favicon-32x32.png',
-            // v115.7: High-urgency vibration pattern for class reminders
+            // v115.8: High-urgency vibration pattern for class reminders
             vibrate: [300, 100, 300, 100, 300, 100, 400],
-            // v115.7: Stack by Default, but with renotify buzzer
+            // v115.8: Stack by Default, but with renotify buzzer
             tag: 'solmates-alert-' + (data.type || 'msg'),
             renotify: true,
             requireInteraction: true,
             timestamp: Date.now(),
-            // v115.7: Priority hint
+            // v115.8: Priority hint
             priority: 'high', 
             data: {
                 url: data.url || '/notification'
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v87';
+const CACHE_NAME = 'solmates-cache-v88';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -65,7 +65,8 @@ const STATIC_ASSETS = [
     '/favicon-16x16.png',
     '/favicon-32x32.png',
     '/favicon.ico',
-    '/apple-touch-icon.png'
+    '/apple-touch-icon.png',
+    '/offline.html'
 ];
 
 self.addEventListener('install', (event) => {
@@ -127,6 +128,9 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             }).catch(() => {
                 // Fallback for offline if not cached
+                if (event.request.headers.get('accept').includes('text/html')) {
+                    return caches.match('/offline.html');
+                }
                 return Response.error();
             });
         })
