@@ -271,4 +271,45 @@
     };
   }
 
+  /* 🔋📲 Capacitor Native Enhancements */
+  function initCapacitor() {
+    if (!window.Capacitor || !window.Capacitor.isNative) return;
+
+    const { App, StatusBar } = window.Capacitor.Plugins;
+
+    if (App) {
+      App.addListener('backButton', ({ canGoBack }) => {
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+          App.exitApp();
+        } else {
+          window.history.back();
+        }
+      });
+    }
+
+    if (StatusBar) {
+      const syncStatusBar = async () => {
+        try {
+          const isDark = document.body.classList.contains('dark-theme');
+          if (isDark) {
+            await StatusBar.setStyle({ style: 'DARK' });
+            await StatusBar.setBackgroundColor({ color: '#161925' });
+          } else {
+            await StatusBar.setStyle({ style: 'LIGHT' });
+            await StatusBar.setBackgroundColor({ color: '#f8f9fa' });
+          }
+        } catch(e) {}
+      };
+
+      setTimeout(syncStatusBar, 500);
+
+      const observer = new MutationObserver(syncStatusBar);
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initCapacitor, 1000);
+  });
+
 })();

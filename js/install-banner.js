@@ -1,6 +1,6 @@
 (() => {
     let isAndroid = /android/i.test(navigator.userAgent);
-    let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || (window.Capacitor && window.Capacitor.isNative);
 
     if (!isAndroid || isStandalone) return;
 
