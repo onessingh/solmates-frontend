@@ -177,8 +177,8 @@
 
       /* Capacitor Native Download */
       if (window.Capacitor && window.Capacitor.isNative) {
-         const { Filesystem, Directory, Share } = window.Capacitor.Plugins;
-         if (Filesystem && Share) {
+         const { Filesystem, Directory, LocalNotifications } = window.Capacitor.Plugins;
+         if (Filesystem && LocalNotifications) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(blob);
@@ -190,11 +190,21 @@
                             data: base64data,
                             directory: Directory.Documents
                         });
-                        await Share.share({
-                            title: 'Download Complete',
-                            text: 'Share or save your file',
-                            url: savedFile.uri
+                        
+                        await LocalNotifications.requestPermissions();
+                        await LocalNotifications.schedule({
+                          notifications: [
+                            {
+                              title: "Download Complete",
+                              body: filename + " saved to Documents.",
+                              id: Math.floor(Math.random() * 100000),
+                              schedule: { at: new Date(Date.now() + 100) },
+                              actionTypeId: "",
+                              extra: null
+                            }
+                          ]
                         });
+
                         setTimeout(() => showDownloadStatus(filename, false), 1000);
                         resolve();
                     } catch(e) {
