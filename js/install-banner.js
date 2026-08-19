@@ -1,13 +1,14 @@
 (() => {
-    if (localStorage.getItem('hideInstallBanner') === 'true') return;
+    // Hide for 24 hours if closed or clicked install to avoid spamming
+    const hideTime = localStorage.getItem('hideInstallBannerTime');
+    if (hideTime && Date.now() - parseInt(hideTime) < 24 * 60 * 60 * 1000) return;
 
-    let deferredPrompt = null;
     let isAndroid = /android/i.test(navigator.userAgent);
     let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-    if (isStandalone) return;
+    if (!isAndroid || isStandalone) return;
 
-    function showBanner(type) {
+    function showBanner() {
         if (document.getElementById('solmates-install-banner')) return;
 
         const banner = document.createElement('div');
@@ -49,29 +50,15 @@
 
         document.getElementById('solmates-close-banner').onclick = () => {
             banner.remove();
-            localStorage.setItem('hideInstallBanner', 'true');
+            localStorage.setItem('hideInstallBannerTime', Date.now().toString());
         };
 
-        document.getElementById('solmates-install-btn').onclick = async () => {
+        document.getElementById('solmates-install-btn').onclick = () => {
             banner.remove();
-            localStorage.setItem('hideInstallBanner', 'true');
-            if (type === 'android') {
-                window.location.href = '/solmates.apk';
-            } else if (type === 'pwa' && deferredPrompt) {
-                deferredPrompt.prompt();
-                await deferredPrompt.userChoice;
-                deferredPrompt = null;
-            }
+            localStorage.setItem('hideInstallBannerTime', Date.now().toString());
+            window.location.href = '/solmates.apk';
         };
     }
 
-    if (isAndroid) {
-        setTimeout(() => showBanner('android'), 3000);
-    } else {
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            showBanner('pwa');
-        });
-    }
+    setTimeout(() => showBanner(), 3000);
 })();
