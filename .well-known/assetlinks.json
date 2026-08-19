@@ -1,26 +1,41 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "in.solmates.app",
-      "sha256_cert_fingerprints": ["90:6D:E8:BB:AA:84:A1:5C:CD:2A:04:AB:73:DE:CB:44:F2:EF:29:A0:65:41:7F:1C:04:C4:7B:C8:53:B2:05:6F"]
+      "sha256_cert_fingerprints": [
+        "90:6D:E8:BB:AA:84:A1:5C:CD:2A:04:AB:73:DE:CB:44:F2:EF:29:A0:65:41:7F:1C:04:C4:7B:C8:53:B2:05:6F",
+        "95:B4:D8:7F:95:1F:73:0E:6D:DD:4D:E2:88:01:1F:18:54:9D:08:1E:D0:09:8C:6E:3F:B2:D4:7D:6C:B5:28:7E"
+      ]
     }
   },
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "in.solmates.www.twa",
-      "sha256_cert_fingerprints": ["44:FE:60:7C:95:CA:2D:26:61:D4:F6:4F:18:A8:D3:E4:D0:00:06:D5:78:A7:84:42:64:FD:42:3A:DB:4E:D9:29"]
+      "sha256_cert_fingerprints": [
+        "44:FE:60:7C:95:CA:2D:26:61:D4:F6:4F:18:A8:D3:E4:D0:00:06:D5:78:A7:84:42:64:FD:42:3A:DB:4E:D9:29",
+        "95:B4:D8:7F:95:1F:73:0E:6D:DD:4D:E2:88:01:1F:18:54:9D:08:1E:D0:09:8C:6E:3F:B2:D4:7D:6C:B5:28:7E"
+      ]
     }
   },
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "in.solmates.twa",
-      "sha256_cert_fingerprints": ["7B:E8:E0:25:D5:63:B6:B7:55:B4:11:66:CE:1F:D1:6B:CB:61:C1:C4:81:F9:B1:D0:25:D1:B1:B8:C8:66:B6:42"]
+      "sha256_cert_fingerprints": [
+        "7B:E8:E0:25:D5:63:B6:B7:55:B4:11:66:CE:1F:D1:6B:CB:61:C1:C4:81:F9:B1:D0:25:D1:B1:B8:C8:66:B6:42",
+        "95:B4:D8:7F:95:1F:73:0E:6D:DD:4D:E2:88:01:1F:18:54:9D:08:1E:D0:09:8C:6E:3F:B2:D4:7D:6C:B5:28:7E"
+      ]
     }
   }
 ]
