@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v115.2 - NUCLEAR REFRESH)
+ * SOLMATES Service Worker (v115.3 - NUCLEAR REFRESH)
  * Handles background push notifications and offline caching.
  */
 
@@ -12,14 +12,14 @@ self.addEventListener('push', function(event) {
             body: data.body || 'New update from SOLMATES!',
             icon: data.icon || '/android-chrome-192x192.png',
             badge: data.badge || '/favicon-32x32.png',
-            // v115.2: High-urgency vibration pattern for class reminders
+            // v115.3: High-urgency vibration pattern for class reminders
             vibrate: [300, 100, 300, 100, 300, 100, 400],
-            // v115.2: Stack by Default, but with renotify buzzer
+            // v115.3: Stack by Default, but with renotify buzzer
             tag: 'solmates-alert-' + (data.type || 'msg'),
             renotify: true,
             requireInteraction: true,
             timestamp: Date.now(),
-            // v115.2: Priority hint
+            // v115.3: Priority hint
             priority: 'high', 
             data: {
                 url: data.url || '/notification'
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v82';
+const CACHE_NAME = 'solmates-cache-v83';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
