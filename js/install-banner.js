@@ -1,8 +1,4 @@
 (() => {
-    // Hide for 24 hours if closed or clicked install to avoid spamming
-    const hideTime = localStorage.getItem('hideInstallBannerTime');
-    if (hideTime && Date.now() - parseInt(hideTime) < 24 * 60 * 60 * 1000) return;
-
     let isAndroid = /android/i.test(navigator.userAgent);
     let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
@@ -48,16 +44,26 @@
 
         document.body.appendChild(banner);
 
-        document.getElementById('solmates-close-banner').onclick = () => {
+        document.getElementById('solmates-close-banner').onclick = (e) => {
+            e.stopPropagation();
             banner.remove();
-            localStorage.setItem('hideInstallBannerTime', Date.now().toString());
         };
 
-        document.getElementById('solmates-install-btn').onclick = () => {
+        document.getElementById('solmates-install-btn').onclick = (e) => {
+            e.stopPropagation();
             banner.remove();
-            localStorage.setItem('hideInstallBannerTime', Date.now().toString());
             window.location.href = '/solmates.apk';
         };
+
+        // Hide when clicking outside
+        setTimeout(() => {
+            document.addEventListener('click', function hideOnOutsideClick(e) {
+                if (!banner.contains(e.target)) {
+                    banner.remove();
+                    document.removeEventListener('click', hideOnOutsideClick);
+                }
+            });
+        }, 100);
     }
 
     setTimeout(() => showBanner(), 3000);
