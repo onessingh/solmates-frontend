@@ -175,7 +175,38 @@
         }
       }
 
-      /* ── 2. Standard Browser / WebView ── */
+      /* Capacitor Native Download */
+      if (window.Capacitor && window.Capacitor.isNative) {
+         const { Filesystem, Directory, Share } = window.Capacitor.Plugins;
+         if (Filesystem && Share) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = async () => {
+                    const base64data = reader.result.split(',')[1];
+                    try {
+                        const savedFile = await Filesystem.writeFile({
+                            path: filename,
+                            data: base64data,
+                            directory: Directory.Documents
+                        });
+                        await Share.share({
+                            title: 'Download Complete',
+                            text: 'Share or save your file',
+                            url: savedFile.uri
+                        });
+                        setTimeout(() => showDownloadStatus(filename, false), 1000);
+                        resolve();
+                    } catch(e) {
+                        console.error('Capacitor download error:', e);
+                        resolve();
+                    }
+                };
+            });
+         }
+      }
+
+      /* 📱 2. Standard Browser / WebView 🔗 */
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -286,6 +317,43 @@
         }
       });
     }
+
+    const { Printer } = window.Capacitor.Plugins;
+    
+    // Hijack Print
+    const _originalPrint = window.print;
+    window.print = async function() {
+      if (Printer) {
+        try {
+          await Printer.print();
+        } catch(e) {
+           console.error('Print error', e);
+        }
+      } else {
+        _originalPrint();
+      }
+    };
+
+    // Pull to refresh
+    let touchstartY = 0;
+    let isPulling = false;
+    document.addEventListener('touchstart', e => {
+      if (window.scrollY === 0) {
+        touchstartY = e.changedTouches[0].screenY;
+        isPulling = true;
+      }
+    }, { passive: true });
+    
+    document.addEventListener('touchend', e => {
+      if (isPulling) {
+        const touchendY = e.changedTouches[0].screenY;
+        if (touchendY - touchstartY > 150 && window.scrollY === 0) {
+          showDownloadStatus('Refreshing...', true);
+          setTimeout(() => window.location.reload(), 500);
+        }
+        isPulling = false;
+      }
+    }, { passive: true });
 
     if (StatusBar) {
       const syncStatusBar = async () => {
