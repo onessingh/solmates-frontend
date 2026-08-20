@@ -2497,13 +2497,19 @@
     async function togglePinNotice(id, semester, currentlyPinned) {
       if (!confirm(`Are you sure you want to ${currentlyPinned ? 'UNPIN' : 'PIN'} this notice? Pinned notices will never be automatically deleted.`)) return;
       try {
-        const res = await solmatesAPI.updateSOLItem('notifications', semester, id, {
-          isPinned: !currentlyPinned
+        const token = localStorage.getItem('adminToken');
+        const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+        const res = await fetch(`${apiUrl}/sol/notifications/${semester}/${id}/pin`, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (res.success) {
+        const data = await res.json();
+        if (data.success) {
           localStorage.removeItem(`cached_notices_sem${semester}`);
           alert(`Notification successfully ${currentlyPinned ? 'unpinned' : 'pinned'}!`);
           location.reload();
+        } else {
+          throw new Error(data.error || 'Failed to update pin status');
         }
       } catch (err) {
         alert('Error updating pin status: ' + err.message);
