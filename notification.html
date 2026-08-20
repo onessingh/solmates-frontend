@@ -2497,7 +2497,7 @@
     async function togglePinNotice(id, semester, currentlyPinned) {
       if (!confirm(`Are you sure you want to ${currentlyPinned ? 'UNPIN' : 'PIN'} this notice? Pinned notices will never be automatically deleted.`)) return;
       try {
-        const token = localStorage.getItem('adminToken');
+        const token = localStorage.getItem('solmates_admin_token');
         const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
         const res = await fetch(`${apiUrl}/sol/notifications/${semester}/${id}/pin`, {
             method: 'PUT',
