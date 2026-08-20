@@ -1886,21 +1886,24 @@
                   </div>
                 </div>
                 <div class="admin-only admin-action-bar" style="display:none;">
-                  <label class="notice-select-label" onclick="event.stopPropagation();">
-                    <input type="checkbox" class="notice-checkbox" value="${noticeId}" data-semester="${semester}" 
-                      ${window.selectedNoticeIds && window.selectedNoticeIds.has(noticeId) ? 'checked' : ''}
-                      onchange="toggleIndividualSelection('${noticeId}', this.checked)">
-                    Select
-                  </label>
-                  <div style="display: flex; gap: 12px;">
-                    <button class="admin-btn edit-notice-btn" onclick="event.stopPropagation(); editNotice('${noticeId}', ${semester})">
-                      <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="admin-btn delete-notice-btn" onclick="event.stopPropagation(); deleteNotice('${noticeId}', ${semester})">
-                      <i class="fas fa-trash-alt"></i> Delete
-                    </button>
+                    <label class="notice-select-label" onclick="event.stopPropagation();">
+                      <input type="checkbox" class="notice-checkbox" value="${noticeId}" data-semester="${semester}" 
+                        ${window.selectedNoticeIds && window.selectedNoticeIds.has(noticeId) ? 'checked' : ''}
+                        onchange="toggleIndividualSelection('${noticeId}', this.checked)">
+                      Select
+                    </label>
+                    <div style="display: flex; gap: 12px;">
+                      <button class="admin-btn pin-notice-btn" onclick="event.stopPropagation(); togglePinNotice('${noticeId}', ${semester}, ${!!notice.isPinned})" style="color: ${notice.isPinned ? '#ff9800' : 'var(--text-muted)'};">
+                        <i class="fas fa-thumbtack"></i> ${notice.isPinned ? 'Unpin' : 'Pin'}
+                      </button>
+                      <button class="admin-btn edit-notice-btn" onclick="event.stopPropagation(); editNotice('${noticeId}', ${semester})">
+                        <i class="fas fa-edit"></i> Edit
+                      </button>
+                      <button class="admin-btn delete-notice-btn" onclick="event.stopPropagation(); deleteNotice('${noticeId}', ${semester})">
+                        <i class="fas fa-trash-alt"></i> Delete
+                      </button>
+                    </div>
                   </div>
-                </div>
               </div>
             </div>`;
         }).join('');
@@ -2491,6 +2494,22 @@
     }); // end DOMContentLoaded form handlers
 
     // Delete Notice Handler
+    async function togglePinNotice(id, semester, currentlyPinned) {
+      if (!confirm(`Are you sure you want to ${currentlyPinned ? 'UNPIN' : 'PIN'} this notice? Pinned notices will never be automatically deleted.`)) return;
+      try {
+        const res = await solmatesAPI.updateSOLItem('notifications', semester, id, {
+          isPinned: !currentlyPinned
+        });
+        if (res.success) {
+          localStorage.removeItem(`cached_notices_sem${semester}`);
+          alert(`Notification successfully ${currentlyPinned ? 'unpinned' : 'pinned'}!`);
+          location.reload();
+        }
+      } catch (err) {
+        alert('Error updating pin status: ' + err.message);
+      }
+    }
+
     async function deleteNotice(id, semester) {
       if (!confirm('Bhai, pakka delete karna hai?')) return;
       try {
