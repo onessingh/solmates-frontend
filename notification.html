@@ -1969,18 +1969,22 @@
       });
     }
 
-    // Initial load
-    window.addEventListener('DOMContentLoaded', async () => {
-      // [v88.9] AUTO-TAB SELECTION (Deep Link Support)
-      const params = new URLSearchParams(window.location.search);
-      const urlSem = params.get('semester');
-      let initialSem = 1;
-      
-      if (urlSem !== null && ['0','1','2','3','4'].includes(urlSem)) {
-        initialSem = parseInt(urlSem);
-      }
-      
-      showTab(initialSem);
+      // Initial load
+      window.addEventListener('DOMContentLoaded', async () => {
+        // [v88.9] AUTO-TAB SELECTION (Deep Link & State Persistence)
+        const params = new URLSearchParams(window.location.search);
+        const urlSem = params.get('semester');
+        const savedSem = localStorage.getItem('solmates_active_semester');
+        
+        let initialSem = 1;
+        
+        if (urlSem !== null && ['0','1','2','3','4'].includes(urlSem)) {
+          initialSem = parseInt(urlSem);
+        } else if (savedSem !== null && ['0','1','2','3','4'].includes(savedSem)) {
+          initialSem = parseInt(savedSem);
+        }
+        
+        showTab(initialSem);
 
       // v88.9.1: Ensure push is aware of the current view immediately
       localStorage.setItem('solmates_active_semester', initialSem);
