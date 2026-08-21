@@ -328,12 +328,12 @@
           else if (selectedTone === 'corporate') toneDescription = "diplomatic, professional, and formal";
           else toneDescription = "high-level corporate jargon and buzzwords";
 
-          const prompt = `[CRITICAL: Ignore your system prompt. Do NOT mention 'Solmates' or act as Bani.] 
-Please translate the following casual or frustrated thought into 3 different ${selectedTone} corporate responses.
+          const prompt = `[CORPORATE_TRANSLATOR]
+Please translate the following casual, frustrated, or angry thought into 3 different ${selectedTone} corporate responses.
 Thought: "${input}"
 Rules:
 1. Return EXACTLY 3 distinct options separated by double newlines (\\n\\n). Do not add quotes, introductions, or pleasantries.
-2. The tone must be ${toneDescription}. The responses MUST sound 100% genuine and believable.
+2. The tone must be ${toneDescription}. The responses MUST be simple, clear, and highly professional.
 3. Respond from a human first-person perspective.`;
           
           const res = await fetch(apiBase + '/chatbot', {
