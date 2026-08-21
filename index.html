@@ -4928,6 +4928,9 @@
 
       let escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       
+      // Fix for AI generating <br> tags inside markdown tables which get escaped and shown as raw text
+      escaped = escaped.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+      
       let lines = escaped.split('\n');
       let inTable = false;
       let formattedLines = [];
