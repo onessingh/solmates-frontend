@@ -282,7 +282,7 @@ Generate 3 different, highly credible and 100% genuine ${length.toLowerCase()} $
             }
             
             // Render logic for multiple options
-            const options = resultText.split(/(?:Option \d+:|^\d+\.)/mi).map(s => s.trim()).filter(s => s.length > 5);
+            const options = resultText.split(/(?:Option \d+:?|^\d+\.)/mi).map(s => s.trim()).filter(s => s.length > 5);
             const finalOptions = options.length > 0 ? options : [resultText];
             
             const container = document.getElementById('output-container');

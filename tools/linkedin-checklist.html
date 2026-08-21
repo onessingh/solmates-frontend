@@ -392,15 +392,15 @@
       </div>
 
       <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border);">
-        <div class="theme-selector">
-          <div class="theme-opt active" onclick="setBannerTheme(this, 'dark')">Cyber Dark</div>
-          <div class="theme-opt" onclick="setBannerTheme(this, 'blue')">Corporate Blue</div>
-          <div class="theme-opt" onclick="setBannerTheme(this, 'gradient')">Modern Gradient</div>
-          <div class="theme-opt" style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative;" title="Custom Color">
-            <span style="position: absolute; pointer-events: none; font-size: 0.85rem; font-weight: 600; color: #333; z-index: 2; padding:0;">Custom Color</span>
-            <input type="color" id="custom-color-picker" style="width: 200%; height: 200%; border: none; padding: 0; cursor: pointer; opacity: 0.7;" onchange="setBannerTheme(this.parentElement, 'custom', this.value)" value="#6366f1">
+        <div class="theme-selector" id="main-theme-selector">
+            <div class="theme-opt active" onclick="setBannerTheme(this, 'dark')">Cyber Dark</div>
+            <div class="theme-opt" onclick="setBannerTheme(this, 'blue')">Corporate Blue</div>
+            <div class="theme-opt" onclick="setBannerTheme(this, 'gradient')">Modern Purple</div>
+            <div class="theme-opt" style="background: var(--bg-body); border: 1px dashed var(--brand);" onclick="document.getElementById('extended-themes').style.display='grid'; this.style.display='none';">View All Themes (30+) <i class="fas fa-chevron-down"></i></div>
           </div>
-        </div>
+          <div class="theme-selector" id="extended-themes" style="display: none; margin-top: 10px; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
+            <!-- Extended themes injected via JS -->
+          </div>
         
         <div class="form-group">
           <label>Your Name / Brand</label>
@@ -629,6 +629,40 @@
         document.getElementById('bv-contact').style.color = 'rgba(255,255,255,0.8)';
       }
     }
+
+    // Generate 30+ Themes
+    const extraThemes = [
+      { n: "Forest Green", c: "linear-gradient(135deg, #065f46, #047857)" },
+      { n: "Midnight Red", c: "linear-gradient(135deg, #7f1d1d, #991b1b)" },
+      { n: "Ocean Blue", c: "linear-gradient(135deg, #0369a1, #0284c7)" },
+      { n: "Sunset Orange", c: "linear-gradient(135deg, #c2410c, #ea580c)" },
+      { n: "Royal Gold", c: "linear-gradient(135deg, #b45309, #d97706)" },
+      { n: "Graphite", c: "linear-gradient(135deg, #374151, #4b5563)" },
+      { n: "Neon Purple", c: "linear-gradient(135deg, #6b21a8, #7e22ce)" },
+      { n: "Aqua Marine", c: "linear-gradient(135deg, #0f766e, #0d9488)" },
+      { n: "Rose Gold", c: "linear-gradient(135deg, #9f1239, #be123c)" },
+      { n: "Steel Blue", c: "linear-gradient(135deg, #334155, #475569)" },
+      { n: "Deep Space", c: "linear-gradient(135deg, #111827, #1f2937)" },
+      { n: "Toxic Green", c: "linear-gradient(135deg, #166534, #15803d)" },
+      { n: "Crimson", c: "linear-gradient(135deg, #881337, #9f1239)" },
+      { n: "Indigo", c: "linear-gradient(135deg, #3730a3, #4338ca)" },
+      { n: "Rust", c: "linear-gradient(135deg, #7c2d12, #9a3412)" },
+      { n: "Olive", c: "linear-gradient(135deg, #3f6212, #4d7c0f)" },
+      { n: "Teal", c: "linear-gradient(135deg, #115e59, #0f766e)" },
+      { n: "Plum", c: "linear-gradient(135deg, #701a75, #86198f)" },
+      { n: "Slate", c: "linear-gradient(135deg, #1e293b, #334155)" },
+      { n: "Navy", c: "linear-gradient(135deg, #1e3a8a, #1d4ed8)" },
+      { n: "Coral", c: "linear-gradient(135deg, #9f1239, #e11d48)" },
+      { n: "Emerald", c: "linear-gradient(135deg, #065f46, #10b981)" },
+      { n: "Amethyst", c: "linear-gradient(135deg, #4c1d95, #8b5cf6)" },
+      { n: "Ruby", c: "linear-gradient(135deg, #7f1d1d, #ef4444)" },
+      { n: "Sapphire", c: "linear-gradient(135deg, #1e3a8a, #3b82f6)" },
+      { n: "Topaz", c: "linear-gradient(135deg, #7c2d12, #f59e0b)" },
+      { n: "Onyx", c: "linear-gradient(135deg, #000000, #111111)" }
+    ];
+    document.getElementById('extended-themes').innerHTML = extraThemes.map(t => 
+      `<div class="theme-opt" onclick="setBannerTheme(this, 'custom', '${t.c}')">${t.n}</div>`
+    ).join('');
     async function downloadBanner() {
       const cvs = document.getElementById('banner-canvas');
       const canvas = await html2canvas(cvs, { scale: 4 }); // 4x scale for high res
