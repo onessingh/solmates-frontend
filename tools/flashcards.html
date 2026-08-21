@@ -482,6 +482,7 @@ IMPORTANT: Do NOT output placeholder text. Generate real educational content.`;
         let res = typeof responseText === 'object' ? responseText : { success: true, message: responseText };
         let resText = res.message || res.reply || responseText;
 
+        let generatedCount = 0;
         if (res.success && resText) {
             let jsonStr = resText;
             const match = resText.match(/\[\s*\{[\s\S]*\}\s*\]/) || resText.match(/\{\s*"[\s\S]*\}\s*/);
@@ -497,6 +498,7 @@ IMPORTANT: Do NOT output placeholder text. Generate real educational content.`;
                 let parsed = JSON.parse(jsonStr);
                 if (parsed.cards) parsed = parsed.cards;
                 const cards = parsed;
+                generatedCount = cards.length;
         
         cards.forEach(card => {
           deck.push({
@@ -514,7 +516,7 @@ IMPORTANT: Do NOT output placeholder text. Generate real educational content.`;
         }
         
         saveDeck();
-        alert(`${cards.length} flashcards generated and saved!`);
+        alert(`${generatedCount} flashcards generated and saved!`);
       } catch (err) {
         console.error(err);
         alert('Failed to generate flashcards. Please try again.');

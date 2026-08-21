@@ -392,11 +392,11 @@
       </div>
 
       <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border);">
-        <div class="theme-selector" id="main-theme-selector">
+        <div class="theme-selector" id="main-theme-selector" style="flex-wrap: wrap;">
             <div class="theme-opt active" onclick="setBannerTheme(this, 'dark')">Cyber Dark</div>
             <div class="theme-opt" onclick="setBannerTheme(this, 'blue')">Corporate Blue</div>
             <div class="theme-opt" onclick="setBannerTheme(this, 'gradient')">Modern Purple</div>
-            <div class="theme-opt" style="background: var(--bg-body); border: 1px dashed var(--brand);" onclick="document.getElementById('extended-themes').style.display='grid'; this.style.display='none';">View All Themes (30+) <i class="fas fa-chevron-down"></i></div>
+            <div class="theme-opt" style="flex-basis: 100%; background: var(--bg-body); border: 1px dashed var(--brand); padding: 12px;" onclick="document.getElementById('extended-themes').style.display='grid'; this.style.display='none';">View All Themes (30+) <i class="fas fa-chevron-down"></i></div>
           </div>
           <div class="theme-selector" id="extended-themes" style="display: none; margin-top: 10px; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
             <!-- Extended themes injected via JS -->
