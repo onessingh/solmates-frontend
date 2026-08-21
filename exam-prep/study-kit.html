@@ -850,7 +850,7 @@ async function generateMCQ(ctx) {
   setProgress('mcq', 'loading');
   document.getElementById('mcq-content').innerHTML = loadingHTML('Generating MCQ questions...');
   const data = await callAI(`Create 20 multiple choice questions for: ${ctx}.
-Return JSON: { "questions": [{ "q": "...", "options": ["A...","B...","C...","D..."], "correct": 0 }] }
+Return JSON: { "questions": [{ "q": "Write the actual question text here", "options": ["Option 1 Text", "Option 2 Text", "Option 3 Text", "Option 4 Text"], "correct": 0 }] }
 correct is the 0-based index of the correct option. Make distractors plausible.`);
 
   if (data?.questions?.length) {
@@ -905,7 +905,7 @@ async function generateMock(ctx) {
   setProgress('mock', 'loading');
   document.getElementById('mock-content').innerHTML = loadingHTML('Generating mock test...');
   const data = await callAI(`Create a 15-question mock test for: ${ctx}. Make it like an actual exam paper.
-Return JSON: { "duration": 30, "questions": [{ "q": "...", "options": ["A...","B...","C...","D..."], "correct": 0 }] }`);
+Return JSON: { "duration": 30, "questions": [{ "q": "Write the actual question text here", "options": ["Option 1 Text", "Option 2 Text", "Option 3 Text", "Option 4 Text"], "correct": 0 }] }`);
 
   if (data?.questions?.length) {
     genData.mock = data.questions;
