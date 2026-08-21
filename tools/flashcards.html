@@ -469,13 +469,14 @@
       
       try {
         const promptText = `Generate exactly ${count} flashcards for the topic: "${topic}".
-Output strictly in the following JSON array format, and nothing else:
+Output strictly in the following JSON array format:
 [
   {
-    "front": "Question or Topic",
-    "back": "Answer or Explanation"
+    "front": "<generate actual question or topic>",
+    "back": "<generate actual answer or explanation>"
   }
-]`;
+]
+IMPORTANT: Do NOT output placeholder text. Generate real educational content.`;
         
         const responseText = await window.solmatesAPI.sendChatMessage(promptText, []);
         let res = typeof responseText === 'object' ? responseText : { success: true, message: responseText };
