@@ -1657,6 +1657,10 @@
   };
 
   const handleJdEvaluateAsync = async (jdText) => {
+    if (dom.jdEvaluateBtn) {
+      dom.jdEvaluateBtn.disabled = true;
+      dom.jdEvaluateBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Evaluating...';
+    }
     const baseResult = analyzeJd(jdText, state.resume);
     try {
       const aiResult = await fetchAiJdMatch(jdText, prepareResumeForAi(state.resume));
@@ -1677,6 +1681,11 @@
     } catch (error) {
       applyJdResults(baseResult);
       if (dom.jdError) dom.jdError.textContent = error?.message || "AI unavailable. Showing rule-based evaluation.";
+    } finally {
+      if (dom.jdEvaluateBtn) {
+        dom.jdEvaluateBtn.disabled = false;
+        dom.jdEvaluateBtn.innerHTML = 'Evaluate Resume';
+      }
     }
   };
 
