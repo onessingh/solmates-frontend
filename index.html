@@ -4524,7 +4524,7 @@
                 resDiv.innerHTML = `<span class="res-label">📚 Related Resources</span><div class="res-links"></div>`;
                 const linksCont = resDiv.querySelector('.res-links');
                 relatedLinks.forEach(link => {
-                  linksCont.innerHTML += `<a href="${link.url}" class="res-link"><i class="fas fa-external-link-alt"></i> ${link.name}</a>`;
+                  linksCont.innerHTML += `<a href="javascript:void(0)" onclick="window.location.href='${link.url}'" class="res-link"><i class="fas fa-external-link-alt"></i> ${link.name}</a>`;
                 });
                 content.appendChild(resDiv);
               }
@@ -4975,7 +4975,7 @@
       formatted = formatted
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="res-link" style="margin: 0 4px; vertical-align: middle;"><i class="fas fa-external-link-alt"></i> $1</a>');
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="javascript:void(0)" onclick="window.location.href=\'$2\'" class="res-link" style="margin: 0 4px; vertical-align: middle;"><i class="fas fa-external-link-alt"></i> $1</a>');
         
       let finalParts = formatted.split(/<\/div>/);
       let finalText = finalParts.map(part => {
