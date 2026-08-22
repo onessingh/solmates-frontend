@@ -1806,6 +1806,27 @@
             print-color-adjust: exact !important;
         }
         .resume.modernSidebar { min-height: auto !important; }
+        
+        /* ModernSidebar Float Fix for PDF Engine (Overrides flex which breaks across pages) */
+        .resume.modernSidebar {
+            display: block !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        .resume.modernSidebar .resume-sidebar {
+            float: left !important;
+            width: 34% !important;
+            min-height: 100vh !important;
+        }
+        .resume.modernSidebar .resume-main {
+            float: right !important;
+            width: 66% !important;
+        }
+        .resume.modernSidebar::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
       }
     </style>
   </head>
