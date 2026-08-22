@@ -3007,24 +3007,20 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 /* 1. PHOTO SIZES — make them BIGGER and clear */
 /* LinkedIn Banner: bigger photo */
+/* Photos - object-fit contain = no zoom, full face visible */
 .template-pin-banner .resume-photo img {
-    width: 150px !important;
-    height: 150px !important;
-    object-fit: cover !important;
-    border-radius: 50% !important;
+    object-fit: contain !important;
 }
-/* Aesthetic Arch: bigger photo, keep portrait ratio */
 .template-pin-arch .resume-photo img {
-    width: 130px !important;
-    height: 160px !important;
-    object-fit: cover !important;
+    object-fit: contain !important;
 }
 /* Canva Modern: bigger photo */
 .template-canvamodern .resume-header .resume-photo img {
-    width: 130px !important;
-    height: 130px !important;
+    width: 120px !important;
+    height: 120px !important;
     border-radius: 50% !important;
-    object-fit: cover !important;
+    object-fit: contain !important;
+    background: #f5f5f5;
 }
 
 /* 2. CANVA MODERN — photo on RIGHT side */
@@ -3074,16 +3070,14 @@ html, body {  padding: 0 !important; height: auto !important; }
 }
 
 /* 5. REACTIVE ONYX — headline as badge */
+/* Reactive Onyx headline - white text, no blue badge */
 .template-onyx .resume-headline {
-    display: inline-block !important;
-    color: #fff !important;
-    background-color: #2563eb !important;
-    padding: 4px 14px !important;
-    border-radius: 6px !important;
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-    margin-top: 6px !important;
-    letter-spacing: 0.5px !important;
+    color: #e2e8f0 !important;
+    background: none !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    margin-top: 4px !important;
+    opacity: 0.9;
 }
 
 /* 6. TEACHER TEMPLATE — expertise skills as inline chips */

@@ -976,20 +976,29 @@
     }
 
     // All other templates
-    const contactLine = [
-      personal.email,
-      personal.phone,
-      formatLocation(personal.location)
-    ].filter(Boolean).join("  \u2022  ");
-    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join("  \u2022  ");
+    // Build clickable contact/links
+    const emailLink = personal.email
+      ? `<a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a>`
+      : "";
+    const phoneText = personal.phone ? escapeHtml(personal.phone) : "";
+    const locationText = formatLocation(personal.location) ? escapeHtml(formatLocation(personal.location)) : "";
+    const contactParts = [emailLink, phoneText, locationText].filter(Boolean).join("  \u2022  ");
+
+    const makeLink = (url) => {
+      if (!url) return "";
+      const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
+      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
+    };
+    const linksParts = [makeLink(personal.linkedin), makeLink(personal.portfolio)].filter(Boolean).join("  \u2022  ");
+
     return `
       <article class="resume template-${escapeHtml(templateKey)}">
         <header class="resume-header">
           <div class="resume-identity">
             <h1 class="resume-name">${escapeHtml(personal.fullName || "")}</h1>
             ${personal.headline && showHeadline ? `<p class="resume-headline">${escapeHtml(personal.headline)}</p>` : ""}
-            ${contactLine ? `<p class="resume-contact">${escapeHtml(contactLine)}</p>` : ""}
-            ${linksLine ? `<p class="resume-links">${escapeHtml(linksLine)}</p>` : ""}
+            ${contactParts ? `<p class="resume-contact">${contactParts}</p>` : ""}
+            ${linksParts ? `<p class="resume-links">${linksParts}</p>` : ""}
           </div>
           ${photoHtml}
         </header>
