@@ -3179,3 +3179,307 @@ html, body {  padding: 0 !important; height: auto !important; }
     border-radius: 60px 60px 10px 10px !important;
     background: transparent !important;
 }
+
+/* =========================================================
+   PREMIUM TEMPLATES (v155)
+   ========================================================= */
+
+/* 1. Forest Sidebar */
+.template-forestSidebar {
+    display: flex;
+    flex-direction: row;
+    font-family: "Inter", sans-serif;
+    color: #333;
+}
+.template-forestSidebar .resume-sidebar {
+    width: 35%;
+    background: linear-gradient(135deg, #1b2823 0%, #0d1411 100%); /* Deep forest green */
+    color: #e5e0d8;
+    padding: 30px;
+    font-size: 0.85rem;
+}
+.template-forestSidebar .resume-sidebar h3,
+.template-forestSidebar .resume-sidebar h2 {
+    color: #fff;
+    border-bottom: 1px solid #4a5c53;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+.template-forestSidebar .resume-main {
+    width: 65%;
+    padding: 30px;
+    background: #fff;
+}
+.template-forestSidebar .resume-photo-wrap img {
+    width: 130px; height: 130px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+.template-forestSidebar header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #222;
+    text-transform: uppercase;
+}
+.template-forestSidebar header .headline {
+    color: #d4af37; /* Gold accent */
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+.template-forestSidebar .resume-section h2 {
+    color: #1b2823;
+    border-bottom: 2px solid #1b2823;
+    text-transform: uppercase;
+}
+
+/* 2. Monochrome Split */
+.template-monochromeSplit {
+    display: flex;
+    flex-direction: row;
+    font-family: "Inter", sans-serif;
+}
+.template-monochromeSplit .resume-sidebar {
+    width: 40%;
+    background: #000;
+    color: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+.template-monochromeSplit header h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+.template-monochromeSplit .resume-photo-wrap img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    margin: 30px 0;
+    filter: grayscale(100%);
+}
+.template-monochromeSplit .resume-sidebar h3,
+.template-monochromeSplit .resume-sidebar h2 {
+    font-size: 1.2rem;
+    border-bottom: 1px solid #444;
+    margin-bottom: 15px;
+}
+.template-monochromeSplit .resume-main {
+    width: 60%;
+    background: #e5e5e5; /* Light grey */
+    padding: 40px;
+    color: #222;
+}
+.template-monochromeSplit .resume-main h2 {
+    font-weight: 800;
+    border-bottom: 2px solid #000;
+}
+
+/* 3. Center Arch */
+.template-centerArch {
+    display: flex;
+    flex-direction: row;
+    font-family: "Outfit", sans-serif;
+    color: #444;
+    background: #fdfbf9;
+}
+.template-centerArch .resume-col {
+    padding: 30px 20px;
+}
+.template-centerArch .left-col,
+.template-centerArch .right-col {
+    width: 33%;
+}
+.template-centerArch .center-col {
+    width: 34%;
+    background: #f0ebe1; /* Beige */
+    text-align: center;
+    border-radius: 10px;
+}
+.template-centerArch .resume-photo-wrap img {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 60px 60px 0 0; /* Arch */
+    margin: 0 auto 20px;
+}
+.template-centerArch h1 {
+    font-size: 1.8rem;
+    color: #cda485;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.template-centerArch .resume-section h2 {
+    color: #cda485;
+    font-size: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    text-transform: uppercase;
+}
+.template-centerArch .contact-block p {
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+/* 4. Navy Overlap */
+.template-navyOverlap {
+    font-family: "Poppins", sans-serif;
+    color: #333;
+}
+.template-navyOverlap .top-header {
+    background: #f4f6f8;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid #ccc;
+}
+.template-navyOverlap .header-content {
+    width: 70%;
+}
+.template-navyOverlap h1 {
+    font-size: 2.5rem;
+    color: #1a2b49;
+    text-transform: uppercase;
+}
+.template-navyOverlap .resume-photo-wrap {
+    position: absolute;
+    right: 40px;
+    top: 20px; /* Overlaps into the next section */
+    border: 5px solid #fff;
+    border-radius: 50%;
+    z-index: 10;
+}
+.template-navyOverlap .resume-photo-wrap img {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.template-navyOverlap .body-split {
+    display: flex;
+    flex-direction: row;
+}
+.template-navyOverlap .resume-main {
+    width: 60%;
+    padding: 60px 40px 40px 40px;
+}
+.template-navyOverlap .resume-sidebar {
+    width: 40%;
+    background: #1a2b49; /* Navy */
+    color: #fff;
+    padding: 60px 40px 40px 40px;
+}
+.template-navyOverlap .resume-sidebar h2 {
+    color: #fff;
+    border-bottom: 1px solid #4a5c7c;
+}
+.template-navyOverlap .resume-main h2 {
+    color: #1a2b49;
+    border-bottom: 1px solid #ccc;
+}
+
+/* 5. Floral Sidebar */
+.template-floralSidebar {
+    display: flex;
+    flex-direction: row;
+    font-family: "Georgia", serif; /* Elegant serif */
+    color: #444;
+}
+.template-floralSidebar .resume-sidebar {
+    width: 35%;
+    background: #f0f0f0;
+    padding: 40px 30px;
+    font-size: 0.85rem;
+    /* Simulate floral corner */
+    background-image: radial-gradient(circle at top left, #ddd 10%, transparent 40%),
+                      radial-gradient(circle at bottom right, #ddd 10%, transparent 40%);
+}
+.template-floralSidebar .resume-main {
+    width: 65%;
+    padding: 40px 40px;
+}
+.template-floralSidebar .resume-photo-wrap img {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 30px;
+    display: block;
+    filter: grayscale(100%);
+}
+.template-floralSidebar h1 {
+    font-size: 2.2rem;
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #222;
+}
+.template-floralSidebar header .headline {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 30px;
+}
+.template-floralSidebar h2 {
+    background: #4a3e47; /* Dusky purple/brown */
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* PDF Print Fixes for Multi-Column Layouts */
+@media print {
+    .template-forestSidebar,
+    .template-monochromeSplit,
+    .template-centerArch,
+    .template-navyOverlap .body-split,
+    .template-floralSidebar {
+        display: block !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    
+    .template-forestSidebar .resume-sidebar,
+    .template-monochromeSplit .resume-sidebar,
+    .template-floralSidebar .resume-sidebar {
+        float: left !important;
+        min-height: auto !important;
+    }
+    
+    .template-forestSidebar .resume-main,
+    .template-monochromeSplit .resume-main,
+    .template-floralSidebar .resume-main {
+        float: right !important;
+    }
+    
+    /* specific widths */
+    .template-forestSidebar .resume-sidebar { width: 35% !important; }
+    .template-forestSidebar .resume-main { width: 65% !important; }
+    
+    .template-monochromeSplit .resume-sidebar { width: 40% !important; }
+    .template-monochromeSplit .resume-main { width: 60% !important; }
+    
+    .template-centerArch .left-col { float: left; width: 33% !important; }
+    .template-centerArch .center-col { float: left; width: 34% !important; }
+    .template-centerArch .right-col { float: right; width: 33% !important; }
+    
+    .template-navyOverlap .body-split .resume-main { float: left !important; width: 60% !important; }
+    .template-navyOverlap .body-split .resume-sidebar { float: right !important; width: 40% !important; }
+    
+    .template-floralSidebar .resume-sidebar { width: 35% !important; }
+    .template-floralSidebar .resume-main { width: 65% !important; }
+}
+
+@media print {
+    .template-centerArch .center-col {
+        background: transparent !important;
+    }
+}

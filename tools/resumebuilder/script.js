@@ -983,6 +983,173 @@
       `.trim();
     }
 
+
+    // --- 5 Premium Templates Logic ---
+    const generateSections = (keys) => {
+      return (state.sectionOrder || []).map(key => {
+        if (!state.sectionEnabled[key] || !keys.includes(key) || key === "headline") return "";
+        const def = sectionMap.get(key);
+        if (!def) return "";
+        const html = def.render(resume);
+        return html ? `<div>${html.replace("<section ", "<div ")}</div>` : "";
+      }).filter(Boolean).join("");
+    };
+
+    const makeUrlLink = (url) => {
+      if (!url) return "";
+      const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
+      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
+    };
+
+    if (templateKey === "forestSidebar") {
+      const sidebarKeys = ["awards", "skills", "technicalStack", "languages", "volunteer", "personalDetails"];
+      const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
+      return `
+        <article class="resume ${escapeHtml(templateKey)}">
+          <aside class="resume-sidebar">
+            <div class="resume-photo-wrap">
+              <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
+            </div>
+            <div class="contact-block">
+              <h3>Contact</h3>
+              ${personal.phone ? `<p>Phone: <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
+              ${personal.email ? `<p>Email: <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
+              ${formatLocation(personal.location) ? `<p>Address: ${escapeHtml(formatLocation(personal.location))}</p>` : ""}
+              ${personal.linkedin ? `<p>Linked: ${makeUrlLink(personal.linkedin)}</p>` : ""}
+              ${personal.portfolio ? `<p>Portfolio: ${makeUrlLink(personal.portfolio)}</p>` : ""}
+            </div>
+            ${generateSections(sidebarKeys)}
+          </aside>
+          <main class="resume-main">
+            <header>
+              <h1>${personal.fullName || "Name"}</h1>
+              ${personal.headline && showHeadline ? `<p class="headline">${escapeHtml(personal.headline)}</p>` : ""}
+            </header>
+            ${generateSections(mainKeys)}
+          </main>
+        </article>`.trim();
+    }
+
+    if (templateKey === "monochromeSplit") {
+      const sidebarKeys = ["skills", "languages", "personalDetails"];
+      const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
+      return `
+        <article class="resume ${escapeHtml(templateKey)}">
+          <aside class="resume-sidebar">
+            <header>
+              <h1>${personal.fullName || "Name"}</h1>
+              ${personal.headline && showHeadline ? `<p class="headline">${escapeHtml(personal.headline)}</p>` : ""}
+            </header>
+            <div class="resume-photo-wrap">
+              <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
+            </div>
+            <div class="contact-block">
+              <h3>Contact</h3>
+              ${personal.phone ? `<p>${escapeHtml(personal.phone)}</p>` : ""}
+              ${personal.email ? `<p>${escapeHtml(personal.email)}</p>` : ""}
+              ${personal.linkedin ? `<p>${makeUrlLink(personal.linkedin)}</p>` : ""}
+              ${personal.portfolio ? `<p>${makeUrlLink(personal.portfolio)}</p>` : ""}
+            </div>
+            ${generateSections(sidebarKeys)}
+          </aside>
+          <main class="resume-main">
+            ${generateSections(mainKeys)}
+          </main>
+        </article>`.trim();
+    }
+
+    if (templateKey === "centerArch") {
+      const leftKeys = ["summary", "experience", "internships"];
+      const rightKeys = ["education", "skills", "technicalStack", "awards", "certifications", "languages", "publications"];
+      const centerKeys = state.sectionOrder.filter(k => !leftKeys.includes(k) && !rightKeys.includes(k));
+      return `
+        <article class="resume ${escapeHtml(templateKey)}">
+          <div class="resume-col left-col">
+            ${generateSections(leftKeys)}
+          </div>
+          <div class="resume-col center-col">
+            <div class="resume-photo-wrap">
+              <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
+            </div>
+            <h1>${personal.fullName || "Name"}</h1>
+            ${personal.headline && showHeadline ? `<p class="headline">${escapeHtml(personal.headline)}</p>` : ""}
+            <div class="contact-block">
+              ${personal.phone ? `<p>call<br><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
+              ${personal.email ? `<p>write<br><a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
+              ${formatLocation(personal.location) ? `<p>meet<br>${escapeHtml(formatLocation(personal.location))}</p>` : ""}
+            </div>
+            <div class="social-links">
+               ${personal.linkedin ? `<p>${makeUrlLink(personal.linkedin)}</p>` : ""}
+               ${personal.portfolio ? `<p>${makeUrlLink(personal.portfolio)}</p>` : ""}
+            </div>
+            ${generateSections(centerKeys)}
+          </div>
+          <div class="resume-col right-col">
+            ${generateSections(rightKeys)}
+          </div>
+        </article>`.trim();
+    }
+
+    if (templateKey === "navyOverlap") {
+      const rightKeys = ["education", "skills", "technicalStack", "certifications"];
+      const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
+      return `
+        <article class="resume ${escapeHtml(templateKey)}">
+          <header class="top-header">
+            <div class="header-content">
+              <h1>${personal.fullName || "Name"}</h1>
+              ${personal.headline && showHeadline ? `<p class="headline">${escapeHtml(personal.headline)}</p>` : ""}
+              <div class="contact-row">
+                ${personal.phone ? `<span class="contact-item">${escapeHtml(personal.phone)}</span>` : ""}
+                ${personal.email ? `<span class="contact-item">${escapeHtml(personal.email)}</span>` : ""}
+                ${personal.linkedin ? `<span class="contact-item">${makeUrlLink(personal.linkedin)}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span class="contact-item">${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+              </div>
+            </div>
+            <div class="resume-photo-wrap">
+              <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
+            </div>
+          </header>
+          <div class="body-split">
+             <main class="resume-main">
+               ${generateSections(leftKeys)}
+             </main>
+             <aside class="resume-sidebar">
+               ${generateSections(rightKeys)}
+             </aside>
+          </div>
+        </article>`.trim();
+    }
+
+    if (templateKey === "floralSidebar") {
+      const sidebarKeys = ["education", "skills", "languages", "awards", "personalDetails"];
+      const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
+      return `
+        <article class="resume ${escapeHtml(templateKey)}">
+          <aside class="resume-sidebar">
+            <div class="resume-photo-wrap">
+              <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
+            </div>
+            <div class="contact-block">
+              <h3>Contact</h3>
+              ${formatLocation(personal.location) ? `<p>${escapeHtml(formatLocation(personal.location))}</p>` : ""}
+              ${personal.phone ? `<p><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
+              ${personal.email ? `<p><a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
+              ${personal.linkedin ? `<p>${makeUrlLink(personal.linkedin)}</p>` : ""}
+              ${personal.portfolio ? `<p>${makeUrlLink(personal.portfolio)}</p>` : ""}
+            </div>
+            ${generateSections(sidebarKeys)}
+          </aside>
+          <main class="resume-main">
+            <header>
+              <h1>${personal.fullName || "Name"}</h1>
+              ${personal.headline && showHeadline ? `<p class="headline">${escapeHtml(personal.headline)}</p>` : ""}
+            </header>
+            ${generateSections(mainKeys)}
+          </main>
+        </article>`.trim();
+    }
+
     // All other templates
     // Build clickable contact/links
     const emailLink = personal.email
@@ -1771,7 +1938,28 @@
       @page { size: A4; margin: 15mm !important; }
       @media screen, print {
         body { margin: 0; padding: 0; box-sizing: border-box; }
-        body:not(.template-modernSidebar) { background: #fff !important; }
+        body:not(.template-modernSidebar):not(.template-forestSidebar):not(.template-monochromeSplit):not(.template-navyOverlap):not(.template-floralSidebar):not(.template-centerArch) { background: #fff !important; }
+        
+        body.template-forestSidebar {
+            background: linear-gradient(to right, #1b2823 35%, #fff 35%) !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-monochromeSplit {
+            background: linear-gradient(to right, #000 40%, #e5e5e5 40%) !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-centerArch {
+            background: linear-gradient(to right, #fdfbf9 33%, #f0ebe1 33%, #f0ebe1 67%, #fdfbf9 67%) !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-navyOverlap {
+            background: linear-gradient(to right, #fff 60%, #1a2b49 60%) !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-floralSidebar {
+            background: linear-gradient(to right, #f0f0f0 35%, #fff 35%) !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
         
         /* ModernSidebar Background Gradient (Overrides white body) */
         body.template-modernSidebar {
@@ -1833,6 +2021,18 @@
             display: table;
             clear: both;
         }
+        
+        .template-forestSidebar .resume-sidebar,
+        .template-monochromeSplit .resume-sidebar,
+        .template-navyOverlap .resume-sidebar,
+        .template-floralSidebar .resume-sidebar {
+            background: transparent !important;
+        }
+        .template-monochromeSplit .resume-main,
+        .template-navyOverlap .resume-main {
+            background: transparent !important;
+        }
+    
       }
     </style>
   </head>
