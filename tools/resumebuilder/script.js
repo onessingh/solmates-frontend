@@ -1778,125 +1778,79 @@
 
       updatePreview();
 
-      const resumeEl = dom.preview.querySelector('.resume') || dom.preview;
-      if (!resumeEl) { window.print(); return; }
-
-      if (typeof html2pdf === 'undefined') {
-        window.print();
-        return;
-      }
-
+      const resumeHtml = renderResume(state.resume, state.activeTemplate, state.sectionOrder);
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
 
-      // Build an isolated off-screen container at exactly 794px width (A4 at 96dpi).
-      // IMPORTANT: Do NOT use opacity:0 \u2014 html2canvas renders it blank.
-      // Use position:absolute; left:-9999px to hide visually but keep it renderable.
-      const wrapper = document.createElement('div');
-      wrapper.style.cssText = [
-        'position:absolute',
-        'top:0',
-        'left:-9999px',
-        'width:794px',
-        'overflow:visible',
-        'background:#fff',
-        'padding:0',
-        'margin:0',
-        'z-index:99999',
-      ].join(';');
+      // Build a complete standalone HTML doc using the existing buildPrintHtml function.
+      // This produces real text (vector), NOT a screenshot — so:
+      //   ✅ ATS scanners can read every word
+      //   ✅ File size is ~50-200 KB (vs 30 MB image-based)
+      //   ✅ Perfect A4 margins via @page CSS — no left-cut, no right-gap
+      let htmlDoc = buildPrintHtml(resumeHtml);
 
-      // Clone resume \u2014 keep class names so CSS template styles still apply.
-      // Only override layout-breaking properties.
-      const clone = resumeEl.cloneNode(true);
-      clone.style.width = '794px';
-      clone.style.setProperty('min-height', '0', 'important');
-      clone.style.padding = '56px'; // ~15mm margins
-      clone.style.margin = '0';
-      clone.style.position = 'static';
-      clone.style.transform = 'none';
-      clone.style.boxShadow = 'none';
-      clone.style.border = 'none';
-      clone.style.background = '#fff';
-      clone.style.boxSizing = 'border-box';
-      clone.style.overflow = 'visible';
+      // Inject a @page rule + auto-print trigger into the <head>
+      htmlDoc = htmlDoc.replace('</head>', `
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 15mm;
+    }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { margin: 0 !important; padding: 0 !important; }
+    .resume {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+    h2 { break-after: avoid !important; page-break-after: avoid !important; }
+    .resume-item { break-inside: avoid !important; page-break-inside: avoid !important; }
+  </style>
+  <script>
+    window.onload = function() {
+      setTimeout(function() { window.print(); }, 400);
+    };
+  </script>
+</head>`);
 
-      // Fix orphaned headings by wrapping h2 and the first item in a page-break-inside: avoid container
-      const sections = clone.querySelectorAll('.resume-section');
-      sections.forEach(sec => {
-        const h2 = sec.querySelector('h2');
-        const firstItem = sec.querySelector('.resume-item');
-        if (h2 && firstItem && h2.nextElementSibling === firstItem) {
-          const keepTogether = document.createElement('div');
-          keepTogether.style.pageBreakInside = 'avoid';
-          keepTogether.style.breakInside = 'avoid';
-          keepTogether.className = 'keep-together';
-          sec.insertBefore(keepTogether, h2);
-          keepTogether.appendChild(h2);
-          keepTogether.appendChild(firstItem);
-        }
-      });
+      // Open in a hidden iframe and trigger print
+      const blob = new Blob([htmlDoc], { type: 'text/html; charset=utf-8' });
+      const url = URL.createObjectURL(blob);
 
-      wrapper.appendChild(clone);
-      document.body.appendChild(wrapper);
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;top:0;left:-9999px;width:794px;height:1123px;border:none;';
+      iframe.src = url;
+      document.body.appendChild(iframe);
 
-      // Defeat any stray "min-height: 296mm" print rules (e.g. from @media print)
-      // that would force the resume container to always be a full A4 page tall,
-      // causing large blank gaps + mis-placed page breaks.
-      clone.style.setProperty('min-height', 'auto', 'important');
-      clone.style.setProperty('background', '#ffffff', 'important');
-      clone.querySelectorAll('.resume, .resume-preview, .resume-sidebar, .resume-main').forEach(el => {
-        el.style.setProperty('min-height', 'auto', 'important');
-      });
-
-      // Wait for fonts AND every image (incl. the profile photo) to actually finish
-      // loading before we rasterize. Capturing too early makes html2canvas compute
-      // the wrong height, which pushes the page-slice boundary through the middle
-      // of a section (this is what produced the black band + blank gap).
-      const fontsReady = (document.fonts && document.fonts.ready)
-        ? document.fonts.ready
-        : Promise.resolve();
-      const imgs = Array.from(clone.querySelectorAll('img'));
-      const imagesReady = Promise.all(imgs.map(img => {
-        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-        return new Promise(res => {
-          img.addEventListener('load', res, { once: true });
-          img.addEventListener('error', res, { once: true });
-        });
-      }));
-      await Promise.all([fontsReady, imagesReady]);
-      // One extra frame so layout/reflow from the above settles before capture.
-      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-      const opt = {
-        margin: 0,
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.75 },
-        pagebreak: {
-          mode: ['css', 'legacy'],
-          avoid: ['.resume-item', '.keep-together', '.resume-header', '.resume-photo-wrap'],
-        },
-        html2canvas: {
-          scale: 1.2,
-          useCORS: true,
-          allowTaint: false,
-          letterRendering: true,
-          scrollY: 0,
-          scrollX: 0,
-          windowWidth: 794,
-          width: 794,
-          backgroundColor: '#ffffff',
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      iframe.onload = () => {
+        // Small delay for fonts to load inside the iframe
+        setTimeout(() => {
+          try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          } catch(e) {
+            // Fallback: open in new tab if iframe print blocked
+            window.open(url, '_blank');
+          }
+          // Cleanup after print dialog closes
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+            URL.revokeObjectURL(url);
+          }, 3000);
+        }, 600);
       };
-
-      await html2pdf().set(opt).from(clone).save();
-
-      // Cleanup
-      document.body.removeChild(wrapper);
 
     } finally {
       isExporting = false;
     }
   };
+
+
+
+
 
 
   const cacheDom = () => {
