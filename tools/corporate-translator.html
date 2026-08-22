@@ -346,6 +346,11 @@ Rules:
           const data = await res.json();
           let rawText = data.message || data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
           
+          // Check if the AI refused the prompt due to strict filters (trigger dictionary fallback instead)
+          if (rawText.toLowerCase().includes("i'm sorry") || rawText.toLowerCase().includes("can't help") || rawText.toLowerCase().includes("unable to")) {
+              throw new Error("AI Refusal detected, falling back to local dictionary");
+          }
+
           let options = rawText.split(/(?:Option \d+:?|^\d+\.|\n\n+)/mi).map(s => s.trim()).filter(t => t.length > 5);
           if (options.length === 0) options = [rawText];
 
