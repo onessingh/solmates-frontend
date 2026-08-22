@@ -1807,15 +1807,15 @@
       // Clone resume â€” keep class names so CSS template styles still apply.
       // Only override layout-breaking properties.
       const clone = resumeEl.cloneNode(true);
-      clone.style.setProperty('width', '794px', 'important');
+      clone.style.width = '794px';
       clone.style.setProperty('min-height', '0', 'important');
-      clone.style.setProperty('padding', '56px', 'important'); // ~15mm margins
-      clone.style.setProperty('margin', '0', 'important');
+      clone.style.padding = '56px'; // ~15mm margins
+      clone.style.margin = '0';
       clone.style.position = 'static';
       clone.style.transform = 'none';
       clone.style.boxShadow = 'none';
       clone.style.border = 'none';
-      clone.style.setProperty('background', '#fff', 'important');
+      clone.style.background = '#fff';
       clone.style.boxSizing = 'border-box';
       clone.style.overflow = 'visible';
 
@@ -1838,17 +1838,49 @@
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
 
-      // Wait for fonts/images to settle
-      await document.fonts.ready; await new Promise(r => setTimeout(r, 500));
+      // Defeat any stray "min-height: 296mm" print rules (e.g. from @media print)
+      // that would force the resume container to always be a full A4 page tall,
+      // causing large blank gaps + mis-placed page breaks.
+      clone.style.setProperty('min-height', 'auto', 'important');
+      clone.style.setProperty('background', '#ffffff', 'important');
+      clone.querySelectorAll('.resume, .resume-preview, .resume-sidebar, .resume-main').forEach(el => {
+        el.style.setProperty('min-height', 'auto', 'important');
+      });
+
+      // Wait for fonts AND every image (incl. the profile photo) to actually finish
+      // loading before we rasterize. Capturing too early makes html2canvas compute
+      // the wrong height, which pushes the page-slice boundary through the middle
+      // of a section (this is what produced the black band + blank gap).
+      const fontsReady = (document.fonts && document.fonts.ready)
+        ? document.fonts.ready
+        : Promise.resolve();
+      const imgs = Array.from(clone.querySelectorAll('img'));
+      const imagesReady = Promise.all(imgs.map(img => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise(res => {
+          img.addEventListener('load', res, { once: true });
+          img.addEventListener('error', res, { once: true });
+        });
+      }));
+      await Promise.all([fontsReady, imagesReady]);
+      // One extra frame so layout/reflow from the above settles before capture.
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
       const opt = {
         margin: 0,
         filename: filename,
-        image: { type: 'jpeg', quality: 1.0 },
-        pagebreak: { mode: ['css', 'legacy'], avoid: ['.resume-item', '.keep-together'] },
+        // PNG avoids a known html2canvas+jsPDF issue where any not-fully-opaque
+        // region gets flattened to BLACK when re-encoded as JPEG (the dark band
+        // seen in exports). Slightly bigger file, but no black artifacts.
+        image: { type: 'png', quality: 1.0 },
+        pagebreak: {
+          mode: ['css', 'legacy'],
+          avoid: ['.resume-item', '.keep-together', '.resume-header', '.resume-photo-wrap', '.resume-sidebar', 'img'],
+        },
         html2canvas: {
           scale: 2,
           useCORS: true,
+          allowTaint: false,
           letterRendering: true,
           scrollY: 0,
           scrollX: 0,
@@ -2230,7 +2262,6 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
-
 
 
 

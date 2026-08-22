@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
   --font-display: "Poppins", "Segoe UI", Arial, sans-serif;
 
@@ -598,7 +598,7 @@ textarea:focus {
     flex-direction: row !important;
     align-items: stretch !important;
     height: auto !important;
-     
+    min-height: auto !important; 
     width: 210mm !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -1233,7 +1233,7 @@ textarea:focus {
   margin-bottom: var(--space-3);
 }
 
-/* div replacing <header> inside resume items Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â avoids @media print header hiding */
+/* div replacing <header> inside resume items ¢Ã¢â€šÂ¬Ã¢â‚¬Â avoids @media print header hiding */
 .resume-item-header {
   display: block;
   margin-bottom: var(--space-1);
@@ -2340,9 +2340,9 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin: 0;
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ HIDE everything that is NOT the resume Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ HIDE everything that is NOT the resume ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   /* IMPORTANT: Do NOT use bare "header"/"footer" tags here.
-     renderResume wraps job title/dates in <header> inside .resume-item Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+     renderResume wraps job title/dates in <header> inside .resume-item ¢Ã¢â€šÂ¬Ã¢â‚¬Â
      hiding the tag globally makes job title, company, dates disappear in print. */
   .wizard-header, .wizard-nav, .site-header, .hero, .jd-match,
   .progress-stepper, .templates,
@@ -2357,20 +2357,20 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     display: none !important;
   }
 
-  /* .resume-item-header is a div Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â always visible, no tag conflict */
+  /* .resume-item-header is a div ¢Ã¢â€šÂ¬Ã¢â‚¬Â always visible, no tag conflict */
   .resume-item-header {
     display: block !important;
     visibility: visible !important;
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ RESET layout wrappers so resume fills the page Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ RESET layout wrappers so resume fills the page ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
     width: 210mm !important;
     height: auto !important;
-     
+    min-height: auto !important; 
     overflow: visible !important;
   }
 
@@ -2394,11 +2394,11 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     transform: none !important; /* Forces 1:1 scale for print */
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ THE RESUME ITSELF Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ THE RESUME ITSELF ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   .resume {
     display: block !important;
     width: 210mm !important; /* Exact A4 width */
-      /* Exact A4 height */
+    min-height: auto !important;  /* Exact A4 height */
     margin: 0 !important;
     padding: 15mm !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
     box-shadow: none !important;
@@ -2415,7 +2415,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     align-items: stretch !important;
     padding: 0 !important;
     overflow: visible !important;
-     
+    min-height: auto !important; 
   }
 
   .resume.modernSidebar .resume-sidebar {
@@ -2424,87 +2424,16 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     min-width: 34% !important;
     flex-shrink: 0 !important;
     align-self: stretch !important;
-  
-  .nav-left, .nav-center, .nav-right {
-    justify-content: center;
-    width: 100%;
-  }
-  
-  .back-btn {
-    padding: 15px 30px;
-    font-size: 1.5rem;
-  }
-
-  .brand-text {
-    font-size: 40px;
-  }
-
-  .brand-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-    border-radius: 16px;
-  }
-  
-  .form-panel {
-    width: 100% !important;
-    padding: 15px;
-    margin: 0 auto;
-  }
-
-  .preview-panel {
-    width: 100% !important;
-    padding: 15px;
-    margin: 0 auto;
-    overflow-x: auto;
-  }
-  
-  #resume-preview {
-    transform-origin: top left;
-    transform: scale(calc((100vw - 50px) / 800));
-    margin-bottom: calc(1122px * ((100vw - 50px) / 800) - 1122px + 20px);
-  }
-  
-  @media (min-width: 850px) {
-    #resume-preview {
-      transform: none;
-      margin-bottom: 0;
-    }
-  }
-
-  .templates {
-    width: 100%;
-    margin: 0 auto;
-    padding-bottom: 60px;
-    padding: 0 15px;
-  }
-  
-  /* Auto-zoom effect for mobile inputs */
-  .field input:focus, .field textarea:focus {
-    transform: none; /* Disable scale on mobile to prevent layout shifts */
-    z-index: 10;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-
-  .template-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .template-card {
-    padding: 10px;
-  }
-
-  .template-preview {
-    height: 120px;
-  }
-  
-  .template-info h3 {
-    font-size: 0.9rem;
   }
 }
+/* NOTE: the block above used to be missing its closing braces, which left
+   everything below it (all template-specific styles, incl. .template-google,
+   .template-finance h2, etc.) accidentally nested inside this @media print
+   rule. That meant those styles only applied while printing/exporting, never
+   on-screen — and the duplicate mobile-responsive rules that used to sit here
+   (.nav-left, .back-btn, #resume-preview scale, .template-grid, etc.) were a
+   redundant copy of the already-correct block at "MOBILE / STACKED MODE (Up to
+   1240px)" above, so they've been removed instead of re-duplicated. */
 
 /* Template Active state highlight */
 .template-card.active {
@@ -2535,9 +2464,9 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin: 0;
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ HIDE everything that is NOT the resume Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ HIDE everything that is NOT the resume ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
   /* IMPORTANT: Do NOT use bare "header"/"footer" tags here.
-     renderResume wraps job title/dates in <header> inside .resume-item Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚ 
+     renderResume wraps job title/dates in <header> inside .resume-item ¢Ã¢â€šÂ¬Ã¢â‚¬Â 
      hiding the tag globally makes job title, company, dates disappear in print. */
   .wizard-header, .wizard-nav, .site-header, .hero, .jd-match,
   .progress-stepper, .templates,
@@ -2552,20 +2481,20 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     display: none !important;
   }
 
-  /* .resume-item-header is a div Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚  always visible, no tag conflict */
+  /* .resume-item-header is a div ¢Ã¢â€šÂ¬Ã¢â‚¬Â  always visible, no tag conflict */
   .resume-item-header {
     display: block !important;
     visibility: visible !important;
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ RESET layout wrappers so resume fills the page Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ RESET layout wrappers so resume fills the page ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
     width: 210mm !important;
     height: auto !important;
-     
+    min-height: auto !important; 
     overflow: visible !important;
   }
 
@@ -2589,11 +2518,11 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     transform: none !important; /* Forces 1:1 scale for print */
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ THE RESUME ITSELF Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ THE RESUME ITSELF ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
   .resume {
     display: block !important;
     width: 210mm !important; /* Exact A4 width */
-      /* Exact A4 height */
+    min-height: auto !important;  /* Exact A4 height */
     margin: 0 !important;
     padding: 15mm !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
     box-shadow: none !important;
@@ -2610,7 +2539,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     align-items: stretch !important;
     padding: 0 !important;
     overflow: visible !important;
-     
+    min-height: auto !important; 
   }
 
   .resume.modernSidebar .resume-sidebar {
@@ -2637,11 +2566,6 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     background: #fff !important;
   }
 
-  .resume.modernSidebar .resume-sidebar, 
-  .resume.modernSidebar .resume-main {
-    break-inside: auto !important;
-    page-break-inside: auto !important;
-  }
   /* Sections: allow natural page flow, items avoid mid-break */
   .resume-section {
     display: block !important;
@@ -2652,7 +2576,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin-bottom: 8px !important;
   }
 
-  /* Prevent orphaned headings â€” h2 always stays with the first item below it */
+  /* Prevent orphaned headings — h2 always stays with the first item below it */
   .resume-section h2 {
     break-after: avoid !important;
     page-break-after: avoid !important;
@@ -2704,7 +2628,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     padding-bottom: 0 !important;
   }
 
-  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ TEMPLATE-SPECIFIC OVERRIDES Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
+  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TEMPLATE-SPECIFIC OVERRIDES ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   .template-social .resume-header { background: #dbe9f9 !important; }
   .template-social .resume-name { color: #0d2366 !important; }
   .template-social .resume-headline { color: #1a1a3e !important; border-top: 1px solid #a0b8d8 !important; }
@@ -3013,7 +2937,6 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 .template-pin-pink .resume-section h2 { font-size: 16px; font-weight: 800; text-transform: uppercase; color: #be185d; border-bottom: 2px dashed #f9a8d4; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; }
 .template-pin-pink .resume-item h3 { font-size: 16px; font-weight: bold; color: #831843; }
 .template-pin-pink .resume-meta { font-size: 11px; color: #f472b6; font-weight: bold; }
-
 
 
 
