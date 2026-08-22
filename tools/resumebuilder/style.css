@@ -2562,3 +2562,54 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     background-color: #f8fafc;
     border-color: #4f46e5;
 }
+
+/* --- 10 MORE PREMIUM TEMPLATES --- */
+.template-google { font-family: 'Roboto', sans-serif; color: #3c4043; }
+.template-google .resume-header { text-align: left; border-bottom: 2px solid #e8eaed; padding-bottom: 10px; margin-bottom: 20px; }
+.template-google .resume-name { font-size: 28px; color: #202124; font-weight: 500; }
+.template-google .resume-section h2 { color: #1a73e8; font-size: 16px; font-weight: 500; padding-bottom: 5px; border-bottom: 1px solid #e8eaed; text-transform: uppercase; }
+
+.template-mckinsey { font-family: 'Georgia', serif; font-size: 10.5pt; color: #000; }
+.template-mckinsey .resume-header { text-align: center; border-bottom: 3px double #000; padding-bottom: 5px; margin-bottom: 15px; }
+.template-mckinsey .resume-name { font-size: 18pt; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+.template-mckinsey .resume-section h2 { font-size: 11pt; font-style: italic; border-bottom: 1px solid #000; margin-top: 15px; }
+
+.template-deekay { font-family: sans-serif; color: #333; }
+.template-deekay .resume-header { background: #f3f4f6; padding: 30px; border-radius: 12px; margin-bottom: 25px; text-align: center; }
+.template-deekay .resume-name { font-weight: 800; font-size: 32px; color: #111827; }
+.template-deekay .resume-section h2 { font-size: 18px; font-weight: 700; color: #4f46e5; border-bottom: 2px dashed #e5e7eb; padding-bottom: 5px; }
+
+.template-kakashi { font-family: 'Courier New', monospace; color: #2d3748; }
+.template-kakashi .resume-header { border-left: 5px solid #38b2ac; padding-left: 20px; text-align: left; margin-bottom: 20px; }
+.template-kakashi .resume-name { font-size: 24px; font-weight: 700; color: #2c7a7b; }
+.template-kakashi .resume-section h2 { background: #e6fffa; color: #234e52; padding: 5px 10px; display: inline-block; font-weight: bold; }
+
+.template-chiron { font-family: 'Playfair Display', serif; color: #1a202c; }
+.template-chiron .resume-header { text-align: right; border-bottom: 1px solid #cbd5e0; padding-bottom: 15px; margin-bottom: 20px; }
+.template-chiron .resume-name { font-size: 36px; color: #2b6cb0; font-style: italic; }
+.template-chiron .resume-section h2 { font-size: 20px; border-bottom: 2px solid #2b6cb0; color: #2c5282; margin-top: 20px; }
+
+.template-jsonflat { font-family: sans-serif; color: #444; }
+.template-jsonflat .resume-header { background: #2c3e50; color: #ecf0f1; padding: 40px 20px; text-align: center; margin-bottom: 30px; }
+.template-jsonflat .resume-name { font-weight: 300; font-size: 38px; color: #ecf0f1; text-transform: uppercase; letter-spacing: 3px; }
+.template-jsonflat .resume-section h2 { color: #e74c3c; font-weight: 700; border-bottom: 2px solid #ecf0f1; }
+
+.template-jsonelegant { font-family: serif; color: #333; }
+.template-jsonelegant .resume-header { text-align: center; margin-bottom: 40px; }
+.template-jsonelegant .resume-name { font-size: 30px; border: 2px solid #333; display: inline-block; padding: 10px 20px; letter-spacing: 2px; }
+.template-jsonelegant .resume-section h2 { font-size: 16px; text-align: center; border-bottom: 1px solid #ddd; margin: 30px 0 20px; padding-bottom: 10px; text-transform: uppercase; }
+
+.template-canvamodern { font-family: 'Montserrat', sans-serif; color: #333; }
+.template-canvamodern .resume-header { display: flex; flex-direction: column; align-items: flex-start; padding: 20px; background: #fdfbf7; border-left: 8px solid #ff6b6b; margin-bottom: 20px; }
+.template-canvamodern .resume-name { font-weight: 800; font-size: 34px; color: #2d3436; }
+.template-canvamodern .resume-section h2 { font-weight: 700; color: #ff6b6b; margin-top: 15px; }
+
+.template-zetyclassic { font-family: 'Arial', sans-serif; color: #222; }
+.template-zetyclassic .resume-header { border-top: 15px solid #0056b3; padding-top: 20px; text-align: center; margin-bottom: 20px; }
+.template-zetyclassic .resume-name { font-weight: bold; font-size: 26px; color: #0056b3; }
+.template-zetyclassic .resume-section h2 { background-color: #f4f4f4; color: #0056b3; padding: 5px 10px; font-weight: bold; border-left: 4px solid #0056b3; }
+
+.template-novoresume { font-family: sans-serif; color: #444; }
+.template-novoresume .resume-header { text-align: left; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 2px solid #16a085; }
+.template-novoresume .resume-name { font-weight: 700; font-size: 28px; color: #2c3e50; }
+.template-novoresume .resume-section h2 { color: #16a085; text-transform: uppercase; font-size: 14px; font-weight: bold; border-bottom: 1px solid #ecf0f1; padding-bottom: 5px; }

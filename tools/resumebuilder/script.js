@@ -20,7 +20,17 @@
     { key: "harvard", name: "Harvard Business", category: "Traditional", atsSafe: true },
     { key: "onyx", name: "Reactive Onyx", category: "Modern", atsSafe: true },
     { key: "awesomecv", name: "Awesome CV (LaTeX)", category: "Tech", atsSafe: true },
-    { key: "notion", name: "Notion Document", category: "Minimal", atsSafe: true }
+    { key: "notion", name: "Notion Document", category: "Minimal", atsSafe: true },
+    { key: "google", name: "Google Tech", category: "Modern", atsSafe: true },
+    { key: "mckinsey", name: "McKinsey Style", category: "Traditional", atsSafe: true },
+    { key: "deekay", name: "Reactive Deekay", category: "Creative", atsSafe: true },
+    { key: "kakashi", name: "Reactive Kakashi", category: "Tech", atsSafe: true },
+    { key: "chiron", name: "Reactive Chiron", category: "Premium", atsSafe: true },
+    { key: "jsonflat", name: "JSON Flat", category: "Standard", atsSafe: true },
+    { key: "jsonelegant", name: "JSON Elegant", category: "Traditional", atsSafe: true },
+    { key: "canvamodern", name: "Canva Modern", category: "Visual", atsSafe: false },
+    { key: "zetyclassic", name: "Zety Classic", category: "Standard", atsSafe: true },
+    { key: "novoresume", name: "Novoresume Hybrid", category: "Modern", atsSafe: true }
   ];
 
   const FIELD_SUGGESTIONS = {
