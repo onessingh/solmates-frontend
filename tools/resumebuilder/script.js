@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -1189,7 +1189,7 @@
 
   const parseBullets = (lines) => {
     return lines
-      .map((line) => line.replace(/^[\-* &bull; \d.)]+\s*/, "").trim())
+      .map((line) => line.replace(/^[\-*\u2022\d.)]+\s*/, "").trim())
       .filter(Boolean);
   };
 
@@ -1203,8 +1203,8 @@
       benefits: []
     };
     const map = [
-      { key: "responsibilities", patterns: [/responsibilities/i, /what you[' do/i, /what you will do/i] },
-      { key: "requirements", patterns: [/requirements/i, /qualifications/i, /what we[' looking for/i] },
+      { key: "responsibilities", patterns: [/responsibilities/i, /what you['\u2019]ll do/i, /what you will do/i] },
+      { key: "requirements", patterns: [/requirements/i, /qualifications/i, /what we['\u2019]re looking for/i] },
       { key: "skills", patterns: [/skills/i, /technical skills/i, /core skills/i] },
       { key: "benefits", patterns: [/benefits/i, /perks/i, /what we offer/i] },
       { key: "about", patterns: [/about us/i, /company/i, /who we are/i] }
