@@ -3181,400 +3181,471 @@ html, body {  padding: 0 !important; height: auto !important; }
 }
 
 
+
 /* =========================================================
-   PREMIUM TEMPLATES - Clean Rewrite (v160)
-   Uses double-class selectors (.resume.template-X) for
-   guaranteed specificity over all media query overrides.
+   PREMIUM TEMPLATES - v161
+   Min-width approach: keeps layout at 760px min so preview
+   scrolls horizontally on mobile instead of collapsing.
+   Double-class (.resume.template-X) for guaranteed specificity.
    ========================================================= */
+
+/* Make preview container scrollable for multi-column templates */
+.resume-preview:has(.template-forestSidebar),
+.resume-preview:has(.template-monochromeSplit),
+.resume-preview:has(.template-centerArch),
+.resume-preview:has(.template-navyOverlap),
+.resume-preview:has(.template-floralSidebar) {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+}
 
 /* ─── 1. FOREST SIDEBAR ─── */
 .resume.template-forestSidebar {
     display: flex !important;
     flex-direction: row !important;
-    font-family: "Inter", sans-serif;
-    color: #333;
-    background: transparent;
+    font-family: "Inter", sans-serif !important;
+    color: #333 !important;
+    min-width: 700px !important;
+    background: transparent !important;
 }
 .resume.template-forestSidebar .resume-sidebar {
     width: 35% !important;
-    flex-shrink: 0 !important;
-    background: linear-gradient(180deg, #1b2823 0%, #0d1411 100%);
-    color: #e5e0d8;
-    padding: 30px 25px;
-    font-size: 0.85rem;
-    min-height: 600px;
+    flex: 0 0 35% !important;
+    background: linear-gradient(180deg, #1b2823 0%, #0d1411 100%) !important;
+    color: #e5e0d8 !important;
+    padding: 30px 25px !important;
+    box-sizing: border-box !important;
 }
 .resume.template-forestSidebar .resume-main {
     flex: 1 !important;
-    padding: 35px 30px;
-    background: #fff;
+    padding: 35px 30px !important;
+    background: #fff !important;
+    box-sizing: border-box !important;
 }
-.resume.template-forestSidebar .resume-sidebar * { color: #e5e0d8; }
+.resume.template-forestSidebar .resume-sidebar,
+.resume.template-forestSidebar .resume-sidebar p,
+.resume.template-forestSidebar .resume-sidebar span,
+.resume.template-forestSidebar .resume-sidebar li {
+    color: #e5e0d8 !important;
+}
 .resume.template-forestSidebar .resume-sidebar h2,
 .resume.template-forestSidebar .resume-sidebar h3 {
-    color: #fff !important;
-    border-bottom: 1px solid #4a5c53 !important;
-    padding-bottom: 5px;
-    margin-bottom: 12px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    padding-bottom: 5px !important;
+    margin-bottom: 12px !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    background: none !important;
 }
 .resume.template-forestSidebar .resume-photo-wrap img {
     width: 120px !important;
     height: 120px !important;
     object-fit: cover !important;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: block;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    display: block !important;
 }
 .resume.template-forestSidebar header h1 {
     font-size: 2rem !important;
-    font-weight: 800;
-    color: #1b2823;
-    text-transform: uppercase;
-    margin-bottom: 4px;
+    font-weight: 800 !important;
+    color: #1b2823 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 5px !important;
 }
 .resume.template-forestSidebar header .headline {
-    color: #d4af37;
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 15px;
+    color: #d4af37 !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    margin-bottom: 20px !important;
 }
-.resume.template-forestSidebar .resume-main .resume-section h2 {
+.resume.template-forestSidebar .resume-section h2 {
     color: #1b2823 !important;
     border-bottom: 2px solid #1b2823 !important;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    padding-bottom: 4px;
-    margin-bottom: 10px;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 1px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 10px !important;
+    background: none !important;
 }
 
 /* ─── 2. MONOCHROME SPLIT ─── */
 .resume.template-monochromeSplit {
     display: flex !important;
     flex-direction: row !important;
-    font-family: "Inter", sans-serif;
-    background: transparent;
+    font-family: "Inter", sans-serif !important;
+    min-width: 700px !important;
+    background: transparent !important;
 }
 .resume.template-monochromeSplit .resume-sidebar {
     width: 38% !important;
-    flex-shrink: 0 !important;
-    background: #111;
-    color: #fff;
-    padding: 35px 25px;
-    min-height: 600px;
+    flex: 0 0 38% !important;
+    background: #111 !important;
+    color: #fff !important;
+    padding: 35px 25px !important;
+    box-sizing: border-box !important;
 }
 .resume.template-monochromeSplit .resume-main {
     flex: 1 !important;
-    background: #f0f0f0;
-    padding: 35px 30px;
+    background: #efefef !important;
+    padding: 35px 30px !important;
+    box-sizing: border-box !important;
 }
-.resume.template-monochromeSplit .resume-sidebar * { color: #ddd; }
+.resume.template-monochromeSplit .resume-sidebar,
+.resume.template-monochromeSplit .resume-sidebar p,
+.resume.template-monochromeSplit .resume-sidebar span,
+.resume.template-monochromeSplit .resume-sidebar li {
+    color: #ddd !important;
+}
 .resume.template-monochromeSplit .resume-sidebar h2,
 .resume.template-monochromeSplit .resume-sidebar h3 {
-    color: #fff !important;
+    color: #ffffff !important;
     border-bottom: 1px solid #444 !important;
-    padding-bottom: 5px;
-    margin-bottom: 12px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    padding-bottom: 5px !important;
+    margin-bottom: 12px !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    background: none !important;
 }
 .resume.template-monochromeSplit .resume-sidebar header h1 {
-    color: #fff !important;
+    color: #ffffff !important;
     font-size: 1.8rem !important;
-    font-weight: 900;
-    text-transform: uppercase;
-    word-break: break-word;
-    margin-bottom: 4px;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    word-break: break-word !important;
+    margin-bottom: 4px !important;
 }
-.resume.template-monochromeSplit .resume-sidebar header .headline {
+.resume.template-monochromeSplit .resume-sidebar .headline {
     color: #aaa !important;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
+    font-size: 0.9rem !important;
+    margin-bottom: 20px !important;
 }
 .resume.template-monochromeSplit .resume-photo-wrap img {
-    width: 120px !important;
-    height: 120px !important;
+    width: 130px !important;
+    height: 130px !important;
     object-fit: cover !important;
-    filter: grayscale(100%);
-    margin: 15px 0 20px;
-    display: block;
+    filter: grayscale(100%) !important;
+    border: 3px solid #444 !important;
+    margin: 15px 0 20px !important;
+    display: block !important;
 }
 .resume.template-monochromeSplit .resume-main .resume-section h2 {
     color: #000 !important;
     border-bottom: 3px solid #000 !important;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-    padding-bottom: 4px;
-    margin-bottom: 10px;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 2px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 10px !important;
+    background: none !important;
 }
 
 /* ─── 3. CENTER ARCH ─── */
 .resume.template-centerArch {
     display: flex !important;
     flex-direction: row !important;
-    font-family: "Outfit", sans-serif;
-    color: #444;
-    background: #fdfbf9;
-    min-height: 600px;
+    font-family: "Outfit", sans-serif !important;
+    color: #444 !important;
+    background: #fdfbf9 !important;
+    min-width: 720px !important;
+    align-items: stretch !important;
 }
 .resume.template-centerArch .resume-col {
     display: block !important;
-    padding: 30px 15px;
-    overflow: visible;
+    padding: 25px 15px !important;
+    box-sizing: border-box !important;
 }
 .resume.template-centerArch .left-col {
-    flex: 0 0 30% !important;
-    max-width: 30% !important;
-}
-.resume.template-centerArch .right-col {
-    flex: 0 0 30% !important;
-    max-width: 30% !important;
+    flex: 0 0 29% !important;
+    width: 29% !important;
+    background: #fdfbf9 !important;
 }
 .resume.template-centerArch .center-col {
-    flex: 0 0 40% !important;
-    max-width: 40% !important;
-    background: #f0ebe1;
-    text-align: center;
-    border-radius: 10px;
+    flex: 0 0 42% !important;
+    width: 42% !important;
+    background: #f0ebe1 !important;
+    text-align: center !important;
+    border-radius: 0 !important;
+}
+.resume.template-centerArch .right-col {
+    flex: 0 0 29% !important;
+    width: 29% !important;
+    background: #fdfbf9 !important;
 }
 .resume.template-centerArch .resume-photo-wrap img {
     width: 110px !important;
     height: 150px !important;
     object-fit: cover !important;
-    border-radius: 55px 55px 0 0;
-    display: block;
-    margin: 0 auto 15px;
+    border-radius: 55px 55px 0 0 !important;
+    display: block !important;
+    margin: 20px auto 15px !important;
 }
 .resume.template-centerArch h1 {
-    font-size: 1.5rem !important;
-    color: #cda485;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-align: center;
-    margin-bottom: 5px;
+    font-size: 1.4rem !important;
+    color: #cda485 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    text-align: center !important;
+    margin-bottom: 5px !important;
 }
 .resume.template-centerArch .headline {
-    font-style: italic;
-    color: #999;
-    font-size: 0.85rem;
-    text-align: center;
-    margin-bottom: 15px;
+    font-style: italic !important;
+    color: #999 !important;
+    font-size: 0.82rem !important;
+    text-align: center !important;
+    margin-bottom: 15px !important;
+    display: block !important;
 }
 .resume.template-centerArch .resume-section h2 {
     color: #cda485 !important;
-    font-size: 0.85rem !important;
-    text-align: center;
+    font-size: 0.8rem !important;
+    text-align: center !important;
     border-bottom: 1px solid #e0cfc0 !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding-bottom: 4px;
-    margin-bottom: 8px;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 8px !important;
+    background: none !important;
 }
-.resume.template-centerArch .contact-block p {
-    font-size: 0.78rem;
-    text-align: center;
-    margin-bottom: 6px;
+.resume.template-centerArch .left-col .resume-section h2,
+.resume.template-centerArch .right-col .resume-section h2 {
+    text-align: left !important;
 }
+.resume.template-centerArch .contact-block p,
 .resume.template-centerArch .social-links p {
-    font-size: 0.78rem;
-    text-align: center;
+    font-size: 0.75rem !important;
+    text-align: center !important;
+    margin-bottom: 5px !important;
 }
 
 /* ─── 4. NAVY OVERLAP ─── */
 .resume.template-navyOverlap {
     display: block !important;
-    font-family: "Inter", sans-serif;
-    background: #fff;
+    font-family: "Inter", sans-serif !important;
+    background: #fff !important;
+    min-width: 700px !important;
 }
 .resume.template-navyOverlap .top-header {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center;
-    justify-content: space-between;
-    background: #f4f6f8;
-    padding: 30px 40px;
-    border-bottom: 4px solid #1a2b49;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: #f4f6f8 !important;
+    padding: 25px 40px !important;
+    border-bottom: 4px solid #1a2b49 !important;
 }
 .resume.template-navyOverlap .header-content h1 {
     font-size: 2rem !important;
-    font-weight: 800;
-    color: #1a2b49;
-    text-transform: uppercase;
-    margin-bottom: 4px;
+    font-weight: 800 !important;
+    color: #1a2b49 !important;
+    text-transform: uppercase !important;
+    margin-bottom: 4px !important;
 }
 .resume.template-navyOverlap .header-content .headline {
-    color: #4a6fa5;
-    font-size: 1rem;
-    margin-bottom: 10px;
+    color: #4a6fa5 !important;
+    font-size: 1rem !important;
+    margin-bottom: 10px !important;
 }
 .resume.template-navyOverlap .contact-row {
     display: flex !important;
-    flex-wrap: wrap;
-    gap: 6px 16px;
-    font-size: 0.82rem;
-    color: #555;
+    flex-wrap: wrap !important;
+    gap: 5px 15px !important;
+    font-size: 0.8rem !important;
+    color: #555 !important;
 }
-.resume.template-navyOverlap .contact-item + .contact-item::before {
-    content: "•";
-    margin-right: 16px;
-    color: #aaa;
+.resume.template-navyOverlap .contact-item {
+    color: #555 !important;
 }
 .resume.template-navyOverlap .resume-photo-wrap img {
     width: 110px !important;
     height: 110px !important;
     object-fit: cover !important;
-    border-radius: 50%;
-    border: 4px solid #1a2b49;
+    border-radius: 50% !important;
+    border: 4px solid #1a2b49 !important;
+    display: block !important;
 }
 .resume.template-navyOverlap .body-split {
     display: flex !important;
     flex-direction: row !important;
+    min-height: 400px !important;
 }
 .resume.template-navyOverlap .body-split .resume-main {
     flex: 1 !important;
-    padding: 30px;
-    background: #fff;
+    padding: 25px 30px !important;
+    background: #fff !important;
+    box-sizing: border-box !important;
 }
 .resume.template-navyOverlap .body-split .resume-sidebar {
     flex: 0 0 36% !important;
-    max-width: 36% !important;
-    background: #1a2b49;
-    color: #d0d8e8;
-    padding: 30px 25px;
+    width: 36% !important;
+    background: #1a2b49 !important;
+    padding: 25px !important;
+    box-sizing: border-box !important;
 }
-.resume.template-navyOverlap .body-split .resume-sidebar * { color: #d0d8e8; }
+.resume.template-navyOverlap .body-split .resume-sidebar,
+.resume.template-navyOverlap .body-split .resume-sidebar p,
+.resume.template-navyOverlap .body-split .resume-sidebar li,
+.resume.template-navyOverlap .body-split .resume-sidebar span {
+    color: #d0d8e8 !important;
+}
 .resume.template-navyOverlap .body-split .resume-sidebar h2,
 .resume.template-navyOverlap .body-split .resume-sidebar h3 {
-    color: #fff !important;
-    border-bottom: 1px solid #4a5c7c !important;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    padding-bottom: 4px;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 10px !important;
+    letter-spacing: 1px !important;
+    background: none !important;
 }
 .resume.template-navyOverlap .body-split .resume-main .resume-section h2 {
     color: #1a2b49 !important;
     border-bottom: 2px solid #1a2b49 !important;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    padding-bottom: 4px;
-    margin-bottom: 10px;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 1px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 10px !important;
+    background: none !important;
 }
 
 /* ─── 5. FLORAL SIDEBAR ─── */
 .resume.template-floralSidebar {
     display: flex !important;
     flex-direction: row !important;
-    font-family: "Georgia", serif;
-    color: #444;
-    background: #fff;
+    font-family: "Georgia", serif !important;
+    color: #444 !important;
+    background: #fff !important;
+    min-width: 700px !important;
 }
 .resume.template-floralSidebar .resume-sidebar {
     width: 33% !important;
-    flex-shrink: 0 !important;
-    background: #f0f0f0;
-    padding: 35px 25px;
-    text-align: center;
-    min-height: 600px;
+    flex: 0 0 33% !important;
+    background: #f0f0f0 !important;
+    padding: 35px 20px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
 }
 .resume.template-floralSidebar .resume-main {
     flex: 1 !important;
-    padding: 35px 30px;
-    background: #fff;
+    padding: 35px 30px !important;
+    background: #fff !important;
+    box-sizing: border-box !important;
 }
 .resume.template-floralSidebar .resume-photo-wrap img {
     width: 120px !important;
     height: 120px !important;
     object-fit: cover !important;
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    display: block;
-    border: 3px solid #4a3e47;
+    border-radius: 50% !important;
+    margin: 0 auto 20px !important;
+    display: block !important;
+    border: 3px solid #4a3e47 !important;
 }
 .resume.template-floralSidebar .resume-sidebar h2,
 .resume.template-floralSidebar .resume-sidebar h3 {
     background: #4a3e47 !important;
     color: #fff !important;
     border: none !important;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    text-align: center;
+    padding: 5px 8px !important;
+    font-size: 0.78rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin-bottom: 10px !important;
+    text-align: center !important;
+    border-radius: 2px !important;
 }
 .resume.template-floralSidebar header h1 {
-    font-size: 1.8rem !important;
-    font-weight: 700;
-    color: #222;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 5px;
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
+    color: #222 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 3px !important;
+    margin-bottom: 5px !important;
 }
 .resume.template-floralSidebar header .headline {
-    font-style: italic;
-    color: #666;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
+    font-style: italic !important;
+    color: #666 !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 20px !important;
+    display: block !important;
 }
 .resume.template-floralSidebar .resume-main .resume-section h2 {
     background: #4a3e47 !important;
     color: #fff !important;
     border: none !important;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
+    padding: 5px 10px !important;
+    font-size: 0.78rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin-bottom: 10px !important;
+    border-radius: 2px !important;
 }
 
-/* ─── PRINT / PDF FIXES ─── */
+/* ─── PDF / PRINT FIXES ─── */
 @media print {
+    /* Sidebar templates: use float for multi-page compat */
     .resume.template-forestSidebar,
     .resume.template-monochromeSplit,
     .resume.template-floralSidebar {
         display: block !important;
-        position: relative !important;
-        overflow: hidden !important;
+        min-width: 0 !important;
+        position: relative;
+        overflow: hidden;
     }
-    .resume.template-forestSidebar .resume-sidebar,
-    .resume.template-monochromeSplit .resume-sidebar,
+    .resume.template-forestSidebar .resume-sidebar {
+        float: left !important; width: 35% !important; min-height: 100vh !important;
+    }
+    .resume.template-forestSidebar .resume-main {
+        float: right !important; width: 65% !important;
+    }
+    .resume.template-monochromeSplit .resume-sidebar {
+        float: left !important; width: 38% !important; min-height: 100vh !important;
+    }
+    .resume.template-monochromeSplit .resume-main {
+        float: right !important; width: 62% !important;
+    }
     .resume.template-floralSidebar .resume-sidebar {
-        float: left !important;
-        width: 35% !important;
-        min-height: 100vh !important;
+        float: left !important; width: 33% !important; min-height: 100vh !important;
     }
-    .resume.template-monochromeSplit .resume-sidebar { width: 38% !important; }
-    .resume.template-floralSidebar .resume-sidebar { width: 33% !important; }
-    .resume.template-forestSidebar .resume-main,
-    .resume.template-monochromeSplit .resume-main,
     .resume.template-floralSidebar .resume-main {
-        float: right !important;
-        width: 65% !important;
+        float: right !important; width: 67% !important;
     }
-    .resume.template-monochromeSplit .resume-main { width: 62% !important; }
-    .resume.template-floralSidebar .resume-main { width: 67% !important; }
 
+    /* Center Arch: 3-col float */
     .resume.template-centerArch {
         display: block !important;
-        position: relative !important;
-        overflow: hidden !important;
+        min-width: 0 !important;
+        position: relative;
+        overflow: hidden;
     }
-    .resume.template-centerArch .left-col { float: left !important; width: 30% !important; }
-    .resume.template-centerArch .center-col { float: left !important; width: 40% !important; }
-    .resume.template-centerArch .right-col { float: right !important; width: 30% !important; }
+    .resume.template-centerArch .left-col {
+        float: left !important; width: 29% !important;
+    }
+    .resume.template-centerArch .center-col {
+        float: left !important; width: 42% !important;
+    }
+    .resume.template-centerArch .right-col {
+        float: right !important; width: 29% !important;
+    }
 
+    /* Navy Overlap */
+    .resume.template-navyOverlap {
+        min-width: 0 !important;
+    }
     .resume.template-navyOverlap .body-split {
         display: block !important;
-        position: relative !important;
+        position: relative;
+        overflow: hidden;
     }
-    .resume.template-navyOverlap .body-split .resume-main { float: left !important; width: 64% !important; }
-    .resume.template-navyOverlap .body-split .resume-sidebar { float: right !important; width: 36% !important; }
+    .resume.template-navyOverlap .body-split .resume-main {
+        float: left !important; width: 64% !important;
+    }
+    .resume.template-navyOverlap .body-split .resume-sidebar {
+        float: right !important; width: 36% !important;
+    }
 }
