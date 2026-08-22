@@ -199,7 +199,7 @@
 
   const state = {
     resume: buildDefaultResume(),
-    selectedTemplate: "finance",
+    selectedTemplate: "social",
     sectionOrder: [...DEFAULT_SECTION_ORDER],
     sectionEnabled: { ...DEFAULT_SECTION_ENABLED },
     photoCrop: {
