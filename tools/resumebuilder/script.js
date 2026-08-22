@@ -1807,15 +1807,15 @@
       // Clone resume â€” keep class names so CSS template styles still apply.
       // Only override layout-breaking properties.
       const clone = resumeEl.cloneNode(true);
-      clone.style.width = '794px';
+      clone.style.setProperty('width', '794px', 'important');
       clone.style.setProperty('min-height', '0', 'important');
-      clone.style.padding = '56px'; // ~15mm margins
-      clone.style.margin = '0';
+      clone.style.setProperty('padding', '56px', 'important'); // ~15mm margins
+      clone.style.setProperty('margin', '0', 'important');
       clone.style.position = 'static';
       clone.style.transform = 'none';
       clone.style.boxShadow = 'none';
       clone.style.border = 'none';
-      clone.style.background = '#fff';
+      clone.style.setProperty('background', '#fff', 'important');
       clone.style.boxSizing = 'border-box';
       clone.style.overflow = 'visible';
 
@@ -1839,7 +1839,7 @@
       document.body.appendChild(wrapper);
 
       // Wait for fonts/images to settle
-      await new Promise(r => setTimeout(r, 150));
+      await document.fonts.ready; await new Promise(r => setTimeout(r, 500));
 
       const opt = {
         margin: 0,
@@ -2230,6 +2230,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
