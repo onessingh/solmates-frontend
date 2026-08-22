@@ -1007,6 +1007,7 @@
       const sidebarSections = generateSections(sidebarKeys);
       const mainSections = generateSections(mainKeys);
       return `
+        <div style="overflow-x:auto;overflow-y:visible;width:100%;-webkit-overflow-scrolling:touch;">
         <article class="resume template-forestSidebar" style="display:flex;flex-direction:row;min-width:680px;font-family:'Inter',sans-serif;color:#333;">
           <aside class="resume-sidebar" style="width:35%;flex-shrink:0;background:linear-gradient(180deg,#1b2823,#0d1411);color:#e5e0d8;padding:28px 22px;box-sizing:border-box;">
             <div style="text-align:center;margin-bottom:18px;">
@@ -1031,7 +1032,8 @@
             <style>.template-forestSidebar .resume-main .resume-section h2{color:#1b2823!important;border-bottom:2px solid #1b2823!important;text-transform:uppercase!important;font-size:0.78rem!important;letter-spacing:1px!important;padding-bottom:4px!important;margin-bottom:10px!important;background:none!important;}</style>
             ${mainSections}
           </main>
-        </article>`.trim();
+        </article>
+        </div>`.trim();
     }
 
     if (templateKey === "monochromeSplit") {
@@ -1040,6 +1042,7 @@
       const sidebarSections = generateSections(sidebarKeys);
       const mainSections = generateSections(mainKeys);
       return `
+        <div style="overflow-x:auto;overflow-y:visible;width:100%;-webkit-overflow-scrolling:touch;">
         <article class="resume template-monochromeSplit" style="display:flex;flex-direction:row;min-width:680px;font-family:'Inter',sans-serif;">
           <aside class="resume-sidebar" style="width:38%;flex-shrink:0;background:#111;color:#eee;padding:30px 22px;box-sizing:border-box;">
             <h1 style="color:#fff;font-size:1.8rem;font-weight:900;text-transform:uppercase;word-break:break-word;margin-bottom:4px;">${escapeHtml(personal.fullName || "Name")}</h1>
@@ -1061,7 +1064,8 @@
             <style>.template-monochromeSplit .resume-main .resume-section h2{color:#000!important;border-bottom:3px solid #000!important;text-transform:uppercase!important;font-size:0.78rem!important;letter-spacing:2px!important;padding-bottom:4px!important;margin-bottom:10px!important;background:none!important;}</style>
             ${mainSections}
           </main>
-        </article>`.trim();
+        </article>
+        </div>`.trim();
     }
 
     if (templateKey === "centerArch") {
@@ -1069,6 +1073,7 @@
       const rightKeys = ["education","skills","technicalStack","awards","certifications","languages","publications"];
       const centerKeys = state.sectionOrder.filter(k => !leftKeys.includes(k) && !rightKeys.includes(k));
       return `
+        <div style="overflow-x:auto;overflow-y:visible;width:100%;-webkit-overflow-scrolling:touch;">
         <article class="resume template-centerArch" style="display:flex;flex-direction:row;min-width:700px;font-family:'Outfit',sans-serif;color:#444;background:#fdfbf9;align-items:stretch;">
           <div class="left-col" style="flex:0 0 29%;width:29%;padding:24px 14px;box-sizing:border-box;background:#fdfbf9;">
             <style>.template-centerArch .left-col .resume-section h2,.template-centerArch .right-col .resume-section h2{color:#cda485!important;font-size:0.78rem!important;border-bottom:1px solid #e0cfc0!important;text-transform:uppercase!important;letter-spacing:1px!important;padding-bottom:4px!important;margin-bottom:8px!important;background:none!important;text-align:left!important;}</style>
@@ -1091,13 +1096,15 @@
           <div class="right-col" style="flex:0 0 29%;width:29%;padding:24px 14px;box-sizing:border-box;background:#fdfbf9;">
             ${generateSections(rightKeys)}
           </div>
-        </article>`.trim();
+        </article>
+        </div>`.trim();
     }
 
     if (templateKey === "navyOverlap") {
       const rightKeys = ["education","skills","technicalStack","certifications"];
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
+        <div style="overflow-x:auto;overflow-y:visible;width:100%;-webkit-overflow-scrolling:touch;">
         <article class="resume template-navyOverlap" style="display:block;min-width:680px;font-family:'Inter',sans-serif;background:#fff;">
           <header style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;background:#f4f6f8;padding:24px 36px;border-bottom:4px solid #1a2b49;">
             <div>
@@ -1122,7 +1129,8 @@
               ${generateSections(rightKeys)}
             </aside>
           </div>
-        </article>`.trim();
+        </article>
+        </div>`.trim();
     }
 
     if (templateKey === "floralSidebar") {
@@ -1131,6 +1139,7 @@
       const sidebarSections = generateSections(sidebarKeys);
       const mainSections = generateSections(mainKeys);
       return `
+        <div style="overflow-x:auto;overflow-y:visible;width:100%;-webkit-overflow-scrolling:touch;">
         <article class="resume template-floralSidebar" style="display:flex;flex-direction:row;min-width:680px;font-family:'Georgia',serif;color:#444;">
           <aside class="resume-sidebar" style="width:33%;flex-shrink:0;background:#f0f0f0;padding:32px 18px;box-sizing:border-box;text-align:center;">
             <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:110px;height:110px;object-fit:cover;border-radius:50%;border:3px solid #4a3e47;display:block;margin:0 auto 18px;" />
@@ -1153,7 +1162,8 @@
             <style>.template-floralSidebar .resume-main .resume-section h2{background:#4a3e47!important;color:#fff!important;font-size:0.75rem!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 10px!important;margin-bottom:10px!important;border:none!important;border-radius:2px!important;}</style>
             ${mainSections}
           </main>
-        </article>`.trim();
+        </article>
+        </div>`.trim();
     }
 
     // All other templates
