@@ -263,7 +263,7 @@ Generate 3 different, highly credible and 100% genuine ${length.toLowerCase()} $
                     const data = await res.json();
                     
                     if (data.success && data.message) {
-                        if (data.message.toLowerCase().includes("i'm sorry") || data.message.toLowerCase().includes("can't help") || data.message.toLowerCase().includes("unable to")) {
+                        if (/sorry|can['’]t help|cannot help|unable to|as an ai/i.test(data.message)) {
                             throw new Error('AI Refusal detected, falling back to local fallback');
                         }
                         resultText = data.message;
