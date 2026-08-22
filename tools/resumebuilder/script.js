@@ -1167,7 +1167,8 @@
 
   const loadState = () => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      let raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) raw = raw.replace(/\\u00C3\\u0192\\u00C2\\u00A2\\u00C3\\u00A2\\u201A\\u00AC\\u00C3\\u201A\\u00C2\\u00A2/g, ' \u2022 ');
       if (!raw) return null;
       return JSON.parse(raw);
     } catch {
@@ -2207,6 +2208,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
