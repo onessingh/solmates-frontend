@@ -1762,12 +1762,21 @@
     <style>
       @page { size: A4; margin: 15mm !important; }
       @media screen, print {
-        body { background: #fff !important; margin: 0; padding: 0; box-sizing: border-box; }
+        body { margin: 0; padding: 0; box-sizing: border-box; }
+        body:not(.template-modernSidebar) { background: #fff !important; }
+        
+        /* ModernSidebar Background Gradient (Overrides white body) */
+        body.template-modernSidebar {
+            background: linear-gradient(to right, #2D3748 34%, #fff 34%) !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        
         .site-header, .hero, .jd-match, .builder-layout, .templates,
         .form-panel, .preview-header, .score-card, .field-suggestion-box,
         .modal, .preview-actions, .back-link, .progress-stepper { display: none !important; }
         
-        .resume-preview { border: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
+        .resume-preview { border: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; background: transparent !important; }
         .resume { 
             width: 100% !important; 
             max-width: 100% !important; 
@@ -1775,6 +1784,7 @@
             margin: 0 !important; 
             border: none !important; 
             box-shadow: none !important; 
+            background: transparent !important;
         }
         
         /* Bulletproof pagination */
@@ -1793,34 +1803,22 @@
         .ats-plain-text { display: none !important; }
         .resume-footer-lines, .resume-footer-line { display: none !important; }
         
-        /* ModernSidebar: body::before pseudo element to ensure dark sidebar persists on all pages in PDF */
-        body.template-modernSidebar::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 34%;
-            height: 100%;
-            background: #2D3748;
-            z-index: -1;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-        .resume.modernSidebar { min-height: auto !important; }
-        
         /* ModernSidebar Float Fix for PDF Engine (Overrides flex which breaks across pages) */
         .resume.modernSidebar {
             display: block !important;
             position: relative !important;
-            overflow: hidden !important;
+            min-height: auto !important;
         }
         .resume.modernSidebar .resume-sidebar {
             float: left !important;
             width: 34% !important;
-            min-height: 100vh !important;
+            min-height: auto !important;
+            background: transparent !important; /* let body gradient show */
         }
         .resume.modernSidebar .resume-main {
             float: right !important;
             width: 66% !important;
+            background: transparent !important;
         }
         .resume.modernSidebar::after {
             content: "";
