@@ -1188,7 +1188,7 @@
 
   const parseBullets = (lines) => {
     return lines
-      .map((line) => line.replace(/^[\-*ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢\d.)]+\s*/, "").trim())
+      .map((line) => line.replace(/^[\-* &bull; \d.)]+\s*/, "").trim())
       .filter(Boolean);
   };
 
