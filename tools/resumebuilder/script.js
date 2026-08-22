@@ -1766,8 +1766,7 @@
   let isExporting = false;
     const handleExport = async () => {
     if (isExporting) return;
-    
-    // Prevent empty sections from being exported by filtering them out before rendering
+
     state.resume = readFormState();
     const errors = validateResume(state.resume);
     if (errors.length > 0) {
@@ -1779,17 +1778,44 @@
     updatePreview();
 
     const exportBtn = document.querySelector('[data-action="print-form"]');
-    const originalBtnText = exportBtn.innerHTML;
-    exportBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Generating PDF...';
+    const originalBtnHtml = exportBtn.innerHTML;
     exportBtn.disabled = true;
+
+    // -- Animated progress counter (fake but realistic) --
+    let progressVal = 0;
+    const setProgress = (pct, label) => {
+      progressVal = pct;
+      exportBtn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Generating PDF... ${pct}%`;
+    };
+    setProgress(5, 'Preparing...');
+
+    // Animate from 5% to 80% over ~10 seconds while waiting for server
+    let animFrame;
+    const startProgressAnim = () => {
+      const startTime = Date.now();
+      const duration = 10000; // 10 seconds
+      const startPct = 5;
+      const endPct = 80;
+      const tick = () => {
+        const elapsed = Date.now() - startTime;
+        const fraction = Math.min(elapsed / duration, 1);
+        // Ease-out curve
+        const eased = 1 - Math.pow(1 - fraction, 2);
+        const pct = Math.round(startPct + (endPct - startPct) * eased);
+        setProgress(pct);
+        if (fraction < 1) animFrame = requestAnimationFrame(tick);
+      };
+      animFrame = requestAnimationFrame(tick);
+    };
+    startProgressAnim();
 
     try {
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
-      
-      // Temporarily remove empty sections from enabled state
+
+      // Hide empty sections temporarily
       const originalEnabled = { ...state.sectionEnabled };
-      const sections = ['experience', 'education', 'skills', 'projects', 'certifications', 'languages', 'volunteer', 'leadership', 'publications', 'references'];
-      sections.forEach(sec => {
+      ['experience', 'education', 'skills', 'projects', 'certifications', 'languages',
+       'volunteer', 'leadership', 'publications', 'references'].forEach(sec => {
           if (!state.resume[sec] || state.resume[sec].length === 0) {
               state.sectionEnabled[sec] = false;
           }
@@ -1800,12 +1826,10 @@
 
       const resumeHtml = renderResume(state.resume, state.selectedTemplate, state.sectionOrder);
       const fullHtml = buildPrintHtml(resumeHtml);
-      
-      // Restore enabled state
       state.sectionEnabled = originalEnabled;
 
-      const apiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-          ? 'http://localhost:3000' 
+      const apiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:3000'
           : 'https://solmates-backend-w27e.onrender.com';
 
       const response = await fetch(`${apiBase}/api/export-pdf`, {
@@ -1814,11 +1838,33 @@
           body: JSON.stringify({ html: fullHtml, filename })
       });
 
+      // Cancel progress animation
+      if (animFrame) cancelAnimationFrame(animFrame);
+      setProgress(90, 'Finalizing...');
+
+      // Validate response is actually a PDF
       if (!response.ok) {
-          throw new Error('Failed to generate PDF on server');
+          const errText = await response.text();
+          console.error('Server error:', errText);
+          throw new Error('Server failed to generate PDF. Please try again.');
       }
 
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/pdf')) {
+          const errText = await response.text();
+          console.error('Unexpected response type:', contentType, errText);
+          throw new Error('Server returned an invalid file. Please try again.');
+      }
+
+      setProgress(95, 'Downloading...');
       const blob = await response.blob();
+
+      if (blob.size < 500) {
+          throw new Error('PDF appears to be empty or corrupt. Please try again.');
+      }
+
+      setProgress(100, 'Done!');
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.style.display = 'none';
@@ -1830,12 +1876,15 @@
       document.body.removeChild(a);
 
     } catch (error) {
+      if (animFrame) cancelAnimationFrame(animFrame);
       console.error('PDF Export Error:', error);
-      alert('An error occurred while generating the PDF. Please try again.');
+      alert(error.message || 'An error occurred while generating the PDF. Please try again.');
     } finally {
       isExporting = false;
-      exportBtn.innerHTML = originalBtnText;
-      exportBtn.disabled = false;
+      setTimeout(() => {
+        exportBtn.innerHTML = originalBtnHtml;
+        exportBtn.disabled = false;
+      }, 1200);
     }
   };
 
