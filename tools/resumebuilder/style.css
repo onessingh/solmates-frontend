@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
   --font-display: "Poppins", "Segoe UI", Arial, sans-serif;
 
@@ -1233,7 +1233,7 @@ textarea:focus {
   margin-bottom: var(--space-3);
 }
 
-/* div replacing <header> inside resume items — avoids @media print header hiding */
+/* div replacing <header> inside resume items â€” avoids @media print header hiding */
 .resume-item-header {
   display: block;
   margin-bottom: var(--space-1);
@@ -2340,9 +2340,9 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin: 0;
   }
 
-  /* ── HIDE everything that is NOT the resume ── */
+  /* â”€â”€ HIDE everything that is NOT the resume â”€â”€ */
   /* IMPORTANT: Do NOT use bare "header"/"footer" tags here.
-     renderResume wraps job title/dates in <header> inside .resume-item —
+     renderResume wraps job title/dates in <header> inside .resume-item â€”
      hiding the tag globally makes job title, company, dates disappear in print. */
   .wizard-header, .wizard-nav, .site-header, .hero, .jd-match,
   .progress-stepper, .templates,
@@ -2357,13 +2357,13 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     display: none !important;
   }
 
-  /* .resume-item-header is a div — always visible, no tag conflict */
+  /* .resume-item-header is a div â€” always visible, no tag conflict */
   .resume-item-header {
     display: block !important;
     visibility: visible !important;
   }
 
-  /* ── RESET layout wrappers so resume fills the page ── */
+  /* â”€â”€ RESET layout wrappers so resume fills the page â”€â”€ */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -2394,7 +2394,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     transform: none !important; /* Forces 1:1 scale for print */
   }
 
-  /* ── THE RESUME ITSELF ── */
+  /* â”€â”€ THE RESUME ITSELF â”€â”€ */
   .resume {
     display: block !important;
     width: 210mm !important; /* Exact A4 width */
@@ -2498,7 +2498,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     padding-bottom: 0 !important;
   }
 
-  /* ── TEMPLATE-SPECIFIC OVERRIDES ── */
+  /* â”€â”€ TEMPLATE-SPECIFIC OVERRIDES â”€â”€ */
   .template-social .resume-header { background: #dbe9f9 !important; }
   .template-social .resume-name { color: #0d2366 !important; }
   .template-social .resume-headline { color: #1a1a3e !important; border-top: 1px solid #a0b8d8 !important; }
@@ -2515,6 +2515,6 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 
 
 
- / *   - - -   5   N E W   P R E M I U M   T E M P L A T E S   - - -   * / 
- . t e m p l a t e - j s o n m a c c h i a t o   {   f o n t - f a m i l y :   ' S e g o e   U I ' ,   T a h o m a ,   G e n e v a ,   V e r d a n a ,   s a n s - s e r i f ;   c o l o r :   # 3 3 3 ;   l i n e - h e i g h t :   1 . 5 ;   }   . t e m p l a t e - j s o n m a c c h i a t o   . r e s u m e - h e a d e r   {   t e x t - a l i g n :   c e n t e r ;   b o r d e r - b o t t o m :   2 p x   s o l i d   # c c c ;   p a d d i n g - b o t t o m :   2 0 p x ;   m a r g i n - b o t t o m :   2 0 p x ;   }   . t e m p l a t e - j s o n m a c c h i a t o   . r e s u m e - n a m e   {   f o n t - s i z e :   2 . 2 e m ;   f o n t - w e i g h t :   3 0 0 ;   l e t t e r - s p a c i n g :   2 p x ;   }   . t e m p l a t e - j s o n m a c c h i a t o   . r e s u m e - s e c t i o n   h 2   {   t e x t - t r a n s f o r m :   u p p e r c a s e ;   l e t t e r - s p a c i n g :   1 . 5 p x ;   b o r d e r - b o t t o m :   1 p x   s o l i d   # d d d ;   c o l o r :   # 5 5 5 ;   p a d d i n g - b o t t o m :   5 p x ;   m a r g i n - b o t t o m :   1 5 p x ;   }   . t e m p l a t e - h a r v a r d   {   f o n t - f a m i l y :   ' G a r a m o n d ' ,   ' T i m e s   N e w   R o m a n ' ,   s e r i f ;   f o n t - s i z e :   1 1 p t ;   c o l o r :   # 0 0 0 ;   l i n e - h e i g h t :   1 . 2 ;   }   . t e m p l a t e - h a r v a r d   . r e s u m e - h e a d e r   {   t e x t - a l i g n :   c e n t e r ;   b o r d e r - b o t t o m :   1 p x   s o l i d   # 0 0 0 ;   p a d d i n g - b o t t o m :   5 p x ;   m a r g i n - b o t t o m :   1 0 p x ;   }   . t e m p l a t e - h a r v a r d   . r e s u m e - n a m e   {   f o n t - s i z e :   1 6 p t ;   f o n t - w e i g h t :   b o l d ;   t e x t - t r a n s f o r m :   u p p e r c a s e ;   m a r g i n - b o t t o m :   2 p x ;   }   . t e m p l a t e - h a r v a r d   . r e s u m e - s e c t i o n   h 2   {   f o n t - s i z e :   1 1 p t ;   f o n t - w e i g h t :   b o l d ;   t e x t - t r a n s f o r m :   u p p e r c a s e ;   b o r d e r - b o t t o m :   1 p x   s o l i d   # 0 0 0 ;   m a r g i n - t o p :   1 5 p x ;   m a r g i n - b o t t o m :   5 p x ;   }   . t e m p l a t e - o n y x   {   f o n t - f a m i l y :   ' R o b o t o ' ,   ' H e l v e t i c a ' ,   s a n s - s e r i f ;   c o l o r :   # 2 c 3 e 5 0 ;   }   . t e m p l a t e - o n y x   . r e s u m e - h e a d e r   {   b a c k g r o u n d - c o l o r :   # 1 a 1 a 1 a ;   c o l o r :   # f f f ;   p a d d i n g :   2 5 p x ;   b o r d e r - r a d i u s :   8 p x ;   t e x t - a l i g n :   l e f t ;   }   . t e m p l a t e - o n y x   . r e s u m e - n a m e   {   c o l o r :   # f f f ;   f o n t - s i z e :   2 8 p x ;   f o n t - w e i g h t :   7 0 0 ;   }   . t e m p l a t e - o n y x   . r e s u m e - c o n t a c t ,   . t e m p l a t e - o n y x   . r e s u m e - l i n k s   {   c o l o r :   # a a a ;   }   . t e m p l a t e - o n y x   . r e s u m e - s e c t i o n   h 2   {   c o l o r :   # 1 a 1 a 1 a ;   f o n t - w e i g h t :   7 0 0 ;   b o r d e r - b o t t o m :   3 p x   s o l i d   # 1 a 1 a 1 a ;   d i s p l a y :   i n l i n e - b l o c k ;   p a d d i n g - b o t t o m :   2 p x ;   m a r g i n - t o p :   2 0 p x ;   }   . t e m p l a t e - a w e s o m e c v   {   f o n t - f a m i l y :   ' H e l v e t i c a   N e u e ' ,   H e l v e t i c a ,   A r i a l ,   s a n s - s e r i f ;   c o l o r :   # 3 3 3 ;   }   . t e m p l a t e - a w e s o m e c v   . r e s u m e - h e a d e r   {   t e x t - a l i g n :   c e n t e r ;   m a r g i n - b o t t o m :   2 0 p x ;   }   . t e m p l a t e - a w e s o m e c v   . r e s u m e - n a m e   {   f o n t - s i z e :   3 2 p x ;   f o n t - w e i g h t :   7 0 0 ;   c o l o r :   # d c 3 5 4 5 ;   }   . t e m p l a t e - a w e s o m e c v   . r e s u m e - s e c t i o n   h 2   {   c o l o r :   # d c 3 5 4 5 ;   f o n t - s i z e :   1 4 p t ;   b o r d e r - b o t t o m :   2 p x   s o l i d   # d c 3 5 4 5 ;   p a d d i n g - b o t t o m :   4 p x ;   }   . t e m p l a t e - n o t i o n   {   f o n t - f a m i l y :   - a p p l e - s y s t e m ,   B l i n k M a c S y s t e m F o n t ,   ' S e g o e   U I ' ,   H e l v e t i c a ,   ' A p p l e   C o l o r   E m o j i ' ,   A r i a l ,   s a n s - s e r i f ;   c o l o r :   # 3 7 3 5 2 f ;   l i n e - h e i g h t :   1 . 5 ;   p a d d i n g :   2 0 p x   4 0 p x ;   }   . t e m p l a t e - n o t i o n   . r e s u m e - h e a d e r   {   m a r g i n - b o t t o m :   3 0 p x ;   }   . t e m p l a t e - n o t i o n   . r e s u m e - n a m e   {   f o n t - s i z e :   4 0 p x ;   f o n t - w e i g h t :   7 0 0 ;   l e t t e r - s p a c i n g :   - 0 . 0 3 e m ;   }   . t e m p l a t e - n o t i o n   . r e s u m e - s e c t i o n   h 2   {   f o n t - s i z e :   1 . 5 e m ;   f o n t - w e i g h t :   6 0 0 ;   p a d d i n g - b o t t o m :   8 p x ;   b o r d e r - b o t t o m :   1 p x   s o l i d   r g b a ( 5 5 ,   5 3 ,   4 7 ,   0 . 1 6 ) ;   }   . t e m p l a t e - n o t i o n   . r e s u m e - i t e m   {   m a r g i n - b o t t o m :   1 5 p x ;   }   . t e m p l a t e - n o t i o n   . r e s u m e - i t e m   h 3   {   f o n t - w e i g h t :   6 0 0 ;   f o n t - s i z e :   1 . 1 e m ;   }  
- 
+/* --- 5 NEW PREMIUM TEMPLATES --- */
+.template-jsonmacchiato { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.5; } .template-jsonmacchiato .resume-header { text-align: center; border-bottom: 2px solid #ccc; padding-bottom: 20px; margin-bottom: 20px; } .template-jsonmacchiato .resume-name { font-size: 2.2em; font-weight: 300; letter-spacing: 2px; } .template-jsonmacchiato .resume-section h2 { text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid #ddd; color: #555; padding-bottom: 5px; margin-bottom: 15px; } .template-harvard { font-family: 'Garamond', 'Times New Roman', serif; font-size: 11pt; color: #000; line-height: 1.2; } .template-harvard .resume-header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 10px; } .template-harvard .resume-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; } .template-harvard .resume-section h2 { font-size: 11pt; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #000; margin-top: 15px; margin-bottom: 5px; } .template-onyx { font-family: 'Roboto', 'Helvetica', sans-serif; color: #2c3e50; } .template-onyx .resume-header { background-color: #1a1a1a; color: #fff; padding: 25px; border-radius: 8px; text-align: left; } .template-onyx .resume-name { color: #fff; font-size: 28px; font-weight: 700; } .template-onyx .resume-contact, .template-onyx .resume-links { color: #aaa; } .template-onyx .resume-section h2 { color: #1a1a1a; font-weight: 700; border-bottom: 3px solid #1a1a1a; display: inline-block; padding-bottom: 2px; margin-top: 20px; } .template-awesomecv { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; } .template-awesomecv .resume-header { text-align: center; margin-bottom: 20px; } .template-awesomecv .resume-name { font-size: 32px; font-weight: 700; color: #dc3545; } .template-awesomecv .resume-section h2 { color: #dc3545; font-size: 14pt; border-bottom: 2px solid #dc3545; padding-bottom: 4px; } .template-notion { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, 'Apple Color Emoji', Arial, sans-serif; color: #37352f; line-height: 1.5; padding: 20px 40px; } .template-notion .resume-header { margin-bottom: 30px; } .template-notion .resume-name { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; } .template-notion .resume-section h2 { font-size: 1.5em; font-weight: 600; padding-bottom: 8px; border-bottom: 1px solid rgba(55, 53, 47, 0.16); } .template-notion .resume-item { margin-bottom: 15px; } .template-notion .resume-item h3 { font-weight: 600; font-size: 1.1em; }
+
