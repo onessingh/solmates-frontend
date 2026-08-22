@@ -2,7 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
-  const MAX_SUMMARY_CHARS = 500;
+  const MAX_SUMMARY_CHARS = 600;
   const JD_MAX_CHARS = 10000;
 
   const TEMPLATE_CATALOG = [
@@ -884,7 +884,7 @@
     if (templateKey === "social") {
       const location = formatLocation(personal.location);
       const contactLines = [
-        personal.phone ? `<p class="resume-contact">Mobile: ${escapeHtml(personal.phone)}</p>` : "",
+        personal.phone ? `<p class="resume-contact">Mobile: <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : "",
         personal.email ? `<p class="resume-contact">Email: ${escapeHtml(personal.email)}</p>` : "",
         location ? `<p class="resume-contact">Address: ${escapeHtml(location)}</p>` : "",
         personal.linkedin ? `<p class="resume-contact">${escapeHtml(personal.linkedin)}</p>` : "",
@@ -944,7 +944,7 @@
               <h3>Contact</h3>
               ${personal.phone ? `<div class="sidebar-item">
                 <span class="sidebar-label">Phone</span>
-                <span class="sidebar-value">${escapeHtml(personal.phone)}</span>
+                <span class="sidebar-value"><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>
               </div>` : ""}
               ${personal.email ? `<div class="sidebar-item">
                 <span class="sidebar-label">Email</span>
@@ -988,7 +988,7 @@
     const emailLink = personal.email
       ? `<a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a>`
       : "";
-    const phoneText = personal.phone ? escapeHtml(personal.phone) : "";
+    const phoneText = personal.phone ? `<a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a>` : "";
     const locationText = formatLocation(personal.location) ? escapeHtml(formatLocation(personal.location)) : "";
     const contactParts = [emailLink, phoneText, locationText].filter(Boolean).join("  \u2022  ");
 
