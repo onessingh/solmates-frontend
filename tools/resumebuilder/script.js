@@ -1790,16 +1790,16 @@
       // so mobile viewport size has ZERO effect on the captured content.
       const resumeHtml = renderResume(state.resume, state.selectedTemplate, state.sectionOrder);
       const container = document.createElement('div');
-      container.style.cssText = 'position:absolute;left:0;top:0;width:680px;background:#fff;z-index:-100;opacity:0.01;pointer-events:none;overflow:visible;';
+      container.style.cssText = 'position:absolute;left:0;top:0;width:794px;background:#fff;z-index:-100;opacity:0.01;pointer-events:none;overflow:visible;';
       container.innerHTML = resumeHtml;
       document.body.appendChild(container);
 
       const resumeEl = container.querySelector('.resume') || container;
       // Force exact A4 width, remove all conflicting styles
-      resumeEl.style.setProperty('width', '680px', 'important');
+      resumeEl.style.setProperty('width', '794px', 'important');
       resumeEl.style.setProperty('min-height', 'auto', 'important');
       resumeEl.style.setProperty('height', 'auto', 'important');
-      resumeEl.style.setProperty('padding', '0px', 'important');
+      resumeEl.style.setProperty('padding', '0 40px', 'important');
       resumeEl.style.setProperty('margin', '0', 'important');
       resumeEl.style.setProperty('box-shadow', 'none', 'important');
       resumeEl.style.setProperty('border', 'none', 'important');
@@ -1812,12 +1812,12 @@
       await new Promise(r => setTimeout(r, 500));
 
       const opt = {
-        margin: 15,
+        margin: [15, 0],
         filename: filename,
         image: { type: 'jpeg', quality: 1.0 },
         pagebreak: {
           mode: ['css', 'legacy'],
-          avoid: ['.resume-item', '.resume-header', '.resume-photo-wrap', 'p', 'h3', 'li'],
+          avoid: ['.resume-section', '.resume-item', '.resume-header', '.keep-together', 'h2', 'h3'],
         },
         html2canvas: {
           scale: 2,
@@ -1826,7 +1826,7 @@
           letterRendering: true,
           scrollY: 0,
           scrollX: 0,
-          windowWidth: 680, x: 0, y: 0,
+          windowWidth: 794, x: 0, y: 0,
           backgroundColor: '#ffffff',
           onclone: function(clonedDoc) {
             // Inside the cloned doc, also ensure no min-height restrictions
