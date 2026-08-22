@@ -15,7 +15,12 @@
     { key: "creative", name: "Creative Designer", category: "Visual", atsSafe: false },
     { key: "academic", name: "Academic CV", category: "Education", atsSafe: true },
     { key: "social", name: "Teacher", category: "Professional", atsSafe: true },
-    { key: "modernSidebar", name: "Modern Sidebar", category: "Premium", atsSafe: false }
+    { key: "modernSidebar", name: "Modern Sidebar", category: "Premium", atsSafe: false },
+    { key: "jsonmacchiato", name: "JSON Macchiato", category: "Open Source", atsSafe: true },
+    { key: "harvard", name: "Harvard Business", category: "Traditional", atsSafe: true },
+    { key: "onyx", name: "Reactive Onyx", category: "Modern", atsSafe: true },
+    { key: "awesomecv", name: "Awesome CV (LaTeX)", category: "Tech", atsSafe: true },
+    { key: "notion", name: "Notion Document", category: "Minimal", atsSafe: true }
   ];
 
   const FIELD_SUGGESTIONS = {
