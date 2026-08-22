@@ -492,7 +492,7 @@
 
   const renderInlineList = (items) => {
     if (!Array.isArray(items) || items.length === 0) return "";
-    return items.map((item) => escapeHtml(item)).join(" Â\u00B7 ");
+    return items.map((item) => escapeHtml(item)).join("  \u2022  ");
   };
 
   const renderSkillGroup = (label, items) => {
@@ -552,9 +552,9 @@
       title: "Experience", // Changed from "Work Experience" for better default
       render: (resume) => {
         const html = (resume.experience || []).map((item) => {
-          const titleLine = [item.jobTitle, item.company].filter(Boolean).join(" Â\u00B7 ");
+          const titleLine = [item.jobTitle, item.company].filter(Boolean).join("  \u2022  ");
           const range = formatRange(item.startDate, item.endDate);
-          const meta = [range, item.location].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [range, item.location].filter(Boolean).join("  \u2022  ");
           const bullets = renderList(item.bullets);
           const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
 
@@ -649,8 +649,8 @@
             `;
           }
 
-          const titleLine = [item.degree, item.institution].filter(Boolean).join(" Â\u00B7 ");
-          const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join(" Â\u00B7 ");
+          const titleLine = [item.degree, item.institution].filter(Boolean).join("  \u2022  ");
+          const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join("  \u2022  ");
           const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
           return `
             <article class="resume-item">
@@ -670,7 +670,7 @@
       title: "Certifications",
       render: (resume) => {
         const html = (resume.certifications || []).map((item) => {
-          const meta = [item.authority, item.year].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [item.authority, item.year].filter(Boolean).join("  \u2022  ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(item.name || "")}</h3>
@@ -686,7 +686,7 @@
       title: "Internships / Training",
       render: (resume) => {
         const html = (resume.internships || []).map((item) => {
-          const meta = [item.organization, item.role, item.duration].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [item.organization, item.role, item.duration].filter(Boolean).join("  \u2022  ");
           const learnings = renderList(item.learnings);
           return `
             <article class="resume-item">
@@ -738,7 +738,7 @@
       title: "Languages",
       render: (resume) => {
         const html = (resume.languages || []).map((item) => {
-          const meta = [item.language, item.level].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [item.language, item.level].filter(Boolean).join("  \u2022  ");
           return `<p class="resume-meta">${escapeHtml(meta)}</p>`;
         }).join("");
         return renderSection("Languages", html);
@@ -749,7 +749,7 @@
       title: "Publications / Research",
       render: (resume) => {
         const html = (resume.publications || []).map((item) => {
-          const meta = [item.platform, item.year].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [item.platform, item.year].filter(Boolean).join("  \u2022  ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(item.title || "")}</h3>
@@ -765,7 +765,7 @@
       title: "Volunteer Experience",
       render: (resume) => {
         const html = (resume.volunteer || []).map((item) => {
-          const meta = [item.organization, item.role].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [item.organization, item.role].filter(Boolean).join("  \u2022  ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(meta)}</h3>
@@ -781,7 +781,7 @@
       title: "Leadership Experience",
       render: (resume) => {
         const html = (resume.leadership || []).map((item) => {
-          const meta = [item.organization, item.role].filter(Boolean).join(" Â\u00B7 ");
+          const meta = [item.organization, item.role].filter(Boolean).join("  \u2022  ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(meta)}</h3>
@@ -967,8 +967,8 @@
       personal.email,
       personal.phone,
       formatLocation(personal.location)
-    ].filter(Boolean).join(" Â\u00B7 ");
-    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join(" Â\u00B7 ");
+    ].filter(Boolean).join("  \u2022  ");
+    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join("  \u2022  ");
     return `
       <article class="resume template-${escapeHtml(templateKey)}">
         <header class="resume-header">
@@ -1034,7 +1034,7 @@
     if (!dom.scoreValue || !dom.scoreFeedback) return;
     const { score, breakdown } = scoreResume(state.resume);
     dom.scoreValue.textContent = String(score);
-    dom.scoreFeedback.textContent = `Contact ${breakdown.contact}/30 Â\u00B7 Summary ${breakdown.summary}/15 Â\u00B7 Experience ${breakdown.experience}/30 Â\u00B7 Education ${breakdown.education}/15 Â\u00B7 Skills ${breakdown.skills}/10`;
+    dom.scoreFeedback.textContent = `Contact ${breakdown.contact}/30  \u2022  Summary ${breakdown.summary}/15  \u2022  Experience ${breakdown.experience}/30  \u2022  Education ${breakdown.education}/15  \u2022  Skills ${breakdown.skills}/10`;
   };
 
   const renderSectionManager = () => {
@@ -1356,7 +1356,7 @@
   };
 
   const buildHeat = (count) => {
-    if (count === 0) return { level: "none", label: "â€”" };
+    if (count === 0) return { level: "none", label: "\u2014" };
     if (count === 1) return { level: "low", label: "Low" };
     if (count <= 3) return { level: "medium", label: "Med" };
     return { level: "high", label: "High" };
@@ -1738,7 +1738,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="${cssUrl}" />
     <style>
-      /* Print window overrides â€” hide everything except the resume */
+      /* Print window overrides \u2014 hide everything except the resume */
       @media screen {
         body { background: #fff !important; margin: 0; padding: 20px; }
         .site-header, .hero, .jd-match, .builder-layout, .templates,
@@ -1781,7 +1781,7 @@
       const resumeEl = dom.preview.querySelector('.resume') || dom.preview;
       if (!resumeEl) { window.print(); return; }
 
-      if (typeof html2pdf === 'undefined') {
+      if (true) { // Always use native print for vector ATS-friendly PDF
         window.print();
         return;
       }
@@ -1789,7 +1789,7 @@
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
 
       // Build an isolated off-screen container at exactly 794px width (A4 at 96dpi).
-      // IMPORTANT: Do NOT use opacity:0 â€” html2canvas renders it blank.
+      // IMPORTANT: Do NOT use opacity:0 \u2014 html2canvas renders it blank.
       // Use position:absolute; left:-9999px to hide visually but keep it renderable.
       const wrapper = document.createElement('div');
       wrapper.style.cssText = [
@@ -1804,7 +1804,7 @@
         'z-index:99999',
       ].join(';');
 
-      // Clone resume â€” keep class names so CSS template styles still apply.
+      // Clone resume \u2014 keep class names so CSS template styles still apply.
       // Only override layout-breaking properties.
       const clone = resumeEl.cloneNode(true);
       clone.style.width = '794px';
@@ -2262,6 +2262,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
