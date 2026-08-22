@@ -161,13 +161,15 @@ async function createRoom() {
     currentSettings = course === 'MBA' ? `MBA - ${sem} - ${sub} (${qCount} Qs)` : `${topic} (${qCount} Qs)`;
     roomState.maxQs = qCount;
     
-    // 1. Build Static Fallback Pool
-    let subjects = (sub === 'All') ? QUIZ_DATA.structure["MBA"][sem] : [sub];
+    // 1. Build Static Fallback Pool (MBA only — other courses rely on AI)
     let fallbackPool = [];
-    subjects.forEach(s => { if (QUIZ_DATA.questionBank[s]) fallbackPool = fallbackPool.concat(QUIZ_DATA.questionBank[s]); });
+    if (course === 'MBA') {
+        let subjects = (sub === 'All') ? (QUIZ_DATA.structure && QUIZ_DATA.structure['MBA'] && QUIZ_DATA.structure['MBA'][sem] ? QUIZ_DATA.structure['MBA'][sem] : []) : [sub];
+        subjects.forEach(s => { if (QUIZ_DATA.questionBank && QUIZ_DATA.questionBank[s]) fallbackPool = fallbackPool.concat(QUIZ_DATA.questionBank[s]); });
+    }
     
     // 2. Try fetching from AI Connector (AI -> Offline -> Static Fallback)
-    let finalPool = fallbackPool;
+    let finalPool = [...fallbackPool];
     if (window.aiGameConnector) {
         try {
             document.getElementById('btn-create-room').textContent = "Generating AI Questions...";
@@ -206,6 +208,31 @@ async function createRoom() {
             console.error("AI Fallback Error", e);
         }
     }
+
+    // Last resort: direct chatbot API call if both static pool + AI connector failed
+    if (finalPool.length === 0) {
+        try {
+            document.getElementById('btn-create-room').textContent = "AI Generating...";
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiBase = window.PRODUCTION_API_URL || (isLocal ? 'http://localhost:3000/api' : 'https://solmates-backend-w27e.onrender.com/api');
+            const directPrompt = `[SYSTEM_OVERRIDE] Generate ${qCount} multiple choice quiz questions for the topic: "${topic}". Return ONLY a valid JSON array: [{"question": "...", "options": ["option A", "option B", "option C", "option D"], "answer": "correct option text here"}, ...]`;
+            const res = await fetch(apiBase + '/chatbot', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message: directPrompt, history: []}) });
+            const data = await res.json();
+            const rawText = data.message || data.response || '';
+            const match = rawText.match(/\[\s*\{[\s\S]*?\}\s*\]/);
+            if (match) {
+                const parsed = JSON.parse(match[0]);
+                if (parsed && parsed.length > 0) {
+                    finalPool = parsed.map(q => {
+                        let correctIdx = q.options ? q.options.findIndex(o => String(o).trim() === String(q.answer || '').trim()) : 0;
+                        if (correctIdx === -1) correctIdx = 0;
+                        return { q: q.question || q.q || 'Question', options: q.options || [], a: correctIdx };
+                    }).filter(q => q.options.length > 0);
+                }
+            }
+        } catch(e2) { console.error('Direct API fallback also failed:', e2); }
+    }
+
     document.getElementById('btn-create-room').textContent = "Create Room";
 
     if (finalPool.length === 0) { alert("No questions available for this selection."); return; }
