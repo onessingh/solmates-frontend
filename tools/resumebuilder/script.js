@@ -1788,46 +1788,42 @@
 
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
 
-      // Build an isolated container at fixed 794px width (A4 in px at 96dpi)
-      // so html2canvas never clips mobile viewport edges
+      // Build an isolated off-screen container at exactly 794px width (A4 at 96dpi).
+      // IMPORTANT: Do NOT use opacity:0 — html2canvas renders it blank.
+      // Use position:absolute; left:-9999px to hide visually but keep it renderable.
       const wrapper = document.createElement('div');
       wrapper.style.cssText = [
-        'position:fixed',
+        'position:absolute',
         'top:0',
-        'left:0',
+        'left:-9999px',
         'width:794px',
-        'min-height:1123px',
-        'z-index:-9999',
-        'opacity:0',
-        'pointer-events:none',
         'overflow:visible',
         'background:#fff',
         'padding:0',
         'margin:0',
+        'z-index:99999',
       ].join(';');
 
-      // Clone the resume element into the wrapper
+      // Clone resume — keep class names so CSS template styles still apply.
+      // Only override layout-breaking properties.
       const clone = resumeEl.cloneNode(true);
-      clone.style.cssText = [
-        'width:794px',
-        'min-height:1123px',
-        'padding:56px',    // ~15mm at 96dpi
-        'margin:0',
-        'position:static',
-        'transform:none',
-        'box-shadow:none',
-        'border:none',
-        'background:#fff',
-        'box-sizing:border-box',
-        'overflow:visible',
-        'font-size:11pt',
-      ].join(';');
+      clone.style.width = '794px';
+      clone.style.minHeight = '0';
+      clone.style.padding = '56px'; // ~15mm margins
+      clone.style.margin = '0';
+      clone.style.position = 'static';
+      clone.style.transform = 'none';
+      clone.style.boxShadow = 'none';
+      clone.style.border = 'none';
+      clone.style.background = '#fff';
+      clone.style.boxSizing = 'border-box';
+      clone.style.overflow = 'visible';
 
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
 
-      // Small delay so styles settle
-      await new Promise(r => setTimeout(r, 80));
+      // Wait for fonts/images to settle
+      await new Promise(r => setTimeout(r, 150));
 
       const opt = {
         margin: 0,
@@ -1840,15 +1836,14 @@
           letterRendering: true,
           scrollY: 0,
           scrollX: 0,
-          x: 0,
-          y: 0,
           windowWidth: 794,
           width: 794,
+          backgroundColor: '#ffffff',
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      await html2pdf().set(opt).from(wrapper).save();
+      await html2pdf().set(opt).from(clone).save();
 
       // Cleanup
       document.body.removeChild(wrapper);
