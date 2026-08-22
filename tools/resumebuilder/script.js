@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -1781,7 +1781,7 @@
       const resumeEl = dom.preview.querySelector('.resume') || dom.preview;
       if (!resumeEl) { window.print(); return; }
 
-      if (true) { // Always use native print for vector ATS-friendly PDF
+      if (typeof html2pdf === 'undefined') {
         window.print();
         return;
       }
@@ -1869,16 +1869,13 @@
       const opt = {
         margin: 0,
         filename: filename,
-        // PNG avoids a known html2canvas+jsPDF issue where any not-fully-opaque
-        // region gets flattened to BLACK when re-encoded as JPEG (the dark band
-        // seen in exports). Slightly bigger file, but no black artifacts.
-        image: { type: 'png', quality: 1.0 },
+        image: { type: 'jpeg', quality: 0.75 },
         pagebreak: {
           mode: ['css', 'legacy'],
-          avoid: ['.resume-item', '.keep-together', '.resume-header', '.resume-photo-wrap', '.resume-sidebar', 'img'],
+          avoid: ['.resume-item', '.keep-together', '.resume-header', '.resume-photo-wrap'],
         },
         html2canvas: {
-          scale: 1.5,
+          scale: 1.2,
           useCORS: true,
           allowTaint: false,
           letterRendering: true,
