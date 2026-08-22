@@ -1791,29 +1791,27 @@
         h2, h3 { break-after: avoid !important; page-break-after: avoid !important; }
         
         .ats-plain-text { display: none !important; }
-        /* Hide decorative footer HR lines — they cause extra empty pages */
         .resume-footer-lines, .resume-footer-line { display: none !important; }
-        /* ModernSidebar: body gradient extends sidebar across all pages */
-        body.template-modernSidebar {
-            background: linear-gradient(to right, #2D3748 34%, #fff 34%) !important;
+        
+        /* ModernSidebar: body::before pseudo element to ensure dark sidebar persists on all pages in PDF */
+        body.template-modernSidebar::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 34%;
+            height: 100%;
+            background: #2D3748;
+            z-index: -1;
             -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         .resume.modernSidebar { min-height: auto !important; }
-        /* ModernSidebar: body background gradient extends sidebar color across all pages */
-        body.modernSidebar, body.template-modernSidebar {
-            background: linear-gradient(to right, #2D3748 34%, #fff 34%) !important;
-            background-attachment: fixed !important;
-        }
-        .resume.modernSidebar { min-height: auto !important; }
-        .resume.modernSidebar .resume-sidebar { min-height: 100% !important; }
       }
     </style>
   </head>
   <body class="template-${escapeHtml(state.selectedTemplate)}">
     <div class="resume-preview">
-      <div class="resume ${escapeHtml(state.selectedTemplate)}">
-        ${resumeHtml}
-      </div>
+      ${resumeHtml}
     </div>
     <pre class="ats-plain-text" aria-hidden="true">${escapeHtml(atsPlainText)}</pre>
   </body>

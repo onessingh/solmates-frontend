@@ -3123,3 +3123,59 @@ html, body {  padding: 0 !important; height: auto !important; }
 }
 
 /* Teacher ul list-style override (must come after existing disc rule) */.template-social .resume-section ul { list-style: none !important; }
+
+/* Modern Sidebar: Fix Flexbox PDF Pagination Bug */
+@media print {
+  .resume.modernSidebar {
+    display: block !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  .resume.modernSidebar .resume-sidebar {
+    float: left !important;
+    width: 34% !important;
+    min-height: 100vh !important;
+  }
+  .resume.modernSidebar .resume-main {
+    float: right !important;
+    width: 65% !important;
+  }
+  .resume.modernSidebar::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+/* =========================================================
+   PERFECT SQUARES FOR PROFILE PHOTOS (v4)
+   ========================================================= */
+
+/* Make all photos 1:1 aspect ratio so object-fit: cover scales the square crop perfectly */
+
+/* 1. LinkedIn Banner: 120x120 Circle (Identical to ATS) */
+.template-pin-banner .resume-photo img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+}
+
+/* 2. Canva Modern: 120x120 Circle (Identical to ATS) */
+.template-canvamodern .resume-header .resume-photo img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+}
+
+/* 3. Aesthetic Arch: 120x120 Arch (Square bounds to prevent side cropping) */
+.template-pin-arch .resume-photo img {
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: cover !important;
+    border-radius: 60px 60px 10px 10px !important;
+    background: transparent !important;
+}
