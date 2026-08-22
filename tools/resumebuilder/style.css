@@ -2452,6 +2452,15 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 }
 
 @media print {
+  /* Advanced Pagination for Puppeteer */
+  .resume-section { page-break-inside: auto; }
+  .resume-item, .resume-header, h2, h3, h4, p, li { 
+      page-break-inside: avoid; 
+      break-inside: avoid; 
+  }
+  .resume-meta { break-after: avoid; page-break-after: avoid; }
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
+
   /* Force color preservation on everything */
   * {
     -webkit-print-color-adjust: exact !important;
@@ -2941,3 +2950,28 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 
 
 
+
+/* Modern Sidebar Fixes */
+.template-modernSidebar .resume-contact, .template-modernSidebar .resume-links, .resume.modernSidebar .resume-contact { word-break: break-all; overflow-wrap: anywhere; }
+
+/* Dark Neon Fixes */
+.template-pin-dark .resume-item h3 { color: #fff; }
+.template-pin-dark p, .template-pin-dark li { color: #ddd; }
+
+/* Kakashi Fixes */
+.template-kakashi p, .template-kakashi li, .template-kakashi .resume-meta { font-family: 'Inter', system-ui, sans-serif !important; letter-spacing: normal; }
+
+/* Creative Designer Fixes */
+.template-designer .resume-item { margin-bottom: 15px !important; padding: 10px !important; }
+
+/* Executive Fixes */
+.template-executive .resume-section { margin-bottom: 15px !important; }
+
+/* Teacher Fixes */
+.template-social table { width: 100% !important; table-layout: fixed; }
+
+/* Aesthetic Arch Fixes */
+.template-pin-arch .resume-meta { color: #666 !important; }
+
+/* Research Scientist Fixes */
+.template-researcher p, .template-researcher li { font-style: normal !important; }
