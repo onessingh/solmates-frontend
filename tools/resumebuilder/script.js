@@ -492,7 +492,7 @@
 
   const renderInlineList = (items) => {
     if (!Array.isArray(items) || items.length === 0) return "";
-    return items.map((item) => escapeHtml(item)).join(" Ãƒâ€šÃ‚Â· ");
+    return items.map((item) => escapeHtml(item)).join(" · ");
   };
 
   const renderSkillGroup = (label, items) => {
@@ -552,9 +552,9 @@
       title: "Experience", // Changed from "Work Experience" for better default
       render: (resume) => {
         const html = (resume.experience || []).map((item) => {
-          const titleLine = [item.jobTitle, item.company].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const titleLine = [item.jobTitle, item.company].filter(Boolean).join(" · ");
           const range = formatRange(item.startDate, item.endDate);
-          const meta = [range, item.location].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [range, item.location].filter(Boolean).join(" · ");
           const bullets = renderList(item.bullets);
           const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
 
@@ -649,8 +649,8 @@
             `;
           }
 
-          const titleLine = [item.degree, item.institution].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
-          const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const titleLine = [item.degree, item.institution].filter(Boolean).join(" · ");
+          const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join(" · ");
           const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
           return `
             <article class="resume-item">
@@ -670,7 +670,7 @@
       title: "Certifications",
       render: (resume) => {
         const html = (resume.certifications || []).map((item) => {
-          const meta = [item.authority, item.year].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [item.authority, item.year].filter(Boolean).join(" · ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(item.name || "")}</h3>
@@ -686,7 +686,7 @@
       title: "Internships / Training",
       render: (resume) => {
         const html = (resume.internships || []).map((item) => {
-          const meta = [item.organization, item.role, item.duration].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [item.organization, item.role, item.duration].filter(Boolean).join(" · ");
           const learnings = renderList(item.learnings);
           return `
             <article class="resume-item">
@@ -738,7 +738,7 @@
       title: "Languages",
       render: (resume) => {
         const html = (resume.languages || []).map((item) => {
-          const meta = [item.language, item.level].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [item.language, item.level].filter(Boolean).join(" · ");
           return `<p class="resume-meta">${escapeHtml(meta)}</p>`;
         }).join("");
         return renderSection("Languages", html);
@@ -749,7 +749,7 @@
       title: "Publications / Research",
       render: (resume) => {
         const html = (resume.publications || []).map((item) => {
-          const meta = [item.platform, item.year].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [item.platform, item.year].filter(Boolean).join(" · ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(item.title || "")}</h3>
@@ -765,7 +765,7 @@
       title: "Volunteer Experience",
       render: (resume) => {
         const html = (resume.volunteer || []).map((item) => {
-          const meta = [item.organization, item.role].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [item.organization, item.role].filter(Boolean).join(" · ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(meta)}</h3>
@@ -781,7 +781,7 @@
       title: "Leadership Experience",
       render: (resume) => {
         const html = (resume.leadership || []).map((item) => {
-          const meta = [item.organization, item.role].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+          const meta = [item.organization, item.role].filter(Boolean).join(" · ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(meta)}</h3>
@@ -967,8 +967,8 @@
       personal.email,
       personal.phone,
       formatLocation(personal.location)
-    ].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
-    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join(" Ãƒâ€šÃ‚Â· ");
+    ].filter(Boolean).join(" · ");
+    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join(" · ");
     return `
       <article class="resume template-${escapeHtml(templateKey)}">
         <header class="resume-header">
@@ -1034,7 +1034,7 @@
     if (!dom.scoreValue || !dom.scoreFeedback) return;
     const { score, breakdown } = scoreResume(state.resume);
     dom.scoreValue.textContent = String(score);
-    dom.scoreFeedback.textContent = `Contact ${breakdown.contact}/30 Ãƒâ€šÃ‚Â· Summary ${breakdown.summary}/15 Ãƒâ€šÃ‚Â· Experience ${breakdown.experience}/30 Ãƒâ€šÃ‚Â· Education ${breakdown.education}/15 Ãƒâ€šÃ‚Â· Skills ${breakdown.skills}/10`;
+    dom.scoreFeedback.textContent = `Contact ${breakdown.contact}/30 · Summary ${breakdown.summary}/15 · Experience ${breakdown.experience}/30 · Education ${breakdown.education}/15 · Skills ${breakdown.skills}/10`;
   };
 
   const renderSectionManager = () => {
@@ -1168,7 +1168,7 @@
   const loadState = () => {
     try {
       let raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) raw = raw.replace(/\\u00C3\\u0192\\u00C2\\u00A2\\u00C3\\u00A2\\u201A\\u00AC\\u00C3\\u201A\\u00C2\\u00A2/g, ' \u2022 ');
+      // encoding fixed at source
       if (!raw) return null;
       return JSON.parse(raw);
     } catch {
@@ -1203,8 +1203,8 @@
       benefits: []
     };
     const map = [
-      { key: "responsibilities", patterns: [/responsibilities/i, /what you['ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢]ll do/i, /what you will do/i] },
-      { key: "requirements", patterns: [/requirements/i, /qualifications/i, /what we['ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢]re looking for/i] },
+      { key: "responsibilities", patterns: [/responsibilities/i, /what you[' do/i, /what you will do/i] },
+      { key: "requirements", patterns: [/requirements/i, /qualifications/i, /what we[' looking for/i] },
       { key: "skills", patterns: [/skills/i, /technical skills/i, /core skills/i] },
       { key: "benefits", patterns: [/benefits/i, /perks/i, /what we offer/i] },
       { key: "about", patterns: [/about us/i, /company/i, /who we are/i] }
@@ -1356,7 +1356,7 @@
   };
 
   const buildHeat = (count) => {
-    if (count === 0) return { level: "none", label: "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â" };
+    if (count === 0) return { level: "none", label: "—" };
     if (count === 1) return { level: "low", label: "Low" };
     if (count <= 3) return { level: "medium", label: "Med" };
     return { level: "high", label: "High" };
@@ -1738,7 +1738,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="${cssUrl}" />
     <style>
-      /* Print window overrides ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â hide everything except the resume */
+      /* Print window overrides — hide everything except the resume */
       @media screen {
         body { background: #fff !important; margin: 0; padding: 20px; }
         .site-header, .hero, .jd-match, .builder-layout, .templates,
@@ -1767,7 +1767,7 @@
     const handleExport = async () => {
     if (isExporting) return;
     isExporting = true;
-    
+
     try {
       state.resume = readFormState();
       const errors = validateResume(state.resume);
@@ -1778,75 +1778,86 @@
 
       updatePreview();
 
-      const capture = dom.preview.querySelector('.resume') || dom.preview;
-      
-      // CRITICAL FIX: Save original overflow state and temporarily remove it to ensure full height capture
-      const origPreviewOverflow = dom.preview.style.overflow;
-      const origBodyOverflow = document.body.style.overflow;
-      
-      dom.preview.style.overflow = 'visible';
-      document.body.style.overflow = 'visible';
-      document.body.classList.add('is-exporting');
-      const originalScrollY = window.scrollY;
-      window.scrollTo(0, 0);
+      const resumeEl = dom.preview.querySelector('.resume') || dom.preview;
+      if (!resumeEl) { window.print(); return; }
+
+      if (typeof html2pdf === 'undefined') {
+        window.print();
+        return;
+      }
 
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
+
+      // Build an isolated container at fixed 794px width (A4 in px at 96dpi)
+      // so html2canvas never clips mobile viewport edges
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = [
+        'position:fixed',
+        'top:0',
+        'left:0',
+        'width:794px',
+        'min-height:1123px',
+        'z-index:-9999',
+        'opacity:0',
+        'pointer-events:none',
+        'overflow:visible',
+        'background:#fff',
+        'padding:0',
+        'margin:0',
+      ].join(';');
+
+      // Clone the resume element into the wrapper
+      const clone = resumeEl.cloneNode(true);
+      clone.style.cssText = [
+        'width:794px',
+        'min-height:1123px',
+        'padding:56px',    // ~15mm at 96dpi
+        'margin:0',
+        'position:static',
+        'transform:none',
+        'box-shadow:none',
+        'border:none',
+        'background:#fff',
+        'box-sizing:border-box',
+        'overflow:visible',
+        'font-size:11pt',
+      ].join(';');
+
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
+
+      // Small delay so styles settle
+      await new Promise(r => setTimeout(r, 80));
+
       const opt = {
         margin: 0,
         filename: filename,
         image: { type: 'jpeg', quality: 1.0 },
         pagebreak: { mode: ['css', 'legacy'], avoid: '.resume-item' },
-                html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            letterRendering: true, 
-            scrollY: 0,
-            scrollX: 0,
-            onclone: function(clonedDoc) {
-                const el = clonedDoc.querySelector('.resume');
-                if (el) {
-                    el.style.width = '210mm';
-                    el.style.margin = '0';
-                    el.style.padding = '15mm';
-                    el.style.position = 'absolute';
-                    el.style.top = '0';
-                    el.style.left = '0';
-                    el.style.transform = 'none';
-                    el.style.boxSizing = 'border-box';
-                    
-                    const container = clonedDoc.getElementById('resume-preview') || clonedDoc.querySelector('.resume-preview');
-                    if (container) {
-                        container.style.padding = '0';
-                        container.style.margin = '0';
-                        container.style.transform = 'none';
-                        container.style.overflow = 'visible';
-                        container.style.position = 'static';
-                    }
-                    
-                    clonedDoc.body.style.padding = '0';
-                    clonedDoc.body.style.margin = '0';
-                }
-            }
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          scrollY: 0,
+          scrollX: 0,
+          x: 0,
+          y: 0,
+          windowWidth: 794,
+          width: 794,
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-      
-      if (typeof html2pdf !== 'undefined') {
-          await html2pdf().set(opt).from(capture).save();
-      } else {
-          window.print();
-      }
 
-      // Restore styles
-      dom.preview.style.overflow = origPreviewOverflow;
-      document.body.style.overflow = origBodyOverflow;
-      document.body.classList.remove('is-exporting');
-      window.scrollTo(0, originalScrollY);
+      await html2pdf().set(opt).from(wrapper).save();
+
+      // Cleanup
+      document.body.removeChild(wrapper);
 
     } finally {
       isExporting = false;
     }
   };
+
 
   const cacheDom = () => {
     dom.fullName = document.getElementById("full-name");
@@ -2208,6 +2219,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
