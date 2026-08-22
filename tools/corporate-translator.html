@@ -363,7 +363,7 @@ Input to translate: "${input}"`;
           let rawText = data.message || data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
           
           // Check if the AI refused the prompt due to strict filters (trigger dictionary fallback instead)
-          if (/sorry|can['’]t help|cannot help|unable to|as an ai/i.test(rawText)) {
+          if (/as an ai language model|i cannot fulfill|i cannot generate|i cannot translate|i am programmed to|against my safety guidelines/i.test(rawText)) {
               throw new Error("AI Refusal detected, falling back to local dictionary");
           }
 

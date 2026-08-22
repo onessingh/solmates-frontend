@@ -279,7 +279,7 @@ Option 3: [Your third unique generated excuse based on context]`;
                     const data = await res.json();
                     
                     if (data.success && data.message) {
-                        if (/sorry|can['’]t help|cannot help|unable to|as an ai/i.test(data.message)) {
+                        if (/as an ai language model|i cannot fulfill|i cannot generate|i cannot translate|i am programmed to|against my safety guidelines/i.test(data.message)) {
                             throw new Error('AI Refusal detected, falling back to local fallback');
                         }
                         resultText = data.message;
