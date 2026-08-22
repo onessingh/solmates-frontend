@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
   --font-display: "Poppins", "Segoe UI", Arial, sans-serif;
 
@@ -598,7 +598,7 @@ textarea:focus {
     flex-direction: row !important;
     align-items: stretch !important;
     height: auto !important;
-    min-height: 296mm !important; break-after: avoid !important; break-inside: avoid !important;
+    min-height: 296mm !important; break-after: avoid !important; 
     width: 210mm !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -1233,7 +1233,7 @@ textarea:focus {
   margin-bottom: var(--space-3);
 }
 
-/* div replacing <header> inside resume items â€” avoids @media print header hiding */
+/* div replacing <header> inside resume items ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â avoids @media print header hiding */
 .resume-item-header {
   display: block;
   margin-bottom: var(--space-1);
@@ -2340,9 +2340,9 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin: 0;
   }
 
-  /* â”€â”€ HIDE everything that is NOT the resume â”€â”€ */
+  /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ HIDE everything that is NOT the resume ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   /* IMPORTANT: Do NOT use bare "header"/"footer" tags here.
-     renderResume wraps job title/dates in <header> inside .resume-item â€”
+     renderResume wraps job title/dates in <header> inside .resume-item ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â
      hiding the tag globally makes job title, company, dates disappear in print. */
   .wizard-header, .wizard-nav, .site-header, .hero, .jd-match,
   .progress-stepper, .templates,
@@ -2357,20 +2357,20 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     display: none !important;
   }
 
-  /* .resume-item-header is a div â€” always visible, no tag conflict */
+  /* .resume-item-header is a div ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â always visible, no tag conflict */
   .resume-item-header {
     display: block !important;
     visibility: visible !important;
   }
 
-  /* â”€â”€ RESET layout wrappers so resume fills the page â”€â”€ */
+  /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ RESET layout wrappers so resume fills the page ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
     width: 210mm !important;
     height: auto !important;
-    min-height: 296mm !important; break-after: avoid !important; break-inside: avoid !important;
+    min-height: 296mm !important; break-after: avoid !important; 
     overflow: visible !important;
   }
 
@@ -2394,11 +2394,11 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     transform: none !important; /* Forces 1:1 scale for print */
   }
 
-  /* â”€â”€ THE RESUME ITSELF â”€â”€ */
+  /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ THE RESUME ITSELF ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   .resume {
     display: block !important;
     width: 210mm !important; /* Exact A4 width */
-    min-height: 296mm !important; break-after: avoid !important; break-inside: avoid !important; /* Exact A4 height */
+    min-height: 296mm !important; break-after: avoid !important;  /* Exact A4 height */
     margin: 0 auto !important;
     padding: 15mm !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
     box-shadow: none !important;
@@ -2415,7 +2415,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     align-items: stretch !important;
     padding: 0 !important;
     overflow: visible !important;
-    min-height: 296mm !important; break-after: avoid !important; break-inside: avoid !important;
+    min-height: 296mm !important; break-after: avoid !important; 
   }
 
   .resume.modernSidebar .resume-sidebar {
@@ -2453,13 +2453,12 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 
   .resume-item {
     display: block !important;
-    break-inside: avoid !important;
     page-break-inside: avoid !important;
+    break-inside: avoid !important;
     overflow: visible !important;
     margin-bottom: 6px !important;
   }
 
-  /* Lists and paragraphs inside sections must be visible */
   .resume-section ul,
   .resume-section ol,
   .resume-section p,
@@ -2498,7 +2497,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     padding-bottom: 0 !important;
   }
 
-  /* â”€â”€ TEMPLATE-SPECIFIC OVERRIDES â”€â”€ */
+  /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TEMPLATE-SPECIFIC OVERRIDES ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   .template-social .resume-header { background: #dbe9f9 !important; }
   .template-social .resume-name { color: #0d2366 !important; }
   .template-social .resume-headline { color: #1a1a3e !important; border-top: 1px solid #a0b8d8 !important; }
@@ -2807,3 +2806,6 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 .template-pin-pink .resume-section h2 { font-size: 16px; font-weight: 800; text-transform: uppercase; color: #be185d; border-bottom: 2px dashed #f9a8d4; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; }
 .template-pin-pink .resume-item h3 { font-size: 16px; font-weight: bold; color: #831843; }
 .template-pin-pink .resume-meta { font-size: 11px; color: #f472b6; font-weight: bold; }
+
+
+
