@@ -2741,3 +2741,69 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 .template-ca .resume-item h3 { color: #1a2e1a; font-weight: 600; font-size: 13px; }
 .template-ca .resume-meta { color: #5a7a5a; font-size: 10.5px; }
 .template-ca li { font-size: 12px; line-height: 1.5; }
+/* =============================================
+   PINTEREST: BEIGE ARCH (Aesthetic Minimalist)
+   ============================================= */
+.template-pin-arch { background-color: #fbf9f6; font-family: 'Georgia', serif; color: #4a4a4a; padding: 30px; }
+.template-pin-arch .resume-header { text-align: center; margin-bottom: 30px; }
+.template-pin-arch .resume-photo { margin-bottom: 15px; }
+.template-pin-arch .resume-photo img { border-radius: 100px 100px 10px 10px; width: 110px; height: 140px; object-fit: cover; border: 3px solid #e5e0d8; }
+.template-pin-arch .resume-name { font-size: 28px; font-weight: normal; letter-spacing: 3px; color: #2c2c2c; text-transform: uppercase; }
+.template-pin-arch .resume-headline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-top: 8px; }
+.template-pin-arch .resume-contact { font-size: 10px; color: #888; margin-top: 8px; }
+.template-pin-arch .resume-section { margin-bottom: 20px; }
+.template-pin-arch .resume-section h2 { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: #bcaaa4; border-bottom: 1px solid #e5e0d8; padding-bottom: 8px; margin-bottom: 15px; text-align: center; }
+.template-pin-arch .resume-item h3 { font-size: 14px; font-weight: bold; color: #4a4a4a; }
+.template-pin-arch .resume-meta { font-size: 11px; font-style: italic; color: #999; }
+
+/* =============================================
+   PINTEREST: LINKEDIN BANNER
+   ============================================= */
+.template-pin-banner { font-family: 'Arial', sans-serif; color: #333; background: #fff; }
+.template-pin-banner .resume-header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); padding: 50px 20px 20px; text-align: center; color: white; position: relative; margin-bottom: 40px; border-radius: 8px 8px 0 0; }
+.template-pin-banner .resume-photo { margin-top: -70px; margin-bottom: 15px; }
+.template-pin-banner .resume-photo img { border-radius: 50%; width: 120px; height: 120px; border: 5px solid #fff; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.template-pin-banner .resume-name { font-size: 32px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+.template-pin-banner .resume-headline { font-size: 14px; color: #bfdbfe; font-weight: 500; }
+.template-pin-banner .resume-contact { font-size: 12px; color: #dbeafe; margin-top: 8px; }
+.template-pin-banner .resume-section h2 { font-size: 16px; font-weight: 800; text-transform: uppercase; color: #1e3a8a; border-bottom: 2px solid #bfdbfe; padding-bottom: 5px; margin-top: 20px; margin-bottom: 15px; }
+.template-pin-banner .resume-item h3 { font-size: 16px; font-weight: bold; color: #1e40af; }
+.template-pin-banner .resume-meta { font-size: 12px; color: #64748b; font-weight: 500; }
+
+/* =============================================
+   PINTEREST: DARK NEON
+   ============================================= */
+.template-pin-dark { background-color: #121212; color: #e0e0e0; font-family: 'Courier New', Courier, monospace; padding: 25px; }
+.template-pin-dark .resume-header { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 25px; display: flex; flex-direction: column; align-items: flex-start; }
+.template-pin-dark .resume-photo img { border-radius: 8px; border: 2px solid #00ffcc; filter: grayscale(100%) contrast(1.2); }
+.template-pin-dark .resume-name { font-size: 36px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -1px; }
+.template-pin-dark .resume-headline { font-size: 14px; color: #00ffcc; font-weight: bold; margin-top: 5px; }
+.template-pin-dark .resume-contact { font-size: 12px; color: #aaa; margin-top: 10px; }
+.template-pin-dark .resume-section h2 { font-size: 18px; font-weight: bold; text-transform: uppercase; color: #00ffcc; margin-top: 25px; margin-bottom: 15px; text-shadow: 0 0 5px rgba(0,255,204,0.3); }
+.template-pin-dark .resume-item h3 { font-size: 15px; font-weight: bold; color: #fff; }
+.template-pin-dark .resume-meta { font-size: 12px; color: #888; }
+
+/* =============================================
+   PINTEREST: BOLD YELLOW & BLACK
+   ============================================= */
+.template-pin-yellow { font-family: 'Helvetica Neue', Helvetica, sans-serif; color: #111; }
+.template-pin-yellow .resume-header { background-color: #facc15; padding: 35px 25px; border-bottom: 10px solid #111; margin-bottom: 30px; }
+.template-pin-yellow .resume-name { font-size: 40px; font-weight: 900; color: #111; text-transform: uppercase; letter-spacing: -1px; line-height: 1; }
+.template-pin-yellow .resume-headline { font-size: 16px; font-weight: 700; color: #111; margin-top: 10px; text-transform: uppercase; }
+.template-pin-yellow .resume-contact { font-size: 12px; font-weight: 500; color: #333; margin-top: 10px; }
+.template-pin-yellow .resume-section h2 { display: inline-block; background: #111; color: #facc15; padding: 6px 15px; font-size: 14px; font-weight: 900; text-transform: uppercase; margin-top: 20px; margin-bottom: 15px; letter-spacing: 1px; }
+.template-pin-yellow .resume-item h3 { font-size: 18px; font-weight: 800; color: #111; }
+.template-pin-yellow .resume-meta { font-size: 12px; font-weight: 600; color: #555; }
+
+/* =============================================
+   PINTEREST: PINK GRID AESTHETIC
+   ============================================= */
+.template-pin-pink { font-family: 'Trebuchet MS', sans-serif; color: #500724; background-image: linear-gradient(#fbcfe8 1px, transparent 1px), linear-gradient(90deg, #fbcfe8 1px, transparent 1px); background-size: 20px 20px; padding: 30px; background-color: #fff; }
+.template-pin-pink .resume-header { border-left: 6px solid #f472b6; padding-left: 20px; margin-bottom: 30px; }
+.template-pin-pink .resume-photo img { border-radius: 50%; border: 3px dashed #f472b6; padding: 4px; }
+.template-pin-pink .resume-name { font-size: 32px; font-weight: 800; color: #db2777; }
+.template-pin-pink .resume-headline { font-size: 14px; font-weight: bold; color: #f472b6; margin-top: 5px; }
+.template-pin-pink .resume-contact { font-size: 11px; color: #9d174d; margin-top: 10px; }
+.template-pin-pink .resume-section h2 { font-size: 16px; font-weight: 800; text-transform: uppercase; color: #be185d; border-bottom: 2px dashed #f9a8d4; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; }
+.template-pin-pink .resume-item h3 { font-size: 16px; font-weight: bold; color: #831843; }
+.template-pin-pink .resume-meta { font-size: 11px; color: #f472b6; font-weight: bold; }

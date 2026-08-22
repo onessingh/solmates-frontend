@@ -40,7 +40,12 @@
     { key: "researcher", name: "Research Scientist", category: "Academic", atsSafe: true },
     { key: "nurse", name: "Nurse / Healthcare", category: "Healthcare", atsSafe: true },
     { key: "designer", name: "Brand Designer", category: "Creative", atsSafe: false },
-    { key: "ca", name: "Chartered Accountant", category: "Finance", atsSafe: true }
+    { key: "ca", name: "Chartered Accountant", category: "Finance", atsSafe: true },
+    { key: "pin-arch", name: "Aesthetic Arch", category: "Pinterest", atsSafe: false },
+    { key: "pin-banner", name: "LinkedIn Style", category: "Pinterest", atsSafe: true },
+    { key: "pin-dark", name: "Dark Neon", category: "Pinterest", atsSafe: false },
+    { key: "pin-yellow", name: "Bold Yellow", category: "Pinterest", atsSafe: true },
+    { key: "pin-pink", name: "Pink Grid", category: "Pinterest", atsSafe: false }
   ];
 
   const FIELD_SUGGESTIONS = {
