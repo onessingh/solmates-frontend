@@ -1790,7 +1790,7 @@
       // so mobile viewport size has ZERO effect on the captured content.
       const resumeHtml = renderResume(state.resume, state.activeTemplate, state.sectionOrder);
       const container = document.createElement('div');
-      container.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;background:#fff;z-index:-1;overflow:visible;';
+      container.style.cssText = 'position:absolute;left:0;top:0;width:794px;background:#fff;z-index:-100;opacity:0.01;pointer-events:none;overflow:visible;';
       container.innerHTML = resumeHtml;
       document.body.appendChild(container);
 
@@ -1826,7 +1826,7 @@
           letterRendering: true,
           scrollY: 0,
           scrollX: 0,
-          windowWidth: 794,
+          windowWidth: 794, x: 0, y: 0,
           backgroundColor: '#ffffff',
           onclone: function(clonedDoc) {
             // Inside the cloned doc, also ensure no min-height restrictions
