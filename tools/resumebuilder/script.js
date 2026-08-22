@@ -1738,21 +1738,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="${cssUrl}" />
     <style>
-      /* Print window overrides \u2014 hide everything except the resume */
-      @media screen {
-        body { background: #fff !important; margin: 0; padding: 20px; }
+      @page { size: A4; margin: 15mm !important; }
+      @media screen, print {
+        body { background: #fff !important; margin: 0; padding: 0; box-sizing: border-box; }
         .site-header, .hero, .jd-match, .builder-layout, .templates,
         .form-panel, .preview-header, .score-card, .field-suggestion-box,
         .modal, .preview-actions, .back-link, .progress-stepper { display: none !important; }
-        .resume-preview { border: none !important; padding: 0 !important; }
+        
+        .resume-preview { border: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
+        .resume { 
+            width: 100% !important; 
+            max-width: 100% !important; 
+            padding: 0 !important; 
+            margin: 0 !important; 
+            border: none !important; 
+            box-shadow: none !important; 
+        }
+        
+        /* Bulletproof pagination */
+        .resume-section { page-break-inside: auto !important; break-inside: auto !important; margin-bottom: 20px; }
+        .resume-item, .resume-header, h2, h3, h4, p, li { 
+            page-break-inside: avoid !important; 
+            break-inside: avoid !important; 
+        }
+        .resume-meta { break-after: avoid !important; page-break-after: avoid !important; }
+        h2, h3 { break-after: avoid !important; page-break-after: avoid !important; }
+        
+        .ats-plain-text { display: none !important; }
       }
-      @page { size: A4; margin: 15mm; }
-      .ats-plain-text { display: none !important; }
     </style>
   </head>
   <body class="template-${escapeHtml(state.selectedTemplate)}">
     <div class="resume-preview">
-      ${resumeHtml}
+      <div class="resume ${escapeHtml(state.selectedTemplate)}">
+        ${resumeHtml}
+      </div>
     </div>
     <pre class="ats-plain-text" aria-hidden="true">${escapeHtml(atsPlainText)}</pre>
   </body>
@@ -1793,14 +1813,14 @@
     let animFrame;
     const startProgressAnim = () => {
       const startTime = Date.now();
-      const duration = 10000; // 10 seconds
+      const duration = 25000; // 25 seconds for slow perceived generation
       const startPct = 5;
-      const endPct = 80;
+      const endPct = 85;
       const tick = () => {
         const elapsed = Date.now() - startTime;
         const fraction = Math.min(elapsed / duration, 1);
-        // Ease-out curve
-        const eased = 1 - Math.pow(1 - fraction, 2);
+        // Slower ease-out curve (cubic)
+        const eased = 1 - Math.pow(1 - fraction, 3);
         const pct = Math.round(startPct + (endPct - startPct) * eased);
         setProgress(pct);
         if (fraction < 1) animFrame = requestAnimationFrame(tick);
