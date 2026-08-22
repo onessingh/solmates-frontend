@@ -1778,79 +1778,90 @@
 
       updatePreview();
 
-      const resumeHtml = renderResume(state.resume, state.activeTemplate, state.sectionOrder);
+      if (typeof html2pdf === 'undefined') {
+        alert('PDF library not loaded. Please refresh and try again.');
+        return;
+      }
+
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
 
-      // Build a complete standalone HTML doc using the existing buildPrintHtml function.
-      // This produces real text (vector), NOT a screenshot — so:
-      //   ✅ ATS scanners can read every word
-      //   ✅ File size is ~50-200 KB (vs 30 MB image-based)
-      //   ✅ Perfect A4 margins via @page CSS — no left-cut, no right-gap
-      let htmlDoc = buildPrintHtml(resumeHtml);
+      // Render fresh HTML into an off-screen container at exactly 794px (A4 width at 96dpi).
+      // We use renderResume() directly instead of cloning the live DOM element,
+      // so mobile viewport size has ZERO effect on the captured content.
+      const resumeHtml = renderResume(state.resume, state.activeTemplate, state.sectionOrder);
+      const container = document.createElement('div');
+      container.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;background:#fff;z-index:-1;overflow:visible;';
+      container.innerHTML = resumeHtml;
+      document.body.appendChild(container);
 
-      // Inject a @page rule + auto-print trigger into the <head>
-      htmlDoc = htmlDoc.replace('</head>', `
-  <style>
-    @page {
-      size: A4 portrait;
-      margin: 15mm;
-    }
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    body { margin: 0 !important; padding: 0 !important; }
-    .resume {
-      width: 100% !important;
-      max-width: 100% !important;
-      min-height: auto !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      box-shadow: none !important;
-      border: none !important;
-    }
-    h2 { break-after: avoid !important; page-break-after: avoid !important; }
-    .resume-item { break-inside: avoid !important; page-break-inside: avoid !important; }
-  </style>
-  <script>
-    window.onload = function() {
-      setTimeout(function() { window.print(); }, 400);
-    };
-  </script>
-</head>`);
+      const resumeEl = container.querySelector('.resume') || container;
+      // Force exact A4 width, remove all conflicting styles
+      resumeEl.style.setProperty('width', '794px', 'important');
+      resumeEl.style.setProperty('min-height', 'auto', 'important');
+      resumeEl.style.setProperty('height', 'auto', 'important');
+      resumeEl.style.setProperty('padding', '40px', 'important');
+      resumeEl.style.setProperty('margin', '0', 'important');
+      resumeEl.style.setProperty('box-shadow', 'none', 'important');
+      resumeEl.style.setProperty('border', 'none', 'important');
+      resumeEl.style.setProperty('box-sizing', 'border-box', 'important');
+      resumeEl.style.setProperty('overflow', 'visible', 'important');
+      resumeEl.style.setProperty('transform', 'none', 'important');
 
-      // Open in a hidden iframe and trigger print
-      const blob = new Blob([htmlDoc], { type: 'text/html; charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+      // Wait for Google Fonts to load inside this fresh container
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      await new Promise(r => setTimeout(r, 500));
 
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'position:fixed;top:0;left:-9999px;width:794px;height:1123px;border:none;';
-      iframe.src = url;
-      document.body.appendChild(iframe);
-
-      iframe.onload = () => {
-        // Small delay for fonts to load inside the iframe
-        setTimeout(() => {
-          try {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-          } catch(e) {
-            // Fallback: open in new tab if iframe print blocked
-            window.open(url, '_blank');
+      const opt = {
+        margin: 0,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.80 },
+        pagebreak: {
+          mode: ['css', 'legacy'],
+          avoid: ['.resume-item', '.resume-header', '.resume-photo-wrap'],
+        },
+        html2canvas: {
+          scale: 1.5,
+          useCORS: true,
+          allowTaint: true,
+          letterRendering: true,
+          scrollY: 0,
+          scrollX: 0,
+          windowWidth: 794,
+          backgroundColor: '#ffffff',
+          onclone: function(clonedDoc) {
+            // Inside the cloned doc, also ensure no min-height restrictions
+            const el = clonedDoc.querySelector('.resume');
+            if (el) {
+              el.style.setProperty('min-height', 'auto', 'important');
+              el.style.setProperty('height', 'auto', 'important');
+              el.style.setProperty('overflow', 'visible', 'important');
+            }
+            // Add page break helpers to all headings and list items
+            clonedDoc.querySelectorAll('h2, h3').forEach(h => {
+              h.style.setProperty('break-after', 'avoid', 'important');
+              h.style.setProperty('page-break-after', 'avoid', 'important');
+            });
+            clonedDoc.querySelectorAll('.resume-item, li').forEach(el => {
+              el.style.setProperty('break-inside', 'avoid', 'important');
+              el.style.setProperty('page-break-inside', 'avoid', 'important');
+            });
           }
-          // Cleanup after print dialog closes
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-            URL.revokeObjectURL(url);
-          }, 3000);
-        }, 600);
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
+      await html2pdf().set(opt).from(resumeEl).save();
+
+    } catch(err) {
+      console.error('PDF export failed:', err);
+      alert('PDF export failed. Please try again.');
     } finally {
+      // Cleanup the off-screen container
+      const old = document.querySelector('div[style*="left:-10000px"]');
+      if (old) document.body.removeChild(old);
       isExporting = false;
     }
   };
-
-
-
-
 
 
   const cacheDom = () => {
