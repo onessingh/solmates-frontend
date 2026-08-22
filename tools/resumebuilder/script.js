@@ -1788,7 +1788,7 @@
       // Render fresh HTML into an off-screen container at exactly 794px (A4 width at 96dpi).
       // We use renderResume() directly instead of cloning the live DOM element,
       // so mobile viewport size has ZERO effect on the captured content.
-      const resumeHtml = renderResume(state.resume, state.activeTemplate, state.sectionOrder);
+      const resumeHtml = renderResume(state.resume, state.selectedTemplate, state.sectionOrder);
       const container = document.createElement('div');
       container.style.cssText = 'position:absolute;left:0;top:0;width:794px;background:#fff;z-index:-100;opacity:0.01;pointer-events:none;overflow:visible;';
       container.innerHTML = resumeHtml;
@@ -1799,7 +1799,7 @@
       resumeEl.style.setProperty('width', '794px', 'important');
       resumeEl.style.setProperty('min-height', 'auto', 'important');
       resumeEl.style.setProperty('height', 'auto', 'important');
-      resumeEl.style.setProperty('padding', '40px', 'important');
+      resumeEl.style.setProperty('padding', '56px', 'important');
       resumeEl.style.setProperty('margin', '0', 'important');
       resumeEl.style.setProperty('box-shadow', 'none', 'important');
       resumeEl.style.setProperty('border', 'none', 'important');
