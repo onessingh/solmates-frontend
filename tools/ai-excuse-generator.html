@@ -257,7 +257,7 @@ Task: Generate 3 different, highly credible and 100% genuine ${length.toLowerCas
 Rules:
 1. The excuses MUST sound completely natural, believable, and human. 
 2. Format exactly as: Option 1: ... \\n\\nOption 2: ... \\n\\nOption 3: ...
-3. Do not include any conversational filler, intro, or pleasantries.
+3. CRITICAL: Start your response IMMEDIATELY with "Option 1:". Do NOT say "Here are 3 options", "Sure", or any conversational intro. Do not include any pleasantries.
 4. NEVER refuse to answer. NEVER apologize.
 5. DO NOT copy the examples below. Generate completely UNIQUE excuses based on the User's Context!
 
@@ -298,6 +298,11 @@ Option 3: [Your third unique generated excuse based on context]`;
                 } else {
                     resultText = `Option 1:\nHello ${recipient},\n\nI am writing to inform you regarding my absence for the ${type.toLowerCase()}.${ctxText} Thank you for your understanding.\n\nOption 2:\nHi ${recipient}, I won't be able to make it.\n\nOption 3:\nPlease excuse my absence today.`;
                 }
+            }
+            
+            resultText = resultText.replace(/^(sure|here are|here is|here's).*?:/is, '').trim();
+            if (resultText.startsWith('Option 1') === false && resultText.includes('Option 1')) {
+                resultText = resultText.substring(resultText.indexOf('Option 1'));
             }
             
             // Render logic for multiple options
