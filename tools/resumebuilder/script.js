@@ -942,18 +942,26 @@
             
             <div class="sidebar-section">
               <h3>Contact</h3>
-              <div class="sidebar-item">
+              ${personal.phone ? `<div class="sidebar-item">
                 <span class="sidebar-label">Phone</span>
-                <span class="sidebar-value">${personal.phone || "123-456-7890"}</span>
-              </div>
-              <div class="sidebar-item">
+                <span class="sidebar-value">${escapeHtml(personal.phone)}</span>
+              </div>` : ""}
+              ${personal.email ? `<div class="sidebar-item">
                 <span class="sidebar-label">Email</span>
-                <span class="sidebar-value">${personal.email || "hello@reallygreatsite.com"}</span>
-              </div>
-              <div class="sidebar-item">
+                <span class="sidebar-value"><a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>
+              </div>` : ""}
+              ${location ? `<div class="sidebar-item">
                 <span class="sidebar-label">Address</span>
-                <span class="sidebar-value">${location || "123 Anywhere St., Any City"}</span>
-              </div>
+                <span class="sidebar-value">${escapeHtml(location)}</span>
+              </div>` : ""}
+              ${personal.linkedin ? `<div class="sidebar-item">
+                <span class="sidebar-label">LinkedIn</span>
+                <span class="sidebar-value"><a href="${/^https?:\/\//i.test(personal.linkedin) ? escapeHtml(personal.linkedin) : "https://" + escapeHtml(personal.linkedin)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.linkedin)}</a></span>
+              </div>` : ""}
+              ${personal.portfolio ? `<div class="sidebar-item">
+                <span class="sidebar-label">Portfolio</span>
+                <span class="sidebar-value"><a href="${/^https?:\/\//i.test(personal.portfolio) ? escapeHtml(personal.portfolio) : "https://" + escapeHtml(personal.portfolio)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.portfolio)}</a></span>
+              </div>` : ""}
             </div>
 
             ${sidebarHtml}
