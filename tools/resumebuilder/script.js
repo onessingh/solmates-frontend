@@ -1785,6 +1785,7 @@
       
       dom.preview.style.overflow = 'visible';
       document.body.style.overflow = 'visible';
+      document.body.classList.add('is-exporting');
       const originalScrollY = window.scrollY;
       window.scrollTo(0, 0);
 
@@ -1794,12 +1795,37 @@
         filename: filename,
         image: { type: 'jpeg', quality: 1.0 },
         pagebreak: { mode: ['css', 'legacy'], avoid: '.resume-item' },
-        html2canvas: { 
+                html2canvas: { 
             scale: 2, 
             useCORS: true, 
             letterRendering: true, 
             scrollY: 0,
-            windowWidth: capture.scrollWidth
+            scrollX: 0,
+            onclone: function(clonedDoc) {
+                const el = clonedDoc.querySelector('.resume');
+                if (el) {
+                    el.style.width = '210mm';
+                    el.style.margin = '0';
+                    el.style.padding = '15mm';
+                    el.style.position = 'absolute';
+                    el.style.top = '0';
+                    el.style.left = '0';
+                    el.style.transform = 'none';
+                    el.style.boxSizing = 'border-box';
+                    
+                    const container = clonedDoc.getElementById('resume-preview') || clonedDoc.querySelector('.resume-preview');
+                    if (container) {
+                        container.style.padding = '0';
+                        container.style.margin = '0';
+                        container.style.transform = 'none';
+                        container.style.overflow = 'visible';
+                        container.style.position = 'static';
+                    }
+                    
+                    clonedDoc.body.style.padding = '0';
+                    clonedDoc.body.style.margin = '0';
+                }
+            }
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
@@ -1813,6 +1839,7 @@
       // Restore styles
       dom.preview.style.overflow = origPreviewOverflow;
       document.body.style.overflow = origBodyOverflow;
+      document.body.classList.remove('is-exporting');
       window.scrollTo(0, originalScrollY);
 
     } finally {
@@ -2180,6 +2207,9 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
+
+
 
 
 

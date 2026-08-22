@@ -118,7 +118,7 @@ body.is-exporting #resume-preview {
   border: none !important;
   transform: none !important;
   padding: 0 !important;
-  margin: 0 auto !important;
+  margin: 0 !important;
   width: 210mm !important; /* Force A4 Width */
   max-width: none !important;
   height: auto !important;
@@ -2399,7 +2399,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     display: block !important;
     width: 210mm !important; /* Exact A4 width */
     min-height: 296mm !important; break-after: avoid !important;  /* Exact A4 height */
-    margin: 0 auto !important;
+    margin: 0 !important;
     padding: 15mm !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
     box-shadow: none !important;
     border: none !important;
@@ -2806,6 +2806,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 .template-pin-pink .resume-section h2 { font-size: 16px; font-weight: 800; text-transform: uppercase; color: #be185d; border-bottom: 2px dashed #f9a8d4; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; }
 .template-pin-pink .resume-item h3 { font-size: 16px; font-weight: bold; color: #831843; }
 .template-pin-pink .resume-meta { font-size: 11px; color: #f472b6; font-weight: bold; }
+
 
 
 
