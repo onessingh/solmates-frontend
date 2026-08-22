@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
   --font-display: "Poppins", "Segoe UI", Arial, sans-serif;
 
@@ -2589,10 +2589,15 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 .template-chiron .resume-name { font-size: 36px; color: #2b6cb0; font-style: italic; }
 .template-chiron .resume-section h2 { font-size: 20px; border-bottom: 2px solid #2b6cb0; color: #2c5282; margin-top: 20px; }
 
-.template-jsonflat { font-family: sans-serif; color: #444; }
+.template-jsonflat { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #444; }
 .template-jsonflat .resume-header { background: #2c3e50; color: #ecf0f1; padding: 40px 20px; text-align: center; margin-bottom: 30px; }
 .template-jsonflat .resume-name { font-weight: 300; font-size: 38px; color: #ecf0f1; text-transform: uppercase; letter-spacing: 3px; }
-.template-jsonflat .resume-section h2 { color: #e74c3c; font-weight: 700; border-bottom: 2px solid #ecf0f1; }
+.template-jsonflat .resume-headline { color: #bdc3c7; font-size: 1rem; margin-top: 6px; }
+.template-jsonflat .resume-contact { color: #bdc3c7; font-size: 0.85rem; margin-top: 4px; }
+.template-jsonflat .resume-links { color: #95a5a6; font-size: 0.82rem; }
+.template-jsonflat .resume-section h2 { color: #e74c3c; font-weight: 700; border-bottom: 2px solid #e8e8e8; padding-bottom: 5px; margin-top: 20px; }
+.template-jsonflat .resume-item h3 { color: #2c3e50; }
+.template-jsonflat .resume-meta { color: #7f8c8d; font-style: italic; }
 
 .template-jsonelegant { font-family: serif; color: #333; }
 .template-jsonelegant .resume-header { text-align: center; margin-bottom: 40px; }
