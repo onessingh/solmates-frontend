@@ -3014,11 +3014,35 @@ html, body {  padding: 0 !important; height: auto !important; }
 .template-pin-arch .resume-contact, 
 .template-ca .resume-contact { margin-left: 15px !important; }
 
-/* Canva Modern Header Flex Fix */
-.template-canva-modern .resume-header { display: flex !important; justify-content: space-between !important; align-items: center !important; }
+/* Canva Modern Header — photo on RIGHT side, not below */
+.template-canvamodern .resume-header {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 20px !important;
+}
+.template-canvamodern .resume-header .resume-identity { flex: 1; }
+.template-canvamodern .resume-header .resume-photo { flex-shrink: 0; order: 2; }
+.template-canvamodern .resume-header .resume-photo img {
+    width: 110px !important;
+    height: 110px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
 
-/* Reactive Onyx Headline */
-.template-reactive-onyx .resume-headline { color: #fff !important; background-color: #2563eb !important; padding: 6px 14px !important; border-radius: 6px !important; font-weight: bold !important; font-size: 1rem !important; }
+/* Reactive Onyx Headline — correct class name is template-onyx */
+.template-onyx .resume-headline {
+    display: inline-block !important;
+    color: #fff !important;
+    background-color: #2563eb !important;
+    padding: 4px 14px !important;
+    border-radius: 6px !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    margin-top: 6px !important;
+    letter-spacing: 0.5px !important;
+}
 
 /* Prevent extra page from underlines */
 .resume-section:last-child { border-bottom: none !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
