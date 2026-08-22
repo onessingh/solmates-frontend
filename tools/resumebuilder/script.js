@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -492,7 +492,7 @@
 
   const renderInlineList = (items) => {
     if (!Array.isArray(items) || items.length === 0) return "";
-    return items.map((item) => escapeHtml(item)).join(" · ");
+    return items.map((item) => escapeHtml(item)).join(" Â· ");
   };
 
   const renderSkillGroup = (label, items) => {
@@ -552,9 +552,9 @@
       title: "Experience", // Changed from "Work Experience" for better default
       render: (resume) => {
         const html = (resume.experience || []).map((item) => {
-          const titleLine = [item.jobTitle, item.company].filter(Boolean).join(" · ");
+          const titleLine = [item.jobTitle, item.company].filter(Boolean).join(" Â· ");
           const range = formatRange(item.startDate, item.endDate);
-          const meta = [range, item.location].filter(Boolean).join(" · ");
+          const meta = [range, item.location].filter(Boolean).join(" Â· ");
           const bullets = renderList(item.bullets);
           const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
 
@@ -649,8 +649,8 @@
             `;
           }
 
-          const titleLine = [item.degree, item.institution].filter(Boolean).join(" · ");
-          const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join(" · ");
+          const titleLine = [item.degree, item.institution].filter(Boolean).join(" Â· ");
+          const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join(" Â· ");
           const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
           return `
             <article class="resume-item">
@@ -670,7 +670,7 @@
       title: "Certifications",
       render: (resume) => {
         const html = (resume.certifications || []).map((item) => {
-          const meta = [item.authority, item.year].filter(Boolean).join(" · ");
+          const meta = [item.authority, item.year].filter(Boolean).join(" Â· ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(item.name || "")}</h3>
@@ -686,7 +686,7 @@
       title: "Internships / Training",
       render: (resume) => {
         const html = (resume.internships || []).map((item) => {
-          const meta = [item.organization, item.role, item.duration].filter(Boolean).join(" · ");
+          const meta = [item.organization, item.role, item.duration].filter(Boolean).join(" Â· ");
           const learnings = renderList(item.learnings);
           return `
             <article class="resume-item">
@@ -738,7 +738,7 @@
       title: "Languages",
       render: (resume) => {
         const html = (resume.languages || []).map((item) => {
-          const meta = [item.language, item.level].filter(Boolean).join(" · ");
+          const meta = [item.language, item.level].filter(Boolean).join(" Â· ");
           return `<p class="resume-meta">${escapeHtml(meta)}</p>`;
         }).join("");
         return renderSection("Languages", html);
@@ -749,7 +749,7 @@
       title: "Publications / Research",
       render: (resume) => {
         const html = (resume.publications || []).map((item) => {
-          const meta = [item.platform, item.year].filter(Boolean).join(" · ");
+          const meta = [item.platform, item.year].filter(Boolean).join(" Â· ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(item.title || "")}</h3>
@@ -765,7 +765,7 @@
       title: "Volunteer Experience",
       render: (resume) => {
         const html = (resume.volunteer || []).map((item) => {
-          const meta = [item.organization, item.role].filter(Boolean).join(" · ");
+          const meta = [item.organization, item.role].filter(Boolean).join(" Â· ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(meta)}</h3>
@@ -781,7 +781,7 @@
       title: "Leadership Experience",
       render: (resume) => {
         const html = (resume.leadership || []).map((item) => {
-          const meta = [item.organization, item.role].filter(Boolean).join(" · ");
+          const meta = [item.organization, item.role].filter(Boolean).join(" Â· ");
           return `
             <article class="resume-item">
               <h3>${escapeHtml(meta)}</h3>
@@ -967,8 +967,8 @@
       personal.email,
       personal.phone,
       formatLocation(personal.location)
-    ].filter(Boolean).join(" · ");
-    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join(" · ");
+    ].filter(Boolean).join(" Â· ");
+    const linksLine = [personal.linkedin, personal.portfolio].filter(Boolean).join(" Â· ");
     return `
       <article class="resume template-${escapeHtml(templateKey)}">
         <header class="resume-header">
@@ -1034,7 +1034,7 @@
     if (!dom.scoreValue || !dom.scoreFeedback) return;
     const { score, breakdown } = scoreResume(state.resume);
     dom.scoreValue.textContent = String(score);
-    dom.scoreFeedback.textContent = `Contact ${breakdown.contact}/30 · Summary ${breakdown.summary}/15 · Experience ${breakdown.experience}/30 · Education ${breakdown.education}/15 · Skills ${breakdown.skills}/10`;
+    dom.scoreFeedback.textContent = `Contact ${breakdown.contact}/30 Â· Summary ${breakdown.summary}/15 Â· Experience ${breakdown.experience}/30 Â· Education ${breakdown.education}/15 Â· Skills ${breakdown.skills}/10`;
   };
 
   const renderSectionManager = () => {
@@ -1356,7 +1356,7 @@
   };
 
   const buildHeat = (count) => {
-    if (count === 0) return { level: "none", label: "—" };
+    if (count === 0) return { level: "none", label: "â€”" };
     if (count === 1) return { level: "low", label: "Low" };
     if (count <= 3) return { level: "medium", label: "Med" };
     return { level: "high", label: "High" };
@@ -1738,7 +1738,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="${cssUrl}" />
     <style>
-      /* Print window overrides — hide everything except the resume */
+      /* Print window overrides â€” hide everything except the resume */
       @media screen {
         body { background: #fff !important; margin: 0; padding: 20px; }
         .site-header, .hero, .jd-match, .builder-layout, .templates,
@@ -1789,7 +1789,7 @@
       const filename = 'Resume_' + (state.resume.personalInfo.fullName.replace(/\s+/g, '_') || 'Generated') + '.pdf';
 
       // Build an isolated off-screen container at exactly 794px width (A4 at 96dpi).
-      // IMPORTANT: Do NOT use opacity:0 — html2canvas renders it blank.
+      // IMPORTANT: Do NOT use opacity:0 â€” html2canvas renders it blank.
       // Use position:absolute; left:-9999px to hide visually but keep it renderable.
       const wrapper = document.createElement('div');
       wrapper.style.cssText = [
@@ -1804,11 +1804,11 @@
         'z-index:99999',
       ].join(';');
 
-      // Clone resume — keep class names so CSS template styles still apply.
+      // Clone resume â€” keep class names so CSS template styles still apply.
       // Only override layout-breaking properties.
       const clone = resumeEl.cloneNode(true);
       clone.style.width = '794px';
-      clone.style.minHeight = '0';
+      clone.style.setProperty('min-height', '0', 'important');
       clone.style.padding = '56px'; // ~15mm margins
       clone.style.margin = '0';
       clone.style.position = 'static';
@@ -1818,6 +1818,22 @@
       clone.style.background = '#fff';
       clone.style.boxSizing = 'border-box';
       clone.style.overflow = 'visible';
+
+      // Fix orphaned headings by wrapping h2 and the first item in a page-break-inside: avoid container
+      const sections = clone.querySelectorAll('.resume-section');
+      sections.forEach(sec => {
+        const h2 = sec.querySelector('h2');
+        const firstItem = sec.querySelector('.resume-item');
+        if (h2 && firstItem && h2.nextElementSibling === firstItem) {
+          const keepTogether = document.createElement('div');
+          keepTogether.style.pageBreakInside = 'avoid';
+          keepTogether.style.breakInside = 'avoid';
+          keepTogether.className = 'keep-together';
+          sec.insertBefore(keepTogether, h2);
+          keepTogether.appendChild(h2);
+          keepTogether.appendChild(firstItem);
+        }
+      });
 
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
@@ -1829,7 +1845,7 @@
         margin: 0,
         filename: filename,
         image: { type: 'jpeg', quality: 1.0 },
-        pagebreak: { mode: ['css', 'legacy'], avoid: '.resume-item' },
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.resume-item', '.keep-together'] },
         html2canvas: {
           scale: 2,
           useCORS: true,
@@ -2214,6 +2230,9 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
+
+
 
 
 
