@@ -119,7 +119,7 @@ body.is-exporting #resume-preview {
   transform: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  width: 210mm !important; /* Force A4 Width */
+  width: 100% !important; /* Force A4 Width */
   max-width: none !important;
   height: auto !important;
   overflow: visible !important;
@@ -599,7 +599,7 @@ textarea:focus {
     align-items: stretch !important;
     height: auto !important;
     min-height: auto !important; 
-    width: 210mm !important;
+    width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
     overflow: visible !important;
@@ -2368,7 +2368,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
-    width: 210mm !important;
+    width: 100% !important;
     height: auto !important;
     min-height: auto !important; 
     overflow: visible !important;
@@ -2397,10 +2397,10 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
   /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ THE RESUME ITSELF ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
   .resume {
     display: block !important;
-    width: 210mm !important; /* Exact A4 width */
+    width: 100% !important; /* Exact A4 width */
     min-height: auto !important;  /* Exact A4 height */
     margin: 0 !important;
-    padding: 15mm !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
+    padding: 0 !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
     box-shadow: none !important;
     border: none !important;
     background: #fff !important;
@@ -2510,7 +2510,7 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
-    width: 210mm !important;
+    width: 100% !important;
     height: auto !important;
     min-height: auto !important; 
     overflow: visible !important;
@@ -2539,10 +2539,10 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
   /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ THE RESUME ITSELF ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
   .resume {
     display: block !important;
-    width: 210mm !important; /* Exact A4 width */
+    width: 100% !important; /* Exact A4 width */
     min-height: auto !important;  /* Exact A4 height */
     margin: 0 !important;
-    padding: 15mm !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
+    padding: 0 !important; /* PERFECT SYMMETRICAL MARGINS (Top/Bottom/Left/Right) */
     box-shadow: none !important;
     border: none !important;
     background: #fff !important;
@@ -3009,3 +3009,5 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 
 /* Research Scientist Fixes */
 .template-researcher p, .template-researcher li { font-style: normal !important; }
+
+@media print { .resume-preview, .resume { padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; } }
