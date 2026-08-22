@@ -43,7 +43,6 @@
     { key: "ca", name: "Chartered Accountant", category: "Finance", atsSafe: true },
     { key: "pin-arch", name: "Aesthetic Arch", category: "Pinterest", atsSafe: false },
     { key: "pin-banner", name: "LinkedIn Style", category: "Pinterest", atsSafe: true },
-    { key: "pin-dark", name: "Dark Neon", category: "Pinterest", atsSafe: false },
     { key: "pin-yellow", name: "Bold Yellow", category: "Pinterest", atsSafe: true },
     { key: "pin-pink", name: "Pink Grid", category: "Pinterest", atsSafe: false }
   ];
@@ -249,6 +248,20 @@
       .replace(/\"/g, "&quot;")
       .replace(/'/g, "&#39;")
       .replace(/\n/g, "<br>");
+  };
+
+  // Linkify: converts http/https/www/domain.tld URLs in text into clickable links
+  const linkify = (str) => {
+    if (!str) return "";
+    return str.replace(/(https?:\/\/[^\s<"]+|www\.[^\s<"]+|[a-zA-Z0-9.-]+\.(in|com|org|net|io|dev|co|edu|gov)(?:\/[^\s<"]*)?)/g, (url) => {
+      let href = url;
+      if (!href.startsWith("http")) href = "https://" + href;
+      // strip trailing punctuation
+      const trail = href.match(/[.,;:!?)]+$/);
+      let suffix = "";
+      if (trail) { suffix = trail[0]; href = href.slice(0, -trail[0].length); url = url.slice(0, -trail[0].length); }
+      return `<a href="${href}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">${url}</a>${suffix}`;
+    });
   };
 
   const sanitizeUrl = (value) => {
@@ -525,16 +538,16 @@
         if (!resume.summary) return "";
         // For modernSidebar, the summary is a floating bio without a section header
         if (state.selectedTemplate === "modernSidebar") {
-          return `<div class="main-header-summary"><p>${escapeHtml(resume.summary)}</p></div>`;
+          return `<div class="main-header-summary"><p>${linkify(escapeHtml(resume.summary))}</p></div>`;
         }
-        return renderSection("Professional Summary", `<p>${escapeHtml(resume.summary)}</p>`);
+        return renderSection("Professional Summary", `<p>${linkify(escapeHtml(resume.summary))}</p>`);
       }
     },
     {
       key: "objective",
       title: "Career Objective",
       render: (resume) => resume.objective
-        ? renderSection("Career Objective", `<p>${escapeHtml(resume.objective)}</p>`)
+        ? renderSection("Career Objective", `<p>${linkify(escapeHtml(resume.objective))}</p>`)
         : ""
     },
     {
@@ -556,7 +569,7 @@
           const range = formatRange(item.startDate, item.endDate);
           const meta = [range, item.location].filter(Boolean).join("  \u2022  ");
           const bullets = renderList(item.bullets);
-          const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
+          const description = item.description ? `<p>${linkify(escapeHtml(item.description))}</p>` : "";
 
           if (state.selectedTemplate === "modernSidebar") {
             return `
@@ -592,8 +605,8 @@
       render: (resume) => {
         const html = (resume.projects || []).map((item) => {
           const meta = item.tools ? `<p class="resume-meta">${escapeHtml(item.tools)}</p>` : "";
-          const desc = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
-          const outcome = item.outcome ? `<p><strong>Outcome:</strong> ${escapeHtml(item.outcome)}</p>` : "";
+          const desc = item.description ? `<p>${linkify(escapeHtml(item.description))}</p>` : "";
+          const outcome = item.outcome ? `<p><strong>Outcome:</strong> ${linkify(escapeHtml(item.outcome))}</p>` : "";
           return `
             <article class="resume-item">
               <div class="resume-item-header">
@@ -651,7 +664,7 @@
 
           const titleLine = [item.degree, item.institution].filter(Boolean).join("  \u2022  ");
           const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join("  \u2022  ");
-          const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : "";
+          const description = item.description ? `<p>${linkify(escapeHtml(item.description))}</p>` : "";
           return `
             <article class="resume-item">
               <div class="resume-item-header">
@@ -1757,14 +1770,25 @@
         
         /* Bulletproof pagination */
         .resume-section { page-break-inside: auto !important; break-inside: auto !important; margin-bottom: 20px; }
-        .resume-item, .resume-header, h2, h3, h4, p, li { 
+        .resume-header, h2, h3, h4 { 
             page-break-inside: avoid !important; 
             break-inside: avoid !important; 
+        }
+        .resume-item, p, li { 
+            page-break-inside: auto !important; 
+            break-inside: auto !important; 
         }
         .resume-meta { break-after: avoid !important; page-break-after: avoid !important; }
         h2, h3 { break-after: avoid !important; page-break-after: avoid !important; }
         
         .ats-plain-text { display: none !important; }
+        /* ModernSidebar: body background gradient extends sidebar color across all pages */
+        body.modernSidebar, body.template-modernSidebar {
+            background: linear-gradient(to right, #2D3748 34%, #fff 34%) !important;
+            background-attachment: fixed !important;
+        }
+        .resume.modernSidebar { min-height: auto !important; }
+        .resume.modernSidebar .resume-sidebar { min-height: 100% !important; }
       }
     </style>
   </head>
