@@ -2618,3 +2618,126 @@ html, body { margin: 0 !important; padding: 0 !important; height: auto !importan
 .template-novoresume .resume-header { text-align: left; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 2px solid #16a085; }
 .template-novoresume .resume-name { font-weight: 700; font-size: 28px; color: #2c3e50; }
 .template-novoresume .resume-section h2 { color: #16a085; text-transform: uppercase; font-size: 14px; font-weight: bold; border-bottom: 1px solid #ecf0f1; padding-bottom: 5px; }
+
+/* =============================================
+   LEGAL PROFESSIONAL (Lawyer / Advocate)
+   ============================================= */
+.template-legal { font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #1a1a1a; line-height: 1.4; }
+.template-legal .resume-header { text-align: center; border-top: 3px double #1a1a1a; border-bottom: 3px double #1a1a1a; padding: 12px 0; margin-bottom: 18px; }
+.template-legal .resume-name { font-size: 20pt; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: #1a1a1a; }
+.template-legal .resume-headline { font-size: 10pt; font-style: italic; color: #444; margin-top: 4px; }
+.template-legal .resume-contact { font-size: 9pt; color: #444; margin-top: 6px; }
+.template-legal .resume-section h2 { font-size: 10pt; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1.5px solid #1a1a1a; margin-bottom: 8px; padding-bottom: 3px; color: #1a1a1a; }
+.template-legal .resume-item h3 { font-size: 10.5pt; font-weight: bold; color: #1a1a1a; }
+.template-legal .resume-meta { font-style: italic; color: #555; font-size: 9.5pt; }
+
+/* =============================================
+   MEDICAL DOCTOR / PHYSICIAN
+   ============================================= */
+.template-doctor { font-family: 'Arial', sans-serif; font-size: 10.5pt; color: #1c2b36; }
+.template-doctor .resume-header { border-left: 6px solid #0d7377; padding: 18px 20px; background: #f0fafa; margin-bottom: 22px; }
+.template-doctor .resume-name { font-size: 24px; font-weight: 700; color: #0d7377; }
+.template-doctor .resume-headline { font-size: 13px; color: #2c6b70; margin-top: 4px; }
+.template-doctor .resume-contact { font-size: 11px; color: #4a7c82; margin-top: 6px; }
+.template-doctor .resume-section h2 { font-size: 11pt; font-weight: bold; color: #0d7377; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #0d7377; padding-bottom: 4px; margin-top: 18px; margin-bottom: 10px; }
+.template-doctor .resume-item h3 { color: #1c2b36; font-weight: 600; }
+.template-doctor .resume-meta { color: #557880; font-size: 10px; }
+
+/* =============================================
+   DATA SCIENTIST / ML ENGINEER
+   ============================================= */
+.template-datascience { font-family: 'Segoe UI', sans-serif; color: #1e1e2e; }
+.template-datascience .resume-header { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%); color: #fff; padding: 30px 28px; margin-bottom: 24px; }
+.template-datascience .resume-name { font-size: 28px; font-weight: 800; color: #fff; }
+.template-datascience .resume-headline { font-size: 13px; color: #c7d2fe; margin-top: 5px; }
+.template-datascience .resume-contact { font-size: 11px; color: #a5b4fc; margin-top: 8px; }
+.template-datascience .resume-links { font-size: 11px; color: #818cf8; }
+.template-datascience .resume-section h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #4f46e5; border-bottom: 2px solid #e0e7ff; padding-bottom: 5px; margin-top: 20px; }
+.template-datascience .resume-item h3 { color: #312e81; font-weight: 600; }
+.template-datascience .resume-meta { color: #6366f1; font-size: 11px; font-family: monospace; }
+
+/* =============================================
+   JOURNALIST / WRITER / MEDIA
+   ============================================= */
+.template-journalist { font-family: 'Georgia', serif; color: #111; }
+.template-journalist .resume-header { border-bottom: 4px solid #111; padding-bottom: 12px; margin-bottom: 20px; }
+.template-journalist .resume-name { font-size: 34px; font-weight: 900; color: #111; font-style: italic; letter-spacing: -1px; }
+.template-journalist .resume-headline { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #555; border-top: 1px solid #bbb; border-bottom: 1px solid #bbb; padding: 4px 0; margin-top: 8px; }
+.template-journalist .resume-contact { font-size: 11px; color: #555; margin-top: 8px; font-family: Arial, sans-serif; }
+.template-journalist .resume-section h2 { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; color: #111; border-bottom: 2px solid #111; padding-bottom: 4px; margin-top: 20px; font-family: Arial, sans-serif; }
+.template-journalist .resume-item h3 { font-size: 14px; font-weight: bold; }
+.template-journalist .resume-meta { font-size: 10px; font-style: italic; color: #666; font-family: Arial, sans-serif; }
+
+/* =============================================
+   PRODUCT MANAGER
+   ============================================= */
+.template-productmanager { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1e293b; }
+.template-productmanager .resume-header { border-bottom: 3px solid #0f766e; padding-bottom: 16px; margin-bottom: 22px; }
+.template-productmanager .resume-name { font-size: 30px; font-weight: 800; color: #0f766e; }
+.template-productmanager .resume-headline { font-size: 14px; color: #475569; margin-top: 4px; }
+.template-productmanager .resume-contact { font-size: 11px; color: #64748b; margin-top: 8px; }
+.template-productmanager .resume-section h2 { background: #f0fdf9; border-left: 4px solid #0f766e; padding: 6px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; color: #0f766e; margin-top: 18px; margin-bottom: 12px; }
+.template-productmanager .resume-item h3 { color: #1e293b; font-size: 15px; font-weight: 700; }
+.template-productmanager .resume-meta { color: #64748b; font-size: 11px; }
+
+/* =============================================
+   INVESTMENT BANKER - Ultra Formal (Wharton/Columbia style)
+   ============================================= */
+.template-ibanker { font-family: 'Times New Roman', Times, serif; font-size: 10.5pt; color: #0a0a23; line-height: 1.3; }
+.template-ibanker .resume-header { text-align: center; margin-bottom: 14px; border-bottom: 1.5px solid #0a0a23; padding-bottom: 8px; }
+.template-ibanker .resume-name { font-size: 15pt; font-weight: bold; color: #0a0a23; text-transform: uppercase; letter-spacing: 1.5px; }
+.template-ibanker .resume-headline { font-size: 9pt; font-style: italic; color: #333; margin-top: 3px; }
+.template-ibanker .resume-contact { font-size: 8.5pt; color: #333; margin-top: 4px; }
+.template-ibanker .resume-section h2 { font-size: 10pt; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #0a0a23; padding-bottom: 2px; margin-top: 14px; margin-bottom: 6px; }
+.template-ibanker .resume-meta { font-style: italic; font-size: 9pt; color: #444; }
+.template-ibanker li { font-size: 9.5pt; line-height: 1.4; }
+
+/* =============================================
+   RESEARCH SCIENTIST / PhD ACADEMIC
+   ============================================= */
+.template-researcher { font-family: 'Palatino Linotype', Georgia, serif; color: #212121; font-size: 11pt; }
+.template-researcher .resume-header { text-align: center; border-bottom: 2px solid #1565c0; padding-bottom: 14px; margin-bottom: 20px; }
+.template-researcher .resume-name { font-size: 22pt; font-weight: bold; color: #1565c0; }
+.template-researcher .resume-headline { font-size: 11pt; font-style: italic; color: #424242; margin-top: 4px; }
+.template-researcher .resume-contact { font-size: 9pt; color: #616161; margin-top: 6px; font-family: Arial, sans-serif; }
+.template-researcher .resume-section h2 { font-size: 12pt; font-weight: bold; color: #1565c0; border-bottom: 1px solid #1565c0; padding-bottom: 4px; margin-top: 20px; margin-bottom: 10px; font-style: italic; }
+.template-researcher .resume-item h3 { color: #1a237e; font-size: 11pt; }
+.template-researcher .resume-meta { color: #616161; font-size: 9.5pt; font-family: Arial, sans-serif; }
+
+/* =============================================
+   NURSE / HEALTHCARE WORKER
+   ============================================= */
+.template-nurse { font-family: 'Calibri', Arial, sans-serif; color: #1a3c5e; font-size: 11pt; }
+.template-nurse .resume-header { background: #eaf4ff; border-top: 6px solid #2196f3; padding: 20px 24px; margin-bottom: 20px; }
+.template-nurse .resume-name { font-size: 22px; font-weight: 700; color: #1565c0; }
+.template-nurse .resume-headline { font-size: 13px; color: #1976d2; margin-top: 4px; }
+.template-nurse .resume-contact { font-size: 11px; color: #1a3c5e; margin-top: 8px; }
+.template-nurse .resume-section h2 { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #1565c0; border-bottom: 2px solid #90caf9; padding-bottom: 4px; margin-top: 18px; letter-spacing: 1px; }
+.template-nurse .resume-item h3 { color: #1a3c5e; font-weight: 600; font-size: 14px; }
+.template-nurse .resume-meta { color: #5585a8; font-size: 11px; }
+
+/* =============================================
+   GRAPHIC / BRAND DESIGNER
+   ============================================= */
+.template-designer { font-family: 'Trebuchet MS', sans-serif; color: #1a1a2e; }
+.template-designer .resume-header { border-left: 12px solid #e91e8c; padding: 20px 24px; background: #fafafa; margin-bottom: 24px; }
+.template-designer .resume-name { font-size: 30px; font-weight: 900; color: #1a1a2e; text-transform: uppercase; letter-spacing: 2px; }
+.template-designer .resume-headline { font-size: 12px; color: #e91e8c; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; }
+.template-designer .resume-contact { font-size: 11px; color: #555; margin-top: 8px; }
+.template-designer .resume-links { color: #e91e8c; font-weight: bold; font-size: 11px; }
+.template-designer .resume-section h2 { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: #e91e8c; margin-top: 22px; margin-bottom: 12px; padding-bottom: 4px; border-bottom: 1px solid #e8e8e8; }
+.template-designer .resume-item h3 { color: #1a1a2e; font-size: 15px; font-weight: 700; }
+.template-designer .resume-meta { color: #888; font-size: 11px; }
+
+/* =============================================
+   CHARTERED ACCOUNTANT / AUDITOR
+   ============================================= */
+.template-ca { font-family: 'Arial', sans-serif; color: #1a2e1a; font-size: 11pt; }
+.template-ca .resume-header { border-top: 5px solid #1b5e20; border-bottom: 1px solid #4caf50; padding: 16px 0 12px 0; margin-bottom: 18px; text-align: center; }
+.template-ca .resume-name { font-size: 20px; font-weight: bold; color: #1b5e20; text-transform: uppercase; letter-spacing: 1px; }
+.template-ca .resume-headline { font-size: 12px; color: #2e7d32; margin-top: 4px; }
+.template-ca .resume-contact { font-size: 10.5px; color: #4a4a4a; margin-top: 6px; }
+.template-ca .resume-section h2 { background: #f1f8e9; color: #1b5e20; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.2px; padding: 5px 10px; border-left: 4px solid #4caf50; margin-top: 16px; margin-bottom: 10px; }
+.template-ca .resume-item h3 { color: #1a2e1a; font-weight: 600; font-size: 13px; }
+.template-ca .resume-meta { color: #5a7a5a; font-size: 10.5px; }
+.template-ca li { font-size: 12px; line-height: 1.5; }

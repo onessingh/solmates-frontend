@@ -30,7 +30,17 @@
     { key: "jsonelegant", name: "JSON Elegant", category: "Traditional", atsSafe: true },
     { key: "canvamodern", name: "Canva Modern", category: "Visual", atsSafe: false },
     { key: "zetyclassic", name: "Zety Classic", category: "Standard", atsSafe: true },
-    { key: "novoresume", name: "Novoresume Hybrid", category: "Modern", atsSafe: true }
+    { key: "novoresume", name: "Novoresume Hybrid", category: "Modern", atsSafe: true },
+    { key: "legal", name: "Legal Professional", category: "Lawyer", atsSafe: true },
+    { key: "doctor", name: "Medical Doctor", category: "Healthcare", atsSafe: true },
+    { key: "datascience", name: "Data Scientist", category: "Tech", atsSafe: true },
+    { key: "journalist", name: "Journalist / Writer", category: "Media", atsSafe: true },
+    { key: "productmanager", name: "Product Manager", category: "Tech", atsSafe: true },
+    { key: "ibanker", name: "Investment Banker", category: "Finance", atsSafe: true },
+    { key: "researcher", name: "Research Scientist", category: "Academic", atsSafe: true },
+    { key: "nurse", name: "Nurse / Healthcare", category: "Healthcare", atsSafe: true },
+    { key: "designer", name: "Brand Designer", category: "Creative", atsSafe: false },
+    { key: "ca", name: "Chartered Accountant", category: "Finance", atsSafe: true }
   ];
 
   const FIELD_SUGGESTIONS = {
