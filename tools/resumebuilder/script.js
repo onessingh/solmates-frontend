@@ -1005,7 +1005,7 @@
       const sidebarKeys = ["awards", "skills", "technicalStack", "languages", "volunteer", "personalDetails"];
       const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
       return `
-        <article class="resume ${escapeHtml(templateKey)}">
+        <article class="resume template-${escapeHtml(templateKey)}">
           <aside class="resume-sidebar">
             <div class="resume-photo-wrap">
               <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
@@ -1034,7 +1034,7 @@
       const sidebarKeys = ["skills", "languages", "personalDetails"];
       const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
       return `
-        <article class="resume ${escapeHtml(templateKey)}">
+        <article class="resume template-${escapeHtml(templateKey)}">
           <aside class="resume-sidebar">
             <header>
               <h1>${personal.fullName || "Name"}</h1>
@@ -1063,7 +1063,7 @@
       const rightKeys = ["education", "skills", "technicalStack", "awards", "certifications", "languages", "publications"];
       const centerKeys = state.sectionOrder.filter(k => !leftKeys.includes(k) && !rightKeys.includes(k));
       return `
-        <article class="resume ${escapeHtml(templateKey)}">
+        <article class="resume template-${escapeHtml(templateKey)}">
           <div class="resume-col left-col">
             ${generateSections(leftKeys)}
           </div>
@@ -1094,7 +1094,7 @@
       const rightKeys = ["education", "skills", "technicalStack", "certifications"];
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
-        <article class="resume ${escapeHtml(templateKey)}">
+        <article class="resume template-${escapeHtml(templateKey)}">
           <header class="top-header">
             <div class="header-content">
               <h1>${personal.fullName || "Name"}</h1>
@@ -1125,7 +1125,7 @@
       const sidebarKeys = ["education", "skills", "languages", "awards", "personalDetails"];
       const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
       return `
-        <article class="resume ${escapeHtml(templateKey)}">
+        <article class="resume template-${escapeHtml(templateKey)}">
           <aside class="resume-sidebar">
             <div class="resume-photo-wrap">
               <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
