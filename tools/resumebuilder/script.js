@@ -1782,6 +1782,14 @@
         h2, h3 { break-after: avoid !important; page-break-after: avoid !important; }
         
         .ats-plain-text { display: none !important; }
+        /* Hide decorative footer HR lines — they cause extra empty pages */
+        .resume-footer-lines, .resume-footer-line { display: none !important; }
+        /* ModernSidebar: body gradient extends sidebar across all pages */
+        body.template-modernSidebar {
+            background: linear-gradient(to right, #2D3748 34%, #fff 34%) !important;
+            -webkit-print-color-adjust: exact !important;
+        }
+        .resume.modernSidebar { min-height: auto !important; }
         /* ModernSidebar: body background gradient extends sidebar color across all pages */
         body.modernSidebar, body.template-modernSidebar {
             background: linear-gradient(to right, #2D3748 34%, #fff 34%) !important;

@@ -3000,21 +3000,34 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 @media print { .resume-preview, .resume { padding: 0 !important;  border: none !important; box-shadow: none !important; } }
 
-/* Profile Photo Fixes */
-.template-pin-banner .resume-photo img { width: 100px !important; height: 100px !important; object-fit: cover; }
-.template-pin-arch .resume-photo img { width: 110px !important; height: 110px !important; object-fit: cover; }
 
-/* Aesthetic Arch Text Clarity */
-.template-pin-arch .resume-item h3 { color: #111 !important; font-weight: 800 !important; }
-.template-pin-arch .resume-meta { color: #444 !important; font-weight: 600 !important; }
-.template-pin-arch .resume-item p, .template-pin-arch .resume-item li { color: #222 !important; font-weight: 500 !important; }
+/* =========================================================
+   COMPREHENSIVE TEMPLATE FIXES (v2 - corrected)
+   ========================================================= */
 
-/* Shift contact info right */
-.template-pin-banner .resume-contact, 
-.template-pin-arch .resume-contact, 
-.template-ca .resume-contact { margin-left: 15px !important; }
+/* 1. PHOTO SIZES — make them BIGGER and clear */
+/* LinkedIn Banner: bigger photo */
+.template-pin-banner .resume-photo img {
+    width: 150px !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+}
+/* Aesthetic Arch: bigger photo, keep portrait ratio */
+.template-pin-arch .resume-photo img {
+    width: 130px !important;
+    height: 160px !important;
+    object-fit: cover !important;
+}
+/* Canva Modern: bigger photo */
+.template-canvamodern .resume-header .resume-photo img {
+    width: 130px !important;
+    height: 130px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
 
-/* Canva Modern Header — photo on RIGHT side, not below */
+/* 2. CANVA MODERN — photo on RIGHT side */
 .template-canvamodern .resume-header {
     display: flex !important;
     flex-direction: row !important;
@@ -3022,16 +3035,45 @@ html, body {  padding: 0 !important; height: auto !important; }
     align-items: center !important;
     gap: 20px !important;
 }
-.template-canvamodern .resume-header .resume-identity { flex: 1; }
-.template-canvamodern .resume-header .resume-photo { flex-shrink: 0; order: 2; }
-.template-canvamodern .resume-header .resume-photo img {
-    width: 110px !important;
-    height: 110px !important;
-    border-radius: 50% !important;
-    object-fit: cover !important;
+.template-canvamodern .resume-header .resume-identity { flex: 1 !important; }
+.template-canvamodern .resume-header .resume-photo {
+    flex-shrink: 0 !important;
+    order: 2 !important;
 }
 
-/* Reactive Onyx Headline — correct class name is template-onyx */
+/* 3. AESTHETIC ARCH — text clarity */
+.template-pin-arch .resume-item h3 { color: #111 !important; font-weight: 800 !important; }
+.template-pin-arch .resume-meta { color: #444 !important; font-weight: 600 !important; }
+.template-pin-arch .resume-item p, .template-pin-arch .resume-item li {
+    color: #222 !important;
+    font-weight: 500 !important;
+}
+.template-pin-arch .resume-section h2 {
+    color: #8a7060 !important;
+    font-weight: 700 !important;
+}
+
+/* 4. CONTACT RIGHT-ALIGN for LinkedIn Banner, Aesthetic Arch, CA */
+/* Only the contact/links lines, not the name */
+.template-pin-banner .resume-contact,
+.template-pin-banner .resume-links,
+.template-pin-arch .resume-contact,
+.template-pin-arch .resume-links,
+.template-ca .resume-contact,
+.template-ca .resume-links {
+    text-align: right !important;
+    color: rgba(255,255,255,0.85) !important;
+}
+.template-pin-arch .resume-contact,
+.template-pin-arch .resume-links {
+    color: #888 !important;
+}
+.template-ca .resume-contact,
+.template-ca .resume-links {
+    color: #5a7a5a !important;
+}
+
+/* 5. REACTIVE ONYX — headline as badge */
 .template-onyx .resume-headline {
     display: inline-block !important;
     color: #fff !important;
@@ -3044,11 +3086,46 @@ html, body {  padding: 0 !important; height: auto !important; }
     letter-spacing: 0.5px !important;
 }
 
-/* Prevent extra page from underlines */
-.resume-section:last-child { border-bottom: none !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
-.resume-section:last-child h2 { border-bottom: none !important; margin-bottom: 0 !important; }
-.resume-item:last-child { border-bottom: none !important; margin-bottom: 0 !important; }
+/* 6. TEACHER TEMPLATE — expertise skills as inline chips */
+/* Correct selector: .resume-section ul NOT .resume-skills ul */
+.template-social .resume-section ul {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+}
+.template-social .resume-section li {
+    display: inline-block !important;
+    list-style-type: none !important;
+    background: #e8f0fe !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 0.85rem !important;
+    margin: 0 !important;
+    border-left: none !important;
+    color: #1a3c8f !important;
+    font-weight: 500 !important;
+}
 
-/* Teacher Template Skills inline layout */
-.template-social .resume-skills ul { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; padding-left: 0 !important; }
-.template-social .resume-skills li { display: inline-block !important; list-style-type: none !important; background: #f1f5f9; padding: 4px 10px; border-radius: 4px; font-size: 0.9rem; margin: 0 !important; border-left: none !important; }
+/* 7. LAST PAGE EXTRA UNDERLINE — hide footer hr lines in PDF */
+.resume-footer-lines { display: none !important; }
+.resume-footer-line { display: none !important; }
+
+/* 8. PREVENT extra page from section bottom borders */
+.resume-section:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+.resume-section:last-child h2 {
+    border-bottom: none !important;
+    margin-bottom: 8px !important;
+}
+
+/* 9. @media print only — keep footer lines in screen view but hide in PDF */
+@media print {
+    .resume-footer-lines, .resume-footer-line { display: none !important; }
+}
+
+/* Teacher ul list-style override (must come after existing disc rule) */.template-social .resume-section ul { list-style: none !important; }
