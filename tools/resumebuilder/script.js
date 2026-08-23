@@ -938,7 +938,7 @@
             </div>
             
             <div class="sidebar-section" style="margin-bottom:30px;">
-                <h3 style="color:#A0AEC0;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;">Contact</h3>
+                ${(personal.phone || personal.email || location || personal.linkedin || personal.portfolio) ? `<h3 style="color:#A0AEC0;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;">Contact</h3>` : ""}
                 ${personal.phone ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
                   <i class="fas fa-phone-alt" style="width:16px;text-align:center;color:#A0AEC0;"></i>
                   <span class="sidebar-value" style="font-size:0.85rem;word-break:break-word;"><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>
@@ -996,7 +996,7 @@
 
           <main class="resume-main">
             <header class="main-header">
-              <h1>${personal.fullName || "Mariana Anderson"}</h1>
+              <h1>${personal.fullName || ""}</h1>
               ${personal.headline && showHeadline ? `<p>${personal.headline}</p>` : ""}
             </header>
             
@@ -1121,7 +1121,7 @@
               </div>
               <div style="padding:40px 40px!important;flex:1;">
                 <div style="margin-bottom:20px;">
-                  <h3 style="color:#fff;border-top:1px solid rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.3);padding:6px 0;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Contact</h3>
+                  ${(personal.phone || personal.email || formatLocation(personal.location) || personal.linkedin || personal.portfolio) ? `<h3 style="color:#fff;border-top:1px solid rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.3);padding:6px 0;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Contact</h3>` : ""}
                   ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
                   ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-envelope" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
                   ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#cfa068;width:14px;text-align:center;margin-top:3px;"></i> <span>${makeLocationLink(personal.location)}</span></p>` : ""}
@@ -1251,7 +1251,7 @@
             <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:#e8e8e8;padding:45px 30px!important;box-sizing:border-box;text-align:center;">
               ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />` : ''}
               <div style="margin-bottom:30px;text-align:left;">
-                <h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>
+                ${(personal.phone || personal.email || formatLocation(personal.location) || personal.linkedin || personal.portfolio) ? `<h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>` : ""}
                 ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#777;width:14px;text-align:center;"></i> <span>${makeLocationLink(personal.location)}</span></p>` : ""}
                 ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#777;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
                 ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-envelope" style="color:#777;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
