@@ -1027,7 +1027,7 @@
       }).filter(Boolean).join("");
     };
 
-    // All other templates â€” Build clickable contact/links with icons
+    // All other templates Ã¢â‚¬â€ Build clickable contact/links with icons
     const makeLink = (url) => {
       if (!url) return "";
       const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
@@ -1996,7 +1996,7 @@
     <link rel="stylesheet" href="${cssUrl}" />
     <style>
       /* Full-bleed templates (sidebars/splits) get 0 page margin so layout isn't cut */
-      ${['modernSidebar','floralSidebar','slateModern','emeraldSplit','navyOverlap','forestSidebar','monochromeSplit','centerArch'].includes(state.selectedTemplate)
+      ${['modernSidebar','floralSidebar','slateModern','emeraldSplit','navyOverlap','forestSidebar','monochromeSplit','centerArch','pin-banner','pin-yellow','pin-dark','pin-pink','pin-arch'].includes(state.selectedTemplate)
         ? '@page { size: A4; margin: 0 !important; }'
         : '@page { size: A4; margin: 15mm !important; }'
       }
@@ -2624,6 +2624,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 

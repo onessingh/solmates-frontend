@@ -2940,7 +2940,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* =============================================
    CHARTERED ACCOUNTANT / AUDITOR
    ============================================= */
-.template-ca { font-family: 'Arial', sans-serif; color: #1a2e1a; font-size: 11pt; }
+.template-ca { font-family: 'Arial', sans-serif; color: #1a2e1a; font-size: 11pt; padding: 30px !important; }
 .template-ca .resume-header { border-top: 5px solid #1b5e20; border-bottom: 1px solid #4caf50; padding: 16px 0 12px 0; margin-bottom: 18px; text-align: center; }
 .template-ca .resume-name { font-size: 20px; font-weight: bold; color: #1b5e20; text-transform: uppercase; letter-spacing: 1px; }
 .template-ca .resume-headline { font-size: 12px; color: #2e7d32; margin-top: 4px; }
@@ -2952,7 +2952,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* =============================================
    PINTEREST: BEIGE ARCH (Aesthetic Minimalist)
    ============================================= */
-.template-pin-arch { background-color: #fbf9f6; font-family: 'Georgia', serif; color: #4a4a4a; padding: 30px; }
+.template-pin-arch { background-color: #fbf9f6; font-family: 'Georgia', serif; color: #4a4a4a; padding: 30px !important; }
 .template-pin-arch .resume-header { text-align: center; margin-bottom: 30px; }
 .template-pin-arch .resume-photo { margin-bottom: 15px; }
 .template-pin-arch .resume-photo img { border-radius: 100px 100px 10px 10px; width: 110px; height: 140px; object-fit: cover; border: 3px solid #e5e0d8; }
@@ -3006,7 +3006,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* =============================================
    PINTEREST: PINK GRID AESTHETIC
    ============================================= */
-.template-pin-pink { font-family: 'Trebuchet MS', sans-serif; color: #500724; background-image: linear-gradient(#fbcfe8 1px, transparent 1px), linear-gradient(90deg, #fbcfe8 1px, transparent 1px); background-size: 20px 20px; padding: 30px; background-color: #fff; }
+.template-pin-pink { font-family: 'Trebuchet MS', sans-serif; color: #500724; background-image: linear-gradient(#fbcfe8 1px, transparent 1px), linear-gradient(90deg, #fbcfe8 1px, transparent 1px); background-size: 20px 20px; padding: 30px !important; background-color: #fff; }
 .template-pin-pink .resume-header { border-left: 6px solid #f472b6; padding-left: 20px; margin-bottom: 30px; }
 .template-pin-pink .resume-photo img { border-radius: 50%; border: 3px dashed #f472b6; padding: 4px; }
 .template-pin-pink .resume-name { font-size: 32px; font-weight: 800; color: #db2777; }
@@ -3409,3 +3409,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 }
 
 /* Default: left-align (no rule needed, flex default is flex-start) */
+
+/* Padding fix for banner templates */
+.template-pin-banner .resume-section, .template-pin-banner .resume-footer-lines { padding-left: 30px !important; padding-right: 30px !important; }
+.template-pin-yellow .resume-section, .template-pin-yellow .resume-footer-lines { padding-left: 30px !important; padding-right: 30px !important; }
