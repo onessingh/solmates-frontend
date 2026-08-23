@@ -1027,7 +1027,7 @@
           </aside>
           <main class="resume-main" style="flex:1!important;padding:35px 30px;background:#fff;box-sizing:border-box;">
             <header style="margin-bottom:30px;">
-              <h1 style="font-size:3rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+              <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
               ${personal.headline && showHeadline ? `<p style="color:#cfa068;font-weight:400;font-size:1.4rem;text-transform:capitalize;">${escapeHtml(personal.headline)}</p>` : ""}
             </header>
             <style>.template-forestSidebar .resume-main .resume-section h2{color:#111!important;border-bottom:2px solid #111!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:14px!important;background:none!important;} .template-forestSidebar .resume-main .resume-item-header { display:flex; justify-content: space-between; align-items: baseline; } .template-forestSidebar .resume-main .resume-item-title { font-weight: 700; color:#111; } .template-forestSidebar .resume-main .resume-item-date { background: #111; color: #fff; padding: 2px 8px; font-size: 0.75rem; border-radius: 3px; }</style>
@@ -1045,7 +1045,7 @@
         <article class="resume template-monochromeSplit" style="display:flex!important;flex-direction:row!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
           <aside class="resume-sidebar" style="width:38%!important;flex-shrink:0!important;display:flex!important;flex-direction:column!important;">
             <div style="background:#fff;padding:40px 30px 25px;">
-              <h1 style="color:#111;font-size:2.8rem;font-weight:900;text-transform:uppercase;word-break:break-word;line-height:1.1;margin-bottom:10px;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+              <h1 style="color:#111;font-size:2.3rem;font-weight:900;text-transform:uppercase;word-break:break-word;line-height:1.1;margin-bottom:10px;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
             </div>
             <div style="width:100%;aspect-ratio:1/1;background:#eee;overflow:hidden;">
               <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);display:block;" />
@@ -1076,13 +1076,13 @@
       const centerKeys = state.sectionOrder.filter(k => !leftKeys.includes(k) && !rightKeys.includes(k));
       return `
         <article class="resume template-centerArch" style="display:flex!important;flex-direction:row!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Outfit',sans-serif;color:#555;background:#fff;align-items:stretch!important;position:relative;border-top:20px solid #d1c7bc;border-bottom:20px solid #888;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
-          <div class="left-col" style="flex:0 0 32%!important;width:32%!important;padding:40px 25px 30px;box-sizing:border-box;text-align:right;">
+          <div class="left-col" style="flex:0 0 32%!important;width:32%!important;padding:40px 20px 30px;box-sizing:border-box;text-align:right;">
             <style>.template-centerArch .left-col .resume-section h2{color:#c1a58d!important;font-size:0.85rem!important;border-bottom:1px solid #e0cfc0!important;text-transform:uppercase!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:12px!important;background:none!important;text-align:right!important;} .template-centerArch .left-col .resume-item { text-align: right; } .template-centerArch .left-col ul { list-style: none!important; padding:0!important; } .template-centerArch .left-col li { text-align: right; }</style>
             ${generateSections(leftKeys)}
           </div>
-          <div class="center-col" style="flex:0 0 36%!important;width:36%!important;background:#f1ede9;text-align:center;border-radius:200px 200px 0 0;margin-top:20px;padding:30px 20px 30px;box-sizing:border-box;">
-            <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 20px;" />
-            <h1 style="font-size:2.2rem;color:#c1a58d;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;line-height:1.2;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+          <div class="center-col" style="flex:0 0 36%!important;width:36%!important;background:#f1ede9;text-align:center;border-radius:200px 200px 0 0;margin:20px 10px 0;padding:40px 15px 30px;box-sizing:border-box;">
+            <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:130px;height:130px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 20px;" />
+            <h1 style="font-size:2rem;color:#c1a58d;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;line-height:1.2;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
             ${personal.headline && showHeadline ? `<p style="font-style:italic;color:#777;font-size:1rem;margin-bottom:35px;">${escapeHtml(personal.headline)}</p>` : ""}
             <div style="margin-bottom:20px;">
               ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:15px;"><strong style="color:#555;letter-spacing:1px;text-transform:uppercase;font-size:0.75rem;">meet</strong><br>${escapeHtml(formatLocation(personal.location))}</p>` : ""}
@@ -1094,7 +1094,7 @@
             <style>.template-centerArch .center-col .resume-section h2{color:#c1a58d!important;font-size:0.85rem!important;border-bottom:1px solid #d4c5ba!important;text-transform:uppercase!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:12px!important;background:none!important;text-align:center!important;} .template-centerArch .center-col .resume-item { text-align: center; } .template-centerArch .center-col ul { list-style: none!important; padding:0!important; } .template-centerArch .center-col li { text-align: center; }</style>
             ${generateSections(centerKeys)}
           </div>
-          <div class="right-col" style="flex:0 0 32%!important;width:32%!important;padding:40px 25px 30px;box-sizing:border-box;text-align:left;">
+          <div class="right-col" style="flex:0 0 32%!important;width:32%!important;padding:40px 20px 30px;box-sizing:border-box;text-align:left;">
              <style>.template-centerArch .right-col .resume-section h2{color:#c1a58d!important;font-size:0.85rem!important;border-bottom:1px solid #e0cfc0!important;text-transform:uppercase!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:12px!important;background:none!important;text-align:left!important;} .template-centerArch .right-col .resume-item { text-align: left; }</style>
             ${generateSections(rightKeys)}
           </div>
