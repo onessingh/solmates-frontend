@@ -3485,7 +3485,7 @@ html.is-desktop .wizard-header { max-width: 100% !important; margin: 0 0 10px 0 
 /* Builder - side by side */
 html.is-desktop .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
 html.is-desktop .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
-html.is-desktop .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: calc(100vh - 160px) !important; overflow-y: auto !important; position: sticky !important; top: 60px !important; }
+html.is-desktop .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
 html.is-desktop .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
 
 /* JD Match full width */
@@ -3493,8 +3493,8 @@ html.is-desktop .jd-match { max-width: 100% !important; width: 100% !important; 
 
 /* Templates full width, no scroll */
 html.is-desktop .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; }
-html.is-desktop .tpl-gallery { max-height: none !important; overflow-y: visible !important; overflow: visible !important; }
-html.is-desktop .tpl-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+html.is-desktop .tpl-gallery { max-height: 600px !important; overflow-y: auto !important; overflow-x: hidden !important; }
+html.is-desktop .tpl-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
 html.is-desktop .template-card { padding: 8px !important; }
 html.is-desktop .template-preview { height: 90px !important; }
 html.is-desktop .template-info h3 { font-size: 0.8rem !important; }
@@ -3517,12 +3517,12 @@ html.is-desktop #resume-preview { transform: none !important; margin-bottom: 0 !
   .wizard-header { max-width: 100% !important; margin: 0 0 10px 0 !important; }
   .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
   .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
-  .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: calc(100vh - 160px) !important; overflow-y: auto !important; position: sticky !important; top: 60px !important; }
+  .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
   .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .jd-match { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
-  .tpl-gallery { max-height: none !important; overflow-y: visible !important; }
-  .tpl-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
+  .tpl-gallery { max-height: 600px !important; overflow-y: auto !important; }
+  .tpl-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
   .template-preview { height: 90px !important; }
   #resume-preview { transform: none !important; margin-bottom: 0 !important; width: 100% !important; }
 }
@@ -3552,4 +3552,25 @@ html.is-desktop .panel-section {
 html.is-desktop .field input, html.is-desktop .field select, html.is-desktop .field textarea {
     padding: 10px 12px !important;
     font-size: 0.9rem !important;
+}
+
+html.is-desktop .jd-match .jd-panel { max-width: 100% !important; width: 100% !important; }
+html.is-desktop .jd-match-body { max-width: 100% !important; width: 100% !important; }
+
+/* Make Preview Panel sticky so it stays visible while scrolling the long form */
+html.is-desktop .preview-panel { 
+    position: sticky !important; 
+    top: 20px !important; 
+    max-height: calc(100vh - 40px) !important; 
+    overflow-y: auto !important; 
+}
+
+/* Ensure JD Match input area spans full width */
+html.is-desktop .jd-input-panel {
+    max-width: 100% !important;
+}
+
+/* JD Match should span both columns in the CSS grid to be full screen width */
+html.is-desktop .jd-match {
+    grid-column: 1 / -1 !important;
 }
