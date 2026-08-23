@@ -536,10 +536,7 @@
       title: "Professional Summary",
       render: (resume) => {
         if (!resume.summary) return "";
-        // For modernSidebar, the summary is a floating bio without a section header
-        if (state.selectedTemplate === "modernSidebar") {
-          return `<div class="main-header-summary"><p>${linkify(escapeHtml(resume.summary))}</p></div>`;
-        }
+        
         return renderSection("Professional Summary", `<p>${linkify(escapeHtml(resume.summary))}</p>`);
       }
     },
@@ -571,19 +568,7 @@
           const bullets = renderList(item.bullets);
           const description = item.description ? `<p>${linkify(escapeHtml(item.description))}</p>` : "";
 
-          if (state.selectedTemplate === "modernSidebar") {
-            return `
-              <article class="experience-item">
-                <div class="experience-header">
-                  <span class="experience-date">${escapeHtml(range || "")}</span>
-                  <h4>${escapeHtml(item.company || "")}</h4>
-                </div>
-                <h5>${escapeHtml(item.jobTitle || "")}</h5>
-                ${description}
-                ${bullets}
-              </article>
-            `;
-          }
+          
 
           return `
             <article class="resume-item">
@@ -652,15 +637,7 @@
         const html = (resume.education || []).map((item) => {
           const range = formatRange(item.startYear, item.endYear);
           
-          if (state.selectedTemplate === "modernSidebar") {
-            return `
-              <div class="education-sidebar-item">
-                <p class="school-date">${escapeHtml(range || "")}</p>
-                <h4>${escapeHtml(item.degree || "")}</h4>
-                <p class="school-name">${escapeHtml(item.institution || "")}</p>
-              </div>
-            `;
-          }
+          
 
           const titleLine = [item.degree, item.institution].filter(Boolean).join("  \u2022  ");
           const meta = [range, item.location, item.specialization, item.marks].filter(Boolean).join("  \u2022  ");
@@ -853,9 +830,7 @@
           `;
         }).join("");
         
-        if (state.selectedTemplate === "modernSidebar") {
-          return renderSection("Reference", `<div class="references-grid">${html}</div>`);
-        }
+        
         return renderSection("References", html);
       }
     }
