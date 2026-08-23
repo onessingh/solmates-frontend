@@ -2002,7 +2002,7 @@
       }
       @media screen, print {
         body { margin: 0; padding: 0; box-sizing: border-box; }
-        body:not(.template-modernSidebar):not(.template-forestSidebar):not(.template-monochromeSplit):not(.template-navyOverlap):not(.template-floralSidebar):not(.template-centerArch) { background: #fff !important; }
+        body:not(.template-modernSidebar):not(.template-forestSidebar):not(.template-monochromeSplit):not(.template-navyOverlap):not(.template-floralSidebar):not(.template-centerArch):not(.template-pin-dark):not(.template-pin-arch):not(.template-pin-pink) { background: #fff !important; }
         
         body.template-forestSidebar {
             background: linear-gradient(to right, #1b2823 35%, #fff 35%) !important;
@@ -2022,6 +2022,20 @@
         }
         body.template-floralSidebar {
             background: linear-gradient(to right, #f0f0f0 35%, #fff 35%) !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-pin-dark {
+            background: #121212 !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-pin-arch {
+            background: #fbf9f6 !important;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+        }
+        body.template-pin-pink {
+            background-color: #fff !important;
+            background-image: linear-gradient(#fbcfe8 1px, transparent 1px), linear-gradient(90deg, #fbcfe8 1px, transparent 1px) !important;
+            background-size: 20px 20px !important;
             -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
         }
         
@@ -2610,6 +2624,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
