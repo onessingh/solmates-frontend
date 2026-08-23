@@ -23,6 +23,9 @@ function initTabs() {
     if(previewPanel) previewPanel.style.display = isDesktop ? "block" : "none";
     
     tabs.forEach(tab => {
+    if(previewPanel) previewPanel.style.display = isDesktop ? "block" : "none";
+    
+    tabs.forEach(tab => {
         tab.addEventListener("click", () => {
             tabs.forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
@@ -31,16 +34,25 @@ function initTabs() {
             
             if(formPanel) formPanel.style.display = (target === "builder") ? "block" : "none";
             if(wizardHeader) wizardHeader.style.display = (target === "builder") ? "flex" : "none";
-            if(jdMatch) jdMatch.style.display = (target === "jd") ? "block" : "none";
+            if(jdMatch) {
+                jdMatch.style.display = (target === "jd") ? "block" : "none";
+                if (target === "jd") {
+                    // Force full width - span both grid columns
+                    jdMatch.style.width = "100%";
+                    jdMatch.style.maxWidth = "100%";
+                    jdMatch.style.boxSizing = "border-box";
+                    jdMatch.style.gridColumn = "1 / -1";
+                }
+            }
             if(templates) templates.style.display = (target === "templates") ? "block" : "none";
             if(previewPanel) {
                 const isDesktop = window.innerWidth >= 900 || document.documentElement.classList.contains('is-desktop');
                 if (isDesktop) {
+                    // On desktop: show preview alongside builder and templates, hide for JD match (JD match takes full width)
                     previewPanel.style.display = (target === "builder" || target === "templates") ? "block" : "none";
                 } else {
                     previewPanel.style.display = (target === "templates") ? "block" : "none";
                 }
-            }
             
             // Re-trigger showStep logic if switching back to builder
             if(target === "builder" && typeof window.currentWizardStep !== "undefined") {

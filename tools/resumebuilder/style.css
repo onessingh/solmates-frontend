@@ -3574,3 +3574,18 @@ html.is-desktop .jd-input-panel {
 html.is-desktop .jd-match {
     grid-column: 1 / -1 !important;
 }
+
+/* Force JD Match to span fully across the grid */
+html.is-desktop .builder-columns > .jd-match {
+    grid-column: span 2 !important;
+    width: 100% !important;
+}
+/* Templates takes 1 column, Preview takes 1 column */
+html.is-desktop .builder-columns > .templates {
+    grid-column: span 1 !important;
+}
+
+/* If Templates spans 2 columns, where does the preview go?
+Wait! If templates spans 2 columns, then the preview will be pushed to the NEXT row!
+BUT the user WANTS the templates to take up the left side and preview on the right! 
+Let's keep Templates as taking 1 column. */
