@@ -1028,7 +1028,8 @@
             </aside>
             <main class="resume-main" style="flex:1!important;padding:35px 30px!important;background:#fff;box-sizing:border-box;">
               <header style="margin-bottom:30px;">
-                <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+                <!-- Fix: Removed .replace(/ /g, '<br>') so name is on one line -->
+                <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name")}</h1>
                 ${personal.headline && showHeadline ? `<p style="color:#cfa068;font-weight:400;font-size:1.4rem;text-transform:capitalize;">${escapeHtml(personal.headline)}</p>` : ""}
               </header>
               <style>.template-forestSidebar .resume-main .resume-section h2{color:#111!important;border-bottom:2px solid #111!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:14px!important;background:none!important;} .template-forestSidebar .resume-main .resume-item-header { display:flex; justify-content: space-between; align-items: baseline; } .template-forestSidebar .resume-main .resume-item-title { font-weight: 700; color:#111; } .template-forestSidebar .resume-main .resume-item-date { background: #111; color: #fff; padding: 2px 8px; font-size: 0.75rem; border-radius: 3px; }</style>
@@ -1038,71 +1039,66 @@
         </article>`.trim();
     }
 
-    if (templateKey === "monochromeSplit") {
-      const sidebarKeys = ["skills","languages","personalDetails"];
-      const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
-      const sidebarSections = generateSections(sidebarKeys);
-      const mainSections = generateSections(mainKeys);
+    if (templateKey === "slateModern") {
+      const rightKeys = ["education","skills","technicalStack","certifications","languages"];
+      const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
-        <article class="resume template-monochromeSplit" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
-          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:1122px!important;align-items:stretch!important;">
-            <aside class="resume-sidebar" style="width:38%!important;flex-shrink:0!important;display:flex!important;flex-direction:column!important;">
-              <div style="background:#fff;padding:40px 30px 25px!important;">
-                <h1 style="color:#111;font-size:2rem;font-weight:900;text-transform:uppercase;word-break:break-word;line-height:1.1;margin-bottom:10px;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+        <article class="resume template-slateModern" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Outfit',sans-serif;background:#2b3036;color:#e0e6ed;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;border-left:15px solid #1abc9c;">
+          <header style="padding:40px 40px 20px!important;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:30px;">
+            <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:3px solid #1abc9c;" />
+            <div>
+              <h1 style="font-size:2.8rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">${escapeHtml(personal.fullName || "Name")}</h1>
+              ${personal.headline && showHeadline ? `<p style="color:#1abc9c;font-size:1.3rem;font-weight:400;margin-bottom:10px;">${escapeHtml(personal.headline)}</p>` : ""}
+              <div style="display:flex;flex-wrap:wrap;gap:10px 20px;font-size:0.85rem;color:#b0bac5;">
+                ${personal.phone ? `<span><i style="color:#1abc9c;font-style:normal;">☎</i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
+                ${personal.email ? `<span><i style="color:#1abc9c;font-style:normal;">✉</i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
+                ${personal.linkedin ? `<span><i style="color:#1abc9c;font-style:normal;">✔</i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span><i style="color:#1abc9c;font-style:normal;">⌂</i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+                ${personal.portfolio ? `<span><i style="color:#1abc9c;font-style:normal;">★</i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
-              <div style="width:100%;aspect-ratio:1/1;background:#eee;overflow:hidden;">
-                <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);display:block;" />
-              </div>
-              <div style="background:#111;color:#eee;flex:1!important;padding:30px!important;">
-                <div style="margin-bottom:25px;">
-                  <h3 style="color:#fff;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Contact</h3>
-                  ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:8px;color:#ccc;">${escapeHtml(personal.phone)}</p>` : ""}
-                  ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:8px;color:#ccc;word-break:break-all;">${escapeHtml(personal.email)}</p>` : ""}
-                  ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:8px;color:#ccc;word-break:break-all;">${makeUrlLink(personal.linkedin)}</p>` : ""}
-                  ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:8px;color:#ccc;word-break:break-all;">${makeUrlLink(personal.portfolio)}</p>` : ""}
-                  ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:8px;color:#ccc;">${escapeHtml(formatLocation(personal.location))}</p>` : ""}
-                </div>
-                <style>.template-monochromeSplit .resume-sidebar h2,.template-monochromeSplit .resume-sidebar h3{color:#fff!important;border:none!important;font-size:0.85rem!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:0!important;margin-bottom:12px!important;background:none!important;} .template-monochromeSplit .resume-sidebar *{color:#ccc!important;} .template-monochromeSplit .resume-sidebar h2,.template-monochromeSplit .resume-sidebar h3{color:#fff!important;} .template-monochromeSplit .resume-sidebar .resume-section { margin-bottom: 25px!important; }</style>
-                ${sidebarSections}
-              </div>
-            </aside>
-            <main class="resume-main" style="flex:1!important;background:#f5f5f5;padding:45px 40px!important;box-sizing:border-box;">
-              <style>.template-monochromeSplit .resume-main .resume-section h2{color:#000!important;border-bottom:2px solid #000!important;text-transform:uppercase!important;font-size:0.95rem!important;font-weight:800!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;} .template-monochromeSplit .resume-main .resume-item { position: relative; padding-left: 20px; border-left: 1px solid #ccc; margin-bottom: 20px; } .template-monochromeSplit .resume-main .resume-item::before { content: ''; position: absolute; left: -4px; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: #000; }</style>
-              ${mainSections}
+            </div>
+          </header>
+          <div style="display:flex!important;flex-direction:row!important;width:100%!important;">
+            <main style="flex:1!important;padding:30px 40px!important;box-sizing:border-box;">
+              <style>.template-slateModern main .resume-section h2{color:#1abc9c!important;border-bottom:1px solid rgba(26,188,156,0.3)!important;text-transform:uppercase!important;font-size:1rem!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:16px!important;background:none!important;} .template-slateModern main *{color:#e0e6ed;} .template-slateModern main strong, .template-slateModern main .resume-item-title { color: #fff; font-weight:600; } .template-slateModern main .resume-item-date { color: #1abc9c; font-size:0.8rem; }</style>
+              ${generateSections(leftKeys)}
             </main>
+            <aside style="flex:0 0 32%!important;width:32%!important;background:rgba(0,0,0,0.15);padding:30px 25px!important;box-sizing:border-box;">
+              <style>.template-slateModern aside .resume-section h2{color:#1abc9c!important;border-bottom:1px solid rgba(26,188,156,0.3)!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:16px!important;background:none!important;} .template-slateModern aside *{color:#b0bac5;} .template-slateModern aside strong, .template-slateModern aside .resume-item-title { color: #fff; font-weight:600; }</style>
+              ${generateSections(rightKeys)}
+            </aside>
           </div>
         </article>`.trim();
     }
 
-    if (templateKey === "centerArch") {
-      const leftKeys = ["summary","experience","internships"];
-      const rightKeys = ["education","skills","technicalStack","awards","certifications","languages","publications"];
-      const centerKeys = state.sectionOrder.filter(k => !leftKeys.includes(k) && !rightKeys.includes(k));
+    if (templateKey === "emeraldSplit") {
+      const rightKeys = ["education","skills","technicalStack","certifications"];
+      const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
-        <article class="resume template-centerArch" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Outfit',sans-serif;color:#555;background:#fff;border-top:20px solid #d1c7bc;border-bottom:20px solid #888;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
-          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:1082px!important;align-items:stretch!important;position:relative;">
-            <div class="left-col" style="flex:0 0 32%!important;width:32%!important;padding:40px 20px 30px!important;box-sizing:border-box;text-align:right;">
-              <style>.template-centerArch .left-col .resume-section h2{color:#c1a58d!important;font-size:0.85rem!important;border-bottom:1px solid #e0cfc0!important;text-transform:uppercase!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:12px!important;background:none!important;text-align:right!important;} .template-centerArch .left-col .resume-item { text-align: right; } .template-centerArch .left-col ul { list-style: none!important; padding:0!important; } .template-centerArch .left-col li { text-align: right; }</style>
-              ${generateSections(leftKeys)}
-            </div>
-            <div class="center-col" style="flex:0 0 36%!important;width:36%!important;background:#f1ede9;text-align:center;border-radius:200px 200px 0 0!important;margin:20px 10px 0!important;padding:40px 15px 30px!important;box-sizing:border-box;">
-              <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:130px;height:130px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 20px;" />
-              <h1 style="font-size:2rem;color:#c1a58d;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;line-height:1.2;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
-              ${personal.headline && showHeadline ? `<p style="font-style:italic;color:#777;font-size:1rem;margin-bottom:35px;">${escapeHtml(personal.headline)}</p>` : ""}
-              <div style="margin-bottom:20px;">
-                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:15px;"><strong style="color:#555;letter-spacing:1px;text-transform:uppercase;font-size:0.75rem;">meet</strong><br>${escapeHtml(formatLocation(personal.location))}</p>` : ""}
-                ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:15px;"><strong style="color:#555;letter-spacing:1px;text-transform:uppercase;font-size:0.75rem;">call</strong><br><a href="tel:${escapeHtml(personal.phone)}" style="color:#777;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
-                ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:15px;"><strong style="color:#555;letter-spacing:1px;text-transform:uppercase;font-size:0.75rem;">write</strong><br><a href="mailto:${escapeHtml(personal.email)}" style="color:#777;text-decoration:none;word-break:break-all;">${escapeHtml(personal.email)}</a></p>` : ""}
-                ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:15px;"><strong style="color:#555;letter-spacing:1px;text-transform:uppercase;font-size:0.75rem;">network</strong><br>${makeUrlLink(personal.linkedin)}</p>` : ""}
-                ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:15px;"><strong style="color:#555;letter-spacing:1px;text-transform:uppercase;font-size:0.75rem;">portfolio</strong><br>${makeUrlLink(personal.portfolio)}</p>` : ""}
+        <article class="resume template-emeraldSplit" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;color:#333;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
+          <header style="background:#0f4c3a;padding:45px 50px!important;color:#fff;display:flex;justify-content:space-between;align-items:center;">
+            <div style="flex:1;">
+              <h1 style="font-size:3.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;line-height:1;">${escapeHtml(personal.fullName || "Name")}</h1>
+              ${personal.headline && showHeadline ? `<p style="color:#81d4a3;font-size:1.3rem;font-weight:400;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px;">${escapeHtml(personal.headline)}</p>` : ""}
+              <div style="display:flex;flex-wrap:wrap;gap:8px 15px;font-size:0.85rem;color:#e8f5e9;">
+                ${personal.phone ? `<span>☎ <a href="tel:${escapeHtml(personal.phone)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
+                ${personal.email ? `<span>✉ <a href="mailto:${escapeHtml(personal.email)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
+                ${personal.linkedin ? `<span>✔ ${makeUrlLink(personal.linkedin)}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span>⌂ ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+                ${personal.portfolio ? `<span>★ ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
-              <style>.template-centerArch .center-col .resume-section h2{color:#c1a58d!important;font-size:0.85rem!important;border-bottom:1px solid #d4c5ba!important;text-transform:uppercase!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:12px!important;background:none!important;text-align:center!important;} .template-centerArch .center-col .resume-item { text-align: center; } .template-centerArch .center-col ul { list-style: none!important; padding:0!important; } .template-centerArch .center-col li { text-align: center; }</style>
-              ${generateSections(centerKeys)}
             </div>
-            <div class="right-col" style="flex:0 0 32%!important;width:32%!important;padding:40px 20px 30px!important;box-sizing:border-box;text-align:left;">
-               <style>.template-centerArch .right-col .resume-section h2{color:#c1a58d!important;font-size:0.85rem!important;border-bottom:1px solid #e0cfc0!important;text-transform:uppercase!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:12px!important;background:none!important;text-align:left!important;} .template-centerArch .right-col .resume-item { text-align: left; }</style>
+            <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:4px solid #81d4a3;margin-left:20px;" />
+          </header>
+          <div style="display:flex!important;flex-direction:row!important;width:100%!important;">
+            <main style="flex:1!important;padding:40px 50px!important;box-sizing:border-box;">
+              <style>.template-emeraldSplit main .resume-section h2{color:#0f4c3a!important;font-size:1.1rem!important;text-transform:uppercase!important;letter-spacing:1px!important;padding-bottom:5px!important;margin-bottom:18px!important;border-bottom:3px solid #0f4c3a!important;background:none!important;} .template-emeraldSplit main .resume-item-title { font-weight: 700; color:#111; } .template-emeraldSplit main .resume-item-date { color: #0f4c3a; font-weight:600; font-size:0.85rem; }</style>
+              ${generateSections(leftKeys)}
+            </main>
+            <aside style="flex:0 0 35%!important;width:35%!important;background:#f5f9f7;padding:40px 30px!important;box-sizing:border-box;border-left:1px solid #e0e0e0;">
+              <style>.template-emeraldSplit aside .resume-section h2{color:#0f4c3a!important;font-size:1rem!important;text-transform:uppercase!important;letter-spacing:1px!important;padding-bottom:5px!important;margin-bottom:18px!important;border-bottom:2px solid #81d4a3!important;background:none!important;} .template-emeraldSplit aside .resume-item-title { font-weight: 700; color:#111; }</style>
               ${generateSections(rightKeys)}
-            </div>
+            </aside>
           </div>
         </article>`.trim();
     }
@@ -1112,7 +1108,8 @@
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
         <article class="resume template-navyOverlap" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;background:#f4f6f8;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding-top:50px!important;overflow:hidden;">
-          <header style="padding:0 50px 25px!important;">
+          <!-- Fix: Added padding-bottom: 90px so contact links are not hidden by the absolute image -->
+          <header style="padding:0 50px 90px!important;">
             <h1 style="font-size:3rem;font-weight:800;color:#2a3b4c;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">${escapeHtml(personal.fullName || "Name")}</h1>
             ${personal.headline && showHeadline ? `<p style="color:#555;font-size:1.2rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;">${escapeHtml(personal.headline)}</p>` : ""}
             <div style="display:flex;flex-wrap:wrap;gap:8px 20px;font-size:0.85rem;color:#666;border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px 0;">
@@ -1120,6 +1117,7 @@
               ${personal.email ? `<span>E: <a href="mailto:${escapeHtml(personal.email)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
               ${personal.linkedin ? `<span>L: ${makeUrlLink(personal.linkedin)}</span>` : ""}
               ${formatLocation(personal.location) ? `<span>A: ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+              ${personal.portfolio ? `<span>W: ${makeUrlLink(personal.portfolio)}</span>` : ""}
             </div>
           </header>
           <div style="display:flex!important;flex-direction:row!important;position:relative;">
@@ -1128,7 +1126,6 @@
               ${generateSections(leftKeys)}
             </main>
             <aside style="flex:0 0 35%!important;width:35%!important;background:#2a3b4c;color:#e0e6ed;padding:30px 30px 40px!important;box-sizing:border-box;position:relative;">
-              <!-- Wrapper div to push content down below the absolute image -->
               <div style="margin-top: 80px!important;">
                 <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:160px;height:160px;object-fit:cover;border-radius:50%;border:6px solid #f4f6f8;position:absolute;top:-80px;left:50%;transform:translateX(-50%);background:#fff;" />
                 <style>.template-navyOverlap aside h2,.template-navyOverlap aside h3{color:#fff!important;border-bottom:1px solid rgba(255,255,255,0.3)!important;border-top:1px solid rgba(255,255,255,0.3)!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding:8px 0!important;margin-bottom:18px!important;background:none!important;text-align:center;} .template-navyOverlap aside *{color:#e0e6ed!important;} .template-navyOverlap aside h2,.template-navyOverlap aside h3{color:#fff!important;}</style>
@@ -1139,38 +1136,7 @@
         </article>`.trim();
     }
 
-    if (templateKey === "floralSidebar") {
-      const sidebarKeys = ["skills","languages","awards","personalDetails","interests"];
-      const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
-      const sidebarSections = generateSections(sidebarKeys);
-      const mainSections = generateSections(mainKeys);
-      return `
-        <article class="resume template-floralSidebar" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Georgia',serif;color:#444;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
-          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:1122px!important;align-items:stretch!important;">
-            <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:#e8e8e8;padding:45px 30px!important;box-sizing:border-box;text-align:center;">
-              <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
-              <div style="margin-bottom:30px;text-align:left;">
-                <h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>
-                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;">${escapeHtml(formatLocation(personal.location))}</p>` : ""}
-                ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;"><a href="tel:${escapeHtml(personal.phone)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
-                ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;"><a href="mailto:${escapeHtml(personal.email)}" style="color:#444;text-decoration:none;word-break:break-all;">${escapeHtml(personal.email)}</a></p>` : ""}
-                ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;word-break:break-all;">${makeUrlLink(personal.linkedin)}</p>` : ""}
-                ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;word-break:break-all;">${makeUrlLink(personal.portfolio)}</p>` : ""}
-              </div>
-              <style>.template-floralSidebar .resume-sidebar h2,.template-floralSidebar .resume-sidebar h3{color:#333!important;font-size:0.85rem!important;text-transform:uppercase!important;letter-spacing:3px!important;padding-bottom:5px!important;margin-bottom:15px!important;border-bottom:1px solid #ccc!important;border-top:none!important;border-left:none!important;border-right:none!important;background:none!important;text-align:center!important;} .template-floralSidebar .resume-sidebar .resume-item { text-align: center; }</style>
-              ${sidebarSections}
-            </aside>
-            <main class="resume-main" style="flex:1!important;padding:55px 45px!important;background:#fff;box-sizing:border-box;">
-              <header style="margin-bottom:40px;text-align:center;">
-                <h1 style="font-size:2.8rem;font-weight:400;color:#222;text-transform:uppercase;letter-spacing:8px;margin-bottom:15px;line-height:1.2;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
-                ${personal.headline && showHeadline ? `<p style="font-style:italic;color:#666;font-size:1.1rem;letter-spacing:2px;position:relative;display:inline-block;">${escapeHtml(personal.headline)}<span style="position:absolute;top:50%;left:-50px;width:40px;height:1px;background:#ccc;"></span><span style="position:absolute;top:50%;right:-50px;width:40px;height:1px;background:#ccc;"></span></p>` : ""}
-              </header>
-              <style>.template-floralSidebar .resume-main .resume-section h2{background:#4a3e47!important;color:#fff!important;font-size:0.9rem!important;text-transform:uppercase!important;letter-spacing:5px!important;padding:8px 15px!important;margin-bottom:18px!important;border:none!important;text-align:center;}</style>
-              ${mainSections}
-            </main>
-          </div>
-        </article>`.trim();
-    }    // All other templates
+    if (templateKey === "floralSidebar") {    // All other templates
     // Build clickable contact/links
     const emailLink = personal.email
       ? `<a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a>`
