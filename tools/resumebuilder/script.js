@@ -1016,11 +1016,11 @@
               <div style="padding:25px 22px!important;flex:1;">
                 <div style="margin-bottom:20px;">
                   <h3 style="color:#fff;border-top:1px solid rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.3);padding:6px 0;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Contact</h3>
-                  ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:6px;"><strong>Phone:</strong> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
-                  ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:6px;"><strong>Email:</strong> <a href="mailto:${escapeHtml(personal.email)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
-                  ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:6px;"><strong>Address:</strong> ${escapeHtml(formatLocation(personal.location))}</p>` : ""}
-                  ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:6px;"><strong>Linked:</strong> ${makeUrlLink(personal.linkedin)}</p>` : ""}
-                  ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:6px;"><strong>Portfolio:</strong> ${makeUrlLink(personal.portfolio)}</p>` : ""}
+                  ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
+                  ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-envelope" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
+                  ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#cfa068;width:14px;text-align:center;margin-top:3px;"></i> <span>${escapeHtml(formatLocation(personal.location))}</span></p>` : ""}
+                  ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fab fa-linkedin-in" style="color:#cfa068;width:14px;text-align:center;"></i> ${makeUrlLink(personal.linkedin)}</p>` : ""}
+                  ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-globe" style="color:#cfa068;width:14px;text-align:center;"></i> ${makeUrlLink(personal.portfolio)}</p>` : ""}
                 </div>
                 <style>.template-forestSidebar .resume-sidebar h2,.template-forestSidebar .resume-sidebar h3{color:#fff!important;border-top:1px solid rgba(255,255,255,0.3)!important;border-bottom:1px solid rgba(255,255,255,0.3)!important;font-size:0.85rem!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:6px 0!important;margin-bottom:12px!important;background:none!important;} .template-forestSidebar .resume-sidebar *{color:#e5e0d8!important;} .template-forestSidebar .resume-sidebar h2,.template-forestSidebar .resume-sidebar h3{color:#fff!important;}</style>
                 ${sidebarSections}
@@ -1028,7 +1028,6 @@
             </aside>
             <main class="resume-main" style="flex:1!important;padding:35px 30px!important;background:#fff;box-sizing:border-box;">
               <header style="margin-bottom:30px;">
-                <!-- Fix: Removed .replace(/ /g, '<br>') so name is on one line -->
                 <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name")}</h1>
                 ${personal.headline && showHeadline ? `<p style="color:#cfa068;font-weight:400;font-size:1.4rem;text-transform:capitalize;">${escapeHtml(personal.headline)}</p>` : ""}
               </header>
@@ -1050,11 +1049,11 @@
               <h1 style="font-size:2.8rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">${escapeHtml(personal.fullName || "Name")}</h1>
               ${personal.headline && showHeadline ? `<p style="color:#1abc9c;font-size:1.3rem;font-weight:400;margin-bottom:10px;">${escapeHtml(personal.headline)}</p>` : ""}
               <div style="display:flex;flex-wrap:wrap;gap:10px 20px;font-size:0.85rem;color:#b0bac5;">
-                ${personal.phone ? `<span><i style="color:#1abc9c;font-style:normal;">☎</i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
-                ${personal.email ? `<span><i style="color:#1abc9c;font-style:normal;">✉</i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
-                ${personal.linkedin ? `<span><i style="color:#1abc9c;font-style:normal;">✔</i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
-                ${formatLocation(personal.location) ? `<span><i style="color:#1abc9c;font-style:normal;">⌂</i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
-                ${personal.portfolio ? `<span><i style="color:#1abc9c;font-style:normal;">★</i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
+                ${personal.phone ? `<span><i class="fas fa-phone-alt" style="color:#1abc9c;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
+                ${personal.email ? `<span><i class="fas fa-envelope" style="color:#1abc9c;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
+                ${personal.linkedin ? `<span><i class="fab fa-linkedin-in" style="color:#1abc9c;width:14px;text-align:center;"></i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span><i class="fas fa-map-marker-alt" style="color:#1abc9c;width:14px;text-align:center;"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+                ${personal.portfolio ? `<span><i class="fas fa-globe" style="color:#1abc9c;width:14px;text-align:center;"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
             </div>
           </header>
@@ -1081,11 +1080,11 @@
               <h1 style="font-size:3.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;line-height:1;">${escapeHtml(personal.fullName || "Name")}</h1>
               ${personal.headline && showHeadline ? `<p style="color:#81d4a3;font-size:1.3rem;font-weight:400;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px;">${escapeHtml(personal.headline)}</p>` : ""}
               <div style="display:flex;flex-wrap:wrap;gap:8px 15px;font-size:0.85rem;color:#e8f5e9;">
-                ${personal.phone ? `<span>☎ <a href="tel:${escapeHtml(personal.phone)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
-                ${personal.email ? `<span>✉ <a href="mailto:${escapeHtml(personal.email)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
-                ${personal.linkedin ? `<span>✔ ${makeUrlLink(personal.linkedin)}</span>` : ""}
-                ${formatLocation(personal.location) ? `<span>⌂ ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
-                ${personal.portfolio ? `<span>★ ${makeUrlLink(personal.portfolio)}</span>` : ""}
+                ${personal.phone ? `<span><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
+                ${personal.email ? `<span><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
+                ${personal.linkedin ? `<span><i class="fab fa-linkedin-in"></i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+                ${personal.portfolio ? `<span><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
             </div>
             <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:4px solid #81d4a3;margin-left:20px;" />
@@ -1108,16 +1107,15 @@
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
         <article class="resume template-navyOverlap" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;background:#f4f6f8;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding-top:50px!important;overflow:hidden;">
-          <!-- Fix: Added padding-bottom: 90px so contact links are not hidden by the absolute image -->
           <header style="padding:0 50px 90px!important;">
             <h1 style="font-size:3rem;font-weight:800;color:#2a3b4c;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">${escapeHtml(personal.fullName || "Name")}</h1>
             ${personal.headline && showHeadline ? `<p style="color:#555;font-size:1.2rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;">${escapeHtml(personal.headline)}</p>` : ""}
             <div style="display:flex;flex-wrap:wrap;gap:8px 20px;font-size:0.85rem;color:#666;border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px 0;">
-              ${personal.phone ? `<span>P: <a href="tel:${escapeHtml(personal.phone)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
-              ${personal.email ? `<span>E: <a href="mailto:${escapeHtml(personal.email)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
-              ${personal.linkedin ? `<span>L: ${makeUrlLink(personal.linkedin)}</span>` : ""}
-              ${formatLocation(personal.location) ? `<span>A: ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
-              ${personal.portfolio ? `<span>W: ${makeUrlLink(personal.portfolio)}</span>` : ""}
+              ${personal.phone ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
+              ${personal.email ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
+              ${personal.linkedin ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
+              ${formatLocation(personal.location) ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+              ${personal.portfolio ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
             </div>
           </header>
           <div style="display:flex!important;flex-direction:row!important;position:relative;">
@@ -1148,11 +1146,11 @@
               <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
               <div style="margin-bottom:30px;text-align:left;">
                 <h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>
-                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;">${escapeHtml(formatLocation(personal.location))}</p>` : ""}
-                ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;"><a href="tel:${escapeHtml(personal.phone)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
-                ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;"><a href="mailto:${escapeHtml(personal.email)}" style="color:#444;text-decoration:none;word-break:break-all;">${escapeHtml(personal.email)}</a></p>` : ""}
-                ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;word-break:break-all;">${makeUrlLink(personal.linkedin)}</p>` : ""}
-                ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;word-break:break-all;">${makeUrlLink(personal.portfolio)}</p>` : ""}
+                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#777;width:14px;text-align:center;"></i> <span>${escapeHtml(formatLocation(personal.location))}</span></p>` : ""}
+                ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#777;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
+                ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-envelope" style="color:#777;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
+                ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fab fa-linkedin-in" style="color:#777;width:14px;text-align:center;"></i> ${makeUrlLink(personal.linkedin)}</p>` : ""}
+                ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-globe" style="color:#777;width:14px;text-align:center;"></i> ${makeUrlLink(personal.portfolio)}</p>` : ""}
               </div>
               <style>.template-floralSidebar .resume-sidebar h2,.template-floralSidebar .resume-sidebar h3{color:#333!important;font-size:0.85rem!important;text-transform:uppercase!important;letter-spacing:3px!important;padding-bottom:5px!important;margin-bottom:15px!important;border-bottom:1px solid #ccc!important;border-top:none!important;border-left:none!important;border-right:none!important;background:none!important;text-align:center!important;} .template-floralSidebar .resume-sidebar .resume-item { text-align: center; }</style>
               ${sidebarSections}
@@ -1167,9 +1165,7 @@
             </main>
           </div>
         </article>`.trim();
-    }
-
-    // All other templates
+    }    // All other templates
     // Build clickable contact/links
     const emailLink = personal.email
       ? `<a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a>`
