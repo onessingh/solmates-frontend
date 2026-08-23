@@ -3540,7 +3540,7 @@ html.is-desktop #templates-accordion-header .accordion-icon {
 
 /* Also make the whole layout slightly more compact on desktop so it fits better */
 html.is-desktop {
-    zoom: 0.63;
+    zoom: 0.53;
 }
 html.is-desktop .panel-section {
     padding: 16px !important;

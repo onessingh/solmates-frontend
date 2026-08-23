@@ -242,7 +242,11 @@ function initAccordions() {
             
             header.addEventListener("click", () => {
                 const isOpen = contentWrap.classList.contains("open");
-                document.querySelectorAll(".accordion-content").forEach(c => { c.classList.remove("open"); c.style.display = "none"; });
+                document.querySelectorAll(".accordion-content").forEach(c => {
+                    // Never close template gallery accordion on desktop
+                    if (c.id === "template-accordion-content" && (document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900)) return;
+                    c.classList.remove("open"); c.style.display = "none";
+                });
                 document.querySelectorAll(".accordion-icon").forEach(i => i.style.transform = "rotate(0deg)");
                 
                 if (!isOpen) {
@@ -253,32 +257,6 @@ function initAccordions() {
         }
     });
 }
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const tempHeader = document.getElementById("templates-accordion-header");
-    const tempContent = document.getElementById("template-accordion-content");
-    if(tempHeader && tempContent) {
-        tempHeader.addEventListener("click", () => {
-            const isOpen = tempContent.style.display === "block";
-            if(isOpen) {
-                tempContent.style.display = "none";
-                tempHeader.querySelector(".accordion-icon").style.transform = "rotate(0deg)";
-            } else {
-                tempContent.style.display = "block";
-                tempHeader.querySelector(".accordion-icon").style.transform = "rotate(180deg)";
-            }
-        });
-    }
-});
-
-
-// Hook into Section Manager clicks to re-enforce wizard visibility
-document.addEventListener("click", (e) => {
-    if(e.target.closest("#section-manager")) {
         // Give script.js a few ms to do its DOM manipulation
         setTimeout(() => {
             if(window.currentWizardStep) {
@@ -289,3 +267,43 @@ document.addEventListener("click", (e) => {
     }
 }, true);
 
+// Template gallery accordion - desktop open by default, phone toggles
+document.addEventListener("DOMContentLoaded", () => {
+    const tempHeader = document.getElementById("templates-accordion-header");
+    const tempContent = document.getElementById("template-accordion-content");
+    if(tempHeader && tempContent) {
+        const isDesktopDevice = document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900;
+        if (isDesktopDevice) {
+            // DESKTOP: always open, no click toggle
+            tempContent.style.display = "block";
+            tempHeader.style.cursor = "default";
+            const icon = tempHeader.querySelector(".accordion-icon");
+            if(icon) icon.style.transform = "rotate(180deg)";
+        } else {
+            // PHONE: accordion toggle
+            tempHeader.addEventListener("click", () => {
+                const isOpen = tempContent.style.display === "block";
+                if(isOpen) {
+                    tempContent.style.display = "none";
+                    const icon = tempHeader.querySelector(".accordion-icon");
+                    if(icon) icon.style.transform = "rotate(0deg)";
+                } else {
+                    tempContent.style.display = "block";
+                    const icon = tempHeader.querySelector(".accordion-icon");
+                    if(icon) icon.style.transform = "rotate(180deg)";
+                }
+            });
+        }
+    }
+});
+
+// Hook into Section Manager clicks to re-enforce wizard visibility
+document.addEventListener("click", (e) => {
+    if(e.target.closest("#section-manager")) {
+        setTimeout(() => {
+            if(window.currentWizardStep) {
+                document.dispatchEvent(new Event("wizardRefresh"));
+            }
+        }, 10);
+    }
+}, true);
