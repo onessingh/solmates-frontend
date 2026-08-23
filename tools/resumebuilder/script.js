@@ -2010,7 +2010,7 @@
             -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
         }
         body.template-navyOverlap {
-            background: linear-gradient(to right, #fff 60%, #1a2b49 60%) !important;
+            background: #f4f6f8 !important;
             -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
         }
         body.template-floralSidebar {
@@ -2603,6 +2603,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
