@@ -991,7 +991,11 @@
 
 
     // --- 5 Premium Templates Logic ---
-    const makeUrlLink = makeLink;
+    const makeUrlLink = (url) => {
+      if (!url) return "";
+      const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
+      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
+    };
     const generateSections = (keys) => {
       return (state.sectionOrder || []).map(key => {
         if (!state.sectionEnabled[key] || !keys.includes(key) || key === "headline") return "";
