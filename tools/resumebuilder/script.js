@@ -1467,7 +1467,8 @@
       selectedTemplate: state.selectedTemplate,
       sectionOrder: state.sectionOrder,
       sectionEnabled: state.sectionEnabled
-    };
+      templateVersion: 1,
+  };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   };
 
@@ -2658,6 +2659,10 @@
     if (saved?.resume) {
       state.resume = normalizeResume(saved.resume);
       state.selectedTemplate = saved.selectedTemplate || "floralSidebar";
+      // If old localStorage data (no templateVersion), reset to floralSidebar
+      if (!saved.templateVersion) {
+        state.selectedTemplate = "floralSidebar";
+      }
       state.sectionOrder = Array.isArray(saved.sectionOrder) && saved.sectionOrder.length
         ? saved.sectionOrder.filter((key) => DEFAULT_SECTION_ORDER.includes(key))
         : [...DEFAULT_SECTION_ORDER];
