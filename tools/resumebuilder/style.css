@@ -3379,3 +3379,7 @@ html, body {  padding: 0 !important; height: auto !important; }
         float: right !important; width: 36% !important;
     }
 }
+
+/* Disable links in live preview but keep them in PDF */
+.builder-layout .resume-preview a { pointer-events: none; cursor: default; }
+
