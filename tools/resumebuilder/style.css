@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
   --font-display: "Poppins", "Segoe UI", Arial, sans-serif;
 
@@ -902,7 +902,7 @@ textarea:focus {
   margin: 0 !important;
 }
 .resume.modernSidebar .resume-sidebar .resume-section ul li::before {
-  content: "– ";
+  content: "â€“ ";
   color: #A0AEC0;
 }
 
@@ -1305,7 +1305,7 @@ textarea:focus {
   margin-bottom: var(--space-3);
 }
 
-/* div replacing <header> inside resume items ¢Ã¢â€šÂ¬Ã¢â‚¬Â avoids @media print header hiding */
+/* div replacing <header> inside resume items Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â avoids @media print header hiding */
 .resume-item-header {
   display: block;
   margin-bottom: var(--space-1);
@@ -1327,12 +1327,13 @@ textarea:focus {
 }
 
 .resume-photo {
-  width: 72px;
-  height: 72px;
+  width: 120px;
+  height: 120px;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(15, 23, 42, 0.12);
   background: var(--color-surface-2);
+  margin-left: 20px;
   flex-shrink: 0;
 }
 
@@ -1861,7 +1862,7 @@ textarea:focus {
 .template-creative .resume-item { background: #fff; border: 1px solid #f3f4f6; padding: var(--space-5); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px; transition: transform 0.2s; border-left: 5px solid #a855f7; }
 .template-creative .resume-item h3 { font-size: 1.2rem; color: #1e1b4b; font-weight: 700; }
 .template-creative .resume-meta { color: #6b7280; font-weight: 600; margin-bottom: 8px; }
-.template-creative .resume-photo { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-right: 20px; }
+.template-creative .resume-photo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-right: 20px; }
 
 /* 6. Executive Leader (Premium Upgrade) */
 .template-executive { font-family: "Inter", "Georgia", serif; background: #fff; color: #1e293b; }
@@ -1875,7 +1876,7 @@ textarea:focus {
 .template-executive .resume-item { margin-bottom: 30px; }
 .template-executive .resume-item h3 { font-weight: 800; color: #0f172a; font-size: 1.15rem; margin-bottom: 2px; }
 .template-executive .resume-meta { color: #ca8a04; font-weight: 700; font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-.template-executive .resume-photo { width: 120px; height: 120px; border-radius: 0; border: 1px solid #ca8a04; padding: 5px; background: #fff; }
+.template-executive .resume-photo { width: 140px; height: 140px; border-radius: 0; border: 1px solid #ca8a04; padding: 5px; background: #fff; }
 
 /* 7. Software Engineer (Renamed from Tech Focus) */
 .template-software { font-family: "Inter", sans-serif; }
@@ -1982,8 +1983,8 @@ textarea:focus {
 
 /* Photo: square, top-right */
 .template-social .resume-photo {
-  width: 110px;
-  height: 130px;
+  width: 130px;
+  height: 150px;
   border-radius: 0;
   border: 3px solid #a0b8d8;
   object-fit: cover;
@@ -2406,9 +2407,9 @@ html, body {  padding: 0 !important; height: auto !important; }
   html, body {  padding: 0 !important; height: auto !important; }
   @page { size: A4; }
 
-  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ HIDE everything that is NOT the resume ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ HIDE everything that is NOT the resume Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   /* IMPORTANT: Do NOT use bare "header"/"footer" tags here.
-     renderResume wraps job title/dates in <header> inside .resume-item ¢Ã¢â€šÂ¬Ã¢â‚¬Â
+     renderResume wraps job title/dates in <header> inside .resume-item Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
      hiding the tag globally makes job title, company, dates disappear in print. */
   .wizard-header, .wizard-nav, .site-header, .hero, .jd-match,
   .progress-stepper, .templates,
@@ -2423,13 +2424,13 @@ html, body {  padding: 0 !important; height: auto !important; }
     display: none !important;
   }
 
-  /* .resume-item-header is a div ¢Ã¢â€šÂ¬Ã¢â‚¬Â always visible, no tag conflict */
+  /* .resume-item-header is a div Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â always visible, no tag conflict */
   .resume-item-header {
     display: block !important;
     visibility: visible !important;
   }
 
-  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ RESET layout wrappers so resume fills the page ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ RESET layout wrappers so resume fills the page Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   html, body {
     
     padding: 0 !important;
@@ -2460,7 +2461,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     transform: none !important; /* Forces 1:1 scale for print */
   }
 
-  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ THE RESUME ITSELF ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ THE RESUME ITSELF Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   .resume {
     display: block !important;
     width: 100% !important; /* Exact A4 width */
@@ -2496,7 +2497,7 @@ html, body {  padding: 0 !important; height: auto !important; }
    everything below it (all template-specific styles, incl. .template-google,
    .template-finance h2, etc.) accidentally nested inside this @media print
    rule. That meant those styles only applied while printing/exporting, never
-   on-screen — and the duplicate mobile-responsive rules that used to sit here
+   on-screen â€” and the duplicate mobile-responsive rules that used to sit here
    (.nav-left, .back-btn, #resume-preview scale, .template-grid, etc.) were a
    redundant copy of the already-correct block at "MOBILE / STACKED MODE (Up to
    1240px)" above, so they've been removed instead of re-duplicated. */
@@ -2542,9 +2543,9 @@ html, body {  padding: 0 !important; height: auto !important; }
   html, body {  padding: 0 !important; height: auto !important; }
   @page { size: A4; }
 
-  /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ HIDE everything that is NOT the resume ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ HIDE everything that is NOT the resume Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   /* IMPORTANT: Do NOT use bare "header"/"footer" tags here.
-     renderResume wraps job title/dates in <header> inside .resume-item ¢Ã¢â€šÂ¬Ã¢â‚¬Â 
+     renderResume wraps job title/dates in <header> inside .resume-item Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚ 
      hiding the tag globally makes job title, company, dates disappear in print. */
   .wizard-header, .wizard-nav, .site-header, .hero, .jd-match,
   .progress-stepper, .templates,
@@ -2559,13 +2560,13 @@ html, body {  padding: 0 !important; height: auto !important; }
     display: none !important;
   }
 
-  /* .resume-item-header is a div ¢Ã¢â€šÂ¬Ã¢â‚¬Â  always visible, no tag conflict */
+  /* .resume-item-header is a div Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚  always visible, no tag conflict */
   .resume-item-header {
     display: block !important;
     visibility: visible !important;
   }
 
-  /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ RESET layout wrappers so resume fills the page ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ RESET layout wrappers so resume fills the page Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   html, body {
     
     padding: 0 !important;
@@ -2596,7 +2597,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     transform: none !important; /* Forces 1:1 scale for print */
   }
 
-  /* ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ THE RESUME ITSELF ¢Ã¢â‚¬Â Ã¢â€šÂ¬¢Ã¢â‚¬Â Ã¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ THE RESUME ITSELF Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   .resume {
     display: block !important;
     width: 100% !important; /* Exact A4 width */
@@ -2654,7 +2655,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     margin-bottom: 8px !important;
   }
 
-  /* Prevent orphaned headings — h2 always stays with the first item below it */
+  /* Prevent orphaned headings â€” h2 always stays with the first item below it */
   .resume-section h2 {
     break-after: avoid !important;
     page-break-after: avoid !important;
@@ -2706,7 +2707,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     padding-bottom: 0 !important;
   }
 
-  /* ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TEMPLATE-SPECIFIC OVERRIDES ¢Ã¢â‚¬ÂÃ¢â€šÂ¬¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
+  /* Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ TEMPLATE-SPECIFIC OVERRIDES Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ */
   .template-social .resume-header { background: #dbe9f9 !important; }
   .template-social .resume-name { color: #0d2366 !important; }
   .template-social .resume-headline { color: #1a1a3e !important; border-top: 1px solid #a0b8d8 !important; }
@@ -2955,7 +2956,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 .template-pin-arch { background-color: #fbf9f6; font-family: 'Georgia', serif; color: #4a4a4a; padding: 30px !important; }
 .template-pin-arch .resume-header { text-align: center; margin-bottom: 30px; }
 .template-pin-arch .resume-photo { margin-bottom: 15px; }
-.template-pin-arch .resume-photo img { border-radius: 100px 100px 10px 10px; width: 110px; height: 140px; object-fit: cover; border: 3px solid #e5e0d8; }
+.template-pin-arch .resume-photo img { border-radius: 100px 100px 10px 10px; width: 130px; height: 160px; object-fit: cover; border: 3px solid #e5e0d8; }
 .template-pin-arch .resume-name { font-size: 28px; font-weight: normal; letter-spacing: 3px; color: #2c2c2c; text-transform: uppercase; }
 .template-pin-arch .resume-headline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-top: 8px; }
 .template-pin-arch .resume-contact { font-size: 10px; color: #888; margin-top: 8px; }
@@ -2970,7 +2971,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 .template-pin-banner { font-family: 'Arial', sans-serif; color: #333; background: #fff; }
 .template-pin-banner .resume-header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); padding: 50px 20px 20px; text-align: center; color: white; position: relative; margin-bottom: 40px; border-radius: 8px 8px 0 0; }
 .template-pin-banner .resume-photo { margin-top: -70px; margin-bottom: 15px; }
-.template-pin-banner .resume-photo img { border-radius: 50%; width: 120px; height: 120px; border: 5px solid #fff; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.template-pin-banner .resume-photo img { border-radius: 50%; width: 140px; height: 140px; border: 5px solid #fff; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 .template-pin-banner .resume-name { font-size: 32px; font-weight: bold; color: #fff; margin-bottom: 5px; }
 .template-pin-banner .resume-headline { font-size: 14px; color: #bfdbfe; font-weight: 500; }
 .template-pin-banner .resume-contact { font-size: 12px; color: #dbeafe; margin-top: 8px; }
@@ -3077,7 +3078,7 @@ html, body {  padding: 0 !important; height: auto !important; }
    COMPREHENSIVE TEMPLATE FIXES (v2 - corrected)
    ========================================================= */
 
-/* 1. PHOTO SIZES — make them BIGGER and clear */
+/* 1. PHOTO SIZES â€” make them BIGGER and clear */
 /* LinkedIn Banner: bigger photo */
 /* Photos - object-fit contain = no zoom, full face visible */
 .template-pin-banner .resume-photo img {
@@ -3088,14 +3089,14 @@ html, body {  padding: 0 !important; height: auto !important; }
 }
 /* Canva Modern: bigger photo */
 .template-canvamodern .resume-header .resume-photo img {
-    width: 120px !important;
-    height: 120px !important;
+    width: 140px !important;
+    height: 140px !important;
     border-radius: 50% !important;
     object-fit: contain !important;
     background: #f5f5f5;
 }
 
-/* 2. CANVA MODERN — photo on RIGHT side */
+/* 2. CANVA MODERN â€” photo on RIGHT side */
 .template-canvamodern .resume-header {
     display: flex !important;
     flex-direction: row !important;
@@ -3109,7 +3110,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     order: 2 !important;
 }
 
-/* 3. AESTHETIC ARCH — text clarity */
+/* 3. AESTHETIC ARCH â€” text clarity */
 .template-pin-arch .resume-item h3 { color: #111 !important; font-weight: 800 !important; }
 .template-pin-arch .resume-meta { color: #444 !important; font-weight: 600 !important; }
 .template-pin-arch .resume-item p, .template-pin-arch .resume-item li {
@@ -3136,7 +3137,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     color: #5a7a5a !important;
 }
 
-/* 5. REACTIVE ONYX — headline as badge */
+/* 5. REACTIVE ONYX â€” headline as badge */
 /* Reactive Onyx headline - white text, no blue badge */
 .template-onyx .resume-headline {
     color: #e2e8f0 !important;
@@ -3147,7 +3148,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     opacity: 0.9;
 }
 
-/* 6. TEACHER TEMPLATE — expertise skills as inline chips */
+/* 6. TEACHER TEMPLATE â€” expertise skills as inline chips */
 /* Correct selector: .resume-section ul NOT .resume-skills ul */
 .template-social .resume-section ul {
     display: flex !important;
@@ -3169,7 +3170,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     font-weight: 500 !important;
 }
 
-/* 7. LAST PAGE EXTRA UNDERLINE — hide footer hr lines in PDF */
+/* 7. LAST PAGE EXTRA UNDERLINE â€” hide footer hr lines in PDF */
 .resume-footer-lines { display: none !important; }
 .resume-footer-line { display: none !important; }
 
@@ -3184,7 +3185,7 @@ html, body {  padding: 0 !important; height: auto !important; }
     margin-bottom: 8px !important;
 }
 
-/* 9. @media print only — keep footer lines in screen view but hide in PDF */
+/* 9. @media print only â€” keep footer lines in screen view but hide in PDF */
 @media print {
     .resume-footer-lines, .resume-footer-line { display: none !important; }
 }
@@ -3222,8 +3223,8 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 /* 1. LinkedIn Banner: 120x120 Circle (Identical to ATS) */
 .template-pin-banner .resume-photo img {
-    width: 120px !important;
-    height: 120px !important;
+    width: 140px !important;
+    height: 140px !important;
     object-fit: cover !important;
     border-radius: 50% !important;
     background: transparent !important;
@@ -3231,8 +3232,8 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 /* 2. Canva Modern: 120x120 Circle (Identical to ATS) */
 .template-canvamodern .resume-header .resume-photo img {
-    width: 120px !important;
-    height: 120px !important;
+    width: 140px !important;
+    height: 140px !important;
     object-fit: cover !important;
     border-radius: 50% !important;
     background: transparent !important;
@@ -3240,8 +3241,8 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 /* 3. Aesthetic Arch: 120x120 Arch (Square bounds to prevent side cropping) */
 .template-pin-arch .resume-photo img {
-    width: 120px !important;
-    height: 120px !important;
+    width: 140px !important;
+    height: 140px !important;
     object-fit: cover !important;
     border-radius: 60px 60px 10px 10px !important;
     background: transparent !important;
@@ -3255,7 +3256,7 @@ html, body {  padding: 0 !important; height: auto !important; }
    scrolls horizontally on mobile instead of collapsing.
    Double-class (/* Disabled template override */
 
-/* ─── 1. FOREST SIDEBAR ─── */
+/* â”€â”€â”€ 1. FOREST SIDEBAR â”€â”€â”€ */
 /* Disabled template override */
 /* Disabled template override */
 /* Disabled template override */
@@ -3266,7 +3267,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* Disabled template override */
 /* Disabled template override */
 
-/* ─── 2. MONOCHROME SPLIT ─── */
+/* â”€â”€â”€ 2. MONOCHROME SPLIT â”€â”€â”€ */
 /* Disabled template override */
 /* Disabled template override */
 /* Disabled template override */
@@ -3277,22 +3278,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* Disabled template override */
 /* Disabled template override */
 
-/* ─── 3. CENTER ARCH ─── */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-/* Disabled template override */
-
-/* ─── 4. NAVY OVERLAP ─── */
-/* Disabled template override */
-/* Disabled template override */
+/* â”€â”€â”€ 3. CENTER ARCH â”€â”€â”€ */
 /* Disabled template override */
 /* Disabled template override */
 /* Disabled template override */
@@ -3305,7 +3291,12 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* Disabled template override */
 /* Disabled template override */
 
-/* ─── 5. FLORAL SIDEBAR ─── */
+/* â”€â”€â”€ 4. NAVY OVERLAP â”€â”€â”€ */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
 /* Disabled template override */
 /* Disabled template override */
 /* Disabled template override */
@@ -3315,7 +3306,17 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* Disabled template override */
 /* Disabled template override */
 
-/* ─── PDF / PRINT FIXES ─── */
+/* â”€â”€â”€ 5. FLORAL SIDEBAR â”€â”€â”€ */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+/* Disabled template override */
+
+/* â”€â”€â”€ PDF / PRINT FIXES â”€â”€â”€ */
 @media print {
     /* Sidebar templates: use float for multi-page compat */
     .resume.template-forestSidebar,
@@ -3379,7 +3380,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 .builder-layout .resume-preview a { pointer-events: none; cursor: default; }
 
 /* =========================================================
-   CONTACT FLEX ALIGNMENT — ensures icon+text never separate
+   CONTACT FLEX ALIGNMENT â€” ensures icon+text never separate
    ========================================================= */
 
 /* Center-header templates: center the flex rows */
@@ -3417,19 +3418,19 @@ html, body {  padding: 0 !important; height: auto !important; }
    during normal screen rendering).
    ===================================================== */
 
-/* pin-arch: beige aesthetic — all 4 sides */
+/* pin-arch: beige aesthetic â€” all 4 sides */
 .article.resume.template-pin-arch,
 .resume.template-pin-arch {
   padding: 30px !important;
 }
 
-/* pin-pink: pink grid — all 4 sides */
+/* pin-pink: pink grid â€” all 4 sides */
 .article.resume.template-pin-pink,
 .resume.template-pin-pink {
   padding: 30px !important;
 }
 
-/* ca: chartered accountant — all 4 sides */
+/* ca: chartered accountant â€” all 4 sides */
 .article.resume.template-ca,
 .resume.template-ca {
   padding: 30px !important;
@@ -3451,3 +3452,5 @@ html, body {  padding: 0 !important; height: auto !important; }
   padding-right: 30px !important;
 }
 .template-pin-yellow .resume-footer-lines { margin-bottom: 20px !important; }
+
+
