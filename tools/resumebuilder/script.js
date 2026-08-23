@@ -1081,17 +1081,17 @@
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                 <div style="flex: 1;">
                   <h1 style="font-size: 3.5rem; font-weight: 800; color: #111827; margin: 0 0 5px 0; letter-spacing: -1.5px; line-height: 1;">${escapeHtml(personal.fullName || "Name")}</h1>
-                  ${personal.headline && showHeadline ? \`<p style="font-size: 1.3rem; color: #4f46e5; margin: 0; font-weight: 500; letter-spacing: -0.5px;">${escapeHtml(personal.headline)}</p>\` : ""}
+                  ${personal.headline && showHeadline ? `<p style="font-size: 1.3rem; color: #4f46e5; margin: 0; font-weight: 500; letter-spacing: -0.5px;">${escapeHtml(personal.headline)}</p>` : ""}
                 </div>
-                ${personal.photoDataUrl ? \`<img src="${personal.photoDataUrl}" alt="Profile" style="width: 100px; height: 100px; border-radius: 24px; object-fit: cover; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />\` : ""}
+                ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="Profile" style="width: 100px; height: 100px; border-radius: 24px; object-fit: cover; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />` : ""}
               </div>
               
               <div style="display: flex; flex-wrap: wrap;">
-                ${personal.phone ? \`<div class="contact-pill"><i class="fas fa-phone-alt"></i> ${escapeHtml(personal.phone)}</div>\` : ""}
-                ${personal.email ? \`<div class="contact-pill"><i class="fas fa-envelope"></i> ${escapeHtml(personal.email)}</div>\` : ""}
-                ${formatLocation(personal.location) ? \`<div class="contact-pill"><i class="fas fa-map-marker-alt"></i> ${makeLocationLink(personal.location)}</div>\` : ""}
-                ${personal.linkedin ? \`<div class="contact-pill"><i class="fab fa-linkedin-in"></i> ${makeUrlLink(personal.linkedin)}</div>\` : ""}
-                ${personal.portfolio ? \`<div class="contact-pill"><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</div>\` : ""}
+                ${personal.phone ? `<div class="contact-pill"><i class="fas fa-phone-alt"></i> ${escapeHtml(personal.phone)}</div>` : ""}
+                ${personal.email ? `<div class="contact-pill"><i class="fas fa-envelope"></i> ${escapeHtml(personal.email)}</div>` : ""}
+                ${formatLocation(personal.location) ? `<div class="contact-pill"><i class="fas fa-map-marker-alt"></i> ${makeLocationLink(personal.location)}</div>` : ""}
+                ${personal.linkedin ? `<div class="contact-pill"><i class="fab fa-linkedin-in"></i> ${makeUrlLink(personal.linkedin)}</div>` : ""}
+                ${personal.portfolio ? `<div class="contact-pill"><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</div>` : ""}
               </div>
             </header>
             
