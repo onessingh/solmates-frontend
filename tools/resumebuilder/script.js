@@ -883,11 +883,17 @@
     // Teacher template: contact on individual lines, label format, headline last
     if (templateKey === "social") {
       const location = formatLocation(personal.location);
+      const makeTeacherLink = (url) => {
+        if (!url) return "";
+        const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
+        return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
+      };
       const contactLines = [
-        personal.phone ? `<p class="resume-contact">Mobile: <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : "",
-        personal.email ? `<p class="resume-contact">Email: ${escapeHtml(personal.email)}</p>` : "",
-        location ? `<p class="resume-contact">Address: ${escapeHtml(location)}</p>` : "",
-        personal.linkedin ? `<p class="resume-contact">${escapeHtml(personal.linkedin)}</p>` : "",
+        personal.phone ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : "",
+        personal.email ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : "",
+        location ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}</p>` : "",
+        personal.linkedin ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeTeacherLink(personal.linkedin)}</p>` : "",
+        personal.portfolio ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeTeacherLink(personal.portfolio)}</p>` : "",
       ].filter(Boolean).join("");
       const headlinePart = personal.headline && showHeadline
         ? `<p class="resume-headline">${escapeHtml(personal.headline)}</p>` : "";
@@ -943,23 +949,23 @@
             <div class="sidebar-section">
               <h3>Contact</h3>
               ${personal.phone ? `<div class="sidebar-item">
-                <span class="sidebar-label">Phone</span>
+                <i class="fas fa-phone-alt" style="width:16px;text-align:center;"></i>
                 <span class="sidebar-value"><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>
               </div>` : ""}
               ${personal.email ? `<div class="sidebar-item">
-                <span class="sidebar-label">Email</span>
+                <i class="fas fa-envelope" style="width:16px;text-align:center;"></i>
                 <span class="sidebar-value"><a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>
               </div>` : ""}
               ${location ? `<div class="sidebar-item">
-                <span class="sidebar-label">Address</span>
+                <i class="fas fa-map-marker-alt" style="width:16px;text-align:center;"></i>
                 <span class="sidebar-value">${escapeHtml(location)}</span>
               </div>` : ""}
               ${personal.linkedin ? `<div class="sidebar-item">
-                <span class="sidebar-label">LinkedIn</span>
+                <i class="fab fa-linkedin-in" style="width:16px;text-align:center;"></i>
                 <span class="sidebar-value"><a href="${/^https?:\/\//i.test(personal.linkedin) ? escapeHtml(personal.linkedin) : "https://" + escapeHtml(personal.linkedin)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.linkedin)}</a></span>
               </div>` : ""}
               ${personal.portfolio ? `<div class="sidebar-item">
-                <span class="sidebar-label">Portfolio</span>
+                <i class="fas fa-globe" style="width:16px;text-align:center;"></i>
                 <span class="sidebar-value"><a href="${/^https?:\/\//i.test(personal.portfolio) ? escapeHtml(personal.portfolio) : "https://" + escapeHtml(personal.portfolio)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.portfolio)}</a></span>
               </div>` : ""}
             </div>
@@ -985,6 +991,7 @@
 
 
     // --- 5 Premium Templates Logic ---
+    const makeUrlLink = makeLink;
     const generateSections = (keys) => {
       return (state.sectionOrder || []).map(key => {
         if (!state.sectionEnabled[key] || !keys.includes(key) || key === "headline") return "";
