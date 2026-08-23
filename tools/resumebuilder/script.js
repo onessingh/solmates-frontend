@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -285,6 +285,13 @@
     if (!location) return "";
     const parts = [location.city, location.state, location.country].filter(Boolean);
     return parts.join(", ");
+  };
+
+  const makeLocationLink = (location) => {
+    const locStr = formatLocation(location);
+    if (!locStr) return "";
+    const href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(locStr);
+    return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(locStr)}</a>`;
   };
 
   const updateProfilePhotoPreview = (dataUrl) => {
