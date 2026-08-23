@@ -1136,7 +1136,40 @@
         </article>`.trim();
     }
 
-    if (templateKey === "floralSidebar") {    // All other templates
+    if (templateKey === "floralSidebar") {
+      const sidebarKeys = ["skills","languages","awards","personalDetails","interests"];
+      const mainKeys = state.sectionOrder.filter(k => !sidebarKeys.includes(k));
+      const sidebarSections = generateSections(sidebarKeys);
+      const mainSections = generateSections(mainKeys);
+      return `
+        <article class="resume template-floralSidebar" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Georgia',serif;color:#444;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
+          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:1122px!important;align-items:stretch!important;">
+            <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:#e8e8e8;padding:45px 30px!important;box-sizing:border-box;text-align:center;">
+              <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
+              <div style="margin-bottom:30px;text-align:left;">
+                <h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>
+                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;">${escapeHtml(formatLocation(personal.location))}</p>` : ""}
+                ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;"><a href="tel:${escapeHtml(personal.phone)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
+                ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;"><a href="mailto:${escapeHtml(personal.email)}" style="color:#444;text-decoration:none;word-break:break-all;">${escapeHtml(personal.email)}</a></p>` : ""}
+                ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;word-break:break-all;">${makeUrlLink(personal.linkedin)}</p>` : ""}
+                ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:10px;text-align:center;word-break:break-all;">${makeUrlLink(personal.portfolio)}</p>` : ""}
+              </div>
+              <style>.template-floralSidebar .resume-sidebar h2,.template-floralSidebar .resume-sidebar h3{color:#333!important;font-size:0.85rem!important;text-transform:uppercase!important;letter-spacing:3px!important;padding-bottom:5px!important;margin-bottom:15px!important;border-bottom:1px solid #ccc!important;border-top:none!important;border-left:none!important;border-right:none!important;background:none!important;text-align:center!important;} .template-floralSidebar .resume-sidebar .resume-item { text-align: center; }</style>
+              ${sidebarSections}
+            </aside>
+            <main class="resume-main" style="flex:1!important;padding:55px 45px!important;background:#fff;box-sizing:border-box;">
+              <header style="margin-bottom:40px;text-align:center;">
+                <h1 style="font-size:2.8rem;font-weight:400;color:#222;text-transform:uppercase;letter-spacing:8px;margin-bottom:15px;line-height:1.2;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+                ${personal.headline && showHeadline ? `<p style="font-style:italic;color:#666;font-size:1.1rem;letter-spacing:2px;position:relative;display:inline-block;">${escapeHtml(personal.headline)}<span style="position:absolute;top:50%;left:-50px;width:40px;height:1px;background:#ccc;"></span><span style="position:absolute;top:50%;right:-50px;width:40px;height:1px;background:#ccc;"></span></p>` : ""}
+              </header>
+              <style>.template-floralSidebar .resume-main .resume-section h2{background:#4a3e47!important;color:#fff!important;font-size:0.9rem!important;text-transform:uppercase!important;letter-spacing:5px!important;padding:8px 15px!important;margin-bottom:18px!important;border:none!important;text-align:center;}</style>
+              ${mainSections}
+            </main>
+          </div>
+        </article>`.trim();
+    }
+
+    // All other templates
     // Build clickable contact/links
     const emailLink = personal.email
       ? `<a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a>`
