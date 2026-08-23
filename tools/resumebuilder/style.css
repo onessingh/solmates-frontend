@@ -3392,7 +3392,14 @@ html, body {  padding: 0 !important; height: auto !important; }
 .template-researcher .resume-contact span,
 .template-ibanker .resume-contact span,
 .template-legal .resume-contact span,
-.template-ca .resume-contact span {
+.template-ca .resume-contact span,
+.template-mckinsey .resume-contact span,
+.template-zetyclassic .resume-contact span,
+.template-jsonelegant .resume-contact span,
+.template-deekay .resume-contact span,
+.template-harvard .resume-contact span,
+.template-jsonmacchiato .resume-contact span,
+.template-academic .resume-contact span {
     justify-content: center;
 }
 
