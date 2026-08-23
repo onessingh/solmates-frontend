@@ -15,48 +15,45 @@ function initTabs() {
     const templates = document.getElementById("templates");
     const wizardHeader = document.querySelector(".wizard-header");
     const previewPanel = document.querySelector(".preview-panel");
-    
-    // Initially hide jd-match and templates if form-panel is shown
+
+    // Initially hide jd-match and templates, show preview on desktop
     if(jdMatch) jdMatch.style.display = "none";
     if(templates) templates.style.display = "none";
-    const isDesktop = window.innerWidth >= 900 || document.documentElement.classList.contains('is-desktop');
+    const isDesktop = document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900;
     if(previewPanel) previewPanel.style.display = isDesktop ? "block" : "none";
-    
-    tabs.forEach(tab => {
-    if(previewPanel) previewPanel.style.display = isDesktop ? "block" : "none";
-    
+
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
             tabs.forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
-            
+
             const target = tab.dataset.tab;
-            
+            const isDesktop = document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900;
+
             if(formPanel) formPanel.style.display = (target === "builder") ? "block" : "none";
             if(wizardHeader) wizardHeader.style.display = (target === "builder") ? "flex" : "none";
+
             if(jdMatch) {
                 jdMatch.style.display = (target === "jd") ? "block" : "none";
                 if (target === "jd") {
-                    // Force full width - span both grid columns
+                    // Force full width on desktop - span both grid columns
                     jdMatch.style.width = "100%";
                     jdMatch.style.maxWidth = "100%";
                     jdMatch.style.boxSizing = "border-box";
                     jdMatch.style.gridColumn = "1 / -1";
                 }
             }
+
             if(templates) templates.style.display = (target === "templates") ? "block" : "none";
+
             if(previewPanel) {
-                const isDesktop = window.innerWidth >= 900 || document.documentElement.classList.contains('is-desktop');
                 if (isDesktop) {
-                    // On desktop: show preview alongside builder and templates, hide for JD match (JD match takes full width)
+                    // Desktop: preview visible on builder + templates, hidden on JD (JD is full width)
                     previewPanel.style.display = (target === "builder" || target === "templates") ? "block" : "none";
                 } else {
+                    // Mobile: preview only visible on templates tab
                     previewPanel.style.display = (target === "templates") ? "block" : "none";
                 }
-            
-            // Re-trigger showStep logic if switching back to builder
-            if(target === "builder" && typeof window.currentWizardStep !== "undefined") {
-                // Actually showStep handles the panel-sections inside form-panel, so no need to do anything since form-panel display block restores them
             }
         });
     });
