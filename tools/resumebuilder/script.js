@@ -1021,15 +1021,25 @@
       const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
       return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
     };
-    const emailLink = personal.email
-      ? `<span style="white-space:nowrap;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>`
+        const emailLink = personal.email
+      ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>`
       : "";
-    const phoneText = personal.phone ? `<span style="white-space:nowrap;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : "";
-    const locationText = formatLocation(personal.location) ? `<span style="white-space:nowrap;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : "";
-    const contactParts = [emailLink, phoneText, locationText].filter(Boolean).join("  &bull;  ");
-    const linkedinLink = personal.linkedin ? `<span style="white-space:nowrap;"><i class="fab fa-linkedin-in"></i> ${makeLink(personal.linkedin)}</span>` : "";
-    const portfolioLink = personal.portfolio ? `<span style="white-space:nowrap;"><i class="fas fa-globe"></i> ${makeLink(personal.portfolio)}</span>` : "";
-    const linksParts = [linkedinLink, portfolioLink].filter(Boolean).join("  &bull;  ");
+    const phoneText = personal.phone ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : "";
+    const locationText = formatLocation(personal.location) ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : "";
+    
+    const linkedinLink = personal.linkedin ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeLink(personal.linkedin)}</span>` : "";
+    const portfolioLink = personal.portfolio ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeLink(personal.portfolio)}</span>` : "";
+    
+    const line1 = [phoneText, emailLink].filter(Boolean).join(' <span style="margin:0 8px;">&bull;</span> ');
+    const line2 = [locationText].filter(Boolean).join("");
+    const line3 = [linkedinLink, portfolioLink].filter(Boolean).join(' <span style="margin:0 8px;">&bull;</span> ');
+
+    const contactParts = [
+      line1 ? `<span style="display:block;margin-bottom:4px;">${line1}</span>` : "",
+      line2 ? `<span style="display:block;margin-bottom:4px;">${line2}</span>` : "",
+      line3 ? `<span style="display:block;margin-bottom:4px;">${line3}</span>` : ""
+    ].filter(Boolean).join("");
+    const linksParts = "";
 
     if (templateKey === "forestSidebar") {
       const sidebarKeys = ["awards","skills","technicalStack","languages","volunteer","personalDetails"];
