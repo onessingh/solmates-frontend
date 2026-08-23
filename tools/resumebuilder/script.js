@@ -291,7 +291,7 @@
     const locStr = formatLocation(location);
     if (!locStr) return "";
     const href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(locStr);
-    return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(locStr)}</a>`;
+    return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;white-space:nowrap;">${escapeHtml(locStr)}</a>`;
   };
 
   const updateProfilePhotoPreview = (dataUrl) => {
@@ -1047,9 +1047,9 @@
     const line3 = [linkedinLink, portfolioLink].filter(Boolean).join(' <span style="margin:0 8px;">&bull;</span> ');
 
     const contactParts = [
-      line1 ? `<span style="display:block;margin-bottom:4px;">${line1}</span>` : "",
-      line2 ? `<span style="display:block;margin-bottom:4px;">${line2}</span>` : "",
-      line3 ? `<span style="display:block;margin-bottom:4px;">${line3}</span>` : ""
+      line1 ? `<span style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-bottom:4px;">${line1}</span>` : "",
+      line2 ? `<span style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-bottom:4px;">${line2}</span>` : "",
+      line3 ? `<span style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-bottom:4px;">${line3}</span>` : ""
     ].filter(Boolean).join("");
     const linksParts = "";
 

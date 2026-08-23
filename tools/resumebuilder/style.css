@@ -3124,12 +3124,7 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* 4. CONTACT RIGHT-ALIGN for LinkedIn Banner, Aesthetic Arch, CA */
 /* Only the contact/links lines, not the name */
 .template-pin-banner .resume-contact,
-.template-pin-banner .resume-links,
-.template-pin-arch .resume-contact,
-.template-pin-arch .resume-links,
-.template-ca .resume-contact,
-.template-ca .resume-links {
-    text-align: right !important;
+.template-pin-banner .resume-links {
     color: rgba(255,255,255,0.85) !important;
 }
 .template-pin-arch .resume-contact,
@@ -3383,3 +3378,27 @@ html, body {  padding: 0 !important; height: auto !important; }
 /* Disable links in live preview but keep them in PDF */
 .builder-layout .resume-preview a { pointer-events: none; cursor: default; }
 
+/* =========================================================
+   CONTACT FLEX ALIGNMENT — ensures icon+text never separate
+   ========================================================= */
+
+/* Center-header templates: center the flex rows */
+.template-pin-arch .resume-contact span,
+.template-pin-banner .resume-contact span,
+.template-pin-pink .resume-contact span,
+.template-pin-yellow .resume-contact span,
+.template-awesomecv .resume-contact span,
+.template-jsonflat .resume-contact span,
+.template-researcher .resume-contact span,
+.template-ibanker .resume-contact span,
+.template-legal .resume-contact span,
+.template-ca .resume-contact span {
+    justify-content: center;
+}
+
+/* Chiron (right-aligned header): align contact rows to flex-end */
+.template-chiron .resume-contact span {
+    justify-content: flex-end;
+}
+
+/* Default: left-align (no rule needed, flex default is flex-start) */
