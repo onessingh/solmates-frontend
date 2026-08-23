@@ -1,12 +1,18 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initializeWizardApp() {
     initTabs();
     initWizard();
     setTimeout(() => {
         initChips();
         initAccordions();
-        
     }, 100);
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", initializeWizardApp);
+} else {
+    initializeWizardApp();
+}
+
 
 function initTabs() {
     const tabs = document.querySelectorAll(".rb-tab");
