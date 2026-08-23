@@ -32,6 +32,7 @@ function initTabs() {
         tab.addEventListener("click", () => {
             tabs.forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
+            sessionStorage.setItem('activeRbTab', tab.dataset.tab);
 
             const target = tab.dataset.tab;
             const isDesktop = document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900;
@@ -63,6 +64,11 @@ function initTabs() {
             }
         });
     });
+    const savedTab = sessionStorage.getItem('activeRbTab');
+    if (savedTab) {
+        const tabToClick = document.querySelector('.rb-tab[data-tab="' + savedTab + '"]');
+        if (tabToClick) tabToClick.click();
+    }
 }
 
 const totalSteps = 8;
@@ -86,8 +92,21 @@ function initWizard() {
     
     const btnNext = document.getElementById("wizard-next");
     const btnPrev = document.getElementById("wizard-prev");
-    const btnPrint = document.getElementById("wizard-print");
-    if(btnPrint) btnPrint.addEventListener("click", () => { if(window.exportResume) window.exportResume(); });
+    const btnPrint = document.getElementById("wizard-templates");
+    if(btnPrint) btnPrint.addEventListener("click", () => {
+        const tabTemplates = document.querySelector('.rb-tab[data-tab="templates"]');
+        if(tabTemplates) tabTemplates.click();
+        
+        // Force open accordion on mobile
+        const tempContent = document.getElementById("template-accordion-content");
+        const tempHeader = document.getElementById("templates-accordion-header");
+        const isDesktop = document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900;
+        if(!isDesktop && tempContent) {
+            tempContent.style.display = "block";
+            const icon = tempHeader.querySelector(".accordion-icon");
+            if(icon) icon.style.transform = "rotate(180deg)";
+        }
+    });
     const stepText = document.getElementById("wizard-step-text");
     const fill = document.getElementById("wizard-fill");
     
@@ -135,7 +154,7 @@ function initWizard() {
                 // Click the actual save button
                 const saveBtn = document.querySelector('[data-action="save-form"]');
                 if (saveBtn) saveBtn.click();
-                alert("Resume finalized and saved!");
+                // alert removed
             }
         });
     }

@@ -1459,7 +1459,7 @@ render: (resume) => {
 
   const handleSaveForm = () => {
     saveState();
-    alert("Resume data saved to browser local storage.");
+    alert("Resume saved!");
   };
 
   const saveState = () => {
@@ -2522,7 +2522,7 @@ render: (resume) => {
     if (dom.downloadBtn) dom.downloadBtn.addEventListener("click", () => handleExport());
     if (dom.printBtn) dom.printBtn.addEventListener("click", () => handleExport());
 
-    if (dom.saveBtn) dom.saveBtn.addEventListener("click", () => { saveState(); alert("Resume saved!"); });
+    // dom.saveBtn listener removed
     if (dom.clearBtn) dom.clearBtn.addEventListener("click", handleClearForm);
 
     // Template Selection via Event Delegation
