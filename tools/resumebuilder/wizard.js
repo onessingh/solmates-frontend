@@ -19,7 +19,8 @@ function initTabs() {
     // Initially hide jd-match and templates if form-panel is shown
     if(jdMatch) jdMatch.style.display = "none";
     if(templates) templates.style.display = "none";
-    if(previewPanel) previewPanel.style.display = "none";
+    const isDesktop = window.innerWidth >= 900 || document.documentElement.classList.contains('is-desktop');
+    if(previewPanel) previewPanel.style.display = isDesktop ? "block" : "none";
     
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
@@ -32,7 +33,14 @@ function initTabs() {
             if(wizardHeader) wizardHeader.style.display = (target === "builder") ? "flex" : "none";
             if(jdMatch) jdMatch.style.display = (target === "jd") ? "block" : "none";
             if(templates) templates.style.display = (target === "templates") ? "block" : "none";
-            if(previewPanel) previewPanel.style.display = (target === "templates") ? "block" : "none";
+            if(previewPanel) {
+                const isDesktop = window.innerWidth >= 900 || document.documentElement.classList.contains('is-desktop');
+                if (isDesktop) {
+                    previewPanel.style.display = (target === "builder" || target === "templates") ? "block" : "none";
+                } else {
+                    previewPanel.style.display = (target === "templates") ? "block" : "none";
+                }
+            }
             
             // Re-trigger showStep logic if switching back to builder
             if(target === "builder" && typeof window.currentWizardStep !== "undefined") {
