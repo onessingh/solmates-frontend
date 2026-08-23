@@ -615,8 +615,9 @@
     },
     {
       key: "education",
-      title: "Education",
-      render: (resume) => {
+title: "Education",
+render: (resume) => {
+  if (!resume.education || resume.education.length === 0) return "";
         if (state.selectedTemplate === "social") {
           const rows = (resume.education || []).map(item => `
             <tr>
