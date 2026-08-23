@@ -3410,6 +3410,44 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 /* Default: left-align (no rule needed, flex default is flex-start) */
 
-/* Padding fix for banner templates */
-.template-pin-banner .resume-section, .template-pin-banner .resume-footer-lines { padding-left: 30px !important; padding-right: 30px !important; }
-.template-pin-yellow .resume-section, .template-pin-yellow .resume-footer-lines { padding-left: 30px !important; padding-right: 30px !important; }
+/* =====================================================
+   MARGIN / PADDING FIX FOR 5 NEW TEMPLATES (live preview)
+   These rules MUST be outside @media print so they apply
+   in the live preview (the @media print blocks get ignored
+   during normal screen rendering).
+   ===================================================== */
+
+/* pin-arch: beige aesthetic — all 4 sides */
+.article.resume.template-pin-arch,
+.resume.template-pin-arch {
+  padding: 30px !important;
+}
+
+/* pin-pink: pink grid — all 4 sides */
+.article.resume.template-pin-pink,
+.resume.template-pin-pink {
+  padding: 30px !important;
+}
+
+/* ca: chartered accountant — all 4 sides */
+.article.resume.template-ca,
+.resume.template-ca {
+  padding: 30px !important;
+}
+
+/* pin-banner: header is full-width banner (intentional), only sections need L/R + top/bottom padding */
+.template-pin-banner .resume-section,
+.template-pin-banner .resume-footer-lines {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+}
+.template-pin-banner > .resume-section:first-of-type { margin-top: 10px !important; }
+.template-pin-banner > .resume-footer-lines { margin-bottom: 20px !important; }
+
+/* pin-yellow: yellow banner header (intentional full-width), sections need padding */
+.template-pin-yellow .resume-section,
+.template-pin-yellow .resume-footer-lines {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+}
+.template-pin-yellow .resume-footer-lines { margin-bottom: 20px !important; }
