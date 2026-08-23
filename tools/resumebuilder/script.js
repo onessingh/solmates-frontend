@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -1027,7 +1027,7 @@
       }).filter(Boolean).join("");
     };
 
-    // All other templates â€” Build clickable contact/links with icons
+    // All other templates Ã¢â‚¬â€ Build clickable contact/links with icons
     const makeLink = (url) => {
       if (!url) return "";
       const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
@@ -1059,13 +1059,13 @@
       const sidebarSections = generateSections(sidebarKeys);
       const mainSections = generateSections(mainKeys);
       return `
-        <article class="resume template-forestSidebar" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;color:#333;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
-          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:1122px!important;align-items:stretch!important;">
+        <article class="resume template-forestSidebar" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Inter',sans-serif;color:#333;background:#fff;overflow:hidden;">
+          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:100%!important;align-items:stretch!important;">
             <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:linear-gradient(180deg,#1b2823,#0d1411);color:#e5e0d8;display:flex!important;flex-direction:column!important;">
               <div style="width:100%;aspect-ratio:1/1;background:#ddd;overflow:hidden;">
                 <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:100%;height:100%;object-fit:cover;display:block;" />
               </div>
-              <div style="padding:25px 22px!important;flex:1;">
+              <div style="padding:40px 40px!important;flex:1;">
                 <div style="margin-bottom:20px;">
                   <h3 style="color:#fff;border-top:1px solid rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.3);padding:6px 0;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Contact</h3>
                   ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
@@ -1078,7 +1078,7 @@
                 ${sidebarSections}
               </div>
             </aside>
-            <main class="resume-main" style="flex:1!important;padding:35px 30px!important;background:#fff;box-sizing:border-box;">
+            <main class="resume-main" style="flex:1!important;padding:40px 40px!important;background:#fff;box-sizing:border-box;">
               <header style="margin-bottom:30px;">
                 <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name")}</h1>
                 ${personal.headline && showHeadline ? `<p style="color:#cfa068;font-weight:400;font-size:1.4rem;text-transform:capitalize;">${escapeHtml(personal.headline)}</p>` : ""}
@@ -1094,7 +1094,7 @@
       const rightKeys = ["education","skills","technicalStack","certifications","languages"];
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
-        <article class="resume template-slateModern" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Outfit',sans-serif;background:#2b3036;color:#e0e6ed;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;border-left:15px solid #1abc9c;">
+        <article class="resume template-slateModern" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Outfit',sans-serif;background:#2b3036;color:#e0e6ed;overflow:hidden;border-left:15px solid #1abc9c;">
           <header style="padding:40px 40px 20px!important;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:30px;">
             <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:3px solid #1abc9c;" />
             <div>
@@ -1110,11 +1110,11 @@
             </div>
           </header>
           <div style="display:flex!important;flex-direction:row!important;width:100%!important;">
-            <main style="flex:1!important;padding:30px 40px!important;box-sizing:border-box;">
+            <main style="flex:1!important;padding:40px 40px!important;box-sizing:border-box;">
               <style>.template-slateModern main .resume-section h2{color:#1abc9c!important;border-bottom:1px solid rgba(26,188,156,0.3)!important;text-transform:uppercase!important;font-size:1rem!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:16px!important;background:none!important;} .template-slateModern main *{color:#e0e6ed;} .template-slateModern main strong, .template-slateModern main .resume-item-title { color: #fff; font-weight:600; } .template-slateModern main .resume-item-date { color: #1abc9c; font-size:0.8rem; }</style>
               ${generateSections(leftKeys)}
             </main>
-            <aside style="flex:0 0 32%!important;width:32%!important;background:rgba(0,0,0,0.15);padding:30px 25px!important;box-sizing:border-box;">
+            <aside style="flex:0 0 32%!important;width:32%!important;background:rgba(0,0,0,0.15);padding:40px 30px!important;box-sizing:border-box;">
               <style>.template-slateModern aside .resume-section h2{color:#1abc9c!important;border-bottom:1px solid rgba(26,188,156,0.3)!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:2px!important;padding-bottom:6px!important;margin-bottom:16px!important;background:none!important;} .template-slateModern aside *{color:#b0bac5;} .template-slateModern aside strong, .template-slateModern aside .resume-item-title { color: #fff; font-weight:600; }</style>
               ${generateSections(rightKeys)}
             </aside>
@@ -1126,7 +1126,7 @@
       const rightKeys = ["education","skills","technicalStack","certifications"];
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
-        <article class="resume template-emeraldSplit" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;color:#333;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
+        <article class="resume template-emeraldSplit" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Inter',sans-serif;color:#333;background:#fff;overflow:hidden;">
           <header style="background:#0f4c3a;padding:45px 50px!important;color:#fff;display:flex;justify-content:space-between;align-items:center;">
             <div style="flex:1;">
               <h1 style="font-size:3.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;line-height:1;">${escapeHtml(personal.fullName || "Name")}</h1>
@@ -1158,7 +1158,7 @@
       const rightKeys = ["education","skills","technicalStack","certifications"];
       const leftKeys = state.sectionOrder.filter(k => !rightKeys.includes(k));
       return `
-        <article class="resume template-navyOverlap" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Inter',sans-serif;background:#f4f6f8;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding-top:50px!important;overflow:hidden;">
+        <article class="resume template-navyOverlap" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Inter',sans-serif;background:#f4f6f8;padding-top:50px!important;overflow:hidden;">
           <header style="padding:0 50px 90px!important;">
             <h1 style="font-size:3rem;font-weight:800;color:#2a3b4c;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">${escapeHtml(personal.fullName || "Name")}</h1>
             ${personal.headline && showHeadline ? `<p style="color:#555;font-size:1.2rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;">${escapeHtml(personal.headline)}</p>` : ""}
@@ -1172,7 +1172,7 @@
           </header>
           <div style="display:flex!important;flex-direction:row!important;position:relative;">
             <main style="flex:1!important;padding:30px 50px 40px!important;box-sizing:border-box;">
-              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'◆'; font-size:1.4rem; }</style>
+              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'â—†'; font-size:1.4rem; }</style>
               ${generateSections(leftKeys)}
             </main>
             <aside style="flex:0 0 35%!important;width:35%!important;background:#2a3b4c;color:#e0e6ed;padding:30px 30px 40px!important;box-sizing:border-box;position:relative;">
@@ -1192,8 +1192,8 @@
       const sidebarSections = generateSections(sidebarKeys);
       const mainSections = generateSections(mainKeys);
       return `
-        <article class="resume template-floralSidebar" style="display:block!important;width:800px!important;max-width:800px!important;min-height:1122px!important;margin:0 auto;font-family:'Georgia',serif;color:#444;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
-          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:1122px!important;align-items:stretch!important;">
+        <article class="resume template-floralSidebar" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Georgia',serif;color:#444;background:#fff;overflow:hidden;">
+          <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:100%!important;align-items:stretch!important;">
             <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:#e8e8e8;padding:45px 30px!important;box-sizing:border-box;text-align:center;">
               <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
               <div style="margin-bottom:30px;text-align:left;">
@@ -2624,6 +2624,8 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
+
 
 
 
