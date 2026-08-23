@@ -954,6 +954,36 @@
                 </div>` : ""}
               </div>
 
+            <style>
+              .resume.modernSidebar .resume-sidebar .resume-item {
+                margin-bottom: 20px !important;
+                text-align: left !important;
+              }
+              .resume.modernSidebar .resume-sidebar .resume-item h3 {
+                font-size: 0.95rem !important;
+                color: #fff !important;
+                margin-bottom: 4px !important;
+                font-weight: 700 !important;
+                text-transform: none !important;
+                border: none !important;
+              }
+              .resume.modernSidebar .resume-sidebar .resume-meta {
+                font-size: 0.8rem !important;
+                color: #A0AEC0 !important;
+                margin-bottom: 10px !important;
+              }
+              .resume.modernSidebar .resume-sidebar .resume-item p,
+              .resume.modernSidebar .resume-sidebar .resume-item li {
+                font-size: 0.82rem !important;
+                color: #E2E8F0 !important;
+                line-height: 1.4 !important;
+              }
+              .resume.modernSidebar .resume-sidebar .resume-item ul {
+                padding-left: 15px !important;
+                margin-top: 5px !important;
+                margin-bottom: 10px !important;
+              }
+            </style>
             ${sidebarHtml}
           </aside>
 
