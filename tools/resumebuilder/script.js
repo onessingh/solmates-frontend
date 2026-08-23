@@ -3,7 +3,7 @@
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
   const MAX_SUMMARY_CHARS = 600;
-  const JD_MAX_CHARS = 10000;
+  const JD_MAX_CHARS = 5000;
 
   const TEMPLATE_CATALOG = [
     { key: "ats", name: "ATS Optimized", category: "Standard", atsSafe: true },
