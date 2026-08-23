@@ -3456,95 +3456,59 @@ html, body {  padding: 0 !important; height: auto !important; }
 
 
 
+
 /* ===== LAPTOP / DESKTOP LAYOUT (min-width: 1241px) ===== */
-/* Phone view (max-width: 1240px) is untouched - this only applies to real desktop/laptop browsers */
 @media (min-width: 1241px) {
-  /* Change viewport so desktop browser renders at real width, not the phone-emulated 900px */
-  /* We handle this via CSS: allow the page to expand fully */
-  
+
+  /* Full width page, no padding wasted */
   .page {
     width: 100% !important;
     max-width: 100% !important;
-    padding: 0 20px !important;
-    box-sizing: border-box;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
   }
 
-  /* Hero: compact two-column row instead of big stacked block */
+  /* Hero: slim horizontal bar */
   .hero {
     max-width: 100% !important;
-    padding: 20px 40px !important;
-    margin: 0 0 20px 0 !important;
+    padding: 16px 32px !important;
+    margin: 0 0 16px 0 !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 30px !important;
+    gap: 24px !important;
+  }
+  .hero-content { flex: 1 !important; }
+  .hero-content h1 { font-size: 1.6rem !important; margin-bottom: 2px !important; }
+  .hero-subtitle { font-size: 0.8rem !important; margin-bottom: 8px !important; }
+  .eyebrow { font-size: 0.7rem !important; margin-bottom: 2px !important; }
+  .hero-actions { margin-bottom: 8px !important; }
+  .hero-metrics { display: flex !important; flex-direction: row !important; gap: 12px !important; }
+  .metric { padding: 6px 12px !important; }
+  .metric-value { font-size: 1.1rem !important; }
+  .metric-label { font-size: 0.65rem !important; }
+  .hero-visual { width: 140px !important; flex-shrink: 0 !important; }
+  .hero-image { width: 100% !important; max-height: 100px !important; object-fit: contain !important; }
+
+  /* Tabs: full width */
+  .rb-tabs {
+    max-width: 100% !important;
+    margin: 0 0 12px 0 !important;
     border-radius: 12px !important;
   }
 
-  .hero-content {
-    flex: 1 !important;
-  }
-
-  .hero-content h1 {
-    font-size: 1.8rem !important;
-    margin-bottom: 4px !important;
-  }
-
-  .hero-subtitle {
-    font-size: 0.85rem !important;
-    margin-bottom: 10px !important;
-  }
-
-  .eyebrow {
-    font-size: 0.75rem !important;
-    margin-bottom: 4px !important;
-  }
-
-  .hero-actions {
-    margin-bottom: 12px !important;
-  }
-
-  .hero-metrics {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 16px !important;
-  }
-
-  .metric {
-    padding: 8px 14px !important;
-  }
-
-  .metric-value {
-    font-size: 1.2rem !important;
-  }
-
-  .metric-label {
-    font-size: 0.7rem !important;
-  }
-
-  .hero-visual {
-    width: 200px !important;
-    flex-shrink: 0 !important;
-  }
-
-  .hero-image {
-    width: 100% !important;
-    max-height: 150px !important;
-    object-fit: contain !important;
-  }
-
-  /* Builder layout: full-width two-column side by side */
+  /* Builder layout: side-by-side form + preview */
   .builder-layout {
     max-width: 100% !important;
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
   }
 
   .builder-columns {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     flex-direction: unset !important;
-    gap: 20px !important;
+    gap: 16px !important;
     max-width: 100% !important;
     margin: 0 !important;
     align-items: start !important;
@@ -3554,10 +3518,10 @@ html, body {  padding: 0 !important; height: auto !important; }
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 !important;
-    height: calc(100vh - 220px) !important;
+    max-height: calc(100vh - 200px) !important;
     overflow-y: auto !important;
     position: sticky !important;
-    top: 80px !important;
+    top: 70px !important;
   }
 
   .preview-panel {
@@ -3566,32 +3530,51 @@ html, body {  padding: 0 !important; height: auto !important; }
     margin: 0 !important;
   }
 
-  /* Tabs: stretch full width */
-  .rb-tabs {
-    margin: 0 0 16px 0 !important;
-    border-radius: 12px !important;
+  /* JD Match: full width */
+  .jd-match {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  /* Templates tab: use multi-column grid */
+  /* Templates: full width, no scrolling, multi-column */
   .templates {
+    max-width: 100% !important;
     width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
     padding: 0 !important;
   }
 
-  .tpl-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+  .tpl-gallery {
+    max-height: none !important;
+    overflow-y: visible !important;
   }
 
-  /* Resume preview: no scale transform on desktop */
+  .tpl-grid {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .template-card {
+    padding: 8px !important;
+  }
+
+  .template-preview {
+    height: 100px !important;
+  }
+
+  /* No transform on desktop for resume preview */
   #resume-preview {
     transform: none !important;
     margin-bottom: 0 !important;
     width: 100% !important;
   }
 
-  /* JD match panel */
-  .jd-match {
+  /* Wizard header full width */
+  .wizard-header {
     max-width: 100% !important;
-    width: 100% !important;
+    margin: 0 0 12px 0 !important;
   }
 }
