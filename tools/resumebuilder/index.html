@@ -675,7 +675,11 @@
       </header>
       <div class="accordion-content" id="template-accordion-content" style="display:none;">
         <style>
-          .tpl-gallery { display: flex; flex-direction: column; gap: 32px; padding: 4px 0 12px; }
+          .tpl-gallery { display: flex; flex-direction: column; gap: 32px; padding: 4px 12px 12px 4px; max-height: 520px; overflow-y: auto; }
+          .tpl-gallery::-webkit-scrollbar { width: 6px; }
+          .tpl-gallery::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+          .tpl-gallery::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+          .tpl-gallery::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
           .tpl-category { }
           .tpl-category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
           .tpl-category-header h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; margin: 0; white-space: nowrap; }
