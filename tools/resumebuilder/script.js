@@ -2024,6 +2024,23 @@
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
+        /* SlateModern: full dark background */
+        body.template-slateModern {
+            background: #2b3036 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        body.template-slateModern .template-slateModern {
+            background: #2b3036 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        /* EmeraldSplit: aside sidebar */
+        body.template-emeraldSplit .template-emeraldSplit aside {
+            background: #0f4c3a !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
         
         .site-header, .hero, .jd-match, .builder-layout, .templates,
         .form-panel, .preview-header, .score-card, .field-suggestion-box,
