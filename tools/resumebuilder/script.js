@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -1172,7 +1172,7 @@
           </header>
           <div style="display:flex!important;flex-direction:row!important;position:relative;">
             <main style="flex:1!important;padding:30px 50px 40px!important;box-sizing:border-box;">
-              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'â—†'; font-size:1.4rem; }</style>
+              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'◆'◆'; font-size:1.4rem; }</style>
               ${generateSections(leftKeys)}
             </main>
             <aside style="flex:0 0 35%!important;width:35%!important;background:#2a3b4c;color:#e0e6ed;padding:30px 30px 40px!important;box-sizing:border-box;position:relative;">
