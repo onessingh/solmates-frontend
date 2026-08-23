@@ -226,46 +226,39 @@ function initChips() {
 function initAccordions() {
     const additional = ["certifications", "projects", "internships", "awards", "publications", "volunteer", "leadership", "languages", "references", "personalDetails"];
     additional.forEach(secName => {
-        const s = document.querySelector(`[data-section-form="${secName}"]`);
+        const s = document.querySelector('[data-section-form="' + secName + '"]');
         if (s) {
             s.classList.add("accordion-section");
             const header = s.querySelector(".section-header");
             header.style.cursor = "pointer";
-            header.innerHTML += " <i class=\"fas fa-chevron-down accordion-icon\"></i>";
+            header.innerHTML += ' <i class="fas fa-chevron-down accordion-icon"></i>';
             const contentWrap = document.createElement("div");
             contentWrap.className = "accordion-content";
-            
+
             while(s.childNodes.length > 2) {
                 contentWrap.appendChild(s.lastChild);
             }
             s.appendChild(contentWrap);
-            
+
             header.addEventListener("click", () => {
                 const isOpen = contentWrap.classList.contains("open");
                 document.querySelectorAll(".accordion-content").forEach(c => {
-                    // Never close template gallery accordion on desktop
+                    // Never close template gallery on desktop
                     if (c.id === "template-accordion-content" && (document.documentElement.classList.contains('is-desktop') || window.screen.width >= 900)) return;
-                    c.classList.remove("open"); c.style.display = "none";
+                    c.classList.remove("open");
+                    c.style.display = "none";
                 });
                 document.querySelectorAll(".accordion-icon").forEach(i => i.style.transform = "rotate(0deg)");
-                
+
                 if (!isOpen) {
-                    contentWrap.style.display = "block"; contentWrap.style.display = "block"; contentWrap.classList.add("open");
+                    contentWrap.style.display = "block";
+                    contentWrap.classList.add("open");
                     header.querySelector(".accordion-icon").style.transform = "rotate(180deg)";
                 }
             });
         }
     });
 }
-        // Give script.js a few ms to do its DOM manipulation
-        setTimeout(() => {
-            if(window.currentWizardStep) {
-                // We need a global way to trigger showStep, let's dispatch an event
-                document.dispatchEvent(new Event("wizardRefresh"));
-            }
-        }, 10);
-    }
-}, true);
 
 // Template gallery accordion - desktop open by default, phone toggles
 document.addEventListener("DOMContentLoaded", () => {
