@@ -1179,7 +1179,7 @@
       const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
       return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
     };
-    const linksParts = [makeLink(personal.linkedin), makeLink(personal.portfolio)].filter(Boolean).join("  \u2022  ");
+    const linksParts = [linkedinLink, portfolioLink].filter(Boolean).join("  &bull;  ");
 
     return `
       <article class="resume template-${escapeHtml(templateKey)}">
