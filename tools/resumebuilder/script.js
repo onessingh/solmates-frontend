@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   "use strict";
 
   const STORAGE_KEY = "solmates.resume.builder.v2";
@@ -1020,7 +1020,7 @@
       }).filter(Boolean).join("");
     };
 
-    // All other templates — Build clickable contact/links with icons
+    // All other templates â€” Build clickable contact/links with icons
     const makeLink = (url) => {
       if (!url) return "";
       const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
@@ -1165,13 +1165,13 @@
           </header>
           <div style="display:flex!important;flex-direction:row!important;position:relative;">
             <main style="flex:1!important;padding:30px 50px 40px!important;box-sizing:border-box;">
-              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'♦'; font-size:1.4rem; }</style>
+              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'â™¦'; font-size:1.4rem; }</style>
               ${generateSections(leftKeys)}
             </main>
             <aside style="flex:0 0 35%!important;width:35%!important;background:#2a3b4c;color:#e0e6ed;padding:30px 30px 40px!important;box-sizing:border-box;position:relative;">
               <div style="margin-top: 80px!important;">
                 <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:160px;height:160px;object-fit:cover;border-radius:50%;border:6px solid #f4f6f8;position:absolute;top:-80px;left:50%;transform:translateX(-50%);background:#fff;" />
-                <style>.template-navyOverlap aside h2,.template-navyOverlap aside h3{color:#fff!important;border-bottom:1px solid rgba(255,255,255,0.3)!important;border-top:1px solid rgba(255,255,255,0.3)!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding:8px 0!important;margin-bottom:18px!important;background:none!important;text-align:center;} .template-navyOverlap aside *{color:#e0e6ed!important;} .template-navyOverlap aside h2,.template-navyOverlap aside h3{color:#fff!important;}</style>
+                <style>.template-navyOverlap aside .resume-section h2{color:#fff!important;border-bottom:1px solid rgba(255,255,255,0.3)!important;border-top:1px solid rgba(255,255,255,0.3)!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding:8px 0!important;margin-bottom:18px!important;background:none!important;text-align:center;} .template-navyOverlap aside *{color:#e0e6ed!important;} .template-navyOverlap aside .resume-item h3 { color:#fff!important; font-weight:600; font-size:1.05rem!important; margin-bottom: 5px; }</style>
                 ${generateSections(rightKeys)}
               </div>
             </aside>
@@ -2035,12 +2035,6 @@
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
-        /* EmeraldSplit: aside sidebar */
-        body.template-emeraldSplit .template-emeraldSplit aside {
-            background: #0f4c3a !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
         
         .site-header, .hero, .jd-match, .builder-layout, .templates,
         .form-panel, .preview-header, .score-card, .field-suggestion-box,
@@ -2609,6 +2603,7 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
 
 
 
