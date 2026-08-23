@@ -834,6 +834,78 @@ textarea:focus {
   line-height: 1.2;
 }
 
+/* === MODERN SIDEBAR: Section h2 headers (CERTIFICATIONS, EXPERTISE, LANGUAGES etc.) === */
+.resume.modernSidebar .resume-sidebar .resume-section h2,
+.resume.modernSidebar .resume-sidebar .sidebar-section h2 {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  color: #A0AEC0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+  padding-bottom: 6px !important;
+  margin-top: 22px !important;
+  margin-bottom: 12px !important;
+}
+
+/* === MODERN SIDEBAR: Skill subsection h3 (Hard Skills, Tools/Technologies, Domain Skills) === */
+.resume.modernSidebar .resume-sidebar .resume-subsection h3 {
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  color: #fff !important;
+  border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+  padding-bottom: 4px !important;
+  margin-top: 14px !important;
+  margin-bottom: 8px !important;
+}
+
+/* === MODERN SIDEBAR: Content items line-by-line === */
+.resume.modernSidebar .resume-sidebar .resume-item {
+  margin-bottom: 14px !important;
+}
+.resume.modernSidebar .resume-sidebar .resume-item h3 {
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin-bottom: 2px !important;
+  border: none !important;
+  text-transform: none !important;
+}
+.resume.modernSidebar .resume-sidebar .resume-meta {
+  font-size: 0.78rem !important;
+  color: #A0AEC0 !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+/* Skills inline text shown compactly */
+.resume.modernSidebar .resume-sidebar .resume-tags {
+  font-size: 0.82rem !important;
+  color: #E2E8F0 !important;
+  line-height: 1.8 !important;
+  word-break: break-word !important;
+}
+
+/* Sidebar section content - language, personal details, awards */
+.resume.modernSidebar .resume-sidebar .resume-section p,
+.resume.modernSidebar .resume-sidebar .resume-section li {
+  font-size: 0.82rem !important;
+  color: #E2E8F0 !important;
+  line-height: 1.7 !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+.resume.modernSidebar .resume-sidebar .resume-section ul {
+  padding-left: 0 !important;
+  list-style: none !important;
+  margin: 0 !important;
+}
+.resume.modernSidebar .resume-sidebar .resume-section ul li::before {
+  content: "– ";
+  color: #A0AEC0;
+}
+
 /* Template Preview in Gallery */
 .preview-modernSidebar {
   background: linear-gradient(to right, #2D3748 35%, #fff 35%);
