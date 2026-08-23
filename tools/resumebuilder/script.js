@@ -1466,9 +1466,9 @@
       resume: state.resume,
       selectedTemplate: state.selectedTemplate,
       sectionOrder: state.sectionOrder,
-      sectionEnabled: state.sectionEnabled
-      templateVersion: 1,
-  };
+      sectionEnabled: state.sectionEnabled,
+      templateVersion: 1
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   };
 
