@@ -888,13 +888,22 @@
         const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
         return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
       };
-      const contactLines = [
-        personal.phone ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : "",
-        personal.email ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : "",
-        location ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}</p>` : "",
-        personal.linkedin ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeTeacherLink(personal.linkedin)}</p>` : "",
-        personal.portfolio ? `<p class="resume-contact" style="display:flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeTeacherLink(personal.portfolio)}</p>` : "",
-      ].filter(Boolean).join("");
+      const phoneHtml = personal.phone ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : "";
+        const emailHtml = personal.email ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : "";
+        const line1 = [phoneHtml, emailHtml].filter(Boolean).join(' <span style="margin:0 8px;">&bull;</span> ');
+
+        const locationHtml = location ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}</span>` : "";
+        const line2 = [locationHtml].filter(Boolean).join("");
+
+        const linkedinHtml = personal.linkedin ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeTeacherLink(personal.linkedin)}</span>` : "";
+        const portfolioHtml = personal.portfolio ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeTeacherLink(personal.portfolio)}</span>` : "";
+        const line3 = [linkedinHtml, portfolioHtml].filter(Boolean).join(' <span style="margin:0 8px;">&bull;</span> ');
+
+        const contactLines = [
+          line1 ? `<p class="resume-contact" style="display:flex;flex-wrap:wrap;align-items:center;margin-bottom:4px;">${line1}</p>` : "",
+          line2 ? `<p class="resume-contact" style="display:flex;flex-wrap:wrap;align-items:center;margin-bottom:4px;">${line2}</p>` : "",
+          line3 ? `<p class="resume-contact" style="display:flex;flex-wrap:wrap;align-items:center;margin-bottom:4px;">${line3}</p>` : ""
+        ].filter(Boolean).join("");
       const headlinePart = personal.headline && showHeadline
         ? `<p class="resume-headline">${escapeHtml(personal.headline)}</p>` : "";
       return `
