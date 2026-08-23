@@ -1211,7 +1211,12 @@
 
   const updatePreview = () => {
     if (!dom.preview) return;
-    dom.preview.innerHTML = renderResume(state.resume, state.selectedTemplate);
+    try {
+      dom.preview.innerHTML = renderResume(state.resume, state.selectedTemplate);
+    } catch (e) {
+      dom.preview.innerHTML = `<div style="color:red; padding: 20px;"><h3>Render Error:</h3><pre>${e.stack}</pre></div>`;
+      console.error(e);
+    }
   };
 
   const scoreResume = (resume) => {
