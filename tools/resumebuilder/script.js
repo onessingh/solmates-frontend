@@ -867,7 +867,7 @@
         const emailHtml = personal.email ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : "";
         const line1 = [phoneHtml, emailHtml].filter(Boolean).join(' <span style="margin:0 8px;">&bull;</span> ');
 
-        const locationHtml = location ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}</span>` : "";
+        const locationHtml = location ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${makeLocationLink(personal.location)}</span>` : "";
         const line2 = [locationHtml].filter(Boolean).join("");
 
         const linkedinHtml = personal.linkedin ? `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeTeacherLink(personal.linkedin)}</span>` : "";
@@ -942,7 +942,7 @@
                 </div>` : ""}
                 ${location ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
                   <i class="fas fa-map-marker-alt" style="width:16px;text-align:center;color:#A0AEC0;"></i>
-                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-word;">${escapeHtml(location)}</span>
+                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-word;">${makeLocationLink(personal.location)}</span>
                 </div>` : ""}
                 ${personal.linkedin ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
                   <i class="fab fa-linkedin-in" style="width:16px;text-align:center;color:#A0AEC0;"></i>
@@ -1030,7 +1030,7 @@
       ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>`
       : "";
     const phoneText = personal.phone ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : "";
-    const locationText = formatLocation(personal.location) ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : "";
+    const locationText = formatLocation(personal.location) ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${makeLocationLink(personal.location)}</span>` : "";
     
     const linkedinLink = personal.linkedin ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeLink(personal.linkedin)}</span>` : "";
     const portfolioLink = personal.portfolio ? `<span style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeLink(personal.portfolio)}</span>` : "";
@@ -1063,7 +1063,7 @@
                   <h3 style="color:#fff;border-top:1px solid rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.3);padding:6px 0;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Contact</h3>
                   ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
                   ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-envelope" style="color:#cfa068;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#e5e0d8;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
-                  ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#cfa068;width:14px;text-align:center;margin-top:3px;"></i> <span>${escapeHtml(formatLocation(personal.location))}</span></p>` : ""}
+                  ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#cfa068;width:14px;text-align:center;margin-top:3px;"></i> <span>${makeLocationLink(personal.location)}</span></p>` : ""}
                   ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fab fa-linkedin-in" style="color:#cfa068;width:14px;text-align:center;"></i> ${makeUrlLink(personal.linkedin)}</p>` : ""}
                   ${personal.portfolio ? `<p style="font-size:0.8rem;margin-bottom:8px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-globe" style="color:#cfa068;width:14px;text-align:center;"></i> ${makeUrlLink(personal.portfolio)}</p>` : ""}
                 </div>
@@ -1097,7 +1097,7 @@
                 ${personal.phone ? `<span><i class="fas fa-phone-alt" style="color:#1abc9c;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
                 ${personal.email ? `<span><i class="fas fa-envelope" style="color:#1abc9c;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
                 ${personal.linkedin ? `<span><i class="fab fa-linkedin-in" style="color:#1abc9c;width:14px;text-align:center;"></i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
-                ${formatLocation(personal.location) ? `<span><i class="fas fa-map-marker-alt" style="color:#1abc9c;width:14px;text-align:center;"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span><i class="fas fa-map-marker-alt" style="color:#1abc9c;width:14px;text-align:center;"></i> ${makeLocationLink(personal.location)}</span>` : ""}
                 ${personal.portfolio ? `<span><i class="fas fa-globe" style="color:#1abc9c;width:14px;text-align:center;"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
             </div>
@@ -1128,7 +1128,7 @@
                 ${personal.phone ? `<span><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
                 ${personal.email ? `<span><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
                 ${personal.linkedin ? `<span><i class="fab fa-linkedin-in"></i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
-                ${formatLocation(personal.location) ? `<span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+                ${formatLocation(personal.location) ? `<span><i class="fas fa-map-marker-alt"></i> ${makeLocationLink(personal.location)}</span>` : ""}
                 ${personal.portfolio ? `<span><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
             </div>
@@ -1159,7 +1159,7 @@
               ${personal.phone ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
               ${personal.email ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.email)}</a></span>` : ""}
               ${personal.linkedin ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fab fa-linkedin-in"></i> ${makeUrlLink(personal.linkedin)}</span>` : ""}
-              ${formatLocation(personal.location) ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : ""}
+              ${formatLocation(personal.location) ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-map-marker-alt"></i> ${makeLocationLink(personal.location)}</span>` : ""}
               ${personal.portfolio ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
             </div>
           </header>
@@ -1191,7 +1191,7 @@
               <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
               <div style="margin-bottom:30px;text-align:left;">
                 <h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>
-                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#777;width:14px;text-align:center;"></i> <span>${escapeHtml(formatLocation(personal.location))}</span></p>` : ""}
+                ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#777;width:14px;text-align:center;"></i> <span>${makeLocationLink(personal.location)}</span></p>` : ""}
                 ${personal.phone ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-phone-alt" style="color:#777;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.phone)}</a></p>` : ""}
                 ${personal.email ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fas fa-envelope" style="color:#777;width:14px;text-align:center;"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:#444;text-decoration:none;">${escapeHtml(personal.email)}</a></p>` : ""}
                 ${personal.linkedin ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;word-break:break-all;"><i class="fab fa-linkedin-in" style="color:#777;width:14px;text-align:center;"></i> ${makeUrlLink(personal.linkedin)}</p>` : ""}
@@ -2603,6 +2603,8 @@
 
   document.addEventListener("DOMContentLoaded", init);
 })();
+
+
 
 
 
