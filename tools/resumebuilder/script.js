@@ -1434,7 +1434,7 @@
   const handleClearForm = () => {
     if (!confirm("Are you sure you want to clear all data? This cannot be undone.")) return;
     state.resume = buildDefaultResume();
-    state.selectedTemplate = "social";
+    state.selectedTemplate = "floralSidebar";
     state.sectionEnabled = {
       personalInfo: true,
       summary: true,
