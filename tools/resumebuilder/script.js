@@ -995,11 +995,21 @@
       }).filter(Boolean).join("");
     };
 
-    const makeUrlLink = (url) => {
+    // All other templates — Build clickable contact/links with icons
+    const makeLink = (url) => {
       if (!url) return "";
       const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
       return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
     };
+    const emailLink = personal.email
+      ? `<span style="white-space:nowrap;"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>`
+      : "";
+    const phoneText = personal.phone ? `<span style="white-space:nowrap;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : "";
+    const locationText = formatLocation(personal.location) ? `<span style="white-space:nowrap;"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(formatLocation(personal.location))}</span>` : "";
+    const contactParts = [emailLink, phoneText, locationText].filter(Boolean).join("  &bull;  ");
+    const linkedinLink = personal.linkedin ? `<span style="white-space:nowrap;"><i class="fab fa-linkedin-in"></i> ${makeLink(personal.linkedin)}</span>` : "";
+    const portfolioLink = personal.portfolio ? `<span style="white-space:nowrap;"><i class="fas fa-globe"></i> ${makeLink(personal.portfolio)}</span>` : "";
+    const linksParts = [linkedinLink, portfolioLink].filter(Boolean).join("  &bull;  ");
 
     if (templateKey === "forestSidebar") {
       const sidebarKeys = ["awards","skills","technicalStack","languages","volunteer","personalDetails"];
@@ -1165,21 +1175,8 @@
             </main>
           </div>
         </article>`.trim();
-    }    // All other templates
-    // Build clickable contact/links
-    const emailLink = personal.email
-      ? `<a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a>`
-      : "";
-    const phoneText = personal.phone ? `<a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a>` : "";
-    const locationText = formatLocation(personal.location) ? escapeHtml(formatLocation(personal.location)) : "";
-    const contactParts = [emailLink, phoneText, locationText].filter(Boolean).join("  \u2022  ");
+    }
 
-    const makeLink = (url) => {
-      if (!url) return "";
-      const href = /^https?:\/\//i.test(url) ? url : "https://" + url;
-      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(url)}</a>`;
-    };
-    const linksParts = [linkedinLink, portfolioLink].filter(Boolean).join("  &bull;  ");
 
     return `
       <article class="resume template-${escapeHtml(templateKey)}">
