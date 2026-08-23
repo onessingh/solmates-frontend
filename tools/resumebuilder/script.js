@@ -934,7 +934,7 @@
         <article class="resume modernSidebar">
           <aside class="resume-sidebar">
             <div class="resume-photo-wrap">
-              <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
+              ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" />` : ''}
             </div>
             
             <div class="sidebar-section" style="margin-bottom:30px;">
@@ -1080,10 +1080,10 @@
             <header>
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                 <div style="flex: 1;">
-                  <h1 style="font-size: 3.5rem; font-weight: 800; color: #111827; margin: 0 0 5px 0; letter-spacing: -1.5px; line-height: 1;">${escapeHtml(personal.fullName || "Name")}</h1>
+                  <h1 style="font-size: 3.5rem; font-weight: 800; color: #111827; margin: 0 0 5px 0; letter-spacing: -1.5px; line-height: 1;">${escapeHtml(personal.fullName || "")}</h1>
                   ${personal.headline && showHeadline ? `<p style="font-size: 1.3rem; color: #4f46e5; margin: 0; font-weight: 500; letter-spacing: -0.5px;">${escapeHtml(personal.headline)}</p>` : ""}
                 </div>
-                ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="Profile" style="width: 120px; height: 120px; border-radius: 24px; object-fit: cover; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />` : ""}
+                ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width: 120px; height: 120px; border-radius: 24px; object-fit: cover; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />` : ""}
               </div>
               
               <div style="display: flex; flex-wrap: wrap;">
@@ -1117,7 +1117,7 @@
           <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:100%!important;align-items:stretch!important;">
             <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:linear-gradient(180deg,#1b2823,#0d1411);color:#e5e0d8;display:flex!important;flex-direction:column!important;">
               <div style="width:100%;aspect-ratio:1/1;background:#ddd;overflow:hidden;">
-                <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" />` : ''}
               </div>
               <div style="padding:40px 40px!important;flex:1;">
                 <div style="margin-bottom:20px;">
@@ -1134,7 +1134,7 @@
             </aside>
             <main class="resume-main" style="flex:1!important;padding:40px 40px!important;background:#fff;box-sizing:border-box;">
               <header style="margin-bottom:30px;">
-                <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "Name")}</h1>
+                <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "")}</h1>
                 ${personal.headline && showHeadline ? `<p style="color:#cfa068;font-weight:400;font-size:1.4rem;text-transform:capitalize;">${escapeHtml(personal.headline)}</p>` : ""}
               </header>
               <style>.template-forestSidebar .resume-main .resume-section h2{color:#111!important;border-bottom:2px solid #111!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:14px!important;background:none!important;} .template-forestSidebar .resume-main .resume-item-header { display:flex; justify-content: space-between; align-items: baseline; } .template-forestSidebar .resume-main .resume-item-title { font-weight: 700; color:#111; } .template-forestSidebar .resume-main .resume-item-date { background: #111; color: #fff; padding: 2px 8px; font-size: 0.75rem; border-radius: 3px; }</style>
@@ -1150,9 +1150,9 @@
       return `
         <article class="resume template-slateModern" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Outfit',sans-serif;background:#2b3036;color:#e0e6ed;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;border-left:15px solid #1abc9c;">
           <header style="padding:40px 40px 20px!important;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:30px;">
-            <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:3px solid #1abc9c;" />
+            ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:3px solid #1abc9c;" />` : ''}
             <div>
-              <h1 style="font-size:2.8rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">${escapeHtml(personal.fullName || "Name")}</h1>
+              <h1 style="font-size:2.8rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">${escapeHtml(personal.fullName || "")}</h1>
               ${personal.headline && showHeadline ? `<p style="color:#1abc9c;font-size:1.3rem;font-weight:400;margin-bottom:10px;">${escapeHtml(personal.headline)}</p>` : ""}
               <div style="display:flex;flex-wrap:wrap;gap:10px 20px;font-size:0.85rem;color:#b0bac5;">
                 ${personal.phone ? `<span><i class="fas fa-phone-alt" style="color:#1abc9c;width:14px;text-align:center;"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#b0bac5;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
@@ -1183,7 +1183,7 @@
         <article class="resume template-emeraldSplit" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Inter',sans-serif;color:#333;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
           <header style="background:#0f4c3a;padding:45px 50px!important;color:#fff;display:flex;justify-content:space-between;align-items:center;">
             <div style="flex:1;">
-              <h1 style="font-size:3.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;line-height:1;">${escapeHtml(personal.fullName || "Name")}</h1>
+              <h1 style="font-size:3.2rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;line-height:1;">${escapeHtml(personal.fullName || "")}</h1>
               ${personal.headline && showHeadline ? `<p style="color:#81d4a3;font-size:1.3rem;font-weight:400;margin-bottom:20px;text-transform:uppercase;letter-spacing:2px;">${escapeHtml(personal.headline)}</p>` : ""}
               <div style="display:flex;flex-wrap:wrap;gap:8px 15px;font-size:0.85rem;color:#e8f5e9;">
                 ${personal.phone ? `<span><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#e8f5e9;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
@@ -1193,7 +1193,7 @@
                 ${personal.portfolio ? `<span><i class="fas fa-globe"></i> ${makeUrlLink(personal.portfolio)}</span>` : ""}
               </div>
             </div>
-            <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:4px solid #81d4a3;margin-left:20px;" />
+            ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:4px solid #81d4a3;margin-left:20px;" />` : ''}
           </header>
           <div style="display:flex!important;flex-direction:row!important;width:100%!important;">
             <main style="flex:1!important;padding:40px 50px!important;box-sizing:border-box;">
@@ -1214,7 +1214,7 @@
       return `
         <article class="resume template-navyOverlap" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Inter',sans-serif;background:#f4f6f8;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding-top:50px!important;overflow:hidden;">
           <header style="padding:0 50px 90px!important;">
-            <h1 style="font-size:3rem;font-weight:800;color:#2a3b4c;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">${escapeHtml(personal.fullName || "Name")}</h1>
+            <h1 style="font-size:3rem;font-weight:800;color:#2a3b4c;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">${escapeHtml(personal.fullName || "")}</h1>
             ${personal.headline && showHeadline ? `<p style="color:#555;font-size:1.2rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;">${escapeHtml(personal.headline)}</p>` : ""}
             <div style="display:flex;flex-wrap:wrap;gap:8px 20px;font-size:0.85rem;color:#666;border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px 0;">
               ${personal.phone ? `<span style="display:flex;align-items:center;gap:6px;"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}" style="color:#666;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>` : ""}
@@ -1231,7 +1231,7 @@
             </main>
             <aside style="flex:0 0 35%!important;width:35%!important;background:#2a3b4c;color:#e0e6ed;padding:30px 30px 40px!important;box-sizing:border-box;position:relative;">
               <div style="margin-top: 80px!important;">
-                <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:160px;height:160px;object-fit:cover;border-radius:50%;border:6px solid #f4f6f8;position:absolute;top:-80px;left:50%;transform:translateX(-50%);background:#fff;" />
+                ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width:160px;height:160px;object-fit:cover;border-radius:50%;border:6px solid #f4f6f8;position:absolute;top:-80px;left:50%;transform:translateX(-50%);background:#fff;" />` : ''}
                 <style>.template-navyOverlap aside .resume-section h2{color:#fff!important;border-bottom:1px solid rgba(255,255,255,0.3)!important;border-top:1px solid rgba(255,255,255,0.3)!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding:8px 0!important;margin-bottom:18px!important;background:none!important;text-align:center;} .template-navyOverlap aside *{color:#e0e6ed!important;} .template-navyOverlap aside .resume-item h3 { color:#fff!important; font-weight:600; font-size:1.05rem!important; margin-bottom: 5px; }</style>
                 ${generateSections(rightKeys)}
               </div>
@@ -1249,7 +1249,7 @@
         <article class="resume template-floralSidebar" style="display:block!important;width:100%!important;min-height:100%!important;font-family:'Georgia',serif;color:#444;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;">
           <div style="display:flex!important;flex-direction:row!important;width:100%!important;min-height:100%!important;align-items:stretch!important;">
             <aside class="resume-sidebar" style="width:34%!important;flex-shrink:0!important;background:#e8e8e8;padding:45px 30px!important;box-sizing:border-box;text-align:center;">
-              <img src="${personal.photoDataUrl || '/tools/resumebuilder/default-avatar.png'}" alt="Profile" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />
+              ${personal.photoDataUrl ? `<img src="${personal.photoDataUrl}" alt="" style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 30px;border:5px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);" />` : ''}
               <div style="margin-bottom:30px;text-align:left;">
                 <h3 style="color:#333;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:15px;border-bottom:1px solid #ccc;padding-bottom:5px;text-align:center;">Contact</h3>
                 ${formatLocation(personal.location) ? `<p style="font-size:0.8rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><i class="fas fa-map-marker-alt" style="color:#777;width:14px;text-align:center;"></i> <span>${makeLocationLink(personal.location)}</span></p>` : ""}
@@ -1263,7 +1263,7 @@
             </aside>
             <main class="resume-main" style="flex:1!important;padding:55px 45px!important;background:#fff;box-sizing:border-box;">
               <header style="margin-bottom:40px;text-align:center;">
-                <h1 style="font-size:2.8rem;font-weight:400;color:#222;text-transform:uppercase;letter-spacing:8px;margin-bottom:15px;line-height:1.2;">${escapeHtml(personal.fullName || "Name").replace(/ /g, '<br>')}</h1>
+                <h1 style="font-size:2.8rem;font-weight:400;color:#222;text-transform:uppercase;letter-spacing:8px;margin-bottom:15px;line-height:1.2;">${escapeHtml(personal.fullName || "").replace(/ /g, '<br>')}</h1>
                 ${personal.headline && showHeadline ? `<p style="font-style:italic;color:#666;font-size:1.1rem;letter-spacing:2px;position:relative;display:inline-block;">${escapeHtml(personal.headline)}<span style="position:absolute;top:50%;left:-50px;width:40px;height:1px;background:#ccc;"></span><span style="position:absolute;top:50%;right:-50px;width:40px;height:1px;background:#ccc;"></span></p>` : ""}
               </header>
               <style>.template-floralSidebar .resume-main .resume-section h2{background:#4a3e47!important;color:#fff!important;font-size:0.9rem!important;text-transform:uppercase!important;letter-spacing:5px!important;padding:8px 15px!important;margin-bottom:18px!important;border:none!important;text-align:center;}</style>
