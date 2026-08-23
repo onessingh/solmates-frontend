@@ -9,7 +9,16 @@
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=97">
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=900, user-scalable=no" />
+  <meta name="viewport" content="width=900, user-scalable=no" id="vp-meta" />
+  <script>
+    (function() {
+      // On real laptops/desktops (actual screen >= 1000px), switch to device-width viewport
+      // Phone stays on the fixed width=900 viewport so nothing breaks
+      if (window.screen.width >= 1000 && !/Mobi|Android/i.test(navigator.userAgent)) {
+        document.getElementById('vp-meta').setAttribute('content', 'width=device-width, initial-scale=1');
+      }
+    })();
+  </script>
 
   <meta name="robots" content="index, follow" />
   <title>AI Resume Builder for Students | ATS-Friendly MBA CV Templates</title>
