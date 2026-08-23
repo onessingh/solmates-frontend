@@ -213,7 +213,7 @@
 
   const state = {
     resume: buildDefaultResume(),
-    selectedTemplate: "finance",
+    selectedTemplate: "floralSidebar",
     sectionOrder: [...DEFAULT_SECTION_ORDER],
     sectionEnabled: { ...DEFAULT_SECTION_ENABLED },
     photoCrop: {
