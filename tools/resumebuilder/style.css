@@ -3493,7 +3493,7 @@ html.is-desktop .jd-match { max-width: 100% !important; width: 100% !important; 
 
 /* Templates full width, no scroll */
 html.is-desktop .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; }
-html.is-desktop .tpl-gallery { max-height: 600px !important; overflow-y: auto !important; overflow-x: hidden !important; }
+html.is-desktop .tpl-gallery { max-height: none !important; overflow-y: visible !important; overflow-x: visible !important; }
 html.is-desktop .tpl-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
 html.is-desktop .template-card { padding: 8px !important; }
 html.is-desktop .template-preview { height: 90px !important; }
@@ -3521,7 +3521,7 @@ html.is-desktop #resume-preview { transform: none !important; margin-bottom: 0 !
   .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .jd-match { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
-  .tpl-gallery { max-height: 600px !important; overflow-y: auto !important; }
+  .tpl-gallery { max-height: none !important; overflow-y: visible !important; }
   .tpl-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
   .template-preview { height: 90px !important; }
   #resume-preview { transform: none !important; margin-bottom: 0 !important; width: 100% !important; }
@@ -3540,7 +3540,7 @@ html.is-desktop #templates-accordion-header .accordion-icon {
 
 /* Also make the whole layout slightly more compact on desktop so it fits better */
 html.is-desktop {
-    zoom: 0.73;
+    zoom: 0.63;
 }
 html.is-desktop .panel-section {
     padding: 16px !important;
