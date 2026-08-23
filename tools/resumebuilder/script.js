@@ -927,7 +927,7 @@
 
     // Modern Sidebar Template: Multi-column partitioning
     if (templateKey === "modernSidebar") {
-      const sidebarKeys = ["education", "skills", "languages", "certifications"];
+      const sidebarKeys = ["skills", "languages", "certifications", "awards", "personalDetails", "interests"];
       const sidebarHtml = (state.sectionOrder || []).map(key => {
         if (!state.sectionEnabled[key] || !sidebarKeys.includes(key)) return "";
         const def = sectionMap.get(key);
@@ -955,29 +955,29 @@
               <img src="${personal.photoDataUrl || "/tools/resumebuilder/default-avatar.png"}" alt="Profile" />
             </div>
             
-            <div class="sidebar-section">
-              <h3>Contact</h3>
-              ${personal.phone ? `<div class="sidebar-item">
-                <i class="fas fa-phone-alt" style="width:16px;text-align:center;"></i>
-                <span class="sidebar-value"><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>
-              </div>` : ""}
-              ${personal.email ? `<div class="sidebar-item">
-                <i class="fas fa-envelope" style="width:16px;text-align:center;"></i>
-                <span class="sidebar-value"><a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>
-              </div>` : ""}
-              ${location ? `<div class="sidebar-item">
-                <i class="fas fa-map-marker-alt" style="width:16px;text-align:center;"></i>
-                <span class="sidebar-value">${escapeHtml(location)}</span>
-              </div>` : ""}
-              ${personal.linkedin ? `<div class="sidebar-item">
-                <i class="fab fa-linkedin-in" style="width:16px;text-align:center;"></i>
-                <span class="sidebar-value"><a href="${/^https?:\/\//i.test(personal.linkedin) ? escapeHtml(personal.linkedin) : "https://" + escapeHtml(personal.linkedin)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.linkedin)}</a></span>
-              </div>` : ""}
-              ${personal.portfolio ? `<div class="sidebar-item">
-                <i class="fas fa-globe" style="width:16px;text-align:center;"></i>
-                <span class="sidebar-value"><a href="${/^https?:\/\//i.test(personal.portfolio) ? escapeHtml(personal.portfolio) : "https://" + escapeHtml(personal.portfolio)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.portfolio)}</a></span>
-              </div>` : ""}
-            </div>
+            <div class="sidebar-section" style="margin-bottom:30px;">
+                <h3 style="color:#A0AEC0;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:5px;">Contact</h3>
+                ${personal.phone ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
+                  <i class="fas fa-phone-alt" style="width:16px;text-align:center;color:#A0AEC0;"></i>
+                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-word;"><a href="tel:${escapeHtml(personal.phone)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.phone)}</a></span>
+                </div>` : ""}
+                ${personal.email ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
+                  <i class="fas fa-envelope" style="width:16px;text-align:center;color:#A0AEC0;"></i>
+                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-all;"><a href="mailto:${escapeHtml(personal.email)}" style="color:inherit;text-decoration:none;">${escapeHtml(personal.email)}</a></span>
+                </div>` : ""}
+                ${location ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
+                  <i class="fas fa-map-marker-alt" style="width:16px;text-align:center;color:#A0AEC0;"></i>
+                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-word;">${escapeHtml(location)}</span>
+                </div>` : ""}
+                ${personal.linkedin ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
+                  <i class="fab fa-linkedin-in" style="width:16px;text-align:center;color:#A0AEC0;"></i>
+                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-all;"><a href="${/^https?:\/\//i.test(personal.linkedin) ? escapeHtml(personal.linkedin) : "https://" + escapeHtml(personal.linkedin)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.linkedin)}</a></span>
+                </div>` : ""}
+                ${personal.portfolio ? `<div class="sidebar-item" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:10px;">
+                  <i class="fas fa-globe" style="width:16px;text-align:center;color:#A0AEC0;"></i>
+                  <span class="sidebar-value" style="font-size:0.85rem;word-break:break-all;"><a href="${/^https?:\/\//i.test(personal.portfolio) ? escapeHtml(personal.portfolio) : "https://" + escapeHtml(personal.portfolio)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">${escapeHtml(personal.portfolio)}</a></span>
+                </div>` : ""}
+              </div>
 
             ${sidebarHtml}
           </aside>
