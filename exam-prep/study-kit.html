@@ -803,7 +803,7 @@ async function generateFlash(ctx) {
   document.getElementById('flash-content').innerHTML = loadingHTML('Generating flashcards...');
   const data = await callAI(`You are an expert educator. Generate 15 real, factual flashcards for exam preparation about: ${ctx}.
 Output strictly as a JSON object matching this schema:
-{ "cards": [{ "question": "<generate real question>", "answer": "<generate real answer (1-3 sentences)>", "category": "<topic name>" }] }
+{ "cards": [{ "question": "What is the capital of France?", "answer": "Paris.", "category": "Geography" }] }
 IMPORTANT: Do NOT output placeholder text. You must generate actual educational content.`);
 
   if (data?.cards?.length) {
@@ -826,11 +826,11 @@ function renderFlashcards(cards) {
       <div class="flashcard-inner">
         <div class="fc-front">
           <div class="card-label"><i class="fas fa-tag"></i> ${c.category || 'Concept'}</div>
-          <div class="card-q">${c.question}</div>
+          <div class="card-q">${c.question || c.q || "Could not load question"}</div>
           <div class="fc-hint">Tap to reveal answer</div>
         </div>
         <div class="fc-back">
-          <div class="card-a">${c.answer}</div>
+          <div class="card-a">${c.answer || c.a || "Could not load answer"}</div>
         </div>
       </div>
     </div>`).join('')}</div>`;
@@ -851,7 +851,7 @@ async function generateMCQ(ctx) {
   setProgress('mcq', 'loading');
   document.getElementById('mcq-content').innerHTML = loadingHTML('Generating MCQ questions...');
   const data = await callAI(`Create 20 multiple choice questions for: ${ctx}.
-Return JSON: { "questions": [{ "q": "Write the actual question text here", "options": ["Option 1 Text", "Option 2 Text", "Option 3 Text", "Option 4 Text"], "correct": 0 }] }
+Return JSON: { "questions": [{ "q": "Which planet is known as the Red Planet?", "options": ["Earth", "Mars", "Jupiter", "Venus"], "correct": 1 }] }
 correct is the 0-based index of the correct option. Make distractors plausible.`);
 
   if (data?.questions?.length) {
@@ -907,7 +907,7 @@ async function generateMock(ctx) {
   document.getElementById('mock-content').innerHTML = loadingHTML('Generating mock test...');
   const data = await callAI(`You are an expert examiner. Generate a complete 15-question mock test paper about: ${ctx}.
 Output strictly as a JSON object matching this schema:
-{ "duration": 30, "questions": [{ "q": "<generate actual question>", "options": ["<opt 1>", "<opt 2>", "<opt 3>", "<opt 4>"], "correct": <integer 0-3> }] }
+{ "duration": 30, "questions": [{ "q": "Who wrote Hamlet?", "options": ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"], "correct": 1 }] }
 IMPORTANT: Do NOT output dummy text. You must generate real, challenging questions.`);
 
   if (data?.questions?.length) {
@@ -1031,7 +1031,7 @@ async function generateApt(ctx) {
   document.getElementById('apt-content').innerHTML = loadingHTML('Generating aptitude questions...');
   const data = await callAI(`You are an expert examiner. Generate 15 real aptitude and logical reasoning questions relevant to: ${ctx}.
 Output strictly as a JSON object matching this schema:
-{ "questions": [{ "type": "<e.g., Logical Reasoning>", "q": "<generate actual reasoning question>", "answer": "<explain the logic/answer>" }] }
+{ "questions": [{ "type": "Logical Reasoning", "q": "If all roses are flowers and some flowers fade quickly, do all roses fade quickly?", "answer": "No, because the statement says only some flowers fade quickly, not all." }] }
 IMPORTANT: Do NOT output placeholders. Generate actual puzzle/aptitude questions with full logic in the answer.`);
 
   if (data?.questions?.length) {
