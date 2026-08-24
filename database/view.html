@@ -548,7 +548,14 @@
           window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, true)
         ]);
         renderGrid(fRes.data || [], iRes.data || []);
-      } catch (e) { grid.innerHTML = '<div class="empty">Error loading content.</div>'; }
+      } catch (e) {
+        const msg = e.message || '';
+        if (msg.toLowerCase().includes('locked')) {
+          grid.innerHTML = '<div class="empty"><i class="fas fa-lock" style="font-size:2rem;color:#f59e0b;margin-bottom:10px;"></i><br><strong>This folder is locked by the Administrator.</strong></div>';
+        } else {
+          grid.innerHTML = '<div class="empty">Error loading content.</div>';
+        }
+      }
     }
 
     function renderGrid(folders, items) {
