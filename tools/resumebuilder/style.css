@@ -3608,22 +3608,14 @@ Let's keep Templates as taking 1 column. */
     left: 0 !important;
     width: 100% !important;
     z-index: 1000 !important;
-    background: #fdfbf6 !important;
+    background: #fdfbf6;
     padding: 16px !important;
-    border-top: 1px solid #e5e7eb !important;
+    border-top: 1px solid #e5e7eb;
     box-shadow: 0 -4px 10px rgba(0,0,0,0.05) !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-}
-
-/* Dark mode override */
-@media (prefers-color-scheme: dark) {
-    .wizard-nav {
-        background: #1e293b !important;
-        border-top-color: #334155 !important;
-    }
 }
 
 /* Desktop: Match left column width exactly */
