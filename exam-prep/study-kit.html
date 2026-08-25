@@ -457,7 +457,6 @@
     <div class="progress-items">
       <div class="prog-item pending" id="prog-guide"><i class="fas fa-circle-notch"></i> <span>Study Guide</span></div>
       <div class="prog-item pending" id="prog-flash"><i class="fas fa-circle-notch"></i> <span>Flashcards</span></div>
-      <div class="prog-item pending" id="prog-mcq"><i class="fas fa-circle-notch"></i> <span>MCQ Practice</span></div>
       <div class="prog-item pending" id="prog-mock"><i class="fas fa-circle-notch"></i> <span>Mock Test</span></div>
       <div class="prog-item pending" id="prog-apt"><i class="fas fa-circle-notch"></i> <span>Aptitude Questions</span></div>
     </div>
@@ -471,9 +470,6 @@
       </button>
       <button class="tab-btn" onclick="switchTab('flash', this)">
         <i class="fas fa-layer-group"></i> Flashcards <span class="count" id="c-flash">0</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('mcq', this)">
-        <i class="fas fa-check-double"></i> MCQ Practice <span class="count" id="c-mcq">0</span>
       </button>
       <button class="tab-btn" onclick="switchTab('mock', this)">
         <i class="fas fa-file-signature"></i> Mock Test <span class="count" id="c-mock">0</span>
@@ -513,23 +509,6 @@
       <div class="empty-state">
         <i class="fas fa-layer-group"></i>
         <p>Flashcards will appear here after generation.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MCQ PRACTICE -->
-  <div class="pane" id="pane-mcq">
-    <div class="pane-header">
-      <div class="pane-title"><i class="fas fa-check-double"></i> MCQ Practice</div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <div class="score-pill">Score: <span id="mcq-score">0</span>/<span id="mcq-total">0</span></div>
-        <button class="dl-btn" onclick="downloadPane('mcq')"><i class="fas fa-download"></i> Download PDF</button>
-      </div>
-    </div>
-    <div id="mcq-content">
-      <div class="empty-state">
-        <i class="fas fa-check-double"></i>
-        <p>MCQ questions will appear here after generation.</p>
       </div>
     </div>
   </div>
@@ -686,7 +665,6 @@ async function generateAll() {
   // Run all 5 in sequence to avoid overloading
   await generateGuide(ctx);
   await generateFlash(ctx);
-  await generateMCQ(ctx);
   await generateMock(ctx);
   await generateApt(ctx);
 
@@ -1118,20 +1096,12 @@ function printContent(title, bodyHTML) {
 }
 
 function downloadPane(pane) {
-  const titles = { guide: 'Study Guide', flash: 'Flashcards', mcq: 'MCQ Practice', mock: 'Mock Test', apt: 'Aptitude Questions' };
+  const titles = { guide: 'Study Guide', flash: 'Flashcards', mock: 'Mock Test', apt: 'Aptitude Questions' };
   // Reveal all aptitude answers before printing
   if (pane === 'apt') genData.apt?.forEach((q, i) => revealApt(i));
   // Show all MCQ explanations and answers before printing
   if (pane === "mock") { genData.mock?.forEach((q, qi) => { document.querySelectorAll(`[id^="mock-opt-${qi}-"]`).forEach((el, oi) => { el.classList.remove("correct-ans", "wrong-ans"); if (oi === q.correct) el.classList.add("correct-ans"); }); }); }
-  if (pane === 'mcq') {
-    genData.mock?.forEach((q, qi) => { document.querySelectorAll(`[id^="mock-opt-${qi}-"]`).forEach((el, oi) => { el.classList.remove("correct-ans", "wrong-ans"); if (oi === q.correct) el.classList.add("correct-ans"); }); });
-  genData.mcq?.forEach((q, qi) => {
-      document.querySelectorAll(`[id^="opt-${qi}-"]`).forEach((el, oi) => {
-        el.classList.remove('correct-ans', 'wrong-ans');
-        if (oi === q.correct) el.classList.add('correct-ans');
-      });
-    });
-  }
+  
   const content = document.getElementById('pane-' + pane).innerHTML;
   printContent(`${examName} — ${subjectName} — ${titles[pane]}`,
     `<h1>${examName} — ${subjectName}</h1><h2>${titles[pane]}</h2>${content}`);
@@ -1140,16 +1110,9 @@ function downloadPane(pane) {
 function downloadAll() {
   // Reveal all answers first
   genData.apt?.forEach((_, i) => revealApt(i));
-  genData.mcq?.forEach((q, qi) => {
-    document.querySelectorAll(`[id^="opt-${qi}-"]`).forEach((el, oi) => {
-      el.classList.remove('correct-ans', 'wrong-ans');
-      if (oi === q.correct) el.classList.add('correct-ans');
-    });
-    document.getElementById(`exp-${qi}`)?.classList.add('show');
-  });
 
-  const sectionTitles = { guide: '📖 Study Guide', flash: '🃏 Flashcards', mcq: 'MCQ Practice', mock: 'Mock Test', apt: 'Aptitude Questions' };
-  const sections = ['guide', 'flash', 'mcq', 'mock', 'apt'].map(p => {
+  const sectionTitles = { guide: '📖 Study Guide', flash: '🃏 Flashcards', mock: 'Mock Test', apt: 'Aptitude Questions' };
+  const sections = ['guide', 'flash', 'mock', 'apt'].map(p => {
     const el = document.getElementById(p + '-content');
     if (!el || el.querySelector('.empty-state')) return '';
     return `<h2 style="margin-top:30px;">${sectionTitles[p]}</h2>${el.innerHTML}`;
