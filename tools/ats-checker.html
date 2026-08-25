@@ -394,7 +394,7 @@
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-title">Word Count</div>
-            <div class="metric-val" id="valWordCount"><i class="fas fa-font"></i> 0</div>
+            <div class="metric-val" id="valWordCount"><i class="fas fa-align-left"></i> 0</div>
           </div>
           <div class="metric-card">
             <div class="metric-title">Action Verbs</div>
@@ -547,7 +547,7 @@
           if (new RegExp('\\b' + v + '(ed|s)?\\b', 'i').test(resume)) exactVerbs++;
         });
         
-        const exactMetrics = (resume.match(/\b\d+(\.\d+)?([kKmM%]|\+)?\b/g) || []).length;
+        const exactMetrics = (resume.match(/(?:\$\d+|\b\d+(\.\d+)?([kKmM%]|\+)\b)/g) || []).length;
         
         let exactKeywordMatch = 'N/A';
         let calculatedScore = response.data.score || 70;
@@ -599,7 +599,7 @@
       document.getElementById('resultsArea').style.display = 'block';
 
       // 1. Populate Metrics
-      document.getElementById('valWordCount').innerHTML = `<i class="fas fa-font"></i> ${data.wordCount || 0}`;
+      document.getElementById('valWordCount').innerHTML = `<i class="fas fa-align-left"></i> ${data.wordCount || 0}`;
       document.getElementById('valVerbs').innerHTML = `<i class="fas fa-bolt"></i> ${data.actionVerbs || 0}`;
       document.getElementById('valNumbers').innerHTML = `<i class="fas fa-chart-bar"></i> ${data.measurableMetrics || 0}`;
       document.getElementById('valKeywords').innerHTML = `<i class="fas fa-key"></i> ${data.keywordMatch || 'N/A'}`;
