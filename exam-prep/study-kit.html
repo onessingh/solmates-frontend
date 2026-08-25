@@ -732,7 +732,7 @@ IMPORTANT: Do NOT output placeholder text. You must generate actual educational 
   if (data?.cards?.length) {
     genData.flash = data.cards;
     document.getElementById('c-flash').textContent = data.cards.length;
-    document.querySelector('.tab-btn:nth-child(2)').classList.add('has-data');
+    document.getElementById('c-flash').parentElement.classList.add('has-data');
     document.getElementById('fc-total').textContent = data.cards.length;
     document.getElementById('fc-stats').style.display = 'flex';
     renderFlashcards(data.cards);
@@ -781,7 +781,7 @@ correct is the 0-based index of the correct option. Make distractors plausible.`
     genData.mcq = data.questions;
     document.getElementById('c-mcq').textContent = data.questions.length;
     document.getElementById('mcq-total').textContent = data.questions.length;
-    document.querySelector('.tab-btn:nth-child(3)').classList.add('has-data');
+    document.getElementById('c-mcq')?.parentElement.classList.add('has-data');
     renderMCQ(data.questions);
     setProgress('mcq', 'done');
   } else {
@@ -838,7 +838,7 @@ IMPORTANT: Do NOT output dummy text. You must generate real, challenging questio
     // 1 minute per question
     timerSeconds = data.questions.length * 60;
     document.getElementById('c-mock').textContent = data.questions.length;
-    document.querySelector('.tab-btn:nth-child(4)').classList.add('has-data');
+    document.getElementById('c-mock').parentElement.classList.add('has-data');
     renderMockTest(data.questions);
     setProgress('mock', 'done');
   } else {
@@ -960,7 +960,7 @@ IMPORTANT: Do NOT output placeholders. Generate actual puzzle/aptitude questions
   if (data?.questions?.length) {
     genData.apt = data.questions;
     document.getElementById('c-apt').textContent = data.questions.length;
-    document.querySelector('.tab-btn:nth-child(5)').classList.add('has-data');
+    document.getElementById('c-apt').parentElement.classList.add('has-data');
     renderAptitude(data.questions);
     setProgress('apt', 'done');
   } else {
