@@ -1,4 +1,53 @@
 const templates = {
+
+  advanced_terminal: {
+    name: "Terminal Hacker (Advanced HTML)",
+    isAdvanced: true,
+    css: `
+      body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }
+      h1 { color: #fff; }
+      a { color: #0ff; }
+      .container { max-width: 800px; margin: 0 auto; border: 1px solid #0f0; padding: 20px; box-shadow: 0 0 10px #0f0; }
+      .prompt::before { content: "root@portfolio:~# "; color: #f0f; }
+      .badge { background: #0f0; color: #000; padding: 2px 5px; margin-right: 5px; }
+      .item { margin-bottom: 20px; border-left: 2px dashed #0f0; padding-left: 10px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - Terminal</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="container">
+    <h1>{NAME}</h1>
+    <p class="prompt">whoami</p>
+    <p>{TITLE}</p>
+    <p class="prompt">cat about.txt</p>
+    <p>{ABOUT}</p>
+    <p class="prompt">ls skills/</p>
+    <div>{SKILLS}</div>
+    <br>
+    <p class="prompt">cat experience.log</p>
+    <div>{EXPERIENCE}</div>
+    <p class="prompt">ls projects/</p>
+    <div>{PROJECTS}</div>
+    <br>
+    <p class="prompt">ping -c 3 contact</p>
+    <p>Email: <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+    <p>GitHub: <a href="{GITHUB}">{GITHUB}</a></p>
+    <p>LinkedIn: <a href="{LINKEDIN}">{LINKEDIN}</a></p>
+  </div>
+</body>
+</html>`,
+    skillLayout: `<span class="badge">{SKILL}</span>`,
+    expLayout: `<div class="item"><h4>> {ROLE} @ {COMPANY} [{YEAR}]</h4><p>{DESC}</p></div>`,
+    projLayout: `<div class="item"><h4>> {TITLE}</h4><p>{DESC}</p><a href="{LINK}">[View Source]</a></div>`,
+    photoLayout: ``
+  },
+
   bento: {
     name: 'Bento Grid',
     css: `

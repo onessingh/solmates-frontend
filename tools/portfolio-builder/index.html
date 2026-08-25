@@ -889,7 +889,7 @@
     }
 
     // Generator Engine
-    function generateHTML() {
+        function generateHTML() {
       const name = document.getElementById('name').value || 'Your Name';
       const title = document.getElementById('title').value || 'Professional Title';
       const about = document.getElementById('about').value;
@@ -898,6 +898,33 @@
       const github = document.getElementById('github').value;
       const skills = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s);
 
+      const t = templates[currentThemeKey];
+
+      if (t && t.isAdvanced) {
+        // Advanced Custom HTML Templating System
+        const skillsHTML = skills.map(s => (t.skillLayout || '<span class="skill-tag">{SKILL}</span>').replaceAll('{SKILL}', s)).join('');
+        const expHTML = expData.map(e => (t.expLayout || '<div class="item"><h3>{ROLE}</h3><p>{COMPANY}</p><p>{YEAR}</p><p>{DESC}</p></div>').replaceAll('{ROLE}', e.role).replaceAll('{COMPANY}', e.company).replaceAll('{YEAR}', e.year).replaceAll('{DESC}', e.desc)).join('');
+        const projHTML = projData.map(p => (t.projLayout || '<div class="item"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}">Link</a></div>').replaceAll('{TITLE}', p.title).replaceAll('{DESC}', p.desc).replaceAll('{LINK}', p.link)).join('');
+
+        const photoHTML = profilePhotoBase64 ? (t.photoLayout || '<img src="{PHOTO_SRC}">').replaceAll('{PHOTO_SRC}', profilePhotoBase64) : '';
+
+        let finalHtml = t.htmlLayout
+            .replaceAll('{NAME}', name)
+            .replaceAll('{TITLE}', title)
+            .replaceAll('{ABOUT}', about)
+            .replaceAll('{EMAIL}', email)
+            .replaceAll('{LINKEDIN}', linkedin)
+            .replaceAll('{GITHUB}', github)
+            .replaceAll('{SKILLS}', skillsHTML)
+            .replaceAll('{EXPERIENCE}', expHTML)
+            .replaceAll('{PROJECTS}', projHTML)
+            .replaceAll('{CSS}', t.css.replaceAll('{COLOR}', currentColor))
+            .replaceAll('{PHOTO}', photoHTML);
+            
+        return finalHtml;
+      }
+
+      // Legacy System for existing 100+ CSS themes
       const skillsHTML = skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
       const expHTML = expData.map(e => `
         <div class="timeline-item">
@@ -915,7 +942,7 @@
         </div>
       `).join('');
 
-      let themeCSS = templates[currentThemeKey].css.replaceAll('{COLOR}', currentColor);
+      let themeCSS = t.css.replaceAll('{COLOR}', currentColor);
 
       return `<!DOCTYPE html>
 <html lang="en">
