@@ -72,7 +72,7 @@ const templates = {
 
 
   premium_3d_particles: {
-    name: "? Cosmic Particles 3D",
+    name: "Cosmic Particles 3D",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
@@ -156,7 +156,7 @@ const templates = {
   },
 
   premium_3d_birds: {
-    name: "?? Dynamic Flock 3D",
+    name: "Dynamic Flock 3D",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
@@ -251,7 +251,7 @@ const templates = {
   },
   
   premium_3d_halo: {
-    name: "?? Neon Halo 3D",
+    name: "Neon Halo 3D",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jura:wght@400;600&display=swap');
@@ -345,7 +345,7 @@ const templates = {
   },
   
   premium_3d_dots: {
-    name: "??? Connected Matrix 3D",
+    name: "Connected Matrix 3D",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
@@ -455,7 +455,7 @@ const templates = {
 
 
   premium_3d_topology: {
-    name: "?? 3D Topology Terrain",
+    name: "3D Topology Terrain",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;500;700&display=swap');
@@ -507,7 +507,7 @@ const templates = {
     photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; object-fit:cover;">`
   },
   premium_3d_rings: {
-    name: "?? Spinning 3D Rings",
+    name: "Spinning 3D Rings",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap');
@@ -553,7 +553,7 @@ const templates = {
 ,
 
   premium_3d_vanta: {
-    name: "Premium Premium 3D Universe",
+    name: "Premium 3D Universe",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
@@ -680,7 +680,7 @@ const templates = {
   },
 
   premium_3d_globe: {
-    name: "Premium Premium 3D Globe",
+    name: "Premium 3D Globe",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;800&display=swap');
@@ -772,7 +772,7 @@ const templates = {
 
 
   premium_devfolio: {
-    name: "Premium Premium DevFolio",
+    name: "Premium DevFolio",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -890,7 +890,7 @@ const templates = {
 
 
   premium_3d_glass: {
-    name: "Premium Premium 3D Glass",
+    name: "Premium 3D Glass",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');

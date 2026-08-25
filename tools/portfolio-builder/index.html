@@ -167,11 +167,18 @@
 
     /* Templates Section */
     .theme-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+        max-height: 260px;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+      .theme-grid::-webkit-scrollbar { width: 6px; }
+      .theme-grid::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+      .theme-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+      .theme-grid::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     @media (max-width: 768px) {
       .theme-grid { grid-template-columns: repeat(2, 1fr); }
     }
