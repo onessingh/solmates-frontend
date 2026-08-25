@@ -1,75 +1,221 @@
 const templates = {
-
-  premium_apple_glass: {
-    name: "Premium Apple Vision Pro",
+  premium_3d_globe: {
+    name: "Premium 3D Globe",
     isAdvanced: true,
     css: `
-      @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;800&display=swap');
       :root { --p: {COLOR}; }
-      body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f5f5f7; color: #1d1d1f; line-height: 1.5; }
-      .container { max-width: 980px; margin: 0 auto; padding: 100px 20px; }
+      body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; color: #fff; }
+      #vanta-globe { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 100px 20px; text-align: center; }
       
-      .hero { text-align: center; margin-bottom: 80px; }
-      .hero img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; }
-      h1 { font-size: 5rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; background: linear-gradient(90deg, #1d1d1f, #86868b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-      .title { font-size: 1.8rem; font-weight: 600; color: #86868b; margin-top: 10px; }
-      .about { font-size: 1.3rem; max-width: 700px; margin: 30px auto; color: #515154; }
+      h1 { font-size: 5rem; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+      .title { font-size: 1.5rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 30px; color: #ccc; }
+      .about-box { background: rgba(0,0,0,0.4); padding: 30px; border-radius: 15px; font-size: 1.2rem; line-height: 1.8; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 50px; }
       
-      .btn { display: inline-block; background: #0071e3; color: #fff; padding: 14px 28px; border-radius: 30px; font-weight: 600; text-decoration: none; margin: 10px; transition: 0.3s; }
-      .btn:hover { background: #0077ED; transform: scale(1.02); }
-      .btn-outline { background: transparent; color: #0071e3; border: 1px solid #0071e3; }
+      h2 { font-size: 2.5rem; margin-top: 80px; margin-bottom: 40px; font-weight: 800; }
       
-      h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 80px 0 40px; text-align: center; }
+      .skills { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 80px; }
+      .skill-pill { background: rgba(255,255,255,0.1); border: 1px solid var(--p); color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: 500; backdrop-filter: blur(5px); transition: 0.3s; }
+      .skill-pill:hover { background: var(--p); color: #000; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left; }
+      .glass-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; transition: 0.3s; }
+      .glass-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+      .glass-card h3 { font-size: 1.6rem; margin: 0 0 10px; color: var(--p); }
       
-      .skills { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
-      .skill-tag { background: #fff; border: 1px solid #d2d2d7; color: #1d1d1f; padding: 12px 24px; border-radius: 40px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
-      .skill-tag:hover { border-color: #0071e3; color: #0071e3; box-shadow: 0 4px 12px rgba(0,113,227,0.1); }
-      
-      .grid { display: grid; gap: 30px; }
-      .card { background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.03); transition: 0.4s; }
-      .card:hover { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
-      .card h3 { font-size: 1.8rem; margin: 0 0 10px; }
-      .card .meta { color: #86868b; font-weight: 600; font-size: 1.1rem; margin-bottom: 15px; }
-      
-      @media(max-width: 768px) { h1 { font-size: 3.5rem; } }
+      .btn-grp { margin-top: 40px; }
+      .btn-grp a { display: inline-block; padding: 15px 35px; background: #fff; color: #000; text-decoration: none; border-radius: 50px; font-weight: 800; margin: 10px; transition: 0.3s; }
+      .btn-grp a:hover { background: var(--p); color: #fff; transform: scale(1.05); }
     `,
     htmlLayout: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{NAME} - Apple UI</title>
+  <title>{NAME} - Global 3D</title>
   <style>{CSS}</style>
 </head>
 <body>
+  <div id="vanta-globe"></div>
   <div class="container">
-    <div class="hero">
-      {PHOTO}
-      <h1>{NAME}</h1>
-      <div class="title">{TITLE}</div>
-      <p class="about">{ABOUT}</p>
-      <a href="mailto:{EMAIL}" class="btn">Contact Me</a>
-      <a href="{LINKEDIN}" class="btn btn-outline" target="_blank">LinkedIn</a>
+    {PHOTO}
+    <h1>{NAME}</h1>
+    <div class="title">{TITLE}</div>
+    
+    <div class="btn-grp">
+      <a href="mailto:{EMAIL}">Contact Me</a>
+      <a href="{LINKEDIN}" target="_blank">LinkedIn</a>
     </div>
-    
-    <h2>Core Technologies</h2>
+
+    <div class="about-box" style="margin-top: 50px;">{ABOUT}</div>
+
+    <h2>Technical Arsenal</h2>
     <div class="skills">{SKILLS}</div>
-    
-    <h2>Professional Experience</h2>
-    <div class="grid">{EXPERIENCE}</div>
-    
-    <h2>Featured Projects</h2>
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">{PROJECTS}</div>
+
+    <h2>Professional Journey</h2>
+    <div class="grid" style="margin-bottom: 60px;">{EXPERIENCE}</div>
+
+    <h2>Global Projects</h2>
+    <div class="grid">{PROJECTS}</div>
+    <br><br><br>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0xff3f81;
+    VANTA.GLOBE({
+      el: "#vanta-globe",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: accentColor,
+      color2: 0xffffff,
+      size: 1.50,
+      backgroundColor: 0x111115
+    });
+    }, 200);
+  </script>
 </body>
 </html>`,
-    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
-    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#515154; font-size:1.1rem; line-height:1.6;">{DESC}</p></div>`,
-    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#515154; font-size:1.1rem; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:#0071e3; text-decoration:none; font-weight:600; margin-top:15px; display:inline-block;">Learn more &rarr;</a></div>`,
-    photoLayout: `<img src="{PHOTO_SRC}">`
+    skillLayout: `<div class="skill-pill">{SKILL}</div>`,
+    expLayout: `<div class="glass-card"><h3>{ROLE}</h3><p style="font-weight:bold; color:#fff;">{COMPANY} | {YEAR}</p><p style="color:#bbb; line-height:1.6;">{DESC}</p></div>`,
+    projLayout: `<div class="glass-card"><h3>{TITLE}</h3><p style="color:#bbb; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none; font-weight:bold; margin-top:15px; display:inline-block;">Explore Project &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:180px; height:180px; border-radius:50%; object-fit:cover; margin-bottom:20px; border: 4px solid var(--p);">`
   },
 
+  premium_3d_vanta: {
+    name: "Premium 3D Universe",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; color: #fff; overflow-x: hidden; }
+      #vanta-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+      .glass-panel {
+        background: rgba(10, 10, 15, 0.4);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 50px;
+        margin-bottom: 50px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        transform-style: preserve-3d;
+      }
+      h1 { font-size: 5rem; font-weight: 700; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px var(--p); color: #fff; transform: translateZ(50px); }
+      .title { font-size: 1.8rem; color: var(--p); letter-spacing: 5px; text-transform: uppercase; transform: translateZ(30px); }
+      .about-text { font-size: 1.2rem; line-height: 1.8; color: #ddd; transform: translateZ(20px); font-family: sans-serif; }
+      h2 { font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--p); padding-bottom: 10px; display: inline-block; margin-top: 40px; }
+      
+      .skills-wrapper { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
+      .skill-3d { 
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); 
+        border: 1px solid rgba(255,255,255,0.2); 
+        padding: 10px 20px; 
+        border-radius: 8px; 
+        font-size: 1.1rem; 
+        font-weight: 600; 
+        transition: 0.3s;
+      }
+      .skill-3d:hover { background: var(--p); transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-color: var(--p); color: #000; }
+      
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+      .card-3d {
+        background: rgba(20, 20, 30, 0.6);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 30px;
+        transform-style: preserve-3d;
+        backdrop-filter: blur(10px);
+      }
+      .card-3d h3 { font-size: 1.5rem; color: #fff; transform: translateZ(30px); margin-top: 0; }
+      .card-3d p { color: #bbb; transform: translateZ(20px); font-size: 1.1rem; font-family: sans-serif; }
+      .card-3d .meta { color: var(--p); font-weight: 600; transform: translateZ(25px); margin-bottom: 10px; }
+      
+      .social-btn { display: inline-block; padding: 12px 30px; margin-right: 15px; margin-top: 20px; background: rgba(255,255,255,0.1); border: 1px solid var(--p); color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
+      .social-btn:hover { background: var(--p); color: #000; box-shadow: 0 0 20px var(--p); transform: scale(1.05); }
+      @media (max-width: 768px) { h1 { font-size: 3rem; } .glass-panel > div { flex-direction: column; text-align: center; } }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - 3D Universe</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="vanta-bg"></div>
+  <div class="container">
+    <div class="glass-panel" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-perspective="1000">
+      <div style="display:flex; align-items:center; gap: 40px; transform: translateZ(30px);">
+        {PHOTO}
+        <div>
+          <h1>{NAME}</h1>
+          <div class="title">{TITLE}</div>
+          <p class="about-text">{ABOUT}</p>
+          <div>
+            <a href="mailto:{EMAIL}" class="social-btn">Email</a>
+            <a href="{LINKEDIN}" class="social-btn" target="_blank">LinkedIn</a>
+            <a href="{GITHUB}" class="social-btn" target="_blank">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <h2>Systems & Skills</h2>
+    <div class="skills-wrapper" style="margin-bottom: 60px;">{SKILLS}</div>
+    
+    <h2>Career Timeline</h2>
+    <div class="grid" style="margin-bottom: 60px;">{EXPERIENCE}</div>
+    
+    <h2>3D Project Matrix</h2>
+    <div class="grid">{PROJECTS}</div>
+    <br><br><br>
+  </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+  <script>
+    // Convert accent color to hex for Vanta
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0x00ffcc;
+    
+    VANTA.NET({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: accentColor,
+      backgroundColor: 0x050510,
+      points: 15.00,
+      maxDistance: 25.00,
+      spacing: 20.00
+    });
+    
+    VanillaTilt.init(document.querySelectorAll(".card-3d"), { max: 10, speed: 400, glare: true, "max-glare": 0.2 });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-3d">{SKILL}</div>`,
+    expLayout: `<div class="card-3d" data-tilt data-tilt-max="10" data-tilt-glare="true" data-tilt-max-glare="0.2"><h3>{ROLE}</h3><div class="meta">{COMPANY} // {YEAR}</div><p>{DESC}</p></div>`,
+    projLayout: `<div class="card-3d" data-tilt data-tilt-max="10" data-tilt-glare="true" data-tilt-max-glare="0.2"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}" style="color:var(--p); font-weight:bold; transform:translateZ(30px); display:inline-block; text-decoration:none; margin-top:10px;">[ Launch Project ]</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:200px; height:200px; border-radius:20px; object-fit:cover; border:3px solid var(--p); transform:translateZ(40px); box-shadow:0 0 30px rgba(0,0,0,0.5);">`
+  },
 
   premium_3d_particles: {
     name: "Cosmic Particles 3D",
@@ -249,7 +395,7 @@ const templates = {
     projLayout: `<div class="item"><h3>{TITLE}</h3><p style="color:#555; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:var(--p); font-weight:700; text-decoration:none;">View Source</a></div>`,
     photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; object-fit:cover; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">`
   },
-  
+
   premium_3d_halo: {
     name: "Neon Halo 3D",
     isAdvanced: true,
@@ -343,169 +489,7 @@ const templates = {
     projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#ddd;">{DESC}</p><a href="{LINK}" style="color:var(--p);">INITIALIZE &rarr;</a></div>`,
     photoLayout: `<img src="{PHOTO_SRC}" style="width:150px; height:150px; object-fit:cover;" class="hero-img">`
   },
-  
-  premium_3d_dots: {
-    name: "Connected Matrix 3D",
-    isAdvanced: true,
-    css: `
-      @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
-      :root { --p: {COLOR}; }
-      body { margin: 0; padding: 0; font-family: 'Fira Code', monospace; background: #050505; color: #eee; }
-      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-      .container { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
-      
-      .window { background: rgba(10,10,10,0.8); border: 1px solid #333; border-radius: 8px; overflow: hidden; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-      .window-header { background: #1a1a1a; padding: 10px 15px; border-bottom: 1px solid #333; display: flex; gap: 8px; align-items: center; }
-      .dot { width: 12px; height: 12px; border-radius: 50%; }
-      .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
-      .window-title { margin-left: 15px; color: #888; font-size: 0.9rem; }
-      
-      .window-body { padding: 40px; }
-      h1 { margin: 0 0 10px; color: var(--p); font-size: 2.5rem; }
-      .title { color: #fff; font-size: 1.2rem; margin-bottom: 20px; }
-      
-      .grid { display: grid; gap: 25px; margin-top: 30px; }
-      .card { border-left: 2px solid #333; padding-left: 20px; transition: 0.3s; }
-      .card:hover { border-color: var(--p); }
-      .card h3 { margin: 0 0 5px; color: #fff; }
-      .card .meta { color: #888; font-size: 0.85rem; margin-bottom: 10px; }
-      
-      .skill-tag { display: inline-block; padding: 5px 10px; background: #1a1a1a; border: 1px solid #333; margin: 5px; font-size: 0.85rem; border-radius: 4px; }
-    `,
-    htmlLayout: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>{NAME} - Matrix</title>
-  <style>{CSS}</style>
-</head>
-<body>
-  <div id="bg"></div>
-  <div class="container">
-    <div class="window">
-      <div class="window-header">
-        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-        <div class="window-title">bash - {NAME}</div>
-      </div>
-      <div class="window-body">
-        {PHOTO}
-        <h1>{NAME}</h1>
-        <div class="title">{TITLE}</div>
-        <p style="color:#aaa; line-height:1.6;">{ABOUT}</p>
-        <div style="margin-top:20px; font-size: 0.9rem;">
-          <span style="color:var(--p);">></span> <a href="mailto:{EMAIL}" style="color:#fff; text-decoration:none;">Email</a><br>
-          <span style="color:var(--p);">></span> <a href="{LINKEDIN}" style="color:#fff; text-decoration:none;">LinkedIn</a><br>
-          <span style="color:var(--p);">></span> <a href="{GITHUB}" style="color:#fff; text-decoration:none;">GitHub</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="window">
-      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">skills.json</div></div>
-      <div class="window-body">
-        <div>{SKILLS}</div>
-      </div>
-    </div>
-    
-    <div class="window">
-      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">experience.log</div></div>
-      <div class="window-body">
-        <div class="grid">{EXPERIENCE}</div>
-      </div>
-    </div>
-    
-    <div class="window">
-      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">projects.exe</div></div>
-      <div class="window-body">
-        <div class="grid">{PROJECTS}</div>
-      </div>
-    </div>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
-  <script>
-    setTimeout(function() {
-      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0x00ffcc;
-      VANTA.DOTS({
-        el: "#bg",
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00,
-        color: accentColor,
-        color2: 0x111111,
-        backgroundColor: 0x050505,
-        size: 3.00,
-        spacing: 30.00,
-        showLines: true
-      });
-    }, 200);
-  </script>
-</body>
-</html>`,
-    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
-    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#aaa;">{DESC}</p></div>`,
-    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#aaa;">{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none;">./run</a></div>`,
-    photoLayout: `<img src="{PHOTO_SRC}" style="width:100px; height:100px; border-radius:8px; margin-bottom:20px; object-fit:cover;">`
-  }
-,
 
-
-  premium_3d_topology: {
-    name: "3D Topology Terrain",
-    isAdvanced: true,
-    css: `
-      @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;500;700&display=swap');
-      :root { --p: {COLOR}; }
-      body { margin: 0; font-family: 'Sora', sans-serif; color: #fff; }
-      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-      .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
-      .box { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); padding: 50px; border-radius: 30px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.1); }
-      h1 { font-size: 4rem; margin: 0 0 10px; }
-      .title { color: var(--p); font-size: 1.5rem; margin-bottom: 20px; }
-      .card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
-      .card h3 { margin: 0 0 5px; color: #fff; }
-      .card .meta { color: var(--p); font-size: 0.9rem; margin-bottom: 10px; }
-      .skill-tag { display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 5px; }
-    `,
-    htmlLayout: `<!DOCTYPE html>
-<html lang="en">
-<head><style>{CSS}</style></head>
-<body>
-  <div id="bg"></div>
-  <div class="container">
-    <div class="box">
-      {PHOTO}
-      <h1>{NAME}</h1>
-      <div class="title">{TITLE}</div>
-      <p style="color:#ccc; line-height:1.6;">{ABOUT}</p>
-    </div>
-    <div class="box">
-      <h2 style="margin-top:0;">Skills</h2>
-      <div>{SKILLS}</div>
-    </div>
-    <div class="box">
-      <h2 style="margin-top:0;">Experience</h2>
-      <div>{EXPERIENCE}</div>
-    </div>
-    <div class="box">
-      <h2 style="margin-top:0;">Projects</h2>
-      <div>{PROJECTS}</div>
-    </div>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js"></script>
-  <script>setTimeout(() => VANTA.TOPOLOGY({el:"#bg", color: parseInt("{COLOR}".replace('#','0x'))||0x3b82f6, backgroundColor:0x111 }), 200);</script>
-</body>
-</html>`,
-    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
-    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#bbb;">{DESC}</p></div>`,
-    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#bbb;">{DESC}</p><a href="{LINK}" style="color:var(--p);">View</a></div>`,
-    photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; object-fit:cover;">`
-  },
   premium_3d_rings: {
     name: "Spinning 3D Rings",
     isAdvanced: true,
@@ -552,224 +536,118 @@ const templates = {
   }
 ,
 
-  premium_3d_vanta: {
-    name: "Premium 3D Universe",
+  premium_3d_glass: {
+    name: "Premium 3D Glass",
     isAdvanced: true,
     css: `
-      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
       :root { --p: {COLOR}; }
-      body { margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; color: #fff; overflow-x: hidden; }
-      #vanta-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-      .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-      .glass-panel {
-        background: rgba(10, 10, 15, 0.4);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; padding: 0; font-family: 'Outfit', sans-serif;
+        background: radial-gradient(circle at top left, #1a1a2e, #0f0f1a);
+        color: #fff; min-height: 100vh; overflow-x: hidden;
+      }
+      .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; animation: float 10s infinite ease-in-out alternate; }
+      .orb-1 { width: 400px; height: 400px; background: var(--p); top: -100px; left: -100px; opacity: 0.4; }
+      .orb-2 { width: 500px; height: 500px; background: #6366f1; bottom: -200px; right: -100px; opacity: 0.2; animation-delay: -5s; }
+      @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 80px); } }
+
+      .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; position: relative; z-index: 1; }
+      
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-radius: 24px;
         padding: 50px;
-        margin-bottom: 50px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        transform-style: preserve-3d;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
       }
-      h1 { font-size: 5rem; font-weight: 700; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px var(--p); color: #fff; transform: translateZ(50px); }
-      .title { font-size: 1.8rem; color: var(--p); letter-spacing: 5px; text-transform: uppercase; transform: translateZ(30px); }
-      .about-text { font-size: 1.2rem; line-height: 1.8; color: #ddd; transform: translateZ(20px); font-family: sans-serif; }
-      h2 { font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--p); padding-bottom: 10px; display: inline-block; margin-top: 40px; }
+      .hero { display: flex; align-items: center; gap: 50px; margin-bottom: 50px; }
+      .hero:hover { transform: perspective(1000px) rotateY(-2deg) rotateX(2deg); border-color: rgba(255,255,255,0.2); }
+      .hero img { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
       
-      .skills-wrapper { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
-      .skill-3d { 
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); 
-        border: 1px solid rgba(255,255,255,0.2); 
-        padding: 10px 20px; 
-        border-radius: 8px; 
-        font-size: 1.1rem; 
-        font-weight: 600; 
-        transition: 0.3s;
+      h1 { font-size: 4rem; margin: 0 0 10px 0; font-weight: 900; background: linear-gradient(135deg, #fff, var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .title { font-size: 1.4rem; color: #a1a1aa; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; }
+
+      .social { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; }
+      .social a { display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; border-radius: 14px; font-weight: 500; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+      .social a:hover { background: var(--p); transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); border-color: var(--p); }
+
+      h2 { font-size: 2.2rem; margin-top: 0; margin-bottom: 40px; display: flex; align-items: center; gap: 20px; font-weight: 700; }
+      h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px; }
+      .grid .glass-card { padding: 40px; height: 100%; display: flex; flex-direction: column; }
+      .grid .glass-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(255,255,255,0.2); }
+
+      .tag { background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 20px; font-size: 1rem; display: inline-block; margin: 0 12px 12px 0; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+      .tag:hover { background: var(--p); border-color: var(--p); transform: translateY(-3px); }
+
+      .exp-item { margin-bottom: 40px; position: relative; padding-left: 40px; border-left: 2px solid rgba(255,255,255,0.1); }
+      .exp-item::before { content: ''; position: absolute; left: -8px; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--p); box-shadow: 0 0 15px var(--p); }
+      .exp-role { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 0 0 8px; }
+      .exp-comp { color: var(--p); font-size: 1.2rem; font-weight: 500; margin: 0 0 12px; }
+      .exp-year { font-size: 0.95rem; color: #a1a1aa; margin-bottom: 15px; display: inline-block; padding: 6px 14px; background: rgba(0,0,0,0.4); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+
+      .proj-link { margin-top: auto; align-self: flex-start; display: inline-block; color: #fff; text-decoration: none; padding: 12px 28px; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); font-weight: 500; transition: all 0.3s; }
+      .proj-link:hover { background: var(--p); border-color: var(--p); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+      @media (max-width: 768px) {
+        .hero { flex-direction: column; text-align: center; gap: 30px; padding: 30px 20px; }
+        h1 { font-size: 2.8rem; }
+        .social { justify-content: center; }
+        .hero img { width: 160px; height: 160px; }
       }
-      .skill-3d:hover { background: var(--p); transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-color: var(--p); color: #000; }
-      
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-      .card-3d {
-        background: rgba(20, 20, 30, 0.6);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 15px;
-        padding: 30px;
-        transform-style: preserve-3d;
-        backdrop-filter: blur(10px);
-      }
-      .card-3d h3 { font-size: 1.5rem; color: #fff; transform: translateZ(30px); margin-top: 0; }
-      .card-3d p { color: #bbb; transform: translateZ(20px); font-size: 1.1rem; font-family: sans-serif; }
-      .card-3d .meta { color: var(--p); font-weight: 600; transform: translateZ(25px); margin-bottom: 10px; }
-      
-      .social-btn { display: inline-block; padding: 12px 30px; margin-right: 15px; margin-top: 20px; background: rgba(255,255,255,0.1); border: 1px solid var(--p); color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
-      .social-btn:hover { background: var(--p); color: #000; box-shadow: 0 0 20px var(--p); transform: scale(1.05); }
-      @media (max-width: 768px) { h1 { font-size: 3rem; } .glass-panel > div { flex-direction: column; text-align: center; } }
     `,
     htmlLayout: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{NAME} - 3D Universe</title>
+  <title>{NAME} - Portfolio</title>
   <style>{CSS}</style>
 </head>
 <body>
-  <div id="vanta-bg"></div>
-  <div class="container">
-    <div class="glass-panel" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-perspective="1000">
-      <div style="display:flex; align-items:center; gap: 40px; transform: translateZ(30px);">
-        {PHOTO}
-        <div>
-          <h1>{NAME}</h1>
-          <div class="title">{TITLE}</div>
-          <p class="about-text">{ABOUT}</p>
+  <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="container">
+        <div class="glass-card hero">
+          {PHOTO}
           <div>
-            <a href="mailto:{EMAIL}" class="social-btn">Email</a>
-            <a href="{LINKEDIN}" class="social-btn" target="_blank">LinkedIn</a>
-            <a href="{GITHUB}" class="social-btn" target="_blank">GitHub</a>
+            <h1>{NAME}</h1>
+            <div class="title">{TITLE}</div>
+            <p style="color: #a1a1aa; line-height: 1.8; margin-top: 25px; font-size: 1.15rem;">{ABOUT}</p>
+            <div class="social">
+              <a href="mailto:{EMAIL}">Email Me</a>
+              <a href="{LINKEDIN}" target="_blank">LinkedIn</a>
+              <a href="{GITHUB}" target="_blank">GitHub</a>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    
-    <h2>Systems & Skills</h2>
-    <div class="skills-wrapper" style="margin-bottom: 60px;">{SKILLS}</div>
-    
-    <h2>Career Timeline</h2>
-    <div class="grid" style="margin-bottom: 60px;">{EXPERIENCE}</div>
-    
-    <h2>3D Project Matrix</h2>
-    <div class="grid">{PROJECTS}</div>
-    <br><br><br>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-  <script>
-    // Convert accent color to hex for Vanta
-    setTimeout(function() {
-      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0x00ffcc;
-    
-    VANTA.NET({
-      el: "#vanta-bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 1.00,
-      color: accentColor,
-      backgroundColor: 0x050510,
-      points: 15.00,
-      maxDistance: 25.00,
-      spacing: 20.00
-    });
-    
-    VanillaTilt.init(document.querySelectorAll(".card-3d"), { max: 10, speed: 400, glare: true, "max-glare": 0.2 });
-    }, 200);
-  </script>
+        <div class="glass-card" style="margin-bottom: 50px;">
+          <h2>Skills & Arsenal</h2>
+          <div>{SKILLS}</div>
+        </div>
+
+        <div class="glass-card" style="margin-bottom: 50px;">
+          <h2>Journey & Experience</h2>
+          <div style="margin-top: 40px;">{EXPERIENCE}</div>
+        </div>
+
+        <h2>Featured Projects</h2>
+        <div class="grid">{PROJECTS}</div>
+  </div>
 </body>
 </html>`,
-    skillLayout: `<div class="skill-3d">{SKILL}</div>`,
-    expLayout: `<div class="card-3d" data-tilt data-tilt-max="10" data-tilt-glare="true" data-tilt-max-glare="0.2"><h3>{ROLE}</h3><div class="meta">{COMPANY} // {YEAR}</div><p>{DESC}</p></div>`,
-    projLayout: `<div class="card-3d" data-tilt data-tilt-max="10" data-tilt-glare="true" data-tilt-max-glare="0.2"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}" style="color:var(--p); font-weight:bold; transform:translateZ(30px); display:inline-block; text-decoration:none; margin-top:10px;">[ Launch Project ]</a></div>`,
-    photoLayout: `<img src="{PHOTO_SRC}" style="width:200px; height:200px; border-radius:20px; object-fit:cover; border:3px solid var(--p); transform:translateZ(40px); box-shadow:0 0 30px rgba(0,0,0,0.5);">`
+    skillLayout: `<span class="tag">{SKILL}</span>`,
+    expLayout: `<div class="exp-item"><p class="exp-role">{ROLE}</p><p class="exp-comp">{COMPANY}</p><p class="exp-year">{YEAR}</p><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem;">{DESC}</p></div>`,
+    projLayout: `<div class="glass-card"><h3 style="font-size: 1.6rem; margin-top:0;">{TITLE}</h3><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem; margin-bottom: 30px;">{DESC}</p><a href="{LINK}" class="proj-link">Launch Project &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}">`
   },
-
-  premium_3d_globe: {
-    name: "Premium 3D Globe",
-    isAdvanced: true,
-    css: `
-      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;800&display=swap');
-      :root { --p: {COLOR}; }
-      body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; color: #fff; }
-      #vanta-globe { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-      .container { max-width: 1000px; margin: 0 auto; padding: 100px 20px; text-align: center; }
-      
-      h1 { font-size: 5rem; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-      .title { font-size: 1.5rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 30px; color: #ccc; }
-      .about-box { background: rgba(0,0,0,0.4); padding: 30px; border-radius: 15px; font-size: 1.2rem; line-height: 1.8; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 50px; }
-      
-      h2 { font-size: 2.5rem; margin-top: 80px; margin-bottom: 40px; font-weight: 800; }
-      
-      .skills { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 80px; }
-      .skill-pill { background: rgba(255,255,255,0.1); border: 1px solid var(--p); color: #fff; padding: 12px 25px; border-radius: 50px; font-weight: 500; backdrop-filter: blur(5px); transition: 0.3s; }
-      .skill-pill:hover { background: var(--p); color: #000; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left; }
-      .glass-card { background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; transition: 0.3s; }
-      .glass-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
-      .glass-card h3 { font-size: 1.6rem; margin: 0 0 10px; color: var(--p); }
-      
-      .btn-grp { margin-top: 40px; }
-      .btn-grp a { display: inline-block; padding: 15px 35px; background: #fff; color: #000; text-decoration: none; border-radius: 50px; font-weight: 800; margin: 10px; transition: 0.3s; }
-      .btn-grp a:hover { background: var(--p); color: #fff; transform: scale(1.05); }
-    `,
-    htmlLayout: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{NAME} - Global 3D</title>
-  <style>{CSS}</style>
-</head>
-<body>
-  <div id="vanta-globe"></div>
-  <div class="container">
-    {PHOTO}
-    <h1>{NAME}</h1>
-    <div class="title">{TITLE}</div>
-    
-    <div class="btn-grp">
-      <a href="mailto:{EMAIL}">Contact Me</a>
-      <a href="{LINKEDIN}" target="_blank">LinkedIn</a>
-    </div>
-
-    <div class="about-box" style="margin-top: 50px;">{ABOUT}</div>
-
-    <h2>Technical Arsenal</h2>
-    <div class="skills">{SKILLS}</div>
-
-    <h2>Professional Journey</h2>
-    <div class="grid" style="margin-bottom: 60px;">{EXPERIENCE}</div>
-
-    <h2>Global Projects</h2>
-    <div class="grid">{PROJECTS}</div>
-    <br><br><br>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
-  <script>
-    setTimeout(function() {
-      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0xff3f81;
-    VANTA.GLOBE({
-      el: "#vanta-globe",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 1.00,
-      color: accentColor,
-      color2: 0xffffff,
-      size: 1.50,
-      backgroundColor: 0x111115
-    });
-    }, 200);
-  </script>
-</body>
-</html>`,
-    skillLayout: `<div class="skill-pill">{SKILL}</div>`,
-    expLayout: `<div class="glass-card"><h3>{ROLE}</h3><p style="font-weight:bold; color:#fff;">{COMPANY} | {YEAR}</p><p style="color:#bbb; line-height:1.6;">{DESC}</p></div>`,
-    projLayout: `<div class="glass-card"><h3>{TITLE}</h3><p style="color:#bbb; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none; font-weight:bold; margin-top:15px; display:inline-block;">Explore Project &rarr;</a></div>`,
-    photoLayout: `<img src="{PHOTO_SRC}" style="width:180px; height:180px; border-radius:50%; object-fit:cover; margin-bottom:20px; border: 4px solid var(--p);">`
-  },
-
 
   premium_devfolio: {
     name: "Premium DevFolio",
@@ -888,119 +766,238 @@ const templates = {
     photoLayout: `<img src="{PHOTO_SRC}">`
   },
 
-
-  premium_3d_glass: {
-    name: "Premium 3D Glass",
+  premium_apple_glass: {
+    name: "Premium Apple Vision Pro",
     isAdvanced: true,
     css: `
-      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;800&display=swap');
       :root { --p: {COLOR}; }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0; padding: 0; font-family: 'Outfit', sans-serif;
-        background: radial-gradient(circle at top left, #1a1a2e, #0f0f1a);
-        color: #fff; min-height: 100vh; overflow-x: hidden;
-      }
-      .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; animation: float 10s infinite ease-in-out alternate; }
-      .orb-1 { width: 400px; height: 400px; background: var(--p); top: -100px; left: -100px; opacity: 0.4; }
-      .orb-2 { width: 500px; height: 500px; background: #6366f1; bottom: -200px; right: -100px; opacity: 0.2; animation-delay: -5s; }
-      @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 80px); } }
-
-      .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; position: relative; z-index: 1; }
+      body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f5f5f7; color: #1d1d1f; line-height: 1.5; }
+      .container { max-width: 980px; margin: 0 auto; padding: 100px 20px; }
       
-      .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border-radius: 24px;
-        padding: 50px;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
-      }
-      .hero { display: flex; align-items: center; gap: 50px; margin-bottom: 50px; }
-      .hero:hover { transform: perspective(1000px) rotateY(-2deg) rotateX(2deg); border-color: rgba(255,255,255,0.2); }
-      .hero img { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+      .hero { text-align: center; margin-bottom: 80px; }
+      .hero img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; }
+      h1 { font-size: 5rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; background: linear-gradient(90deg, #1d1d1f, #86868b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .title { font-size: 1.8rem; font-weight: 600; color: #86868b; margin-top: 10px; }
+      .about { font-size: 1.3rem; max-width: 700px; margin: 30px auto; color: #515154; }
       
-      h1 { font-size: 4rem; margin: 0 0 10px 0; font-weight: 900; background: linear-gradient(135deg, #fff, var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-      .title { font-size: 1.4rem; color: #a1a1aa; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; }
-
-      .social { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; }
-      .social a { display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; border-radius: 14px; font-weight: 500; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
-      .social a:hover { background: var(--p); transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); border-color: var(--p); }
-
-      h2 { font-size: 2.2rem; margin-top: 0; margin-bottom: 40px; display: flex; align-items: center; gap: 20px; font-weight: 700; }
-      h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); }
-
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px; }
-      .grid .glass-card { padding: 40px; height: 100%; display: flex; flex-direction: column; }
-      .grid .glass-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(255,255,255,0.2); }
-
-      .tag { background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 20px; font-size: 1rem; display: inline-block; margin: 0 12px 12px 0; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-      .tag:hover { background: var(--p); border-color: var(--p); transform: translateY(-3px); }
-
-      .exp-item { margin-bottom: 40px; position: relative; padding-left: 40px; border-left: 2px solid rgba(255,255,255,0.1); }
-      .exp-item::before { content: ''; position: absolute; left: -8px; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--p); box-shadow: 0 0 15px var(--p); }
-      .exp-role { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 0 0 8px; }
-      .exp-comp { color: var(--p); font-size: 1.2rem; font-weight: 500; margin: 0 0 12px; }
-      .exp-year { font-size: 0.95rem; color: #a1a1aa; margin-bottom: 15px; display: inline-block; padding: 6px 14px; background: rgba(0,0,0,0.4); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
-
-      .proj-link { margin-top: auto; align-self: flex-start; display: inline-block; color: #fff; text-decoration: none; padding: 12px 28px; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); font-weight: 500; transition: all 0.3s; }
-      .proj-link:hover { background: var(--p); border-color: var(--p); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-
-      @media (max-width: 768px) {
-        .hero { flex-direction: column; text-align: center; gap: 30px; padding: 30px 20px; }
-        h1 { font-size: 2.8rem; }
-        .social { justify-content: center; }
-        .hero img { width: 160px; height: 160px; }
-      }
+      .btn { display: inline-block; background: #0071e3; color: #fff; padding: 14px 28px; border-radius: 30px; font-weight: 600; text-decoration: none; margin: 10px; transition: 0.3s; }
+      .btn:hover { background: #0077ED; transform: scale(1.02); }
+      .btn-outline { background: transparent; color: #0071e3; border: 1px solid #0071e3; }
+      
+      h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 80px 0 40px; text-align: center; }
+      
+      .skills { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+      .skill-tag { background: #fff; border: 1px solid #d2d2d7; color: #1d1d1f; padding: 12px 24px; border-radius: 40px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
+      .skill-tag:hover { border-color: #0071e3; color: #0071e3; box-shadow: 0 4px 12px rgba(0,113,227,0.1); }
+      
+      .grid { display: grid; gap: 30px; }
+      .card { background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.03); transition: 0.4s; }
+      .card:hover { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+      .card h3 { font-size: 1.8rem; margin: 0 0 10px; }
+      .card .meta { color: #86868b; font-weight: 600; font-size: 1.1rem; margin-bottom: 15px; }
+      
+      @media(max-width: 768px) { h1 { font-size: 3.5rem; } }
     `,
     htmlLayout: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{NAME} - Portfolio</title>
+  <title>{NAME} - Apple UI</title>
   <style>{CSS}</style>
 </head>
 <body>
-  <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="container">
-        <div class="glass-card hero">
-          {PHOTO}
-          <div>
-            <h1>{NAME}</h1>
-            <div class="title">{TITLE}</div>
-            <p style="color: #a1a1aa; line-height: 1.8; margin-top: 25px; font-size: 1.15rem;">{ABOUT}</p>
-            <div class="social">
-              <a href="mailto:{EMAIL}">Email Me</a>
-              <a href="{LINKEDIN}" target="_blank">LinkedIn</a>
-              <a href="{GITHUB}" target="_blank">GitHub</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass-card" style="margin-bottom: 50px;">
-          <h2>Skills & Arsenal</h2>
-          <div>{SKILLS}</div>
-        </div>
-
-        <div class="glass-card" style="margin-bottom: 50px;">
-          <h2>Journey & Experience</h2>
-          <div style="margin-top: 40px;">{EXPERIENCE}</div>
-        </div>
-
-        <h2>Featured Projects</h2>
-        <div class="grid">{PROJECTS}</div>
+  <div class="container">
+    <div class="hero">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+      <p class="about">{ABOUT}</p>
+      <a href="mailto:{EMAIL}" class="btn">Contact Me</a>
+      <a href="{LINKEDIN}" class="btn btn-outline" target="_blank">LinkedIn</a>
+    </div>
+    
+    <h2>Core Technologies</h2>
+    <div class="skills">{SKILLS}</div>
+    
+    <h2>Professional Experience</h2>
+    <div class="grid">{EXPERIENCE}</div>
+    
+    <h2>Featured Projects</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">{PROJECTS}</div>
   </div>
 </body>
 </html>`,
-    skillLayout: `<span class="tag">{SKILL}</span>`,
-    expLayout: `<div class="exp-item"><p class="exp-role">{ROLE}</p><p class="exp-comp">{COMPANY}</p><p class="exp-year">{YEAR}</p><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem;">{DESC}</p></div>`,
-    projLayout: `<div class="glass-card"><h3 style="font-size: 1.6rem; margin-top:0;">{TITLE}</h3><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem; margin-bottom: 30px;">{DESC}</p><a href="{LINK}" class="proj-link">Launch Project &rarr;</a></div>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#515154; font-size:1.1rem; line-height:1.6;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#515154; font-size:1.1rem; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:#0071e3; text-decoration:none; font-weight:600; margin-top:15px; display:inline-block;">Learn more &rarr;</a></div>`,
     photoLayout: `<img src="{PHOTO_SRC}">`
   },
+
+  premium_3d_topology: {
+    name: "3D Topology Terrain",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;500;700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; font-family: 'Sora', sans-serif; color: #fff; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+      .box { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); padding: 50px; border-radius: 30px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.1); }
+      h1 { font-size: 4rem; margin: 0 0 10px; }
+      .title { color: var(--p); font-size: 1.5rem; margin-bottom: 20px; }
+      .card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
+      .card h3 { margin: 0 0 5px; color: #fff; }
+      .card .meta { color: var(--p); font-size: 0.9rem; margin-bottom: 10px; }
+      .skill-tag { display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 5px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head><style>{CSS}</style></head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    <div class="box">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+      <p style="color:#ccc; line-height:1.6;">{ABOUT}</p>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0;">Skills</h2>
+      <div>{SKILLS}</div>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0;">Experience</h2>
+      <div>{EXPERIENCE}</div>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0;">Projects</h2>
+      <div>{PROJECTS}</div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js"></script>
+  <script>setTimeout(() => VANTA.TOPOLOGY({el:"#bg", color: parseInt("{COLOR}".replace('#','0x'))||0x3b82f6, backgroundColor:0x111 }), 200);</script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#bbb;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#bbb;">{DESC}</p><a href="{LINK}" style="color:var(--p);">View</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; object-fit:cover;">`
+  },
+
+  premium_3d_dots: {
+    name: "Connected Matrix 3D",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Fira Code', monospace; background: #050505; color: #eee; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
+      
+      .window { background: rgba(10,10,10,0.8); border: 1px solid #333; border-radius: 8px; overflow: hidden; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+      .window-header { background: #1a1a1a; padding: 10px 15px; border-bottom: 1px solid #333; display: flex; gap: 8px; align-items: center; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
+      .window-title { margin-left: 15px; color: #888; font-size: 0.9rem; }
+      
+      .window-body { padding: 40px; }
+      h1 { margin: 0 0 10px; color: var(--p); font-size: 2.5rem; }
+      .title { color: #fff; font-size: 1.2rem; margin-bottom: 20px; }
+      
+      .grid { display: grid; gap: 25px; margin-top: 30px; }
+      .card { border-left: 2px solid #333; padding-left: 20px; transition: 0.3s; }
+      .card:hover { border-color: var(--p); }
+      .card h3 { margin: 0 0 5px; color: #fff; }
+      .card .meta { color: #888; font-size: 0.85rem; margin-bottom: 10px; }
+      
+      .skill-tag { display: inline-block; padding: 5px 10px; background: #1a1a1a; border: 1px solid #333; margin: 5px; font-size: 0.85rem; border-radius: 4px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Matrix</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    <div class="window">
+      <div class="window-header">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="window-title">bash - {NAME}</div>
+      </div>
+      <div class="window-body">
+        {PHOTO}
+        <h1>{NAME}</h1>
+        <div class="title">{TITLE}</div>
+        <p style="color:#aaa; line-height:1.6;">{ABOUT}</p>
+        <div style="margin-top:20px; font-size: 0.9rem;">
+          <span style="color:var(--p);">></span> <a href="mailto:{EMAIL}" style="color:#fff; text-decoration:none;">Email</a><br>
+          <span style="color:var(--p);">></span> <a href="{LINKEDIN}" style="color:#fff; text-decoration:none;">LinkedIn</a><br>
+          <span style="color:var(--p);">></span> <a href="{GITHUB}" style="color:#fff; text-decoration:none;">GitHub</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="window">
+      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">skills.json</div></div>
+      <div class="window-body">
+        <div>{SKILLS}</div>
+      </div>
+    </div>
+    
+    <div class="window">
+      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">experience.log</div></div>
+      <div class="window-body">
+        <div class="grid">{EXPERIENCE}</div>
+      </div>
+    </div>
+    
+    <div class="window">
+      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">projects.exe</div></div>
+      <div class="window-body">
+        <div class="grid">{PROJECTS}</div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0x00ffcc;
+      VANTA.DOTS({
+        el: "#bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: accentColor,
+        color2: 0x111111,
+        backgroundColor: 0x050505,
+        size: 3.00,
+        spacing: 30.00,
+        showLines: true
+      });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#aaa;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#aaa;">{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none;">./run</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:100px; height:100px; border-radius:8px; margin-bottom:20px; object-fit:cover;">`
+  }
+,
+
+
 
   bento: {
     name: 'Bento Grid',
