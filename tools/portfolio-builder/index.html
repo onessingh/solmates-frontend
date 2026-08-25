@@ -1253,7 +1253,11 @@
       
       const blob = new Blob([html], { type: 'text/html' });
       currentBlobUrl = URL.createObjectURL(blob);
-      iframe.src = currentBlobUrl;
+        if (iframe.contentWindow) {
+          iframe.contentWindow.location.replace(currentBlobUrl);
+        } else {
+          iframe.src = currentBlobUrl;
+        }
     }
 
 
