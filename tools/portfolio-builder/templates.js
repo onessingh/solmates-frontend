@@ -1,7 +1,7 @@
 const templates = {
 
   premium_apple_glass: {
-    name: "?? Apple Vision Pro",
+    name: "Premium Apple Vision Pro",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;800&display=swap');
@@ -70,7 +70,7 @@ const templates = {
   },
 
   premium_notion: {
-    name: "?? Notion Docs Style",
+    name: "Premium Notion Docs Style",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@700&display=swap');
@@ -113,23 +113,23 @@ const templates = {
     <div class="title">{TITLE}</div>
     
     <div class="links" style="margin-bottom: 40px;">
-      <a href="mailto:{EMAIL}">?? Email</a>
-      <a href="{LINKEDIN}">?? LinkedIn</a>
-      <a href="{GITHUB}">?? GitHub</a>
+      <a href="mailto:{EMAIL}"><i class="fas fa-envelope"></i> Email</a>
+      <a href="{LINKEDIN}"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      <a href="{GITHUB}"><i class="fab fa-github"></i> GitHub</a>
     </div>
 
     <div class="callout">
-      <div class="callout-icon">??</div>
+      <div class="callout-icon"><i class="fas fa-lightbulb"></i></div>
       <p>{ABOUT}</p>
     </div>
 
-    <h2>?? Skills</h2>
+    <h2><i class="fas fa-code"></i> Skills</h2>
     <div class="skills">{SKILLS}</div>
 
-    <h2>?? Experience</h2>
+    <h2><i class="fas fa-briefcase"></i> Experience</h2>
     <div style="margin-top: 20px;">{EXPERIENCE}</div>
 
-    <h2>?? Projects</h2>
+    <h2><i class="fas fa-folder-open"></i> Projects</h2>
     <div style="margin-top: 20px;">{PROJECTS}</div>
   </div>
 </body>
@@ -141,7 +141,7 @@ const templates = {
   },
 
   premium_retro: {
-    name: "?? Retro Arcade 8-Bit",
+    name: "Premium Retro Arcade 8-Bit",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -208,8 +208,581 @@ const templates = {
   },
 
 
+
+  premium_3d_particles: {
+    name: "? Cosmic Particles 3D",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif; background: #0b0c10; color: #c5c6c7; overflow-x: hidden; }
+      #particles-js { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+      
+      .hero { text-align: center; margin-bottom: 80px; padding: 60px; background: rgba(31, 40, 51, 0.6); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(102, 252, 241, 0.2); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+      h1 { font-size: 4rem; color: #fff; margin: 0 0 10px; letter-spacing: 2px; }
+      .title { font-size: 1.5rem; color: var(--p); margin-bottom: 20px; }
+      .about { font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px; }
+      .btn { display: inline-block; padding: 12px 30px; background: transparent; color: var(--p); border: 2px solid var(--p); border-radius: 5px; text-decoration: none; font-weight: 600; transition: 0.3s; margin: 5px; }
+      .btn:hover { background: var(--p); color: #000; box-shadow: 0 0 15px var(--p); }
+      
+      h2 { font-size: 2rem; color: #fff; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 50px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+      .card { background: rgba(31, 40, 51, 0.6); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; backdrop-filter: blur(5px); }
+      .card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+      .card h3 { color: #fff; margin: 0 0 10px; }
+      .card .meta { color: var(--p); font-size: 0.9rem; margin-bottom: 15px; }
+      .skill-tag { display: inline-block; padding: 8px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; margin: 5px; transition: 0.3s; }
+      .skill-tag:hover { background: var(--p); color: #000; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Particles</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="container">
+    <div class="hero">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+      <p class="about">{ABOUT}</p>
+      <a href="mailto:{EMAIL}" class="btn">Email Me</a>
+      <a href="{LINKEDIN}" class="btn" target="_blank">LinkedIn</a>
+      <a href="{GITHUB}" class="btn" target="_blank">GitHub</a>
+    </div>
+    <h2>Tech Stack</h2>
+    <div>{SKILLS}</div>
+    <h2>Experience</h2>
+    <div class="grid">{EXPERIENCE}</div>
+    <h2>Projects</h2>
+    <div class="grid">{PROJECTS}</div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let color = "{COLOR}";
+      if(!color.startsWith("#")) color = "#45a29e";
+      particlesJS("particles-js", {
+        "particles": {
+          "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+          "color": { "value": color },
+          "shape": { "type": "circle" },
+          "opacity": { "value": 0.5, "random": false },
+          "size": { "value": 3, "random": true },
+          "line_linked": { "enable": true, "distance": 150, "color": color, "opacity": 0.4, "width": 1 },
+          "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+          "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 4 } }
+        },
+        "retina_detect": true
+      });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p>{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none;">View &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:3px solid var(--p);">`
+  },
+
+  premium_3d_waves: {
+    name: "?? Oceanic 3D Waves",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Outfit', sans-serif; color: #fff; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1100px; margin: 0 auto; padding: 80px 20px; }
+      
+      .glass-box { background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+      
+      h1 { font-size: 5rem; font-weight: 800; margin: 0; letter-spacing: -2px; }
+      .title { font-size: 1.5rem; color: var(--p); font-weight: 500; margin: 10px 0 20px; }
+      .btn { display: inline-block; padding: 10px 25px; background: rgba(255,255,255,0.1); color: #fff; border-radius: 30px; text-decoration: none; margin-right: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
+      .btn:hover { background: var(--p); color: #000; border-color: var(--p); }
+      
+      h2 { font-size: 2.2rem; margin-top: 50px; font-weight: 800; }
+      
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+      .skill-tag { display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.05); border-radius: 10px; margin: 5px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
+      .skill-tag:hover { border-color: var(--p); background: rgba(255,255,255,0.1); }
+      
+      .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 25px; transition: 0.3s; }
+      .card:hover { background: rgba(255,255,255,0.08); transform: translateY(-5px); border-color: rgba(255,255,255,0.2); }
+      .card h3 { margin: 0 0 5px; font-size: 1.3rem; }
+      .card .meta { color: var(--p); font-size: 0.9rem; margin-bottom: 15px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Waves</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    <div class="glass-box" style="display:flex; align-items:center; gap:40px; flex-wrap:wrap;">
+      {PHOTO}
+      <div>
+        <h1>{NAME}</h1>
+        <div class="title">{TITLE}</div>
+        <p style="font-size:1.1rem; line-height:1.7; color:#ddd; max-width:600px;">{ABOUT}</p>
+        <div style="margin-top:20px;">
+          <a href="mailto:{EMAIL}" class="btn">Email</a>
+          <a href="{LINKEDIN}" class="btn">LinkedIn</a>
+          <a href="{GITHUB}" class="btn">GitHub</a>
+        </div>
+      </div>
+    </div>
+    
+    <h2>Skills</h2>
+    <div>{SKILLS}</div>
+    
+    <h2>Experience</h2>
+    <div class="grid">{EXPERIENCE}</div>
+    
+    <h2>Projects</h2>
+    <div class="grid">{PROJECTS}</div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0x1f78d1;
+      VANTA.WAVES({
+        el: "#bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: accentColor,
+        shininess: 60.00,
+        waveHeight: 20.00,
+        waveSpeed: 0.80,
+        zoom: 0.90
+      });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#bbb; line-height:1.6;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#bbb; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none; font-weight:500;">Details &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:200px; height:200px; border-radius:20px; object-fit:cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">`
+  },
+
+  premium_3d_birds: {
+    name: "?? Dynamic Flock 3D",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; color: #111; overflow-x: hidden; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; position: relative; z-index: 1; }
+      
+      .hero { background: rgba(255,255,255,0.7); backdrop-filter: blur(15px); padding: 50px; border-radius: 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5); margin-bottom: 50px; }
+      h1 { font-size: 3.5rem; margin: 0; color: #000; }
+      .title { font-size: 1.4rem; color: var(--p); font-weight: 700; margin: 10px 0 20px; }
+      .btn { display: inline-block; padding: 12px 30px; background: #000; color: #fff; border-radius: 8px; text-decoration: none; margin: 5px; font-weight: 500; transition: 0.3s; }
+      .btn:hover { background: var(--p); transform: translateY(-2px); }
+      
+      .section-box { background: rgba(255,255,255,0.7); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.5); }
+      h2 { font-size: 1.8rem; margin-top: 0; border-bottom: 2px solid var(--p); padding-bottom: 10px; display: inline-block; }
+      
+      .skills { display: flex; flex-wrap: wrap; gap: 10px; }
+      .skill-tag { padding: 8px 16px; background: #fff; border-radius: 5px; font-weight: 500; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 3px solid var(--p); }
+      
+      .item { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+      .item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+      .item h3 { margin: 0 0 5px; font-size: 1.2rem; }
+      .item .meta { color: #666; font-size: 0.9rem; font-weight: 500; margin-bottom: 10px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Flock</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    <div class="hero">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+      <p style="font-size: 1.1rem; color: #444; max-width: 700px; margin: 0 auto 30px; line-height: 1.6;">{ABOUT}</p>
+      <a href="mailto:{EMAIL}" class="btn">Email</a>
+      <a href="{LINKEDIN}" class="btn">LinkedIn</a>
+    </div>
+    
+    <div class="section-box">
+      <h2>Skills</h2>
+      <div class="skills">{SKILLS}</div>
+    </div>
+    
+    <div class="section-box">
+      <h2>Experience</h2>
+      <div>{EXPERIENCE}</div>
+    </div>
+    
+    <div class="section-box">
+      <h2>Projects</h2>
+      <div>{PROJECTS}</div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0xff4a5a;
+      VANTA.BIRDS({
+        el: "#bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        backgroundColor: 0xf5f7fa,
+        color1: accentColor,
+        color2: 0x000000,
+        birdSize: 1.50,
+        wingSpan: 30.00,
+        speedLimit: 5.00,
+        separation: 50.00,
+        alignment: 50.00,
+        cohesion: 50.00
+      });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="item"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#555; line-height:1.6;">{DESC}</p></div>`,
+    projLayout: `<div class="item"><h3>{TITLE}</h3><p style="color:#555; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:var(--p); font-weight:700; text-decoration:none;">View Source</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; object-fit:cover; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">`
+  },
+  
+  premium_3d_halo: {
+    name: "?? Neon Halo 3D",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jura:wght@400;600&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Jura', sans-serif; color: #fff; background: #000; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 900px; margin: 0 auto; padding: 100px 20px; text-align: center; }
+      
+      .hero-img { border-radius: 50%; border: 2px solid var(--p); box-shadow: 0 0 30px var(--p); padding: 5px; }
+      h1 { font-family: 'Syncopate', sans-serif; font-size: 4rem; text-transform: uppercase; margin: 20px 0 10px; letter-spacing: 5px; text-shadow: 0 0 10px var(--p); }
+      .title { font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 30px; color: #ccc; }
+      
+      .links a { display: inline-block; padding: 10px 20px; border: 1px solid var(--p); color: #fff; text-decoration: none; margin: 5px; text-transform: uppercase; font-weight: 600; transition: 0.3s; background: rgba(0,0,0,0.5); }
+      .links a:hover { background: var(--p); color: #000; box-shadow: 0 0 20px var(--p); }
+      
+      .section { text-align: left; background: rgba(10,10,10,0.8); border: 1px solid rgba(255,255,255,0.1); padding: 40px; margin-top: 50px; position: relative; border-left: 5px solid var(--p); }
+      h2 { font-family: 'Syncopate', sans-serif; font-size: 1.5rem; color: var(--p); margin-top: 0; margin-bottom: 30px; }
+      
+      .skills { display: flex; flex-wrap: wrap; gap: 15px; }
+      .skill-tag { border-bottom: 2px solid var(--p); padding: 5px 10px; font-size: 1.1rem; }
+      
+      .grid { display: grid; gap: 30px; }
+      .card { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 20px; }
+      .card:last-child { border-bottom: none; padding-bottom: 0; }
+      .card h3 { margin: 0 0 5px; font-size: 1.3rem; letter-spacing: 1px; }
+      .card .meta { color: #888; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Halo</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    {PHOTO}
+    <h1>{NAME}</h1>
+    <div class="title">{TITLE}</div>
+    <p style="font-size: 1.1rem; line-height: 1.8; color: #bbb; max-width: 600px; margin: 0 auto 30px;">{ABOUT}</p>
+    
+    <div class="links">
+      <a href="mailto:{EMAIL}">Email</a>
+      <a href="{LINKEDIN}">LinkedIn</a>
+      <a href="{GITHUB}">GitHub</a>
+    </div>
+    
+    <div class="section">
+      <h2>SYS.SKILLS</h2>
+      <div class="skills">{SKILLS}</div>
+    </div>
+    
+    <div class="section">
+      <h2>SYS.EXPERIENCE</h2>
+      <div class="grid">{EXPERIENCE}</div>
+    </div>
+    
+    <div class="section">
+      <h2>SYS.PROJECTS</h2>
+      <div class="grid">{PROJECTS}</div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0xff00ff;
+      VANTA.HALO({
+        el: "#bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        baseColor: accentColor,
+        backgroundColor: 0x000000,
+        amplitudeFactor: 2.00,
+        xOffset: 0.00,
+        yOffset: 0.10,
+        size: 1.50
+      });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#ddd;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#ddd;">{DESC}</p><a href="{LINK}" style="color:var(--p);">INITIALIZE &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:150px; height:150px; object-fit:cover;" class="hero-img">`
+  },
+  
+  premium_3d_dots: {
+    name: "??? Connected Matrix 3D",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Fira Code', monospace; background: #050505; color: #eee; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
+      
+      .window { background: rgba(10,10,10,0.8); border: 1px solid #333; border-radius: 8px; overflow: hidden; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+      .window-header { background: #1a1a1a; padding: 10px 15px; border-bottom: 1px solid #333; display: flex; gap: 8px; align-items: center; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
+      .window-title { margin-left: 15px; color: #888; font-size: 0.9rem; }
+      
+      .window-body { padding: 40px; }
+      h1 { margin: 0 0 10px; color: var(--p); font-size: 2.5rem; }
+      .title { color: #fff; font-size: 1.2rem; margin-bottom: 20px; }
+      
+      .grid { display: grid; gap: 25px; margin-top: 30px; }
+      .card { border-left: 2px solid #333; padding-left: 20px; transition: 0.3s; }
+      .card:hover { border-color: var(--p); }
+      .card h3 { margin: 0 0 5px; color: #fff; }
+      .card .meta { color: #888; font-size: 0.85rem; margin-bottom: 10px; }
+      
+      .skill-tag { display: inline-block; padding: 5px 10px; background: #1a1a1a; border: 1px solid #333; margin: 5px; font-size: 0.85rem; border-radius: 4px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Matrix</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    <div class="window">
+      <div class="window-header">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="window-title">bash - {NAME}</div>
+      </div>
+      <div class="window-body">
+        {PHOTO}
+        <h1>{NAME}</h1>
+        <div class="title">{TITLE}</div>
+        <p style="color:#aaa; line-height:1.6;">{ABOUT}</p>
+        <div style="margin-top:20px; font-size: 0.9rem;">
+          <span style="color:var(--p);">></span> <a href="mailto:{EMAIL}" style="color:#fff; text-decoration:none;">Email</a><br>
+          <span style="color:var(--p);">></span> <a href="{LINKEDIN}" style="color:#fff; text-decoration:none;">LinkedIn</a><br>
+          <span style="color:var(--p);">></span> <a href="{GITHUB}" style="color:#fff; text-decoration:none;">GitHub</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="window">
+      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">skills.json</div></div>
+      <div class="window-body">
+        <div>{SKILLS}</div>
+      </div>
+    </div>
+    
+    <div class="window">
+      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">experience.log</div></div>
+      <div class="window-body">
+        <div class="grid">{EXPERIENCE}</div>
+      </div>
+    </div>
+    
+    <div class="window">
+      <div class="window-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="window-title">projects.exe</div></div>
+      <div class="window-body">
+        <div class="grid">{PROJECTS}</div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+  <script>
+    setTimeout(function() {
+      let accentColor = parseInt("{COLOR}".replace('#', '0x')) || 0x00ffcc;
+      VANTA.DOTS({
+        el: "#bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: accentColor,
+        color2: 0x111111,
+        backgroundColor: 0x050505,
+        size: 3.00,
+        spacing: 30.00,
+        showLines: true
+      });
+    }, 200);
+  </script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#aaa;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#aaa;">{DESC}</p><a href="{LINK}" style="color:var(--p); text-decoration:none;">./run</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:100px; height:100px; border-radius:8px; margin-bottom:20px; object-fit:cover;">`
+  }
+,
+
+
+  premium_3d_topology: {
+    name: "?? 3D Topology Terrain",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;500;700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; font-family: 'Sora', sans-serif; color: #fff; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+      .box { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); padding: 50px; border-radius: 30px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.1); }
+      h1 { font-size: 4rem; margin: 0 0 10px; }
+      .title { color: var(--p); font-size: 1.5rem; margin-bottom: 20px; }
+      .card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
+      .card h3 { margin: 0 0 5px; color: #fff; }
+      .card .meta { color: var(--p); font-size: 0.9rem; margin-bottom: 10px; }
+      .skill-tag { display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; margin: 5px; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head><style>{CSS}</style></head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    <div class="box">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+      <p style="color:#ccc; line-height:1.6;">{ABOUT}</p>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0;">Skills</h2>
+      <div>{SKILLS}</div>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0;">Experience</h2>
+      <div>{EXPERIENCE}</div>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0;">Projects</h2>
+      <div>{PROJECTS}</div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js"></script>
+  <script>setTimeout(() => VANTA.TOPOLOGY({el:"#bg", color: parseInt("{COLOR}".replace('#','0x'))||0x3b82f6, backgroundColor:0x111 }), 200);</script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#bbb;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#bbb;">{DESC}</p><a href="{LINK}" style="color:var(--p);">View</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; object-fit:cover;">`
+  },
+  premium_3d_rings: {
+    name: "?? Spinning 3D Rings",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; font-family: 'Outfit', sans-serif; color: #fff; text-align: center; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .container { max-width: 800px; margin: 0 auto; padding: 100px 20px; }
+      h1 { font-size: 4rem; margin: 0; text-shadow: 0 0 20px var(--p); }
+      .title { color: #fff; font-size: 1.5rem; margin-bottom: 30px; letter-spacing: 2px; }
+      .card { background: rgba(0,0,0,0.6); padding: 30px; border-radius: 20px; border: 1px solid var(--p); margin-bottom: 20px; text-align: left; backdrop-filter: blur(5px); }
+      .skill-tag { display: inline-block; padding: 10px 20px; border: 1px solid var(--p); border-radius: 5px; margin: 5px; background: rgba(0,0,0,0.5); }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head><style>{CSS}</style></head>
+<body>
+  <div id="bg"></div>
+  <div class="container">
+    {PHOTO}
+    <h1>{NAME}</h1>
+    <div class="title">{TITLE}</div>
+    <p style="color:#ddd; margin-bottom: 50px;">{ABOUT}</p>
+    
+    <h2 style="color:var(--p);">SKILLS</h2>
+    <div style="margin-bottom:50px;">{SKILLS}</div>
+    
+    <h2 style="color:var(--p);">EXPERIENCE</h2>
+    <div>{EXPERIENCE}</div>
+    
+    <h2 style="color:var(--p); margin-top:50px;">PROJECTS</h2>
+    <div>{PROJECTS}</div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.rings.min.js"></script>
+  <script>setTimeout(() => VANTA.RINGS({el:"#bg", color: parseInt("{COLOR}".replace('#','0x'))||0x3b82f6, backgroundColor:0x0 }), 200);</script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3 style="margin:0 0 5px;">{ROLE}</h3><div style="color:var(--p); margin-bottom:10px;">{COMPANY} | {YEAR}</div><p style="margin:0; color:#bbb;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3 style="margin:0 0 5px;">{TITLE}</h3><p style="margin:0 0 10px; color:#bbb;">{DESC}</p><a href="{LINK}" style="color:#fff;">View</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:150px; height:150px; border-radius:50%; object-fit:cover;">`
+  }
+,
+
   premium_3d_vanta: {
-    name: "?? Premium 3D Universe",
+    name: "Premium Premium 3D Universe",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
@@ -336,7 +909,7 @@ const templates = {
   },
 
   premium_3d_globe: {
-    name: "?? Premium 3D Globe",
+    name: "Premium Premium 3D Globe",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;800&display=swap');
@@ -428,7 +1001,7 @@ const templates = {
 
 
   premium_cyberpunk: {
-    name: "?? Cyberpunk 2077",
+    name: "Premium Cyberpunk 2077",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;800&display=swap');
@@ -491,7 +1064,7 @@ const templates = {
     photoLayout: `<img src="{PHOTO_SRC}">`
   },
   premium_split: {
-    name: "?? Premium Split Frame",
+    name: "Premium Premium Split Frame",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Roboto:wght@300;400;500&display=swap');
@@ -571,7 +1144,7 @@ const templates = {
 
 
   premium_devfolio: {
-    name: "?? Premium DevFolio",
+    name: "Premium Premium DevFolio",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -689,7 +1262,7 @@ const templates = {
 
 
   premium_3d_glass: {
-    name: "?? Premium 3D Glass",
+    name: "Premium Premium 3D Glass",
     isAdvanced: true,
     css: `
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
