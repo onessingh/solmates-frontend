@@ -1,5 +1,148 @@
 const templates = {
 
+  premium_cyberpunk: {
+    name: "?? Cyberpunk 2077",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;800&display=swap');
+      :root { --p: #fcee0a; --bg: #000000; --text: #00ff00; --accent: #ff003c; }
+      body { margin: 0; font-family: 'Oxanium', monospace; background: var(--bg); color: var(--text); padding: 40px; text-transform: uppercase; overflow-x: hidden; }
+      .cyber-container { max-width: 1200px; margin: 0 auto; border: 2px solid var(--p); padding: 40px; position: relative; box-shadow: 0 0 20px rgba(252, 238, 10, 0.2); }
+      .cyber-container::before { content: 'SYSTEM_READY'; position: absolute; top: -12px; left: 20px; background: var(--bg); color: var(--p); padding: 0 10px; font-weight: bold; }
+      
+      .glitch-wrapper { display: flex; align-items: flex-end; gap: 40px; margin-bottom: 60px; border-bottom: 4px solid var(--accent); padding-bottom: 20px; }
+      .glitch-wrapper img { width: 150px; height: 150px; filter: grayscale(100%) contrast(150%); border: 2px solid var(--p); }
+      h1 { font-size: 5rem; margin: 0; color: var(--p); text-shadow: 4px 4px 0px var(--accent); letter-spacing: -2px; }
+      .title { font-size: 1.5rem; color: #fff; background: var(--accent); display: inline-block; padding: 5px 15px; margin-top: 10px; }
+      
+      .cyber-btn { display: inline-block; margin: 20px 10px 0 0; padding: 10px 20px; border: 2px solid var(--p); color: var(--p); text-decoration: none; font-weight: bold; transition: 0.2s; background: transparent; cursor: crosshair; }
+      .cyber-btn:hover { background: var(--p); color: var(--bg); box-shadow: 4px 4px 0 var(--accent); }
+
+      h2 { color: var(--p); border-left: 10px solid var(--accent); padding-left: 15px; font-size: 2rem; margin-top: 50px; }
+      
+      .skills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+      .skill-tag { background: #111; color: #fff; border: 1px solid var(--p); padding: 10px 20px; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+      .cyber-card { background: #111; border: 1px solid #333; padding: 30px; position: relative; transition: 0.2s; }
+      .cyber-card:hover { border-color: var(--p); transform: translate(-5px, -5px); box-shadow: 5px 5px 0 var(--accent); }
+      .cyber-card h3 { margin-top: 0; color: var(--p); }
+      .cyber-card a { color: var(--text); }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - CYBERPUNK</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="cyber-container">
+    <div class="glitch-wrapper">
+      {PHOTO}
+      <div>
+        <h1>{NAME}</h1>
+        <div class="title">{TITLE}</div>
+        <p style="color:#ccc; text-transform:none; margin-top:20px; font-family: sans-serif;">{ABOUT}</p>
+        <a href="mailto:{EMAIL}" class="cyber-btn">INITIATE_CONTACT</a>
+        <a href="{GITHUB}" class="cyber-btn" target="_blank">ACCESS_GITHUB</a>
+      </div>
+    </div>
+    <h2>SYS.SKILLS</h2>
+    <div class="skills">{SKILLS}</div>
+    <h2>SYS.EXPERIENCE</h2>
+    <div class="grid">{EXPERIENCE}</div>
+    <h2>SYS.PROJECTS</h2>
+    <div class="grid">{PROJECTS}</div>
+  </div>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="cyber-card"><h3>{ROLE}</h3><p style="color:#fff">{COMPANY} // {YEAR}</p><p style="text-transform:none; font-family:sans-serif; color:#aaa;">{DESC}</p></div>`,
+    projLayout: `<div class="cyber-card"><h3>{TITLE}</h3><p style="text-transform:none; font-family:sans-serif; color:#aaa;">{DESC}</p><a href="{LINK}">[EXTRACT_DATA]</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}">`
+  },
+  premium_split: {
+    name: "?? Premium Split Frame",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Roboto:wght@300;400;500&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; display: flex; font-family: 'Roboto', sans-serif; background: #fafafa; color: #222; }
+      
+      .left-pane { width: 45vw; height: 100vh; position: fixed; left: 0; top: 0; background-size: cover; background-position: center; border-right: 1px solid #ddd; }
+      .left-pane img { width: 100%; height: 100%; object-fit: cover; }
+      
+      .right-pane { margin-left: 45vw; width: 55vw; padding: 80px 10vw; min-height: 100vh; }
+      
+      h1 { font-family: 'Playfair Display', serif; font-size: 5rem; margin: 0 0 10px; line-height: 1; color: var(--p); }
+      .title { font-size: 1.5rem; color: #555; font-style: italic; margin-bottom: 40px; }
+      .about { font-size: 1.2rem; line-height: 1.8; color: #666; margin-bottom: 50px; }
+
+      h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; border-bottom: 2px solid var(--p); display: inline-block; margin-top: 50px; margin-bottom: 30px; }
+      
+      .skills { display: flex; flex-wrap: wrap; gap: 10px; }
+      .skill-tag { border: 1px solid #ccc; padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; }
+      
+      .item { margin-bottom: 40px; }
+      .item h3 { font-size: 1.4rem; margin: 0 0 5px; }
+      .item .meta { color: var(--p); font-weight: 500; margin-bottom: 10px; }
+      .item p { line-height: 1.6; color: #555; }
+      
+      .social { margin-top: 60px; display: flex; gap: 20px; }
+      .social a { color: #222; text-decoration: none; font-weight: 500; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; border-bottom: 1px solid transparent; transition: 0.3s; }
+      .social a:hover { color: var(--p); border-bottom-color: var(--p); }
+
+      @media (max-width: 900px) {
+        body { flex-direction: column; }
+        .left-pane { position: relative; width: 100%; height: 60vh; }
+        .right-pane { margin-left: 0; width: 100%; padding: 40px 20px; }
+        h1 { font-size: 3.5rem; }
+      }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - Portfolio</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="left-pane">
+    {PHOTO}
+  </div>
+  <div class="right-pane">
+    <h1>{NAME}</h1>
+    <div class="title">{TITLE}</div>
+    <p class="about">{ABOUT}</p>
+    
+    <div class="social">
+      <a href="mailto:{EMAIL}">Email</a>
+      <a href="{LINKEDIN}">LinkedIn</a>
+      <a href="{GITHUB}">GitHub</a>
+    </div>
+
+    <h2>Expertise</h2>
+    <div class="skills">{SKILLS}</div>
+
+    <h2>Experience</h2>
+    <div>{EXPERIENCE}</div>
+
+    <h2>Selected Projects</h2>
+    <div>{PROJECTS}</div>
+    <br><br><br>
+  </div>
+</body>
+</html>`,
+    skillLayout: `<span class="skill-tag">{SKILL}</span>`,
+    expLayout: `<div class="item"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p>{DESC}</p></div>`,
+    projLayout: `<div class="item"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}" style="color:var(--p); font-weight:bold;">View Project</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}">`
+  },
+
+
   premium_devfolio: {
     name: "?? Premium DevFolio",
     isAdvanced: true,

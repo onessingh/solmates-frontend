@@ -712,7 +712,7 @@
       renderModalThemes();
     }
 
-    function renderModalThemes() {
+        function renderModalThemes() {
       const container = document.getElementById('modal-theme-grid');
       let keys = Object.keys(templates);
       
@@ -720,18 +720,32 @@
         keys = keys.filter(k => templates[k].name.toLowerCase().includes(modalSearchQuery.toLowerCase()));
       }
 
-      container.innerHTML = keys.map(key => {
+      const premiumKeys = keys.filter(k => templates[k].isAdvanced);
+      const standardKeys = keys.filter(k => !templates[k].isAdvanced);
+
+      let html = '';
+      
+      const renderCard = (key) => {
         const t = templates[key];
         const isActive = key === currentThemeKey ? 'active' : '';
         const icon = themeIcons[key] || 'fa-pager';
-        
-        return `
-          <div class="theme-card ${isActive}" onclick="setTheme('${key}'); closeTemplateModal();" style="border-width: 1px;">
+        return `<div class="theme-card ${isActive}" onclick="setTheme('${key}'); closeTemplateModal();">
             <div class="theme-icon" style="font-size: 1.5rem;"><i class="fas ${icon}"></i></div>
             <div class="theme-name" style="font-size: 0.9rem;">${t.name}</div>
-          </div>
-        `;
-      }).join('');
+          </div>`;
+      };
+
+      if (premiumKeys.length > 0) {
+        html += `<div style="grid-column: 1/-1; margin-top: 10px; margin-bottom: 5px; font-weight: bold; font-size: 1.2rem; color: #e11d48;"><i class="fas fa-crown"></i> Premium Custom Layouts (New!)</div>`;
+        html += premiumKeys.map(renderCard).join('');
+      }
+      
+      if (standardKeys.length > 0) {
+        html += `<div style="grid-column: 1/-1; margin-top: 20px; margin-bottom: 5px; font-weight: bold; font-size: 1.2rem; color: var(--primary);"><i class="fas fa-palette"></i> Standard Color Themes</div>`;
+        html += standardKeys.map(renderCard).join('');
+      }
+
+      container.innerHTML = html;
     }
 
     function setTheme(key) {
