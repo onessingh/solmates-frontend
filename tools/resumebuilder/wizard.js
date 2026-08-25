@@ -17,31 +17,39 @@ if (document.readyState === 'loading') {
 function initPreviewScaler() {
     const previewPanel = document.querySelector('.preview-panel');
     const resumePreview = document.getElementById('resume-preview');
-    if (!previewPanel || !resumePreview) return;
+    const formPanel = document.querySelector('.form-panel');
     
-    // Only apply dynamic scale on desktop (where container-type is active or layout is side-by-side)
-    const updateScale = () => {
-        const isDesktop = document.documentElement.classList.contains('is-desktop') || window.innerWidth >= 1241;
-        if (!isDesktop) {
-            resumePreview.style.removeProperty('--preview-scale');
-            return;
+    const updateLayout = () => {
+        // 1. Set form min-height to push nav to bottom
+        if (formPanel) {
+            let zoom = 1;
+            const htmlZoom = window.getComputedStyle(document.documentElement).zoom;
+            if (htmlZoom && htmlZoom !== 'normal') zoom = parseFloat(htmlZoom);
+            const minH = (window.innerHeight / zoom) - 100;
+            formPanel.style.minHeight = Math.max(minH, 400) + 'px';
         }
-        // Get the available width in the preview panel (minus some safety padding)
-        const availableWidth = previewPanel.clientWidth;
-        if (availableWidth > 0) {
-            // A4 design is 800px wide
-            let scale = availableWidth / 800;
-            // Cap the scale to avoid it getting too large
-            if (scale > 1) scale = 1;
-            resumePreview.style.setProperty('--preview-scale', scale);
+        
+        // 2. Scale preview
+        if (previewPanel && resumePreview) {
+            const isDesktop = document.documentElement.classList.contains('is-desktop') || window.innerWidth >= 1241;
+            if (!isDesktop) {
+                resumePreview.style.removeProperty('--preview-scale');
+                return;
+            }
+            const availableWidth = previewPanel.clientWidth;
+            if (availableWidth > 0) {
+                let scale = availableWidth / 800;
+                if (scale > 1) scale = 1;
+                resumePreview.style.setProperty('--preview-scale', scale);
+            }
         }
     };
     
-    updateScale();
-    window.addEventListener('resize', updateScale);
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
     
-    if (window.ResizeObserver) {
-        new ResizeObserver(() => updateScale()).observe(previewPanel);
+    if (window.ResizeObserver && previewPanel) {
+        new ResizeObserver(() => updateLayout()).observe(previewPanel);
     }
 }
 

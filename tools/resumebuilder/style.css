@@ -967,6 +967,8 @@ textarea:focus {
   padding: var(--space-6);
   border: 1px solid #f1f0ea;
   box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
 }
 
 .preview-panel {
@@ -3485,7 +3487,7 @@ html.is-desktop .wizard-header { max-width: 100% !important; margin: 0 0 10px 0 
 /* Builder - side by side */
 html.is-desktop .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
 html.is-desktop .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
-html.is-desktop .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
+html.is-desktop .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; display: flex !important; flex-direction: column !important; }
 html.is-desktop .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
 
 /* JD Match full width */
@@ -3523,7 +3525,7 @@ html.is-desktop #resume-preview {
   .wizard-header { max-width: 100% !important; margin: 0 0 10px 0 !important; }
   .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
   .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
-  .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
+  .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; display: flex !important; flex-direction: column !important; }
   .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; container-type: inline-size !important; }
   .jd-match { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -3601,7 +3603,7 @@ Let's keep Templates as taking 1 column. */
 /* Make nav sit naturally at the bottom of the form everywhere */
 .wizard-nav {
     position: static;
-    margin-top: 24px;
+    margin-top: auto !important;
     padding-top: 16px;
     border-top: 1px solid #e5e7eb;
     display: flex;
