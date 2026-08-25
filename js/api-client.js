@@ -578,7 +578,7 @@ class SolmatesAPI {
       method: 'POST',
       body: JSON.stringify({ message, history }),
       skipAuth: true,
-    });
+    }, 45000);
   }
 
   // ========== RESUME BUILDER ==========
@@ -619,15 +619,14 @@ class SolmatesAPI {
    * Start a new career test
    */
   async startCareerTest(currentField, desiredField, experienceLevel) {
-    // Only use query param for cache busting - no custom headers
     return await this.request(`/career-test/start`, {
       method: 'POST',
       body: JSON.stringify({
         currentField: currentField || '',
         desiredField,
-        experienceLevel: experienceLevel || 'intermediate'
-      })
-    });
+        expLevel: experienceLevel
+      }),
+    }, 45000);
   }
 
   /**
@@ -662,21 +661,21 @@ class SolmatesAPI {
     return await this.request('/ai-tools/generate', {
       method: 'POST',
       body: JSON.stringify({ toolType, ...userData }),
-    });
+    }, 45000);
   }
 
   async submitAIToolResult(sessionId, answers) {
     return await this.request('/ai-tools/submit', {
       method: 'POST',
       body: JSON.stringify({ sessionId, answers }),
-    });
+    }, 45000);
   }
 
   async explainAnswer(question, answer, context = 'General') {
     return await this.request('/ai-tools/explain', {
       method: 'POST',
       body: JSON.stringify({ question, answer, context }),
-    });
+    }, 45000);
   }
 
   // ========== INTERVIEW METHODS ==========
@@ -684,7 +683,7 @@ class SolmatesAPI {
     return await this.request('/interview/start', {
       method: 'POST',
       body: JSON.stringify({ field, difficulty }),
-    });
+    }, 45000);
   }
 
   async analyzeResumeInterview(file) {
