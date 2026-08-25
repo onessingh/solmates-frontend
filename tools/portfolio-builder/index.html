@@ -654,13 +654,57 @@
     let projData = [];
 
     // Initialization
+    
+    // LocalStorage Auto-Save Logic
+    function saveToLocal() {
+      const data = {
+        name: document.getElementById('name') ? document.getElementById('name').value : '',
+        title: document.getElementById('title') ? document.getElementById('title').value : '',
+        email: document.getElementById('email') ? document.getElementById('email').value : '',
+        linkedin: document.getElementById('linkedin') ? document.getElementById('linkedin').value : '',
+        github: document.getElementById('github') ? document.getElementById('github').value : '',
+        about: document.getElementById('about') ? document.getElementById('about').value : '',
+        skills: document.getElementById('skills') ? document.getElementById('skills').value : '',
+        color: currentColor,
+        theme: currentThemeKey,
+        experiences: expData,
+        projects: projData
+      };
+      localStorage.setItem('portfolioBuilderData', JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+      try {
+        const raw = localStorage.getItem('portfolioBuilderData');
+        if(!raw) return;
+        const data = JSON.parse(raw);
+        if(data.name) document.getElementById('name').value = data.name;
+        if(data.title) document.getElementById('title').value = data.title;
+        if(data.email) document.getElementById('email').value = data.email;
+        if(data.linkedin) document.getElementById('linkedin').value = data.linkedin;
+        if(data.github) document.getElementById('github').value = data.github;
+        if(data.about) document.getElementById('about').value = data.about;
+        if(data.skills) document.getElementById('skills').value = data.skills;
+        if(data.color) { currentColor = data.color; }
+        if(data.theme && templates[data.theme]) { currentThemeKey = data.theme; }
+        if(data.experiences && data.experiences.length > 0) { expData = data.experiences; }
+        if(data.projects && data.projects.length > 0) { projData = data.projects; }
+        
+        renderThemes();
+        renderColors();
+        renderExperience();
+        renderProjects();
+      } catch(e) { console.error(e); }
+    }
+
     window.onload = () => {
-      renderThemes();
-      renderColors();
-      renderExperience();
-      renderProjects();
-      updatePreview();
+      loadFromLocal();
+      document.querySelectorAll('input, textarea').forEach(el => {
+         el.addEventListener('input', saveToLocal);
+      });
+      updatePreviewDebounced();
     };
+
 
     function toggleAccordion(id) {
       const el = document.getElementById(id);
@@ -749,6 +793,7 @@
     }
 
     function setTheme(key) {
+      if(typeof saveToLocal === 'function') saveToLocal();
       currentThemeKey = key;
       document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
       const card = document.getElementById('theme-card-' + key);
@@ -847,8 +892,9 @@
         `;
       });
     }
-    function addExperience() { expData.push({role:"", company:"", year:"", desc:""}); renderExperience(); updatePreview(); }
-    function removeExperience(idx) { expData.splice(idx, 1); renderExperience(); updatePreview(); }
+    function addExperience() {
+      if(typeof saveToLocal === 'function') saveToLocal(); expData.push({role:"", company:"", year:"", desc:""}); renderExperience(); updatePreview(); }
+    function removeExperience(idx) { expData.splice(idx, 1); if(typeof saveToLocal === 'function') saveToLocal(); renderExperience(); updatePreview(); }
     function saveExperience() {
       const items = document.querySelectorAll('#experience-list .repeater-item');
       expData = Array.from(items).map(item => ({
@@ -875,8 +921,9 @@
         `;
       });
     }
-    function addProject() { projData.push({title:"", desc:"", link:""}); renderProjects(); updatePreview(); }
-    function removeProject(idx) { projData.splice(idx, 1); renderProjects(); updatePreview(); }
+    function addProject() {
+      if(typeof saveToLocal === 'function') saveToLocal(); projData.push({title:"", desc:"", link:""}); renderProjects(); updatePreview(); }
+    function removeProject(idx) { projData.splice(idx, 1); if(typeof saveToLocal === 'function') saveToLocal(); renderProjects(); updatePreview(); }
     function saveProject() {
       const items = document.querySelectorAll('#project-list .repeater-item');
       projData = Array.from(items).map(item => ({
