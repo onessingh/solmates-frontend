@@ -1039,16 +1039,8 @@
 
       <!-- TEST CARD -->
       <div id="testStep" class="card hidden">
-        <div class="timer" id="timer">00:00</div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill" style="width:0%"></div>
-        </div>
-        <div class="progress-label" id="progressLabel">Question 1 of 15</div>
-        <div class="question-box">
-          <div class="question-text" id="questionText"></div>
-          <div class="options" id="optionsContainer"></div>
-        </div>
-        <button class="btn btn-primary" id="nextBtn" style="width:100%; margin-top:24px;">next question →</button>
+        <div id="questionsListContainer" style="margin-bottom: 20px;"></div>
+        <button class="btn btn-primary" id="nextBtn" style="width:100%; margin-top:24px;">Submit Test</button>
         <div id="testError" class="error-msg hidden"></div>
       </div>
 
@@ -1504,48 +1496,83 @@
           return;
         }
 
-        if (currentIdx >= questions.length) {
-          submitTest();
-          return;
-        }
+        const container = document.getElementById('questionsListContainer');
+        container.innerHTML = '';
+        
+        // Hide pagination/timer elements
+        const timerEl = document.getElementById('timer');
+        if (timerEl) timerEl.style.display = 'none';
+        
+        const progressLabel = document.getElementById('progressLabel');
+        if (progressLabel) progressLabel.textContent = `15 Questions - ${currentFieldSelect.getValue() || desiredFieldSelect.getValue()}`;
+        
+        const progressFill = document.getElementById('progressFill');
+        if (progressFill) progressFill.style.width = '100%';
 
-        const question = questions[currentIdx];
-        if (!question) {
-          console.error('Question missing at index:', currentIdx);
-          return;
-        }
+        questions.forEach((question, qIdx) => {
+          const qBox = document.createElement('div');
+          qBox.className = 'q-block';
+          qBox.style.marginBottom = '40px';
+          qBox.style.padding = '20px';
+          qBox.style.background = '#f9fafb';
+          qBox.style.borderRadius = '16px';
+          qBox.style.border = '1px solid #e2e8f0';
+          
+          const qTitle = document.createElement('div');
+          qTitle.className = 'question-text';
+          qTitle.style.fontSize = '18px';
+          qTitle.style.fontWeight = '700';
+          qTitle.style.marginBottom = '16px';
+          qTitle.style.color = '#1e293b';
+          qTitle.textContent = `${qIdx + 1}. ${question.text || question.question || 'Question text missing'}`;
+          qBox.appendChild(qTitle);
 
-        questionText.textContent = `${currentIdx + 1}. ${question.text || question.question || 'Question text missing'}`;
+          const optsDiv = document.createElement('div');
+          optsDiv.className = 'options';
+          optsDiv.style.display = 'flex';
+          optsDiv.style.flexDirection = 'column';
+          optsDiv.style.gap = '10px';
 
-        const progress = ((currentIdx + 1) / questions.length) * 100;
-        progressFill.style.width = `${progress}%`;
-        progressLabel.textContent = `Question ${currentIdx + 1} of ${questions.length}`;
+          const options = question.options || [];
+          options.forEach((opt, optIdx) => {
+            const btn = document.createElement('div');
+            btn.className = 'option';
+            
+            if (answers[qIdx] === optIdx) {
+              btn.classList.add('selected');
+            }
 
-        nextBtn.textContent = currentIdx === questions.length - 1 ? 'Submit Test →' : 'Next Question →';
-
-        optionsContainer.innerHTML = '';
-        const options = question.options || [];
-
-        options.forEach((optionText, index) => {
-          const optionDiv = document.createElement('div');
-          optionDiv.className = 'option';
-          if (answers[currentIdx] === index) {
-            optionDiv.classList.add('selected');
-          }
-          optionDiv.textContent = optionText;
-
-          optionDiv.addEventListener('click', () => {
-            optionsContainer.querySelectorAll('.option').forEach(opt => {
-              opt.classList.remove('selected');
-            });
-            optionDiv.classList.add('selected');
-            answers[currentIdx] = index;
+            btn.onclick = () => {
+              const siblings = optsDiv.querySelectorAll('.option');
+              siblings.forEach(s => s.classList.remove('selected'));
+              btn.classList.add('selected');
+              answers[qIdx] = optIdx;
+            };
+            btn.textContent = opt;
+            optsDiv.appendChild(btn);
           });
-
-          optionsContainer.appendChild(optionDiv);
+          
+          qBox.appendChild(optsDiv);
+          container.appendChild(qBox);
         });
-
-        console.log(`Rendered question ${currentIdx + 1}/${questions.length}`);
+        
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+            nextBtn.textContent = 'Submit Test';
+            nextBtn.onclick = submitTest;
+            
+            // Remove the old addEventListener that was checking currentIdx
+            const newBtn = nextBtn.cloneNode(true);
+            nextBtn.parentNode.replaceChild(newBtn, nextBtn);
+            newBtn.onclick = () => {
+                // Check if any answers are null
+                if (answers.includes(null) || answers.includes(undefined)) {
+                    showError('Please select an answer for all questions before submitting.', 'testError');
+                    return;
+                }
+                submitTest();
+            };
+        }
       }
 
       // ============================================================
