@@ -1,5 +1,213 @@
 const templates = {
 
+  premium_apple_glass: {
+    name: "?? Apple Vision Pro",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;800&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f5f5f7; color: #1d1d1f; line-height: 1.5; }
+      .container { max-width: 980px; margin: 0 auto; padding: 100px 20px; }
+      
+      .hero { text-align: center; margin-bottom: 80px; }
+      .hero img { width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; }
+      h1 { font-size: 5rem; font-weight: 800; letter-spacing: -0.05em; margin: 0; background: linear-gradient(90deg, #1d1d1f, #86868b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .title { font-size: 1.8rem; font-weight: 600; color: #86868b; margin-top: 10px; }
+      .about { font-size: 1.3rem; max-width: 700px; margin: 30px auto; color: #515154; }
+      
+      .btn { display: inline-block; background: #0071e3; color: #fff; padding: 14px 28px; border-radius: 30px; font-weight: 600; text-decoration: none; margin: 10px; transition: 0.3s; }
+      .btn:hover { background: #0077ED; transform: scale(1.02); }
+      .btn-outline { background: transparent; color: #0071e3; border: 1px solid #0071e3; }
+      
+      h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 80px 0 40px; text-align: center; }
+      
+      .skills { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+      .skill-tag { background: #fff; border: 1px solid #d2d2d7; color: #1d1d1f; padding: 12px 24px; border-radius: 40px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
+      .skill-tag:hover { border-color: #0071e3; color: #0071e3; box-shadow: 0 4px 12px rgba(0,113,227,0.1); }
+      
+      .grid { display: grid; gap: 30px; }
+      .card { background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.03); transition: 0.4s; }
+      .card:hover { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+      .card h3 { font-size: 1.8rem; margin: 0 0 10px; }
+      .card .meta { color: #86868b; font-weight: 600; font-size: 1.1rem; margin-bottom: 15px; }
+      
+      @media(max-width: 768px) { h1 { font-size: 3.5rem; } }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - Apple UI</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+      <p class="about">{ABOUT}</p>
+      <a href="mailto:{EMAIL}" class="btn">Contact Me</a>
+      <a href="{LINKEDIN}" class="btn btn-outline" target="_blank">LinkedIn</a>
+    </div>
+    
+    <h2>Core Technologies</h2>
+    <div class="skills">{SKILLS}</div>
+    
+    <h2>Professional Experience</h2>
+    <div class="grid">{EXPERIENCE}</div>
+    
+    <h2>Featured Projects</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">{PROJECTS}</div>
+  </div>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="card"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:#515154; font-size:1.1rem; line-height:1.6;">{DESC}</p></div>`,
+    projLayout: `<div class="card"><h3>{TITLE}</h3><p style="color:#515154; font-size:1.1rem; line-height:1.6;">{DESC}</p><a href="{LINK}" style="color:#0071e3; text-decoration:none; font-weight:600; margin-top:15px; display:inline-block;">Learn more &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}">`
+  },
+
+  premium_notion: {
+    name: "?? Notion Docs Style",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@700&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; color: #37352f; background: #fff; }
+      .container { max-width: 900px; margin: 0 auto; padding: 80px 20px; }
+      
+      .hero-icon { font-size: 5rem; margin-bottom: 20px; }
+      h1 { font-family: 'Merriweather', serif; font-size: 3.5rem; margin: 0 0 10px; color: #37352f; }
+      .title { font-size: 1.2rem; color: rgba(55,53,47,0.6); margin-bottom: 30px; }
+      
+      .callout { background: rgba(241,241,239,1); padding: 20px 25px; border-radius: 5px; display: flex; gap: 15px; margin-bottom: 40px; }
+      .callout-icon { font-size: 1.5rem; }
+      .callout p { margin: 0; font-size: 1.1rem; line-height: 1.6; color: #37352f; }
+      
+      h2 { font-family: 'Inter', sans-serif; font-size: 1.8rem; border-bottom: 1px solid rgba(55,53,47,0.16); padding-bottom: 10px; margin-top: 50px; }
+      
+      .skills { display: flex; flex-wrap: wrap; gap: 10px; }
+      .skill { background: rgba(227,226,224,0.5); color: rgba(55,53,47,0.8); padding: 5px 12px; border-radius: 3px; font-size: 0.95rem; }
+      
+      .list-item { display: flex; gap: 20px; margin-bottom: 30px; }
+      .bullet { font-size: 1.5rem; color: rgba(55,53,47,0.4); line-height: 1; }
+      .list-content h3 { margin: 0 0 5px; font-size: 1.2rem; }
+      .list-content .meta { font-size: 0.95rem; color: rgba(55,53,47,0.6); margin-bottom: 10px; }
+      
+      .links a { display: inline-block; padding: 8px 15px; border: 1px solid rgba(55,53,47,0.16); border-radius: 4px; color: #37352f; text-decoration: none; margin-right: 10px; font-size: 0.95rem; font-weight: 500; transition: 0.2s; }
+      .links a:hover { background: rgba(55,53,47,0.08); }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Notion</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="container">
+    {PHOTO}
+    <h1>{NAME}</h1>
+    <div class="title">{TITLE}</div>
+    
+    <div class="links" style="margin-bottom: 40px;">
+      <a href="mailto:{EMAIL}">?? Email</a>
+      <a href="{LINKEDIN}">?? LinkedIn</a>
+      <a href="{GITHUB}">?? GitHub</a>
+    </div>
+
+    <div class="callout">
+      <div class="callout-icon">??</div>
+      <p>{ABOUT}</p>
+    </div>
+
+    <h2>?? Skills</h2>
+    <div class="skills">{SKILLS}</div>
+
+    <h2>?? Experience</h2>
+    <div style="margin-top: 20px;">{EXPERIENCE}</div>
+
+    <h2>?? Projects</h2>
+    <div style="margin-top: 20px;">{PROJECTS}</div>
+  </div>
+</body>
+</html>`,
+    skillLayout: `<div class="skill">{SKILL}</div>`,
+    expLayout: `<div class="list-item"><div class="bullet">�</div><div class="list-content"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p style="color:rgba(55,53,47,0.8); line-height:1.6;">{DESC}</p></div></div>`,
+    projLayout: `<div class="list-item"><div class="bullet">?</div><div class="list-content"><h3><a href="{LINK}" style="color:inherit; text-decoration:underline;">{TITLE}</a></h3><p style="color:rgba(55,53,47,0.8); line-height:1.6;">{DESC}</p></div></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:100px; height:100px; border-radius:10px; margin-bottom:20px; object-fit:cover;">`
+  },
+
+  premium_retro: {
+    name: "?? Retro Arcade 8-Bit",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; padding: 0; font-family: 'Press Start 2P', cursive; background: #000; color: #fff; line-height: 1.8; }
+      .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+      
+      .box { border: 4px solid #fff; padding: 30px; margin-bottom: 40px; box-shadow: 8px 8px 0 var(--p); background: #111; }
+      
+      h1 { font-size: 2.5rem; color: var(--p); text-shadow: 4px 4px 0 #fff; margin-top: 0; line-height: 1.4; }
+      .title { font-size: 1rem; color: #0f0; margin-bottom: 20px; }
+      
+      .btn { display: inline-block; padding: 15px 20px; background: #000; color: #fff; border: 2px solid #fff; text-decoration: none; font-size: 0.8rem; margin: 10px 10px 0 0; transition: 0.2s; }
+      .btn:hover { background: var(--p); color: #000; border-color: var(--p); box-shadow: 4px 4px 0 #fff; }
+
+      h2 { font-size: 1.5rem; color: #ff00ff; border-bottom: 4px dashed #fff; padding-bottom: 10px; margin-top: 50px; }
+      
+      .skills { display: flex; flex-wrap: wrap; gap: 15px; }
+      .skill-tag { background: #fff; color: #000; padding: 10px 15px; font-size: 0.8rem; }
+      
+      .item { margin-bottom: 40px; border-left: 4px solid var(--p); padding-left: 20px; }
+      .item h3 { color: #0ff; font-size: 1.2rem; margin: 0 0 10px; }
+      .item .meta { font-size: 0.8rem; color: #aaa; margin-bottom: 15px; }
+      .item p { font-size: 0.9rem; line-height: 1.8; }
+      
+      @media(max-width: 768px) { h1 { font-size: 1.5rem; } }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{NAME} - Arcade</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="container">
+    <div class="box" style="text-align:center;">
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">PLAYER 1: {TITLE}</div>
+      <p style="font-size: 0.9rem; margin-top:20px;">{ABOUT}</p>
+      <a href="mailto:{EMAIL}" class="btn">SEND MAIL</a>
+      <a href="{GITHUB}" class="btn" target="_blank">GITHUB</a>
+    </div>
+
+    <h2>SKILLS INVENTORY</h2>
+    <div class="skills">{SKILLS}</div>
+
+    <h2>QUEST LOG (EXPERIENCE)</h2>
+    <div style="margin-top:40px;">{EXPERIENCE}</div>
+
+    <h2>ACHIEVEMENTS (PROJECTS)</h2>
+    <div style="margin-top:40px;">{PROJECTS}</div>
+    
+    <div style="text-align:center; margin-top: 80px; color: yellow; animation: blink 1s infinite;">INSERT COIN TO CONTINUE...</div>
+  </div>
+  <style>@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }</style>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="item"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p>{DESC}</p></div>`,
+    projLayout: `<div class="item"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}" style="color:#0f0; text-decoration:none; font-size:0.8rem;">START PROJECT &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; image-rendering:pixelated; border:4px solid #fff; margin-bottom:20px;">`
+  }
+
+
   premium_3d_vanta: {
     name: "?? Premium 3D Universe",
     isAdvanced: true,
