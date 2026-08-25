@@ -919,7 +919,7 @@
 
     function updatePreviewDebounced() {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(updatePreview, 800);
+      debounceTimer = setTimeout(updatePreview, 1200);
     }
 
     // Dynamic Lists (Experience)
@@ -1191,14 +1191,22 @@
 </html>`;
     }
 
+    
+    let currentBlobUrl = null;
     function updatePreview() {
       const html = generateHTML();
       const iframe = document.getElementById('preview-frame');
-      const doc = iframe.contentWindow.document;
-      doc.open();
-      doc.write(html);
-      doc.close();
+      
+      // Clean up previous blob to prevent memory leak
+      if (currentBlobUrl) {
+        URL.revokeObjectURL(currentBlobUrl);
+      }
+      
+      const blob = new Blob([html], { type: 'text/html' });
+      currentBlobUrl = URL.createObjectURL(blob);
+      iframe.src = currentBlobUrl;
     }
+
 
     // ZIP EXPORT
     function exportWebsite() {
