@@ -294,14 +294,14 @@
       background: linear-gradient(135deg, var(--accent), #005bb5);
       color: white;
       border: none;
-      padding: 16px 40px;
+      padding: 12px 28px;
       border-radius: 30px;
       font-weight: 700;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       transition: all 0.3s;
       box-shadow: 0 8px 20px rgba(0,113,227,0.3);
     }
@@ -575,17 +575,7 @@
       <button class="btn-add" onclick="addProject()"><i class="fas fa-plus"></i> Add Another Project</button>
     </div>
 
-    <div style="text-align: center; margin: 20px 0; font-weight: bold; color: #475569; font-size: 1.2rem;">OR</div>
 
-    <div class="card" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); border-color: #7dd3fc;">
-      <div class="card-title" style="margin-bottom: 10px; border-bottom: none;"><i class="fas fa-file-upload"></i> Auto-Fill with Resume</div>
-      <p style="font-size: 0.9rem; color: var(--brand-primary); margin-bottom: 15px;">Upload your PDF or DOCX resume to auto-fill the above details. (Note: Extraction might not be 100% perfect, please review after uploading.)</p>
-      <input type="file" id="resumeUpload" accept=".pdf,.docx" style="display:none;" onchange="handleResumeUpload(event)">
-      <label for="resumeUpload" style="display:block; padding: 15px; background: var(--accent); color: white; text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s;">
-        <i class="fas fa-upload"></i> Upload Resume
-      </label>
-      <div id="resume-loading" style="display:none; text-align:center; margin-top:10px; font-weight:bold; color:var(--primary);">Extracting Data...</div>
-    </div>
     
     <!-- Mobile Export Button -->
     <div class="mobile-only" style="margin-bottom: 20px; text-align: center;">
