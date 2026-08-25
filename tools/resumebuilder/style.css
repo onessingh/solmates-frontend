@@ -3500,8 +3500,15 @@ html.is-desktop .template-preview { height: 90px !important; }
 html.is-desktop .template-info h3 { font-size: 0.8rem !important; }
 html.is-desktop .template-info p { font-size: 0.68rem !important; }
 
-/* No scale transform on desktop preview */
-html.is-desktop #resume-preview { transform: none !important; margin-bottom: 0 !important; width: 100% !important; }
+/* Scale transform on desktop preview based on column width */
+html.is-desktop .preview-panel { container-type: inline-size !important; }
+html.is-desktop #resume-preview { 
+    width: 800px !important; 
+    transform-origin: top left !important; 
+    transform: scale(0.6) !important; /* Fallback */
+    transform: scale(calc(100cqi / 800)) !important; 
+    margin-bottom: calc(1122px * (100cqi / 800) - 1122px + 20px) !important; 
+}
 
 /* Duplicate all above for media query as fallback */
 @media (min-width: 1241px) {
@@ -3518,13 +3525,19 @@ html.is-desktop #resume-preview { transform: none !important; margin-bottom: 0 !
   .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
   .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
   .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
-  .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
+  .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; container-type: inline-size !important; }
   .jd-match { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
   .tpl-gallery { max-height: 580px !important; overflow-y: auto !important; }
   .tpl-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
   .template-preview { height: 90px !important; }
-  #resume-preview { transform: none !important; margin-bottom: 0 !important; width: 100% !important; }
+  #resume-preview { 
+      width: 800px !important; 
+      transform-origin: top left !important; 
+      transform: scale(0.6) !important; 
+      transform: scale(calc(100cqi / 800)) !important; 
+      margin-bottom: calc(1122px * (100cqi / 800) - 1122px + 20px) !important; 
+  }
 }
 
 /* ===== TEMPLATES ACCORDION ALWAYS OPEN ON DESKTOP ===== */
