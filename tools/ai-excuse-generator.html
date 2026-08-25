@@ -242,6 +242,10 @@
             const length = document.querySelector('input[name="length"]:checked').value;
             const context = document.getElementById('context').value;
 
+            // Clear previous response immediately
+            outputText.innerHTML = '';
+            outputText.classList.remove('text-red-500');
+            
             loading.classList.remove('hidden');
             generateBtn.disabled = true;
             try {
