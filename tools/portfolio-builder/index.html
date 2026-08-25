@@ -15,21 +15,6 @@
   <!-- Cropper.js for photo crop -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  <!-- PDF.js and Mammoth for Resume Parsing -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-      (async function() {
-        try {
-          const res = await fetch('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');
-          const blob = await res.blob();
-          pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
-        } catch(e) {
-          console.warn('Could not load PDF worker blob, falling back to cross-origin', e);
-          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        }
-      })();
-    </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <!-- Load the 10 templates -->
   <script src="/tools/portfolio-builder/templates.js"></script>
   <style>
