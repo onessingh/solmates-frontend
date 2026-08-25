@@ -3505,9 +3505,8 @@ html.is-desktop .preview-panel { container-type: inline-size !important; }
 html.is-desktop #resume-preview { 
     width: 800px !important; 
     transform-origin: top left !important; 
-    transform: scale(0.6) !important; /* Fallback */
-    transform: scale(calc(100cqi / 800)) !important; 
-    margin-bottom: calc(1122px * (100cqi / 800) - 1122px + 20px) !important; 
+    transform: scale(var(--preview-scale, 1)) !important; 
+    margin-bottom: calc(1122px * var(--preview-scale, 1) - 1122px + 20px) !important; 
 }
 
 /* Duplicate all above for media query as fallback */
@@ -3534,9 +3533,8 @@ html.is-desktop #resume-preview {
   #resume-preview { 
       width: 800px !important; 
       transform-origin: top left !important; 
-      transform: scale(0.6) !important; 
-      transform: scale(calc(100cqi / 800)) !important; 
-      margin-bottom: calc(1122px * (100cqi / 800) - 1122px + 20px) !important; 
+      transform: scale(var(--preview-scale, 1)) !important; 
+      margin-bottom: calc(1122px * var(--preview-scale, 1) - 1122px + 20px) !important; 
   }
 }
 

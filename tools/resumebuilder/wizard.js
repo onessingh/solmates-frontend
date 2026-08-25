@@ -1,6 +1,7 @@
 function initializeWizardApp() {
     initTabs();
     initWizard();
+    initPreviewScaler();
     setTimeout(() => {
         initChips();
         initAccordions();
@@ -11,6 +12,37 @@ if (document.readyState === 'loading') {
     document.addEventListener("DOMContentLoaded", initializeWizardApp);
 } else {
     initializeWizardApp();
+}
+
+function initPreviewScaler() {
+    const previewPanel = document.querySelector('.preview-panel');
+    const resumePreview = document.getElementById('resume-preview');
+    if (!previewPanel || !resumePreview) return;
+    
+    // Only apply dynamic scale on desktop (where container-type is active or layout is side-by-side)
+    const updateScale = () => {
+        const isDesktop = document.documentElement.classList.contains('is-desktop') || window.innerWidth >= 1241;
+        if (!isDesktop) {
+            resumePreview.style.removeProperty('--preview-scale');
+            return;
+        }
+        // Get the available width in the preview panel (minus some safety padding)
+        const availableWidth = previewPanel.clientWidth;
+        if (availableWidth > 0) {
+            // A4 design is 800px wide
+            let scale = availableWidth / 800;
+            // Cap the scale to avoid it getting too large
+            if (scale > 1) scale = 1;
+            resumePreview.style.setProperty('--preview-scale', scale);
+        }
+    };
+    
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    
+    if (window.ResizeObserver) {
+        new ResizeObserver(() => updateScale()).observe(previewPanel);
+    }
 }
 
 
