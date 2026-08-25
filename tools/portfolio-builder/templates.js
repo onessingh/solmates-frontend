@@ -1,4 +1,71 @@
 const templates = {
+    premium_3d_fog: {
+    name: "Premium 3D Cinematic Fog",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+      :root { --p: {COLOR}; }
+      body { margin: 0; font-family: 'Montserrat', sans-serif; color: #fff; background: #000; overflow-x: hidden; }
+      #bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
+      .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%); z-index: -1; }
+      .container { max-width: 900px; margin: 0 auto; padding: 100px 20px; position: relative; z-index: 1; }
+      header { text-align: center; margin-bottom: 80px; }
+      h1 { font-family: 'Cinzel', serif; font-size: 5rem; margin: 0; letter-spacing: 5px; text-transform: uppercase; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+      .title { color: var(--p); font-size: 1.2rem; letter-spacing: 3px; margin-top: 10px; text-transform: uppercase; font-weight: 600; }
+      .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+      h2 { font-family: 'Cinzel', serif; color: #fff; font-size: 2rem; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+      .skill-tag { display: inline-block; padding: 8px 16px; margin: 5px; background: rgba(255,255,255,0.05); border-left: 3px solid var(--p); font-size: 0.9rem; letter-spacing: 1px; }
+      .item { margin-bottom: 30px; }
+      .item h3 { margin: 0 0 5px; font-size: 1.3rem; color: #fff; }
+      .meta { color: var(--p); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+      .desc { color: #aaa; line-height: 1.7; font-size: 0.95rem; }
+      a.btn { color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 5px 15px; border-radius: 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; }
+      a.btn:hover { background: #fff; color: #000; }
+    `,
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head><style>{CSS}</style></head>
+<body>
+  <div id="bg"></div>
+  <div class="overlay"></div>
+  <div class="container">
+    <header>
+      {PHOTO}
+      <h1>{NAME}</h1>
+      <div class="title">{TITLE}</div>
+    </header>
+    
+    <div class="glass-panel">
+      <h2>About</h2>
+      <p class="desc" style="font-size: 1.1rem;">{ABOUT}</p>
+    </div>
+    
+    <div class="glass-panel">
+      <h2>Expertise</h2>
+      <div>{SKILLS}</div>
+    </div>
+    
+    <div class="glass-panel">
+      <h2>Experience</h2>
+      <div>{EXPERIENCE}</div>
+    </div>
+    
+    <div class="glass-panel">
+      <h2>Selected Works</h2>
+      <div>{PROJECTS}</div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  <script>setTimeout(() => VANTA.FOG({el:"#bg", highlightColor: parseInt("{COLOR}".replace('#','0x'))||0x3b82f6, midtoneColor: 0x000000, lowlightColor: 0x111111, baseColor: 0x000000, blurFactor: 0.9, speed: 1.5 }), 200);</script>
+</body>
+</html>`,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="item"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><div class="desc">{DESC}</div></div>`,
+    projLayout: `<div class="item"><h3>{TITLE}</h3><div class="desc" style="margin-bottom: 10px;">{DESC}</div><a href="{LINK}" class="btn" target="_blank">View Project</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}" style="width:180px; height:180px; border-radius:50%; object-fit:cover; border: 2px solid rgba(255,255,255,0.1); padding: 10px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.5);">`
+  },
+
   premium_3d_globe: {
     name: "Premium 3D Globe",
     isAdvanced: true,
