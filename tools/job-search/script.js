@@ -105,8 +105,8 @@ document.getElementById('jobSearchForm').addEventListener('submit', async functi
     const sub = subSelect.value === 'other' ? document.getElementById('subFieldCustom').value : subSelect.value;
     const shift = document.getElementById('jobShift').value;
     const exp = document.getElementById('experience').value;
-    const sal = document.getElementById('package').value;
-    const loc = document.getElementById('location').value;
+    const sal = document.getElementById('package')?.value || '';
+    const loc = document.getElementById('location')?.value || '';
 
     // Construct search query
     let query = `${sub || field}`;
