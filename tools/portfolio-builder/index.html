@@ -690,15 +690,17 @@
         if(data.experiences && data.experiences.length > 0) { expData = data.experiences; }
         if(data.projects && data.projects.length > 0) { projData = data.projects; }
         
-        renderThemes();
-        renderColors();
-        renderExperience();
-        renderProjects();
+        
       } catch(e) { console.error(e); }
     }
 
     window.onload = () => {
       loadFromLocal();
+      renderThemes();
+      renderColors();
+      renderExperience();
+      renderProjects();
+      
       document.querySelectorAll('input, textarea').forEach(el => {
          el.addEventListener('input', saveToLocal);
       });
