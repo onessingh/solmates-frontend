@@ -20,16 +20,7 @@ function initPreviewScaler() {
     const formPanel = document.querySelector('.form-panel');
     
     const updateLayout = () => {
-        // 1. Set form min-height to push nav to bottom
-        if (formPanel) {
-            let zoom = 1;
-            const htmlZoom = window.getComputedStyle(document.documentElement).zoom;
-            if (htmlZoom && htmlZoom !== 'normal') zoom = parseFloat(htmlZoom);
-            const minH = (window.innerHeight / zoom) - 100;
-            formPanel.style.minHeight = Math.max(minH, 400) + 'px';
-        }
-        
-        // 2. Scale preview
+        // Scale preview
         if (previewPanel && resumePreview) {
             const isDesktop = document.documentElement.classList.contains('is-desktop') || window.innerWidth >= 1241;
             if (!isDesktop) {
