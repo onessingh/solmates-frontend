@@ -538,7 +538,53 @@
         const response = await window.solmatesAPI.generateAIToolData('ats-checker', { resume, jd });
         if (!response.success) throw new Error(response.error || 'Failed to analyze resume');
         
+        
+        // --- OVERRIDE WITH 100% ACCURATE DETERMINISTIC JS CALCULATIONS ---
+        const exactWordCount = resume.split(/\s+/).filter(w => w.length > 0).length;
+        
+        let exactVerbs = 0;
+        actionVerbs.forEach(v => {
+          if (new RegExp('\\b' + v + '(ed|s)?\\b', 'i').test(resume)) exactVerbs++;
+        });
+        
+        const exactMetrics = (resume.match(/\b\d+(\.\d+)?([kKmM%]|\+)?\b/g) || []).length;
+        
+        let exactKeywordMatch = 'N/A';
+        let calculatedScore = response.data.score || 70;
+        
+        if (jd) {
+          const jdKeywords = extractKeywords(jd);
+          let matchCount = 0;
+          jdKeywords.forEach(kw => {
+            if (new RegExp('\\b' + kw + '(s|es|ed|ing)?\\b', 'i').test(resume)) {
+              matchCount++;
+            }
+          });
+          
+          let matchPercent = Math.round((matchCount / Math.max(jdKeywords.length, 1)) * 100);
+          exactKeywordMatch = matchPercent + '%';
+          
+          // Factor keyword match heavily into the score if JD is provided
+          calculatedScore = Math.max(30, Math.min(100, Math.round((matchPercent * 0.6) + (response.data.score * 0.4))));
+        } else {
+          // If no JD, factor in standard metrics
+          let metricScore = 40;
+          if (exactWordCount >= 300 && exactWordCount <= 800) metricScore += 20;
+          if (exactVerbs >= 5) metricScore += 20;
+          if (exactMetrics >= 3) metricScore += 20;
+          
+          calculatedScore = Math.max(30, Math.min(100, Math.round((metricScore * 0.5) + (response.data.score * 0.5))));
+        }
+        
+        response.data.wordCount = exactWordCount;
+        response.data.actionVerbs = exactVerbs;
+        response.data.measurableMetrics = exactMetrics;
+        response.data.keywordMatch = exactKeywordMatch;
+        response.data.score = calculatedScore;
+        // -----------------------------------------------------------------
+
         renderResults(response.data);
+
       } catch (err) {
         console.error(err);
         alert('An error occurred during analysis: ' + err.message);
