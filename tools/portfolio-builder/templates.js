@@ -59,8 +59,16 @@ const templates = {
         .exp-header { flex-direction: column; gap: 5px; }
       }
     `,
-    htmlLayout: `
-      <div class="nav">
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - Portfolio</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="nav">
         <div class="nav-logo">{NAME}.</div>
         <div class="nav-links">
           <a href="mailto:{EMAIL}">Email</a>
@@ -91,7 +99,8 @@ const templates = {
       <footer>
         <p>&copy; 2026 {NAME}. Designed with minimalism.</p>
       </footer>
-    `,
+</body>
+</html>`,
     skillLayout: `<div class="skill-tag">{SKILL}</div>`,
     expLayout: `<div class="exp-card">
       <div class="exp-header">
@@ -175,8 +184,16 @@ const templates = {
         .hero img { width: 160px; height: 160px; }
       }
     `,
-    htmlLayout: `
-      <div class="orb orb-1"></div>
+    htmlLayout: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{NAME} - Portfolio</title>
+  <style>{CSS}</style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
       <div class="orb orb-2"></div>
       <div class="container">
         <div class="glass-card hero">
@@ -205,8 +222,9 @@ const templates = {
 
         <h2>Featured Projects</h2>
         <div class="grid">{PROJECTS}</div>
-      </div>
-    `,
+  </div>
+</body>
+</html>`,
     skillLayout: `<span class="tag">{SKILL}</span>`,
     expLayout: `<div class="exp-item"><p class="exp-role">{ROLE}</p><p class="exp-comp">{COMPANY}</p><p class="exp-year">{YEAR}</p><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem;">{DESC}</p></div>`,
     projLayout: `<div class="glass-card"><h3 style="font-size: 1.6rem; margin-top:0;">{TITLE}</h3><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem; margin-bottom: 30px;">{DESC}</p><a href="{LINK}" class="proj-link">Launch Project &rarr;</a></div>`,
