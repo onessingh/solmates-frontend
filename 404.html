@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invalid Link - Solmates</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .container-404 {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            max-width: 450px;
+            width: 100%;
+        }
+        .icon-404 {
+            font-size: 4rem;
+            color: #ef4444; /* Red color for error/invalid */
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0 0 10px;
+            font-size: 1.8rem;
+            color: #0f172a;
+        }
+        p {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0f172a;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-home:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-404">
+        <i class="fas fa-link-slash icon-404"></i>
+        <h1>Oops! Invalid Link</h1>
+        <p>The link you followed is broken, invalid, or the page has been removed.</p>
+        <a href="/" class="btn-home">
+            <i class="fas fa-home"></i> Go to Homepage
+        </a>
+    </div>
+</body>
+</html>
