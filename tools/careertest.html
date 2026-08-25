@@ -1649,7 +1649,34 @@
                 try {
                   const expRes = await window.solmatesAPI.explainAnswer(detail.text, detail.correctAnswer, 'Career Test');
                   if (expRes.success) {
-                    explanationBody.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6;">${expRes.explanation}</div>`;
+                    let text = expRes.explanation.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    // Parse bold
+                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#1e293b;">$1</strong>');
+                    // Parse italic
+                    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    
+                    // Split into paragraphs and lists
+                    let htmlContent = text.split(/\n\n+/).map(block => {
+                        block = block.trim();
+                        // If it's a list
+                        if (block.match(/^[-*]\s/m)) {
+                            const listItems = block.split('\n').map(line => {
+                                const match = line.match(/^[-*]\s+(.*)/);
+                                return match ? `<li style="margin-bottom:6px;">${match[1]}</li>` : `<li>${line}</li>`;
+                            }).join('');
+                            return `<ul style="padding-left:20px; margin-bottom:15px; color:#334155;">${listItems}</ul>`;
+                        }
+                        // If it's just a bold header like **English**
+                        else if (block.match(/^<strong.*?>.*?<\/strong>$/)) {
+                            return `<h4 style="color: #0071e3; margin-top: 16px; margin-bottom: 8px; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">${block}</h4>`;
+                        }
+                        // Normal paragraph
+                        else {
+                            return `<p style="margin-bottom:12px; color:#334155;">${block}</p>`;
+                        }
+                    }).join('');
+                    
+                    explanationBody.innerHTML = `<div style="line-height: 1.6; font-size: 14.5px;">${htmlContent}</div>`;
                   } else {
                     explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: #ffe5e5; border-radius: 10px;">
                   <i class="fas fa-exclamation-circle"></i> ${expRes.error || 'Could not generate explanation.'}
