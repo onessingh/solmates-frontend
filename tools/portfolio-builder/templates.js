@@ -20,7 +20,7 @@ const templates = {
       .meta { color: var(--p); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
       .desc { color: #aaa; line-height: 1.7; font-size: 0.95rem; }
       a.btn { color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 5px 15px; border-radius: 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; }
-      a.btn:hover { background: #fff; color: #000; }
+      a.btn:hover, .social-links a:hover { background: #fff; color: #000; }
     `,
     htmlLayout: `<!DOCTYPE html>
 <html lang="en">
@@ -33,6 +33,11 @@ const templates = {
       {PHOTO}
       <h1>{NAME}</h1>
       <div class="title">{TITLE}</div>
+      <div class="social-links" style="margin-top: 25px; display: flex; justify-content: center; gap: 15px;">
+        <a href="mailto:{EMAIL}" target="_blank" style="color: #fff; text-decoration: none; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; transition: 0.3s; font-size: 0.9rem;">Email</a>
+        <a href="{LINKEDIN}" target="_blank" style="color: #fff; text-decoration: none; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; transition: 0.3s; font-size: 0.9rem;">LinkedIn</a>
+        <a href="{GITHUB}" target="_blank" style="color: #fff; text-decoration: none; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; transition: 0.3s; font-size: 0.9rem;">GitHub</a>
+      </div>
     </header>
     
     <div class="glass-panel">
