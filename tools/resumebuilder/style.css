@@ -3488,7 +3488,7 @@ html.is-desktop .wizard-header { max-width: 100% !important; margin: 0 0 10px 0 
 /* Builder - side by side */
 html.is-desktop .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
 html.is-desktop .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
-html.is-desktop .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; display: flex !important; flex-direction: column !important; }
+html.is-desktop .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
 html.is-desktop .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
 
 /* JD Match full width */
@@ -3526,7 +3526,7 @@ html.is-desktop #resume-preview {
   .wizard-header { max-width: 100% !important; margin: 0 0 10px 0 !important; }
   .builder-layout { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
   .builder-columns { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; gap: 16px !important; max-width: 100% !important; margin: 0 !important; align-items: start !important; }
-  .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; display: flex !important; flex-direction: column !important; }
+  .form-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; max-height: none !important; overflow-y: visible !important; position: static !important; }
   .preview-panel { max-width: 100% !important; width: 100% !important; margin: 0 !important; container-type: inline-size !important; }
   .jd-match { max-width: 100% !important; width: 100% !important; margin: 0 !important; }
   .templates { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
