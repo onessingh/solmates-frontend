@@ -1547,6 +1547,10 @@
               siblings.forEach(s => s.classList.remove('selected'));
               btn.classList.add('selected');
               answers[qIdx] = optIdx;
+              
+              // Clear error styles if any
+              qBox.style.border = '1px solid #e2e8f0';
+              qBox.style.backgroundColor = '#f9fafb';
             };
             btn.textContent = opt;
             optsDiv.appendChild(btn);
@@ -1565,9 +1569,29 @@
             const newBtn = nextBtn.cloneNode(true);
             nextBtn.parentNode.replaceChild(newBtn, nextBtn);
             newBtn.onclick = () => {
-                // Check if any answers are null
-                if (answers.includes(null) || answers.includes(undefined)) {
-                    showError('Please select an answer for all questions before submitting.', 'testError');
+                const unanswered = [];
+                answers.forEach((ans, idx) => {
+                    if (ans === null || ans === undefined) unanswered.push(idx + 1);
+                });
+
+                if (unanswered.length > 0) {
+                    showError(`Please select an answer for question(s): ${unanswered.join(', ')}`, 'testError');
+                    
+                    const qBlocks = document.querySelectorAll('.q-block');
+                    qBlocks.forEach((block, idx) => {
+                        if (unanswered.includes(idx + 1)) {
+                            block.style.border = '2px solid #ef4444';
+                            block.style.backgroundColor = '#fef2f2';
+                        } else {
+                            block.style.border = '1px solid #e2e8f0';
+                            block.style.backgroundColor = '#f9fafb';
+                        }
+                    });
+                    
+                    const firstUnansweredIdx = unanswered[0] - 1;
+                    if (qBlocks[firstUnansweredIdx]) {
+                        qBlocks[firstUnansweredIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                     return;
                 }
                 submitTest();
