@@ -205,7 +205,7 @@ const templates = {
     expLayout: `<div class="item"><h3>{ROLE}</h3><div class="meta">{COMPANY} | {YEAR}</div><p>{DESC}</p></div>`,
     projLayout: `<div class="item"><h3>{TITLE}</h3><p>{DESC}</p><a href="{LINK}" style="color:#0f0; text-decoration:none; font-size:0.8rem;">START PROJECT &rarr;</a></div>`,
     photoLayout: `<img src="{PHOTO_SRC}" style="width:120px; height:120px; image-rendering:pixelated; border:4px solid #fff; margin-bottom:20px;">`
-  }
+  },
 
 
   premium_3d_vanta: {
