@@ -649,6 +649,7 @@ function setProgress(id, state) { // state: 'loading' | 'done' | 'pending'
   const icon = el.querySelector('i');
   if (state === 'loading') icon.className = 'fas fa-circle-notch';
   else if (state === 'done') icon.className = 'fas fa-check-circle';
+    else if (state === 'error') { icon.className = 'fas fa-times-circle'; el.style.color = 'var(--danger)'; }
   else icon.className = 'fas fa-circle';
 }
 
@@ -663,10 +664,7 @@ async function generateAll() {
   const ctx = `Exam: ${examName}, Subject: ${subjectName}, Difficulty: ${difficulty}`;
 
   // Run all 5 in sequence to avoid overloading
-  await generateGuide(ctx);
-  await generateFlash(ctx);
-  await generateMock(ctx);
-  await generateApt(ctx);
+  await Promise.all([generateGuide(ctx), generateFlash(ctx), generateMock(ctx), generateApt(ctx)]);
 
   btn.disabled = false;
   btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
@@ -703,75 +701,22 @@ async function generateGuide(ctx) {
   setProgress('guide', 'loading');
   document.getElementById('guide-content').innerHTML = loadingHTML('Generating study guide...');
 
-  try {
-    if (!window.solmatesAPI) window.solmatesAPI = new SolmatesAPI();
-
-    // Simpler prompt that works within chatbot constraints
-    const prompt = `Create a detailed study guide for exam preparation: ${ctx}.
+  const prompt = `Create a detailed study guide for exam preparation: ${ctx}.
 Cover these sections: 1) Overview, 2) Core Concepts, 3) Key Topics, 4) Important Points, 5) Exam Tips.
-Respond in JSON format only:
-{ "sections": [{ "heading": "Overview", "content": "...", "keyPoints": ["point1","point2"] }, ...] }`;
+Respond strictly in JSON format matching this schema:
+{ "sections": [{ "heading": "Overview", "content": "...", "keyPoints": ["point1","point2"] }] }
+CRITICAL: Return ONLY valid JSON. No extra text, no markdown fences.`;
 
-    const res = await window.solmatesAPI.sendChatMessage(
-      prompt + '\n\nCRITICAL: Return ONLY valid JSON. No extra text, no markdown fences.',
-      []
-    );
+  const data = await callAI(prompt, 2);
 
-    const raw = res?.message || res?.text || '';
-
-    // Try JSON parse first
-    let data = null;
-    try {
-      const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-      const parsed = JSON.parse(cleaned);
-      if (parsed?.sections?.length) data = parsed;
-    } catch(e) { /* fallback to text */ }
-
-    if (data?.sections?.length) {
-      // Render structured JSON
-      let html = `<div class="study-guide-card">`;
-      data.sections.forEach(s => {
-        html += `<h2>${s.heading}</h2>`;
-        if (s.content) html += `<p>${s.content}</p>`;
-        if (s.keyPoints?.length) {
-          html += `<ul>${s.keyPoints.map(p => `<li>${p}</li>`).join('')}</ul>`;
-        }
-      });
-      html += `</div>`;
-      document.getElementById('guide-content').innerHTML = html;
-
-    } else if (raw && raw.length > 50) {
-      // Fallback: render raw text as formatted study guide
-      const paragraphs = raw.split(/\n\n+/).filter(p => p.trim());
-      let html = `<div class="study-guide-card">`;
-      paragraphs.forEach(p => {
-        const t = p.trim();
-        if (t.match(/^\*\*(.+)\*\*$|^#+\s/) || t.match(/^[A-Z][A-Z\s]+:?$/)) {
-          // It's a heading
-          html += `<h2>${t.replace(/^\*\*|\*\*$|^#+\s/g, '').replace(/:$/, '')}</h2>`;
-        } else if (t.startsWith('- ') || t.startsWith('• ') || t.match(/^\d+\.\s/)) {
-          // It's a list
-          const items = t.split('\n').filter(l => l.trim());
-          html += `<ul>${items.map(i => `<li>${i.replace(/^[-•\d.]\s*/, '')}</li>`).join('')}</ul>`;
-        } else {
-          html += `<p>${t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}</p>`;
-        }
-      });
-      html += `</div>`;
-      document.getElementById('guide-content').innerHTML = html;
-
-    } else {
-      document.getElementById('guide-content').innerHTML = errorHTML('guide');
-    }
-
-    genData.guide = raw;
-    document.querySelector('.tab-btn:nth-child(1)').classList.add('has-data');
+  if (data?.sections?.length) {
+    genData.guide = data;
+    document.getElementById('c-guide').textContent = data.sections.length;
+    renderGuide(data);
     setProgress('guide', 'done');
-
-  } catch(e) {
-    console.error('generateGuide error:', e);
+  } else {
     document.getElementById('guide-content').innerHTML = errorHTML('guide');
-    setProgress('guide', 'done');
+    setProgress('guide', 'error');
   }
 }
 
@@ -794,7 +739,7 @@ IMPORTANT: Do NOT output placeholder text. You must generate actual educational 
     setProgress('flash', 'done');
   } else {
     document.getElementById('flash-content').innerHTML = errorHTML('flash');
-    setProgress('flash', 'done');
+    setProgress('flash', 'error');
   }
 }
 
@@ -898,7 +843,7 @@ IMPORTANT: Do NOT output dummy text. You must generate real, challenging questio
     setProgress('mock', 'done');
   } else {
     document.getElementById('mock-content').innerHTML = errorHTML('mock');
-    setProgress('mock', 'done');
+    setProgress('mock', 'error');
   }
 }
 
@@ -1020,7 +965,7 @@ IMPORTANT: Do NOT output placeholders. Generate actual puzzle/aptitude questions
     setProgress('apt', 'done');
   } else {
     document.getElementById('apt-content').innerHTML = errorHTML('apt');
-    setProgress('apt', 'done');
+    setProgress('apt', 'error');
   }
 }
 
