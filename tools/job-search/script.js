@@ -377,7 +377,7 @@ function updateInsights(data) {
     data.forEach(j => stats[j.source] = (stats[j.source] || 0) + 1);
     const statsHtml = Object.entries(stats).map(([src, count]) => {
         const pct = Math.round((count / data.length) * 100);
-        return `<span style="background: rgba(15,28,46,0.05); padding: 4px 10px; border-radius: 6px; margin-right: 5px;">${src}: ${pct}%</span>`;
+        return `<span style="display: inline-block; background: rgba(15,28,46,0.05); padding: 4px 10px; border-radius: 6px; margin-right: 5px; margin-bottom: 5px; white-space: nowrap;">${src}: ${pct}%</span>`;
     }).join('');
     document.getElementById('platformStats').innerHTML = statsHtml;
 }
