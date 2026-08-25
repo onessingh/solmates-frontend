@@ -515,6 +515,9 @@ Output strictly in the following JSON array format, and nothing else:
     "correct": 1, 
     "explanation": "Explanation for why option index 1 is correct.",
     "hinglish_explanation": "Wahi same explanation asan Hinglish me."
+    }
+  ]
+  CRITICAL INSTRUCTION: Keep all explanations EXTREMELY concise (maximum 1-2 lines).
     "tag": "${difficulty}"
   }
 ]
@@ -523,9 +526,12 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
+            
             try {
-                let parsed = safeParseJSON(resText);
-                if (parsed.questions) parsed = parsed.questions; // Handle wrapped objects
+                let cleanText = repairIncompleteJSON(resText);
+                let parsed = safeParseJSON(cleanText);
+                if (parsed.questions) parsed = parsed.questions;
+ // Handle wrapped objects
                 generatedQuestions = parsed;
             } catch (parseErr) {
                 console.error("JSON Parse Error:", parseErr, resText.substring(0, 200));
@@ -548,6 +554,28 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
         document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format. Please try again.</p><button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
           document.getElementById('loader').style.display = 'none';
       }
+    }
+
+    
+    function repairIncompleteJSON(str) {
+        let clean = str.trim();
+        // Remove markdown blocks if any
+        clean = clean.replace(/^`{3}json/i, '').replace(/`{3}$/, '').trim();
+        
+        if (clean.endsWith(']')) return clean; // Looks complete
+        
+        // Find the last complete object
+        const lastBrace = clean.lastIndexOf('}');
+        if (lastBrace !== -1) {
+            clean = clean.substring(0, lastBrace + 1);
+            // Remove any trailing comma at the very end of the truncated string
+            clean = clean.replace(/,\s*$/, '');
+            clean += '\n]';
+        } else {
+            // If there's not even one complete object, we can't save it
+            clean += ']';
+        }
+        return clean;
     }
 
     function renderQuestions() {
