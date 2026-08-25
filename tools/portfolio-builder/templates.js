@@ -1,5 +1,219 @@
 const templates = {
 
+  premium_devfolio: {
+    name: "?? Premium DevFolio",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+      :root { --p: {COLOR}; --bg: #ffffff; --text: #111827; --gray: #6b7280; --light: #f3f4f6; }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+      
+      .nav { padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--light); }
+      .nav-logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: var(--text); }
+      .nav-links a { margin-left: 30px; text-decoration: none; color: var(--gray); font-weight: 500; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--p); }
+
+      .container { max-width: 1000px; margin: 0 auto; padding: 80px 20px; }
+      
+      .hero { text-align: center; margin-bottom: 100px; animation: slideUp 0.8s ease; }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+      .hero img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+      .hero h1 { font-size: 4.5rem; font-weight: 800; letter-spacing: -2px; margin: 0 0 20px; line-height: 1.1; }
+      .hero p { font-size: 1.3rem; color: var(--gray); max-width: 600px; margin: 0 auto 40px; }
+      
+      .btn { display: inline-block; padding: 14px 32px; background: var(--text); color: #fff; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; transition: 0.3s; }
+      .btn:hover { background: var(--p); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+      
+      .section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 40px; }
+      
+      .skills-container { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 100px; }
+      .skill-tag { padding: 12px 24px; background: var(--light); color: var(--text); border-radius: 8px; font-weight: 600; font-size: 1rem; transition: 0.2s; cursor: default; }
+      .skill-tag:hover { background: var(--p); color: #fff; transform: scale(1.05); }
+
+      .exp-grid { display: grid; gap: 30px; margin-bottom: 100px; }
+      .exp-card { padding: 40px; border: 1px solid var(--light); border-radius: 20px; transition: 0.3s; background: #fff; }
+      .exp-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.06); transform: translateY(-5px); border-color: transparent; }
+      .exp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; }
+      .exp-role { font-size: 1.4rem; font-weight: 700; margin: 0; }
+      .exp-comp { color: var(--p); font-weight: 600; font-size: 1.1rem; }
+      .exp-year { color: var(--gray); font-size: 1rem; font-weight: 500; }
+      .exp-desc { color: var(--gray); font-size: 1.1rem; margin: 0; }
+
+      .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+      .proj-card { background: var(--light); border-radius: 24px; padding: 40px; transition: 0.3s; display: flex; flex-direction: column; }
+      .proj-card:hover { background: var(--text); color: #fff; transform: translateY(-10px); }
+      .proj-card:hover .proj-desc { color: #d1d5db; }
+      .proj-card:hover .proj-link { color: #fff; }
+      .proj-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 15px; letter-spacing: -1px; }
+      .proj-desc { color: var(--gray); font-size: 1.1rem; margin-bottom: 30px; transition: 0.3s; }
+      .proj-link { margin-top: auto; align-self: flex-start; font-weight: 600; color: var(--text); text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+      .proj-link::after { content: '?'; font-size: 1.2rem; }
+
+      footer { text-align: center; padding: 60px 20px; color: var(--gray); font-weight: 500; border-top: 1px solid var(--light); margin-top: 100px; }
+
+      @media (max-width: 768px) {
+        .hero h1 { font-size: 3rem; }
+        .nav { padding: 20px; flex-direction: column; gap: 15px; }
+        .nav-links a { margin: 0 10px; }
+        .exp-header { flex-direction: column; gap: 5px; }
+      }
+    `,
+    htmlLayout: `
+      <div class="nav">
+        <div class="nav-logo">{NAME}.</div>
+        <div class="nav-links">
+          <a href="mailto:{EMAIL}">Email</a>
+          <a href="{LINKEDIN}" target="_blank">LinkedIn</a>
+          <a href="{GITHUB}" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="hero">
+          {PHOTO}
+          <h1>Hi, I'm {NAME}</h1>
+          <p>{TITLE}</p>
+          <p style="margin-top: -20px;">{ABOUT}</p>
+          <a href="mailto:{EMAIL}" class="btn">Let's Work Together</a>
+        </div>
+
+        <h2 class="section-title">My Toolkit</h2>
+        <div class="skills-container">{SKILLS}</div>
+
+        <h2 class="section-title">Experience</h2>
+        <div class="exp-grid">{EXPERIENCE}</div>
+
+        <h2 class="section-title">Selected Works</h2>
+        <div class="proj-grid">{PROJECTS}</div>
+      </div>
+
+      <footer>
+        <p>&copy; 2026 {NAME}. Designed with minimalism.</p>
+      </footer>
+    `,
+    skillLayout: `<div class="skill-tag">{SKILL}</div>`,
+    expLayout: `<div class="exp-card">
+      <div class="exp-header">
+        <div><h3 class="exp-role">{ROLE}</h3><span class="exp-comp">{COMPANY}</span></div>
+        <span class="exp-year">{YEAR}</span>
+      </div>
+      <p class="exp-desc">{DESC}</p>
+    </div>`,
+    projLayout: `<div class="proj-card">
+      <h3 class="proj-title">{TITLE}</h3>
+      <p class="proj-desc">{DESC}</p>
+      <a href="{LINK}" class="proj-link">View Live</a>
+    </div>`,
+    photoLayout: `<img src="{PHOTO_SRC}">`
+  },
+
+
+  premium_3d_glass: {
+    name: "?? Premium 3D Glass",
+    isAdvanced: true,
+    css: `
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+      :root { --p: {COLOR}; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; padding: 0; font-family: 'Outfit', sans-serif;
+        background: radial-gradient(circle at top left, #1a1a2e, #0f0f1a);
+        color: #fff; min-height: 100vh; overflow-x: hidden;
+      }
+      .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; animation: float 10s infinite ease-in-out alternate; }
+      .orb-1 { width: 400px; height: 400px; background: var(--p); top: -100px; left: -100px; opacity: 0.4; }
+      .orb-2 { width: 500px; height: 500px; background: #6366f1; bottom: -200px; right: -100px; opacity: 0.2; animation-delay: -5s; }
+      @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 80px); } }
+
+      .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; position: relative; z-index: 1; }
+      
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-radius: 24px;
+        padding: 50px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
+      }
+      .hero { display: flex; align-items: center; gap: 50px; margin-bottom: 50px; }
+      .hero:hover { transform: perspective(1000px) rotateY(-2deg) rotateX(2deg); border-color: rgba(255,255,255,0.2); }
+      .hero img { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+      
+      h1 { font-size: 4rem; margin: 0 0 10px 0; font-weight: 900; background: linear-gradient(135deg, #fff, var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .title { font-size: 1.4rem; color: #a1a1aa; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; }
+
+      .social { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; }
+      .social a { display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; border-radius: 14px; font-weight: 500; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+      .social a:hover { background: var(--p); transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); border-color: var(--p); }
+
+      h2 { font-size: 2.2rem; margin-top: 0; margin-bottom: 40px; display: flex; align-items: center; gap: 20px; font-weight: 700; }
+      h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent); }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px; }
+      .grid .glass-card { padding: 40px; height: 100%; display: flex; flex-direction: column; }
+      .grid .glass-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(255,255,255,0.2); }
+
+      .tag { background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 20px; font-size: 1rem; display: inline-block; margin: 0 12px 12px 0; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+      .tag:hover { background: var(--p); border-color: var(--p); transform: translateY(-3px); }
+
+      .exp-item { margin-bottom: 40px; position: relative; padding-left: 40px; border-left: 2px solid rgba(255,255,255,0.1); }
+      .exp-item::before { content: ''; position: absolute; left: -8px; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--p); box-shadow: 0 0 15px var(--p); }
+      .exp-role { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 0 0 8px; }
+      .exp-comp { color: var(--p); font-size: 1.2rem; font-weight: 500; margin: 0 0 12px; }
+      .exp-year { font-size: 0.95rem; color: #a1a1aa; margin-bottom: 15px; display: inline-block; padding: 6px 14px; background: rgba(0,0,0,0.4); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+
+      .proj-link { margin-top: auto; align-self: flex-start; display: inline-block; color: #fff; text-decoration: none; padding: 12px 28px; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); font-weight: 500; transition: all 0.3s; }
+      .proj-link:hover { background: var(--p); border-color: var(--p); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+      @media (max-width: 768px) {
+        .hero { flex-direction: column; text-align: center; gap: 30px; padding: 30px 20px; }
+        h1 { font-size: 2.8rem; }
+        .social { justify-content: center; }
+        .hero img { width: 160px; height: 160px; }
+      }
+    `,
+    htmlLayout: `
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="container">
+        <div class="glass-card hero">
+          {PHOTO}
+          <div>
+            <h1>{NAME}</h1>
+            <div class="title">{TITLE}</div>
+            <p style="color: #a1a1aa; line-height: 1.8; margin-top: 25px; font-size: 1.15rem;">{ABOUT}</p>
+            <div class="social">
+              <a href="mailto:{EMAIL}">Email Me</a>
+              <a href="{LINKEDIN}" target="_blank">LinkedIn</a>
+              <a href="{GITHUB}" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="margin-bottom: 50px;">
+          <h2>Skills & Arsenal</h2>
+          <div>{SKILLS}</div>
+        </div>
+
+        <div class="glass-card" style="margin-bottom: 50px;">
+          <h2>Journey & Experience</h2>
+          <div style="margin-top: 40px;">{EXPERIENCE}</div>
+        </div>
+
+        <h2>Featured Projects</h2>
+        <div class="grid">{PROJECTS}</div>
+      </div>
+    `,
+    skillLayout: `<span class="tag">{SKILL}</span>`,
+    expLayout: `<div class="exp-item"><p class="exp-role">{ROLE}</p><p class="exp-comp">{COMPANY}</p><p class="exp-year">{YEAR}</p><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem;">{DESC}</p></div>`,
+    projLayout: `<div class="glass-card"><h3 style="font-size: 1.6rem; margin-top:0;">{TITLE}</h3><p style="color: #a1a1aa; line-height: 1.7; font-size: 1.05rem; margin-bottom: 30px;">{DESC}</p><a href="{LINK}" class="proj-link">Launch Project &rarr;</a></div>`,
+    photoLayout: `<img src="{PHOTO_SRC}">`
+  },
+
+
   advanced_terminal: {
     name: "Terminal Hacker (Advanced HTML)",
     isAdvanced: true,
