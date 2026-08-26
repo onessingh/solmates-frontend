@@ -442,6 +442,9 @@
     function safeParseJSON(text) {
         if (!text) throw new Error("Empty response");
         let attempt = text.trim();
+        attempt = attempt.replace(/```json/gi, '').replace(/```/g, '').trim();
+        // Prevent unescaped newline crashes inside JSON
+        attempt = attempt.replace(/[\n\r\t]+/g, ' ');
         const start = attempt.indexOf('[');
         const end = attempt.lastIndexOf(']');
         const startObj = attempt.indexOf('{');
@@ -529,7 +532,8 @@
       while (retries >= 0 && !success) {
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
-            const prompt = ctxPrompt + `Generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}. All questions and answers MUST be in ${language}.
+            const prompt = ctxPrompt + `Generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}.
+CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. However, the JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English. Do not translate the JSON keys.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
 Output strictly in JSON format as an array of sections:
 [
