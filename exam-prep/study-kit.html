@@ -664,10 +664,10 @@ async function generateAll() {
   const ctx = `Exam: ${examName}, Subject: ${subjectName}, Difficulty: ${difficulty}`;
 
   // Run in sequence to avoid hitting AI Rate Limits (429) and to show progress one-by-one
-  await generateGuide(ctx);
-  await generateFlash(ctx);
-  await generateMock(ctx);
-  await generateApt(ctx);
+  try { await generateGuide(ctx); } catch(e) { console.error('Guide fail:', e); }
+  try { await generateFlash(ctx); } catch(e) { console.error('Flash fail:', e); }
+  try { await generateMock(ctx); } catch(e) { console.error('Mock fail:', e); }
+  try { await generateApt(ctx); } catch(e) { console.error('Apt fail:', e); }
 
   btn.disabled = false;
   btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
@@ -744,6 +744,28 @@ IMPORTANT: Do NOT output placeholder text. You must generate actual educational 
     document.getElementById('flash-content').innerHTML = errorHTML('flash');
     setProgress('flash', 'error');
   }
+}
+
+
+function renderGuide(data) {
+  if (!data || !data.sections) return;
+  const html = data.sections.map((sec) => `
+    <div style="background:var(--surface); padding:20px; border-radius:12px; margin-bottom:20px; box-shadow:var(--shadow-sm);">
+      <h3 style="color:var(--text); margin-bottom:12px; border-bottom:2px solid var(--brand); padding-bottom:8px; display:inline-block;">
+        <i class="fas fa-bookmark" style="color:var(--brand); margin-right:8px;"></i>${sec.heading}
+      </h3>
+      <p style="color:var(--text-light); line-height:1.7; margin-bottom:15px;">${sec.content}</p>
+      ${sec.keyPoints && sec.keyPoints.length ? `
+        <div style="background:rgba(79, 70, 229, 0.05); padding:15px; border-radius:8px; border-left:3px solid var(--brand);">
+          <h4 style="margin-bottom:10px; font-size:0.9rem; color:var(--text);">Key Takeaways:</h4>
+          <ul style="list-style:none; padding:0; margin:0;">
+            ${sec.keyPoints.map(p => `<li style="margin-bottom:8px; color:var(--text-light);"><i class="fas fa-check" style="color:var(--brand); margin-right:8px;"></i>${p}</li>`).join('')}
+          </ul>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+  document.getElementById('guide-content').innerHTML = html;
 }
 
 function renderFlashcards(cards) {
