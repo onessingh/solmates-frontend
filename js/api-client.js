@@ -798,16 +798,17 @@ class SolmatesAPI {
     return await this.request('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify({
-        subscription,
-        deviceId,
-        semesters: Array.isArray(semesters) ? semesters : [semesters],
-        metadata: {
-          isApp,
-          appSource,
-          platform: navigator.platform,
-          userAgent: navigator.userAgent
-        }
-      })
+          subscription,
+          fcmToken: localStorage.getItem('solmates_fcm_token') || null,
+          deviceId,
+          semesters: Array.isArray(semesters) ? semesters : [semesters],
+          metadata: {
+            isApp,
+            appSource,
+            platform: navigator.platform,
+            userAgent: navigator.userAgent
+          }
+        })
     });
   }
 
@@ -845,11 +846,12 @@ class SolmatesAPI {
       await this.request('/notifications/subscribe', {
         method: 'POST',
         body: JSON.stringify({
-          subscription,
-          deviceId,
-          semesters: Array.isArray(semesters) ? semesters : [semesters],
-          metadata: { isApp, appSource: appSource + '-silent', platform: navigator.platform, userAgent: navigator.userAgent }
-        })
+            subscription,
+            fcmToken: localStorage.getItem('solmates_fcm_token') || null,
+            deviceId,
+            semesters: Array.isArray(semesters) ? semesters : [semesters],
+            metadata: { isApp, appSource: appSource + '-silent', platform: navigator.platform, userAgent: navigator.userAgent }
+          })
       });
     } catch (error) {
       console.warn('Silent push sync failed:', error);
