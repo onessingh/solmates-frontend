@@ -326,7 +326,7 @@
       <div class="input-card">
         <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-sliders-h"></i> Paper Specification</h3>
         
-        <div class="grid-2">
+        <div class="grid-3">
           <div class="form-group">
             <label>Exam / Board</label>
             <input type="text" id="exam" class="form-control" placeholder="e.g. CBSE Class 12, UPSC, CAT" value="CBSE Class 12">
@@ -372,6 +372,14 @@
               <option value="Mixed">Mixed (MCQ, Short, Long)</option>
               <option value="MCQ Only">Objective / MCQ Only</option>
               <option value="Subjective Only">Subjective Only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Language</label>
+            <select id="language" class="form-control">
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Hinglish">Hinglish</option>
             </select>
           </div>
         </div>
@@ -504,6 +512,7 @@
       const pattern = document.getElementById('pattern').value;
       const topic = document.getElementById('unit').value || 'Syllabus';
       const difficulty = document.getElementById('difficulty').value;
+      const language = document.getElementById('language') ? document.getElementById('language').value : 'English';
       
       document.getElementById('loader').style.display = 'flex';
       
@@ -520,7 +529,7 @@
       while (retries >= 0 && !success) {
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
-            const prompt = ctxPrompt + `Generate a question paper for ${exam}, Subject: ${subject}, Topic: ${topic}.
+            const prompt = ctxPrompt + `Generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}. All questions and answers MUST be in ${language}.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
 Output strictly in JSON format as an array of sections:
 [
