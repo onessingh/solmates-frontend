@@ -124,7 +124,37 @@
 
   
 
-    /* Dark Mode Native OS Integration */
+        /* AI Generate Form & Modal Styles */
+    .action-buttons-row {
+      display: flex; 
+      gap: 10px;
+    }
+    @media (max-width: 480px) {
+      .action-buttons-row {
+        flex-direction: column;
+      }
+    }
+    .btn-ai-generate {
+      flex: 1;
+      background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%);
+      border: 2px solid #a855f7;
+      color: #7e22ce;
+      font-weight: 700;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      padding: 12px;
+    }
+    .btn-ai-generate:hover {
+      background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.2) 100%);
+      transform: translateY(-1px);
+    }
+/* Dark Mode Native OS Integration */
     
     </style>
 
@@ -318,9 +348,9 @@
           <label>Back (Answer / Explanation)</label>
           <textarea id="card-back" class="form-control" rows="3" placeholder="e.g. Mitochondria. It generates most of the chemical energy needed..."></textarea>
         </div>
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-main" onclick="addCard()" style="flex: 1;">Add to Deck</button>
-          <button onclick="generateWithAI()" style="flex: 1; background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%); border: 2px solid #a855f7; color: #7e22ce; font-weight: 700; border-radius: 8px; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.2) 100%)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)'; this.style.transform='translateY(0)';">
+        <div class="action-buttons-row">
+          <button class="btn-main" onclick="addCard()" style="flex: 1; padding: 12px;">Add to Deck</button>
+          <button class="btn-ai-generate" onclick="generateWithAI()">
             <i class="fas fa-magic"></i> Generate with AI
           </button>
         </div>
@@ -646,28 +676,26 @@ IMPORTANT: Do NOT output placeholder text. Generate real educational content.`;
   </script>
 
 <!-- AI Generate Modal -->
-<div id="aiModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
-  <div style="background:white; padding:30px; border-radius:16px; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+<div id="aiModal" class="ai-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
+  <div class="card" style="padding:30px; border-radius:16px; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
     <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.2rem; display:flex; align-items:center; gap:10px;">
       <i class="fas fa-magic" style="color:var(--accent);"></i> Generate with AI
     </h3>
     <div style="margin-bottom: 20px;">
         <label style="display:block; margin-bottom:8px; font-size:0.9rem; font-weight:600; color:var(--text);">What do you want to learn?</label>
-        <input type="text" id="aiTopic" placeholder="e.g. UGC NET -> Management -> Marketing" style="width:100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size:1rem; outline:none; transition:0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#e2e8f0'">
+        <input type="text" id="aiTopic" class="form-control" placeholder="e.g. UGC NET -> Management -> Marketing" style="width:100%; padding: 12px; border-radius: 8px; font-size:1rem; outline:none; transition:0.2s;">
     </div>
     <div style="margin-bottom: 25px;">
         <label style="display:block; margin-bottom:8px; font-size:0.9rem; font-weight:600; color:var(--text);">Number of Flashcards</label>
-        <input type="number" id="aiCount" value="5" min="1" max="20" style="width:100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size:1rem; outline:none; transition:0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#e2e8f0'">
+        <input type="number" id="aiCount" class="form-control" value="5" min="1" max="20" style="width:100%; padding: 12px; border-radius: 8px; font-size:1rem; outline:none; transition:0.2s;">
     </div>
     <div style="display: flex; gap: 12px; justify-content: flex-end;">
-      <button onclick="document.getElementById('aiModal').style.display='none'" style="padding: 10px 20px; background: #f1f5f9; color:#475569; border: none; border-radius: 8px; cursor: pointer; font-weight:600;">Cancel</button>
+      <button onclick="document.getElementById('aiModal').style.display='none'" style="padding: 10px 20px; background: var(--bg); color:var(--text); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight:600;">Cancel</button>
       <button onclick="submitAIModal()" style="padding: 10px 20px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight:600; display:flex; align-items:center; gap:8px;">
         <i class="fas fa-bolt"></i> Generate
       </button>
     </div>
   </div>
 </div>
-
 </body>
 </html>
-
