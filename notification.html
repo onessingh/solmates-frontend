@@ -1222,30 +1222,6 @@
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
-
-<script>
-// --- STRICT ANTI-SCRAPING MODULE ---
-(function() {
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function(e) {
-        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) return false;
-    };
-    setInterval(function() {
-        let devtoolsOpen = false;
-        const threshold = 160;
-        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) devtoolsOpen = true;
-        const start = performance.now();
-        debugger;
-        if (performance.now() - start > 100) devtoolsOpen = true;
-        if (devtoolsOpen) {
-            document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%;'>Security Violation: Access Denied.</h1>";
-            document.head.innerHTML = "";
-            window.location.replace("about:blank");
-        }
-    }, 1000);
-})();
-</script>
-
 </head>
 
 <body>
@@ -2636,7 +2612,7 @@
     }
 
     /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
-    function updateNotifyUI() {
+        function updateNotifyUI() {
       const btn = document.getElementById('notifyToggleBtn');
       if (!btn) return;
 
@@ -2646,7 +2622,6 @@
       const text = btn.querySelector('span');
       const icon = btn.querySelector('i');
 
-      // Native App Override: If we have FCM token, it's natively allowed.
       if (hasNativeFCM && localEnabled) {
         btn.className = 'notify-status-btn granted';
         if (text) text.innerText = 'App Notifications Active';
@@ -2654,14 +2629,13 @@
         closeRepairGuide();
         return;
       } else if (hasNativeFCM && !localEnabled) {
-        btn.className = 'notify-status-btn default';
-        if (text) text.innerText = 'Turn On App Notifications';
+        btn.className = 'notify-status-btn';
+        if (text) text.innerText = 'Allow Notifications (App)';
         icon.className = 'fas fa-bell';
         closeRepairGuide();
         return;
       }
 
-      // Web Fallback
       if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') {
         btn.style.display = 'none';
         return;
@@ -2669,12 +2643,7 @@
 
       if (perm === 'granted' && localEnabled) {
         btn.className = 'notify-status-btn granted';
-        if (text) text.innerText = 'Notifications Active';
-        icon.className = 'fas fa-check-circle';
-        closeRepairGuide();
-      } else if (perm === 'granted' && !localEnabled) {
-        btn.className = 'notify-status-btn default';
-        if (text) text.innerText = 'Allow Notifications';
+        if (text) text.innerText = 'Deny Notifications';
         icon.className = 'fas fa-bell';
         closeRepairGuide();
       } else if (perm === 'denied') {
@@ -2682,64 +2651,238 @@
         if (text) text.innerText = 'Notifications Blocked';
         icon.className = 'fas fa-bell-slash';
       } else {
-        btn.className = 'notify-status-btn default';
+        btn.className = 'notify-status-btn';
         if (text) text.innerText = 'Allow Notifications';
         icon.className = 'fas fa-bell';
-        closeRepairGuide();
+        checkSoftPromptAvailability();
       }
     }
 
-    async function handleNotifyToggle() {
+    function checkSoftPromptAvailability() {
+      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
+      const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
+      const now = Date.now();
+      if (Notification.permission === 'default' && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
+        setTimeout(() => {
+          const banner = document.getElementById('soft-prompt-banner');
+          if (banner) banner.classList.add('active');
+        }, 3000);
+      }
+    }
+
+    function dismissSoftPrompt() {
+      localStorage.setItem('sol_soft_prompt_dismissed', Date.now().toString());
+      const banner = document.getElementById('soft-prompt-banner');
+      if (banner) banner.classList.remove('active');
+    }
+
+    async function acceptSoftPrompt() {
+      dismissSoftPrompt();
+      handleNotifyToggle();
+    }
+
+    function showRepairGuide() {
+      const overlay = document.getElementById('repair-guide-overlay');
+      const stepsContainer = document.getElementById('repair-steps-container');
+      const subtitle = document.getElementById('repair-subtitle');
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const isAPK = typeof window.isMedianApp === 'function' && window.isMedianApp();
+      
+      if (isAPK) {
+        subtitle.innerText = "SOLMATES App (APK) mein notifications setup sahi nahi hai. Ise sahi karne ke liye:";
+        stepsContainer.innerHTML = `
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>System Settings</b><span>Niche diye gaye button par click karke direct settings kholien.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Allow All</b><span>'Notifications' mein jaakar saare toggles (Show notifications, Pop on screen) ON kar dein.</span></div></div>
+          <button onclick="window.openNativeSettings()" style="margin-top:15px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
+        `;
+      } else if (isStandalone) {
+        subtitle.innerText = "Ye App (Home Screen) par band hain. Ise chalu karne ke liye:";
+        stepsContainer.innerHTML = `
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>SOLMATES App Icon</b><span>Phone ki home screen par SOLMATES icon ko long-press karein.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>App Info</b><span>"App Info" (i icon) mein jayein.</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Enable Notifications</b><span>"Notifications" mein jaakar saare toggles ON kar dein.</span></div></div>`;
+      } else {
+        subtitle.innerText = "Chrome settings mein notifications band hain. Ise chalu karne ke liye:";
+        stepsContainer.innerHTML = `
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Settings Circle</b><span>Address bar mein 'Lock' ya 'Settings' icon par click karein.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications/Site Settings' par jayein.</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow</b><span>Wahan toggle ON kar dein aur page reload karein.</span></div></div>`;
+      }
+      overlay.classList.add('active');
+    }
+
+    function closeRepairGuide() {
+      const overlay = document.getElementById('repair-guide-overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+        async function handleNotifyToggle() {
       const hasNativeFCM = !!localStorage.getItem('sol_fcm_token');
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       
-      // Native App Toggle Logic
       if (hasNativeFCM) {
-        if (localEnabled) {
-          localStorage.setItem('sol_notif_enabled', 'false');
-        } else {
-          localStorage.setItem('sol_notif_enabled', 'true');
-          const pushSelected = Array.from(document.querySelectorAll('.semester-chip.selected')).map(c => c.dataset.val);
-          if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
-              await window.solmatesAPI.subscribeToPush(pushSelected);
+          if (localEnabled) {
+              if (confirm("Stop receiving notifications on this device?")) {
+                  localStorage.setItem('sol_notif_enabled', 'false');
+                  updateNotifyUI();
+              }
+          } else {
+              openSemSelectionModal();
           }
-        }
-        updateNotifyUI();
-        return;
+          return;
       }
 
-      // Web Toggle Logic
       if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
       const perm = Notification.permission;
       if (perm === 'denied') { showRepairGuide(); return; }
       const btn = document.getElementById('notifyToggleBtn');
       
-      if (perm === 'granted') {
-        if (localEnabled) {
-          localStorage.setItem('sol_notif_enabled', 'false');
-        } else {
-          localStorage.setItem('sol_notif_enabled', 'true');
-          const pushSelected = Array.from(document.querySelectorAll('.semester-chip.selected')).map(c => c.dataset.val);
-          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Activating...</span>';
-          if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
-            await window.solmatesAPI.subscribeToPush(pushSelected);
-          }
+      if (perm === 'granted' && localEnabled) {
+        if (confirm("Stop receiving notifications on this device?")) {
+           try {
+             if (window.solmatesAPI && window.solmatesAPI.unsubscribeFromPush) {
+               await window.solmatesAPI.unsubscribeFromPush();
+             } else {
+               const registration = await navigator.serviceWorker.ready;
+               const sub = await registration.pushManager.getSubscription();
+               if (sub) await sub.unsubscribe();
+             }
+             localStorage.setItem('sol_notif_enabled', 'false');
+             updateNotifyUI();
+           } catch (e) { updateNotifyUI(); }
         }
-        updateNotifyUI();
-      } else if (perm === 'default') {
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Requesting...</span>';
-        const newPerm = await Notification.requestPermission();
-        if (newPerm === 'granted') {
-          localStorage.setItem('sol_notif_enabled', 'true');
-          const pushSelected = Array.from(document.querySelectorAll('.semester-chip.selected')).map(c => c.dataset.val);
-          if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
-            await window.solmatesAPI.subscribeToPush(pushSelected);
-          }
-        } else if (newPerm === 'denied') {
-          showRepairGuide();
+      } else {
+        if (perm !== 'granted') {
+          if (!confirm("Receive instant alerts for live classes and MBA notifications on this device?")) return;
+          const status = await Notification.requestPermission();
+          if (status !== 'granted') { updateNotifyUI(); return; }
         }
-        updateNotifyUI();
+        openSemSelectionModal();
       }
+    }
+
+    // ========== SEMESTER SELECTION LOGIC (v88.7) ==========
+    function openSemSelectionModal() {
+      const modal = document.getElementById('semSelectionModal');
+      modal.style.display = 'flex';
+      
+      // Load current selection from localStorage
+      const saved = localStorage.getItem('sol_subscribed_sems');
+      const sems = saved ? JSON.parse(saved) : ['all'];
+      
+      const checks = document.querySelectorAll('.sem-sub-check');
+      const allCheck = document.getElementById('sem_all');
+      
+      allCheck.checked = sems.includes('all');
+      checks.forEach(c => {
+        c.checked = sems.includes('all') || sems.includes(c.value);
+        c.disabled = allCheck.checked;
+      });
+    }
+
+    function closeSemSelectionModal() {
+      document.getElementById('semSelectionModal').style.display = 'none';
+    }
+
+    function toggleAllSemCheckboxes(checked) {
+      const checks = document.querySelectorAll('.sem-sub-check');
+      checks.forEach(c => {
+        c.checked = checked;
+        c.disabled = checked;
+      });
+    }
+
+    async function confirmSemSelection() {
+      const btn = document.getElementById('confirmSemSubBtn');
+      const allCheck = document.getElementById('sem_all');
+      const checks = document.querySelectorAll('.sem-sub-check');
+      
+      let uiSelected = [];
+      let pushSelected = [];
+      
+      if (allCheck.checked) {
+        uiSelected = ['all'];
+        pushSelected = ['all', '0', '1', '2', '3', '4'];
+      } else {
+        uiSelected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+        pushSelected = [...uiSelected];
+        // Ensure users always receive global and general announcements
+        if (!pushSelected.includes('0')) pushSelected.push('0');
+        // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
+      }
+
+      if (uiSelected.length === 0) {
+        alert('Please select at least one semester!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Subscribing...';
+
+      try {
+        await window.solmatesAPI.subscribeToPush(pushSelected);
+        
+        // [v104.5] App Bridge Sync
+        if (typeof window.syncNativePushTags === 'function') {
+           window.syncNativePushTags(pushSelected);
+        }
+
+        localStorage.setItem('sol_notif_enabled', 'true');
+        localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
+        closeSemSelectionModal();
+        updateNotifyUI();
+        alert('Notification settings updated successfully! ??');
+      } catch (err) {
+        console.error('Subscription error:', err);
+        alert('Subscription failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Confirm Subscription';
+      }
+    }
+
+    window.addEventListener('focus', updateNotifyUI);
+
+    async function initPushUI() {
+      updateNotifyUI(); 
+      if (window.isWebView && window.isWebView()) {
+        console.log('[PUSH] WebView detected. Skipping browser push registration; using native bridge.');
+        return;
+      }
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+      try {
+        const swUrl = './sw.js?v=87';
+        const registration = await navigator.serviceWorker.register(swUrl);
+        
+        // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
+        const _pageOpenTime = Date.now();
+        let _swRefreshed = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (_swRefreshed) return;
+          _swRefreshed = true;
+          if (Date.now() - _pageOpenTime > 30000) {
+            window.location.reload();
+          }
+        });
+
+        await navigator.serviceWorker.ready;
+        
+        // Auto-heal push subscriptions
+        if (localStorage.getItem('sol_notif_enabled') === 'true') {
+           if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
+              const lastSync = localStorage.getItem('sol_push_last_sync_autoheal');
+              const now = Date.now();
+              if (!lastSync || now - parseInt(lastSync) > 86400000) {
+                 let semArr = ['all'];
+                 try { semArr = JSON.parse(localStorage.getItem('sol_subscribed_sems')) || ['all']; } catch(e){}
+                 window.solmatesAPI.subscribeToPush(semArr).catch(e => console.warn('Auto-heal failed', e));
+                 localStorage.setItem('sol_push_last_sync_autoheal', now.toString());
+              }
+           }
+        }
+
+        if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) updateNotifyUI();
+      } catch (err) { }
     }
 
     document.addEventListener('DOMContentLoaded', initPushUI);
