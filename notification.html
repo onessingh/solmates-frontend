@@ -2179,7 +2179,10 @@
       if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'block';
       if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
       if (addFab) addFab.style.display = isLoggedIn ? 'flex' : 'none';
-      if (bulkActions) bulkActions.style.display = isLoggedIn ? 'block' : 'none';
+      if (bulkActions) {
+        bulkActions.style.display = isLoggedIn ? 'block' : 'none';
+        bulkActions.style.pointerEvents = isLoggedIn ? 'auto' : 'none';
+      }
 
       document.querySelectorAll('.admin-only').forEach(el => {
         el.style.display = isLoggedIn ? 'block' : (el.classList.contains('flex') ? 'flex' : 'block');
@@ -2914,7 +2917,7 @@
     <i class="fas fa-plus"></i>
   </button>
 
-  <div id="admin-bulk-actions" style="display:none; position:fixed; bottom:0; left:0; width:100%; background:white; padding:15px; box-shadow:0 -10px 25px rgba(0,0,0,0.1); z-index:900; border-top:1px solid #eee;">
+  <div id="admin-bulk-actions" style="display:none; pointer-events:none; position:fixed; bottom:0; left:0; width:100%; background:white; padding:15px; box-shadow:0 -10px 25px rgba(0,0,0,0.1); z-index:900; border-top:1px solid #eee;">
     <div style="max-width:850px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;">
       <span style="font-size:14px; font-weight:600;"><i class="fas fa-check-square"></i> Bulk Selection Active</span>
       <div style="display:flex; gap:10px;">
