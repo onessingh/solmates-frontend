@@ -456,16 +456,27 @@
       `).reverse().join('');
     }
 
-    async function generateWithAI() {
-      const topic = prompt("Enter topic (e.g. UGC NET -> Management -> Marketing -> Consumer Behaviour)");
-      if(!topic) return;
+    function generateWithAI() {
+      document.getElementById('aiTopic').value = '';
+      document.getElementById('aiCount').value = '5';
+      document.getElementById('aiModal').style.display = 'flex';
+    }
+
+    async function submitAIModal() {
+      const topic = document.getElementById('aiTopic').value.trim();
+      const count = parseInt(document.getElementById('aiCount').value) || 5;
       
-      const countStr = prompt("How many cards to generate? (e.g. 5, 10, 20)", "5");
-      const count = parseInt(countStr) || 5;
+      if(!topic) {
+        alert("Please enter a topic.");
+        return;
+      }
       
-      const prevText = document.querySelector('button[onclick="generateWithAI()"]').innerHTML;
-      document.querySelector('button[onclick="generateWithAI()"]').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating...`;
-      document.querySelector('button[onclick="generateWithAI()"]').disabled = true;
+      document.getElementById('aiModal').style.display = 'none';
+
+      const aiBtn = document.querySelector('button[onclick="generateWithAI()"]');
+      const prevText = aiBtn.innerHTML;
+      aiBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating...`;
+      aiBtn.disabled = true;
       
       try {
         const promptText = `Generate exactly ${count} flashcards for the topic: "${topic}".
