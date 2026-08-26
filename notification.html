@@ -163,7 +163,7 @@
     /* ========== Main Content ========== */
     .container {
       max-width: 850px;
-      margin: 100px auto 180px;
+      margin: 100px auto 40px;
       padding: 0 24px;
     }
 
@@ -572,6 +572,7 @@
     .notification-list {
       display: none;
       animation: fadeIn 0.4s ease;
+      padding-bottom: 60px;
     }
 
     .notification-list.active {
@@ -1930,7 +1931,7 @@
                   </div>
               </div>
             </div>`;
-        }).join('') + '<div style="height: 120px; width: 100%; pointer-events: none;"></div>';
+        }).join('');
         updateAuthUI();
 
         // v104.8: IMMEDIATELY mark as seen for Home Page badge sync
