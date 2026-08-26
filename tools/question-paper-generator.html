@@ -586,16 +586,26 @@ Note: Set "options" to null or an empty array if the question is subjective. For
 
     function renderPaper(sections) {
         if (!Array.isArray(sections)) {
-            let found = null;
-            if (typeof sections === 'object' && sections !== null) {
-                for (let k in sections) {
-                    if (Array.isArray(sections[k])) { found = sections[k]; break; }
+            function findArray(obj) {
+                if (Array.isArray(obj)) return obj;
+                if (typeof obj === 'object' && obj !== null) {
+                    for (let k in obj) {
+                        let res = findArray(obj[k]);
+                        if (res) return res;
+                    }
                 }
+                return null;
             }
+            let found = findArray(sections);
             if (found) sections = found;
-            else sections = [];
+            else throw new Error("Could not find sections array in AI response");
         }
-      let pBody = '';
+      
+        if (sections.length > 0 && !sections[0].sectionTitle && sections[0].text) {
+            // The AI returned an array of questions directly instead of sections. Wrap it.
+            sections = [{ sectionTitle: "SECTION A", questions: sections }];
+        }
+        let pBody = '';
       let kBody = '';
 
       sections.forEach(sec => {
