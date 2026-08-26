@@ -296,7 +296,7 @@
         </div>
         <div style="display: flex; gap: 10px;">
           <button class="btn-main" onclick="addCard()" style="flex: 1;">Add to Deck</button>
-          <button class="btn-secondary" onclick="generateWithAI()" style="flex: 1; border: 1px solid var(--accent); color: var(--accent); display: flex; justify-content: center; align-items: center; gap: 8px;">
+          <button onclick="generateWithAI()" style="flex: 1; background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%); border: 2px solid #a855f7; color: #7e22ce; font-weight: 700; border-radius: 8px; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.2) 100%)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)'; this.style.transform='translateY(0)';">
             <i class="fas fa-magic"></i> Generate with AI
           </button>
         </div>
