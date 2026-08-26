@@ -803,37 +803,44 @@
     <script>
         lucide.createIcons();
 
-        // Extended Profanity Filter
-        const badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father'];
-        
-        function containsProfanity(text) {
-            // Normalize leetspeak (e.g. ch0du -> chodu, sh1t -> shit)
-            let lowerText = text.toLowerCase()
-                .replace(/0/g, 'o')
-                .replace(/1/g, 'i')
-                .replace(/3/g, 'e')
-                .replace(/4/g, 'a')
-                .replace(/5/g, 's')
-                .replace(/@/g, 'a')
-                .replace(/\$/g, 's')
-                .replace(/!/g, 'i')
-                .replace(/[^a-z]/g, ''); // Remove all other non-alphabet chars for checking (prevents c-h-o-d)
+        // Extended Profanity Filter (Hindi + English)
+        const badWords = [
+            'fuck', 'shit', 'bitch', 'asshole', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt',
+            'bastard', 'fucker', 'motherfucker', 'suck', 'xxx', 'xnxx', 'nude', 'naked', 'boobs', 'tits', 'booty',
+            'chut', 'choot', 'chuut', 'chutiya', 'chutiye', 'chutya',
+            'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi',
+            'randi', 'raand', 'gandu', 'gand', 'gaand',
+            'jhant', 'jhantu', 'jhaant',
+            'lund', 'lauda', 'lawda', 'lodu', 'loda', 'land',
+            'chod', 'chodu',
+            'muth', 'mutth', 'mutthal', 'muthal', 'muthiya',
+            'tatte', 'tatta', 'tatay',
+            'kutta', 'kutiya', 'kuttiya', 'kutti',
+            'kamina', 'harami', 'bhadwa', 'bhadwe', 'bhadwi',
+            'hijra', 'chhakka', 'bc', 'mc'
+        ];
 
-            return badWords.some(word => {
-                // Since we removed non-alphabets, boundary \b won't work perfectly on the cleaned string 
-                // if it's connected, but we can just check if it includes the word.
-                // For very short words like bc/mc, we still want to avoid false positives.
+        function containsProfanity(text) {
+            if (!text) return false;
+            let lowerText = text.toLowerCase()
+                .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e')
+                .replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a')
+                .replace(/\$/g, 's').replace(/!/g, 'i').replace(/[^a-z]/g, '');
+
+            for (let word of badWords) {
+                if (!lowerText.includes(word)) continue;
+                if (word === 'chut' && (lowerText.includes('chutney') || lowerText.includes('parachute'))) continue;
+                if (word === 'land' && lowerText.length > 6) continue;
                 if (word.length <= 3) {
-                    // Check original text for boundary matches to avoid flagging "abc" as "bc"
                     const origClean = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
-                    return new RegExp(`\\b${word}\\b`).test(origClean);
+                    if (!new RegExp(`\\b${word}\\b`).test(origClean)) continue;
                 }
-                return lowerText.includes(word);
-            });
+                return true;
+            }
+            return false;
         }
 
         function hasInvalidChars(text) {
-            // Block specific special chars or if there are 2 or more 'x's (case-insensitive)
             return /[\*\#\$\!\^\%\~\@\?\&]/.test(text) || (text.match(/x/gi) || []).length >= 2;
         }
 
