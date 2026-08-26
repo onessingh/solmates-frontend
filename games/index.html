@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/global-lockdown.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+<script src="/js/profanity.js"></script>
     <style>
 
         :root {
@@ -821,27 +822,14 @@
         ];
 
         function containsProfanity(text) {
-            if (!text) return false;
-            let lowerText = text.toLowerCase()
-                .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e')
-                .replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a')
-                .replace(/\$/g, 's').replace(/!/g, 'i').replace(/[^a-z]/g, '');
-
-            for (let word of badWords) {
-                if (!lowerText.includes(word)) continue;
-                if (word === 'chut' && (lowerText.includes('chutney') || lowerText.includes('parachute'))) continue;
-                if (word === 'land' && lowerText.length > 6) continue;
-                if (word.length <= 3) {
-                    const origClean = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
-                    if (!new RegExp(`\\b${word}\\b`).test(origClean)) continue;
-                }
-                return true;
-            }
+            if (window.solmatesCheckProfanity) return window.solmatesCheckProfanity(text);
+            // Fallback (should not reach here if profanity.js loaded)
             return false;
         }
 
         function hasInvalidChars(text) {
-            return /[\*\#\$\!\^\%\~\@\?\&]/.test(text) || (text.match(/x/gi) || []).length >= 2;
+            if (window.solmatesHasInvalidChars) return window.solmatesHasInvalidChars(text);
+            return /[*#$!^%~@?&]/.test(text);
         }
 
         function openProfileModal() {
