@@ -1395,11 +1395,30 @@
     </div>
   </div>
 
-
   <!-- config.js is already loaded with defer in <head>
 
   <meta name="theme-color" content="#ffffff">, not needed here -->
   <script>
+    // Notice Detail Popup (for Gen tab notices without links)
+    function showNoticeDetail(title, description, date) {
+      let existing = document.getElementById('notice-detail-modal');
+      if (existing) existing.remove();
+      const modal = document.createElement('div');
+      modal.id = 'notice-detail-modal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:80vh;overflow-y:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+            <h3 style="margin:0;font-size:1rem;font-weight:700;color:#1a1a2e;line-height:1.4;flex:1;">${title}</h3>
+            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">×</button>
+          </div>
+          ${date ? `<p style="margin:0 0 12px;font-size:0.8rem;color:#888;"><b>Date:</b> ${date}</p>` : ''}
+          <p style="margin:0;font-size:0.9rem;color:#444;line-height:1.6;">${description}</p>
+        </div>`;
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+      document.body.appendChild(modal);
+    }
+
     // Safe JSON parser helper
     function safeJSONParse(str, fallback = []) {
       try {
@@ -1857,7 +1876,9 @@
           
           const linkHtml = isPending 
             ? `<button class="view-btn pending" disabled><i class="fas fa-clock"></i> Coming Soon...</button>`
-            : `<a href="${notice.link}" target="_blank" class="${btnClass}" onclick="${clickHandler}">${btnText}</a>`;
+            : (notice.link && notice.link !== '#' && notice.link !== '#pending' && notice.link.startsWith('http'))
+              ? `<a href="${notice.link}" target="_blank" class="${btnClass}" onclick="${clickHandler}">${btnText}</a>`
+              : `<button class="${btnClass}" onclick="${clickHandler}; showNoticeDetail('${(notice.title||'').replace(/'/g,"\\'")}', '${(notice.description||notice.subtitle||'No additional details available.').replace(/'/g,"\\'")}', '${notice.date||''}')">${btnText}</button>`;
           const isNew = hasValidDate && (Date.now() - dateObj.getTime() < 24 * 60 * 60 * 1000) && !seenIds.includes(uniqueKey);
           const newBadge = isNew ? `<span class="new-badge">NEW</span>` : '';
 
