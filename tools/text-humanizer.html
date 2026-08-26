@@ -271,6 +271,8 @@
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+  <script src="/config.js"></script>
+  <script src="/js/api-client.js?v=88" defer></script>
 </head>
 <body>
 
@@ -378,65 +380,7 @@
     document.getElementById(countId).innerText = words + " Words";
   }
 
-  // Dictionary of common AI terms to replace
-  const aiReplacements = [
-    // Connectors / Formal
-    { regex: /\b(Moreover|Furthermore|Additionally)\b/gi, repl: "Also" },
-    { regex: /\b(In conclusion|To conclude)\b/gi, repl: "To wrap up" },
-    { regex: /\b(Consequently|As a result)\b/gi, repl: "So" },
-    { regex: /\b(Nevertheless|Nonetheless)\b/gi, repl: "Still" },
-    { regex: /\b(notably)\b/gi, repl: "especially" },
-    
-    // Academic / Business
-    { regex: /\b(It is crucial to|It is vital to|It is essential to|It is imperative to)\b/gi, repl: "We need to" },
-    { regex: /\b(crucial|vital|imperative|paramount)\b/gi, repl: "important" },
-    { regex: /\b(delve into|dive into)\b/gi, repl: "look at" },
-    { regex: /\b(navigating the complexities)\b/gi, repl: "dealing with" },
-    { regex: /\b(underscore|highlighting)\b/gi, repl: "show" },
-    { regex: /\b(leverage|utilize)\b/gi, repl: "use" },
-    { regex: /\b(foster|cultivate)\b/gi, repl: "build" },
-    { regex: /\b(robust|resilient)\b/gi, repl: "strong" },
-    { regex: /\b(comprehensive|multifaceted)\b/gi, repl: "detailed" },
-    { regex: /\b(a myriad of|a plethora of|an abundance of)\b/gi, repl: "many" },
-    { regex: /\b(testament to)\b/gi, repl: "proof of" },
-    { regex: /\b(in today's rapidly evolving landscape|in the modern digital age|in today's world|in the ever-changing world)\b/gi, repl: "today" },
-    { regex: /\b(catalyst)\b/gi, repl: "spark" },
-    { regex: /\b(synergy)\b/gi, repl: "teamwork" },
-    { regex: /\b(seamlessly)\b/gi, repl: "smoothly" },
-    { regex: /\b(pivotal)\b/gi, repl: "key" },
-    
-    // Story / Creative (ChatGPT classics)
-    { regex: /\b(tapestry)\b/gi, repl: "mix" },
-    { regex: /\b(embark on|embarked upon)\b/gi, repl: "start" },
-    { regex: /\b(ethereal|ephemeral)\b/gi, repl: "ghostly" },
-    { regex: /\b(symphony of)\b/gi, repl: "blend of" },
-    { regex: /\b(bustling)\b/gi, repl: "busy" },
-    { regex: /\b(labyrinth)\b/gi, repl: "maze" },
-    { regex: /\b(resonated)\b/gi, repl: "echoed" },
-    { regex: /\b(unwavering)\b/gi, repl: "steady" },
-    { regex: /\b(realm)\b/gi, repl: "world" },
-    { regex: /\b(palpable)\b/gi, repl: "real" },
-    { regex: /\b(a sense of anticipation)\b/gi, repl: "excitement" },
-    { regex: /\b(gleaming|shimmering)\b/gi, repl: "shining" },
-    { regex: /\b(in the heart of)\b/gi, repl: "inside" }
-  ];
-
-  const aiReplacementsProf = [
-    // ChatGPT usually uses these even in professional writing, replace with more natural professional equivalents
-    { regex: /\b(delve into|dive into)\b/gi, repl: "examine" },
-    { regex: /\b(a myriad of|a plethora of)\b/gi, repl: "various" },
-    { regex: /\b(tapestry)\b/gi, repl: "framework" },
-    { regex: /\b(symphony of)\b/gi, repl: "combination of" },
-    { regex: /\b(testament to)\b/gi, repl: "evidence of" },
-    { regex: /\b(catalyst)\b/gi, repl: "driver" },
-    { regex: /\b(synergy)\b/gi, repl: "collaboration" },
-    { regex: /\b(seamlessly)\b/gi, repl: "efficiently" },
-    { regex: /\b(embark on|embarked upon)\b/gi, repl: "initiate" },
-    { regex: /\b(in today's rapidly evolving landscape|in the modern digital age|in today's world)\b/gi, repl: "in the current environment" },
-    { regex: /\b(navigating the complexities)\b/gi, repl: "managing the challenges" }
-  ];
-
-  function humanizeText() {
+  async function humanizeText() {
     let text = document.getElementById('inputText').value;
     if (!text.trim()) {
       alert("Please paste some text to humanize.");
@@ -446,83 +390,66 @@
     const doVocab = document.getElementById('chkVocab').checked;
     const doParas = document.getElementById('chkParas').checked;
     const doMark = document.getElementById('chkMark').checked;
+    const tone = document.getElementById('toneSelect') ? document.getElementById('toneSelect').value : 'casual';
 
-    // 1. Clean Markdown
-    if (doMark) {
-      text = text.replace(/\*\*(.*?)\*\*/g, '$1'); // bold
-      text = text.replace(/\*(.*?)\*/g, '$1'); // italic
-      text = text.replace(/### (.*?)\n/g, '$1\n'); // h3
-      text = text.replace(/## (.*?)\n/g, '$1\n'); // h2
-      text = text.replace(/# (.*?)\n/g, '$1\n'); // h1
-    }
-
-    // 2. Vocabulary Replacements
-    let replacedText = text;
-    if (doVocab) {
-      const tone = document.getElementById('toneSelect') ? document.getElementById('toneSelect').value : 'casual';
-      const dict = tone === 'professional' ? aiReplacementsProf : aiReplacements;
-      dict.forEach(pair => {
-        // Keep original casing for first letter if possible, or just force lower/upper based on context
-        // A simple string replace won't handle case perfectly, but we use a function to match case
-        replacedText = replacedText.replace(pair.regex, function(match) {
-          // If original is capitalized, capitalize replacement
-          let newWord = "";
-          if (match[0] === match[0].toUpperCase()) {
-            newWord = pair.repl.charAt(0).toUpperCase() + pair.repl.slice(1);
-          } else {
-            newWord = pair.repl.toLowerCase();
-          }
-          return `<span class="highlight" title="Replaced: ${match}">${newWord}</span>`;
-        });
-      });
-    }
-
-    // 3. Break Paragraphs
-    if (doParas) {
-      // Split into existing paragraphs
-      let paras = replacedText.split(/\n\n+/);
-      let newParas = [];
-      
-      paras.forEach(p => {
-        // Count sentences
-        let sentences = p.match(/[^.!?]+[.!?]+/g) || [p];
-        if (sentences.length > 3) {
-          // Break it up randomly into chunks of 2-3 sentences
-          let chunk = "";
-          let count = 0;
-          let target = Math.floor(Math.random() * 2) + 2; // 2 or 3
-          
-          for (let i = 0; i < sentences.length; i++) {
-            chunk += sentences[i].trim() + " ";
-            count++;
-            if (count >= target || i === sentences.length - 1) {
-              newParas.push(chunk.trim());
-              chunk = "";
-              count = 0;
-              target = Math.floor(Math.random() * 2) + 2;
-            }
-          }
-        } else {
-          newParas.push(p.trim());
-        }
-      });
-      
-      replacedText = newParas.join('\n\n');
-    }
-
-    // Replace line breaks with HTML breaks for contenteditable div
-    replacedText = replacedText.replace(/\n/g, '<br>');
-    
-    // Output
-    document.getElementById('outputText').innerHTML = replacedText;
-    updateWordCount('outputText', 'outCount');
-
-    // Visual feedback
     const btn = document.querySelector('.controls-card .btn-primary');
-    btn.innerHTML = '<i class="fas fa-check"></i> Humanized!';
-    setTimeout(() => {
-      btn.innerHTML = '<i class="fas fa-magic"></i> Humanize Text';
-    }, 2000);
+    const originalBtnHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Humanizing...';
+    btn.disabled = true;
+
+    try {
+      let prompt = `You are an expert human copywriter and editor. Your task is to rewrite the following AI-generated text so it sounds 100% human, natural, and completely bypasses AI detectors (like ZeroGPT, Turnitin, etc.).
+
+`;
+      prompt += `Tone: ${tone}
+
+`;
+      prompt += `Follow these STRICT rules:
+`;
+      if (doVocab) {
+          prompt += `- DO NOT use typical AI buzzwords (e.g., delve, testament, tapestry, myriad, navigate complexities, underscore, robust, crucial, foster). Use simple, everyday vocabulary.
+`;
+          prompt += `- Vary sentence structures. Add natural human imperfections like occasional colloquialisms, rhetorical questions, or slight conversational pivots.
+`;
+      }
+      if (doParas) {
+          prompt += `- Break long walls of text into shorter, easily readable paragraphs (1-3 sentences max per paragraph).
+`;
+      }
+      if (doMark) {
+          prompt += `- DO NOT use ANY markdown formatting. No bold, no italics, no bullet points, no headers. Output plain text only.
+`;
+      }
+      prompt += `
+Text to humanize:
+"""
+${text}
+"""
+
+Rewrite the text directly. DO NOT include any introductory or concluding remarks. DO NOT wrap the output in quotes.`;
+
+      const res = await window.solmatesAPI.sendChatMessage(prompt, []);
+      const resText = res.message || res.reply;
+      
+      if (res.success && resText) {
+          let finalHtml = resText.replace(/\n/g, '<br>');
+          document.getElementById('outputText').innerHTML = finalHtml;
+          updateWordCount('outputText', 'outCount');
+
+          btn.innerHTML = '<i class="fas fa-check"></i> Humanized!';
+          setTimeout(() => {
+            btn.innerHTML = originalBtnHtml;
+            btn.disabled = false;
+          }, 2000);
+      } else {
+          throw new Error("Failed to get a response from AI.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error: " + err.message);
+      btn.innerHTML = originalBtnHtml;
+      btn.disabled = false;
+    }
   }
 
   function copyText() {
