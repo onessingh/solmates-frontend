@@ -1054,3 +1054,40 @@ if (typeof module !== 'undefined' && module.exports) {
 
     setInterval(detect, 1000);
 })();
+
+
+window.solmatesBadWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
+
+window.solmatesCheckProfanity = function(text) {
+    if(!text) return false;
+    let lowerText = text.toLowerCase()
+        .replace(/0/g, 'o')
+        .replace(/1/g, 'i')
+        .replace(/3/g, 'e')
+        .replace(/4/g, 'a')
+        .replace(/5/g, 's')
+        .replace(/@/g, 'a');
+    return window.solmatesBadWords.some(word => lowerText.includes(word));
+};
+
+window.solmatesPromptNickname = function() {
+    let name = "";
+    while(true) {
+        name = prompt("Please enter your nickname to play:");
+        if (!name) return null; // Cancelled
+        name = name.trim();
+        if (/[*#$!^%~@?&]/.test(name)) {
+            alert("Characters like * # $ ! ^ % ~ @ ? & are not allowed.");
+            continue;
+        }
+        if (window.solmatesCheckProfanity(name)) {
+            alert("Please choose a clean and appropriate nickname.");
+            continue;
+        }
+        if (name.length > 15) {
+            alert("Nickname must be 15 characters or less.");
+            continue;
+        }
+        return name;
+    }
+};

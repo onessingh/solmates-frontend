@@ -1,3 +1,29 @@
+
+const _badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
+
+function _safePrompt() {
+    let name = "";
+    while(true) {
+        name = prompt("Please enter your nickname:");
+        if (!name) return null;
+        name = name.trim();
+        if (/[*#$!^%~@?&]/.test(name)) {
+            alert("Characters like * # $ ! ^ % ~ @ ? & are not allowed.");
+            continue;
+        }
+        let lower = name.toLowerCase().replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a');
+        if (_badWords.some(w => lower.includes(w))) {
+            alert("Please choose a clean and appropriate nickname.");
+            continue;
+        }
+        if (name.length > 15) {
+            alert("Nickname must be 15 characters or less.");
+            continue;
+        }
+        return name;
+    }
+}
+
 // State variables
 let myName = "";
 let peer = null;
@@ -27,7 +53,7 @@ function uiShowCreateRoom() {
     try {
         myName = localStorage.getItem('solmates_nickname');
         if(!myName) {
-            myName = prompt("Please enter your nickname:");
+            myName = _safePrompt();
             if (!myName) return;
             localStorage.setItem('solmates_nickname', myName);
             document.getElementById('welcome-name').textContent = myName;
@@ -44,7 +70,7 @@ function uiShowJoinRoom() {
     try {
         myName = localStorage.getItem('solmates_nickname');
         if(!myName) {
-            myName = prompt("Please enter your nickname:");
+            myName = _safePrompt();
             if (!myName) return;
             localStorage.setItem('solmates_nickname', myName);
             document.getElementById('welcome-name').textContent = myName;
@@ -294,7 +320,7 @@ async function createRoom() {
 function joinViaUrl() {
     myName = localStorage.getItem('solmates_nickname');
     if(!myName) {
-        myName = prompt("Please enter your nickname:");
+        myName = _safePrompt();
         if (!myName) return;
         localStorage.setItem('solmates_nickname', myName);
     }
