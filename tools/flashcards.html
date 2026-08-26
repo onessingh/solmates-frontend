@@ -677,17 +677,17 @@ IMPORTANT: Do NOT output placeholder text. Generate real educational content.`;
 
 <!-- AI Generate Modal -->
 <div id="aiModal" class="ai-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.8); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
-  <div class="card" style="padding:30px; border-radius:16px; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+  <div class="card" style="background: var(--card); padding:30px; border-radius:16px; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
     <h3 style="margin-bottom:15px; color:var(--primary); font-size:1.2rem; display:flex; align-items:center; gap:10px;">
       <i class="fas fa-magic" style="color:var(--accent);"></i> Generate with AI
     </h3>
     <div style="margin-bottom: 20px;">
         <label style="display:block; margin-bottom:8px; font-size:0.9rem; font-weight:600; color:var(--text);">What do you want to learn?</label>
-        <input type="text" id="aiTopic" class="form-control" placeholder="e.g. UGC NET -> Management -> Marketing" style="width:100%; padding: 12px; border-radius: 8px; font-size:1rem; outline:none; transition:0.2s;">
+        <input type="text" id="aiTopic" class="form-control" placeholder="e.g. UGC NET -> Management -> Marketing" style="width:100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size:1rem; outline:none; transition:0.2s; background: var(--bg); color: var(--text);">
     </div>
     <div style="margin-bottom: 25px;">
         <label style="display:block; margin-bottom:8px; font-size:0.9rem; font-weight:600; color:var(--text);">Number of Flashcards</label>
-        <input type="number" id="aiCount" class="form-control" value="5" min="1" max="20" style="width:100%; padding: 12px; border-radius: 8px; font-size:1rem; outline:none; transition:0.2s;">
+        <input type="number" id="aiCount" class="form-control" value="5" min="1" max="20" style="width:100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size:1rem; outline:none; transition:0.2s; background: var(--bg); color: var(--text);">
     </div>
     <div style="display: flex; gap: 12px; justify-content: flex-end;">
       <button onclick="document.getElementById('aiModal').style.display='none'" style="padding: 10px 20px; background: transparent; color: inherit; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight:600;">Cancel</button>
