@@ -1014,3 +1014,43 @@ if (typeof module !== 'undefined' && module.exports) {
         }
     }, 2000);
 })();
+
+// --- STRICT ANTI-SCRAPING MODULE ---
+(function() {
+    // 1. Block Right Click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. Block Keyboard Shortcuts
+    document.onkeydown = function(e) {
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
+            return false;
+        }
+    };
+
+    // 3. DevTools Detector (Size difference + Debugger Trap)
+    const detect = function() {
+        let devtoolsOpen = false;
+        const threshold = 160;
+        
+        // Detect via screen size difference (DevTools takes up space)
+        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+            devtoolsOpen = true;
+        }
+
+        // Detect via performance profile
+        const start = performance.now();
+        debugger;
+        if (performance.now() - start > 100) {
+            devtoolsOpen = true;
+        }
+
+        if (devtoolsOpen) {
+            // Nuke the page completely if they try to bypass
+            document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%;'>Security Violation: Access Denied.</h1>";
+            document.head.innerHTML = "";
+            window.location.replace("about:blank");
+        }
+    };
+
+    setInterval(detect, 1000);
+})();
