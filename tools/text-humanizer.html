@@ -386,6 +386,13 @@
       alert("Please paste some text to humanize.");
       return;
     }
+    
+    // Check word limit to avoid backend token limits (Groq TPM limit)
+    const wordCount = text.trim().split(/\s+/).length;
+    if (wordCount > 1500) {
+      alert("Word Limit Exceeded! Please limit your text to 1,500 words at a time to ensure the AI can process it fully.");
+      return;
+    }
 
     const doVocab = document.getElementById('chkVocab').checked;
     const doParas = document.getElementById('chkParas').checked;
