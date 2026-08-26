@@ -663,8 +663,11 @@ async function generateAll() {
 
   const ctx = `Exam: ${examName}, Subject: ${subjectName}, Difficulty: ${difficulty}`;
 
-  // Run all 5 in sequence to avoid overloading
-  await Promise.all([generateGuide(ctx), generateFlash(ctx), generateMock(ctx), generateApt(ctx)]);
+  // Run in sequence to avoid hitting AI Rate Limits (429) and to show progress one-by-one
+  await generateGuide(ctx);
+  await generateFlash(ctx);
+  await generateMock(ctx);
+  await generateApt(ctx);
 
   btn.disabled = false;
   btn.innerHTML = '<i class="fas fa-redo"></i> Regenerate';
