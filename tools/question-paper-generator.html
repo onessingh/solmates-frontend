@@ -554,6 +554,7 @@ Note: Set "options" to null or an empty array if the question is subjective. For
 
             const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
             const resText = res.message || res.reply;
+            window.lastRawResponse = resText;
             if (res.success && resText) {
                 sections = safeParseJSON(resText);
                 if (sections.sections) sections = sections.sections;
@@ -578,12 +579,22 @@ Note: Set "options" to null or an empty array if the question is subjective. For
       } catch (err) {
         console.error(err);
         document.getElementById('result-mode').style.display = 'block';
-        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format. Please try again.</p><button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
+        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format. Please try again.</p><p style="font-size:0.8rem;color:red;margin-bottom:15px;" id="err-debug"></p><button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
         document.getElementById('loader').style.display = 'none';
       }
     }
 
     function renderPaper(sections) {
+        if (!Array.isArray(sections)) {
+            let found = null;
+            if (typeof sections === 'object' && sections !== null) {
+                for (let k in sections) {
+                    if (Array.isArray(sections[k])) { found = sections[k]; break; }
+                }
+            }
+            if (found) sections = found;
+            else sections = [];
+        }
       let pBody = '';
       let kBody = '';
 
@@ -591,7 +602,7 @@ Note: Set "options" to null or an empty array if the question is subjective. For
         pBody += `<div class="section-title">${sec.sectionTitle}</div>`;
         sec.questions.forEach(q => {
           let optsHtml = '';
-          if (q.options && q.options.length > 0) {
+          if (Array.isArray(q.options) && q.options.length > 0) {
             optsHtml = `<div class="q-options">` + q.options.map(o => `<div>${o}</div>`).join('') + `</div>`;
           } else {
             optsHtml = '<div style="margin-top: 15px; border-bottom: 1px dashed var(--border); width: 100%; height: 20px;"></div><div style="margin-top: 15px; border-bottom: 1px dashed var(--border); width: 100%; height: 20px;"></div>';
