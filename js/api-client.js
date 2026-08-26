@@ -1056,10 +1056,11 @@ if (typeof module !== 'undefined' && module.exports) {
 })();
 
 
-window.solmatesBadWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
+window.solmatesBadWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'chutiye', 'chutya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass', 'chut', 'choot', 'chuut', 'bhur', 'muth', 'mutth', 'land', 'lannd', 'tatay', 'tatte', 'tatta', 'jhaant', 'hijra', 'chhakka', 'burbak', 'bhadwa', 'bhadwe', 'bhadwi', 'muthiya', 'mutthal', 'muthal', 'kutiya', 'kuttiya', 'kutti'];
 
 window.solmatesCheckProfanity = function(text) {
     if(!text) return false;
+    // Basic bad words
     let lowerText = text.toLowerCase()
         .replace(/0/g, 'o')
         .replace(/1/g, 'i')
@@ -1067,7 +1068,17 @@ window.solmatesCheckProfanity = function(text) {
         .replace(/4/g, 'a')
         .replace(/5/g, 's')
         .replace(/@/g, 'a');
-    return window.solmatesBadWords.some(word => lowerText.includes(word));
+        
+    // Deep match (don't allow word parts either if it's very short)
+    for (let word of window.solmatesBadWords) {
+        if (lowerText.includes(word)) {
+            // Ignore false positives for 'chut' like 'chutney', 'parachute', 'shut'
+            if (word === 'chut' && (lowerText.includes('chutney') || lowerText.includes('parachute') || lowerText === 'shut')) continue;
+            if (word === 'ass' && (lowerText.includes('class') || lowerText.includes('pass') || lowerText.includes('glass') || lowerText.includes('mass') || lowerText.includes('assassin') || lowerText.includes('assign') || lowerText.includes('assist'))) continue;
+            return true;
+        }
+    }
+    return false;
 };
 
 window.solmatesPromptNickname = function() {
