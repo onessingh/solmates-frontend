@@ -576,7 +576,7 @@ class SolmatesAPI {
   async sendChatMessage(message, history = []) {
     return await this.request('/chatbot', {
       method: 'POST',
-      body: JSON.stringify({ message, history }),
+      body: JSON.stringify({ message, history, skipRag: true }),
       skipAuth: true,
     }, 120000);
   }
