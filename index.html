@@ -3019,6 +3019,30 @@
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+
+<script>
+// --- STRICT ANTI-SCRAPING MODULE ---
+(function() {
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) return false;
+    };
+    setInterval(function() {
+        let devtoolsOpen = false;
+        const threshold = 160;
+        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) devtoolsOpen = true;
+        const start = performance.now();
+        debugger;
+        if (performance.now() - start > 100) devtoolsOpen = true;
+        if (devtoolsOpen) {
+            document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%;'>Security Violation: Access Denied.</h1>";
+            document.head.innerHTML = "";
+            window.location.replace("about:blank");
+        }
+    }, 1000);
+})();
+</script>
+
 </head>
 
 <body>
@@ -5310,41 +5334,62 @@
     // v116.5: Run initHomePush AFTER window fully loads + 5s idle delay
     // Previously ran on DOMContentLoaded which blocked initial render on mobile
     async function initHomePush() {
-      try {
-        if (window.isWebView && window.isWebView()) {
-          return; // Use native bridge instead
-        }
-
-        if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-
-        const swUrl = './sw.js?v=87';
-        const registration = await navigator.serviceWorker.register(swUrl);
-        
-        // [v116.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
-        // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
-        // controllerchange fires AFTER nuclear reload, triggering a second reload → infinite loop.
-        let _swRefreshed = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (_swRefreshed) return; // already reloaded once, don't loop
-          _swRefreshed = true;
-          // Only reload if page has been open >30s (not during initial load)
-          if (Date.now() - pageOpenTime > 30000) {
-            window.location.reload();
+        try {
+          // Native Bridge Check
+          const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token');
+          if (typeof window.isWebView === 'function' && window.isWebView() && hasNativeFCM) {
+            return; // Pure webview with injected bridge
           }
-        });
 
-        // Removed 5-second setTimeout auto-prompt to comply with mobile browser policies
-        // Users will now only subscribe via direct interaction (e.g. Bell icon on notification.html)
-        if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
-          // Attempt silent token refresh for already subscribed users
-          window.solmatesAPI.silentPushTokenRefresh();
+          // [v125.0] Auto-trigger Notification Permission on Home Page (Restored)
+          // TWA/Standalone and Browser default prompt behavior
+          if (typeof Notification !== 'undefined') {
+              const perm = Notification.permission;
+              const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+              const neverAsked = !localStorage.getItem('sol_home_notif_asked');
+              
+              if (perm === 'default' && neverAsked) {
+                  localStorage.setItem('sol_home_notif_asked', '1');
+                  setTimeout(async () => {
+                      try {
+                          const status = await Notification.requestPermission();
+                          if (status === 'granted') {
+                              localStorage.setItem('sol_notif_enabled', 'true');
+                              if (window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+                                  // Auto-subscribe to 'all' if they clicked Allow directly on the home page prompt
+                                  const saved = localStorage.getItem('sol_subscribed_sems');
+                                  const sems = saved ? JSON.parse(saved) : ['all'];
+                                  window.solmatesAPI.subscribeToPush(sems);
+                              }
+                          }
+                      } catch(e) { console.warn('[Auto-Prompt] Failed:', e); }
+                  }, isStandalone ? 1000 : 3000); // Faster in app, slower in browser
+              }
+          }
+
+          if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+          const swUrl = './sw.js?v=87';
+          const registration = await navigator.serviceWorker.register(swUrl);
+          
+          let _swRefreshed = false;
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (_swRefreshed) return;
+            _swRefreshed = true;
+            if (typeof pageOpenTime !== 'undefined' && Date.now() - pageOpenTime > 30000) {
+              window.location.reload();
+            }
+          });
+
+          if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
+            window.solmatesAPI.silentPushTokenRefresh();
+          }
+        } catch (e) {
+          console.warn('[Push Home] Failed:', e);
         }
-      } catch (e) {
-        console.warn('[Push Home] Failed:', e);
       }
-    }
-    // v116.5: Run after window load + 3s idle, NOT on DOMContentLoaded
-    window.addEventListener('load', () => setTimeout(initHomePush, 3000));
+      // v116.5: Run after window load + 3s idle, NOT on DOMContentLoaded
+      window.addEventListener('load', () => setTimeout(initHomePush, 3000));
   
     // Theme Toggle Logic
     function toggleTheme() {
