@@ -2638,42 +2638,26 @@
     }
 
     /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
-        function updateNotifyUI() {
+    function updateNotifyUI() {
       const btn = document.getElementById('notifyToggleBtn');
       if (!btn) return;
-
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
-      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
-      const text = btn.querySelector('span');
-      const icon = btn.querySelector('i');
-
-      if (hasNativeFCM && localEnabled) {
-        btn.className = 'notify-status-btn granted';
-        if (text) text.innerText = 'App Notifications Active';
-        icon.className = 'fas fa-check-circle';
-        closeRepairGuide();
-        return;
-      } else if (hasNativeFCM && !localEnabled) {
-        btn.className = 'notify-status-btn';
-        if (text) text.innerText = 'Allow Notifications (App)';
-        icon.className = 'fas fa-bell';
-        closeRepairGuide();
-        checkSoftPromptAvailability();
-        return;
-      }
 
       if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') {
         btn.style.display = 'none';
         return;
       }
 
+      const perm = Notification.permission;
+      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
+      const text = btn.querySelector('span');
+      const icon = btn.querySelector('i');
+
       if (perm === 'granted' && localEnabled) {
         btn.className = 'notify-status-btn granted';
         if (text) text.innerText = 'Deny Notifications';
         icon.className = 'fas fa-bell';
         closeRepairGuide();
-      } else if (perm === 'denied' && !hasNativeFCM && !window.matchMedia('(display-mode: standalone)').matches) {
+      } else if (perm === 'denied') {
         btn.className = 'notify-status-btn denied';
         if (text) text.innerText = 'Notifications Blocked';
         icon.className = 'fas fa-bell-slash';
@@ -2686,14 +2670,10 @@
     }
 
     function checkSoftPromptAvailability() {
-      const isNativeApp = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
-      
+      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
       const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
       const now = Date.now();
-      
-      // Allow banner if it's a native app (since we don't care about browser permission) OR if browser permission is default
-      if ((isNativeApp || perm === 'default') && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
+      if (Notification.permission === 'default' && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
         setTimeout(() => {
           const banner = document.getElementById('soft-prompt-banner');
           if (banner) banner.classList.add('active');
@@ -2747,25 +2727,7 @@
       if (overlay) overlay.classList.remove('active');
     }
 
-    function showNotifBlockedPrompt() {
-      var existing = document.getElementById('notif-blocked-prompt');
-      if (existing) existing.remove();
-      var el = document.createElement('div');
-      el.id = 'notif-blocked-prompt';
-      el.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,0.95);display:flex;align-items:center;justify-content:center;padding:24px;';
-      el.innerHTML = '<div style="background:#fff;border-radius:24px;padding:32px 24px;max-width:360px;width:100%;text-align:center;"><div style="font-size:40px;margin-bottom:16px;">🔔</div><h2 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin-bottom:10px;">Notifications Band Hain</h2><p style="font-size:0.85rem;color:#64748b;margin-bottom:24px;">Live class aur MBA alerts ke liye allow karo — sirf ek tap!</p><button onclick="openSolmatesSettings()" style="width:100%;padding:14px;border-radius:14px;background:#0f2b46;color:white;border:none;font-weight:700;font-size:1rem;cursor:pointer;margin-bottom:10px;">⚙️ Allow Notifications</button><button onclick="document.getElementById(\'notif-blocked-prompt\').remove()" style="width:100%;padding:12px;border-radius:14px;background:#f1f5f9;color:#64748b;border:none;font-weight:600;cursor:pointer;">Baad Mein</button></div>';
-      document.body.appendChild(el);
-    }
-
-    function openSolmatesSettings() {
-      window.location.href = 'intent:#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;S.android.package=in.solmates.app;end';
-      setTimeout(function() {
-        var el = document.getElementById('notif-blocked-prompt');
-        if (el) el.remove();
-      }, 500);
-    }
-
-        async function handleNotifyToggle() {
+    async function handleNotifyToggle() {
       if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
       const perm = Notification.permission;
       if (perm === 'denied') { showRepairGuide(); return; }
@@ -2803,7 +2765,6 @@
     function openSemSelectionModal() {
       const modal = document.getElementById('semSelectionModal');
       modal.style.display = 'flex';
-      modal.style.pointerEvents = 'auto';
       
       // Load current selection from localStorage
       const saved = localStorage.getItem('sol_subscribed_sems');
@@ -2820,9 +2781,7 @@
     }
 
     function closeSemSelectionModal() {
-      const modal = document.getElementById('semSelectionModal');
-      modal.style.display = 'none';
-      modal.style.pointerEvents = 'none';
+      document.getElementById('semSelectionModal').style.display = 'none';
     }
 
     function toggleAllSemCheckboxes(checked) {
@@ -2834,93 +2793,58 @@
     }
 
     async function confirmSemSelection() {
-        const btn = document.getElementById('confirmSemSubBtn');
-        const allCheck = document.getElementById('sem_all');
-        const checks = document.querySelectorAll('.sem-sub-check');
-        
-        let uiSelected = [];
-        let pushSelected = [];
-        
-        if (allCheck.checked) {
-          uiSelected = ['all'];
-          pushSelected = ['all', '0', '1', '2', '3', '4'];
-        } else {
-          uiSelected = Array.from(checks).filter(c => c.checked).map(c => c.value);
-          pushSelected = [...uiSelected];
-          // Ensure users always receive global and general announcements
-          if (!pushSelected.includes('0')) pushSelected.push('0');
-        }
-  
-        if (uiSelected.length === 0) {
-          alert('Please select at least one semester!');
-          return;
-        }
-  
-        btn.disabled = true;
-        btn.innerText = 'Subscribing...';
-  
-        try {
-          await window.solmatesAPI.subscribeToPush(pushSelected);
-          
-          // [v104.5] App Bridge Sync
-          if (typeof window.syncNativePushTags === 'function') {
-             window.syncNativePushTags(pushSelected);
-          }
-  
-          localStorage.setItem('sol_notif_enabled', 'true');
-          localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
-          closeSemSelectionModal();
-          updateNotifyUI();
-          alert('Notification settings updated successfully! 🔔');
-        } catch (err) {
-          console.error('Subscription error:', err);
-          alert('Subscription failed: ' + err.message);
-        } finally {
-          btn.disabled = false;
-          btn.innerText = 'Confirm Subscription';
-        }
+      const btn = document.getElementById('confirmSemSubBtn');
+      const allCheck = document.getElementById('sem_all');
+      const checks = document.querySelectorAll('.sem-sub-check');
+      
+      let uiSelected = [];
+      let pushSelected = [];
+      
+      if (allCheck.checked) {
+        uiSelected = ['all'];
+        pushSelected = ['all', '0', '1', '2', '3', '4'];
+      } else {
+        uiSelected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+        pushSelected = [...uiSelected];
+        // Ensure users always receive global and general announcements
+        if (!pushSelected.includes('0')) pushSelected.push('0');
+        // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
       }
 
-      window.addEventListener('focus', updateNotifyUI);
+      if (uiSelected.length === 0) {
+        alert('Please select at least one semester!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Subscribing...';
+
+      try {
+        await window.solmatesAPI.subscribeToPush(pushSelected);
+        
+        // [v104.5] App Bridge Sync
+        if (typeof window.syncNativePushTags === 'function') {
+           window.syncNativePushTags(pushSelected);
+        }
+
+        localStorage.setItem('sol_notif_enabled', 'true');
+        localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
+        closeSemSelectionModal();
+        updateNotifyUI();
+        alert('Notification settings updated successfully! ??');
+      } catch (err) {
+        console.error('Subscription error:', err);
+        alert('Subscription failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Confirm Subscription';
+      }
+    }
+
+    window.addEventListener('focus', updateNotifyUI);
 
     async function initPushUI() {
       updateNotifyUI(); 
-
-      // [v124.0] TWA Standalone: Smart permission handler
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      if (isStandalone && typeof Notification !== 'undefined') {
-        const perm = Notification.permission;
-
-        if (perm === 'default' && !localStorage.getItem('sol_notif_asked')) {
-          // FIRST TIME: auto-trigger native browser Allow/Deny popup after 1.5s
-          localStorage.setItem('sol_notif_asked', '1');
-          setTimeout(async () => {
-            try {
-              const result = await Notification.requestPermission();
-              if (result === 'granted') openSemSelectionModal();
-              updateNotifyUI();
-            } catch(e) {}
-          }, 1500);
-
-        } else if (perm === 'denied' && localStorage.getItem('sol_notif_enabled') !== 'true') {
-          // BLOCKED: show fullscreen enable-settings prompt after 1s
-          setTimeout(() => showNotifBlockedPrompt(), 1000);
-        }
-      }
-
-      // Auto-subscribe when user returns from phone settings with permission granted
-      window.addEventListener('focus', async () => {
-        updateNotifyUI();
-        const isStand = window.matchMedia('(display-mode: standalone)').matches;
-        if (isStand && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-          const alreadyEnabled = localStorage.getItem('sol_notif_enabled') === 'true';
-          if (!alreadyEnabled) {
-            // User just enabled from phone settings - auto open semester selection
-            openSemSelectionModal();
-          }
-        }
-      });
-
       if (window.isWebView && window.isWebView()) {
         console.log('[PUSH] WebView detected. Skipping browser push registration; using native bridge.');
         return;
@@ -2969,7 +2893,7 @@
     <i class="fas fa-plus"></i>
   </button>
 
-  <div id="admin-bulk-actions" style="display:none; pointer-events:none; position:fixed; bottom:0; left:0; width:100%; background:white; padding:15px; box-shadow:0 -10px 25px rgba(0,0,0,0.1); z-index:900; border-top:1px solid #eee;">
+  <div id="admin-bulk-actions" style="display:none; position:fixed; bottom:0; left:0; width:100%; background:white; padding:15px; box-shadow:0 -10px 25px rgba(0,0,0,0.1); z-index:900; border-top:1px solid #eee;">
     <div style="max-width:850px; margin:0 auto; display:flex; justify-content:space-between; align-items:center;">
       <span style="font-size:14px; font-weight:600;"><i class="fas fa-check-square"></i> Bulk Selection Active</span>
       <div style="display:flex; gap:10px;">
@@ -3161,10 +3085,6 @@
   </div>
 </body>
 </html>
-
-
-
-
 
 
 
