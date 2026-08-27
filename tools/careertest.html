@@ -830,6 +830,32 @@
           color: #94a3b8 !important;
       }
 
+      /* Fix Upload Zone in Dark Mode */
+      .upload-zone {
+          background: #1e293b !important;
+          border: 1.5px dashed #475569 !important;
+      }
+      .upload-zone:hover {
+          background: #334155 !important;
+          border-color: #60a5fa !important;
+      }
+      .upload-placeholder {
+          color: #cbd5e1 !important;
+      }
+      .upload-placeholder i {
+          background: transparent !important;
+          color: #60a5fa !important;
+          -webkit-background-clip: initial !important;
+          background-clip: initial !important;
+          -webkit-text-fill-color: initial !important;
+      }
+      .divider-line {
+          background: #334155 !important;
+      }
+      .divider-text {
+          color: #94a3b8 !important;
+      }
+
       /* Fix Options in Test (Dark Mode) */
       .option {
           background: #0f172a !important;
@@ -1101,9 +1127,9 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:12px; margin: 24px 0 10px;">
-          <span style="flex:1; height:1px; background:#ececf0;"></span>
-          <span style="color:#6e6e73; font-size:0.8rem;">or upload resume</span>
-          <span style="flex:1; height:1px; background:#ececf0;"></span>
+          <span class="divider-line" style="flex:1; height:1px; background:#ececf0;"></span>
+          <span class="divider-text" style="color:#6e6e73; font-size:0.8rem;">or upload resume</span>
+          <span class="divider-line" style="flex:1; height:1px; background:#ececf0;"></span>
         </div>
 
         <div class="form-group">
