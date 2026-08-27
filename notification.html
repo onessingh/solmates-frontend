@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2719,17 +2719,17 @@
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const isAPK = typeof window.isMedianApp === 'function' && window.isMedianApp();
       
-      const stepStyle = "display: flex; align-items: flex-start; gap: 15px; text-align: left; background: var(--bg-nav, #f8fafc); padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border-color, #eee);";
-      const numStyle = "width: 24px; height: 24px; background: #0f2b46; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0;";
-      const titleStyle = "display: block; color: var(--text-main, #333); font-size: 14px; margin-bottom: 4px; font-weight: 700;";
-      const descStyle = "color: var(--text-muted, #666); font-size: 13px; line-height: 1.4;";
+      const stepStyle = "display: flex; align-items: flex-start; gap: 10px; text-align: left; background: var(--bg-nav, #f8fafc); padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border-color, #eee);";
+      const numStyle = "width: 20px; height: 20px; background: #0f2b46; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; margin-top: 2px;";
+      const titleStyle = "display: block; color: var(--text-main, #333); font-size: 13px; margin-bottom: 2px; font-weight: 700;";
+      const descStyle = "color: var(--text-muted, #666); font-size: 12px; line-height: 1.4;";
 
       if (isAPK) {
         subtitle.innerText = "SOLMATES App mein notifications setup sahi nahi hai:";
         stepsContainer.innerHTML = `
           <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">System Settings</b><span style="${descStyle}">Niche diye gaye button par click karke settings kholien.</span></div></div>
           <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Allow All</b><span style="${descStyle}">'Notifications' mein jaakar saare toggles ON kar dein.</span></div></div>
-          <button onclick="window.openNativeSettings()" style="margin-top:15px; width:100%; padding:14px; border-radius:14px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
+          <button onclick="window.openNativeSettings()" style="margin-top:10px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
         `;
       } else if (isStandalone) {
         subtitle.innerText = "Home Screen App par notifications band hain:";
@@ -2740,10 +2740,10 @@
       } else {
         subtitle.innerText = "Chrome settings mein notifications band hain:";
         stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">Three Dots Menu</b><span style="${descStyle}">Upar corner mein ⋮ Three Dots par click karein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Settings</b><span style="${descStyle}">Menu mein se 'Settings' (⚙️) icon par click karein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Site Settings</b><span style="${descStyle}">Niche scroll karke 'Site Settings' par jayein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">4</div><div><b style="${titleStyle}">Sound & Notifications</b><span style="${descStyle}">Notifications ya Sound par click karke 'Allow' karein.</span></div></div>`;
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">Three Dots (⋮)</b><span style="${descStyle}">Browser ke top-right mein ⋮ par click karein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Settings ⚙️</b><span style="${descStyle}">'Settings' par jayein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Site Settings</b><span style="${descStyle}">Niche scroll karke 'Site Settings' pe click karein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">4</div><div><b style="${titleStyle}">Notifications</b><span style="${descStyle}">'Notifications' pe jayein → 'Not Allowed' section mein solmates.in dhundhein → uske saamne ⋮ click karke <b>Allow</b> karein.</span></div></div>`;
       }
 
       overlay.style.display = 'flex';
