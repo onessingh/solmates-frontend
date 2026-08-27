@@ -2725,25 +2725,25 @@
       const descStyle = "color: var(--text-muted, #666); font-size: 12px; line-height: 1.4;";
 
       if (isAPK) {
-        subtitle.innerText = "SOLMATES App mein notifications setup sahi nahi hai:";
+        subtitle.innerText = "Notifications are not set up in the SOLMATES App:";
         stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">System Settings</b><span style="${descStyle}">Niche diye gaye button par click karke settings kholien.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Allow All</b><span style="${descStyle}">'Notifications' mein jaakar saare toggles ON kar dein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">System Settings</b><span style="${descStyle}">Tap the button below to open App Settings directly.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Allow All</b><span style="${descStyle}">Go to 'Notifications' and turn ON all toggles.</span></div></div>
           <button onclick="window.openNativeSettings()" style="margin-top:10px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
         `;
       } else if (isStandalone) {
-        subtitle.innerText = "Home Screen App par notifications band hain:";
+        subtitle.innerText = "Notifications are blocked for the Home Screen App:";
         stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">App Icon</b><span style="${descStyle}">Phone ki home screen par SOLMATES icon ko long-press karein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">App Info</b><span style="${descStyle}">"App Info" (i icon) mein jayein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Enable</b><span style="${descStyle}">"Notifications" mein jaakar toggles ON kar dein.</span></div></div>`;
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">App Icon</b><span style="${descStyle}">Long-press the SOLMATES icon on your home screen.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">App Info</b><span style="${descStyle}">Tap "App Info" (i icon).</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Enable</b><span style="${descStyle}">Go to "Notifications" and turn ON all toggles.</span></div></div>`;
       } else {
-        subtitle.innerText = "Chrome settings mein notifications band hain:";
+        subtitle.innerText = "Notifications are blocked in Chrome settings:";
         stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">Three Dots (⋮)</b><span style="${descStyle}">Browser ke top-right mein ⋮ par click karein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Settings ⚙️</b><span style="${descStyle}">'Settings' par jayein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Site Settings</b><span style="${descStyle}">Niche scroll karke 'Site Settings' pe click karein.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">4</div><div><b style="${titleStyle}">Notifications</b><span style="${descStyle}">'Notifications' pe jayein → 'Not Allowed' section mein solmates.in dhundhein → uske saamne ⋮ click karke <b>Allow</b> karein.</span></div></div>`;
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">Three Dots (⋮)</b><span style="${descStyle}">Tap ⋮ at the top-right of your browser.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Settings ⚙️</b><span style="${descStyle}">Tap 'Settings'.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Site Settings</b><span style="${descStyle}">Scroll down and tap 'Site Settings'.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">4</div><div><b style="${titleStyle}">Notifications</b><span style="${descStyle}">Tap 'Notifications' → find solmates.in under 'Not Allowed' → tap ⋮ next to it and select <b>Allow</b>.</span></div></div>`;
       }
 
       overlay.style.display = 'flex';
@@ -3073,7 +3073,7 @@
       <div class="repair-content" style="background: var(--bg-card, #fff); padding: 20px; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
         <div class="repair-icon" style="font-size: 30px; color: #ef4444; margin-bottom: 10px;"><i class="fas fa-bell-slash"></i></div>
         <h2 class="repair-title" style="font-size: 17px; font-weight: 800; color: var(--text-main, #333); margin-bottom: 6px;">Notifications Blocked</h2>
-        <p id="repair-subtitle" class="repair-subtitle" style="font-size: 12px; color: var(--text-muted, #666); margin-bottom: 14px; line-height: 1.4;">Chrome settings mein notifications band hain. Ise chalu karne ke liye:</p>
+        <p id="repair-subtitle" class="repair-subtitle" style="font-size: 12px; color: var(--text-muted, #666); margin-bottom: 14px; line-height: 1.4;">Notifications are blocked in Chrome settings:</p>
         <div id="repair-steps-container" style="text-align: left;"></div>
         <button class="repair-close-btn" onclick="closeRepairGuide()" style="margin-top: 14px; width: 100%; background: #0f2b46; color: white; padding: 11px; border-radius: 12px; border: none; font-weight: 700; font-size: 14px; cursor: pointer;">Got it</button>
       </div>
