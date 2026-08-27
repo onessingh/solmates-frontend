@@ -2867,81 +2867,54 @@
     }
 
     async function confirmSemSelection() {
-      const btn = document.getElementById('confirmSemSubBtn');
-      const allCheck = document.getElementById('sem_all');
-      const checks = document.querySelectorAll('.sem-sub-check');
-      
-      let uiSelected = [];
-      let pushSelected = [];
-      
-      if (allCheck.checked) {
-        uiSelected = ['all'];
-        pushSelected = ['all', '0', '1', '2', '3', '4'];
-      } else {
-        uiSelected = Array.from(checks).filter(c => c.checked).map(c => c.value);
-        pushSelected = [...uiSelected];
-        // Ensure users always receive global and general announcements
-        if (!pushSelected.includes('0')) pushSelected.push('0');
-        // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
-      }
-
-      if (uiSelected.length === 0) {
-        alert('Please select at least one semester!');
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerText = 'Subscribing...';
-
-      try {
-        // [v122.0] TWA/Native App: Chrome browser permission may be 'denied' but FCM still works via Android bridge
-        // So for standalone/TWA, SKIP PushManager (web push) and use native FCM token route
-        const isTWA = window.matchMedia('(display-mode: standalone)').matches ||
-                      (typeof window.isWebView === 'function' && window.isWebView()) ||
-                      (typeof window.isMedianApp === 'function' && window.isMedianApp()) ||
-                      !!localStorage.getItem('solmates_fcm_token') ||
-                      !!localStorage.getItem('sol_fcm_token');
-
-        if (isTWA) {
-          // Native bridge sync (Median/AppMachine)
-          if (typeof window.syncNativePushTags === 'function') {
-            window.syncNativePushTags(pushSelected);
-          }
-          // Register FCM token with backend if available
-          const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
-          if (fcmToken && window.solmatesAPI) {
-            const deviceId = typeof window.solmatesAPI.getDeviceId === 'function' ? window.solmatesAPI.getDeviceId() : null;
-            window.solmatesAPI.request('/notifications/subscribe', {
-              method: 'POST',
-              body: JSON.stringify({
-                subscription: null, fcmToken, deviceId, semesters: pushSelected,
-                metadata: { isApp: true, appSource: 'twa', platform: navigator.platform, userAgent: navigator.userAgent }
-              })
-            }).catch(e => console.warn('[TWA] FCM backend register error:', e));
-          }
+        const btn = document.getElementById('confirmSemSubBtn');
+        const allCheck = document.getElementById('sem_all');
+        const checks = document.querySelectorAll('.sem-sub-check');
+        
+        let uiSelected = [];
+        let pushSelected = [];
+        
+        if (allCheck.checked) {
+          uiSelected = ['all'];
+          pushSelected = ['all', '0', '1', '2', '3', '4'];
         } else {
-          // Standard browser WebPush via PushManager
-          await window.solmatesAPI.subscribeToPush(pushSelected);
-          if (typeof window.syncNativePushTags === 'function') {
-            window.syncNativePushTags(pushSelected);
-          }
+          uiSelected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+          pushSelected = [...uiSelected];
+          // Ensure users always receive global and general announcements
+          if (!pushSelected.includes('0')) pushSelected.push('0');
         }
-
-        localStorage.setItem('sol_notif_enabled', 'true');
-        localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
-        closeSemSelectionModal();
-        updateNotifyUI();
-        alert('Notifications enabled! You will now receive instant alerts.');
-      } catch (err) {
-        console.error('Subscription error:', err);
-        alert('Subscription failed: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = 'Confirm Subscription';
+  
+        if (uiSelected.length === 0) {
+          alert('Please select at least one semester!');
+          return;
+        }
+  
+        btn.disabled = true;
+        btn.innerText = 'Subscribing...';
+  
+        try {
+          await window.solmatesAPI.subscribeToPush(pushSelected);
+          
+          // [v104.5] App Bridge Sync
+          if (typeof window.syncNativePushTags === 'function') {
+             window.syncNativePushTags(pushSelected);
+          }
+  
+          localStorage.setItem('sol_notif_enabled', 'true');
+          localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
+          closeSemSelectionModal();
+          updateNotifyUI();
+          alert('Notification settings updated successfully! 🔔');
+        } catch (err) {
+          console.error('Subscription error:', err);
+          alert('Subscription failed: ' + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.innerText = 'Confirm Subscription';
+        }
       }
-    }
 
-    window.addEventListener('focus', updateNotifyUI);
+      window.addEventListener('focus', updateNotifyUI);
 
     async function initPushUI() {
       updateNotifyUI(); 
