@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2705,201 +2705,6 @@
       localStorage.setItem('sol_soft_prompt_dismissed', Date.now().toString());
       const banner = document.getElementById('soft-prompt-banner');
       if (banner) banner.classList.remove('active');
-          location.reload();
-        } else {
-          alert('Failed to add: ' + (res.error || 'Unknown error'));
-        }
-      } catch (err) {
-        console.error('[ADMIN] Error:', err);
-        alert('Error: ' + err.message);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }
-    }); // end addNoticeForm
-
-    }); // end DOMContentLoaded form handlers
-
-    // Delete Notice Handler
-    async function togglePinNotice(id, semester, currentlyPinned) {
-      if (!confirm(`Are you sure you want to ${currentlyPinned ? 'UNPIN' : 'PIN'} this notice? Pinned notices will never be automatically deleted.`)) return;
-      try {
-        const token = localStorage.getItem('solmates_admin_token');
-        const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
-        const res = await fetch(`${apiUrl}/sol/notifications/${semester}/${id}/pin`, {
-            method: 'PUT',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (data.success) {
-          localStorage.removeItem(`cached_notices_sem${semester}`);
-          alert(`Notification successfully ${currentlyPinned ? 'unpinned' : 'pinned'}!`);
-          location.reload();
-        } else {
-          throw new Error(data.error || 'Failed to update pin status');
-        }
-      } catch (err) {
-        alert('Error updating pin status: ' + err.message);
-      }
-    }
-
-    async function deleteNotice(id, semester) {
-      if (!confirm('Bhai, pakka delete karna hai?')) return;
-      try {
-        const res = await solmatesAPI.deleteSOLItem('notifications', semester, id);
-        if (res.success) {
-          // v74.7: Clear local cache for this semester to ensure the deleted item vanishes
-          localStorage.removeItem(`cached_notices_sem${semester}`);
-          alert('Notification deleted!');
-          location.reload();
-        }
-      } catch (err) {
-        alert('Error deleting: ' + err.message);
-      }
-    }
-
-  // v83.14: Bulk Selection with Persistence
-    function toggleSelectAllSemNotices() {
-      const activeList = document.querySelector('.notification-list.active');
-      if (!activeList) return;
-      const checkboxes = activeList.querySelectorAll('.notice-checkbox');
-      if (checkboxes.length === 0) return;
-      
-      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-      const newState = !allChecked;
-
-      checkboxes.forEach(cb => {
-        cb.checked = newState;
-        const noticeId = cb.value;
-        if (newState) window.selectedNoticeIds.add(noticeId);
-        else window.selectedNoticeIds.delete(noticeId);
-      });
-      // v83.23.1: Sync bulk toggle to session storage
-      sessionStorage.setItem('sol_selected_notices', JSON.stringify(Array.from(window.selectedNoticeIds)));
-      console.log(`[SELECTION] Bulk Toggle: ${newState ? 'Selected' : 'Deselected'} all. Total: ${window.selectedNoticeIds.size}`);
-    }
-
-
-    async function deleteSelectedSemNotices() {
-      if (window.selectedNoticeIds.size === 0) return alert('Pehle notices select karein!');
-      
-      const total = window.selectedNoticeIds.size;
-      if (!confirm(`Kya aap sach mein ${total} items delete karna chahte hain? Ye permanent hoga.`)) return;
-      
-      const btn = document.querySelector('#admin-bulk-actions .delete-btn');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing...`;
-      btn.style.opacity = '0.7';
-      btn.disabled = true;
-
-      let successCount = 0;
-      const idsToDelete = Array.from(window.selectedNoticeIds);
-
-      for (const noticeId of idsToDelete) {
-        try {
-          const checkbox = document.querySelector(`.notice-checkbox[value="${noticeId}"]`);
-          const semester = checkbox ? checkbox.getAttribute('data-semester') : window.currentSemester;
-          
-          const res = await solmatesAPI.deleteSOLItem('notifications', parseInt(semester), noticeId);
-          if (res && res.success !== false) {
-             successCount++;
-             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${successCount}/${total} Deleted`;
-             window.selectedNoticeIds.delete(noticeId);
-          }
-        } catch (e) {
-          console.error(`[Bulk Delete Failed] ID: ${noticeId}`, e);
-        }
-      }
-      
-      btn.innerHTML = `<i class="fas fa-check"></i> All Deleted!`;
-      
-      // v83.23.1: Clear selection from session storage after deletion
-      sessionStorage.setItem('sol_selected_notices', JSON.stringify(Array.from(window.selectedNoticeIds)));
-      
-      const semMatches = document.querySelector('.tab-btn.active').getAttribute('onclick').match(/\d+/);
-      const sem = semMatches ? parseInt(semMatches[0]) : window.currentSemester;
-      localStorage.removeItem(`cached_notices_sem${sem}`);
-      
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-        btn.style.opacity = '1';
-        
-        // Force fetch from server
-        activeRequests.delete(sem);
-        lastFetchTime[sem] = 0;
-        showTab(sem);
-      }, 2000);
-    }
-
-    /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
-        function updateNotifyUI() {
-      const btn = document.getElementById('notifyToggleBtn');
-      if (!btn) return;
-
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
-      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
-      const text = btn.querySelector('span');
-      const icon = btn.querySelector('i');
-
-      if (hasNativeFCM && localEnabled) {
-        btn.className = 'notify-status-btn granted';
-        if (text) text.innerText = 'App Notifications Active';
-        icon.className = 'fas fa-check-circle';
-        closeRepairGuide();
-        return;
-      } else if (hasNativeFCM && !localEnabled) {
-        btn.className = 'notify-status-btn';
-        if (text) text.innerText = 'Allow Notifications (App)';
-        icon.className = 'fas fa-bell';
-        closeRepairGuide();
-        checkSoftPromptAvailability();
-        return;
-      }
-
-      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') {
-        btn.style.display = 'none';
-        return;
-      }
-
-      if (perm === 'granted' && localEnabled) {
-        btn.className = 'notify-status-btn granted';
-        if (text) text.innerText = 'Deny Notifications';
-        icon.className = 'fas fa-bell';
-        closeRepairGuide();
-      } else if (perm === 'denied' && !hasNativeFCM && !window.matchMedia('(display-mode: standalone)').matches) {
-        btn.className = 'notify-status-btn denied';
-        if (text) text.innerText = 'Notifications Blocked';
-        icon.className = 'fas fa-bell-slash';
-      } else {
-        btn.className = 'notify-status-btn';
-        if (text) text.innerText = 'Allow Notifications';
-        icon.className = 'fas fa-bell';
-        checkSoftPromptAvailability();
-      }
-    }
-
-    function checkSoftPromptAvailability() {
-      const isNativeApp = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
-      
-      const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
-      const now = Date.now();
-      
-      // Allow banner if it's a native app (since we don't care about browser permission) OR if browser permission is default
-      if ((isNativeApp || perm === 'default') && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
-        setTimeout(() => {
-          const banner = document.getElementById('soft-prompt-banner');
-          if (banner) banner.classList.add('active');
-        }, 3000);
-      }
-    }
-
-    function dismissSoftPrompt() {
-      localStorage.setItem('sol_soft_prompt_dismissed', Date.now().toString());
-      const banner = document.getElementById('soft-prompt-banner');
-      if (banner) banner.classList.remove('active');
     }
 
     async function acceptSoftPrompt() {
@@ -2913,33 +2718,26 @@
       const subtitle = document.getElementById('repair-subtitle');
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const isAPK = typeof window.isMedianApp === 'function' && window.isMedianApp();
-
+      
       if (isAPK) {
-        subtitle.innerText = "SOLMATES App mein notifications band hain. Seedha yahan se allow karo:";
+        subtitle.innerText = "SOLMATES App (APK) mein notifications setup sahi nahi hai. Ise sahi karne ke liye:";
         stepsContainer.innerHTML = `
-          <button onclick="openSolmatesNotifSettings()" style="width:100%;padding:14px;border-radius:14px;background:#0f2b46;color:white;border:none;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
-            <i class="fas fa-bell"></i> Open App Notification Settings
-          </button>
-          <p style="font-size:12px;color:#94a3b8;text-align:center;">Settings mein Notifications → Allow karo, wapas aakar Allow dabao.</p>`;
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>System Settings</b><span>Niche diye gaye button par click karke direct settings kholien.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Allow All</b><span>'Notifications' mein jaakar saare toggles (Show notifications, Pop on screen) ON kar dein.</span></div></div>
+          <button onclick="window.openNativeSettings()" style="margin-top:15px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
+        `;
       } else if (isStandalone) {
-        subtitle.innerText = "SOLMATES App ki notifications band hain. Seedha yahan se allow karo:";
+        subtitle.innerText = "Ye App (Home Screen) par band hain. Ise chalu karne ke liye:";
         stepsContainer.innerHTML = `
-          <button onclick="openSolmatesNotifSettings()" style="width:100%;padding:14px;border-radius:14px;background:#0f2b46;color:white;border:none;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
-            <i class="fas fa-bell"></i> Open App Notification Settings
-          </button>
-          <p style="font-size:12px;color:#94a3b8;text-align:center;">Settings mein Notifications → Allow karo, wapas aakar Allow dabao.</p>`;
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>SOLMATES App Icon</b><span>Phone ki home screen par SOLMATES icon ko long-press karein.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>App Info</b><span>"App Info" (i icon) mein jayein.</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Enable Notifications</b><span>"Notifications" mein jaakar saare toggles ON kar dein.</span></div></div>`;
       } else {
-        subtitle.innerText = "Notifications blocked hain. Niche button dabao — Chrome settings seedha khul jayegi:";
+        subtitle.innerText = "Chrome settings mein notifications band hain. Ise chalu karne ke liye:";
         stepsContainer.innerHTML = `
-          <button onclick="tryOpenChromeSettings()" style="width:100%;padding:14px;border-radius:14px;background:#0f2b46;color:white;border:none;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;">
-            <i class="fas fa-external-link-alt"></i> Open Chrome Notification Settings
-          </button>
-          <div id="chrome-fallback-steps" style="display:none;">
-            <p style="font-size:13px;color:#64748b;margin-bottom:12px;">Agar settings nahi khuli, yeh manually karo:</p>
-            <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Lock Icon 🔒</b><span>Address bar mein lock icon tap karo.</span></div></div>
-            <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications' select karo.</span></div></div>
-            <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow karo</b><span>Toggle ON karo, page reload karega automatically.</span></div></div>
-          </div>`;
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Settings Circle</b><span>Address bar mein 'Lock' ya 'Settings' icon par click karein.</span></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications/Site Settings' par jayein.</span></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow</b><span>Wahan toggle ON kar dein aur page reload karein.</span></div></div>`;
       }
       overlay.classList.add('active');
     }
@@ -2947,34 +2745,6 @@
     function closeRepairGuide() {
       const overlay = document.getElementById('repair-guide-overlay');
       if (overlay) overlay.classList.remove('active');
-    }
-
-    function tryOpenChromeSettings() {
-      const siteOrigin = encodeURIComponent(window.location.origin);
-      window.location.href = 'intent://settings/content/siteDetails?site=' + siteOrigin + '#Intent;scheme=googlechrome;package=com.android.chrome;end';
-      setTimeout(function() {
-        if (document.hasFocus()) {
-          try { window.location.href = 'googlechrome://settings/content/notifications'; } catch(e) {}
-        }
-      }, 1500);
-      setTimeout(function() {
-        if (document.hasFocus()) {
-          var fallback = document.getElementById('chrome-fallback-steps');
-          if (fallback) fallback.style.display = 'block';
-        }
-      }, 3000);
-    }
-
-    function openSolmatesNotifSettings() {
-      // Android intent to open Solmates (in.solmates.app) notification settings directly
-      var intentUrl = 'intent:#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;S.android.package=in.solmates.app;end';
-      window.location.href = intentUrl;
-      // Fallback: open general notification settings after 2s if still on page
-      setTimeout(function() {
-        if (document.hasFocus()) {
-          window.location.href = 'intent:#Intent;action=android.settings.ACTION_APP_NOTIFICATION_SETTINGS;S.app_package=in.solmates.app;end';
-        }
-      }, 2000);
     }
 
         async function handleNotifyToggle() {
@@ -3136,6 +2906,28 @@
 
     async function initPushUI() {
       updateNotifyUI(); 
+
+      // [v123.0] TWA Standalone: auto-trigger native Allow/Deny popup on FIRST open
+      // This is the simplest approach - browser shows its own native dialog automatically
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const neverAsked = !localStorage.getItem('sol_notif_asked');
+      if (isStandalone && neverAsked && typeof Notification !== 'undefined') {
+        localStorage.setItem('sol_notif_asked', '1');
+        try {
+          // Small delay so page loads first before popup appears
+          setTimeout(async () => {
+            if (Notification.permission === 'default') {
+              const result = await Notification.requestPermission();
+              if (result === 'granted') {
+                // Permission granted - open semester selection
+                openSemSelectionModal();
+              }
+              updateNotifyUI();
+            }
+          }, 1500);
+        } catch(e) { console.warn('[PUSH] Auto-prompt failed:', e); }
+      }
+
       if (window.isWebView && window.isWebView()) {
         console.log('[PUSH] WebView detected. Skipping browser push registration; using native bridge.');
         return;
@@ -3376,9 +3168,6 @@
   </div>
 </body>
 </html>
-
-
-
 
 
 
