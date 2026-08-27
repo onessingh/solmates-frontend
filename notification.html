@@ -2642,7 +2642,7 @@
       const btn = document.getElementById('notifyToggleBtn');
       if (!btn) return;
 
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
       const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       const text = btn.querySelector('span');
@@ -2748,7 +2748,7 @@
     }
 
         async function handleNotifyToggle() {
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       
       if (hasNativeFCM) {
