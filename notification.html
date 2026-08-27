@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2733,11 +2733,18 @@
           <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>App Info</b><span>"App Info" (i icon) mein jayein.</span></div></div>
           <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Enable Notifications</b><span>"Notifications" mein jaakar saare toggles ON kar dein.</span></div></div>`;
       } else {
-        subtitle.innerText = "Chrome settings mein notifications band hain. Ise chalu karne ke liye:";
+        subtitle.innerText = "Notifications blocked hain. Niche button dabao — Chrome settings seedha khul jayegi:";
+        const siteUrl = encodeURIComponent(window.location.origin);
         stepsContainer.innerHTML = `
-          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Settings Circle</b><span>Address bar mein 'Lock' ya 'Settings' icon par click karein.</span></div></div>
-          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications/Site Settings' par jayein.</span></div></div>
-          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow</b><span>Wahan toggle ON kar dein aur page reload karein.</span></div></div>`;
+          <button onclick="tryOpenChromeSettings()" style="width:100%;padding:14px;border-radius:14px;background:#0f2b46;color:white;border:none;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;">
+            <i class="fas fa-external-link-alt"></i> Open Chrome Notification Settings
+          </button>
+          <div id="chrome-fallback-steps" style="display:none;">
+            <p style="font-size:13px;color:#64748b;margin-bottom:12px;">Agar settings nahi khuli, yeh manually karo:</p>
+            <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Lock Icon 🔒</b><span>Address bar mein lock icon tap karo.</span></div></div>
+            <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications' select karo.</span></div></div>
+            <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow karo</b><span>Toggle ON karo, page reload karega automatically.</span></div></div>
+          </div>`;
       }
       overlay.classList.add('active');
     }
@@ -2745,6 +2752,22 @@
     function closeRepairGuide() {
       const overlay = document.getElementById('repair-guide-overlay');
       if (overlay) overlay.classList.remove('active');
+    }
+
+    function tryOpenChromeSettings() {
+      const siteOrigin = encodeURIComponent(window.location.origin);
+      window.location.href = 'intent://settings/content/siteDetails?site=' + siteOrigin + '#Intent;scheme=googlechrome;package=com.android.chrome;end';
+      setTimeout(function() {
+        if (document.hasFocus()) {
+          try { window.location.href = 'googlechrome://settings/content/notifications'; } catch(e) {}
+        }
+      }, 1500);
+      setTimeout(function() {
+        if (document.hasFocus()) {
+          var fallback = document.getElementById('chrome-fallback-steps');
+          if (fallback) fallback.style.display = 'block';
+        }
+      }, 3000);
     }
 
         async function handleNotifyToggle() {
@@ -3146,6 +3169,8 @@
   </div>
 </body>
 </html>
+
+
 
 
 
