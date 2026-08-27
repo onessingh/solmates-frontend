@@ -820,6 +820,24 @@ class SolmatesAPI {
     });
   }
 
+  async silentPushTokenRefresh() {
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+    try {
+      let semesters = null;
+      const savedSem = localStorage.getItem('sol_subscribed_sems');
+      if (savedSem) {
+        try { semesters = JSON.parse(savedSem); } catch (e) {}
+      } else {
+        const activeSem = localStorage.getItem('solmates_active_semester');
+        if (activeSem) semesters = [activeSem];
+        else semesters = ['all'];
+      }
+      await this.subscribeToPush(semesters);
+    } catch (error) {
+      console.warn('Silent push sync failed:', error);
+    }
+  }
+
   async unsubscribeFromPush() {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.getSubscription();
