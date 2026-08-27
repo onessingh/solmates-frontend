@@ -7,16 +7,20 @@
     function showBanner() {
         if (document.getElementById('solmates-install-banner')) return;
 
-        const isDark = document.body.classList.contains('dark-theme') ||
-                       document.documentElement.classList.contains('dark-theme') ||
-                       document.body.getAttribute('data-theme') === 'dark' ||
-                       window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // Strictly check Solmates app active theme (not OS media query)
+        const savedTheme = localStorage.getItem('solmates_theme');
+        const darkStyle = document.getElementById('theme-dark-style');
+        const isDark = (savedTheme === 'dark') ||
+                       (document.documentElement.getAttribute('data-solmates-theme') === 'dark') ||
+                       (document.body.classList.contains('dark-theme')) ||
+                       (darkStyle && darkStyle.media === 'all');
 
         const bg     = isDark ? '#1e2535' : '#ffffff';
         const border = isDark ? '#2e3a50' : '#eaeaea';
         const title  = isDark ? '#f1f5f9' : '#111111';
         const sub    = isDark ? '#94a3b8' : '#666666';
-        const shadow = isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.15)';
+        const shadow = isDark ? '0 4px 15px rgba(0,0,0,0.5)' : '0 4px 15px rgba(0,0,0,0.15)';
+        const btnBg  = isDark ? '#2563eb' : '#007bff';
         const close  = isDark ? '#94a3b8' : '#999999';
 
         const banner = document.createElement('div');
@@ -30,7 +34,7 @@
             max-width: 400px;
             background: ${bg};
             border-radius: 12px;
-            box-shadow: 0 4px 15px ${shadow};
+            box-shadow: ${shadow};
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -49,7 +53,7 @@
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 10px;">
-                <button id="solmates-install-btn" style="background: #0f2b46; color: #fff; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer;">Install</button>
+                <button id="solmates-install-btn" style="background: ${btnBg}; color: #fff; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer;">Install</button>
                 <button id="solmates-close-banner" style="background: transparent; color: ${close}; border: none; font-size: 20px; cursor: pointer; padding: 0 5px;">&times;</button>
             </div>
         `;
