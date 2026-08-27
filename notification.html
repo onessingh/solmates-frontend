@@ -2642,7 +2642,7 @@
       const btn = document.getElementById('notifyToggleBtn');
       if (!btn) return;
 
-      const hasNativeFCM = !!localStorage.getItem('sol_fcm_token');
+      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
       const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       const text = btn.querySelector('span');
@@ -2659,6 +2659,7 @@
         if (text) text.innerText = 'Allow Notifications (App)';
         icon.className = 'fas fa-bell';
         closeRepairGuide();
+        checkSoftPromptAvailability();
         return;
       }
 
@@ -2672,7 +2673,7 @@
         if (text) text.innerText = 'Deny Notifications';
         icon.className = 'fas fa-bell';
         closeRepairGuide();
-      } else if (perm === 'denied') {
+      } else if (perm === 'denied' && !hasNativeFCM && !window.matchMedia('(display-mode: standalone)').matches) {
         btn.className = 'notify-status-btn denied';
         if (text) text.innerText = 'Notifications Blocked';
         icon.className = 'fas fa-bell-slash';
@@ -2685,10 +2686,14 @@
     }
 
     function checkSoftPromptAvailability() {
-      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
+      const isNativeApp = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
+      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+      
       const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
       const now = Date.now();
-      if (Notification.permission === 'default' && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
+      
+      // Allow banner if it's a native app (since we don't care about browser permission) OR if browser permission is default
+      if ((isNativeApp || perm === 'default') && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
         setTimeout(() => {
           const banner = document.getElementById('soft-prompt-banner');
           if (banner) banner.classList.add('active');
@@ -2743,7 +2748,7 @@
     }
 
         async function handleNotifyToggle() {
-      const hasNativeFCM = !!localStorage.getItem('sol_fcm_token');
+      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       
       if (hasNativeFCM) {
@@ -2760,7 +2765,8 @@
 
       if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
       const perm = Notification.permission;
-      if (perm === 'denied') { showRepairGuide(); return; }
+      const isTwaOrNative = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
+      if (perm === 'denied' && !isTwaOrNative) { showRepairGuide(); return; }
       const btn = document.getElementById('notifyToggleBtn');
       
       if (perm === 'granted' && localEnabled) {
