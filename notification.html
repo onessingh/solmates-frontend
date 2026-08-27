@@ -2766,50 +2766,71 @@
     }
 
         async function handleNotifyToggle() {
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
-      
-      if (hasNativeFCM) {
-          if (localEnabled) {
-              if (confirm("Stop receiving notifications on this device?")) {
-                  localStorage.setItem('sol_notif_enabled', 'false');
-                  updateNotifyUI();
-              }
-          } else {
-              openSemSelectionModal();
-          }
-          return;
+        const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
+        const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
+        
+        // Ensure browser Notification API is checked first to trigger OS prompt in TWA
+        if (typeof Notification !== 'undefined' && Notification.permission && typeof Notification.requestPermission === 'function') {
+            const perm = Notification.permission;
+            const isTWA = window.matchMedia('(display-mode: standalone)').matches || !!localStorage.getItem('solmates_fcm_token');
+            
+            if (perm === 'denied') {
+                if (isTWA) {
+                    showNotifBlockedPrompt();
+                } else {
+                    showRepairGuide();
+                }
+                return;
+            }
+
+            if (perm === 'granted' && localEnabled) {
+                if (confirm("Stop receiving notifications on this device?")) {
+                   try {
+                     if (window.solmatesAPI && window.solmatesAPI.unsubscribeFromPush) {
+                       await window.solmatesAPI.unsubscribeFromPush();
+                     } else {
+                       const registration = await navigator.serviceWorker.ready;
+                       const sub = await registration.pushManager.getSubscription();
+                       if (sub) await sub.unsubscribe();
+                     }
+                   } catch (e) {}
+                   localStorage.setItem('sol_notif_enabled', 'false');
+                   updateNotifyUI();
+                }
+                return;
+            }
+
+            // If not granted (i.e. default), we MUST prompt
+            if (perm !== 'granted') {
+                if (!confirm("Receive instant alerts for live classes and MBA notifications on this device?")) return;
+                const status = await Notification.requestPermission();
+                if (status !== 'granted') {
+                    if (status === 'denied') {
+                        isTWA ? showNotifBlockedPrompt() : showRepairGuide();
+                    }
+                    updateNotifyUI(); 
+                    return; 
+                }
+            }
+            
+            openSemSelectionModal();
+            return;
+        }
+
+        // Fallback ONLY if Notification API doesn't exist (e.g. some webviews)
+        if (hasNativeFCM) {
+            if (localEnabled) {
+                if (confirm("Stop receiving notifications on this device?")) {
+                    localStorage.setItem('sol_notif_enabled', 'false');
+                    updateNotifyUI();
+                }
+            } else {
+                openSemSelectionModal();
+            }
+            return;
+        }
       }
 
-      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
-      const perm = Notification.permission;
-      const isTwaOrNative = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      if (perm === 'denied' && !isTwaOrNative) { showRepairGuide(); return; }
-      const btn = document.getElementById('notifyToggleBtn');
-      
-      if (perm === 'granted' && localEnabled) {
-        if (confirm("Stop receiving notifications on this device?")) {
-           try {
-             if (window.solmatesAPI && window.solmatesAPI.unsubscribeFromPush) {
-               await window.solmatesAPI.unsubscribeFromPush();
-             } else {
-               const registration = await navigator.serviceWorker.ready;
-               const sub = await registration.pushManager.getSubscription();
-               if (sub) await sub.unsubscribe();
-             }
-             localStorage.setItem('sol_notif_enabled', 'false');
-             updateNotifyUI();
-           } catch (e) { updateNotifyUI(); }
-        }
-      } else {
-        if (perm !== 'granted') {
-          if (!confirm("Receive instant alerts for live classes and MBA notifications on this device?")) return;
-          const status = await Notification.requestPermission();
-          if (status !== 'granted') { updateNotifyUI(); return; }
-        }
-        openSemSelectionModal();
-      }
-    }
 
     // ========== SEMESTER SELECTION LOGIC (v88.7) ==========
     function openSemSelectionModal() {
