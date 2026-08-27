@@ -2797,6 +2797,7 @@
     function openSemSelectionModal() {
       const modal = document.getElementById('semSelectionModal');
       modal.style.display = 'flex';
+      modal.style.pointerEvents = 'auto';
       
       // Load current selection from localStorage
       const saved = localStorage.getItem('sol_subscribed_sems');
@@ -2813,7 +2814,9 @@
     }
 
     function closeSemSelectionModal() {
-      document.getElementById('semSelectionModal').style.display = 'none';
+      const modal = document.getElementById('semSelectionModal');
+      modal.style.display = 'none';
+      modal.style.pointerEvents = 'none';
     }
 
     function toggleAllSemCheckboxes(checked) {
