@@ -2719,32 +2719,39 @@
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const isAPK = typeof window.isMedianApp === 'function' && window.isMedianApp();
       
+      const stepStyle = "display: flex; align-items: flex-start; gap: 15px; text-align: left; background: var(--bg-nav, #f8fafc); padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border-color, #eee);";
+      const numStyle = "width: 24px; height: 24px; background: #0f2b46; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0;";
+      const titleStyle = "display: block; color: var(--text-main, #333); font-size: 14px; margin-bottom: 4px; font-weight: 700;";
+      const descStyle = "color: var(--text-muted, #666); font-size: 13px; line-height: 1.4;";
+
       if (isAPK) {
-        subtitle.innerText = "SOLMATES App (APK) mein notifications setup sahi nahi hai. Ise sahi karne ke liye:";
+        subtitle.innerText = "SOLMATES App mein notifications setup sahi nahi hai:";
         stepsContainer.innerHTML = `
-          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>System Settings</b><span>Niche diye gaye button par click karke direct settings kholien.</span></div></div>
-          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Allow All</b><span>'Notifications' mein jaakar saare toggles (Show notifications, Pop on screen) ON kar dein.</span></div></div>
-          <button onclick="window.openNativeSettings()" style="margin-top:15px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">System Settings</b><span style="${descStyle}">Niche diye gaye button par click karke settings kholien.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Allow All</b><span style="${descStyle}">'Notifications' mein jaakar saare toggles ON kar dein.</span></div></div>
+          <button onclick="window.openNativeSettings()" style="margin-top:15px; width:100%; padding:14px; border-radius:14px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
         `;
       } else if (isStandalone) {
-        subtitle.innerText = "Ye App (Home Screen) par band hain. Ise chalu karne ke liye:";
+        subtitle.innerText = "Home Screen App par notifications band hain:";
         stepsContainer.innerHTML = `
-          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>SOLMATES App Icon</b><span>Phone ki home screen par SOLMATES icon ko long-press karein.</span></div></div>
-          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>App Info</b><span>"App Info" (i icon) mein jayein.</span></div></div>
-          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Enable Notifications</b><span>"Notifications" mein jaakar saare toggles ON kar dein.</span></div></div>`;
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">App Icon</b><span style="${descStyle}">Phone ki home screen par SOLMATES icon ko long-press karein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">App Info</b><span style="${descStyle}">"App Info" (i icon) mein jayein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Enable</b><span style="${descStyle}">"Notifications" mein jaakar toggles ON kar dein.</span></div></div>`;
       } else {
-        subtitle.innerText = "Chrome settings mein notifications band hain. Ise chalu karne ke liye:";
+        subtitle.innerText = "Chrome settings mein notifications band hain:";
         stepsContainer.innerHTML = `
-          <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Settings Circle</b><span>Address bar mein 'Lock' ya 'Settings' icon par click karein.</span></div></div>
-          <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>Permissions</b><span>'Notifications/Site Settings' par jayein.</span></div></div>
-          <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>Allow</b><span>Wahan toggle ON kar dein aur page reload karein.</span></div></div>`;
+          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">Three Dots Menu</b><span style="${descStyle}">Upar corner mein ⋮ Three Dots par click karein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Settings</b><span style="${descStyle}">Menu mein se 'Settings' (⚙️) icon par click karein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Site Settings</b><span style="${descStyle}">Niche scroll karke 'Site Settings' par jayein.</span></div></div>
+          <div style="${stepStyle}"><div style="${numStyle}">4</div><div><b style="${titleStyle}">Sound & Notifications</b><span style="${descStyle}">Notifications ya Sound par click karke 'Allow' karein.</span></div></div>`;
       }
-      overlay.classList.add('active');
+
+      overlay.style.display = 'flex';
     }
 
     function closeRepairGuide() {
       const overlay = document.getElementById('repair-guide-overlay');
-      if (overlay) overlay.classList.remove('active');
+      if (overlay) overlay.style.display = 'none';
     }
 
         async function handleNotifyToggle() {
@@ -3062,15 +3069,15 @@
     </div>
   </div>
 
-  <div id="repair-guide-overlay" class="repair-guide-overlay">
-    <div class="repair-content">
-      <div class="repair-icon"><i class="fas fa-bell-slash"></i></div>
-      <h2 class="repair-title">Notifications Blocked</h2>
-      <p id="repair-subtitle" class="repair-subtitle">Settings mein notifications band hain.</p>
-      <div id="repair-steps-container"></div>
-      <button class="repair-close-btn" onclick="closeRepairGuide()">Got it</button>
+  <div id="repair-guide-overlay" class="repair-guide-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);">
+      <div class="repair-content" style="background: var(--bg-card, #fff); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div class="repair-icon" style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"><i class="fas fa-bell-slash"></i></div>
+        <h2 class="repair-title" style="font-size: 22px; font-weight: 800; color: var(--text-main, #333); margin-bottom: 10px;">Notifications Blocked</h2>
+        <p id="repair-subtitle" class="repair-subtitle" style="font-size: 15px; color: var(--text-muted, #666); margin-bottom: 25px; line-height: 1.5;">Chrome settings mein notifications band hain. Ise chalu karne ke liye:</p>
+        <div id="repair-steps-container" style="text-align: left;"></div>
+        <button class="repair-close-btn" onclick="closeRepairGuide()" style="margin-top: 20px; width: 100%; background: #0f2b46; color: white; padding: 14px; border-radius: 14px; border: none; font-weight: 700; font-size: 15px; cursor: pointer;">Got it</button>
+      </div>
     </div>
-  </div>
 
   <!-- Semester Selection Modal (v88.7) -->
   <div id="semSelectionModal" class="admin-modal">
