@@ -32,6 +32,7 @@
       --text-muted: #6e6e73;
     }
 
+
     body {
       font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background: #f5f5f7 !important;
@@ -467,22 +468,30 @@
       margin-bottom: 20px;
     }
 
-    .question-box {
-      background: var(--bg-body);
-      border-radius: 28px;
-      padding: 28px;
-      border: 1px solid #f0f0f3;
+    .question-box, .q-block {
+      background: var(--bg-body, #ffffff);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 30px;
+      border: 1.5px solid var(--border-color, #e2e8f0);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+
+    .q-block.unanswered {
+      border-color: #ef4444 !important;
+      background: #fef2f2 !important;
     }
 
     .question-text {
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-size: 1.15rem;
+      font-weight: 700;
       letter-spacing: -0.01em;
-      color: #1d1c1f;
-      margin-bottom: 24px;
+      color: var(--text-main, #1d1c1f);
+      margin-bottom: 18px;
       word-wrap: break-word;
       overflow-wrap: break-word;
+      line-height: 1.4;
     }
 
     .options {
@@ -661,6 +670,33 @@
       color: #0071e3;
     }
 
+    .exp-heading {
+      color: #0071e3;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .exp-bold {
+      color: var(--text-main, #1e293b);
+      font-weight: 700;
+    }
+
+    .exp-ul {
+      margin-bottom: 15px;
+      margin-top: 5px;
+      color: var(--text-main, #334155);
+      padding-left: 20px;
+    }
+
+    .exp-li {
+      margin-bottom: 6px;
+      color: inherit;
+    }
+
     .btn-why {
       background: #f0f0f0;
       border: none;
@@ -753,118 +789,156 @@
         --brand-accent: #c0962d;
       }
 
-    
+      body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
+      .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
+      .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .resume-preview, .feature-item, .info-box { 
+          background: var(--bg-card, #1e293b) !important; 
+          border: 1px solid var(--border-color, #334155) !important; 
+      }
+      h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
+      h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
+      .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
+      input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
+          background: var(--bg-card-hover, #334155) !important; 
+          color: var(--text-main, #f8fafc) !important; 
+          border: 1px solid var(--border-color, #475569) !important; 
+      }
+      input:focus, select:focus, textarea:focus, .searchable-select .select-btn:hover {
+          border-color: var(--brand-primary, #60a5fa) !important;
+      }
+      .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+      .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+      .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
+      .searchable-select .optgroup { background: #334155 !important; color: #94a3b8 !important; }
+      .searchable-select .option-item { background: #1e293b !important; color: #f8fafc !important; }
+      .searchable-select .option-item:hover, .searchable-select .option-item.selected { background: #334155 !important; }
 
-        body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
-        .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
-        .card, .form-card, .result-box, .white-box, .container, .main-content, .card-body, .resume-preview, .feature-item, .info-box { 
-            background: var(--bg-card, #1e293b) !important; 
-            border: 1px solid var(--border-color, #334155) !important; 
-        }
-        h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
-        h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
-        .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
-        input, select, textarea, .searchable-select .select-btn, .search-box input, .dropdown, .input-field, .select-field, .textarea-field { 
-            background: var(--bg-card-hover, #334155) !important; 
-            color: var(--text-main, #f8fafc) !important; 
-            border: 1px solid var(--border-color, #475569) !important; 
-        }
-        input:focus, select:focus, textarea:focus, .searchable-select .select-btn:hover {
-            border-color: var(--brand-primary, #60a5fa) !important;
-        }
-        .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
-        .searchable-select .dropdown option, .searchable-select .option { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
-        .searchable-select .option:hover { background: var(--bg-card, #1e293b) !important; }
-    
+      /* Fix Question Card & Q-Block in Dark Mode */
+      .q-block, .question-box {
+          background: #1e293b !important;
+          border: 1.5px solid #334155 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+      }
+      .q-block.unanswered {
+          border-color: #ef4444 !important;
+          background: rgba(239, 68, 68, 0.15) !important;
+      }
+      .question-text, .q-block .question-text, .loading-title, .review-item .q-num, .timer {
+          color: #f8fafc !important;
+      }
+      .loading-sub, .review-item .explanation, .progress-label {
+          color: #94a3b8 !important;
+      }
 
-    /* Fix Options Container for Dropdowns */
-    .searchable-select .options-container, .searchable-select .dropdown { 
-        background: #1e293b !important;
-        border-color: #334155 !important;
-    }
-    .searchable-select .optgroup {
-        background: #334155 !important;
-        color: #94a3b8 !important;
-    }
-    .searchable-select .option-item {
-        background: #1e293b !important;
-        color: #f8fafc !important;
-    }
-    .searchable-select .option-item:hover, .searchable-select .option-item.selected {
-        background: #334155 !important;
-    }
+      /* Fix Options in Test (Dark Mode) */
+      .option {
+          background: #0f172a !important;
+          border: 1.5px solid #334155 !important;
+          color: #f8fafc !important;
+      }
+      .option:hover {
+          background: #334155 !important;
+          border-color: #60a5fa !important;
+          color: #ffffff !important;
+      }
+      .option.selected {
+          background: #2563eb !important;
+          border-color: #60a5fa !important;
+          color: #ffffff !important;
+          box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.4) !important;
+      }
 
-    /* Fix Upload Zone */
-    .upload-zone {
-        background: rgba(15, 23, 42, 0.4) !important;
-        border-color: #475569 !important;
-    }
-    .upload-zone:hover {
-        background: rgba(96, 165, 250, 0.1) !important;
-        border-color: #60a5fa !important;
-    }
-    .upload-placeholder i {
-        background: transparent !important;
-        color: #cbd5e1 !important;
-        -webkit-background-clip: initial !important;
-        background-clip: initial !important;
-        -webkit-text-fill-color: initial !important;
-    }
+      /* Fix Review Item & Badges Background */
+      .review-item {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+      }
+      .badge-your {
+          background: rgba(245, 158, 11, 0.2) !important;
+          color: #fbbf24 !important;
+          border: 1px solid rgba(245, 158, 11, 0.3) !important;
+      }
+      .badge-right {
+          background: rgba(34, 197, 94, 0.2) !important;
+          color: #4ade80 !important;
+          border: 1px solid rgba(34, 197, 94, 0.3) !important;
+      }
+      .btn-why {
+          background: #334155 !important;
+          color: #60a5fa !important;
+          border: 1px solid #475569 !important;
+      }
+      .btn-why:hover {
+          background: #475569 !important;
+          color: #93c5fd !important;
+      }
 
-    /* Fix Question & Loading Text */
-    .question-text, .loading-title, .review-item .q-num, .timer {
-        color: #f8fafc !important;
-    }
-    .loading-sub, .review-item .explanation, .progress-label {
-        color: #94a3b8 !important;
-    }
+      /* Fix AI Explanation Modal Clarity in Dark Mode */
+      .modal {
+          background: rgba(0, 0, 0, 0.75) !important;
+          backdrop-filter: blur(5px);
+      }
+      .modal-content {
+          background: #1e293b !important;
+          border: 1px solid #334155 !important;
+          color: #f8fafc !important;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+      }
+      .modal-content h3 {
+          color: #60a5fa !important;
+      }
+      .modal-close {
+          color: #94a3b8 !important;
+      }
+      .modal-close:hover {
+          color: #f8fafc !important;
+      }
+      .explanation-text {
+          color: #cbd5e1 !important;
+      }
+      .exp-heading {
+          color: #60a5fa !important;
+          border-bottom: 1px solid #334155 !important;
+      }
+      .exp-bold {
+          color: #ffffff !important;
+          font-weight: 700 !important;
+      }
+      .exp-ul {
+          color: #cbd5e1 !important;
+      }
+      .exp-li {
+          color: #cbd5e1 !important;
+      }
 
-    /* Fix Review Item Background */
-    .review-item {
-        background: #1e293b !important;
-        border-color: #334155 !important;
-    }
-    
-    /* Fix Selected Test Option (Question Answers) */
-    .option.selected {
-        background: #3b82f6 !important;
-        border-color: #60a5fa !important;
-        color: #ffffff !important;
-    }
-    
-    /* Fix Dual Badge (Experience Select) */
-    .dual-badge {
-        background: #334155 !important;
-        border-color: #475569 !important;
-    }
-    .dual-badge select {
-        background: transparent !important;
-        border: none !important;
-    }
-    
-    /* Fix Result Score 1/15 */
-    .result-score {
-        background: linear-gradient(145deg, #f8fafc, #cbd5e1) !important;
-        -webkit-background-clip: text !important;
-        background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
-    }
+      /* Fix Dual Badge (Experience Select) */
+      .dual-badge {
+          background: #334155 !important;
+          border-color: #475569 !important;
+      }
+      .dual-badge select {
+          background: transparent !important;
+          border: none !important;
+      }
 
-        /* Hardcoded class overrides for Dark Mode */
-        .form-control { background: #334155 !important; color: #f8fafc !important; border-color: #475569 !important; }
-        .form-control:focus { background: #1e293b !important; }
-        .loader-overlay { background: #0f172a !important; }
-        .metric-card, .pro-item, .con-item, .list-card, .result-box, .stat-card, .feature-card, .step-card, .empty-state, .history-item { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
-        .m-title { color: #94a3b8 !important; }
-        .m-tag { background: #1e293b !important; color: #cbd5e1 !important; border-color: #475569 !important; }
-        .status-high { background: rgba(22, 163, 74, 0.2) !important; color: #4ade80 !important; }
-        .status-med { background: rgba(202, 138, 4, 0.2) !important; color: #facc15 !important; }
-        .status-low { background: rgba(220, 38, 38, 0.2) !important; color: #f87171 !important; }
-        table th { background: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
-        table td, .list-group-item { background: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
-        .form-control::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
+      /* Fix Result Score */
+      .result-score {
+          background: linear-gradient(145deg, #f8fafc, #cbd5e1) !important;
+          -webkit-background-clip: text !important;
+          background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+      }
 
-
+      .loader-overlay { background: #0f172a !important; }
+      .metric-card, .pro-item, .con-item, .list-card, .result-box, .stat-card, .feature-card, .step-card, .empty-state, .history-item { background: #334155 !important; border-color: #475569 !important; color: #f8fafc !important; }
+      .m-title { color: #94a3b8 !important; }
+      .m-tag { background: #1e293b !important; color: #cbd5e1 !important; border-color: #475569 !important; }
+      .status-high { background: rgba(22, 163, 74, 0.2) !important; color: #4ade80 !important; }
+      .status-med { background: rgba(202, 138, 4, 0.2) !important; color: #facc15 !important; }
+      .status-low { background: rgba(220, 38, 38, 0.2) !important; color: #f87171 !important; }
+      table th { background: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+      table td, .list-group-item { background: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
+      .form-control::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
     </style>
 <script>
     (function() {
@@ -1536,26 +1610,14 @@
         questions.forEach((question, qIdx) => {
           const qBox = document.createElement('div');
           qBox.className = 'q-block';
-          qBox.style.marginBottom = '40px';
-          qBox.style.padding = '20px';
-          qBox.style.background = '#f9fafb';
-          qBox.style.borderRadius = '16px';
-          qBox.style.border = '1px solid #e2e8f0';
           
           const qTitle = document.createElement('div');
           qTitle.className = 'question-text';
-          qTitle.style.fontSize = '18px';
-          qTitle.style.fontWeight = '700';
-          qTitle.style.marginBottom = '16px';
-          qTitle.style.color = '#1e293b';
           qTitle.textContent = `${qIdx + 1}. ${question.text || question.question || 'Question text missing'}`;
           qBox.appendChild(qTitle);
 
           const optsDiv = document.createElement('div');
           optsDiv.className = 'options';
-          optsDiv.style.display = 'flex';
-          optsDiv.style.flexDirection = 'column';
-          optsDiv.style.gap = '10px';
 
           const options = question.options || [];
           options.forEach((opt, optIdx) => {
@@ -1573,8 +1635,7 @@
               answers[qIdx] = optIdx;
               
               // Clear error styles if any
-              qBox.style.border = '1px solid #e2e8f0';
-              qBox.style.backgroundColor = '#f9fafb';
+              qBox.classList.remove('unanswered');
             };
             btn.textContent = opt;
             optsDiv.appendChild(btn);
@@ -1604,11 +1665,9 @@
                     const qBlocks = document.querySelectorAll('.q-block');
                     qBlocks.forEach((block, idx) => {
                         if (unanswered.includes(idx + 1)) {
-                            block.style.border = '2px solid #ef4444';
-                            block.style.backgroundColor = '#fef2f2';
+                            block.classList.add('unanswered');
                         } else {
-                            block.style.border = '1px solid #e2e8f0';
-                            block.style.backgroundColor = '#f9fafb';
+                            block.classList.remove('unanswered');
                         }
                     });
                     
@@ -1727,23 +1786,23 @@
                     let text = expRes.explanation.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     
                     // Standalone headers (English/Hinglish)
-                    text = text.replace(/^\s*\*\*(.*?)\*\*\s*$/gm, '\n<h4 style="color: #0071e3; margin-top: 16px; margin-bottom: 8px; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">$1</h4>\n');
+                    text = text.replace(/^\s*\*\*(.*?)\*\*\s*$/gm, '\n<h4 class="exp-heading">$1</h4>\n');
                     
                     // Inline bold
-                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#1e293b;">$1</strong>');
+                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="exp-bold">$1</strong>');
                     
                     // Lists
-                    text = text.replace(/^[-*]\s+(.*)$/gm, '<li style="margin-bottom:6px; margin-left: 20px;">$1</li>');
+                    text = text.replace(/^[-*]\s+(.*)$/gm, '<li class="exp-li">$1</li>');
                     
                     // Wrap lists and remove newlines between them so pre-wrap doesn't add huge gaps
                     text = text.replace(/(?:<li.*?>.*?<\/li>\n*)+/g, match => {
-                        return '<ul style="margin-bottom:15px; margin-top:5px; color:#334155;">' + match.replace(/\n/g, '') + '</ul>';
+                        return '<ul class="exp-ul">' + match.replace(/\n/g, '') + '</ul>';
                     });
                     
                     // Remove extra newlines around h4
                     text = text.replace(/\n(<h4.*?>.*?<\/h4>)\n/g, '$1');
                     
-                    explanationBody.innerHTML = `<div style="line-height: 1.6; font-size: 14.5px; white-space: pre-wrap;">${text.trim()}</div>`;
+                    explanationBody.innerHTML = `<div class="explanation-text" style="line-height: 1.6; font-size: 14.5px; white-space: pre-wrap;">${text.trim()}</div>`;
                   } else {
                     explanationBody.innerHTML = `<div style="color: #bf3b3b; padding: 10px; background: #ffe5e5; border-radius: 10px;">
                   <i class="fas fa-exclamation-circle"></i> ${expRes.error || 'Could not generate explanation.'}
