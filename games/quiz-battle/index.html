@@ -405,6 +405,17 @@
 
         <button id="btn-start-game" onclick="startGame()" class="hidden w-full btn-primary p-4 font-semibold shadow-sm">Start Game</button>
         <p id="wait-host-msg" class="text-slate-500 dark:text-slate-400 text-sm hidden font-medium">Waiting for host to start...</p>
+
+        <!-- Host Migration Tip -->
+        <div class="mt-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/40 rounded-xl px-4 py-3 text-left flex gap-3 items-start">
+            <span class="text-amber-500 text-lg mt-0.5">&#128161;</span>
+            <div>
+                <p class="text-xs font-bold text-amber-700 dark:text-amber-400 mb-1">Game stuck or screen frozen?</p>
+                <p class="text-xs text-amber-600 dark:text-amber-500 leading-relaxed">
+                    The host may have left. <span class="font-semibold">Don't close the tab</span> - the next player will become the new host and the <span class="font-semibold">game will resume from where it stopped within 30-45 seconds.</span>
+                </p>
+            </div>
+        </div>
     </div>
 
     <!-- Screen 5: Game Active -->
