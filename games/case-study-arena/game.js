@@ -90,7 +90,11 @@ function initPeer(onOpen, onFail) {
                     isMigrating = false; onOpen(myId); });
     peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
+    setInterval(() => {
+        if (!isHost) return;
+        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, caseData: (gameState.gameStarted && gameState.caseData) ? gameState.caseData : null };
+        broadcast(syncData);
+    }, 3000);
 }
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
 
@@ -354,6 +358,16 @@ function copyInviteLink() {
 
 function handleGuestData(data) {
     if (data.type === 'PING') return;
+    if (data.type === 'STATE_SYNC') {
+        players = data.players;
+        if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; }
+        if (data.gameStarted && !gameState.readPhaseStarted) {
+            if (data.caseData) { gameState.caseData = data.caseData; }
+            if (gameState.caseData) { gameState.readPhaseStarted = true; startReadPhase(); }
+        } else if (!gameState.readPhaseStarted) { renderPlayers(); }
+        return;
+    }
+    if (data.type === 'PING_SKIP') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; renderPlayers(); }
     if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }

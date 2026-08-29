@@ -116,7 +116,11 @@ function initPeer(onOpen, onFail) {
                     isMigrating = false; onOpen(myId); });
     peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
+    setInterval(() => {
+        if (!isHost) return;
+        const syncData = { type: 'STATE_SYNC', players: players, gameStarted: gameState.gameStarted || false, round: gameState.round || 0 };
+        broadcast(syncData);
+    }, 3000);
 }
 
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
@@ -234,6 +238,12 @@ function manualJoinRoom() {
 
 function handleGuestData(data) {
     if (data.type === 'PING') return;
+    if (data.type === 'STATE_SYNC') {
+        players = data.players;
+        if (!gameState.gameStarted) renderLobby();
+        return;
+    }
+    if (data.type === 'PING_SKIP') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') {
         players = data.players;

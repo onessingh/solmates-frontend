@@ -150,7 +150,12 @@ function initPeer(onOpen, forceId) {
         }
     });
 
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
+    setInterval(() => {
+        if (!isHost) return;
+        // STATE_SYNC: keep guests in sync even if earlier messages were dropped
+        const syncData = { type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false };
+        broadcast(syncData);
+    }, 3000);
 
     peer.on('open', (id) => {
         myId = id;
@@ -374,6 +379,15 @@ function connectToHost(hostId) {
                 renderLobby();
             } else if(data.type === 'PING') {
                 // keep-alive, ignore
+            } else if(data.type === 'STATE_SYNC') {
+                // Self-healing: update players even if LOBBY_UPDATE was dropped
+                roomState.players = data.players;
+                if (data.topic) document.getElementById('lobby-topic').textContent = data.topic;
+                if (data.gameStarted && !roomState.gameStarted) {
+                    roomState.gameStarted = true; startGameUI();
+                } else if (!roomState.gameStarted) {
+                    renderLobby();
+                }
             } else if(data.type === 'START_GAME') {
                 if (data.questions) roomState.backupQuestions = data.questions;
                 if (!roomState.gameStarted) { roomState.gameStarted = true; startGameUI(); }

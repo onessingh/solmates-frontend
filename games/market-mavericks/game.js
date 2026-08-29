@@ -109,7 +109,11 @@ function initPeer(onOpen, onFail) {
                     isMigrating = false; onOpen(myId); });
     peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Error: " + err.type); if (onFail) onFail(); } });
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
-    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
+    setInterval(() => {
+        if (!isHost) return;
+        const syncData = { type: 'STATE_SYNC', players: players, settings: { topic: gameState.topic, totalEvents: gameState.totalEvents, events: gameState.events }, gameStarted: gameState.gameStarted || false };
+        broadcast(syncData);
+    }, 3000);
 }
 
 function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
@@ -229,13 +233,23 @@ function manualJoinRoom() {
 function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
+    if (data.type === 'STATE_SYNC') {
+        players = data.players;
+        gameState = { ...gameState, ...data.settings };
+        if (data.gameStarted && !gameState.gameStarted) {
+            // Game started while we were out of sync — we'll catch the next START_EVENT
+        } else if (!gameState.gameStarted) {
+            renderLobby();
+        }
+        return;
+    }
     if (data.type === 'LOBBY_UPDATE') {
         players = data.players;
         gameState = { ...gameState, ...data.settings };
         document.getElementById('lobby-topic').textContent = `Market Mavericks · ${data.settings.topic} · ${data.settings.totalEvents} Events`;
         renderLobby();
     }
-    if (data.type === 'START_EVENT') { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; gameState.portfolios = data.portfolios; startEventUI(data.event, data.eventIndex); }
+    if (data.type === 'START_EVENT') { gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
     if (data.type === 'TRADE_COUNT') { const el = document.getElementById('waiting-count'); if (el) el.textContent = `${data.count} / ${data.total} traded`; }
     if (data.type === 'EVENT_RESULT') { gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
@@ -286,6 +300,8 @@ function hostNextEvent() {
     myTradeSubmitted = false;
     const event = gameState.events[gameState.eventIndex];
     broadcast({ type: 'START_EVENT', event, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios });
+    setTimeout(() => broadcast({ type: 'START_EVENT', event, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios }), 600);
+    setTimeout(() => broadcast({ type: 'START_EVENT', event, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios }), 1500);
     startEventUI(event, gameState.eventIndex);
 }
 
