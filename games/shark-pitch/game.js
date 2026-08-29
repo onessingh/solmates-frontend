@@ -242,7 +242,7 @@ function handleGuestData(data) {
         renderLobby();
     }
     if (data.type === 'BACKUP_CHALLENGES') { if (data.challenges) gameState.challenges = data.challenges; }
-    if (data.type === 'START_ROUND') { gameState.gameStarted = true; gameState.round = data.round; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); }
+    if (data.type === 'START_ROUND') { if (gameState.round !== data.round) { gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
     if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; gameState._pendingRound = data.round; gameState._pendingTotalRounds = data.totalRounds; }
@@ -296,6 +296,8 @@ function hostNextRound() {
     const challenge = gameState.challenges[gameState.round - 1];
     gameState.currentChallenge = challenge;
     broadcast({ type: 'START_ROUND', challenge, round: gameState.round });
+    setTimeout(() => broadcast({ type: 'START_ROUND', challenge, round: gameState.round }), 500);
+    setTimeout(() => broadcast({ type: 'START_ROUND', challenge, round: gameState.round }), 1500);
     startPitchUI(challenge, gameState.round, gameState.totalRounds, gameState.timePerRound);
 }
 

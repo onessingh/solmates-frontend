@@ -149,6 +149,9 @@ function initPeer(onOpen, forceId) {
             ]
         }
     });
+
+    setInterval(() => { if (isHost) broadcast({ type: 'PING' }); }, 3000);
+
     peer.on('open', (id) => {
         myId = id;
         onOpen(id);
@@ -351,7 +354,7 @@ function manualJoinRoom() {
 function connectToHost(hostId) {
     initPeer((id) => {
         isHost = false;
-        hostConn = peer.connect(hostId);
+        hostConn = peer.connect(hostId, { reliable: true });
         
         hostConn.on('open', () => {
             hostConn.send({ type: 'JOIN', name: myName });
@@ -369,9 +372,11 @@ function connectToHost(hostId) {
                 roomState.players = data.players;
                 document.getElementById('lobby-topic').textContent = data.topic;
                 renderLobby();
+            } else if(data.type === 'PING') {
+                // keep-alive, ignore
             } else if(data.type === 'START_GAME') {
                 if (data.questions) roomState.backupQuestions = data.questions;
-                startGameUI();
+                if (!roomState.gameStarted) { roomState.gameStarted = true; startGameUI(); }
             } else if(data.type === 'BACKUP_QUESTIONS') {
                 if (data.questions) roomState.backupQuestions = data.questions;
             } else if(data.type === 'QUESTION') {
@@ -508,6 +513,8 @@ function startGame() {
     roomState.currentQ = 0;
     
     broadcast({ type: 'START_GAME' });
+    setTimeout(() => broadcast({ type: 'START_GAME' }), 500);
+    setTimeout(() => broadcast({ type: 'START_GAME' }), 1500);
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
     startGameUI();
     

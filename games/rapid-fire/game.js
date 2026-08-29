@@ -324,7 +324,7 @@ function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }
-    if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.questions) gameState.questions = data.questions; startGameUI(); }
+    if (data.type === 'START_GAME') { gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.questions) gameState.questions = data.questions; if (!gameState.gameStarted) { gameState.gameStarted = true; startGameUI(); } }
     if (data.type === 'BACKUP_QUESTIONS') { if (data.questions) gameState.questions = data.questions; } // store for migration/leaderboard
     if (data.type === 'QUESTION') { gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
     if (data.type === 'REVEAL') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
@@ -340,6 +340,8 @@ function startGame() {
     gameState.qIndex = -1;
     gameState.gameStarted = true;
     broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length });
+    setTimeout(() => broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length }), 500);
+    setTimeout(() => broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length }), 1500);
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: shuffled }), 300);
     startGameUI();
     nextQuestion();
