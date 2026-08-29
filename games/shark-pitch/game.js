@@ -245,7 +245,8 @@ function handleGuestData(data) {
     if (data.type === 'START_ROUND') { gameState.gameStarted = true; gameState.round = data.round; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
-    if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; showRoundResults(data.results, data.round, data.totalRounds); }
+    if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; gameState._pendingRound = data.round; gameState._pendingTotalRounds = data.totalRounds; }
+    if (data.type === 'ROUND_RESULTS_DATA') { showRoundResults(data.results, gameState._pendingRound || gameState.round, gameState._pendingTotalRounds || gameState.totalRounds); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
 
@@ -439,7 +440,8 @@ Respond in this exact JSON format only, no extra text:
         return { id: p.id, name: p.name, pitch: p.pitch, aiScore, feedback, points };
     });
 
-    broadcast({ type: 'ROUND_RESULTS', results, scores: gameState.scores, correctCounts: gameState.correctCounts, round: gameState.round, totalRounds: gameState.totalRounds });
+    broadcast({ type: 'ROUND_RESULTS', scores: gameState.scores, correctCounts: gameState.correctCounts, round: gameState.round, totalRounds: gameState.totalRounds });
+    setTimeout(() => broadcast({ type: 'ROUND_RESULTS_DATA', results }), 300);
     showRoundResults(results, gameState.round, gameState.totalRounds);
 }
 
