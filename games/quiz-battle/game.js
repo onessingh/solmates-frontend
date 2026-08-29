@@ -380,6 +380,10 @@ function connectToHost(hostId) {
             } else if(data.type === 'PING') {
                 // keep-alive, ignore
             } else if(data.type === 'STATE_SYNC') {
+        // Self-healing JOIN: if host doesn't have us, resend JOIN
+        if (data.players && !data.players.find(p => p.id === myId)) {
+            hostConn.send({ type: 'JOIN', name: myName });
+        }
                 // Self-healing: update players even if LOBBY_UPDATE was dropped
                 roomState.players = data.players;
                 if (data.topic) document.getElementById('lobby-topic').textContent = data.topic;
@@ -511,6 +515,7 @@ function copyInviteLink() {
 // Game Logic
 function startGame() {
     if(!isHost) return;
+    roomState.gameStarted = true;
     
     // Use the pool that was already built in createRoom()
     let finalPool = roomState.pool || [];

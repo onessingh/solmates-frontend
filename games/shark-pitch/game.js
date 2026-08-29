@@ -239,6 +239,10 @@ function manualJoinRoom() {
 function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'STATE_SYNC') {
+        // Self-healing JOIN: if host doesn't have us, resend JOIN
+        if (data.players && !data.players.find(p => p.id === myId)) {
+            hostConn.send({ type: 'JOIN', name: myName });
+        }
         players = data.players;
         if (!gameState.gameStarted) renderLobby();
         return;

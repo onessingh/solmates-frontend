@@ -359,6 +359,10 @@ function copyInviteLink() {
 function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'STATE_SYNC') {
+        // Self-healing JOIN: if host doesn't have us, resend JOIN
+        if (data.players && !data.players.find(p => p.id === myId)) {
+            hostConn.send({ type: 'JOIN', name: myName });
+        }
         players = data.players;
         if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; }
         if (data.gameStarted && !gameState.readPhaseStarted) {
