@@ -172,7 +172,8 @@ function handleHostData(data, fromId) {
         players.push({ id: fromId, name: data.name, score: 0, correctCounts: 0, disconnected: false });
         gameState.scores[fromId] = 0;
         gameState.correctCounts[fromId] = 0;
-        broadcast({ type: 'LOBBY_UPDATE', players, settings: { topic: gameState.topic, totalRounds: gameState.totalRounds, timePerRound: gameState.timePerRound, challenges: gameState.challenges } });
+        broadcast({ type: 'LOBBY_UPDATE', players, settings: { topic: gameState.topic, totalRounds: gameState.totalRounds, timePerRound: gameState.timePerRound } });
+        setTimeout(() => broadcast({ type: 'BACKUP_CHALLENGES', challenges: gameState.challenges }), 300);
         renderLobby();
     }
     if (data.type === 'PITCH_SUBMIT') {
@@ -240,6 +241,7 @@ function handleGuestData(data) {
         document.getElementById('lobby-topic').textContent = `Shark Pitch · ${data.settings.topic} · ${data.settings.totalRounds} rounds`;
         renderLobby();
     }
+    if (data.type === 'BACKUP_CHALLENGES') { if (data.challenges) gameState.challenges = data.challenges; }
     if (data.type === 'START_ROUND') { gameState.gameStarted = true; gameState.round = data.round; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
@@ -594,7 +596,8 @@ function migrateHost(hostId) {
                     
                     // Resume game
                     setTimeout(() => {
-                        broadcast({ type: 'LOBBY_UPDATE', players, settings: { topic: gameState.topic, totalRounds: gameState.totalRounds, timePerRound: gameState.timePerRound, challenges: gameState.challenges } });
+                        broadcast({ type: 'LOBBY_UPDATE', players, settings: { topic: gameState.topic, totalRounds: gameState.totalRounds, timePerRound: gameState.timePerRound } });
+                        setTimeout(() => broadcast({ type: 'BACKUP_CHALLENGES', challenges: gameState.challenges }), 300);
                         if (gameState.gameStarted && !gameState.gameOver && gameState.round <= gameState.challenges.length) {
                             // resend current round
                             const ch = gameState.challenges[gameState.round - 1];

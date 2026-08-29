@@ -356,7 +356,8 @@ function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; renderPlayers(); }
-    if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.caseData = data.caseData; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startReadPhase(); }
+    if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; startReadPhase(); } /* else: wait for BACKUP_CASE_DATA */ }
+    if (data.type === 'BACKUP_CASE_DATA') { if (data.caseData) { gameState.caseData = data.caseData; startReadPhase(); } }
     if (data.type === 'READ_CASE') { gameState.caseData = data.caseData; startReadPhase(); }
       if (data.type === 'READY_STATUS') { updateReadyStatus(data.readyCount, data.total); }
     if (data.type === 'QUESTION') { gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
@@ -370,7 +371,9 @@ function startGame() {
     players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; gameState.readStatus[p.id] = false; });
     gameState.qIndex = -1;
     gameState.gameStarted = true;
-    broadcast({ type: 'START_GAME', caseData: gameState.caseData });
+    broadcast({ type: 'START_GAME' });
+    // Send caseData separately — fixes mobile host large payload WebRTC drop
+    setTimeout(() => broadcast({ type: 'BACKUP_CASE_DATA', caseData: gameState.caseData }), 300);
     startReadPhase();
 }
 

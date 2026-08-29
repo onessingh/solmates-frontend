@@ -372,6 +372,8 @@ function connectToHost(hostId) {
             } else if(data.type === 'START_GAME') {
                 if (data.questions) roomState.backupQuestions = data.questions;
                 startGameUI();
+            } else if(data.type === 'BACKUP_QUESTIONS') {
+                if (data.questions) roomState.backupQuestions = data.questions;
             } else if(data.type === 'QUESTION') {
                 roomState.currentQ = data.qNum - 1;
                 renderQuestion(data.question, data.qNum, data.totalQ);
@@ -505,7 +507,8 @@ function startGame() {
     roomState.questions = finalPool.slice(0, qCount);
     roomState.currentQ = 0;
     
-    broadcast({ type: 'START_GAME', questions: roomState.questions });
+    broadcast({ type: 'START_GAME' });
+    setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
     startGameUI();
     
     setTimeout(sendNextQuestion, 2000);
