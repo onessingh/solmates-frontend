@@ -297,7 +297,7 @@ async function createRoom() {
         // Listen for incoming connections
         peer.on('connection', (conn) => {
             if(roomState.gameOver) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'This game has already ended. Please create a new room.' }); setTimeout(() => conn.close(), 500); }); return; }
-            if(roomState.players.length >= 4) {
+            if(roomState.players.filter(p => !p.disconnected).length >= 4) {
                 conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'Room is full' }); setTimeout(()=>conn.close(), 500); });
                 return;
             }

@@ -112,10 +112,35 @@ window.Peer = class Peer {
                     }
                 });
                 
-                db.ref(`solmates-rooms/${this.id}/clients/${clientId}`).on('value', valSnap => {
-                    if (!valSnap.exists()) {
+                const clientRef = db.ref(`solmates-rooms/${this.id}/clients/${clientId}`);
+                clientRef.on('value', valSnap => {
+                    const val = valSnap.val();
+                    if (!val) {
+                        // Node fully gone (explicit removal) -> close right away
+                        if (conn._graceTimer) { clearTimeout(conn._graceTimer); conn._graceTimer = null; }
                         conn._handlers.close.forEach(cb => cb());
                         outboxRef.off();
+                        return;
+                    }
+                    if (val.connected === false) {
+                        // Guest went offline (tab backgrounded, brief network drop, etc).
+                        // Give them a grace period to come back before treating them as gone,
+                        // same pattern already used for host-disconnect below.
+                        if (!conn._graceTimer) {
+                            conn._graceTimer = setTimeout(() => {
+                                clientRef.child('connected').once('value', s => {
+                                    if (s.val() === false) {
+                                        conn._handlers.close.forEach(cb => cb());
+                                        outboxRef.off();
+                                    }
+                                    conn._graceTimer = null;
+                                });
+                            }, 15000);
+                        }
+                    } else if (conn._graceTimer) {
+                        // Guest reconnected in time - cancel the pending close
+                        clearTimeout(conn._graceTimer);
+                        conn._graceTimer = null;
                     }
                 });
             }, 50);
@@ -157,8 +182,22 @@ window.Peer = class Peer {
             }
             
             const myRef = db.ref(`solmates-rooms/${hostId}/clients/${clientId}`);
-            myRef.set({ connected: true });
-            myRef.onDisconnect().remove(); 
+            myRef.update({ connected: true, disconnectedAt: null });
+            // Don't delete the node on disconnect - just flag it. A tab going to the
+            // background for a few seconds (e.g. switching apps to share the invite link)
+            // used to permanently drop the guest from the room. Now the host waits out a
+            // grace period (see clientRef listener above) before treating them as gone.
+            myRef.onDisconnect().update({ connected: false, disconnectedAt: firebase.database.ServerValue.TIMESTAMP });
+
+            // Self-heal: whenever THIS device's own connection to Firebase comes back
+            // (tab foregrounded again, network restored), proactively re-mark ourselves
+            // as connected instead of waiting for the host to notice.
+            db.ref('.info/connected').on('value', connSnap => {
+                if (connSnap.val() === true) {
+                    myRef.update({ connected: true, disconnectedAt: null });
+                    myRef.onDisconnect().update({ connected: false, disconnectedAt: firebase.database.ServerValue.TIMESTAMP });
+                }
+            });
             
             const inboxRef = db.ref(`solmates-rooms/${hostId}/clients/${clientId}/inbox`);
             inboxRef.on('child_added', msgSnap => {
