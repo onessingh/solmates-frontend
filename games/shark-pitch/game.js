@@ -355,8 +355,6 @@ function hostNextRound() {
     const challenge = gameState.challenges[gameState.round - 1];
     gameState.currentChallenge = challenge;
     broadcast({ type: 'START_ROUND', challenge, round: gameState.round });
-    setTimeout(() => broadcast({ type: 'START_ROUND', challenge, round: gameState.round }), 500);
-    setTimeout(() => broadcast({ type: 'START_ROUND', challenge, round: gameState.round }), 1500);
     startPitchUI(challenge, gameState.round, gameState.totalRounds, gameState.timePerRound);
 }
 

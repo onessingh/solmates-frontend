@@ -370,8 +370,6 @@ function startGame() {
     gameState.qIndex = -1;
     gameState.gameStarted = true;
     broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length });
-    setTimeout(() => broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length }), 500);
-    setTimeout(() => broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length }), 1500);
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: shuffled }), 300);
     startGameUI();
     nextQuestion();

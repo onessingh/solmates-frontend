@@ -409,8 +409,6 @@ function startGame() {
     gameState.gameStarted = true;
     gameState.readPhaseStarted = true; // Host resets immediately
     broadcast({ type: 'START_GAME' });
-    setTimeout(() => broadcast({ type: 'START_GAME' }), 500);
-    setTimeout(() => broadcast({ type: 'START_GAME' }), 1500);
     // Send caseData separately — fixes mobile host large payload WebRTC drop
     setTimeout(() => broadcast({ type: 'BACKUP_CASE_DATA', caseData: gameState.caseData }), 300);
     startReadPhase();

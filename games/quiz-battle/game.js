@@ -155,7 +155,7 @@ function initPeer(onOpen, forceId) {
         // STATE_SYNC: keep guests in sync even if earlier messages were dropped.
         // Include the actual questions (not just gameStarted) so a guest who missed
         // both START_GAME and BACKUP_QUESTIONS can still recover automatically.
-        const syncData = { type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false, questions: roomState.gameStarted ? roomState.questions : null };
+        const syncData = { type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false, scores: roomState.scores, correctCounts: roomState.correctCounts };
         broadcast(syncData);
     }, 3000);
 
@@ -309,6 +309,13 @@ async function createRoom() {
             });
             conn.on('data', (data) => {
                 guestConns[conn.peer] = conn;
+                if(data.type === 'REQUEST_RECOVERY') {
+                    if (roomState.gameStarted) {
+                        conn.send({ type: 'START_GAME' });
+                        setTimeout(() => conn.send({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
+                        if (roomState.currentQuestion) conn.send(roomState.currentQuestion);
+                    }
+                }
                 if(data.type === 'JOIN') {
                     const existing = roomState.players.find(p => p.id === conn.peer);
                     if (existing) {
@@ -399,15 +406,12 @@ function connectToHost(hostId) {
                 // Self-healing: update players even if LOBBY_UPDATE was dropped
                 roomState.players = data.players;
                 if (data.topic) document.getElementById('lobby-topic').textContent = data.topic;
-                // Self-healing: recover the actual questions if START_GAME/BACKUP_QUESTIONS were both missed
-                if (data.questions && (!roomState.backupQuestions || roomState.backupQuestions.length === 0)) {
-                    roomState.backupQuestions = data.questions;
-                }
                 if (data.gameStarted && !roomState.gameStarted) {
                     hostConn.send({ type: 'REQUEST_RECOVERY' });
                 } else if (!roomState.gameStarted) {
                     renderLobby();
                 }
+                if (data.scores) { roomState.scores = data.scores; roomState.correctCounts = data.correctCounts; }
             } else if(data.type === 'START_GAME') {
                 if (data.questions) roomState.backupQuestions = data.questions;
                 if (!roomState.gameStarted) { roomState.gameStarted = true; startGameUI(); }
@@ -548,8 +552,6 @@ function startGame() {
     roomState.currentQ = 0;
     
     broadcast({ type: 'START_GAME' });
-    setTimeout(() => broadcast({ type: 'START_GAME' }), 500);
-    setTimeout(() => broadcast({ type: 'START_GAME' }), 1500);
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
     startGameUI();
     

@@ -330,8 +330,6 @@ function hostNextEvent() {
     myTradeSubmitted = false;
     const event = gameState.events[gameState.eventIndex];
     broadcast({ type: 'START_EVENT', event, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios });
-    setTimeout(() => broadcast({ type: 'START_EVENT', event, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios }), 600);
-    setTimeout(() => broadcast({ type: 'START_EVENT', event, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios }), 1500);
     startEventUI(event, gameState.eventIndex);
 }
 
