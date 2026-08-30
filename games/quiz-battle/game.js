@@ -404,7 +404,7 @@ function connectToHost(hostId) {
                     roomState.backupQuestions = data.questions;
                 }
                 if (data.gameStarted && !roomState.gameStarted) {
-                    roomState.gameStarted = true; startGameUI();
+                    hostConn.send({ type: 'REQUEST_RECOVERY' });
                 } else if (!roomState.gameStarted) {
                     renderLobby();
                 }
@@ -824,6 +824,13 @@ function migrateHost(hostId) {
                     peer.on('connection', (conn) => {
                         conn.on('data', (data) => {
                             guestConns[conn.peer] = conn;
+                            if(data.type === 'REQUEST_RECOVERY') {
+                                if (roomState.gameStarted) {
+                                    conn.send({ type: 'START_GAME' });
+                                    setTimeout(() => conn.send({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
+                                    if (roomState.currentQuestion) conn.send(roomState.currentQuestion);
+                                }
+                            }
                             if(data.type === 'JOIN') {
                                 let existingPlayer = roomState.players.find(p => p.id === conn.peer);
                                 if (existingPlayer) {

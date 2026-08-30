@@ -199,6 +199,11 @@ function handleHostData(data, fromId) {
         setTimeout(() => broadcast({ type: 'BACKUP_CHALLENGES', challenges: gameState.challenges }), 300);
         renderLobby();
     }
+    if (data.type === 'REQUEST_RECOVERY') {
+        if (gameState.gameStarted && guestConns[fromId]) {
+            guestConns[fromId].send({ type: 'START_ROUND', challenge: gameState.currentChallenge, round: gameState.round });
+        }
+    }
     if (data.type === 'PITCH_SUBMIT') {
         pitches[fromId] = data.pitch;
         updateSubmittedCount();
@@ -272,7 +277,9 @@ function handleGuestData(data) {
         players = data.players;
         // Self-healing: recover the current round's challenge if all 3 START_ROUND
         // broadcasts were missed (same dedupe check as the START_ROUND handler below)
-        if (data.gameStarted && data.challenge && gameState.round !== data.round) {
+        if (data.gameStarted && !gameState.gameStarted) {
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
+        } else if (data.gameStarted && data.challenge && gameState.round !== data.round) {
             gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {};
             startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound);
         }

@@ -259,7 +259,7 @@ function handleGuestData(data) {
         players = data.players;
         gameState = { ...gameState, ...data.settings };
         if (data.gameStarted && !gameState.gameStarted) {
-            // Game started while we were out of sync — we'll catch the next START_EVENT
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
         } else if (!gameState.gameStarted) {
             renderLobby();
         }

@@ -241,6 +241,12 @@ function handleHostData(data, fromId) {
         broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
         renderPlayers();
     }
+    if (data.type === 'REQUEST_RECOVERY') {
+        if (gameState.gameStarted && guestConns[fromId]) {
+            guestConns[fromId].send({ type: 'START_GAME', qCount: gameState.qCount, scores: gameState.scores, correctCounts: gameState.correctCounts });
+            if (gameState.currentQuestion) guestConns[fromId].send({ type: 'QUESTION', qIndex: gameState.qIndex, question: gameState.currentQuestion });
+        }
+    }
     if (data.type === 'ANSWER') {
         gameState.currentAnswers[fromId] = { idx: data.idx, elapsed: data.elapsed };
         checkAllAnswered();
@@ -337,8 +343,9 @@ function handleGuestData(data) {
         }
         players = data.players;
         if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; }
-        if (data.gameStarted && !gameState.gameStarted) { gameState.gameStarted = true; gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startGameUI(); }
-        else if (!gameState.gameStarted) renderPlayers();
+        if (data.gameStarted && !gameState.gameStarted) {
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
+        } else if (!gameState.gameStarted) renderPlayers();
         return;
     }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }

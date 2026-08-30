@@ -1,1 +1,0 @@
-﻿const fs = require('fs'); let d = fs.readFileSync('tools/resumebuilder/script.js', 'utf8'); d = d.replace(/\.template-navyOverlap main \.resume-section h2::before \{ content:'[^']+'; font-size:1\.4rem; \}/, '.template-navyOverlap main .resume-section h2::before { content:\'◆\'; font-size:1.4rem; }'); fs.writeFileSync('tools/resumebuilder/script.js', d, 'utf8');

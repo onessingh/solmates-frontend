@@ -280,6 +280,12 @@ function handleHostData(data, fromId) {
         gameState.readStatus[fromId] = true;
         checkAllReady();
     }
+    if (data.type === 'REQUEST_RECOVERY') {
+        if (gameState.gameStarted && guestConns[fromId]) {
+            guestConns[fromId].send({ type: 'START_READ_PHASE', caseData: gameState.caseData });
+            if (gameState.qIndex >= 0) guestConns[fromId].send({ type: 'QUESTION', qIndex: gameState.qIndex, question: gameState.questions[gameState.qIndex] });
+        }
+    }
     if (data.type === 'ANSWER') {
         gameState.currentAnswers[fromId] = { idx: data.idx, elapsed: data.elapsed };
         checkAllAnswered();
@@ -376,8 +382,7 @@ function handleGuestData(data) {
         players = data.players;
         if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; }
         if (data.gameStarted && !gameState.readPhaseStarted) {
-            if (data.caseData) { gameState.caseData = data.caseData; }
-            if (gameState.caseData) { gameState.readPhaseStarted = true; startReadPhase(); }
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
         } else if (!gameState.readPhaseStarted) { renderPlayers(); }
         return;
     }
