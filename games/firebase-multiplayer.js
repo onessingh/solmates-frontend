@@ -115,6 +115,7 @@ window.Peer = class Peer {
         const hostPresenceRef = db.ref(`solmates-rooms/${this.id}/hostDisconnectedAt`);
         db.ref('.info/connected').on('value', snap => {
             if (snap.val() === true) {
+                this._fire('network_state', { online: true });
                 hostPresenceRef.remove();
                 hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
                 
@@ -128,6 +129,8 @@ window.Peer = class Peer {
                     });
                     db.ref(`solmates-rooms/${this.id}/status`).set({ gameStarted: true, ts: Date.now() });
                 }
+            } else {
+                this._fire('network_state', { online: false });
             }
         });
         

@@ -173,6 +173,24 @@ function initPeer(onOpen, forceId) {
             showToast("Connection error: " + err.type);
         }
     });
+    peer.on('network_state', (state) => {
+        if (!isHost) return;
+        const btn = document.getElementById('btn-start-game');
+        if (state.online) {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = "Start Game";
+                btn.style.opacity = '1';
+            }
+        } else {
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = "Reconnecting to server...";
+                btn.style.opacity = '0.5';
+            }
+            showToast("Network dropped. Reconnecting...", 3000);
+        }
+    });
 }
 
 async function createRoom() {
