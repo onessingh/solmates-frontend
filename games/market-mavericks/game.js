@@ -112,7 +112,7 @@ function initPeer(onOpen, onFail) {
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
     setInterval(() => {
         if (!isHost) return;
-        const syncData = { type: 'STATE_SYNC', players: players, settings: { topic: gameState.topic, totalEvents: gameState.totalEvents, events: gameState.events }, gameStarted: gameState.gameStarted || false };
+        const syncData = { type: 'STATE_SYNC', players: players, settings: { topic: gameState.topic, totalEvents: gameState.totalEvents, events: gameState.events }, gameStarted: gameState.gameStarted || false, eventIndex: gameState.eventIndex, portfolios: gameState.portfolios };
         broadcast(syncData);
     }, 3000);
 }
@@ -260,9 +260,12 @@ function handleGuestData(data) {
         gameState = { ...gameState, ...data.settings };
         if (data.gameStarted && !gameState.gameStarted) {
             hostConn.send({ type: 'REQUEST_RECOVERY' });
+        } else if (data.gameStarted && data.eventIndex !== gameState.eventIndex) {
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
         } else if (!gameState.gameStarted) {
             renderLobby();
         }
+        if (data.portfolios) { gameState.portfolios = data.portfolios; }
         return;
     }
     if (data.type === 'LOBBY_UPDATE') {

@@ -113,7 +113,7 @@ function initPeer(onOpen, onFail) {
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
     setInterval(() => {
         if (!isHost) return;
-        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, qCount: gameState.qCount || 0 };
+        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, qCount: gameState.qCount || 0, qIndex: gameState.qIndex || 0, scores: gameState.scores, correctCounts: gameState.correctCounts };
         broadcast(syncData);
     }, 3000);
 }
@@ -345,7 +345,12 @@ function handleGuestData(data) {
         if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; }
         if (data.gameStarted && !gameState.gameStarted) {
             hostConn.send({ type: 'REQUEST_RECOVERY' });
-        } else if (!gameState.gameStarted) renderPlayers();
+        } else if (data.gameStarted && data.qIndex !== gameState.qIndex) {
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
+        } else if (!gameState.gameStarted) {
+            renderPlayers();
+        }
+        if (data.scores) { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; }
         return;
     }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }

@@ -121,7 +121,7 @@ function initPeer(onOpen, onFail) {
         if (!isHost) return;
         // Include the current round's challenge (not just the round number) so a guest
         // who missed all 3 START_ROUND broadcasts can still recover automatically.
-        const syncData = { type: 'STATE_SYNC', players: players, gameStarted: gameState.gameStarted || false, round: gameState.round || 0, challenge: gameState.gameStarted ? gameState.currentChallenge : null };
+        const syncData = { type: 'STATE_SYNC', players: players, gameStarted: gameState.gameStarted || false, round: gameState.round || 0, challenge: gameState.gameStarted ? gameState.currentChallenge : null, scores: gameState.scores, correctCounts: gameState.correctCounts };
         broadcast(syncData);
     }, 3000);
 }
@@ -280,10 +280,11 @@ function handleGuestData(data) {
         if (data.gameStarted && !gameState.gameStarted) {
             hostConn.send({ type: 'REQUEST_RECOVERY' });
         } else if (data.gameStarted && data.challenge && gameState.round !== data.round) {
-            gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {};
-            startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound);
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
+        } else if (!gameState.gameStarted) {
+            renderLobby();
         }
-        if (!gameState.gameStarted) renderLobby();
+        if (data.scores) { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; }
         return;
     }
     if (data.type === 'PING_SKIP') return;

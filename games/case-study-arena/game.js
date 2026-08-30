@@ -92,7 +92,7 @@ function initPeer(onOpen, onFail) {
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
     setInterval(() => {
         if (!isHost) return;
-        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, caseData: (gameState.gameStarted && gameState.caseData) ? gameState.caseData : null };
+        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, caseData: (gameState.gameStarted && gameState.caseData) ? gameState.caseData : null, qIndex: gameState.qIndex, scores: gameState.scores };
         broadcast(syncData);
     }, 3000);
 }
@@ -383,7 +383,10 @@ function handleGuestData(data) {
         if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; }
         if (data.gameStarted && !gameState.readPhaseStarted) {
             hostConn.send({ type: 'REQUEST_RECOVERY' });
+        } else if (data.gameStarted && data.qIndex !== gameState.qIndex) {
+            hostConn.send({ type: 'REQUEST_RECOVERY' });
         } else if (!gameState.readPhaseStarted) { renderPlayers(); }
+        if (data.scores) { gameState.scores = data.scores; }
         return;
     }
     if (data.type === 'PING_SKIP') return;
