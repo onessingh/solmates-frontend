@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v117.7 - Socket Init Fix)
+ * SOLMATES Service Worker (v117.5 - Mobile WebRTC Overload Fix)
  * Handles background push notifications and offline caching.
  */
 
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v369';
+const CACHE_NAME = 'solmates-cache-v370';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
