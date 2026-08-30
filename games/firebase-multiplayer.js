@@ -50,7 +50,7 @@ class PeerConnection {
         if (this.isHost) {
             if (data) {
                 // Write START events directly to gameState node (fast single-node write)
-                if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT' || data.type === 'SYNC_PREPARE') {
                     db.ref(`solmates-rooms/${this.roomId}/locked`).set(true);
                     const gsPayload = { type: data.type, payload: payload, ts: Date.now() };
                     db.ref(`solmates-rooms/${this.roomId}/gameState`).set(gsPayload);
@@ -258,7 +258,7 @@ window.Peer = class Peer {
                 lastSeenGameStateTs = gs.ts;
                 try {
                     const data = JSON.parse(gs.payload);
-                    if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                    if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT' || data.type === 'SYNC_PREPARE') {
                         conn._emitData(data);
                     }
                 } catch(e) {}
@@ -278,7 +278,7 @@ window.Peer = class Peer {
                     lastSeenGameStateTs = gs2.ts;
                     try {
                         const data = JSON.parse(gs2.payload);
-                        if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                        if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT' || data.type === 'SYNC_PREPARE') {
                             conn._emitData(data);
                         }
                     } catch(e) {}
@@ -378,6 +378,9 @@ window.Peer = class Peer {
 
 window.SolmatesSync = {
     show: function(msg) {
+        let reconnectEl = document.getElementById('sol-host-reconnect');
+        if (reconnectEl) reconnectEl.style.display = 'none';
+        
         let el = document.getElementById('sol-sync-overlay');
         if (!el) {
             el = document.createElement('div');
