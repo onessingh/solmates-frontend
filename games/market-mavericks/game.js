@@ -257,7 +257,7 @@ function manualJoinRoom() {
             }
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { migrateHost(code); });
+        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
@@ -701,7 +701,7 @@ function manualJoinRoomReconnect(code) {
             if(typeof showToast === 'function') showToast("Reconnected!");
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { migrateHost(code); });
+        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });

@@ -469,7 +469,7 @@ function connectToHost(hostId) {
             } else if(data.type === 'QUESTION') {
                 roomState.questionReceived = true;
                 roomState.currentQ = data.qNum - 1;
-                renderQuestion(data.question, data.qNum, data.totalQ);
+                renderQuestion(data.question, data.qNum, data.totalQ, data.deadline);
             } else if(data.type === 'RESULT') {
                 roomState.correctCounts = data.correctCounts || {};
                 roomState.scores = data.scores || {};
@@ -480,30 +480,19 @@ function connectToHost(hostId) {
             }
         });
         
-        hostConn.on('host_disconnect_early', () => {
-            if (roomState.backupQuestions) {
-                migrateHost(hostId);
-            } else {
-                window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
-            }
-        });
+        hostConn.on('host_disconnect_early', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         
         hostConn.on('host_disconnect', () => {
             if (!roomState.backupQuestions) {
                 window.SolmatesHostStatus && window.SolmatesHostStatus.showOffline();
+            } else {
+                migrateHost(hostId);
             }
         });
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         });
-        hostConn.on('close', () => {
-            if (!roomState.backupQuestions) {
-                showToast('Host left the room.');
-                setTimeout(() => window.location.href='/', 2000);
-            } else {
-                migrateHost(hostId);
-            }
-        });
+        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
     });
 }
 
@@ -631,14 +620,15 @@ function sendNextQuestion() {
     // Reset host answers tracking
     roomState.currentAnswers = {};
     
+    const deadline = Date.now() + (typeof serverTimeOffset !== 'undefined' ? serverTimeOffset : 0) + 15000;
     const qData = {
         question: { q: q.q, options: q.options },
         qNum: roomState.currentQ + 1,
-        totalQ: roomState.questions.length
+        totalQ: roomState.questions.length,
+        deadline: deadline
     };
-    
     broadcast({ type: 'QUESTION', ...qData });
-    renderQuestion(qData.question, qData.qNum, qData.totalQ);
+    renderQuestion(qData.question, qData.qNum, qData.totalQ, qData.deadline);
     
     // Host internal timer
     let ticks = 15;
@@ -666,33 +656,38 @@ function updateLiveScoresUI() {
     `).join('');
 }
 
-function renderQuestion(q, qNum, totalQ) {
+function renderQuestion(q, qNum, totalQ, deadline) {
     updateLiveScoresUI();
 
     answered = false;
-    document.getElementById('game-q-num').textContent = `Q ${qNum}/${totalQ}`;
+    document.getElementById('game-q-num').textContent = Q /;
     document.getElementById('question-text').textContent = q.q;
     
     const grid = document.getElementById('options-grid');
     grid.innerHTML = '';
     const letters = ['A', 'B', 'C', 'D'];
     q.options.forEach((opt, idx) => {
-        grid.innerHTML += `<button id="opt-${idx}" class="option-btn p-4 rounded-xl text-left font-semibold text-lg" onclick="submitAnswer(${idx})">${letters[idx]}. ${opt}</button>`;
+        grid.innerHTML += <button id="opt-" class="option-btn p-4 rounded-xl text-left font-semibold text-lg" onclick="submitAnswer()">. </button>;
     });
     
     document.getElementById('answer-feedback').classList.add('hidden');
     
     // Visual Timer
     timeRemaining = 15;
-    document.getElementById('game-timer').textContent = "15s";
+    if (deadline) {
+        const now = Date.now() + (typeof serverTimeOffset !== 'undefined' ? serverTimeOffset : 0);
+        timeRemaining = Math.max(0, Math.ceil((deadline - now) / 1000));
+    }
+    document.getElementById('game-timer').textContent = timeRemaining + "s";
     const bar = document.getElementById('timer-bar');
-    bar.style.width = '100%';
+    bar.style.width = ${(timeRemaining/15)*100}%;
     
     if(questionTimer) clearInterval(questionTimer);
     questionTimer = setInterval(() => {
         timeRemaining--;
+        if (timeRemaining < 0) timeRemaining = 0;
         document.getElementById('game-timer').textContent = timeRemaining + "s";
-        bar.style.width = `${(timeRemaining/15)*100}%`;
+        bar.style.width = ${(timeRemaining/15)*100}%;
         if(timeRemaining <= 0) clearInterval(questionTimer);
     }, 1000);
 }

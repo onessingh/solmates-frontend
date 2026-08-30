@@ -47,7 +47,7 @@ class PeerConnection {
         if (!this.open) return;
         const payload = JSON.stringify(data);
         if (this.isHost) {
-            if (data && (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT' || data.type === 'SYNC_PREPARE')) {
+            if (data && ['START_GAME', 'START_ROUND', 'START_EVENT', 'SYNC_PREPARE', 'QUESTION', 'RESULT', 'REVEAL', 'GAME_OVER', 'END_GAME', 'EVENT_RESULT', 'ROUND_RESULTS', 'ROUND_RESULTS_DATA', 'READ_CASE'].includes(data.type)) {
                 db.ref('solmates-rooms/' + this.roomId + '/locked').set(true);
                 window._solmatesStateVersion = (window._solmatesStateVersion || 0) + 1;
                 const sv = window._solmatesStateVersion;
@@ -110,11 +110,11 @@ window.Peer = class Peer {
         await db.ref('solmates-rooms/' + this.id + '/active').set(true);
         await db.ref('solmates-rooms/' + this.id + '/timestamp').set(firebase.database.ServerValue.TIMESTAMP);
         const hostPresenceRef = db.ref('solmates-rooms/' + this.id + '/hostDisconnectedAt');
-        db.ref('.info/connected').on('value', snap => {
+        db.ref('.info/connected').on('value', async snap => {
             if (snap.val() === true) {
                 this._fire('network_state', { online: true });
-                hostPresenceRef.remove();
-                hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+                await hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+                await hostPresenceRef.remove();
                 if (this._lastGameStartPayload) {
                     db.ref('solmates-rooms/' + this.id + '/gameState').set({ ...this._lastGameStartPayload, ts: Date.now() });
                     db.ref('solmates-rooms/' + this.id + '/status').set({ gameStarted: true, ts: Date.now() });
@@ -193,7 +193,7 @@ window.Peer = class Peer {
                 lastSeenSV = newSV; lastSeenTs = newTs;
                 try {
                     const data = JSON.parse(gs.payload);
-                    if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT' || data.type === 'SYNC_PREPARE') {
+                    if (['START_GAME', 'START_ROUND', 'START_EVENT', 'SYNC_PREPARE', 'QUESTION', 'RESULT', 'REVEAL', 'GAME_OVER', 'END_GAME', 'EVENT_RESULT', 'ROUND_RESULTS', 'ROUND_RESULTS_DATA', 'READ_CASE'].includes(data.type)) {
                         if (data.type === 'START_GAME') conn._syncStarted = true;
                         conn._emitData(data);
                     }
@@ -213,7 +213,7 @@ window.Peer = class Peer {
                     lastSeenSV = newSV; lastSeenTs = newTs;
                     try {
                         const data = JSON.parse(gs2.payload);
-                        if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                        if (['START_GAME', 'START_ROUND', 'START_EVENT', 'QUESTION', 'RESULT', 'REVEAL', 'GAME_OVER', 'END_GAME', 'EVENT_RESULT', 'ROUND_RESULTS', 'ROUND_RESULTS_DATA', 'READ_CASE'].includes(data.type)) {
                             conn._syncStarted = true; conn._emitData(data);
                         }
                     } catch(e) {}
