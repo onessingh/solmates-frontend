@@ -25,10 +25,25 @@ db.ref('.info/serverTimeOffset').on('value', snap => {
 // This prevents false "offline" caused by mobile browser timer throttling.
 if (!window._solmatesGlobalListenersAdded) {
     window._solmatesGlobalListenersAdded = true;
+    
+    const forceReconnect = () => {
+        // Forcefully kill any zombie WebSocket and reconnect
+        db.goOffline();
+        db.goOnline();
+        
+        // If we are the host, forcefully clear the disconnect flag
+        // The SDK might not trigger .info/connected if it was in a zombie state
+        if (window._solmatesHostId) {
+            const hostPresenceRef = db.ref(`solmates-rooms/${window._solmatesHostId}/hostDisconnectedAt`);
+            hostPresenceRef.remove();
+            hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+        }
+    };
+
     document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') db.goOnline();
+        if (document.visibilityState === 'visible') forceReconnect();
     });
-    window.addEventListener('online', () => db.goOnline());
+    window.addEventListener('online', forceReconnect);
 }
 
 
@@ -120,6 +135,7 @@ window.Peer = class Peer {
             }
         }
         this.id = id.replace('SOLMATES-', ''); // Keep it clean in DB
+        if (id && id.startsWith('SOLMATES-')) { window._solmatesHostId = this.id; }
         this.disconnected = false;
         this.destroyed = false;
         this._handlers = { open: [], connection: [], error: [], disconnected: [], close: [] };
@@ -573,6 +589,7 @@ window.SolmatesHostStatus = {
         if (el) el.style.display = 'none';
     }
 };
+
 
 
 
