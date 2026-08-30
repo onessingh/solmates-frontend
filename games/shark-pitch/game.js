@@ -161,6 +161,9 @@ async function createRoom() {
             guestConns[conn.peer] = conn;
             conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
             conn.on('close', () => handleDisconnect(conn.peer));
+            conn.on('open', () => {
+                try { conn.send({ type: 'STATE_SYNC', players, topic: gameState.topic, gameStarted: gameState.gameStarted || false }); } catch(e) {}
+            });
         });
     }, () => { document.getElementById('btn-create-room').textContent = "Generate Room"; uiShowWelcome(); });
 }

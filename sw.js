@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v117.0 - Cache Bump)
+ * SOLMATES Service Worker (v117.1 - Host Open Sync Fix)
  * Handles background push notifications and offline caching.
  */
 
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v362';
+const CACHE_NAME = 'solmates-cache-v363';
 const STATIC_ASSETS = [
     '/',
     '/index.html',

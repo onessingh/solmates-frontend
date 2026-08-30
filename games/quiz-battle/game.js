@@ -304,6 +304,9 @@ async function createRoom() {
                 return;
             }
             
+            conn.on('open', () => {
+                try { conn.send({ type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false }); } catch(e) {}
+            });
             conn.on('data', (data) => {
                 guestConns[conn.peer] = conn;
                 if(data.type === 'JOIN') {
