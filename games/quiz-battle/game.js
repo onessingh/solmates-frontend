@@ -446,10 +446,20 @@ function connectToHost(hostId) {
             } else if(data.type === 'START_GAME') {
                 window.SolmatesSync.hide();
                 if (data.questions) roomState.backupQuestions = data.questions;
-                if (!roomState.gameStarted) { roomState.gameStarted = true; startGameUI(); }
+                if (!roomState.gameStarted) {
+                    roomState.gameStarted = true;
+                    startGameUI();
+                    // Auto-recovery: if QUESTION doesn't arrive in 3s, ask host to resend
+                    setTimeout(() => {
+                        if (!roomState.questionReceived && hostConn) {
+                            hostConn.send({ type: 'REQUEST_RECOVERY' });
+                        }
+                    }, 3000);
+                }
             } else if(data.type === 'BACKUP_QUESTIONS') {
                 if (data.questions) roomState.backupQuestions = data.questions;
             } else if(data.type === 'QUESTION') {
+                roomState.questionReceived = true;
                 roomState.currentQ = data.qNum - 1;
                 renderQuestion(data.question, data.qNum, data.totalQ);
             } else if(data.type === 'RESULT') {

@@ -389,9 +389,18 @@ function handleGuestData(data) {
         return;
     }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }
-    if (data.type === 'START_GAME') { window.SolmatesSync.hide(); gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.questions) gameState.questions = data.questions; if (!gameState.gameStarted) { gameState.gameStarted = true; startGameUI(); } }
+    if (data.type === 'START_GAME') { window.SolmatesSync.hide(); gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.questions) gameState.questions = data.questions; if (!gameState.gameStarted) { gameState.gameStarted = true; startGameUI(); } 
+        // Auto-recovery: if QUESTION doesn't arrive in 3s, ask host to resend it
+        if (!isHost) {
+            setTimeout(() => {
+                if (gameState.gameStarted && !gameState.questionReceived) {
+                    if (hostConn) hostConn.send({ type: 'REQUEST_RECOVERY' });
+                }
+            }, 3000);
+        }
+    }
     if (data.type === 'BACKUP_QUESTIONS') { if (data.questions) gameState.questions = data.questions; } // store for migration/leaderboard
-    if (data.type === 'QUESTION') { gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
+    if (data.type === 'QUESTION') { gameState.questionReceived = true; gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
     if (data.type === 'REVEAL') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
@@ -437,6 +446,7 @@ function nextQuestion() {
     if (gameState.gameOver) return;
         const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
         if (!q) return;
+    gameState.currentQuestion = q;
     broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
     showQuestion(gameState.qIndex, q);
 
