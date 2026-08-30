@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v117.1 - Host Open Sync Fix)
+ * SOLMATES Service Worker (v117.2 - JOIN Retry ACK Fix)
  * Handles background push notifications and offline caching.
  */
 
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v363';
+const CACHE_NAME = 'solmates-cache-v364';
 const STATIC_ASSETS = [
     '/',
     '/index.html',

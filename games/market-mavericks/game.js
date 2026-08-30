@@ -6,6 +6,7 @@ let peer = null, hostConn = null, isHost = false, myId = null;
 let myName = "Player";
 try { myName = localStorage.getItem('solmates_nickname') || "Player"; } catch(e) {}
 let pendingRoomCode = null;
+let joinConfirmed = false, joinRetryInterval = null;
 
 let players = [];
 let guestConns = {};
@@ -226,7 +227,14 @@ function manualJoinRoom() {
         hostConn = peer.connect(ROOM_PREFIX + code, { reliable: true });
         hostConn.on('open', () => {
             clearTimeout(failTimer); isHost = false; myId = peer.id;
+            joinConfirmed = false;
             hostConn.send({ type: 'JOIN', name: myName });
+            // Retry JOIN every 600ms until host confirms via LOBBY_UPDATE
+            if (joinRetryInterval) clearInterval(joinRetryInterval);
+            joinRetryInterval = setInterval(() => {
+                if (joinConfirmed) { clearInterval(joinRetryInterval); joinRetryInterval = null; return; }
+                try { hostConn.send({ type: 'JOIN', name: myName }); } catch(e) {}
+            }, 600);
             hideAllScreens(); document.getElementById('screen-lobby').classList.remove('hidden');
             document.getElementById('invite-link').textContent = window.location.origin + window.location.pathname + '?room=' + code;
             document.getElementById('btn-start-game').classList.add('hidden');
@@ -260,7 +268,12 @@ function handleGuestData(data) {
     if (data.type === 'LOBBY_UPDATE') {
         players = data.players;
         gameState = { ...gameState, ...data.settings };
-        document.getElementById('lobby-topic').textContent = `Market Mavericks · ${data.settings.topic} · ${data.settings.totalEvents} Events`;
+        // Confirm JOIN was received — stop retry loop
+        if (!joinConfirmed && myId && data.players && data.players.find(p => p.id === myId)) {
+            joinConfirmed = true;
+            if (joinRetryInterval) { clearInterval(joinRetryInterval); joinRetryInterval = null; }
+        }
+        document.getElementById('lobby-topic').textContent = `Market Mavericks 📈 ${data.settings.topic} · ${data.settings.totalEvents} Events`;
         renderLobby();
     }
     if (data.type === 'START_EVENT') { gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
