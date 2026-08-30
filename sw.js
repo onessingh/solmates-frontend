@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v117.5 - Mobile WebRTC Overload Fix)
+ * SOLMATES Service Worker (v117.6 - Dedicated Socket.io Server Migration)
  * Handles background push notifications and offline caching.
  */
 
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v367';
+const CACHE_NAME = 'solmates-cache-v368';
 const STATIC_ASSETS = [
     '/',
     '/index.html',

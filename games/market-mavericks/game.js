@@ -520,15 +520,9 @@ function migrateHost(hostId) {
       if (typeof showToast === 'function') showToast(hostName + " disconnected");
 
     if (!gameState.events || gameState.events.length === 0) return;
-    if (hostConn) { hostConn.close(); hostConn = null; }
-    
-    // We need firebase database reference
-    const db = firebase.database();
-    db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
-        if (currentData === null) return myId;
-        return; // Someone else claimed
-    }, (error, committed, snapshot) => {
-        if (committed && snapshot.val() === myId) {
+    if (hostConn) { hostConn.close(); hostConn = null; }    // Socket.io host claim
+    socket.emit('game:claim_host', { roomId: code, hostId: hostId }, (res) => {
+        if (res.success) {
             isHost = true;
             
             let oldHostPlayer = players.find(p => p.id === hostId);
