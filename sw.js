@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v117.6 - Dedicated Socket.io Server Migration)
+ * SOLMATES Service Worker (v117.7 - Socket Init Fix)
  * Handles background push notifications and offline caching.
  */
 
@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v368';
+const CACHE_NAME = 'solmates-cache-v369';
 const STATIC_ASSETS = [
     '/',
     '/index.html',

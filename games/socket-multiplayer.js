@@ -7,7 +7,8 @@ if (typeof io === 'undefined') {
 }
 
 // Ensure we connect to the right backend
-const backendUrl = window.RENDER_BACKEND_URL || (window.PRODUCTION_API_URL ? window.PRODUCTION_API_URL.replace('/api', '') : 'http://localhost:3000');
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const backendUrl = isLocal ? 'http://localhost:3000' : 'https://solmates-backend-w27e.onrender.com';
 const socket = io(backendUrl, {
     transports: ['websocket', 'polling'], // Fallback to polling if websocket is blocked
     reconnection: true,
@@ -33,6 +34,9 @@ class PeerConnection {
     
     on(event, cb) { 
         this._handlers[event].push(cb); 
+        if (event === 'open' && this.open) {
+            setTimeout(cb, 0);
+        }
     }
     
     send(data) {
@@ -127,6 +131,11 @@ window.Peer = class Peer {
     on(event, cb) {
         if (this._handlers[event]) {
             this._handlers[event].push(cb);
+            
+            // If binding 'open' and socket is already connected, fire immediately
+            if (event === 'open' && socket.connected) {
+                setTimeout(() => cb(this.id), 0);
+            }
         }
     }
 
