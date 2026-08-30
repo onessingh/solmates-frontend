@@ -45,8 +45,9 @@ class AIGameConnector {
                 
                 const data = await response.json();
                 
-                if (data.success && data.data && data.data.questions) {
-                    let validQs = data.data.questions.filter(q => {
+                const qs = data.questions || (data.data && data.data.questions) || [];
+                if (data.success && qs.length > 0) {
+                    let validQs = qs.filter(q => {
                         const qText = q.question || q.q || "";
                         if (qText.trim().length <= 5) return false;
                         const opts = q.options || [];

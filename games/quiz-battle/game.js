@@ -277,7 +277,7 @@ async function createRoom() {
             const directPrompt = `[SYSTEM_OVERRIDE] Generate ${qCount} multiple choice quiz questions for the topic: "${topic}". Return ONLY a valid JSON array: [{"question": "...", "options": ["option A", "option B", "option C", "option D"], "answer": "correct option text here"}, ...]`;
             const res = await fetch(apiBase + '/chatbot', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message: directPrompt, history: []}) });
             const data = await res.json();
-            const rawText = data.message || data.response || '';
+            const rawText = data.message || data.response || data.reply || '';
             const match = rawText.match(/\[\s*\{[\s\S]*?\}\s*\]/);
             if (match) {
                 const parsed = JSON.parse(match[0]);
