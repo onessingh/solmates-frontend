@@ -118,7 +118,9 @@ function initPeer(onOpen, onFail) {
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
     setInterval(() => {
         if (!isHost) return;
-        const syncData = { type: 'STATE_SYNC', players: players, gameStarted: gameState.gameStarted || false, round: gameState.round || 0 };
+        // Include the current round's challenge (not just the round number) so a guest
+        // who missed all 3 START_ROUND broadcasts can still recover automatically.
+        const syncData = { type: 'STATE_SYNC', players: players, gameStarted: gameState.gameStarted || false, round: gameState.round || 0, challenge: gameState.gameStarted ? gameState.currentChallenge : null };
         broadcast(syncData);
     }, 3000);
 }
@@ -251,6 +253,12 @@ function handleGuestData(data) {
             hostConn.send({ type: 'JOIN', name: myName });
         }
         players = data.players;
+        // Self-healing: recover the current round's challenge if all 3 START_ROUND
+        // broadcasts were missed (same dedupe check as the START_ROUND handler below)
+        if (data.gameStarted && data.challenge && gameState.round !== data.round) {
+            gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {};
+            startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound);
+        }
         if (!gameState.gameStarted) renderLobby();
         return;
     }
