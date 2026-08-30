@@ -39,13 +39,13 @@ class PeerConnection {
                 // Write START events directly to gameState node (fast single-node write)
                 if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
                     db.ref(`solmates-rooms/${this.roomId}/locked`).set(true);
-                    db.ref(`solmates-rooms/${this.roomId}/gameState`).set({
-                        type: data.type,
-                        payload: payload,
-                        ts: Date.now()
-                    });
+                    const gsPayload = { type: data.type, payload: payload, ts: Date.now() };
+                    db.ref(`solmates-rooms/${this.roomId}/gameState`).set(gsPayload);
+                    db.ref(`solmates-rooms/${this.roomId}/status`).set({ gameStarted: true, ts: Date.now() });
+                    // Store on the room's Peer instance for reconnection-retry
+                    if (window._solmatesPeer) window._solmatesPeer._lastGameStartPayload = gsPayload;
                 }
-                // Write gameStarted status directly on every STATE_SYNC (bypasses slow inbox)
+                // Write gameStarted status on every STATE_SYNC (bypasses slow inbox)
                 if (data.type === 'STATE_SYNC' && data.gameStarted) {
                     db.ref(`solmates-rooms/${this.roomId}/status`).set({ gameStarted: true, ts: Date.now() });
                 }
@@ -69,7 +69,9 @@ class PeerConnection {
 // Overwrite the global Peer class
 window.Peer = class Peer {
     constructor(id) {
+        window._solmatesPeer = this;
         if (!id) {
+            // Check session storage first
             let existingId = sessionStorage.getItem('solmates_guest_id');
             if (existingId) {
                 id = existingId;
@@ -93,12 +95,23 @@ window.Peer = class Peer {
         await db.ref(`solmates-rooms/${this.id}/active`).set(true);
         await db.ref(`solmates-rooms/${this.id}/timestamp`).set(firebase.database.ServerValue.TIMESTAMP);
         
-        // Host Presence tracking
+        // Host Presence tracking + Reconnection-triggered GameState re-write
         const hostPresenceRef = db.ref(`solmates-rooms/${this.id}/hostDisconnectedAt`);
         db.ref('.info/connected').on('value', snap => {
             if (snap.val() === true) {
                 hostPresenceRef.remove();
                 hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+                
+                // On reconnect: if game already started, re-write gameState & status
+                // so guests who missed the START packet get it immediately
+                if (this._lastGameStartPayload) {
+                    db.ref(`solmates-rooms/${this.id}/gameState`).set({
+                        type: this._lastGameStartPayload.type,
+                        payload: this._lastGameStartPayload.payload,
+                        ts: Date.now()
+                    });
+                    db.ref(`solmates-rooms/${this.id}/status`).set({ gameStarted: true, ts: Date.now() });
+                }
             }
         });
         
