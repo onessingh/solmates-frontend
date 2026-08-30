@@ -35,9 +35,15 @@ class PeerConnection {
         if (!this.open) return;
         const payload = JSON.stringify(data);
         if (this.isHost) {
-            // Auto-lock room when game starts to prevent late joiners
-            if (data && data.type === 'START_GAME') {
+            // When game starts, write to a dedicated gameState node in addition to inbox.
+            // This is the fallback for mobile hosts where inbox push might be delayed.
+            if (data && (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT')) {
                 db.ref(`solmates-rooms/${this.roomId}/locked`).set(true);
+                db.ref(`solmates-rooms/${this.roomId}/gameState`).set({
+                    type: data.type,
+                    payload: payload,
+                    ts: firebase.database.ServerValue.TIMESTAMP
+                });
             }
             db.ref(`solmates-rooms/${this.roomId}/clients/${this.clientId}/inbox`).push(payload);
         } else {
@@ -210,6 +216,25 @@ window.Peer = class Peer {
                 }
             });
             
+            // *** FALLBACK WATCHER: Watch the host's gameState node directly ***
+            // This fires even if the inbox push was delayed (mobile browser throttling).
+            // When gameState changes to a START type, we relay it as a data event.
+            let lastSeenGameStateTs = 0;
+            const gameStateRef = db.ref(`solmates-rooms/${hostId}/gameState`);
+            gameStateRef.on('value', gsSnap => {
+                const gs = gsSnap.val();
+                if (!gs || !gs.payload || !gs.ts) return;
+                if (gs.ts <= lastSeenGameStateTs) return; // Already processed
+                lastSeenGameStateTs = gs.ts;
+                try {
+                    const data = JSON.parse(gs.payload);
+                    // Only relay START-type events, not general messages
+                    if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                        conn._handlers.data.forEach(cb => cb(data));
+                    }
+                } catch(e) {}
+            });
+            
             // Watch if room gets destroyed
             db.ref(`solmates-rooms/${hostId}/active`).on('value', snap => {
                 if (!snap.exists()) {
@@ -265,6 +290,7 @@ window.Peer = class Peer {
             
             conn._cleanup = () => {
                 inboxRef.off();
+                gameStateRef.off();
                 db.ref(`solmates-rooms/${hostId}/active`).off();
                 db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
                 if (disconnectTimeoutId) clearTimeout(disconnectTimeoutId);
