@@ -476,34 +476,18 @@ function connectToHost(hostId) {
         hostConn.on('host_disconnect_early', () => {
             if (roomState.backupQuestions) {
                 migrateHost(hostId);
+            } else {
+                window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
             }
         });
         
         hostConn.on('host_disconnect', () => {
             if (!roomState.backupQuestions) {
-                let el = document.getElementById('sol-host-reconnect');
-                if (!el) {
-                    el = document.createElement('div');
-                    el.id = 'sol-host-reconnect';
-                    el.style.position = 'fixed';
-                    el.style.top = '20px'; el.style.left = '50%'; el.style.transform = 'translateX(-50%)';
-                    el.style.backgroundColor = 'white';
-                    el.style.color = 'black'; 
-                    el.style.padding = '20px';
-                    el.style.borderRadius = '10px';
-                    el.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
-                    el.style.display = 'flex'; el.style.flexDirection = 'column';
-                    el.style.alignItems = 'center'; el.style.zIndex = '9999';
-                    el.innerHTML = `<h3 style="margin:0;font-size:18px;">Host may be offline</h3><p style="margin:10px 0;font-size:14px;color:#666;">Wait for them or leave?</p><div style="margin-top:10px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:8px 16px;background:#3b82f6;color:white;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:8px 16px;background:#ef4444;color:white;border-radius:5px;font-weight:bold;">Leave</button></div>`;
-                    document.body.appendChild(el);
-                } else {
-                    el.style.display = 'flex';
-                }
+                window.SolmatesHostStatus && window.SolmatesHostStatus.showOffline();
             }
         });
         hostConn.on('host_reconnect', () => {
-            let el = document.getElementById('sol-host-reconnect');
-            if (el) el.style.display = 'none';
+            window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         });
         hostConn.on('close', () => {
             if (!roomState.backupQuestions) {
@@ -948,8 +932,7 @@ function migrateHost(hostId) {
             // Just reset isMigrating so we can try again if host drops again.
             isMigrating = false;
             // Hide the "offline" popup - host is back
-            let el = document.getElementById('sol-host-reconnect');
-            if (el) el.style.display = 'none';
+            window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         }
     });
 }
@@ -989,3 +972,4 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+

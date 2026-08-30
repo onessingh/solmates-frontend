@@ -253,7 +253,10 @@ function manualJoinRoom() {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { migrateHost(code); });
-        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            migrateHost(code);
+        });
         hostConn.on('error', err => { clearTimeout(failTimer); showToast("Connect failed: " + err.type); });
     });
     peer.on('error', err => { showToast("Error: " + err.type); });
@@ -689,7 +692,10 @@ function manualJoinRoomReconnect(code) {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { migrateHost(code); });
-        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            migrateHost(code);
+        });
     });
 }
 
@@ -722,3 +728,4 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+

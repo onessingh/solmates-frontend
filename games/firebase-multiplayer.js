@@ -19,6 +19,19 @@ db.ref('.info/serverTimeOffset').on('value', snap => {
     serverTimeOffset = snap.val() || 0;
 });
 
+// GLOBAL RECONNECT NUDGES:
+// When the tab returns from background or the device regains internet,
+// tell Firebase SDK to (re)establish its connection immediately.
+// This prevents false "offline" caused by mobile browser timer throttling.
+if (!window._solmatesGlobalListenersAdded) {
+    window._solmatesGlobalListenersAdded = true;
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') db.goOnline();
+    });
+    window.addEventListener('online', () => db.goOnline());
+}
+
+
 class PeerConnection {
     constructor(isHost, roomId, clientId) {
         this.isHost = isHost;
@@ -345,59 +358,114 @@ window.Peer = class Peer {
             // the connection on brief host drops. We now rely exclusively on the 
             // hostDisconnectedAt grace period logic below.
             
-            // Watch if host disconnected and doesn't come back
-            let disconnectTimeoutId = null;
-            db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).on('value', snap => {
-                const disconnectTime = snap.val();
-                if (disconnectTime) {
-                    // [Fix] Removed Game Paused UI overlay as per request
-                    let el = document.getElementById('sol-host-reconnect');
-                    if (el) el.style.display = 'none';
-                    const checkTimeout = () => {
-                        if (!conn.open) return;
-                        const now = Date.now() + serverTimeOffset;
-                        if (now - disconnectTime > 300000) {
-                            conn._handlers.close.forEach(cb => cb());
-                            inboxRef.off();
-                            db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
-                        } else if (now - disconnectTime > 28000) {
-                            if (conn._handlers.host_disconnect && conn._handlers.host_disconnect.length > 0) {
-                                conn._handlers.host_disconnect.forEach(cb => cb());
-                            }
-                            if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
-                                conn._handlers.host_disconnect_early.forEach(cb => cb());
-                            }
-                            disconnectTimeoutId = setTimeout(checkTimeout, 2000);
-                        } else if (now - disconnectTime > 10000) {
-                            if (conn._handlers.host_disconnect_early && conn._handlers.host_disconnect_early.length > 0) {
-                                conn._handlers.host_disconnect_early.forEach(cb => cb());
-                            }
-                            disconnectTimeoutId = setTimeout(checkTimeout, 2000);
-                        } else {
-                            disconnectTimeoutId = setTimeout(checkTimeout, 2000);
-                        }
-                    };
-                    checkTimeout();
-                } else {
-                    // Hide paused UI if host reconnects
-                    let el = document.getElementById('sol-host-reconnect');
-                    if (el) el.style.display = 'none';
+            // Watch if host disconnected and doesn't come back.
+            //
+            // KEY FIX: We NO LONGER use a recursive setTimeout polling loop as the primary
+            // source of truth for offline detection.
+            //
+            // OLD (broken) flow:
+            //   hostDisconnectedAt set → checkTimeout() → setTimeout(checkTimeout, 2000) → ...
+            //   ↳ Background tab: timer paused → stale elapsed time → false "Host offline"
+            //
+            // NEW (correct) flow:
+            //   hostDisconnectedAt set → evalHostDisconnect(serverTimestamp) → ONE scheduled check
+            //   ↳ Tab returns to foreground → visibilitychange → Firebase re-read → recalculate
+            //
+            let disconnectTimers = [];
+            const clearDisconnectTimers = () => {
+                disconnectTimers.forEach(t => clearTimeout(t));
+                disconnectTimers = [];
+            };
+            let currentDisconnectTime = null;
 
-                    if (disconnectTimeoutId) {
-                        clearTimeout(disconnectTimeoutId);
-                        disconnectTimeoutId = null;
-                    }
+            const evalHostDisconnect = (disconnectTime) => {
+                if (!disconnectTime || !conn.open) return;
+                // Use serverTimeOffset so our clock matches Firebase server clock
+                const now = Date.now() + serverTimeOffset;
+                const elapsed = now - disconnectTime;
+
+                if (elapsed > 300000) {
+                    // >5 min: genuinely abandoned room
+                    conn._handlers.close.forEach(cb => cb());
+                    inboxRef.off();
+                    hostDisconnectedRef.off();
+                    return;
+                }
+                if (elapsed > 28000) {
+                    // >28s: Firebase has confirmed the host has been offline for a substantial
+                    // time — safe to trigger migration/offline UI
+                    if (conn._handlers.host_disconnect) conn._handlers.host_disconnect.forEach(cb => cb());
+                    if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
+                    // Schedule ONE check at the 5-minute deadline, not a tight 2s polling loop
+                    const nextCheck = Math.max(300000 - elapsed, 10000);
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), nextCheck));
+                } else if (elapsed > 10000) {
+                    // >10s: early warning — still within normal reconnect window
+                    if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
+                    // Schedule ONE check at the 28s threshold
+                    const nextCheck = Math.max(28000 - elapsed, 2000);
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), nextCheck));
+                } else {
+                    // <10s: normal transient drop — schedule check at 10s threshold
+                    const nextCheck = Math.max(10000 - elapsed, 1000);
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), nextCheck));
+                }
+            };
+
+            const hostDisconnectedRef = db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`);
+            hostDisconnectedRef.on('value', snap => {
+                const disconnectTime = snap.val();
+                currentDisconnectTime = disconnectTime;
+                clearDisconnectTimers();
+                if (disconnectTime) {
+                    // Firebase server confirmed host dropped — evaluate elapsed time
+                    evalHostDisconnect(disconnectTime);
+                } else {
+                    // hostDisconnectedAt was cleared → host reconnected
+                    let el = document.getElementById('sol-host-reconnect');
+                    if (el) el.style.display = 'none';
+                    if (conn._handlers.host_reconnect) conn._handlers.host_reconnect.forEach(cb => cb());
                 }
             });
-            
+
+            // FOREGROUND RECOVERY:
+            // When the tab returns from background (e.g. after sharing via WhatsApp), any local
+            // setTimeout timers may have been paused or throttled by the mobile browser.
+            // Instead of trusting those timers, we re-read hostDisconnectedAt directly from Firebase
+            // to get the true current server state and recalculate elapsed time accurately.
+            const guestVisibilityHandler = () => {
+                if (document.visibilityState !== 'visible') return;
+                // Nudge Firebase SDK to (re)connect immediately
+                db.goOnline();
+                if (!conn.open) return;
+                hostDisconnectedRef.once('value', freshSnap => {
+                    const freshTime = freshSnap.val();
+                    if (freshTime !== currentDisconnectTime || (freshTime && conn.open)) {
+                        // State changed while backgrounded, or timers may have drifted — recalculate
+                        currentDisconnectTime = freshTime;
+                        clearDisconnectTimers();
+                        if (freshTime) {
+                            evalHostDisconnect(freshTime);
+                        } else {
+                            // Host came back while we were in background — clear any error UI
+                            let el = document.getElementById('sol-host-reconnect');
+                            if (el) el.style.display = 'none';
+                        }
+                    }
+                });
+            };
+            document.addEventListener('visibilitychange', guestVisibilityHandler);
+
             conn._cleanup = () => {
                 inboxRef.off();
                 gameStateRef.off();
                 statusRef.off();
+                hostDisconnectedRef.off();
                 db.ref(`solmates-rooms/${hostId}/active`).off();
-                db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
-                if (disconnectTimeoutId) clearTimeout(disconnectTimeoutId);
+                document.removeEventListener('visibilitychange', guestVisibilityHandler);
+                clearDisconnectTimers();
             };
+
             
             setTimeout(() => {
                 conn._handlers.open.forEach(cb => cb());
@@ -457,6 +525,55 @@ window.SolmatesSync = {
         if (el) el.style.display = 'none';
     }
 };
+
+// Shared host connection status UI — used by all 5 games.
+// Two-stage: first "Reconnecting..." (orange, 10s), then "Host offline" (red, 28s).
+// Both stages are ONLY shown when Firebase server timestamp confirms the disconnect duration.
+// JS timers are NOT used as the primary authority — see firebase-multiplayer.js evalHostDisconnect.
+window.SolmatesHostStatus = {
+    _getOrCreate: function() {
+        let el = document.getElementById('sol-host-reconnect');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'sol-host-reconnect';
+            el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:white;color:black;padding:16px 24px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.18);display:flex;flex-direction:column;align-items:center;z-index:9999;font-family:Inter,sans-serif;min-width:260px;text-align:center;';
+            document.body.appendChild(el);
+        }
+        return el;
+    },
+    // Stage 1: shown at host_disconnect_early (~10s after Firebase confirms disconnect)
+    showReconnecting: function() {
+        const el = this._getOrCreate();
+        el.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <div style="width:10px;height:10px;background:#f59e0b;border-radius:50%;animation:sol-pulse 1.2s ease-in-out infinite;"></div>
+                <span style="font-size:16px;font-weight:700;color:#92400e;">Host reconnecting...</span>
+            </div>
+            <p style="margin:0;font-size:13px;color:#78716c;">Connection temporarily lost. Waiting for host to return.</p>
+            <style>@keyframes sol-pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }</style>
+        `;
+        el.style.display = 'flex';
+    },
+    // Stage 2: shown at host_disconnect (~28s after Firebase confirms disconnect)
+    showOffline: function() {
+        const el = this._getOrCreate();
+        el.innerHTML = `
+            <h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">🔴 Host appears offline</h3>
+            <p style="margin:0 0 14px;font-size:13px;color:#6b7280;">They've been gone for a while. Wait or leave?</p>
+            <div style="display:flex;gap:10px;">
+                <button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:8px 18px;background:#3b82f6;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Stay</button>
+                <button onclick="window.location.href='/'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Leave</button>
+            </div>
+        `;
+        el.style.display = 'flex';
+    },
+    // Called when host reconnects (hostDisconnectedAt cleared in Firebase)
+    hide: function() {
+        let el = document.getElementById('sol-host-reconnect');
+        if (el) el.style.display = 'none';
+    }
+};
+
 
 
 

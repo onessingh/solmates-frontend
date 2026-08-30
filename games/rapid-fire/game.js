@@ -335,7 +335,10 @@ function manualJoinRoom() {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { migrateHost(code); });
-        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            migrateHost(code);
+        });
         hostConn.on('error', err => { clearTimeout(failTimer); statusEl.textContent = "Connection failed."; showToast("Error: " + err.type); });
     });
     peer.on('error', err => { clearTimeout(failTimer); statusEl.textContent = "Connection failed."; showToast("Error: " + err.type); });
@@ -740,8 +743,7 @@ function migrateHost(hostId) {
             // Since we did NOT close hostConn, our Firebase listeners are still alive.
             isMigrating = false;
             // Hide the "offline" popup — host is back
-            let el = document.getElementById('sol-host-reconnect');
-            if (el) el.style.display = 'none';
+            window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         }
     });
 }
@@ -779,7 +781,10 @@ function manualJoinRoomReconnect(code) {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { migrateHost(code); });
-        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            migrateHost(code);
+        });
     });
 }
 
@@ -821,3 +826,4 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+
