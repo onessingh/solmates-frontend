@@ -60,6 +60,16 @@ class PeerConnection {
                     db.ref(`solmates-rooms/${this.roomId}/status`).set({ gameStarted: true, ts: Date.now() });
                     // Store on the room's Peer instance for reconnection-retry
                     if (window._solmatesPeer) window._solmatesPeer._lastGameStartPayload = gsPayload;
+                    
+                    // For SYNC_PREPARE: also write a dedicated syncPrepare node
+                    // Guests poll this every 2s and keep retrying SYNC_READY until game starts
+                    if (data.type === 'SYNC_PREPARE') {
+                        db.ref(`solmates-rooms/${this.roomId}/syncPrepare`).set({ payload: payload, ts: Date.now() });
+                    }
+                    // Clear syncPrepare when actual START_GAME is sent (stops guest retry loops)
+                    if (data.type === 'START_GAME') {
+                        db.ref(`solmates-rooms/${this.roomId}/syncPrepare`).remove();
+                    }
                 }
                 // Write gameStarted status on every STATE_SYNC (bypasses slow inbox)
                 if (data.type === 'STATE_SYNC' && data.gameStarted) {
@@ -249,6 +259,7 @@ window.Peer = class Peer {
             inboxRef.on('child_added', msgSnap => {
                 if (msgSnap.val()) {
                     const data = JSON.parse(msgSnap.val());
+                    if (data.type === 'START_GAME') conn._syncStarted = true;
                     conn._emitData(data);
                     msgSnap.ref.remove();
                 }
@@ -265,6 +276,7 @@ window.Peer = class Peer {
                 try {
                     const data = JSON.parse(gs.payload);
                     if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT' || data.type === 'SYNC_PREPARE') {
+                        if (data.type === 'START_GAME') conn._syncStarted = true;
                         conn._emitData(data);
                     }
                 } catch(e) {}
@@ -291,6 +303,43 @@ window.Peer = class Peer {
                 });
             });
             
+
+            // *** FALLBACK 3: Watch dedicated syncPrepare node ***
+            // This is the most reliable delivery - it's a persistent node, not a queue message.
+            // Guest watches it and keeps re-sending SYNC_READY every 2s until game truly starts.
+            let syncPrepareHandled = false;
+            const syncPrepareRef = db.ref(`solmates-rooms/${hostId}/syncPrepare`);
+            syncPrepareRef.on('value', spSnap => {
+                const sp = spSnap.val();
+                if (!sp || !sp.payload || syncPrepareHandled) return;
+                try {
+                    const data = JSON.parse(sp.payload);
+                    if (data.type === 'SYNC_PREPARE') {
+                        conn._emitData(data);
+                    }
+                } catch(e) {}
+            });
+            
+            // Retry SYNC_READY every 2s in case our outgoing message to host was lost
+            const syncRetryInterval = setInterval(() => {
+                // If game has started, stop retrying
+                if (conn._syncStarted) { clearInterval(syncRetryInterval); syncPrepareHandled = true; return; }
+                // If syncPrepare node exists and we haven't gotten START_GAME yet, resend SYNC_READY
+                syncPrepareRef.once('value', spSnap => {
+                    const sp = spSnap.val();
+                    if (sp && sp.payload && !conn._syncStarted) {
+                        try {
+                            const data = JSON.parse(sp.payload);
+                            if (data.type === 'SYNC_PREPARE') {
+                                // Re-deliver locally (idempotent since game checks gameStarted flag)
+                                conn._emitData(data);
+                            }
+                        } catch(e) {}
+                    }
+                });
+            }, 2000);
+            
+            conn._syncRetryInterval = syncRetryInterval;
 
             // The 'active' node watcher used to be here, but it prematurely killed 
             // the connection on brief host drops. We now rely exclusively on the 

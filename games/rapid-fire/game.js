@@ -111,6 +111,25 @@ function initPeer(onOpen, onFail) {
                     isMigrating = false; onOpen(myId); });
     peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
     peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
+
+    peer.on('network_state', (state) => {
+        if (!isHost) return;
+        const btn = document.getElementById('btn-start-game');
+        if (state.online) {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = "Start Game";
+                btn.style.opacity = '1';
+            }
+        } else {
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = "Reconnecting to server...";
+                btn.style.opacity = '0.5';
+            }
+            showToast("Network dropped. Reconnecting...", 3000);
+        }
+    });
     setInterval(() => {
         if (!isHost) return;
         const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, qCount: gameState.qCount || 0, qIndex: gameState.qIndex || 0, scores: gameState.scores, correctCounts: gameState.correctCounts };
