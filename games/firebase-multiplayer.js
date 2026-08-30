@@ -35,16 +35,22 @@ class PeerConnection {
         if (!this.open) return;
         const payload = JSON.stringify(data);
         if (this.isHost) {
-            // When game starts, write to a dedicated gameState node in addition to inbox.
-            // This is the fallback for mobile hosts where inbox push might be delayed.
-            if (data && (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT')) {
-                db.ref(`solmates-rooms/${this.roomId}/locked`).set(true);
-                db.ref(`solmates-rooms/${this.roomId}/gameState`).set({
-                    type: data.type,
-                    payload: payload,
-                    ts: firebase.database.ServerValue.TIMESTAMP
-                });
+            if (data) {
+                // Write START events directly to gameState node (fast single-node write)
+                if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                    db.ref(`solmates-rooms/${this.roomId}/locked`).set(true);
+                    db.ref(`solmates-rooms/${this.roomId}/gameState`).set({
+                        type: data.type,
+                        payload: payload,
+                        ts: Date.now()
+                    });
+                }
+                // Write gameStarted status directly on every STATE_SYNC (bypasses slow inbox)
+                if (data.type === 'STATE_SYNC' && data.gameStarted) {
+                    db.ref(`solmates-rooms/${this.roomId}/status`).set({ gameStarted: true, ts: Date.now() });
+                }
             }
+            // Also send via inbox as primary channel
             db.ref(`solmates-rooms/${this.roomId}/clients/${this.clientId}/inbox`).push(payload);
         } else {
             db.ref(`solmates-rooms/${this.roomId}/clients/${this.clientId}/outbox`).push(payload);
@@ -216,9 +222,7 @@ window.Peer = class Peer {
                 }
             });
             
-            // *** FALLBACK WATCHER: Watch the host's gameState node directly ***
-            // This fires even if the inbox push was delayed (mobile browser throttling).
-            // When gameState changes to a START type, we relay it as a data event.
+            // *** FALLBACK 1: Watch gameState node directly (written on START) ***
             let lastSeenGameStateTs = 0;
             const gameStateRef = db.ref(`solmates-rooms/${hostId}/gameState`);
             gameStateRef.on('value', gsSnap => {
@@ -228,13 +232,34 @@ window.Peer = class Peer {
                 lastSeenGameStateTs = gs.ts;
                 try {
                     const data = JSON.parse(gs.payload);
-                    // Only relay START-type events, not general messages
                     if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
                         conn._handlers.data.forEach(cb => cb(data));
                     }
                 } catch(e) {}
             });
             
+            // *** FALLBACK 2: Watch the status node (written every STATE_SYNC when gameStarted) ***
+            // This fires every 3 seconds from the host heartbeat, extremely reliable.
+            const statusRef = db.ref(`solmates-rooms/${hostId}/status`);
+            statusRef.on('value', stSnap => {
+                const st = stSnap.val();
+                if (!st || !st.gameStarted) return;
+                // Read the gameState node directly and process it (bypass inbox entirely)
+                db.ref(`solmates-rooms/${hostId}/gameState`).once('value', gsSnap2 => {
+                    const gs2 = gsSnap2.val();
+                    if (!gs2 || !gs2.payload) return;
+                    if (gs2.ts <= lastSeenGameStateTs) return; // Already processed via fallback 1
+                    lastSeenGameStateTs = gs2.ts;
+                    try {
+                        const data = JSON.parse(gs2.payload);
+                        if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
+                            conn._handlers.data.forEach(cb => cb(data));
+                        }
+                    } catch(e) {}
+                });
+            });
+            
+
             // Watch if room gets destroyed
             db.ref(`solmates-rooms/${hostId}/active`).on('value', snap => {
                 if (!snap.exists()) {
@@ -291,6 +316,7 @@ window.Peer = class Peer {
             conn._cleanup = () => {
                 inboxRef.off();
                 gameStateRef.off();
+                statusRef.off();
                 db.ref(`solmates-rooms/${hostId}/active`).off();
                 db.ref(`solmates-rooms/${hostId}/hostDisconnectedAt`).off();
                 if (disconnectTimeoutId) clearTimeout(disconnectTimeoutId);
