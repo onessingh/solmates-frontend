@@ -330,8 +330,9 @@ async function createRoom() {
                 if(data.type === 'SYNC_READY') {
                     if (roomState.syncing && roomState.readyPlayers) {
                         roomState.readyPlayers.add(data.id);
-                        window.SolmatesSync.update(`Waiting for players... (${roomState.readyPlayers.size}/${roomState.players.length})`);
-                        if (roomState.readyPlayers.size >= roomState.players.length) {
+                        const activeCount = roomState.players.filter(p => !p.disconnected).length;
+                        window.SolmatesSync.update(`Waiting for players... (${roomState.readyPlayers.size}/${activeCount})`);
+                        if (roomState.readyPlayers.size >= activeCount) {
                             finishSyncStart();
                         }
                     }
@@ -595,17 +596,24 @@ function startGame() {
     
     roomState.syncing = true;
     roomState.readyPlayers = new Set([myId]);
-    window.SolmatesSync.show(`Waiting for players... (1/${roomState.players.length})`);
+    const activeCount = roomState.players.filter(p => !p.disconnected).length;
+    window.SolmatesSync.show(`Waiting for players... (1/${activeCount})`);
     
     broadcast({ type: 'SYNC_PREPARE', questions: roomState.questions });
     
+    // Safety net: never let a missing/ghost ack block the start forever.
+    // If not everyone has acked within 5s, proceed anyway with whoever's ready.
+    clearTimeout(roomState._syncTimeout);
+    roomState._syncTimeout = setTimeout(() => { if (roomState.syncing) finishSyncStart(); }, 5000);
+    
     // In case guests are already fully synced or playing solo
-    if (roomState.readyPlayers.size >= roomState.players.length) {
+    if (roomState.readyPlayers.size >= activeCount) {
         finishSyncStart();
     }
 }
 
 function finishSyncStart() {
+    clearTimeout(roomState._syncTimeout);
     roomState.syncing = false;
     window.SolmatesSync.hide();
     broadcast({ type: 'START_GAME', questions: roomState.questions });

@@ -227,7 +227,7 @@ async function createRoom() {
             if (gameState.gameOver) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'This game has already ended. Please create a new room.' }); setTimeout(() => conn.close(), 500); }); return; }
             if (players.filter(p => !p.disconnected).length >= 4) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'Room full' }); setTimeout(() => conn.close(), 500); }); return; }
             guestConns[conn.peer] = conn;
-            conn.on('data', data => handleHostData(data, conn.peer));
+            conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
             conn.on('close', () => handleDisconnect(conn.peer));
             conn.on('open', () => {
                 try { conn.send({ type: 'STATE_SYNC', players, topic: gameState.topic, gameStarted: gameState.gameStarted || false }); } catch(e) {}
@@ -246,7 +246,25 @@ function handleDisconnect(peerId) {
 }
 
 function handleHostData(data, fromId) {
-    if (data.type === 'PONG') return;
+    if (data.type === 'SYNC_READY') {
+        if (gameState.syncing && gameState.readyPlayers) {
+            gameState.readyPlayers.add(fromId);
+            const activeCount = players.filter(p => !p.disconnected).length;
+            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${activeCount})`);
+            if (gameState.readyPlayers.size >= activeCount) {
+                finishSyncStart();
+            }
+        }
+        return;
+    }
+    if (data.type === 'PONG') {
+        const p = players.find(pl => pl.id === fromId);
+        if (p && p.disconnected) {
+            p.disconnected = false;
+            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderPlayers();
+        }
+        return;
+    }
     if (data.type === 'JOIN') {
         const existing = players.find(p => p.id === fromId);
         if (existing) {
@@ -372,16 +390,6 @@ function handleGuestData(data) {
         if (data.scores) { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; }
         return;
     }
-    if (data.type === 'SYNC_READY') {
-        if (gameState.syncing && gameState.readyPlayers) {
-            gameState.readyPlayers.add(data.id);
-            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${players.length})`);
-            if (gameState.readyPlayers.size >= players.length) {
-                finishSyncStart();
-            }
-        }
-        return;
-    }
     if (data.type === 'SYNC_PREPARE') {
         if (data.questions) gameState.questions = data.questions;
         window.SolmatesSync.show("Syncing with host...");
@@ -416,16 +424,21 @@ function startGame() {
     
     gameState.syncing = true;
     gameState.readyPlayers = new Set([myId]);
-    window.SolmatesSync.show(`Waiting for players... (1/${players.length})`);
+    const activeCount = players.filter(p => !p.disconnected).length;
+    window.SolmatesSync.show(`Waiting for players... (1/${activeCount})`);
     
     broadcast({ type: 'SYNC_PREPARE', topic: gameState.topic, qCount: shuffled.length, questions: shuffled });
     
-    if (gameState.readyPlayers.size >= players.length) {
+    clearTimeout(gameState._syncTimeout);
+    gameState._syncTimeout = setTimeout(() => { if (gameState.syncing) finishSyncStart(); }, 5000);
+    
+    if (gameState.readyPlayers.size >= activeCount) {
         finishSyncStart();
     }
 }
 
 function finishSyncStart() {
+    clearTimeout(gameState._syncTimeout);
     gameState.syncing = false;
     window.SolmatesSync.hide();
     broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: gameState.questions.length, questions: gameState.questions });
@@ -711,7 +724,7 @@ function migrateHost(hostId) {
                     
                     peer.on('connection', conn => {
                         guestConns[conn.peer] = conn;
-                        conn.on('data', data => handleHostData(data, conn.peer));
+                        conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
                         conn.on('close', () => handleDisconnect(conn.peer));
                     });
                     

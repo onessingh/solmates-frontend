@@ -165,6 +165,17 @@ function handleDisconnect(peerId) {
 }
 
 function handleHostData(data, fromId) {
+    if (data.type === 'SYNC_READY') {
+        if (gameState.syncing && gameState.readyPlayers) {
+            gameState.readyPlayers.add(fromId);
+            const activeCount = players.filter(p => !p.disconnected).length;
+            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${activeCount})`);
+            if (gameState.readyPlayers.size >= activeCount) {
+                finishSyncStart();
+            }
+        }
+        return;
+    }
     if (data.type === 'PONG') {
         const p = players.find(pl => pl.id === fromId);
         if (p && p.disconnected) {
@@ -279,16 +290,6 @@ function handleGuestData(data) {
         document.getElementById('lobby-topic').textContent = `Market Mavericks 📈 ${data.settings.topic} · ${data.settings.totalEvents} Events`;
         renderLobby();
     }
-    if (data.type === 'SYNC_READY') {
-        if (gameState.syncing && gameState.readyPlayers) {
-            gameState.readyPlayers.add(data.id);
-            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${players.length})`);
-            if (gameState.readyPlayers.size >= players.length) {
-                finishSyncStart();
-            }
-        }
-        return;
-    }
     if (data.type === 'SYNC_PREPARE') {
         window.SolmatesSync.show("Syncing with host...");
         hostConn.send({ type: 'SYNC_READY', id: myId });
@@ -338,16 +339,21 @@ function startGame() {
     
     gameState.syncing = true;
     gameState.readyPlayers = new Set([myId]);
-    window.SolmatesSync.show(`Waiting for players... (1/${players.length})`);
+    const activeCount = players.filter(p => !p.disconnected).length;
+    window.SolmatesSync.show(`Waiting for players... (1/${activeCount})`);
     
     broadcast({ type: 'SYNC_PREPARE' });
     
-    if (gameState.readyPlayers.size >= players.length) {
+    clearTimeout(gameState._syncTimeout);
+    gameState._syncTimeout = setTimeout(() => { if (gameState.syncing) finishSyncStart(); }, 5000);
+    
+    if (gameState.readyPlayers.size >= activeCount) {
         finishSyncStart();
     }
 }
 
 function finishSyncStart() {
+    clearTimeout(gameState._syncTimeout);
     gameState.syncing = false;
     window.SolmatesSync.hide();
     hostNextEvent();
