@@ -311,7 +311,7 @@ async function createRoom() {
                 guestConns[conn.peer] = conn;
                 if(data.type === 'REQUEST_RECOVERY') {
                     if (roomState.gameStarted) {
-                        conn.send({ type: 'START_GAME' });
+                        conn.send({ type: 'START_GAME', questions: roomState.questions });
                         setTimeout(() => conn.send({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
                         if (roomState.currentQuestion) conn.send(roomState.currentQuestion);
                     }
@@ -551,7 +551,7 @@ function startGame() {
     roomState.questions = finalPool.slice(0, qCount);
     roomState.currentQ = 0;
     
-    broadcast({ type: 'START_GAME' });
+    broadcast({ type: 'START_GAME', questions: roomState.questions });
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
     startGameUI();
     
@@ -828,7 +828,7 @@ function migrateHost(hostId) {
                             guestConns[conn.peer] = conn;
                             if(data.type === 'REQUEST_RECOVERY') {
                                 if (roomState.gameStarted) {
-                                    conn.send({ type: 'START_GAME' });
+                                    conn.send({ type: 'START_GAME', questions: roomState.questions });
                                     setTimeout(() => conn.send({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
                                     if (roomState.currentQuestion) conn.send(roomState.currentQuestion);
                                 }

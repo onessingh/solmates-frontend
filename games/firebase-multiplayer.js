@@ -26,10 +26,23 @@ class PeerConnection {
         this.clientId = clientId;
         this.peer = clientId; // To match conn.peer in game logic
         this._handlers = { open: [], data: [], close: [], error: [], host_disconnect: [], host_reconnect: [], host_disconnect_early: [] };
+        this._dataQueue = [];
         this.open = true;
     }
     on(event, cb) { 
         this._handlers[event].push(cb); 
+        // Flush queue if data listener is added
+        if (event === 'data' && this._dataQueue.length > 0) {
+            this._dataQueue.forEach(d => cb(d));
+            this._dataQueue = [];
+        }
+    }
+    _emitData(data) {
+        if (this._handlers.data.length === 0) {
+            this._dataQueue.push(data);
+        } else {
+            this._handlers.data.forEach(cb => cb(data));
+        }
     }
     send(data) {
         if (!this.open) return;
@@ -132,7 +145,7 @@ window.Peer = class Peer {
                 outboxRef.on('child_added', msgSnap => {
                     if (msgSnap.val()) {
                         const data = JSON.parse(msgSnap.val());
-                        conn._handlers.data.forEach(cb => cb(data));
+                        conn._emitData(data);
                         msgSnap.ref.remove(); // Cleanup
                     }
                 });
@@ -230,7 +243,7 @@ window.Peer = class Peer {
             inboxRef.on('child_added', msgSnap => {
                 if (msgSnap.val()) {
                     const data = JSON.parse(msgSnap.val());
-                    conn._handlers.data.forEach(cb => cb(data));
+                    conn._emitData(data);
                     msgSnap.ref.remove();
                 }
             });
@@ -246,7 +259,7 @@ window.Peer = class Peer {
                 try {
                     const data = JSON.parse(gs.payload);
                     if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
-                        conn._handlers.data.forEach(cb => cb(data));
+                        conn._emitData(data);
                     }
                 } catch(e) {}
             });
@@ -266,7 +279,7 @@ window.Peer = class Peer {
                     try {
                         const data = JSON.parse(gs2.payload);
                         if (data.type === 'START_GAME' || data.type === 'START_ROUND' || data.type === 'START_EVENT') {
-                            conn._handlers.data.forEach(cb => cb(data));
+                            conn._emitData(data);
                         }
                     } catch(e) {}
                 });
