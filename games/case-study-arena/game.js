@@ -391,8 +391,24 @@ function handleGuestData(data) {
     }
     if (data.type === 'PING_SKIP') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
+    if (data.type === 'SYNC_READY') {
+        if (gameState.syncing && gameState.readyPlayers) {
+            gameState.readyPlayers.add(data.id);
+            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${players.length})`);
+            if (gameState.readyPlayers.size >= players.length) {
+                finishSyncStart();
+            }
+        }
+        return;
+    }
+    if (data.type === 'SYNC_PREPARE') {
+        if (data.caseData) gameState.caseData = data.caseData;
+        window.SolmatesSync.show("Syncing with host...");
+        hostConn.send({ type: 'SYNC_READY', id: myId });
+        return;
+    }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; renderPlayers(); }
-    if (data.type === 'START_GAME') { gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }
+    if (data.type === 'START_GAME') { window.SolmatesSync.hide(); gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }
     if (data.type === 'BACKUP_CASE_DATA') { if (data.caseData && !gameState.readPhaseStarted) { gameState.readPhaseStarted = true; gameState.caseData = data.caseData; startReadPhase(); } }
     if (data.type === 'READ_CASE') { gameState.caseData = data.caseData; startReadPhase(); }
       if (data.type === 'READY_STATUS') { updateReadyStatus(data.readyCount, data.total); }
@@ -408,9 +424,22 @@ function startGame() {
     gameState.qIndex = -1;
     gameState.gameStarted = true;
     gameState.readPhaseStarted = true; // Host resets immediately
-    // Include caseData directly in START_GAME so guest never waits for a separate packet
+    
+    gameState.syncing = true;
+    gameState.readyPlayers = new Set([myId]);
+    window.SolmatesSync.show(`Waiting for players... (1/${players.length})`);
+    
+    broadcast({ type: 'SYNC_PREPARE', caseData: gameState.caseData });
+    
+    if (gameState.readyPlayers.size >= players.length) {
+        finishSyncStart();
+    }
+}
+
+function finishSyncStart() {
+    gameState.syncing = false;
+    window.SolmatesSync.hide();
     broadcast({ type: 'START_GAME', caseData: gameState.caseData });
-    // Also send BACKUP_CASE_DATA as extra safety net (in case START_GAME is split/dropped)
     setTimeout(() => broadcast({ type: 'BACKUP_CASE_DATA', caseData: gameState.caseData }), 1000);
     startReadPhase();
 }

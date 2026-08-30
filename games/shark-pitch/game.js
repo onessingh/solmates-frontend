@@ -301,7 +301,22 @@ function handleGuestData(data) {
         renderLobby();
     }
     if (data.type === 'BACKUP_CHALLENGES') { if (data.challenges) gameState.challenges = data.challenges; }
-    if (data.type === 'START_ROUND') { if (gameState.round !== data.round) { gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
+    if (data.type === 'SYNC_READY') {
+        if (gameState.syncing && gameState.readyPlayers) {
+            gameState.readyPlayers.add(data.id);
+            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${players.length})`);
+            if (gameState.readyPlayers.size >= players.length) {
+                finishSyncStart();
+            }
+        }
+        return;
+    }
+    if (data.type === 'SYNC_PREPARE') {
+        window.SolmatesSync.show("Syncing with host...");
+        hostConn.send({ type: 'SYNC_READY', id: myId });
+        return;
+    }
+    if (data.type === 'START_ROUND') { window.SolmatesSync.hide(); if (gameState.round !== data.round) { gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
     if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; gameState._pendingRound = data.round; gameState._pendingTotalRounds = data.totalRounds; }
@@ -343,6 +358,21 @@ function startGame() {
     if (!isHost) return;
     gameState.round = 0;
     gameState.gameStarted = true;
+    
+    gameState.syncing = true;
+    gameState.readyPlayers = new Set([myId]);
+    window.SolmatesSync.show(`Waiting for players... (1/${players.length})`);
+    
+    broadcast({ type: 'SYNC_PREPARE' });
+    
+    if (gameState.readyPlayers.size >= players.length) {
+        finishSyncStart();
+    }
+}
+
+function finishSyncStart() {
+    gameState.syncing = false;
+    window.SolmatesSync.hide();
     hostNextRound();
 }
 

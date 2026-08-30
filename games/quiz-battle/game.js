@@ -309,6 +309,15 @@ async function createRoom() {
             });
             conn.on('data', (data) => {
                 guestConns[conn.peer] = conn;
+                if(data.type === 'SYNC_READY') {
+                    if (roomState.syncing && roomState.readyPlayers) {
+                        roomState.readyPlayers.add(data.id);
+                        window.SolmatesSync.update(`Waiting for players... (${roomState.readyPlayers.size}/${roomState.players.length})`);
+                        if (roomState.readyPlayers.size >= roomState.players.length) {
+                            finishSyncStart();
+                        }
+                    }
+                }
                 if(data.type === 'REQUEST_RECOVERY') {
                     if (roomState.gameStarted) {
                         conn.send({ type: 'START_GAME', questions: roomState.questions });
@@ -412,7 +421,12 @@ function connectToHost(hostId) {
                     renderLobby();
                 }
                 if (data.scores) { roomState.scores = data.scores; roomState.correctCounts = data.correctCounts; }
+            } else if (data.type === 'SYNC_PREPARE') {
+                if (data.questions) roomState.backupQuestions = data.questions;
+                window.SolmatesSync.show("Syncing with host...");
+                hostConn.send({ type: 'SYNC_READY', id: myId });
             } else if(data.type === 'START_GAME') {
+                window.SolmatesSync.hide();
                 if (data.questions) roomState.backupQuestions = data.questions;
                 if (!roomState.gameStarted) { roomState.gameStarted = true; startGameUI(); }
             } else if(data.type === 'BACKUP_QUESTIONS') {
@@ -551,10 +565,24 @@ function startGame() {
     roomState.questions = finalPool.slice(0, qCount);
     roomState.currentQ = 0;
     
+    roomState.syncing = true;
+    roomState.readyPlayers = new Set([myId]);
+    window.SolmatesSync.show(`Waiting for players... (1/${roomState.players.length})`);
+    
+    broadcast({ type: 'SYNC_PREPARE', questions: roomState.questions });
+    
+    // In case guests are already fully synced or playing solo
+    if (roomState.readyPlayers.size >= roomState.players.length) {
+        finishSyncStart();
+    }
+}
+
+function finishSyncStart() {
+    roomState.syncing = false;
+    window.SolmatesSync.hide();
     broadcast({ type: 'START_GAME', questions: roomState.questions });
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
     startGameUI();
-    
     setTimeout(sendNextQuestion, 2000);
 }
 

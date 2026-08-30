@@ -376,6 +376,33 @@ window.Peer = class Peer {
     }
 };
 
+window.SolmatesSync = {
+    show: function(msg) {
+        let el = document.getElementById('sol-sync-overlay');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'sol-sync-overlay';
+            el.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Inter,sans-serif;';
+            document.body.appendChild(el);
+        }
+        el.style.display = 'flex';
+        el.innerHTML = `
+            <div style="width:60px;height:60px;border:5px solid #e2e8f0;border-top-color:#0ea5e9;border-radius:50%;animation:sol-spin 1s linear infinite;"></div>
+            <h2 style="margin-top:24px;font-size:24px;font-weight:700;color:#0f172a;text-align:center;">Starting Game</h2>
+            <p id="sol-sync-text" style="margin-top:12px;font-size:16px;color:#64748b;text-align:center;">${msg}</p>
+            <style>@keyframes sol-spin { 100% { transform: rotate(360deg); } }</style>
+        `;
+    },
+    update: function(msg) {
+        let p = document.getElementById('sol-sync-text');
+        if (p) p.textContent = msg;
+    },
+    hide: function() {
+        let el = document.getElementById('sol-sync-overlay');
+        if (el) el.style.display = 'none';
+    }
+};
+
 
 
 

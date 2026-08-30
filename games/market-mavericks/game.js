@@ -279,7 +279,22 @@ function handleGuestData(data) {
         document.getElementById('lobby-topic').textContent = `Market Mavericks 📈 ${data.settings.topic} · ${data.settings.totalEvents} Events`;
         renderLobby();
     }
-    if (data.type === 'START_EVENT') { gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
+    if (data.type === 'SYNC_READY') {
+        if (gameState.syncing && gameState.readyPlayers) {
+            gameState.readyPlayers.add(data.id);
+            window.SolmatesSync.update(`Waiting for players... (${gameState.readyPlayers.size}/${players.length})`);
+            if (gameState.readyPlayers.size >= players.length) {
+                finishSyncStart();
+            }
+        }
+        return;
+    }
+    if (data.type === 'SYNC_PREPARE') {
+        window.SolmatesSync.show("Syncing with host...");
+        hostConn.send({ type: 'SYNC_READY', id: myId });
+        return;
+    }
+    if (data.type === 'START_EVENT') { window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
     if (data.type === 'TRADE_COUNT') { const el = document.getElementById('waiting-count'); if (el) el.textContent = `${data.count} / ${data.total} traded`; }
     if (data.type === 'EVENT_RESULT') { gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
@@ -320,6 +335,21 @@ function startGame() {
     gameState.eventIndex = 0;
     gameState.gameStarted = true;
     players.forEach(p => { gameState.portfolios[p.id] = STARTING_CASH; gameState.correctCounts[p.id] = 0; });
+    
+    gameState.syncing = true;
+    gameState.readyPlayers = new Set([myId]);
+    window.SolmatesSync.show(`Waiting for players... (1/${players.length})`);
+    
+    broadcast({ type: 'SYNC_PREPARE' });
+    
+    if (gameState.readyPlayers.size >= players.length) {
+        finishSyncStart();
+    }
+}
+
+function finishSyncStart() {
+    gameState.syncing = false;
+    window.SolmatesSync.hide();
     hostNextEvent();
 }
 
