@@ -38,6 +38,9 @@ class PeerConnection {
         }
     }
     _emitData(data) {
+        this.open = true;
+        this.disconnected = false;
+        
         if (this._handlers.data.length === 0) {
             this._dataQueue.push(data);
         } else {
@@ -286,13 +289,9 @@ window.Peer = class Peer {
             });
             
 
-            // Watch if room gets destroyed
-            db.ref(`solmates-rooms/${hostId}/active`).on('value', snap => {
-                if (!snap.exists()) {
-                    conn._handlers.close.forEach(cb => cb());
-                    inboxRef.off();
-                }
-            });
+            // The 'active' node watcher used to be here, but it prematurely killed 
+            // the connection on brief host drops. We now rely exclusively on the 
+            // hostDisconnectedAt grace period logic below.
             
             // Watch if host disconnected and doesn't come back
             let disconnectTimeoutId = null;
@@ -362,6 +361,7 @@ window.Peer = class Peer {
         }
     }
     
+
     _fire(event, data) {
         if (this._handlers[event]) {
             this._handlers[event].forEach(cb => cb(data));
