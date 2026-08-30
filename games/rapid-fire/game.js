@@ -629,9 +629,11 @@ function migrateHost(hostId) {
       }
       if (typeof showToast === 'function') showToast(hostName + " disconnected");
 
-    if (!gameState.questions || gameState.questions.length === 0) return;
-    if (hostConn) { hostConn.close(); hostConn = null; }
-    
+    if (!gameState.questions || gameState.questions.length === 0) { isMigrating = false; return; }
+
+    // *** DO NOT close hostConn here — closing it kills all Firebase listeners ***
+    // Only close AFTER we win the transaction.
+
     // We need firebase database reference
     const db = firebase.database();
     db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
@@ -639,6 +641,8 @@ function migrateHost(hostId) {
         return; // Someone else claimed
     }, (error, committed, snapshot) => {
         if (committed && snapshot.val() === myId) {
+            // WE won — now safe to close hostConn
+            if (hostConn) { hostConn.close(); hostConn = null; }
             isHost = true;
             
             let oldHostPlayer = players.find(p => p.id === hostId);
@@ -709,18 +713,12 @@ function migrateHost(hostId) {
                 });
             }, 1000);
         } else {
-            // Someone else became host, reconnect
-            setTimeout(() => {
-                
-                  let newHostName = "Someone";
-                  let pList2 = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
-                  let newHostPlayer = pList2.find(p => p.id === snapshot.val());
-                  if (newHostPlayer) newHostName = newHostPlayer.name;
-                  if (typeof showToast === 'function') showToast(newHostName + " is the new host");
-                  
-                  isMigrating = false;
-                  manualJoinRoomReconnect(hostId);
-            }, 3000);
+            // Transaction failed = original host came back before we could claim.
+            // Since we did NOT close hostConn, our Firebase listeners are still alive.
+            isMigrating = false;
+            // Hide the "offline" popup — host is back
+            let el = document.getElementById('sol-host-reconnect');
+            if (el) el.style.display = 'none';
         }
     });
 }

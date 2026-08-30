@@ -828,22 +828,28 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (isMigrating) return;
     isMigrating = true;
-      let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
-      let hostName = "Host";
-      if (pList && pList.length > 0) {
-          let oldHost = pList.find(p => p.id === hostId || p.id === hostId + '-LEFT');
-          if (oldHost) hostName = oldHost.name;
-      }
-      if (typeof showToast === 'function') showToast(hostName + " disconnected");
+    let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
+    let hostName = "Host";
+    if (pList && pList.length > 0) {
+        let oldHost = pList.find(p => p.id === hostId || p.id === hostId + '-LEFT');
+        if (oldHost) hostName = oldHost.name;
+    }
+    if (typeof showToast === 'function') showToast(hostName + " disconnected");
 
-    if (!roomState.backupQuestions) return;
-    if (hostConn) { hostConn.close(); hostConn = null; }
+    if (!roomState.backupQuestions) { isMigrating = false; return; }
+
+    // *** DO NOT close hostConn here — closing it kills all Firebase listeners
+    // and makes the guest permanently deaf if original host reconnects. ***
+    // We only close hostConn AFTER we win the transaction.
+
     const db = firebase.database();
     db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
         if (currentData === null) return myId;
         return; // Someone else claimed
     }, (error, committed, snapshot) => {
         if (committed && snapshot.val() === myId) {
+            // WE won the transaction — now safe to close hostConn
+            if (hostConn) { hostConn.close(); hostConn = null; }
             isHost = true;
             roomState.questions = roomState.backupQuestions;
             roomState.currentAnswers = {};
@@ -919,10 +925,13 @@ function migrateHost(hostId) {
                 }, hostId);
             }, 1000);
         } else {
-            // Someone else became host, reconnect
-            setTimeout(() => {
-                connectToHost(hostId);
-            }, 3000);
+            // Transaction failed = original host came back before we could claim.
+            // Since we did NOT close hostConn, our Firebase listeners are still alive.
+            // Just reset isMigrating so we can try again if host drops again.
+            isMigrating = false;
+            // Hide the "offline" popup - host is back
+            let el = document.getElementById('sol-host-reconnect');
+            if (el) el.style.display = 'none';
         }
     });
 }
