@@ -969,13 +969,44 @@ function migrateHost(hostId) {
 // When returning to the foreground, if a sync is stuck because the 5s timer was paused, force it.
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && typeof isHost !== 'undefined' && isHost) {
-        if (typeof gameState !== 'undefined' && gameState.syncing && typeof finishSyncStart === 'function') {
-            console.log('Tab returned to foreground, forcing sync finish');
-            finishSyncStart();
-        }
-        if (typeof roomState !== 'undefined' && roomState.syncing && typeof finishSyncStart === 'function') {
-            console.log('Tab returned to foreground, forcing sync finish');
-            finishSyncStart();
+        const isSyncing = (typeof roomState !== 'undefined' && roomState.syncing) ||
+                          (typeof gameState !== 'undefined' && gameState.syncing);
+        if (isSyncing && typeof finishSyncStart === 'function') {
+            // DO NOT call finishSyncStart() immediately.
+            // Firebase WebSocket may not be re-established yet (visibilitychange fires synchronously,
+            // Firebase reconnect is async). If we broadcast START_GAME before connection is live,
+            // packets get queued in an offline state and guests never receive them.
+            //
+            // Fix: nudge goOnline() and wait for .info/connected confirmation (max 3s fallback).
+            const fb = (typeof db !== 'undefined') ? db : null;
+            if (!fb) { if (roomState.syncing || (typeof gameState !== 'undefined' && gameState.syncing)) finishSyncStart(); return; }
+            fb.goOnline();
+            let resolved = false;
+            const onConnected = fb.ref('.info/connected').on('value', snap => {
+                if (snap.val() === true && !resolved) {
+                    resolved = true;
+                    fb.ref('.info/connected').off('value', onConnected);
+                    const stillSyncing = (typeof roomState !== 'undefined' && roomState.syncing) ||
+                                         (typeof gameState !== 'undefined' && gameState.syncing);
+                    if (stillSyncing) {
+                        console.log('[v390] Tab returned foreground, Firebase online, finishing sync');
+                        finishSyncStart();
+                    }
+                }
+            });
+            // Fallback: if Firebase doesn't confirm within 3s, proceed anyway
+            setTimeout(() => {
+                if (!resolved) {
+                    resolved = true;
+                    fb.ref('.info/connected').off('value', onConnected);
+                    const stillSyncing = (typeof roomState !== 'undefined' && roomState.syncing) ||
+                                         (typeof gameState !== 'undefined' && gameState.syncing);
+                    if (stillSyncing) {
+                        console.log('[v390] Tab returned foreground, Firebase timeout, finishing sync anyway');
+                        finishSyncStart();
+                    }
+                }
+            }, 3000);
         }
     }
 });

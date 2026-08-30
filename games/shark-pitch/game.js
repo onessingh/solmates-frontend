@@ -279,7 +279,12 @@ function manualJoinRoom() {
         hostConn.on('close', () => { migrateHost(code); });
         hostConn.on('host_disconnect_early', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
-            migrateHost(code);
+        });
+        hostConn.on('host_disconnect', () => {
+            if (typeof migrateHost === 'function') migrateHost(code);
+        });
+        hostConn.on('host_reconnect', () => {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         });
         hostConn.on('error', err => { clearTimeout(failTimer); showToast("Could not connect: " + err.type); });
     });
@@ -764,7 +769,12 @@ function manualJoinRoomReconnect(code) {
         hostConn.on('close', () => { migrateHost(code); });
         hostConn.on('host_disconnect_early', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
-            migrateHost(code);
+        });
+        hostConn.on('host_disconnect', () => {
+            if (typeof migrateHost === 'function') migrateHost(code);
+        });
+        hostConn.on('host_reconnect', () => {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         });
     });
 }
