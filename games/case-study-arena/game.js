@@ -232,7 +232,7 @@ async function createRoom() {
             if (gameState.gameOver) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'This game has already ended. Please create a new room.' }); setTimeout(() => conn.close(), 500); }); return; }
             if (players.filter(p => !p.disconnected).length >= 4) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'Room full' }); setTimeout(() => conn.close(), 500); }); return; }
             guestConns[conn.peer] = conn;
-            conn.on('data', data => handleHostData(data, conn.peer));
+            conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
             conn.on('close', () => handleDisconnect(conn.peer));
         });
     }, () => uiShowWelcome());
@@ -251,7 +251,14 @@ function handleDisconnect(peerId) {
 }
 
 function handleHostData(data, fromId) {
-    if (data.type === 'PONG') return;
+    if (data.type === 'PONG') {
+        const p = players.find(pl => pl.id === fromId);
+        if (p && p.disconnected) {
+            p.disconnected = false;
+            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderPlayers();
+        }
+        return;
+    }
     if (data.type === 'JOIN') {
         const existing = players.find(p => p.id === fromId);
         if (existing) {
@@ -694,7 +701,7 @@ function migrateHost(hostId) {
                     
                     peer.on('connection', conn => {
                         guestConns[conn.peer] = conn;
-                        conn.on('data', data => handleHostData(data, conn.peer));
+                        conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
                         conn.on('close', () => handleDisconnect(conn.peer));
                     });
                     

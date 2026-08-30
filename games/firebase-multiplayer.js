@@ -116,10 +116,13 @@ window.Peer = class Peer {
                 clientRef.on('value', valSnap => {
                     const val = valSnap.val();
                     if (!val) {
-                        // Node fully gone (explicit removal) -> close right away
+                        // Node fully gone (explicit removal) -> close right away.
+                        // Keep the outbox listener alive regardless - if this guest ever
+                        // writes again (e.g. their periodic heartbeat/JOIN resend), the game
+                        // code's own JOIN handling will revive them, so we never permanently
+                        // deafen ourselves to a client that might come back.
                         if (conn._graceTimer) { clearTimeout(conn._graceTimer); conn._graceTimer = null; }
                         conn._handlers.close.forEach(cb => cb());
-                        outboxRef.off();
                         return;
                     }
                     if (val.connected === false) {
@@ -131,7 +134,6 @@ window.Peer = class Peer {
                                 clientRef.child('connected').once('value', s => {
                                     if (s.val() === false) {
                                         conn._handlers.close.forEach(cb => cb());
-                                        outboxRef.off();
                                     }
                                     conn._graceTimer = null;
                                 });

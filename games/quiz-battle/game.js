@@ -1,113 +1,60 @@
+// ===== Rapid Fire — simultaneous speed-quiz multiplayer logic =====
+const ROOM_PREFIX = 'SOLMATES-RF-';
+const TIME_LIMIT_MS = 8000;
 
-const _badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
+let peer = null, hostConn = null, isHost = false, myId = null;
+let myName = "Player";
+try { myName = localStorage.getItem('solmates_nickname') || "Player"; } catch(e) {}
+let pendingRoomCode = null;
 
-function _safePrompt() {
-    let name = "";
-    while(true) {
-        name = prompt("Please enter your nickname:");
-        if (!name) return null;
-        name = name.trim();
-        if (/[*#$!^%~@?&]/.test(name)) {
-            alert("Characters like * # $ ! ^ % ~ @ ? & are not allowed.");
-            continue;
-        }
-        let lower = name.toLowerCase().replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a');
-        if (_badWords.some(w => lower.includes(w))) {
-            alert("Please choose a clean and appropriate nickname.");
-            continue;
-        }
-        if (name.length > 15) {
-            alert("Nickname must be 15 characters or less.");
-            continue;
-        }
-        return name;
-    }
-}
+let players = [];
+let guestConns = {};
 
-// State variables
-let myName = "";
-let peer = null;
-let hostConn = null; // If I am a client
-let guestConns = {}; // If I am the host
-let isHost = false;
-let myId = null;
-let roomState = {
-    players: [],
-    questions: [],
-    currentQ: 0,
-    scores: {},
-    correctCounts: {},
-    gameOver: false
+let gameState = {
+    topic: '', pool: [], questions: [], qIndex: -1, qCount: 0,
+    scores: {}, correctCounts: {}, currentAnswers: {}, gameStarted: false, gameOver: false
 };
-let questionTimer = null;
-let timeRemaining = 15;
-let answered = false;
-let currentSettings = "";
 
-// UI Navigation
-function hideAllScreens() {
-    document.querySelectorAll('.main-container > div').forEach(el => el.classList.add('hidden'));
+let questionStartTime = 0;
+let myAnswered = false;
+let forceRevealTimer = null;
+let tickInterval = null;
+let revealTimer = null;
+
+// ---------- Toast ----------
+function showToast(msg) {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
 }
+
+// ---------- Screen navigation ----------
+function hideAllScreens() { ['screen-welcome', 'screen-create', 'screen-join', 'screen-lobby', 'screen-game', 'screen-leaderboard'].forEach(id => document.getElementById(id).classList.add('hidden')); }
 function uiShowWelcome() { hideAllScreens(); document.getElementById('screen-welcome').classList.remove('hidden'); }
-function uiShowCreateRoom() {
-    try {
-        myName = localStorage.getItem('solmates_nickname');
-        if(!myName) {
-            myName = _safePrompt();
-            if (!myName) return;
-            localStorage.setItem('solmates_nickname', myName);
-            document.getElementById('welcome-name').textContent = myName;
-            document.getElementById('welcome-avatar').textContent = myName.charAt(0).toUpperCase();
-        }
-    } catch(e) {
-        myName = "Player";
-    }
-    hideAllScreens();
-    document.getElementById('screen-create').classList.remove('hidden');
-    populateSemesters();
-}
-function uiShowJoinRoom() {
-    try {
-        myName = localStorage.getItem('solmates_nickname');
-        if(!myName) {
-            myName = _safePrompt();
-            if (!myName) return;
-            localStorage.setItem('solmates_nickname', myName);
-            document.getElementById('welcome-name').textContent = myName;
-            document.getElementById('welcome-avatar').textContent = myName.charAt(0).toUpperCase();
-        }
-    } catch(e) {
-        myName = "Player";
-    }
-    hideAllScreens();
-    document.getElementById('screen-join').classList.remove('hidden');
-}
+function uiShowCreateRoom() { hideAllScreens(); document.getElementById('screen-create').classList.remove('hidden'); populateSemesters(); }
+function uiShowJoinRoom() { hideAllScreens(); document.getElementById('screen-join').classList.remove('hidden'); }
 
-// Form Population
+(function checkUrlInvite() {
+    const room = new URLSearchParams(window.location.search).get('room');
+    if (room) { pendingRoomCode = room.toUpperCase(); window.addEventListener('DOMContentLoaded', () => document.getElementById('url-join-box').classList.remove('hidden')); }
+})();
+function joinViaUrl() { if (!pendingRoomCode) return; document.getElementById('room-code-input').value = pendingRoomCode; uiShowJoinRoom(); manualJoinRoom(); }
+
 function populateSemesters() {
     const sel = document.getElementById('select-semester');
     sel.innerHTML = '<option value="">Choose Semester...</option>';
-    if (QUIZ_DATA.structure["MBA"]) {
-        Object.keys(QUIZ_DATA.structure["MBA"]).forEach(s => {
-            sel.innerHTML += `<option value="${s}">${s}</option>`;
-        });
-    }
+    if (QUIZ_DATA.structure["MBA"]) Object.keys(QUIZ_DATA.structure["MBA"]).forEach(s => sel.innerHTML += `<option value="${s}">${s}</option>`);
 }
 function updateSubjects() {
     const sem = document.getElementById('select-semester').value;
-    const subDiv = document.getElementById('subject-container');
-    const sel = document.getElementById('select-subject');
-    
+    const subjSel = document.getElementById('select-subject');
+    const subjContainer = document.getElementById('subject-container');
+    subjSel.innerHTML = '<option value="All">All Subjects (Mixed)</option>';
     if (sem && QUIZ_DATA.structure["MBA"][sem]) {
-        subDiv.classList.remove('hidden');
-        sel.innerHTML = '<option value="All">All Subjects (Mixed)</option>';
-        QUIZ_DATA.structure["MBA"][sem].forEach(sub => {
-            let cleanSub = sub.replace(/\[.*?\] /, "");
-            sel.innerHTML += `<option value="${cleanSub}">${sub}</option>`;
-        });
-    } else {
-        subDiv.classList.add('hidden');
-    }
+        QUIZ_DATA.structure["MBA"][sem].forEach(subj => { const opt = document.createElement('option'); opt.value = subj; opt.textContent = subj; subjSel.appendChild(opt); });
+        subjContainer.classList.remove('hidden');
+    } else { subjContainer.classList.add('hidden'); }
 }
 
 function updateCourseSelection() {
@@ -128,10 +75,19 @@ function updateCourseSelection() {
     }
 }
 
-// PeerJS Networking
-function initPeer(onOpen, forceId) {
-    const id = forceId || Math.random().toString(36).substring(2, 8).toUpperCase();
-    peer = new Peer('SOLMATES-' + id, {
+function buildQuestionPool(sem, subject) {
+    let subjects = [];
+    if (typeof course !== 'undefined' && course !== 'MBA') subjects = [];
+    else subjects = (subject === 'All') ? (QUIZ_DATA.structure["MBA"]?.[sem] || []) : [subject];
+    let pool = [];
+    subjects.forEach(s => { if (QUIZ_DATA.questionBank[s]) pool = pool.concat(QUIZ_DATA.questionBank[s]); });
+    return pool;
+}
+
+// ---------- Peer setup ----------
+function initPeer(onOpen, onFail) {
+    const id = Math.random().toString(36).substring(2, 8).toUpperCase();
+    peer = new Peer(ROOM_PREFIX + id, {
         debug: 1,
         config: {
             'iceServers': [
@@ -149,29 +105,20 @@ function initPeer(onOpen, forceId) {
             ]
         }
     });
-
+    let opened = false;
+    const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
+    peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
+                    isMigrating = false; onOpen(myId); });
+    peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
+    peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); if (!peer.destroyed) peer.reconnect(); });
     setInterval(() => {
         if (!isHost) return;
-        // STATE_SYNC: keep guests in sync even if earlier messages were dropped
-        const syncData = { type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false };
+        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, qCount: gameState.qCount || 0 };
         broadcast(syncData);
     }, 3000);
-
-    peer.on('open', (id) => {
-        myId = id;
-        onOpen(id);
-    });
-    peer.on('error', (err) => {
-        console.error(err);
-        if (err.type === 'peer-unavailable') {
-            showToast("Room not found or host disconnected.");
-        } else if (err.type === 'network' || err.type === 'disconnected') {
-            showToast("Network lost. Auto-reconnecting...");
-        } else {
-            showToast("Connection error: " + err.type);
-        }
-    });
 }
+
+function broadcast(data) { Object.values(guestConns).forEach(c => { if (c.open) c.send(data); }); }
 
 async function createRoom() {
     const course = document.getElementById('select-course').value;
@@ -180,7 +127,7 @@ async function createRoom() {
     if (course === 'MBA') {
         sem = document.getElementById('select-semester').value;
         if(!sem) { showToast("Please select a semester first"); return; }
-        sub = document.getElementById('select-subject') ? (document.getElementById('select-subject').value || "All") : "All";
+        sub = document.getElementById('select-subject').value || "All";
         
         if (sub === 'All' && window.QUIZ_DATA && window.QUIZ_DATA.structure && window.QUIZ_DATA.structure["MBA"] && window.QUIZ_DATA.structure["MBA"][sem]) {
             topic = "MBA " + sem + " Covering exactly: " + window.QUIZ_DATA.structure["MBA"][sem].join(", ");
@@ -192,32 +139,23 @@ async function createRoom() {
     } else {
         const diff = document.getElementById('select-difficulty').value;
         topic = course + " (" + diff + " difficulty)";
-        sub = topic;
+        sub = topic; // use topic as subject for AI
     }
-    
     const qCount = parseInt(document.getElementById('select-q-count').value || "10", 10);
     
-    currentSettings = course === 'MBA' ? `MBA - ${sem} - ${sub} (${qCount} Qs)` : `${topic} (${qCount} Qs)`;
-    roomState.maxQs = qCount;
-    
-    // 1. Build Static Fallback Pool (MBA only — other courses rely on AI)
-    let fallbackPool = [];
-    if (course === 'MBA') {
-        let subjects = (sub === 'All') ? (QUIZ_DATA.structure && QUIZ_DATA.structure['MBA'] && QUIZ_DATA.structure['MBA'][sem] ? QUIZ_DATA.structure['MBA'][sem] : []) : [sub];
-        subjects.forEach(s => { if (QUIZ_DATA.questionBank && QUIZ_DATA.questionBank[s]) fallbackPool = fallbackPool.concat(QUIZ_DATA.questionBank[s]); });
-    }
-    
-    // 2. Try fetching from AI Connector (AI -> Offline -> Static Fallback)
-    let finalPool = [...fallbackPool];
+    let pool = buildQuestionPool(sem, sub);
     if (window.aiGameConnector) {
         try {
             document.getElementById('btn-create-room').textContent = "Generating AI Questions...";
-            const aiData = await window.aiGameConnector.getQuestions('quiz-battle', topic, qCount + 5, fallbackPool);
-            
-            // Map AI output to game expected format (q: text, options: [], a: index)
+            const aiData = await window.aiGameConnector.getQuestions('rapid-fire', topic, qCount + 5, pool);
             if (aiData && aiData.length > 0) {
-                finalPool = aiData.map(q => {
-                    // Check if AI gave 'answer' string instead of index
+                pool = aiData.filter(q => {
+                    const qText = q.question || q.q || "";
+                    const opts = q.options || [];
+                    // Reject fake options like "A", "B", "C", "D"
+                    const hasFakeOpts = opts.every(o => typeof o === 'string' && o.replace(/^[A-Da-d][).:\s]*/,'').trim().length <= 2);
+                    return qText.trim().length > 5 && opts.length >= 2 && !hasFakeOpts;
+                }).map(q => {
                     let correctIdx = 0;
                     if (typeof q.answer === 'string' && q.options) {
                         correctIdx = q.options.findIndex(opt => opt.trim() === q.answer.trim());
@@ -233,6 +171,7 @@ async function createRoom() {
                                 let cleanOpt = typeof opt === 'string' ? opt.replace(/^([A-Da-d])[).]\s*/, '').trim() : String(opt);
                                 return { opt: cleanOpt, isCorrect: i === correctIdx };
                             });
+                        // Fisher-Yates shuffle
                         for (let i = pairs.length - 1; i > 0; i--) {
                             const j = Math.floor(Math.random() * (i + 1));
                             [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
@@ -240,247 +179,127 @@ async function createRoom() {
                         finalOptions = pairs.map(p => p.opt);
                         finalAnswerIdx = pairs.findIndex(p => p.isCorrect);
                     }
+                    
                     return { q: q.question || q.q, options: finalOptions, a: finalAnswerIdx };
                 });
             }
-        } catch(e) {
-            console.error("AI Fallback Error", e);
-        }
+        } catch(e) {}
     }
-
-    // Last resort: direct chatbot API call if both static pool + AI connector failed
-    if (finalPool.length === 0) {
-        try {
-            document.getElementById('btn-create-room').textContent = "AI Generating...";
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const apiBase = window.PRODUCTION_API_URL || (isLocal ? 'http://localhost:3000/api' : 'https://solmates-backend-w27e.onrender.com/api');
-            const directPrompt = `[SYSTEM_OVERRIDE] Generate ${qCount} multiple choice quiz questions for the topic: "${topic}". Return ONLY a valid JSON array: [{"question": "...", "options": ["option A", "option B", "option C", "option D"], "answer": "correct option text here"}, ...]`;
-            const res = await fetch(apiBase + '/chatbot', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message: directPrompt, history: []}) });
-            const data = await res.json();
-            const rawText = data.message || data.response || '';
-            const match = rawText.match(/\[\s*\{[\s\S]*?\}\s*\]/);
-            if (match) {
-                const parsed = JSON.parse(match[0]);
-                if (parsed && parsed.length > 0) {
-                    finalPool = parsed.map(q => {
-                        let correctIdx = q.options ? q.options.findIndex(o => String(o).trim() === String(q.answer || '').trim()) : 0;
-                        if (correctIdx === -1) correctIdx = 0;
-                        return { q: q.question || q.q || 'Question', options: q.options || [], a: correctIdx };
-                    }).filter(q => q.options.length > 0);
-                }
-            }
-        } catch(e2) { console.error('Direct API fallback also failed:', e2); }
-    }
-
     document.getElementById('btn-create-room').textContent = "Create Room";
-
-    if (finalPool.length === 0) { alert("No questions available for this selection."); return; }
     
-    roomState.pool = finalPool;
+    if (pool.length === 0) { showToast("No questions available for that selection"); return; }
 
-    initPeer((id) => {
+    gameState.topic = course === 'MBA' ? `MBA · ${sem} · ${sub} (${qCount} Qs)` : `${topic} (${qCount} Qs)`;
+    gameState.pool = pool;
+    gameState.qCount = Math.min(qCount, pool.length);
+
+    initPeer(id => {
         isHost = true;
-        roomState.players.push({ id: myId, name: myName, score: 0, disconnected: false });
-        roomState.correctCounts[myId] = 0;
-        
-        hideAllScreens();
-        document.getElementById('screen-lobby').classList.remove('hidden');
-        document.getElementById('lobby-topic').textContent = currentSettings;
-        
-        const url = new URL(window.location.href);
-        url.searchParams.set('room', id);
-        document.getElementById('invite-link').textContent = url.toString();
-        
-        document.getElementById('btn-start-game').classList.remove('hidden');
-        renderLobby();
-        
-        // Listen for incoming connections
-        peer.on('connection', (conn) => {
-            if(roomState.gameOver) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'This game has already ended. Please create a new room.' }); setTimeout(() => conn.close(), 500); }); return; }
-            if(roomState.players.filter(p => !p.disconnected).length >= 4) {
-                conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'Room is full' }); setTimeout(()=>conn.close(), 500); });
-                return;
-            }
-            
-            conn.on('data', (data) => {
-                if(data.type === 'JOIN') {
-                    guestConns[conn.peer] = conn;
-                    const existing = roomState.players.find(p => p.id === conn.peer);
-                    if (existing) {
-                        existing.disconnected = false;
-                        existing.name = data.name;
-                    } else {
-                        roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
-                        roomState.correctCounts[conn.peer] = 0;
-                    }
-                    broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
-                    renderLobby();
-                } else if(data.type === 'ANSWER') {
-                    handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
-                }
-            });
-            conn.on('close', () => {
-                const p = roomState.players.find(pl => pl.id === conn.peer);
-                if (p) { p.disconnected = true; showToast(`${p.name} disconnected`); }
-                delete guestConns[conn.peer];
-                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
-                if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
-            });
+        players = [{ id: myId, name: myName, score: 0, disconnected: false }];
+        gameState.scores[myId] = 0;
+        gameState.correctCounts[myId] = 0;
+
+        hideAllScreens(); document.getElementById('screen-lobby').classList.remove('hidden');
+        document.getElementById('lobby-topic').textContent = gameState.topic;
+        document.getElementById('invite-link').textContent = window.location.origin + window.location.pathname + '?room=' + id;
+        renderPlayers();
+
+        peer.on('connection', conn => {
+            if (gameState.gameOver) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'This game has already ended. Please create a new room.' }); setTimeout(() => conn.close(), 500); }); return; }
+            if (players.filter(p => !p.disconnected).length >= 4) { conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'Room full' }); setTimeout(() => conn.close(), 500); }); return; }
+            guestConns[conn.peer] = conn;
+            conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
+            conn.on('close', () => handleDisconnect(conn.peer));
         });
-    });
+    }, () => uiShowWelcome());
 }
 
-function joinViaUrl() {
-    myName = localStorage.getItem('solmates_nickname');
-    if(!myName) {
-        myName = _safePrompt();
-        if (!myName) return;
-        localStorage.setItem('solmates_nickname', myName);
+function handleDisconnect(peerId) {
+    const p = players.find(pl => pl.id === peerId);
+    if (p) { p.disconnected = true; showToast(`${p.name} disconnected`); }
+    delete guestConns[peerId];
+    broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+    if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderPlayers();
+    checkAllAnswered();
+}
+
+function handleHostData(data, fromId) {
+    if (data.type === 'PONG') {
+        const p = players.find(pl => pl.id === fromId);
+        if (p && p.disconnected) {
+            p.disconnected = false;
+            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderPlayers();
+        }
+        return;
     }
-    const url = new URL(window.location.href);
-    const roomId = url.searchParams.get('room');
-    if(roomId) connectToHost(roomId);
+    if (data.type === 'JOIN') {
+        const existing = players.find(p => p.id === fromId);
+        if (existing) {
+            existing.disconnected = false;
+            existing.name = data.name;
+        } else {
+            players.push({ id: fromId, name: data.name, score: 0, disconnected: false });
+            gameState.scores[fromId] = 0;
+        }
+        gameState.correctCounts[fromId] = 0;
+        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+        renderPlayers();
+    }
+    if (data.type === 'ANSWER') {
+        gameState.currentAnswers[fromId] = { idx: data.idx, elapsed: data.elapsed };
+        checkAllAnswered();
+    }
 }
 
 function manualJoinRoom() {
-    let input = document.getElementById('room-code-input').value.trim();
-    if(!input) return;
-    
-    // Extract ID if URL pasted
-    if(input.includes('?room=')) {
-        input = new URL(input).searchParams.get('room');
-    } else if(!input.startsWith('SOLMATES-')) {
-        input = 'SOLMATES-' + input;
-    }
-    document.getElementById('join-status').classList.remove('hidden');
-    connectToHost(input);
-}
+    let raw = document.getElementById('room-code-input').value.trim();
+    let code = raw;
+    try { if (raw.includes('room=')) code = new URL(raw).searchParams.get('room'); } catch (e) {}
+    code = (code || '').toUpperCase().trim();
+    if (!code) { showToast("Enter a room code or invite link"); return; }
 
-function connectToHost(hostId) {
-    initPeer((id) => {
-        isHost = false;
-        hostConn = peer.connect(hostId, { reliable: true });
-        
-        hostConn.on('open', () => {
-            hostConn.send({ type: 'JOIN', name: myName });
-            hideAllScreens();
-            document.getElementById('screen-lobby').classList.remove('hidden');
-            document.getElementById('wait-host-msg').classList.remove('hidden');
-            document.getElementById('invite-box').classList.add('hidden');
-        });
-        
-        hostConn.on('data', (data) => {
-            if(data.type === 'ERROR') {
-                alert(data.msg);
-                location.reload();
-            } else if(data.type === 'LOBBY_UPDATE') {
-                roomState.players = data.players;
-                document.getElementById('lobby-topic').textContent = data.topic;
-                renderLobby();
-            } else if(data.type === 'PING') {
-                // keep-alive, ignore
-            } else if(data.type === 'STATE_SYNC') {
-        // Self-healing JOIN: if host doesn't have us, resend JOIN
-        if (data.players && !data.players.find(p => p.id === myId)) {
-            hostConn.send({ type: 'JOIN', name: myName });
+    const statusEl = document.getElementById('join-status');
+    statusEl.classList.remove('hidden'); statusEl.textContent = "Connecting...";
+
+    peer = new Peer(undefined, {
+        debug: 1,
+        config: {
+            'iceServers': [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' },
+                { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:relay.metered.ca:80', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' },
+                { urls: 'turn:relay.metered.ca:443', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' },
+                { urls: 'turn:relay.metered.ca:443?transport=tcp', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' }
+            ]
         }
-                // Self-healing: update players even if LOBBY_UPDATE was dropped
-                roomState.players = data.players;
-                if (data.topic) document.getElementById('lobby-topic').textContent = data.topic;
-                if (data.gameStarted && !roomState.gameStarted) {
-                    roomState.gameStarted = true; startGameUI();
-                } else if (!roomState.gameStarted) {
-                    renderLobby();
-                }
-            } else if(data.type === 'START_GAME') {
-                if (data.questions) roomState.backupQuestions = data.questions;
-                if (!roomState.gameStarted) { roomState.gameStarted = true; startGameUI(); }
-            } else if(data.type === 'BACKUP_QUESTIONS') {
-                if (data.questions) roomState.backupQuestions = data.questions;
-            } else if(data.type === 'QUESTION') {
-                roomState.currentQ = data.qNum - 1;
-                renderQuestion(data.question, data.qNum, data.totalQ);
-            } else if(data.type === 'RESULT') {
-                roomState.correctCounts = data.correctCounts || {};
-                roomState.scores = data.scores || {};
-                showResult(data.correctIdx, data.scores);
-            } else if(data.type === 'GAME_OVER') {
-                roomState.correctCounts = data.correctCounts || {};
-                showLeaderboard(data.scores, data.totalQ);
-            }
-        });
-        
-        hostConn.on('host_disconnect_early', () => {
-            if (roomState.backupQuestions) {
-                migrateHost(hostId);
-            }
-        });
-        
-        hostConn.on('host_disconnect', () => {
-            if (!roomState.backupQuestions) {
-                let el = document.getElementById('sol-host-reconnect');
-                if (!el) {
-                    el = document.createElement('div');
-                    el.id = 'sol-host-reconnect';
-                    el.style.position = 'fixed';
-                    el.style.top = '20px'; el.style.left = '50%'; el.style.transform = 'translateX(-50%)';
-                    el.style.backgroundColor = 'white';
-                    el.style.color = 'black'; 
-                    el.style.padding = '20px';
-                    el.style.borderRadius = '10px';
-                    el.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
-                    el.style.display = 'flex'; el.style.flexDirection = 'column';
-                    el.style.alignItems = 'center'; el.style.zIndex = '9999';
-                    el.innerHTML = `<h3 style="margin:0;font-size:18px;">Host may be offline</h3><p style="margin:10px 0;font-size:14px;color:#666;">Wait for them or leave?</p><div style="margin-top:10px;display:flex;gap:10px;"><button onclick="document.getElementById('sol-host-reconnect').style.display='none'" style="padding:8px 16px;background:#3b82f6;color:white;border-radius:5px;font-weight:bold;">Stay</button><button onclick="window.location.href='/'" style="padding:8px 16px;background:#ef4444;color:white;border-radius:5px;font-weight:bold;">Leave</button></div>`;
-                    document.body.appendChild(el);
-                } else {
-                    el.style.display = 'flex';
-                }
-            }
-        });
-        hostConn.on('host_reconnect', () => {
-            let el = document.getElementById('sol-host-reconnect');
-            if (el) el.style.display = 'none';
-        });
-        hostConn.on('close', () => {
-            if (!roomState.backupQuestions) {
-                showToast('Host left the room.');
-                setTimeout(() => window.location.href='/', 2000);
-            } else {
-                migrateHost(hostId);
-            }
-        });
     });
-}
+    const failTimer = setTimeout(() => { statusEl.textContent = "Could not connect."; showToast("Connection timed out."); }, 12000);
 
-function showToast(msg) {
-    const container = document.getElementById('toast-container');
-    if(!container) return;
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = msg;
-    container.appendChild(toast);
-    
-    // Trigger animation
-    requestAnimationFrame(() => toast.classList.add('show'));
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
-function broadcast(data) {
-    Object.values(guestConns).forEach(conn => conn.send(data));
-}
-
-function renderLobby() {
-    document.getElementById('player-count').textContent = roomState.players.length;
-    const list = document.getElementById('players-list');
-    list.innerHTML = '';
-    roomState.players.forEach(p => {
-        list.innerHTML += `<div class="player-item">${p.name} ${p.id === myId ? '(You)' : ''}</div>`;
+    peer.on('open', () => {
+        peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
+        setInterval(() => { if (!isHost && hostConn && hostConn.open) hostConn.send({ type: 'PONG' }); }, 3000);
+        hostConn = peer.connect(ROOM_PREFIX + code, { reliable: true });
+        hostConn.on('open', () => {
+            clearTimeout(failTimer); isHost = false; myId = peer.id;
+            hostConn.send({ type: 'JOIN', name: myName });
+            hideAllScreens(); document.getElementById('screen-lobby').classList.remove('hidden');
+            document.getElementById('invite-link').textContent = window.location.origin + window.location.pathname + '?room=' + code;
+            document.getElementById('lobby-topic').textContent = "Waiting for host...";
+            document.getElementById('btn-start-game').classList.add('hidden');
+            document.getElementById('wait-host-msg').classList.remove('hidden');
+        });
+        hostConn.on('data', handleGuestData);
+        hostConn.on('close', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
+        hostConn.on('error', err => { clearTimeout(failTimer); statusEl.textContent = "Connection failed."; showToast("Error: " + err.type); });
     });
+    peer.on('error', err => { clearTimeout(failTimer); statusEl.textContent = "Connection failed."; showToast("Error: " + err.type); });
 }
 
 function copyInviteLink() {
@@ -506,258 +325,240 @@ function copyInviteLink() {
                 text: 'Play this multiplayer game with me on Solmates!',
                 url: linkText
             }).catch(err => console.log('Share cancelled', err));
-        }, 500);
+        }, 4000);
     } else if (typeof showToast !== 'function') {
         alert('Invite link copied!');
     }
 }
 
-// Game Logic
-function startGame() {
-    if(!isHost) return;
-    roomState.gameStarted = true;
-    
-    // Use the pool that was already built in createRoom()
-    let finalPool = roomState.pool || [];
-    const fallbackPool = roomState.fallbackPool || [];
-    if (finalPool.length === 0) { alert("No questions found. Please create a new room."); return; }
-    
-    const qCount = roomState.maxQs || 10;
-    
-    // Shuffle final pool
-    finalPool = finalPool.sort(() => Math.random() - 0.5);
-    
-    // Slice to exact requested count
-    roomState.questions = finalPool.slice(0, qCount);
-    roomState.currentQ = 0;
-    
-    broadcast({ type: 'START_GAME' });
-    setTimeout(() => broadcast({ type: 'START_GAME' }), 500);
-    setTimeout(() => broadcast({ type: 'START_GAME' }), 1500);
-    setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
-    startGameUI();
-    
-    setTimeout(sendNextQuestion, 2000);
-}
-
-function startGameUI() {
-    hideAllScreens();
-    document.getElementById('screen-game').classList.remove('hidden');
-    document.getElementById('question-text').textContent = "Get Ready...";
-    document.getElementById('options-grid').innerHTML = '';
-}
-
-function sendNextQuestion() {
-    if(roomState.currentQ >= roomState.questions.length) {
-        broadcast({ type: 'GAME_OVER', scores: roomState.scores, correctCounts: roomState.correctCounts, totalQ: roomState.questions.length });
-        showLeaderboard(roomState.scores);
+function handleGuestData(data) {
+    if (data.type === 'PING') return;
+    if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
+    if (data.type === 'STATE_SYNC') {
+        // Self-healing JOIN: if host doesn't have us, resend JOIN
+        if (data.players && !data.players.find(p => p.id === myId)) {
+            hostConn.send({ type: 'JOIN', name: myName });
+        }
+        players = data.players;
+        if (data.topic) { gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; }
+        if (data.gameStarted && !gameState.gameStarted) { gameState.gameStarted = true; gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); startGameUI(); }
+        else if (!gameState.gameStarted) renderPlayers();
         return;
     }
-    
-    const q = roomState.questions[roomState.currentQ];
-    // Reset host answers tracking
-    roomState.currentAnswers = {};
-    
-    const qData = {
-        question: { q: q.q, options: q.options },
-        qNum: roomState.currentQ + 1,
-        totalQ: roomState.questions.length
-    };
-    
-    broadcast({ type: 'QUESTION', ...qData });
-    renderQuestion(qData.question, qData.qNum, qData.totalQ);
-    
-    // Host internal timer
-    let ticks = 15;
-    const t = setInterval(() => {
-        ticks--;
-        if(ticks <= 0) {
-            clearInterval(t);
-            resolveQuestion();
-        } else if(Object.keys(roomState.currentAnswers).length === roomState.players.filter(p => !p.disconnected).length) {
-            // Everyone answered
-            clearInterval(t);
-            setTimeout(resolveQuestion, 1000);
-        }
-    }, 1000);
+    if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }
+    if (data.type === 'START_GAME') { gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.questions) gameState.questions = data.questions; if (!gameState.gameStarted) { gameState.gameStarted = true; startGameUI(); } }
+    if (data.type === 'BACKUP_QUESTIONS') { if (data.questions) gameState.questions = data.questions; } // store for migration/leaderboard
+    if (data.type === 'QUESTION') { gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
+    if (data.type === 'REVEAL') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
+    if (data.type === 'END_GAME') { showLeaderboard(); }
 }
 
+// ---------- Game flow ----------
+function startGame() {
+    if (!isHost) return;
+    const shuffled = [...gameState.pool].sort(() => 0.5 - Math.random()).slice(0, gameState.qCount);
+    gameState.questions = shuffled;
+    players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; });
+    gameState.qIndex = -1;
+    gameState.gameStarted = true;
+    broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length });
+    setTimeout(() => broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length }), 500);
+    setTimeout(() => broadcast({ type: 'START_GAME', topic: gameState.topic, qCount: shuffled.length }), 1500);
+    setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: shuffled }), 300);
+    startGameUI();
+    nextQuestion();
+}
+
+function startGameUI() { hideAllScreens(); document.getElementById('screen-game').classList.remove('hidden'); }
+
+function nextQuestion() {
+    if (!isHost) return;
+    gameState.qIndex++;
+    if (gameState.qIndex >= gameState.questions.length) {
+        broadcast({ type: 'END_GAME' }); showLeaderboard(); return;
+    }
+    gameState.currentAnswers = {};
+    if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
+    broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
+    showQuestion(gameState.qIndex, q);
+
+    clearTimeout(forceRevealTimer);
+    forceRevealTimer = setTimeout(() => {
+        players.filter(p => !p.disconnected).forEach(p => {
+            if (!gameState.currentAnswers[p.id]) gameState.currentAnswers[p.id] = { idx: -1, elapsed: TIME_LIMIT_MS };
+        });
+        checkAllAnswered();
+    }, TIME_LIMIT_MS + 300);
+}
+
+function checkAllAnswered() {
+    if (!isHost) return;
+    const activePlayers = players.filter(p => !p.disconnected);
+    if (activePlayers.every(p => gameState.currentAnswers[p.id])) {
+        clearTimeout(forceRevealTimer);
+        if (gameState.gameOver) return;
+        const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
+        if (!q) return;
+        // Score calculation
+        activePlayers.forEach(p => {
+            const ans = gameState.currentAnswers[p.id];
+            if (ans.idx === q.a) {
+                gameState.scores[p.id] += 100 + Math.round(100 * (1 - ans.elapsed / TIME_LIMIT_MS));
+                gameState.correctCounts[p.id]++;
+            }
+        });
+        broadcast({ type: 'REVEAL', answers: gameState.currentAnswers, correctIdx: q.a, scores: gameState.scores, correctCounts: gameState.correctCounts });
+        revealAnswers(gameState.currentAnswers, q.a);
+    }
+}
 
 function updateLiveScoresUI() {
     const container = document.getElementById('live-scores-container');
     if (!container) return;
-    container.innerHTML = roomState.players.map(p => `
+    container.innerHTML = players.map(p => `
         <div class="px-3 py-1.5 rounded-full border border-slate-200 bg-white text-xs font-bold text-slate-700 ${p.disconnected ? 'opacity-40' : ''}">
-            ${p.id === myId ? 'You' : p.name}: <span class="text-sky-600">${roomState.scores[p.id] || 0}</span>
+            ${p.id === myId ? 'You' : p.name}: <span class="text-sky-600">${gameState.scores[p.id] || 0}</span>
         </div>
     `).join('');
 }
 
-function renderQuestion(q, qNum, totalQ) {
-    updateLiveScoresUI();
-
-    answered = false;
-    document.getElementById('game-q-num').textContent = `Q ${qNum}/${totalQ}`;
+function showQuestion(qIndex, q) {
+    myAnswered = false;
+    document.getElementById('game-q-num').textContent = `Q ${qIndex + 1}/${gameState.questions.length}`;
     document.getElementById('question-text').textContent = q.q;
-    
+    updateLiveScoresUI();
+    document.getElementById('answer-feedback').classList.add('hidden');
+
     const grid = document.getElementById('options-grid');
     grid.innerHTML = '';
     const letters = ['A', 'B', 'C', 'D'];
-    q.options.forEach((opt, idx) => {
-        grid.innerHTML += `<button id="opt-${idx}" class="option-btn p-4 rounded-xl text-left font-semibold text-lg" onclick="submitAnswer(${idx})">${letters[idx]}. ${opt}</button>`;
+    q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn p-4 text-left font-semibold text-lg';
+        btn.textContent = `${letters[i]}. ${opt}`;
+        btn.onclick = () => selectOption(i);
+        grid.appendChild(btn);
     });
-    
-    document.getElementById('answer-feedback').classList.add('hidden');
-    
-    // Visual Timer
-    timeRemaining = 15;
-    document.getElementById('game-timer').textContent = "15s";
+
+    questionStartTime = Date.now();
     const bar = document.getElementById('timer-bar');
-    bar.style.width = '100%';
-    
-    if(questionTimer) clearInterval(questionTimer);
-    questionTimer = setInterval(() => {
-        timeRemaining--;
-        document.getElementById('game-timer').textContent = timeRemaining + "s";
-        bar.style.width = `${(timeRemaining/15)*100}%`;
-        if(timeRemaining <= 0) clearInterval(questionTimer);
-    }, 1000);
+    bar.style.transition = 'none'; bar.style.width = '100%';
+    requestAnimationFrame(() => {
+        bar.style.transition = `width ${TIME_LIMIT_MS}ms linear`;
+        bar.style.width = '0%';
+    });
+
+    clearInterval(tickInterval);
+    tickInterval = setInterval(() => {
+        if (Date.now() - questionStartTime >= TIME_LIMIT_MS) {
+            clearInterval(tickInterval);
+            if (!myAnswered) lockInAnswer(-1);
+        }
+    }, 100);
 }
 
-function submitAnswer(idx) {
-    if(answered) return;
-    answered = true;
-    clearInterval(questionTimer);
-    
-    document.getElementById(`opt-${idx}`).classList.add('selected');
-    document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
-    
+function selectOption(idx) {
+    if (myAnswered) return;
+    document.querySelectorAll('#options-grid .option-btn')[idx].classList.add('selected');
+    lockInAnswer(idx);
+}
+
+function lockInAnswer(idx) {
+    if (myAnswered) return;
+    myAnswered = true;
+    const elapsed = Math.min(Date.now() - questionStartTime, TIME_LIMIT_MS);
     document.getElementById('answer-feedback').classList.remove('hidden');
-    document.getElementById('feedback-text').textContent = "Waiting for others...";
-    document.getElementById('feedback-text').className = "text-xl font-bold text-slate-400";
-    
-    if(isHost) {
-        handleGuestAnswer(myId, idx, timeRemaining);
+    document.getElementById('feedback-text').textContent = idx === -1 ? "Time's up!" : "Answer locked — waiting for others...";
+    document.querySelectorAll('#options-grid .option-btn').forEach(b => b.disabled = true);
+
+    if (isHost) {
+        gameState.currentAnswers[myId] = { idx, elapsed };
+        checkAllAnswered();
     } else {
-        hostConn.send({ type: 'ANSWER', answerIdx: idx, timeLeft: timeRemaining });
-                                    }
-}
-
-function handleGuestAnswer(playerId, idx, timeLeft) {
-    roomState.currentAnswers[playerId] = { idx, time: timeLeft };
-}
-
-function resolveQuestion() {
-    const q = roomState.questions[roomState.currentQ];
-    const correctIdx = q.a;
-    
-    // Calculate points
-    roomState.players.forEach(p => {
-        const ans = roomState.currentAnswers[p.id];
-        if(!roomState.scores[p.id]) roomState.scores[p.id] = 0;
-        if(!roomState.correctCounts[p.id]) roomState.correctCounts[p.id] = 0;
-        
-        if(ans && ans.idx === correctIdx) {
-            roomState.scores[p.id] += (100 + (ans.time * 10));
-            roomState.correctCounts[p.id]++;
-        }
-    });
-    
-    const resData = { correctIdx, scores: roomState.scores, correctCounts: roomState.correctCounts };
-    broadcast({ type: 'RESULT', ...resData });
-    showResult(resData.correctIdx, resData.scores);
-    
-    roomState.currentQ++;
-    setTimeout(sendNextQuestion, 4000);
-}
-
-function showResult(correctIdx, scores) {
-            if(questionTimer) clearInterval(questionTimer);
-    document.querySelectorAll('.option-btn').forEach((btn, idx) => {
-        btn.disabled = true;
-        if(idx === correctIdx) {
-            btn.classList.add('correct');
-        } else if(btn.classList.contains('selected')) {
-            btn.classList.add('wrong');
-        }
-    });
-    
-    const fb = document.getElementById('answer-feedback');
-    const fbt = document.getElementById('feedback-text');
-    fb.classList.remove('hidden');
-    
-    const myScore = scores[myId] || 0;
-    
-    if(document.getElementById(`opt-${correctIdx}`).classList.contains('selected')) {
-        fbt.textContent = `Correct!`;
-        fbt.className = "text-xl font-bold text-green-400";
-    } else {
-        fbt.textContent = `Wrong!`;
-        fbt.className = "text-xl font-bold text-red-400";
+        if (hostConn && hostConn.open) hostConn.send({ type: 'ANSWER', idx, elapsed });
+                        
     }
 }
 
-function showLeaderboard(scores, passedTotalQ = null) {
-    roomState.gameOver = true;
-    hideAllScreens();
-    document.getElementById('screen-leaderboard').classList.remove('hidden');
-    
-    const list = document.getElementById('leaderboard-list');
-    list.innerHTML = '';
-    const totalQ = passedTotalQ !== null ? passedTotalQ : (roomState.questions ? roomState.questions.length : 0);
-    
-    // Sort players by score; disconnected go to bottom
-    const sorted = [...roomState.players].sort((a,b) => {
-        const sA = scores[a.id] || 0;
-        const sB = scores[b.id] || 0;
-        if (sB !== sA) return sB - sA;
+function revealAnswers(answers, correctIdx) {
+            clearInterval(tickInterval);
+    const buttons = document.querySelectorAll('#options-grid .option-btn');
+    buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === correctIdx) b.classList.add('correct');
+    });
+    const myAns = answers[myId] || { idx: -1, elapsed: TIME_LIMIT_MS };
+    if (myAns.idx !== -1 && myAns.idx !== correctIdx) buttons[myAns.idx].classList.add('wrong');
+
+    document.getElementById('answer-feedback').classList.remove('hidden');
+    let msg = "Incorrect";
+    if (myAns.idx === -1) {
+        msg = "";
+    } else if (myAns.idx === correctIdx) {
+        // Find fastest time
+        let fastest = TIME_LIMIT_MS;
+        let isFastest = true;
+        Object.keys(answers).forEach(pid => {
+            const a = answers[pid];
+            if (a.idx === correctIdx && a.elapsed < fastest) fastest = a.elapsed;
+        });
+        isFastest = myAns.elapsed <= fastest;
+        const pts = 100 + Math.round(100 * (1 - myAns.elapsed / TIME_LIMIT_MS));
+        msg = `Correct! +${pts} pts${isFastest ? " ⚡ Fastest!" : ""}`;
+    }
+    document.getElementById('feedback-text').textContent = msg;
+    updateLiveScoresUI();
+
+    if (isHost) { clearTimeout(revealTimer); revealTimer = setTimeout(nextQuestion, 2500); }
+}
+
+function showLeaderboard() {
+    gameState.gameOver = true;
+    hideAllScreens(); document.getElementById('screen-leaderboard').classList.remove('hidden');
+    const totalQ = gameState.questions.length;
+    const sorted = [...players].sort((a,b) => {
         if (a.disconnected && !b.disconnected) return 1;
         if (!a.disconnected && b.disconnected) return -1;
-        return 0;
+        return (gameState.scores[b.id]||0) - (gameState.scores[a.id]||0);
     });
     
-    sorted.forEach((p, idx) => {
+    document.getElementById('leaderboard-list').innerHTML = sorted.map((p, i) => {
         const isMe = p.id === myId;
-        const correct = roomState.correctCounts[p.id] || 0;
-        const borderCls = idx === 0 ? 'border-yellow-300 bg-yellow-50' : (isMe ? 'border-sky-200 bg-sky-50' : 'border-slate-200 bg-white');
-        list.innerHTML += `
-            <div class="p-4 rounded-xl border ${borderCls} flex items-center justify-between shadow-sm ${p.disconnected ? 'opacity-50' : ''}">
+        const borderCls = i === 0 ? 'border-yellow-300 bg-yellow-50' : (isMe ? 'border-sky-200 bg-sky-50' : 'border-slate-200 bg-white');
+        return `
+            <div class="flex items-center justify-between p-4 rounded-xl border ${borderCls} ${p.disconnected ? 'opacity-50' : ''}">
                 <div class="flex items-center gap-3">
-                    <span class="font-bold text-slate-400">#${idx+1}</span>
+                    <span class="font-bold text-slate-400">#${i + 1}</span>
                     <div>
-                        <p class="font-bold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' 🔌' : ''}</p>
-                        <p class="text-xs text-slate-500 mt-0.5">✅ ${correct} / ${totalQ} correct</p>
+                        <p class="font-semibold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' 🔌' : ''}</p>
+                        <p class="text-xs text-slate-500 mt-0.5">✅ ${gameState.correctCounts[p.id]||0} / ${totalQ} correct</p>
                     </div>
-                    ${idx===0 && !p.disconnected ? '<span class="text-yellow-500">🏆</span>' : ''}
+                    ${i === 0 && !p.disconnected ? '<i data-lucide="trophy" class="w-4 h-4 text-yellow-500"></i>' : ''}
                 </div>
-                <span class="font-bold text-slate-900 text-lg">${scores[p.id] || 0} pts</span>
-            </div>
-        `;
+                <span class="font-bold text-slate-900 text-lg">${gameState.scores[p.id]||0} pts</span>
+            </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+function safeExit() { try { Object.values(guestConns).forEach(c => c.close()); if (hostConn) hostConn.close(); if (peer) peer.destroy(); } catch (e) {} window.location.href = '/games/'; }
+window.addEventListener('beforeunload', e => { if (gameState.gameStarted) { e.preventDefault(); e.returnValue = "Leaving will end the game!"; } });
+
+function renderPlayers() {
+    const list = document.getElementById('players-list');
+    if (!list) return;
+    const countEl = document.getElementById('player-count');
+    if (countEl) countEl.textContent = players.length;
+    list.innerHTML = '';
+    players.forEach(p => {
+        list.innerHTML += `<div class="player-item">${p.name} ${p.id === myId ? '(You)' : ''} ${p.disconnected ? '🔌' : ''}</div>`;
     });
+    const btn = document.getElementById('btn-start-game');
+    if (btn && isHost && players.filter(p => !p.disconnected).length > 0) btn.classList.remove('hidden');
 }
 
-// Prevent accidental reloads destroying the P2P connection
-let allowExit = false;
-window.addEventListener('beforeunload', (e) => {
-    if (!allowExit && ((isHost && roomState.players.length > 0) || (!isHost && hostConn && hostConn.open))) {
-        e.preventDefault();
-        e.returnValue = "Leaving this page will disconnect you from the game!";
-        return e.returnValue;
-    }
-});
-
-function safeExit() {
-    allowExit = true;
-    window.location.href = "/games/";
-}
-
-// Auto-check URL on load
-window.onload = () => {
-    const url = new URL(window.location.href);
-    if(url.searchParams.get('room')) {
-        document.getElementById('url-join-box').classList.remove('hidden');
-    }
-};
 
 
 let isMigrating = false;
@@ -772,8 +573,10 @@ function migrateHost(hostId) {
       }
       if (typeof showToast === 'function') showToast(hostName + " disconnected");
 
-    if (!roomState.backupQuestions) return;
+    if (!gameState.questions || gameState.questions.length === 0) return;
     if (hostConn) { hostConn.close(); hostConn = null; }
+    
+    // We need firebase database reference
     const db = firebase.database();
     db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
         if (currentData === null) return myId;
@@ -781,80 +584,130 @@ function migrateHost(hostId) {
     }, (error, committed, snapshot) => {
         if (committed && snapshot.val() === myId) {
             isHost = true;
-            roomState.questions = roomState.backupQuestions;
-            roomState.currentAnswers = {};
-
-            let oldHostPlayer = roomState.players.find(p => p.id === hostId);
+            
+            let oldHostPlayer = players.find(p => p.id === hostId);
             if (oldHostPlayer) {
                 oldHostPlayer.id = hostId + '-LEFT';
                 oldHostPlayer.disconnected = true;
-                roomState.scores[oldHostPlayer.id] = roomState.scores[hostId] || 0;
-                roomState.correctCounts[oldHostPlayer.id] = roomState.correctCounts[hostId] || 0;
+              }
+              // Delay disconnect to prevent UI flicker
+              players.forEach(p => {
+                  if (p.id !== myId && p.name !== myName) {
+                      const oldId = p.id;
+                      setTimeout(() => {
+                          if (p.id === oldId) { p.disconnected = true; renderPlayers(); }
+                      }, 8000);
+                  }
+              });
+              if (oldHostPlayer) {
+                gameState.scores[oldHostPlayer.id] = gameState.scores[hostId] || 0;
+                gameState.correctCounts[oldHostPlayer.id] = gameState.correctCounts[hostId] || 0;
             }
             let myOldId = myId;
-
+            
             if (peer) peer.destroy();
+            
             setTimeout(() => {
-                initPeer((id) => {
-                    let me = roomState.players.find(p => p.id === myOldId || p.name === myName);
+                // Re-init peer as host using the same room code
+                peer = new Peer(ROOM_PREFIX + hostId, {
+                    debug: 1,
+                    config: {
+                        'iceServers': [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' },
+                { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:relay.metered.ca:80', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' },
+                { urls: 'turn:relay.metered.ca:443', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' },
+                { urls: 'turn:relay.metered.ca:443?transport=tcp', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' }
+            ]
+                    }
+                });
+                peer.on('open', (pid) => {
+                    myId = pid.replace(ROOM_PREFIX, '');
+                    isMigrating = false;
+                    let me = players.find(p => p.id === myOldId || p.name === myName);
                     if (me) me.id = myId;
-                    roomState.scores[myId] = roomState.scores[myOldId] || 0;
-                    roomState.correctCounts[myId] = roomState.correctCounts[myOldId] || 0;
+                    gameState.scores[myId] = gameState.scores[myOldId] || 0;
+                    gameState.correctCounts[myId] = gameState.correctCounts[myOldId] || 0;
+                    
                     hideAllScreens();
                     document.getElementById('screen-game').classList.remove('hidden');
-                    showToast("You are the new host!");
+                    if(typeof showToast === 'function') showToast("You are the new host!");
                     
-                    // Accept reconnecting guests
-                    peer.on('connection', (conn) => {
-                        conn.on('data', (data) => {
-                            if(data.type === 'JOIN') {
-                                guestConns[conn.peer] = conn;
-                                let existingPlayer = roomState.players.find(p => p.id === conn.peer);
-                                if (existingPlayer) {
-                                    existingPlayer.disconnected = false;
-                                    existingPlayer.name = data.name;
-                                } else {
-                                    roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
-                                    roomState.correctCounts[conn.peer] = 0;
-                                }
-                                if (roomState.questions && roomState.questions.length > 0 && roomState.currentQ > 0) {
-                                    conn.send({ type: 'SYNC_STATE', state: { roomState, timeRemaining, currentSettings } });
-                                }
-                                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
-                                if (!roomState.backupQuestions) renderLobby();
-                            } else if(data.type === 'ANSWER') {
-                                handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
-                            }
-                        });
-                        conn.on('close', () => {
-                            const p = roomState.players.find(pl => pl.id === conn.peer);
-                            if (p) { 
-                                if (!roomState.backupQuestions) {
-                                    roomState.players = roomState.players.filter(pl => pl.id !== conn.peer);
-                                } else {
-                                    p.disconnected = true; showToast(p.name + " disconnected"); 
-                                }
-                            }
-                            delete guestConns[conn.peer];
-                            broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
-                            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
-                        });
+                    peer.on('connection', conn => {
+                        guestConns[conn.peer] = conn;
+                        conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
+                        conn.on('close', () => handleDisconnect(conn.peer));
                     });
                     
                     // Resume game
                     setTimeout(() => {
-                        sendNextQuestion();
-                    }, 3000);
-                }, hostId);
+                        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+                        if (gameState.gameStarted && !gameState.gameOver) { gameState.qIndex--; nextQuestion(); }
+                    }, 4000);
+                });
             }, 1000);
         } else {
             // Someone else became host, reconnect
             setTimeout(() => {
-                connectToHost(hostId);
+                
+                  let newHostName = "Someone";
+                  let pList2 = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
+                  let newHostPlayer = pList2.find(p => p.id === snapshot.val());
+                  if (newHostPlayer) newHostName = newHostPlayer.name;
+                  if (typeof showToast === 'function') showToast(newHostName + " is the new host");
+                  
+                  isMigrating = false;
+                  manualJoinRoomReconnect(hostId);
             }, 3000);
         }
     });
 }
+
+function manualJoinRoomReconnect(code) {
+    if (peer) peer.destroy();
+    const statusEl = document.getElementById('join-status');
+    statusEl.classList.remove('hidden'); statusEl.textContent = "Reconnecting...";
+
+    peer = new Peer(undefined, {
+        debug: 1,
+        config: {
+            'iceServers': [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+                { urls: 'stun:stun3.l.google.com:19302' },
+                { urls: 'stun:stun4.l.google.com:19302' },
+                { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' },
+                { urls: 'turn:relay.metered.ca:80', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' },
+                { urls: 'turn:relay.metered.ca:443', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' },
+                { urls: 'turn:relay.metered.ca:443?transport=tcp', username: 'e8dd65f9e29d966b7a7eb7de', credential: 'uY+/7DqCPHyGsUP/' }
+            ]
+        }
+    });
+    const failTimer = setTimeout(() => { statusEl.textContent = "Could not connect."; }, 12000);
+    peer.on('open', () => {
+        hostConn = peer.connect(ROOM_PREFIX + code, { reliable: true });
+        hostConn.on('open', () => {
+            clearTimeout(failTimer); isHost = false; myId = peer.id;
+            hostConn.send({ type: 'JOIN', name: myName });
+            if(typeof showToast === 'function') showToast("Reconnected!");
+        });
+        hostConn.on('data', handleGuestData);
+        hostConn.on('close', () => { migrateHost(code); });
+        hostConn.on('host_disconnect_early', () => { migrateHost(code); });
+    });
+}
+
+
+
 
 
 

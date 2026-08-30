@@ -157,7 +157,7 @@ async function createRoom() {
                 conn.on('open', () => { conn.send({ type: 'ERROR', msg: 'Room is full (max 4)' }); setTimeout(() => conn.close(), 500); }); return;
             }
             guestConns[conn.peer] = conn;
-            conn.on('data', data => handleHostData(data, conn.peer));
+            conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
             conn.on('close', () => handleDisconnect(conn.peer));
         });
     }, () => { document.getElementById('btn-create-room').textContent = "Generate Room"; uiShowWelcome(); });
@@ -171,7 +171,14 @@ function handleDisconnect(peerId) {
 }
 
 function handleHostData(data, fromId) {
-    if (data.type === 'PONG') return;
+    if (data.type === 'PONG') {
+        const p = players.find(pl => pl.id === fromId);
+        if (p && p.disconnected) {
+            p.disconnected = false;
+            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
+        }
+        return;
+    }
     if (data.type === 'JOIN') {
         players.push({ id: fromId, name: data.name, score: 0, correctCounts: 0, disconnected: false });
         gameState.scores[fromId] = 0;
@@ -608,7 +615,7 @@ function migrateHost(hostId) {
                     
                     peer.on('connection', conn => {
                         guestConns[conn.peer] = conn;
-                        conn.on('data', data => handleHostData(data, conn.peer));
+                        conn.on('data', data => { guestConns[conn.peer] = conn; handleHostData(data, conn.peer); });
                         conn.on('close', () => handleDisconnect(conn.peer));
                     });
                     
