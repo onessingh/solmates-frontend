@@ -407,6 +407,13 @@ function connectToHost(hostId) {
             document.getElementById('screen-lobby').classList.remove('hidden');
             document.getElementById('wait-host-msg').classList.remove('hidden');
             document.getElementById('invite-box').classList.add('hidden');
+            // Optimistically add self so lobby shows our name immediately
+            // (before the host's LOBBY_UPDATE arrives)
+            if (!roomState.players.find(p => p.id === myId)) {
+                roomState.players.push({ id: myId, name: myName, score: 0, disconnected: false });
+                roomState.correctCounts[myId] = 0;
+                renderLobby();
+            }
         });
 
         // Periodic re-JOIN acts as a heartbeat: even if the host briefly lost track of us

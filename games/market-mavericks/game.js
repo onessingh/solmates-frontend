@@ -250,6 +250,11 @@ function manualJoinRoom() {
             document.getElementById('invite-link').textContent = window.location.origin + window.location.pathname + '?room=' + code;
             document.getElementById('btn-start-game').classList.add('hidden');
             document.getElementById('wait-host-msg').classList.remove('hidden');
+            // Optimistically add self so lobby shows our name immediately
+            if (!players.find(p => p.id === myId)) {
+                players.push({ id: myId, name: myName, score: 0, disconnected: false });
+                renderLobby();
+            }
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { migrateHost(code); });

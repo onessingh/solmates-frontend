@@ -332,6 +332,11 @@ function manualJoinRoom() {
             document.getElementById('lobby-topic').textContent = "Waiting for host...";
             document.getElementById('btn-start-game').classList.add('hidden');
             document.getElementById('wait-host-msg').classList.remove('hidden');
+            // Optimistically add self so lobby shows our name immediately
+            if (!players.find(p => p.id === myId)) {
+                players.push({ id: myId, name: myName, score: 0, disconnected: false });
+                renderPlayers();
+            }
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { migrateHost(code); });
