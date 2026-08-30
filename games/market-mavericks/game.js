@@ -707,3 +707,18 @@ function manualJoinRoomReconnect(code) {
 
 
 
+
+// Fix for background tab throttling on mobile (e.g. sharing link via WhatsApp)
+// When returning to the foreground, if a sync is stuck because the 5s timer was paused, force it.
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && typeof isHost !== 'undefined' && isHost) {
+        if (typeof gameState !== 'undefined' && gameState.syncing && typeof finishSyncStart === 'function') {
+            console.log('Tab returned to foreground, forcing sync finish');
+            finishSyncStart();
+        }
+        if (typeof roomState !== 'undefined' && roomState.syncing && typeof finishSyncStart === 'function') {
+            console.log('Tab returned to foreground, forcing sync finish');
+            finishSyncStart();
+        }
+    }
+});
