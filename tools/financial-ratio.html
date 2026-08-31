@@ -737,16 +737,19 @@ async function parseBSQuestion() {
 
     // AI fallback for missing fields
     let errDiv = document.getElementById('bs-parse-error');
-    errDiv.innerText = "Detecting values... (AI fallback for: " + missing.join(", ") + ")";
-    errDiv.style.color = "var(--light)";
+    let detectBtn = document.getElementById('bs-detect-btn');
+    
+    // Set loading state on button instead of errDiv
+    detectBtn.innerText = "Detecting values...";
+    detectBtn.disabled = true;
+    detectBtn.style.opacity = "0.7";
+    detectBtn.style.cursor = "not-allowed";
 
     try {
         if(window.solmatesAPI) {
             const aiResult = await window.solmatesAPI.generateAIToolData('black-scholes-parser', { question: questionText });
             if(aiResult && aiResult.success !== false) {
-                // Backend returns { success: true, data: { stockPrice, ... } }
                 let aiData = (aiResult.data !== undefined) ? aiResult.data : aiResult;
-                // Normalize AI response field names
                 let aiDetected = {
                     S: (aiData.stockPrice !== undefined && aiData.stockPrice !== null) ? parseFloat(aiData.stockPrice) : null,
                     K: (aiData.strikePrice !== undefined && aiData.strikePrice !== null) ? parseFloat(aiData.strikePrice) : null,
@@ -756,7 +759,6 @@ async function parseBSQuestion() {
                     q: (aiData.dividendYield !== undefined && aiData.dividendYield !== null) ? parseFloat(aiData.dividendYield) : 0,
                     type: aiData.optionType || null
                 };
-                // Merge: local high-confidence values take priority, AI fills missing
                 let merged = mergeWithAI(detected, aiDetected);
                 applyDetectedToUI(merged, true);
             } else {
@@ -766,11 +768,16 @@ async function parseBSQuestion() {
             applyDetectedToUI(detected, false);
         }
     } catch(e) {
-        // AI failed - show what local parser found + manual prompt
         applyDetectedToUI(detected, false);
         if(getMissingFields(detected).length > 0) {
             errDiv.innerText += " AI fallback failed. Please enter missing values manually.";
         }
+    } finally {
+        // Restore button state
+        detectBtn.innerText = "Detect Values";
+        detectBtn.disabled = false;
+        detectBtn.style.opacity = "1";
+        detectBtn.style.cursor = "pointer";
     }
 }
 
@@ -880,7 +887,7 @@ function renderRatios() {
         <label>Paste your Black-Scholes question</label>
         <textarea id="bs-question-text" class="rc-inp" rows="5" placeholder="Example: A stock is currently trading at ₹500. The strike price is ₹520, expiry is 30 days, volatility is 25%, risk-free rate is 6% and dividend yield is 1%. Calculate the European call option value using Black-Scholes model." style="resize: vertical;"></textarea>
       </div>
-      <button class="btn-calc" style="margin-top: 10px;" onclick="parseBSQuestion()">
+      <button id="bs-detect-btn" class="btn-calc" style="margin-top: 10px;" onclick="parseBSQuestion()">
          Detect Values
       </button>
       <div id="bs-parse-error" style="margin-top: 10px; font-size: 0.85rem;"></div>
