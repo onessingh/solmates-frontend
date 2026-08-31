@@ -274,6 +274,8 @@
 })();
 </script>
 
+  <script src="/config.js?v=97"></script>
+  <script src="/js/api-client.js?v=88"></script>
 </head>
 <body>
 
@@ -573,80 +575,146 @@ function setBSMode(mode) {
     }
 }
 
-function parseBSQuestion() {
-    const text = document.getElementById('bs-question-text').value.toLowerCase();
-    
+function runLocalParser(text) {
     let detected = { S: null, K: null, T: null, v: null, r: null, q: null, type: null };
+    const digitPat = '([\\d.,]*\\d[\\d.,]*)';
     
-    const digitPattern = '([\\d.,]*\\d[\\d.,]*)';
-    
-    const sPattern = new RegExp('(?:market price of (?:a|the) (?:share|stock)|market price|share price|current market price|current market value|stock(?: is)?(?: currently)? trading at|currently trading at|stock(?: is)?(?: currently)? valued at|share(?: is)?(?: currently)? valued at|current value of the stock|stock(?: is)? priced at|share(?: is)? priced at|underlying asset(?: is)?(?: currently)? priced at|underlying asset price|underlying price|current stock price|stock price|s\\s*=)[^\\d]*' + digitPattern, 'i');
-    let sMatch = text.match(sPattern);
-    if(sMatch) {
-        let val = parseFloat(sMatch[1].replace(/,/g, ''));
-        if(!isNaN(val)) detected.S = val;
-    }
+    const sP = new RegExp('(?:market price of (?:a|the) (?:share|stock)|market price|share price|current market price|current market value|stock(?: is)?(?: currently)? trading at|currently trading at|stock(?: is)?(?: currently)? valued at|share(?: is)?(?: currently)? valued at|current value of the stock|stock(?: is)? priced at|share(?: is)? priced at|underlying asset(?: is)?(?: currently)? priced at|underlying asset price|underlying price|current stock price|stock price|s\\s*=)[^\\d]*' + digitPat, 'i');
+    let sM = text.match(sP); if(sM) { let v = parseFloat(sM[1].replace(/,/g, '')); if(!isNaN(v)) detected.S = v; }
 
-    const kPattern = new RegExp('(?:exercise price of (?:the|a) option|exercise price of the european call option|exercise price|strike price|strike|k\\s*=)[^\\d]*' + digitPattern, 'i');
-    let kMatch = text.match(kPattern);
-    if(kMatch) {
-        let val = parseFloat(kMatch[1].replace(/,/g, ''));
-        if(!isNaN(val)) detected.K = val;
-    }
+    const kP = new RegExp('(?:exercise price of (?:the|a) option|exercise price of the european (?:call|put) option|exercise price|strike price|strike|k\\s*=)[^\\d]*' + digitPat, 'i');
+    let kM = text.match(kP); if(kM) { let v = parseFloat(kM[1].replace(/,/g, '')); if(!isNaN(v)) detected.K = v; }
 
-    const tDaysPattern = new RegExp(digitPattern + '\\s*(?:days)', 'i');
-    const tMonthsPattern = new RegExp(digitPattern + '\\s*(?:months)', 'i');
-    const tYearsPattern = new RegExp(digitPattern + '\\s*(?:years?)', 'i');
-    let tDaysMatch = text.match(tDaysPattern);
-    let tMonthsMatch = text.match(tMonthsPattern);
-    let tYearsMatch = text.match(tYearsPattern);
-    if(tDaysMatch) detected.T = parseFloat(tDaysMatch[1]);
-    else if(tMonthsMatch) detected.T = parseFloat(tMonthsMatch[1]) * 30;
-    else if(tYearsMatch) detected.T = parseFloat(tYearsMatch[1]) * 365;
+    const tDayP = new RegExp(digitPat + '\\s*days', 'i');
+    const tMonP = new RegExp(digitPat + '\\s*months', 'i');
+    const tYrP  = new RegExp(digitPat + '\\s*years?', 'i');
+    let tDM = text.match(tDayP);
+    let tMM = text.match(tMonP);
+    let tYM = text.match(tYrP);
+    if(tDM) detected.T = parseFloat(tDM[1]);
+    else if(tMM) detected.T = parseFloat(tMM[1]) * 30;
+    else if(tYM) detected.T = parseFloat(tYM[1]) * 365;
 
-    const vPattern = new RegExp('(?:annualized volatility|annual volatility|volatility|standard deviation|σ)[^\\d]*' + digitPattern, 'i');
-    let vMatch = text.match(vPattern);
-    if(vMatch) detected.v = parseFloat(vMatch[1]);
+    const vP = new RegExp('(?:annualized volatility|annual volatility|volatility|standard deviation)[^\\d]*' + digitPat, 'i');
+    let vM = text.match(vP); if(vM) detected.v = parseFloat(vM[1]);
 
-    const rPattern = new RegExp('(?:continuously compounded risk-free(?: interest)? rate|risk-free(?: interest)? rate|risk free(?: interest)? rate|interest rate|r\\s*=)[^\\d]*' + digitPattern, 'i');
-    let rMatch = text.match(rPattern);
-    if(rMatch) detected.r = parseFloat(rMatch[1]);
+    const rP = new RegExp('(?:continuously compounded risk-free(?: interest)? rate|risk-free(?: interest)? rate|risk free(?: interest)? rate|r\\s*=)[^\\d]*' + digitPat, 'i');
+    let rM = text.match(rP); if(rM) detected.r = parseFloat(rM[1]);
 
-    const qPattern = new RegExp('(?:annual dividend yield|dividend yield|annual dividend|dividend|q\\s*=)[^\\d]*' + digitPattern, 'i');
-    let qMatch = text.match(qPattern);
-    if(qMatch) detected.q = parseFloat(qMatch[1]);
-    else detected.q = 0; // default
+    const qP = new RegExp('(?:annual dividend yield|dividend yield|annual dividend(?! per)|q\\s*=)[^\\d]*' + digitPat, 'i');
+    let qM = text.match(qP); if(qM) detected.q = parseFloat(qM[1]); else detected.q = 0;
 
     if(text.includes('put')) detected.type = 'put';
     else if(text.includes('call')) detected.type = 'call';
 
+    return detected;
+}
+
+function getMissingFields(detected) {
     let missing = [];
     if(detected.S === null || isNaN(detected.S)) missing.push('Stock Price');
     if(detected.K === null || isNaN(detected.K)) missing.push('Strike Price');
     if(detected.T === null || isNaN(detected.T)) missing.push('Days to Expiry');
     if(detected.v === null || isNaN(detected.v)) missing.push('Volatility');
     if(detected.r === null || isNaN(detected.r)) missing.push('Risk-Free Rate');
+    return missing;
+}
 
-    document.getElementById('bs_S').value = detected.S !== null ? detected.S : '';
-    document.getElementById('bs_K').value = detected.K !== null ? detected.K : '';
-    document.getElementById('bs_T').value = detected.T !== null ? detected.T : '';
-    document.getElementById('bs_v').value = detected.v !== null ? detected.v : '';
-    document.getElementById('bs_r').value = detected.r !== null ? detected.r : '';
-    document.getElementById('bs_q').value = detected.q !== null ? detected.q : '0';
+function applyDetectedToUI(detected, aiAssisted) {
+    if(detected.S !== null) document.getElementById('bs_S').value = detected.S;
+    else document.getElementById('bs_S').value = '';
+    if(detected.K !== null) document.getElementById('bs_K').value = detected.K;
+    else document.getElementById('bs_K').value = '';
+    if(detected.T !== null) document.getElementById('bs_T').value = detected.T;
+    else document.getElementById('bs_T').value = '';
+    if(detected.v !== null) document.getElementById('bs_v').value = detected.v;
+    else document.getElementById('bs_v').value = '';
+    if(detected.r !== null) document.getElementById('bs_r').value = detected.r;
+    else document.getElementById('bs_r').value = '';
+    document.getElementById('bs_q').value = (detected.q !== null && !isNaN(detected.q)) ? detected.q : '0';
     if(detected.type !== null) document.getElementById('bs_type').value = detected.type;
 
+    let missing = getMissingFields(detected);
     let errDiv = document.getElementById('bs-parse-error');
+    let detectedTitle = document.getElementById('bs-detected-title');
+
     if(missing.length > 0) {
         errDiv.innerText = "Could not detect: " + missing.join(", ") + ". Please enter them manually.";
         errDiv.style.color = "var(--danger)";
     } else {
-        errDiv.innerText = "Detection successful. Please review the values.";
+        errDiv.innerText = aiAssisted ? "Detection successful (AI-assisted). Please review the values." : "Detection successful. Please review the values.";
         errDiv.style.color = "var(--success)";
     }
 
+    detectedTitle.style.display = 'block';
+    detectedTitle.innerText = aiAssisted ? "Detected Values (AI-assisted)" : "Detected Values";
     document.getElementById('bs-inputs-section').style.display = 'block';
-    document.getElementById('bs-detected-title').style.display = 'block';
     document.getElementById('bs-calc-btn-text').innerText = "Solve";
+}
+
+function mergeWithAI(local, ai) {
+    let merged = Object.assign({}, local);
+    const fields = ['S', 'K', 'T', 'v', 'r', 'q', 'type'];
+    for(let f of fields) {
+        if((merged[f] === null || isNaN(merged[f])) && ai[f] !== null && ai[f] !== undefined) {
+            merged[f] = ai[f];
+        }
+    }
+    return merged;
+}
+
+async function parseBSQuestion() {
+    const questionText = document.getElementById('bs-question-text').value;
+    const text = questionText.toLowerCase();
+    
+    document.getElementById('bs-parse-error').innerText = '';
+    document.getElementById('bs-result').style.display = 'none';
+
+    let detected = runLocalParser(text);
+    let missing = getMissingFields(detected);
+
+    if(missing.length === 0) {
+        // Local parser got everything — no AI needed
+        applyDetectedToUI(detected, false);
+        return;
+    }
+
+    // AI fallback for missing fields
+    let errDiv = document.getElementById('bs-parse-error');
+    errDiv.innerText = "Detecting values... (AI fallback for: " + missing.join(", ") + ")";
+    errDiv.style.color = "var(--light)";
+
+    try {
+        if(window.solmatesAPI) {
+            const aiResult = await window.solmatesAPI.generateAIToolData('black-scholes-parser', { question: questionText });
+            if(aiResult && aiResult.success !== false) {
+                let aiData = aiResult;
+                // Normalize AI response field names
+                let aiDetected = {
+                    S: aiData.stockPrice !== undefined ? aiData.stockPrice : null,
+                    K: aiData.strikePrice !== undefined ? aiData.strikePrice : null,
+                    T: aiData.daysToExpiry !== undefined ? aiData.daysToExpiry : null,
+                    v: aiData.volatility !== undefined ? aiData.volatility : null,
+                    r: aiData.riskFreeRate !== undefined ? aiData.riskFreeRate : null,
+                    q: aiData.dividendYield !== undefined ? aiData.dividendYield : 0,
+                    type: aiData.optionType || null
+                };
+                // Merge: local high-confidence values take priority, AI fills missing
+                let merged = mergeWithAI(detected, aiDetected);
+                applyDetectedToUI(merged, true);
+            } else {
+                applyDetectedToUI(detected, false);
+            }
+        } else {
+            applyDetectedToUI(detected, false);
+        }
+    } catch(e) {
+        // AI failed - show what local parser found + manual prompt
+        applyDetectedToUI(detected, false);
+        if(getMissingFields(detected).length > 0) {
+            errDiv.innerText += " AI fallback failed. Please enter missing values manually.";
+        }
+    }
 }
 
 function solveBlackScholes() {
