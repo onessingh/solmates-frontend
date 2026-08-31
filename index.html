@@ -3,9 +3,15 @@
 
 <head>
 
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
   <meta id="theme-color-meta" name="theme-color" content="#ffffff">
+  <script>
+    // Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
+    (function() {
+      var t = localStorage.getItem('solmates_theme');
+      var m = document.getElementById('theme-color-meta');
+      if (t === 'dark' && m) m.setAttribute('content', '#0f172a');
+    })();
+  </script>
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta charset="UTF-8">
