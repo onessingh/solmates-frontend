@@ -278,7 +278,7 @@ function handleDisconnect(peerId) {
     const p = players.find(pl => pl.id === peerId);
     if (p) { p.disconnected = true; showToast(`${p.name} disconnected`); }
     delete guestConns[peerId];
-    broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+    broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic, caseData: gameState.caseData });
     if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderPlayers();
     
     // Check if we were waiting for them
@@ -317,7 +317,7 @@ function handleHostData(data, fromId) {
         }
         gameState.correctCounts[fromId] = 0;
         gameState.readStatus[fromId] = false;
-        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic, caseData: gameState.caseData });
         renderPlayers();
     }
     if (data.type === 'READY') {
@@ -385,8 +385,9 @@ function manualJoinRoom() {
             }
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
+            if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
@@ -432,6 +433,7 @@ function copyInviteLink() {
 function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'STATE_SYNC') {
+        if (data.caseData) gameState.caseData = data.caseData;
         // Self-healing JOIN: if host doesn't have us, resend JOIN
         if (data.players && !data.players.find(p => p.id === myId)) {
             hostConn.send({ type: 'JOIN', name: myName });
@@ -877,8 +879,9 @@ function manualJoinRoomReconnect(code) {
             if(typeof showToast === 'function') showToast("Reconnected!");
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
+            if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {

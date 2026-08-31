@@ -271,8 +271,9 @@ function manualJoinRoom() {
             }
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
+            if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
@@ -731,8 +732,9 @@ function manualJoinRoomReconnect(code) {
             if(typeof showToast === 'function') showToast("Reconnected!");
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
+            if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {

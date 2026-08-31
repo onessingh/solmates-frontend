@@ -155,7 +155,7 @@ function initPeer(onOpen, forceId) {
         // STATE_SYNC: keep guests in sync even if earlier messages were dropped.
         // Include the actual questions (not just gameStarted) so a guest who missed
         // both START_GAME and BACKUP_QUESTIONS can still recover automatically.
-        const syncData = { type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false, scores: roomState.scores, correctCounts: roomState.correctCounts };
+        const syncData = { type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false, scores: roomState.scores, correctCounts: roomState.correctCounts, questions: roomState.questions };
         broadcast(syncData);
     }, 3000);
 
@@ -353,7 +353,7 @@ async function createRoom() {
                         roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
                         roomState.correctCounts[conn.peer] = 0;
                     }
-                    broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
+                    broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
                     renderLobby();
                 } else if(data.type === 'ANSWER') {
                     handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
@@ -363,7 +363,7 @@ async function createRoom() {
                 const p = roomState.players.find(pl => pl.id === conn.peer);
                 if (p) { p.disconnected = true; showToast(`${p.name} disconnected`); }
                 delete guestConns[conn.peer];
-                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
+                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
                 if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
             });
         });
@@ -428,12 +428,14 @@ function connectToHost(hostId) {
                 alert(data.msg);
                 location.reload();
             } else if(data.type === 'LOBBY_UPDATE') {
+                if (data.questions) roomState.backupQuestions = data.questions;
                 roomState.players = data.players;
                 document.getElementById('lobby-topic').textContent = data.topic;
                 renderLobby();
             } else if(data.type === 'PING') {
                 // keep-alive, ignore
             } else if(data.type === 'STATE_SYNC') {
+                if (data.questions) roomState.backupQuestions = data.questions;
         // Self-healing JOIN: if host doesn't have us, resend JOIN
         if (data.players && !data.players.find(p => p.id === myId)) {
             hostConn.send({ type: 'JOIN', name: myName });
@@ -488,19 +490,15 @@ function connectToHost(hostId) {
             }
         });
         
-        hostConn.on('host_disconnect_early', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('host_disconnect_early', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         
         hostConn.on('host_disconnect', () => {
-            if (!roomState.backupQuestions) {
-                window.SolmatesHostStatus && window.SolmatesHostStatus.showOffline();
-            } else {
-                migrateHost(hostId);
-            }
+            migrateHost(hostId);
         });
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         });
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
     });
 }
 
@@ -672,7 +670,8 @@ function sendNextQuestion() {
         question: { q: q.q, options: q.options },
         qNum: roomState.currentQ + 1,
         totalQ: roomState.questions.length,
-        deadline: deadline
+        deadline: deadline,
+        questions: roomState.questions
     };
     broadcast({ type: 'QUESTION', ...qData });
     renderQuestion(qData.question, qData.qNum, qData.totalQ, qData.deadline);
@@ -888,7 +887,7 @@ function migrateHost(hostId) {
     }
     if (typeof showToast === 'function') showToast(hostName + " disconnected");
 
-    if (!roomState.backupQuestions) { isMigrating = false; return; }
+    // Early return removed so migration always attempts
 
     // *** DO NOT close hostConn here â€” closing it kills all Firebase listeners
     // and makes the guest permanently deaf if original host reconnects. ***
@@ -950,7 +949,7 @@ function migrateHost(hostId) {
                                 if (roomState.questions && roomState.questions.length > 0 && roomState.currentQ > 0) {
                                     conn.send({ type: 'SYNC_STATE', state: { roomState, timeRemaining, currentSettings } });
                                 }
-                                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
+                                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
                                 if (!roomState.backupQuestions) renderLobby();
                             } else if(data.type === 'ANSWER') {
                                 handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
@@ -966,7 +965,7 @@ function migrateHost(hostId) {
                                 }
                             }
                             delete guestConns[conn.peer];
-                            broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings });
+                            broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
                             if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
                         });
                     });

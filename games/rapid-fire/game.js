@@ -132,7 +132,7 @@ function initPeer(onOpen, onFail) {
     });
     setInterval(() => {
         if (!isHost) return;
-        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, qCount: gameState.qCount || 0, qIndex: gameState.qIndex || 0, scores: gameState.scores, correctCounts: gameState.correctCounts };
+        const syncData = { type: 'STATE_SYNC', players: players, topic: gameState.topic, gameStarted: gameState.gameStarted || false, qCount: gameState.qCount || 0, qIndex: gameState.qIndex || 0, scores: gameState.scores, correctCounts: gameState.correctCounts, questions: gameState.questions };
         broadcast(syncData);
     }, 3000);
 }
@@ -240,7 +240,7 @@ function handleDisconnect(peerId) {
     const p = players.find(pl => pl.id === peerId);
     if (p) { p.disconnected = true; showToast(`${p.name} disconnected`); }
     delete guestConns[peerId];
-    broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+    broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic, questions: gameState.questions });
     if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderPlayers();
     checkAllAnswered();
 }
@@ -275,7 +275,7 @@ function handleHostData(data, fromId) {
             gameState.scores[fromId] = 0;
         }
         gameState.correctCounts[fromId] = 0;
-        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic, questions: gameState.questions });
         renderPlayers();
     }
     if (data.type === 'REQUEST_RECOVERY') {
@@ -339,8 +339,9 @@ function manualJoinRoom() {
             }
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
+            if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
@@ -387,6 +388,7 @@ function handleGuestData(data) {
     if (data.type === 'PING') return;
     if (data.type === 'ERROR') { showToast(data.msg); uiShowWelcome(); }
     if (data.type === 'STATE_SYNC') {
+        if (data.questions) gameState.questions = data.questions;
         // Self-healing JOIN: if host doesn't have us, resend JOIN
         if (data.players && !data.players.find(p => p.id === myId)) {
             hostConn.send({ type: 'JOIN', name: myName });
@@ -409,7 +411,7 @@ function handleGuestData(data) {
         hostConn.send({ type: 'SYNC_READY', id: myId });
         return;
     }
-    if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }
+    if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; if (data.questions) gameState.questions = data.questions; document.getElementById('lobby-topic').textContent = data.topic; renderPlayers(); }
     if (data.type === 'START_GAME') { 
         enterGameFromAuthoritativeState(data, 'START_GAME');
         gameState.qCount = data.qCount; gameState.scores = {}; gameState.correctCounts = {}; 
@@ -524,7 +526,7 @@ function nextQuestion() {
         const q = gameState.caseData ? gameState.caseData.questions[gameState.qIndex] : gameState.questions[gameState.qIndex];
         if (!q) return;
     gameState.currentQuestion = q;
-    broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q });
+    broadcast({ type: 'QUESTION', qIndex: gameState.qIndex, question: q, questions: gameState.questions });
     showQuestion(gameState.qIndex, q);
 
     clearTimeout(forceRevealTimer);
@@ -552,7 +554,7 @@ function checkAllAnswered() {
                 gameState.correctCounts[p.id]++;
             }
         });
-        broadcast({ type: 'REVEAL', answers: gameState.currentAnswers, correctIdx: q.a, scores: gameState.scores, correctCounts: gameState.correctCounts });
+        broadcast({ type: 'REVEAL', answers: gameState.currentAnswers, correctIdx: q.a, scores: gameState.scores, correctCounts: gameState.correctCounts, questions: gameState.questions });
         revealAnswers(gameState.currentAnswers, q.a);
     }
 }
@@ -717,7 +719,7 @@ function migrateHost(hostId) {
       }
       if (typeof showToast === 'function') showToast(hostName + " disconnected");
 
-    if (!gameState.questions || gameState.questions.length === 0) { isMigrating = false; return; }
+    // Early return removed
 
     // *** DO NOT close hostConn here — closing it kills all Firebase listeners ***
     // Only close AFTER we win the transaction.
@@ -796,7 +798,7 @@ function migrateHost(hostId) {
                     
                     // Resume game
                     setTimeout(() => {
-                        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic });
+                        broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic, questions: gameState.questions });
                         if (gameState.gameStarted && !gameState.gameOver) { gameState.qIndex--; nextQuestion(); }
                     }, 4000);
                 });
@@ -843,8 +845,9 @@ function manualJoinRoomReconnect(code) {
             if(typeof showToast === 'function') showToast("Reconnected!");
         });
         hostConn.on('data', handleGuestData);
-        hostConn.on('close', () => { window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
+        hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
         hostConn.on('host_disconnect_early', () => {
+            if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {

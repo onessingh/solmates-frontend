@@ -419,6 +419,20 @@ window.Peer = class Peer {
     destroy() { this.destroyed = true; db.ref('solmates-rooms/' + this.id).remove(); }
 };
 
+window.SolmatesAlert = {
+    show: function(msg) {
+        let el = document.getElementById('sol-alert-popup');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'sol-alert-popup';
+            el.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background:white;color:black;padding:24px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.25);z-index:10000;font-family:Inter,sans-serif;min-width:280px;text-align:center;display:none;flex-direction:column;align-items:center;border:1px solid #e2e8f0;';
+            document.body.appendChild(el);
+        }
+        el.innerHTML = '<div style="margin-bottom:16px;font-size:16px;font-weight:600;color:#1e293b;">' + msg + '</div><button onclick="document.getElementById(\'sol-alert-popup\').style.display=\'none\'" style="background:#3b82f6;color:white;border:none;padding:8px 24px;border-radius:8px;font-weight:600;cursor:pointer;">OK</button>';
+        el.style.display = 'flex';
+    }
+};
+
 window.SolmatesSync = {
     show: function(msg) {
         let el = document.getElementById('sol-sync-overlay');
@@ -446,5 +460,5 @@ window.SolmatesHostStatus = {
         el.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host appears offline</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">They\'ve been gone for a while. Wait or leave?</p><div style="display:flex;gap:10px;"><button onclick="document.getElementById(\'sol-host-reconnect\').style.display=\'none\'" style="padding:8px 18px;background:#3b82f6;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Stay</button><button onclick="window.location.href=\'/\'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Leave</button></div>';
         el.style.display = 'flex';
     },
-    hide: function() { let el = document.getElementById('sol-host-reconnect'); if (el) el.style.display = 'none'; }
+    hide: function() { let el = document.getElementById('sol-host-reconnect'); if (el) el.remove(); }
 };
