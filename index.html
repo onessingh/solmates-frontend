@@ -3,7 +3,9 @@
 
 <head>
 
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <meta id="theme-color-meta" name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light only">
   <meta name="supported-color-schemes" content="light">
   <meta charset="UTF-8">
@@ -2964,7 +2966,7 @@
 (function() {
     function updateMetaColorScheme() {
         var meta = document.querySelector('meta[name="color-scheme"]');
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        var themeMeta = document.getElementById('theme-color-meta');
         var darkStyle = document.getElementById('solmates-dark-style');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
@@ -2974,20 +2976,19 @@
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
-            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
+            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); themeMeta.removeAttribute('media'); }
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light only');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
-            // Force light mode for new users to override OS dark mode in PWA status bar
             meta.setAttribute('content', 'light only');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
