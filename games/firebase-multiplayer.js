@@ -292,13 +292,13 @@ window.Peer = class Peer {
                 if (!disconnectTime || !conn.open) return;
                 const elapsed = Date.now() + serverTimeOffset - disconnectTime;
                 
-                // Dynamic threshold: 60s for lobby, 15s for game
+                // Dynamic threshold: 120s for lobby, 15s for game
                 let isStarted = false;
                 if (typeof gameState !== 'undefined' && gameState) isStarted = gameState.gameStarted;
                 else if (typeof roomState !== 'undefined' && roomState) isStarted = roomState.gameStarted;
                 else if (window._solmatesGameStarted) isStarted = true;
                 
-                const disconnectThreshold = isStarted ? 15000 : 60000;
+                const disconnectThreshold = isStarted ? 15000 : 120000;
                 
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
                 if (elapsed > disconnectThreshold) {
