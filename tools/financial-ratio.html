@@ -575,18 +575,65 @@ function setBSMode(mode) {
     }
 }
 
+function textNumberToDays(text) {
+    // Convert written-out time expressions to approximate days
+    const wordMap = {
+        'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+        'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+        'eleven': 11, 'twelve': 12, 'half': 0.5, 'a': 1, 'an': 1
+    };
+    // e.g. "two months left", "three months", "half year", "one year"
+    let m = text.match(/(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|half|an?)\s+(?:and\s+(?:a\s+)?half\s+)?months?/i);
+    if(m) {
+        let base = wordMap[m[1].toLowerCase()] || 1;
+        let extra = m[0].includes('and') ? 0.5 : 0;
+        return (base + extra) * 30;
+    }
+    m = text.match(/(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|half|an?)\s+(?:and\s+(?:a\s+)?half\s+)?years?/i);
+    if(m) {
+        let base = wordMap[m[1].toLowerCase()] || 1;
+        let extra = m[0].includes('and') ? 0.5 : 0;
+        return (base + extra) * 365;
+    }
+    // "a quarter" => ~91 days
+    if(text.match(/a quarter/i)) return 91;
+    return null;
+}
+
 function runLocalParser(text) {
     let detected = { S: null, K: null, T: null, v: null, r: null, q: null, type: null };
     const digitPat = '([\\d.,]*\\d[\\d.,]*)';
-    
-    const sP = new RegExp('(?:market price of (?:a|the) (?:share|stock)|market price|share price|current market price|current market value|stock(?: is)?(?: currently)? trading at|currently trading at|stock(?: is)?(?: currently)? valued at|share(?: is)?(?: currently)? valued at|current value of the stock|stock(?: is)? priced at|share(?: is)? priced at|underlying asset(?: is)?(?: currently)? priced at|underlying asset price|underlying price|current stock price|stock price|s\\s*=)[^\\d]*' + digitPat, 'i');
-    let sM = text.match(sP); if(sM) { let v = parseFloat(sM[1].replace(/,/g, '')); if(!isNaN(v)) detected.S = v; }
 
-    const kP = new RegExp('(?:exercise price of (?:the|a) option|exercise price of the european (?:call|put) option|exercise price|strike price|strike|k\\s*=)[^\\d]*' + digitPat, 'i');
-    let kM = text.match(kP); if(kM) { let v = parseFloat(kM[1].replace(/,/g, '')); if(!isNaN(v)) detected.K = v; }
+    // Stock price patterns — most specific first
+    const sP = new RegExp(
+        '(?:market price of (?:a|the) (?:share|stock|equity|underlying)|' +
+        'underlying security(?:\\s+is)?\\s+(?:quoted|priced|valued|trading) at|' +
+        'underlying asset(?:\\s+is)?\\s+(?:quoted|priced|valued|trading) at|' +
+        'underlying(?:\\s+is)?\\s+(?:quoted|priced|valued|trading) at|' +
+        'underlying price|underlying asset price|' +
+        'market price|share price|current market price|current market value|' +
+        'stock(?: is)?(?: currently)? trading at|currently trading at|' +
+        'stock(?: is)?(?: currently)? valued at|stock(?: is)?(?: currently)? quoted at|' +
+        'share(?: is)?(?: currently)? valued at|share(?: is)?(?: currently)? quoted at|' +
+        'current value of the (?:stock|share)|stock(?: is)? priced at|share(?: is)? priced at|' +
+        'current stock price|stock price|s\\s*=)' +
+        '[^\\d]*' + digitPat, 'i');
+    let sM = text.match(sP);
+    if(sM) { let v = parseFloat(sM[1].replace(/,/g, '')); if(!isNaN(v)) detected.S = v; }
 
-    const tDayP = new RegExp(digitPat + '\\s*days', 'i');
-    const tMonP = new RegExp(digitPat + '\\s*months', 'i');
+    // Strike price patterns — most specific first
+    const kP = new RegExp(
+        '(?:contractual exercise(?:\\s+level| price)|' +
+        'exercise(?:\\s+level|\\s+price)(?:\\s+of(?:\\s+the)?(?:\\s+option)?)?|' +
+        'strike(?:\\s+price)?(?:\\s+of(?:\\s+the)?(?:\\s+option)?)?|' +
+        'k\\s*=)' +
+        '[^\\d]*' + digitPat, 'i');
+    let kM = text.match(kP);
+    if(kM) { let v = parseFloat(kM[1].replace(/,/g, '')); if(!isNaN(v)) detected.K = v; }
+
+    // Time to expiry — numeric first, then written-out
+    const tDayP = new RegExp(digitPat + '\\s*(?:trading\\s+)?days?(?:\\s+to\\s+expiry|\\s+remaining|\\s+until|\\s+left|\\s+before)?', 'i');
+    const tMonP = new RegExp(digitPat + '\\s*months?', 'i');
     const tYrP  = new RegExp(digitPat + '\\s*years?', 'i');
     let tDM = text.match(tDayP);
     let tMM = text.match(tMonP);
@@ -594,16 +641,25 @@ function runLocalParser(text) {
     if(tDM) detected.T = parseFloat(tDM[1]);
     else if(tMM) detected.T = parseFloat(tMM[1]) * 30;
     else if(tYM) detected.T = parseFloat(tYM[1]) * 365;
+    else {
+        // Try written-out word numbers
+        let written = textNumberToDays(text);
+        if(written !== null) detected.T = written;
+    }
 
-    const vP = new RegExp('(?:annualized volatility|annual volatility|volatility|standard deviation)[^\\d]*' + digitPat, 'i');
+    // Volatility
+    const vP = new RegExp('(?:annualized(?:\\s+standard deviation|\\s+volatility)|annual(?:\\s+volatility)?|volatility|standard deviation)[^\\d]*' + digitPat, 'i');
     let vM = text.match(vP); if(vM) detected.v = parseFloat(vM[1]);
 
+    // Risk-free rate
     const rP = new RegExp('(?:continuously compounded risk-free(?: interest)? rate|risk-free(?: interest)? rate|risk free(?: interest)? rate|r\\s*=)[^\\d]*' + digitPat, 'i');
     let rM = text.match(rP); if(rM) detected.r = parseFloat(rM[1]);
 
+    // Dividend yield
     const qP = new RegExp('(?:annual dividend yield|dividend yield|annual dividend(?! per)|q\\s*=)[^\\d]*' + digitPat, 'i');
     let qM = text.match(qP); if(qM) detected.q = parseFloat(qM[1]); else detected.q = 0;
 
+    // Option type
     if(text.includes('put')) detected.type = 'put';
     else if(text.includes('call')) detected.type = 'call';
 
@@ -688,15 +744,16 @@ async function parseBSQuestion() {
         if(window.solmatesAPI) {
             const aiResult = await window.solmatesAPI.generateAIToolData('black-scholes-parser', { question: questionText });
             if(aiResult && aiResult.success !== false) {
-                let aiData = aiResult;
+                // Backend returns { success: true, data: { stockPrice, ... } }
+                let aiData = (aiResult.data !== undefined) ? aiResult.data : aiResult;
                 // Normalize AI response field names
                 let aiDetected = {
-                    S: aiData.stockPrice !== undefined ? aiData.stockPrice : null,
-                    K: aiData.strikePrice !== undefined ? aiData.strikePrice : null,
-                    T: aiData.daysToExpiry !== undefined ? aiData.daysToExpiry : null,
-                    v: aiData.volatility !== undefined ? aiData.volatility : null,
-                    r: aiData.riskFreeRate !== undefined ? aiData.riskFreeRate : null,
-                    q: aiData.dividendYield !== undefined ? aiData.dividendYield : 0,
+                    S: (aiData.stockPrice !== undefined && aiData.stockPrice !== null) ? parseFloat(aiData.stockPrice) : null,
+                    K: (aiData.strikePrice !== undefined && aiData.strikePrice !== null) ? parseFloat(aiData.strikePrice) : null,
+                    T: (aiData.daysToExpiry !== undefined && aiData.daysToExpiry !== null) ? parseFloat(aiData.daysToExpiry) : null,
+                    v: (aiData.volatility !== undefined && aiData.volatility !== null) ? parseFloat(aiData.volatility) : null,
+                    r: (aiData.riskFreeRate !== undefined && aiData.riskFreeRate !== null) ? parseFloat(aiData.riskFreeRate) : null,
+                    q: (aiData.dividendYield !== undefined && aiData.dividendYield !== null) ? parseFloat(aiData.dividendYield) : 0,
                     type: aiData.optionType || null
                 };
                 // Merge: local high-confidence values take priority, AI fills missing
