@@ -56,6 +56,7 @@ class PeerConnection {
                 const sv = Date.now() * 1000 + window._solmatesStateVersionCounter;
                 
                 const gsPayload = { type: data.type, payload: payload, ts: Date.now(), sv: sv };
+                console.log('[MP GAMESTATE WRITE] type=', data.type, 'sv=', sv, 'ts=', gsPayload.ts, 'payload=', payload.substring(0, 50));
                 updates['solmates-rooms/' + this.roomId + '/gameState'] = gsPayload;
                 
                 let phase = 'PLAYING';
@@ -65,6 +66,7 @@ class PeerConnection {
                 if (data.type === 'SYNC_PREPARE') phase = 'SYNC_PREPARE';
                 
                 updates['solmates-rooms/' + this.roomId + '/status'] = { gameStarted: !['GAME_OVER', 'END_GAME'].includes(data.type), phase: phase, ts: Date.now(), sv: sv };
+                console.log('[MP STATUS WRITE] gameStarted=', updates['solmates-rooms/' + this.roomId + '/status'].gameStarted, 'phase=', phase, 'sv=', sv);
                 
                 if (window._solmatesPeer) window._solmatesPeer._lastGameStartPayload = gsPayload;
                 
@@ -115,6 +117,7 @@ window.Peer = class Peer {
         
         this._isHostRole = isExplicitHost; 
         this._hostInitDone = false;
+        console.log(isExplicitHost ? '[MP HOST INIT] roomId=' : '[MP GUEST INIT] roomId=', this.id);
         
         if (isExplicitHost) {
             window._solmatesHostId = this.id;
@@ -219,6 +222,7 @@ window.Peer = class Peer {
             gameStateRef.on('value', gsSnap => {
                 const gs = gsSnap.val();
                 if (!gs || !gs.payload) return;
+                try { console.log('[MP GAMESTATE RECEIVED] type=', JSON.parse(gs.payload).type, 'sv=', gs.sv, 'payload=', gs.payload.substring(0, 50)); } catch(e) {}
                 const newSV = gs.sv || 0; const newTs = gs.ts || 0;
                 if (newSV > 0 && newSV <= lastSeenSV) return;
                 if (newSV === 0 && newTs <= lastSeenTs) return;
@@ -235,7 +239,9 @@ window.Peer = class Peer {
             const statusRef = db.ref('solmates-rooms/' + hostId + '/status');
             statusRef.on('value', stSnap => {
                 const st = stSnap.val();
-                if (!st || !st.gameStarted || conn._syncStarted) return;
+                console.log('[MP STATUS RECEIVED] status=', st, 'syncStarted=', conn._syncStarted);
+                if (!st || !st.gameStarted || conn._syncStarted) { console.log('[MP RECOVERY BLOCKED] reason=', (!st ? 'no status' : (!st.gameStarted ? 'not started' : 'sync already started'))); return; }
+                console.log('[MP START RECOVERY] initiating recovery from status...');
                 db.ref('solmates-rooms/' + hostId + '/gameState').once('value', gsSnap2 => {
                     const gs2 = gsSnap2.val();
                     if (!gs2 || !gs2.payload) return;
