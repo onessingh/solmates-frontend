@@ -296,7 +296,7 @@ function manualJoinRoom() {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
-            if (typeof migrateHost === 'function') migrateHost(ROOM_PREFIX + code);
+            if (typeof migrateHost === 'function') migrateHost(code);
         });
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
@@ -656,16 +656,29 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
+    // Lobby guard: game not started → show panel, return WITHOUT setting isMigrating
+    if (!gameState.gameStarted) {
+        const _lel = window.SolmatesHostStatus && window.SolmatesHostStatus._getOrCreate();
+        if (_lel) {
+            _lel.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3>'
+                + '<p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p>'
+                + '<button onclick="window.location.href=\'/games/\'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>';
+            _lel.style.display = 'flex';
+        }
+        return;
+    }
+    if (!gameState.challenges || gameState.challenges.length === 0) {
+        if (typeof showToast === 'function') showToast('Host left — no game data.');
+        return;
+    }
     isMigrating = true;
-      let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
-      let hostName = "Host";
-      if (pList && pList.length > 0) {
-          let oldHost = pList.find(p => p.id === hostId || p.id === hostId + '-LEFT');
-          if (oldHost) hostName = oldHost.name;
-      }
-      if (typeof showToast === 'function') showToast(hostName + " disconnected");
-
-    if (!gameState.challenges || gameState.challenges.length === 0) return;
+    let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
+    let hostName = "Host";
+    if (pList && pList.length > 0) {
+        let oldHost = pList.find(p => p.id === hostId || p.id === hostId + '-LEFT');
+        if (oldHost) hostName = oldHost.name;
+    }
+    if (typeof showToast === 'function') showToast(hostName + " disconnected");
     if (hostConn) { hostConn.close(); hostConn = null; }
     
     // We need firebase database reference
@@ -803,7 +816,7 @@ function manualJoinRoomReconnect(code) {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
-            if (typeof migrateHost === 'function') migrateHost(ROOM_PREFIX + code);
+            if (typeof migrateHost === 'function') migrateHost(code);
         });
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();

@@ -888,6 +888,14 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
+    // Bug3: pool fallback if backupQuestions missing in 300ms gap
+    if (!roomState.backupQuestions && roomState.pool && roomState.pool.length > 0) {
+        roomState.backupQuestions = roomState.pool.slice(0, roomState.maxQs || 10);
+    }
+    if (!roomState.backupQuestions || roomState.backupQuestions.length === 0) {
+        if (typeof showToast === 'function') showToast('Host left - no question data.');
+        return;
+    }
     isMigrating = true;
     let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
     let hostName = "Host";

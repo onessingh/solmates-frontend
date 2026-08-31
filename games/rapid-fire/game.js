@@ -719,6 +719,14 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
+    // Bug3: pool fallback if questions missing in BACKUP_QUESTIONS 300ms gap
+    if ((!gameState.questions || gameState.questions.length === 0) && gameState.pool && gameState.pool.length > 0) {
+        gameState.questions = gameState.pool.slice(0, gameState.qCount || 10);
+    }
+    if (!gameState.questions || gameState.questions.length === 0) {
+        if (typeof showToast === 'function') showToast('Host left - no question data.');
+        return;
+    }
     isMigrating = true;
       let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
       let hostName = "Host";
@@ -727,8 +735,6 @@ function migrateHost(hostId) {
           if (oldHost) hostName = oldHost.name;
       }
       if (typeof showToast === 'function') showToast(hostName + " disconnected");
-
-    // Early return removed
 
     // *** DO NOT close hostConn here — closing it kills all Firebase listeners ***
     // Only close AFTER we win the transaction.
