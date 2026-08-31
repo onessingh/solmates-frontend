@@ -492,13 +492,6 @@ function connectToHost(hostId) {
         
         hostConn.on('host_disconnect_early', () => {
             if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
-            let started = typeof gameState !== 'undefined' ? gameState.gameStarted : (typeof roomState !== 'undefined' ? roomState.gameStarted : true);
-            if (!started) {
-                window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
-                const _lel = window.SolmatesHostStatus && window.SolmatesHostStatus._getOrCreate();
-                if (_lel) { _lel.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p><button onclick="window.location.href='/games/'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>'; _lel.style.display = 'flex'; }
-                return;
-            }
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         
