@@ -47,26 +47,43 @@ class PeerConnection {
         if (!this.open) return;
         const payload = JSON.stringify(data);
         if (this.isHost) {
+            let updates = {};
             if (data && ['START_GAME', 'START_ROUND', 'START_EVENT', 'SYNC_PREPARE', 'QUESTION', 'RESULT', 'REVEAL', 'GAME_OVER', 'END_GAME', 'EVENT_RESULT', 'ROUND_RESULTS', 'ROUND_RESULTS_DATA', 'READ_CASE'].includes(data.type)) {
-                db.ref('solmates-rooms/' + this.roomId + '/locked').set(true);
-                window._solmatesStateVersion = (window._solmatesStateVersion || 0) + 1;
-                const sv = window._solmatesStateVersion;
+                updates['solmates-rooms/' + this.roomId + '/locked'] = true;
+                
+                if (!window._solmatesStateVersionCounter) window._solmatesStateVersionCounter = 0;
+                window._solmatesStateVersionCounter++;
+                const sv = Date.now() * 1000 + window._solmatesStateVersionCounter;
+                
                 const gsPayload = { type: data.type, payload: payload, ts: Date.now(), sv: sv };
-                db.ref('solmates-rooms/' + this.roomId + '/gameState').set(gsPayload);
-                db.ref('solmates-rooms/' + this.roomId + '/status').set({ gameStarted: true, ts: Date.now(), sv: sv });
+                updates['solmates-rooms/' + this.roomId + '/gameState'] = gsPayload;
+                
+                let phase = 'PLAYING';
+                if (['START_GAME', 'START_ROUND', 'START_EVENT'].includes(data.type)) phase = 'STARTING';
+                if (['RESULT', 'REVEAL', 'EVENT_RESULT', 'ROUND_RESULTS', 'ROUND_RESULTS_DATA'].includes(data.type)) phase = 'RESULT';
+                if (['GAME_OVER', 'END_GAME'].includes(data.type)) phase = 'GAME_OVER';
+                if (data.type === 'SYNC_PREPARE') phase = 'SYNC_PREPARE';
+                
+                updates['solmates-rooms/' + this.roomId + '/status'] = { gameStarted: !['GAME_OVER', 'END_GAME'].includes(data.type), phase: phase, ts: Date.now(), sv: sv };
+                
                 if (window._solmatesPeer) window._solmatesPeer._lastGameStartPayload = gsPayload;
+                
                 if (data.type === 'SYNC_PREPARE') {
                     const syncId = Math.random().toString(36).substr(2, 8).toUpperCase();
-                    db.ref('solmates-rooms/' + this.roomId + '/syncPrepare').set({ payload: payload, ts: Date.now(), syncId: syncId });
+                    updates['solmates-rooms/' + this.roomId + '/syncPrepare'] = { payload: payload, ts: Date.now(), syncId: syncId };
                 }
                 if (data.type === 'START_GAME') {
-                    db.ref('solmates-rooms/' + this.roomId + '/syncPrepare').remove();
+                    updates['solmates-rooms/' + this.roomId + '/syncPrepare'] = null;
                 }
             }
             if (data && data.type === 'STATE_SYNC' && data.gameStarted) {
-                db.ref('solmates-rooms/' + this.roomId + '/status').set({ gameStarted: true, ts: Date.now() });
+                updates['solmates-rooms/' + this.roomId + '/status'] = { gameStarted: true, phase: 'SYNC', ts: Date.now() };
             }
-            db.ref('solmates-rooms/' + this.roomId + '/clients/' + this.clientId + '/inbox').push(payload);
+            
+            const inboxKey = db.ref('solmates-rooms/' + this.roomId + '/clients/' + this.clientId + '/inbox').push().key;
+            updates['solmates-rooms/' + this.roomId + '/clients/' + this.clientId + '/inbox/' + inboxKey] = payload;
+            
+            db.ref().update(updates);
         } else {
             db.ref('solmates-rooms/' + this.roomId + '/clients/' + this.clientId + '/outbox').push(payload);
         }
@@ -248,16 +265,23 @@ window.Peer = class Peer {
             let disconnectTimers = [];
             const clearDisconnectTimers = () => { disconnectTimers.forEach(t => clearTimeout(t)); disconnectTimers = []; };
             let currentDisconnectTime = null;
+            let earlyFired = false;
+            let disconnectFired = false;
             const evalHostDisconnect = (disconnectTime) => {
                 if (!disconnectTime || !conn.open) return;
                 const elapsed = Date.now() + serverTimeOffset - disconnectTime;
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
                 if (elapsed > 28000) {
-                    if (conn._handlers.host_disconnect) conn._handlers.host_disconnect.forEach(cb => cb());
-                    if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
+                    if (!disconnectFired) {
+                        if (conn._handlers.host_disconnect) conn._handlers.host_disconnect.forEach(cb => cb());
+                        disconnectFired = true;
+                    }
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(300000 - elapsed, 10000)));
                 } else if (elapsed > 10000) {
-                    if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
+                    if (!earlyFired) {
+                        if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
+                        earlyFired = true;
+                    }
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(28000 - elapsed, 2000)));
                 } else {
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(10000 - elapsed, 1000)));
@@ -266,6 +290,10 @@ window.Peer = class Peer {
             const hostDisconnectedRef = db.ref('solmates-rooms/' + hostId + '/hostDisconnectedAt');
             hostDisconnectedRef.on('value', snap => {
                 const disconnectTime = snap.val();
+                if (currentDisconnectTime !== disconnectTime) {
+                    earlyFired = false;
+                    disconnectFired = false;
+                }
                 currentDisconnectTime = disconnectTime;
                 clearDisconnectTimers();
                 if (disconnectTime) { evalHostDisconnect(disconnectTime); }
