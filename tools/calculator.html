@@ -505,10 +505,7 @@
       <div id="percentageResult" class="result-box">
         <div class="result-val" id="percentVal">--</div>
         <div class="result-label">Aggregated Percentage</div>
-        <div class="formula-tag" id="formulaTag">Formula: CGPA � 10 (DU Standard)</div>
-      </div>
-        <div class="result-label">Aggregated Percentage</div>
-        <div class="formula-tag">Formula: CGPA ? 9.5 (DU Standard)</div>
+        <div class="formula-tag" id="formulaTag">Formula: CGPA × 10 (DU Standard)</div>
       </div>
     </div>
 
@@ -701,7 +698,7 @@
         const percentage = (cgpa * mult).toFixed(1);
         val.innerText = percentage + '%';
         const fTag = document.getElementById('formulaTag');
-        if(fTag) fTag.innerText = 'Formula: CGPA � ' + mult + ' (DU Standard)';
+        if(fTag) fTag.innerText = 'Formula: CGPA × ' + mult + ' (DU Standard)';
         box.style.display = 'block';
       } else {
         box.style.display = 'none';
