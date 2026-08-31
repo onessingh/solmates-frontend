@@ -652,7 +652,7 @@ function runLocalParser(text) {
     let vM = text.match(vP); if(vM) detected.v = parseFloat(vM[1]);
 
     // Risk-free rate
-    const rP = new RegExp('(?:continuously compounded risk-free(?: interest)? rate|risk-free(?: interest)? rate|risk free(?: interest)? rate|r\\s*=)[^\\d]*' + digitPat, 'i');
+    const rP = new RegExp('(?:continuously compounded risk-free(?: interest)? (?:rate|return)|risk-free(?: interest)? (?:rate|return)|risk free(?: interest)? (?:rate|return)|r\\s*=)[^\\d]*' + digitPat, 'i');
     let rM = text.match(rP); if(rM) detected.r = parseFloat(rM[1]);
 
     // Dividend yield
