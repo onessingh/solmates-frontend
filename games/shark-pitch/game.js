@@ -300,7 +300,8 @@ function manualJoinRoom() {
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
         });
-        hostConn.on('error', err => { clearTimeout(failTimer); showToast("Could not connect: " + err.type); });
+        hostConn.on('error', err => { clearTimeout(failTimer); showToast("Could not connect: " + err.type);
+            if (btn) { btn.disabled = false; btn.textContent = 'Join Room'; } });
     });
     peer.on('error', err => { showToast("Error: " + err.type); });
 }
@@ -652,6 +653,7 @@ function renderLobby() {
 
 let isMigrating = false;
 function migrateHost(hostId) {
+    if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
     isMigrating = true;
       let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);

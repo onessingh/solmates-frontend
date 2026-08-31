@@ -877,6 +877,7 @@ window.onload = () => {
 
 let isMigrating = false;
 function migrateHost(hostId) {
+    if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
     isMigrating = true;
     let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
@@ -899,6 +900,7 @@ function migrateHost(hostId) {
         return; // Someone else claimed
     }, (error, committed, snapshot) => {
         if (committed && snapshot.val() === myId) {
+            window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
             // WE won the transaction â€” now safe to close hostConn
             if (hostConn) { hostConn.close(); hostConn = null; }
             isHost = true;
