@@ -1,5 +1,5 @@
 /*
- * SOLMATES Service Worker (v117.5 - Mobile WebRTC Overload Fix)
+ * SOLMATES Service Worker (v117.6 - Mobile WebRTC Overload Fix)
  * Handles background push notifications and offline caching.
  */
 

@@ -2917,7 +2917,7 @@
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
   <!-- config.js loaded once at top (deferred), no need to repeat here -->
   <script>
-    // [v116.5] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // [v116.6] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
     // Bug: previous sync version fired reload(true) after 500ms without awaiting
     // cache.delete() and sw.unregister() — on slow devices these weren't done yet
     // causing an infinite reload loop (version still mismatched after reload).
@@ -2925,7 +2925,7 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        const currentVersion = '116.5';
+        const currentVersion = '116.6';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
