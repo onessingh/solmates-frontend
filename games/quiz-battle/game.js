@@ -379,7 +379,14 @@ function joinViaUrl() {
     try { myName = localStorage.getItem('solmates_nickname') || myName || "Player"; } catch(e) { myName = myName || "Player"; }
     const url = new URL(window.location.href);
     const roomId = url.searchParams.get('room');
-    if(roomId) connectToHost(roomId);
+    if (!roomId) return;
+    // Route through the join screen + manualJoinRoom() flow the other games use (so the
+    // "Connecting..." status text shows), but skip uiShowJoinRoom()'s own name-prompt logic —
+    // it would re-check localStorage and pop a blocking prompt() again, undoing the fallback above.
+    document.getElementById('room-code-input').value = roomId;
+    hideAllScreens();
+    document.getElementById('screen-join').classList.remove('hidden');
+    manualJoinRoom();
 }
 
 function manualJoinRoom() {
@@ -392,7 +399,9 @@ function manualJoinRoom() {
     } else if(!input.startsWith('SOLMATES-')) {
         input = 'SOLMATES-' + input;
     }
-    document.getElementById('join-status').classList.remove('hidden');
+    const statusEl = document.getElementById('join-status');
+    statusEl.textContent = "Connecting...";
+    statusEl.classList.remove('hidden');
     connectToHost(input);
 }
 
