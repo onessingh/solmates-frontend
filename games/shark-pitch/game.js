@@ -291,9 +291,9 @@ function manualJoinRoom() {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
-        hostConn.on('host_disconnect_early', () => {
+        hostConn.on('host_disconnect_early', (secondsLeft) => {
             if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
-            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(secondsLeft);
         });
         hostConn.on('host_disconnect', () => {
             if (typeof migrateHost === 'function') migrateHost(code);
@@ -660,9 +660,9 @@ function migrateHost(hostId) {
     if (!gameState.gameStarted) {
         const _lel = window.SolmatesHostStatus && window.SolmatesHostStatus._getOrCreate();
         if (_lel) {
-            _lel.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3>'
-                + '<p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p>'
-                + '<button onclick="window.location.href=\'/games/\'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>';
+            _lel.innerHTML = '<h3 class="sol-hs-title sol-hs-danger" style="margin:0 0 8px;font-size:17px;">&#128308; Host has left</h3>'
+                + '<p class="sol-hs-sub" style="margin:0 0 14px;">The game was not started. The room is now closed.</p>'
+                + '<div class="sol-hs-actions"><button class="sol-hs-btn sol-hs-btn-leave" onclick="window.location.href=\'/games/\'">Go Home</button></div>';
             _lel.style.display = 'flex';
         }
         return;
@@ -758,9 +758,9 @@ function migrateHost(hostId) {
                             broadcast({ type: 'START_ROUND', roundIndex: gameState.round, challenge: ch });
                             startPitchUI(ch, gameState.round, gameState.totalRounds, gameState.timePerRound);
                         }
-                    }, 4000);
+                    }, 1500);
                 });
-            }, 1000);
+            }, 500);
         } else {
             // Someone else became host, reconnect
             setTimeout(() => {
@@ -773,7 +773,7 @@ function migrateHost(hostId) {
                   
                   isMigrating = false;
                   manualJoinRoomReconnect(hostId);
-            }, 3000);
+            }, 1500);
         }
     });
 }
@@ -811,9 +811,9 @@ function manualJoinRoomReconnect(code) {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
-        hostConn.on('host_disconnect_early', () => {
+        hostConn.on('host_disconnect_early', (secondsLeft) => {
             if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
-            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(secondsLeft);
         });
         hostConn.on('host_disconnect', () => {
             if (typeof migrateHost === 'function') migrateHost(code);

@@ -145,7 +145,7 @@ async function createRoom() {
     
     if (course === 'MBA') {
         sem = document.getElementById('select-semester').value;
-        if(!sem) { showToast("Please select a semester first"); return; }
+        if(!sem) { window.SolmatesModal.alert("Select a semester", "Please choose your semester before creating the room."); return; }
         sub = document.getElementById('select-subject').value || "All";
         
         if (sub === 'All' && window.QUIZ_DATA && window.QUIZ_DATA.structure && window.QUIZ_DATA.structure["MBA"] && window.QUIZ_DATA.structure["MBA"][sem]) {
@@ -340,16 +340,16 @@ function manualJoinRoom() {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
-        hostConn.on('host_disconnect_early', () => {
+        hostConn.on('host_disconnect_early', (secondsLeft) => {
             if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
-            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(secondsLeft);
         });
         hostConn.on('host_disconnect', () => {
             if (!gameState.gameStarted) {
                 window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
                 if (window.SolmatesHostStatus) {
                     const el = window.SolmatesHostStatus._getOrCreate();
-                    el.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p><button onclick="window.location.href='/games/'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>';
+                    el.innerHTML = '<h3 class="sol-hs-title sol-hs-danger" style="margin:0 0 8px;font-size:17px;">&#128308; Host has left</h3><p class="sol-hs-sub" style="margin:0 0 14px;">The game was not started. The room is now closed.</p><div class="sol-hs-actions"><button class="sol-hs-btn sol-hs-btn-leave" onclick="window.location.href='/games/'">Go Home</button></div>';
                     el.style.display = 'flex';
                 }
                 return;
@@ -815,9 +815,9 @@ function migrateHost(hostId) {
                     setTimeout(() => {
                         broadcast({ type: 'LOBBY_UPDATE', players, topic: gameState.topic, questions: gameState.questions });
                         if (gameState.gameStarted && !gameState.gameOver) { gameState.qIndex--; nextQuestion(); }
-                    }, 4000);
+                    }, 1500);
                 });
-            }, 1000);
+            }, 500);
         } else {
             // Transaction failed = original host came back before we could claim.
             // Since we did NOT close hostConn, our Firebase listeners are still alive.
@@ -861,16 +861,16 @@ function manualJoinRoomReconnect(code) {
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
-        hostConn.on('host_disconnect_early', () => {
+        hostConn.on('host_disconnect_early', (secondsLeft) => {
             if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return;
-            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
+            window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(secondsLeft);
         });
         hostConn.on('host_disconnect', () => {
             if (!gameState.gameStarted) {
                 window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
                 if (window.SolmatesHostStatus) {
                     const el = window.SolmatesHostStatus._getOrCreate();
-                    el.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p><button onclick="window.location.href='/games/'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>';
+                    el.innerHTML = '<h3 class="sol-hs-title sol-hs-danger" style="margin:0 0 8px;font-size:17px;">&#128308; Host has left</h3><p class="sol-hs-sub" style="margin:0 0 14px;">The game was not started. The room is now closed.</p><div class="sol-hs-actions"><button class="sol-hs-btn sol-hs-btn-leave" onclick="window.location.href='/games/'">Go Home</button></div>';
                     el.style.display = 'flex';
                 }
                 return;

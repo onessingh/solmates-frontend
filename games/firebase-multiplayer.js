@@ -26,6 +26,69 @@ if (!window._solmatesGlobalListenersAdded) {
     window.addEventListener('online', () => db.goOnline());
 }
 
+// Lightweight, theme-aware alert modal used for validation messages (e.g. "select a semester")
+// that deserve more attention than a toast but don't need the full host-status panel.
+window.SolmatesModal = {
+    _ensureStyles: function() {
+        if (document.getElementById('sol-modal-styles')) return;
+        const style = document.createElement('style');
+        style.id = 'sol-modal-styles';
+        style.textContent = `
+            #sol-modal-overlay {
+                position: fixed; inset: 0; z-index: 10000;
+                background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px);
+                display: flex; align-items: center; justify-content: center;
+                padding: 20px; opacity: 0; transition: opacity .18s ease;
+            }
+            #sol-modal-overlay.sol-modal-show { opacity: 1; }
+            #sol-modal-card {
+                background: #ffffff; color: #0f172a;
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                border-radius: 18px; padding: 24px 26px; max-width: 340px; width: 100%;
+                text-align: center; font-family: Inter, sans-serif;
+                box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+                transform: scale(0.94); transition: transform .18s ease;
+            }
+            #sol-modal-overlay.sol-modal-show #sol-modal-card { transform: scale(1); }
+            html.dark #sol-modal-card {
+                background: #1e293b; color: #f1f5f9;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            }
+            #sol-modal-icon { font-size: 30px; margin-bottom: 10px; }
+            #sol-modal-title { margin: 0 0 8px; font-size: 17px; font-weight: 700; color: #b45309; }
+            html.dark #sol-modal-title { color: #fbbf24; }
+            #sol-modal-msg { margin: 0 0 18px; font-size: 13.5px; line-height: 1.5; color: #64748b; }
+            html.dark #sol-modal-msg { color: #94a3b8; }
+            #sol-modal-ok {
+                padding: 10px 28px; border: none; border-radius: 10px; font-weight: 700; font-size: 14px;
+                cursor: pointer; background: #3b82f6; color: white; transition: opacity .15s ease;
+            }
+            #sol-modal-ok:hover { opacity: 0.88; }
+        `;
+        document.head.appendChild(style);
+    },
+    alert: function(title, message, okText) {
+        this._ensureStyles();
+        let overlay = document.getElementById('sol-modal-overlay');
+        if (overlay) overlay.remove();
+        overlay = document.createElement('div');
+        overlay.id = 'sol-modal-overlay';
+        overlay.innerHTML = `
+            <div id="sol-modal-card">
+                <div id="sol-modal-icon">&#128203;</div>
+                <h3 id="sol-modal-title">${title}</h3>
+                <p id="sol-modal-msg">${message}</p>
+                <button id="sol-modal-ok">${okText || 'Got it'}</button>
+            </div>`;
+        document.body.appendChild(overlay);
+        const close = () => { overlay.classList.remove('sol-modal-show'); setTimeout(() => overlay.remove(), 180); };
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+        overlay.querySelector('#sol-modal-ok').addEventListener('click', close);
+        requestAnimationFrame(() => overlay.classList.add('sol-modal-show'));
+    }
+};
+
 class PeerConnection {
     constructor(isHost, roomId, clientId) {
         this.isHost = isHost; this.roomId = roomId; this.clientId = clientId;
@@ -298,8 +361,11 @@ window.Peer = class Peer {
                 else if (typeof roomState !== 'undefined' && roomState) isStarted = roomState.gameStarted;
                 else if (window._solmatesGameStarted) isStarted = true;
                 
+                // Dynamic threshold: 120s for lobby (host is often just away sharing the invite
+                // link and can take up to ~a minute to come back), 15s for an in-progress game
+                // (guests should recover/migrate quickly once gameplay has started).
                 const disconnectThreshold = isStarted ? 15000 : 120000;
-                
+
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
                 if (elapsed > disconnectThreshold) {
                     if (!disconnectFired) {
@@ -308,11 +374,11 @@ window.Peer = class Peer {
                     }
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(300000 - elapsed, 10000)));
                 } else if (elapsed > 6000) {
-                    if (!earlyFired) {
-                        if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
-                        earlyFired = true;
-                    }
-                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(disconnectThreshold - elapsed, 2000)));
+                    earlyFired = true;
+                    const secondsLeft = Math.max(1, Math.ceil((disconnectThreshold - elapsed) / 1000));
+                    if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb(secondsLeft));
+                    // Keep ticking the countdown once a second while in this band.
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), 1000));
                 } else {
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(6000 - elapsed, 1000)));
                 }
@@ -454,19 +520,72 @@ window.SolmatesSync = {
 };
 
 window.SolmatesHostStatus = {
+    _ensureStyles: function() {
+        if (document.getElementById('sol-host-status-styles')) return;
+        const style = document.createElement('style');
+        style.id = 'sol-host-status-styles';
+        style.textContent = `
+            @keyframes sol-pulse { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
+            #sol-host-reconnect {
+                position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+                z-index: 9999; min-width: 280px; max-width: calc(100vw - 32px);
+                padding: 18px 22px; border-radius: 16px; text-align: center;
+                font-family: Inter, sans-serif; display: flex; flex-direction: column; align-items: center;
+                background: #ffffff; color: #0f172a;
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16), 0 2px 8px rgba(15, 23, 42, 0.06);
+            }
+            html.dark #sol-host-reconnect {
+                background: #1e293b; color: #f1f5f9;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+            }
+            #sol-host-reconnect .sol-hs-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+            #sol-host-reconnect .sol-hs-dot { width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; animation: sol-pulse 1.2s ease-in-out infinite; flex-shrink: 0; }
+            #sol-host-reconnect .sol-hs-title { font-size: 16px; font-weight: 700; color: #b45309; }
+            html.dark #sol-host-reconnect .sol-hs-title { color: #fbbf24; }
+            #sol-host-reconnect .sol-hs-title.sol-hs-danger { color: #dc2626; }
+            html.dark #sol-host-reconnect .sol-hs-title.sol-hs-danger { color: #f87171; }
+            #sol-host-reconnect .sol-hs-sub { margin: 0; font-size: 13px; color: #64748b; }
+            html.dark #sol-host-reconnect .sol-hs-sub { color: #94a3b8; }
+            #sol-host-reconnect .sol-hs-count { font-variant-numeric: tabular-nums; font-weight: 600; color: #334155; }
+            html.dark #sol-host-reconnect .sol-hs-count { color: #cbd5e1; }
+            #sol-host-reconnect .sol-hs-actions { display: flex; gap: 10px; margin-top: 12px; }
+            #sol-host-reconnect .sol-hs-btn { padding: 9px 20px; border: none; border-radius: 9px; font-weight: 700; font-size: 13px; cursor: pointer; transition: opacity .15s ease; }
+            #sol-host-reconnect .sol-hs-btn:hover { opacity: 0.88; }
+            #sol-host-reconnect .sol-hs-btn-stay { background: #eff6ff; color: #2563eb; }
+            html.dark #sol-host-reconnect .sol-hs-btn-stay { background: rgba(59,130,246,0.18); color: #93c5fd; }
+            #sol-host-reconnect .sol-hs-btn-leave { background: #fef2f2; color: #dc2626; }
+            html.dark #sol-host-reconnect .sol-hs-btn-leave { background: rgba(239,68,68,0.18); color: #fca5a5; }
+        `;
+        document.head.appendChild(style);
+    },
     _getOrCreate: function() {
+        this._ensureStyles();
         let el = document.getElementById('sol-host-reconnect');
-        if (!el) { el = document.createElement('div'); el.id = 'sol-host-reconnect'; el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:white;color:black;padding:16px 24px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.18);display:flex;flex-direction:column;align-items:center;z-index:9999;font-family:Inter,sans-serif;min-width:260px;text-align:center;'; document.body.appendChild(el); }
+        if (!el) { el = document.createElement('div'); el.id = 'sol-host-reconnect'; document.body.appendChild(el); }
         return el;
     },
-    showReconnecting: function() {
+    showReconnecting: function(secondsLeft) {
         const el = this._getOrCreate();
-        el.innerHTML = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;"><div style="width:10px;height:10px;background:#f59e0b;border-radius:50%;animation:sol-pulse 1.2s ease-in-out infinite;"></div><span style="font-size:16px;font-weight:700;color:#92400e;">Host reconnecting...</span></div><p style="margin:0;font-size:13px;color:#78716c;">Connection temporarily lost. Waiting for host to return.</p><style>@keyframes sol-pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }</style>';
+        const countHtml = secondsLeft ? `<span class="sol-hs-count">${secondsLeft}s</span>` : '';
+        el.innerHTML = `
+            <div class="sol-hs-row">
+                <div class="sol-hs-dot"></div>
+                <span class="sol-hs-title">Host reconnecting${countHtml ? '&hellip; ' : '...'}${countHtml}</span>
+            </div>
+            <p class="sol-hs-sub">Connection temporarily lost. Waiting for host to return.</p>`;
         el.style.display = 'flex';
     },
     showOffline: function() {
         const el = this._getOrCreate();
-        el.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host appears offline</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">They\'ve been gone for a while. Wait or leave?</p><div style="display:flex;gap:10px;"><button onclick="document.getElementById(\'sol-host-reconnect\').style.display=\'none\'" style="padding:8px 18px;background:#3b82f6;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Stay</button><button onclick="window.location.href=\'/\'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Leave</button></div>';
+        el.innerHTML = `
+            <h3 class="sol-hs-title sol-hs-danger" style="margin:0 0 8px;font-size:17px;">&#128308; Host appears offline</h3>
+            <p class="sol-hs-sub" style="margin:0 0 14px;">They've been gone for a while. Wait or leave?</p>
+            <div class="sol-hs-actions">
+                <button class="sol-hs-btn sol-hs-btn-stay" onclick="document.getElementById('sol-host-reconnect').style.display='none'">Stay</button>
+                <button class="sol-hs-btn sol-hs-btn-leave" onclick="window.location.href='/'">Leave</button>
+            </div>`;
         el.style.display = 'flex';
     },
     hide: function() { let el = document.getElementById('sol-host-reconnect'); if (el) el.remove(); }
