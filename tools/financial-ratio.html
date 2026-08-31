@@ -578,7 +578,7 @@ function parseBSQuestion() {
     
     let detected = { S: null, K: null, T: null, v: null, r: null, q: null, type: null };
     
-    let sMatch = text.match(/(?:stock(?: is)? trading at|current stock price|share price|underlying price|current market price|stock price)[^\d]*([\d.,]+)/i) || text.match(/s\s*=\s*([\d.,]+)/i);
+    let sMatch = text.match(/(?:stock(?: is)?(?: currently)? trading at|current stock price|share price|underlying price|current market price|stock price)[^\d]*([\d.,]+)/i) || text.match(/s\s*=\s*([\d.,]+)/i);
     if(sMatch) {
         let val = parseFloat(sMatch[1].replace(/,/g, ''));
         if(!isNaN(val)) detected.S = val;
