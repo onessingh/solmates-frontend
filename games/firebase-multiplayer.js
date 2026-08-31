@@ -356,11 +356,57 @@ window.Peer = class Peer {
             };
             document.addEventListener('visibilitychange', guestVisibilityHandler);
 
+            // -- GUEST POLLING FALLBACK ------------------------------------------------
+            // If Firebase WebSocket silently dies (no visibility change triggered),
+            // this polling loop force-fetches authoritative room state every 6 seconds.
+            const guestPollInterval = setInterval(() => {
+                if (conn._syncStarted && !currentDisconnectTime) return; // stable, no need
+                db.goOnline();
+                db.ref('solmates-rooms/' + hostId).once('value', freshSnap => {
+                    const fresh = freshSnap.val();
+                    if (!fresh) return;
+
+                    // Re-evaluate host disconnect state
+                    const freshDisconnectTime = fresh.hostDisconnectedAt || null;
+                    if (freshDisconnectTime !== currentDisconnectTime) {
+                        currentDisconnectTime = freshDisconnectTime;
+                        clearDisconnectTimers();
+                        if (freshDisconnectTime) { evalHostDisconnect(freshDisconnectTime); }
+                        else {
+                            let el = document.getElementById('sol-host-reconnect');
+                            if (el) el.style.display = 'none';
+                            if (conn._handlers.host_reconnect) conn._handlers.host_reconnect.forEach(cb => cb());
+                        }
+                    }
+
+                    // Recover game state if game started but guest hasn't received it
+                    if (fresh.status && fresh.status.gameStarted && !conn._syncStarted) {
+                        const gs = fresh.gameState;
+                        if (gs && gs.payload) {
+                            const newSV = gs.sv || 0; const newTs = gs.ts || 0;
+                            if (newSV > 0 ? newSV > lastSeenSV : newTs > lastSeenTs) {
+                                lastSeenSV = newSV; lastSeenTs = newTs;
+                                try {
+                                    const data = JSON.parse(gs.payload);
+                                    if (['START_GAME','START_ROUND','START_EVENT','QUESTION','RESULT','REVEAL',
+                                         'GAME_OVER','END_GAME','EVENT_RESULT','ROUND_RESULTS',
+                                         'ROUND_RESULTS_DATA','READ_CASE'].includes(data.type)) {
+                                        conn._syncStarted = true;
+                                        conn._emitData(data);
+                                    }
+                                } catch(e) {}
+                            }
+                        }
+                    }
+                });
+            }, 6000);
+            conn._guestPollInterval = guestPollInterval;
+
             conn._cleanup = () => {
                 inboxRef.off(); gameStateRef.off(); statusRef.off(); syncPrepareRef.off(); hostDisconnectedRef.off();
                 db.ref('solmates-rooms/' + hostId + '/active').off();
                 document.removeEventListener('visibilitychange', guestVisibilityHandler);
-                clearDisconnectTimers(); clearInterval(syncRetryInterval);
+                clearDisconnectTimers(); clearInterval(syncRetryInterval); if (conn._guestPollInterval) clearInterval(conn._guestPollInterval);
             };
             setTimeout(() => { conn._handlers.open.forEach(cb => cb()); }, 50);
         });

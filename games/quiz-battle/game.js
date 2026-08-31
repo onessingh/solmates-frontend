@@ -1,4 +1,4 @@
-﻿
+
 const _badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
 
 function _safePrompt() {
@@ -587,17 +587,35 @@ function startGame() {
     const activeCount = roomState.players.filter(p => !p.disconnected).length;
     window.SolmatesSync.show(`Waiting for players... (1/${activeCount})`);
     
-    broadcast({ type: 'SYNC_PREPARE', questions: roomState.questions });
-    
-    // Safety net: never let a missing/ghost ack block the start forever.
-    // If not everyone has acked within 5s, proceed anyway with whoever's ready.
-    clearTimeout(roomState._syncTimeout);
-    roomState._syncTimeout = setTimeout(() => { if (roomState.syncing) finishSyncStart(); }, 5000);
-    
-    // In case guests are already fully synced or playing solo
-    if (roomState.readyPlayers.size >= activeCount) {
-        finishSyncStart();
-    }
+    // ── HOST CONNECTION GUARD ─────────────────────────────────────────────────
+    // Mobile Host may return from background with a momentarily-suspended WebSocket.
+    // Confirm Firebase is actually connected before broadcasting SYNC_PREPARE,
+    // so the write is guaranteed to reach the server and trigger Guest listeners.
+    const doHostBroadcast = () => {
+        broadcast({ type: 'SYNC_PREPARE', questions: roomState.questions });
+        // Safety net: if not everyone acks within 5s, proceed with whoever's ready.
+        clearTimeout(roomState._syncTimeout);
+        roomState._syncTimeout = setTimeout(() => { if (roomState.syncing) finishSyncStart(); }, 5000);
+        if (roomState.readyPlayers.size >= activeCount) { finishSyncStart(); }
+    };
+    db.ref('.info/connected').once('value', snap => {
+        if (snap.val() === true) {
+            doHostBroadcast();
+        } else {
+            // Not yet connected — go online and wait for the connection event once
+            db.goOnline();
+            const connRef = db.ref('.info/connected');
+            const waitHandler = snap2 => {
+                if (snap2.val() === true) {
+                    connRef.off('value', waitHandler);
+                    doHostBroadcast();
+                }
+            };
+            connRef.on('value', waitHandler);
+            // Hard fallback: after 4s give up waiting and broadcast anyway
+            setTimeout(() => { connRef.off('value', waitHandler); if (roomState.syncing) doHostBroadcast(); }, 4000);
+        }
+    });
 }
 
 function finishSyncStart() {
