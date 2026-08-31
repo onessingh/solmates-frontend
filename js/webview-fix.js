@@ -365,16 +365,26 @@
       }
     }, { passive: true });
 
-    if (StatusBar) {
+    if (StatusBar || window.median || window.gonative) {
       const syncStatusBar = async () => {
         try {
-          const isDark = document.body.classList.contains('dark-theme');
-          if (isDark) {
-            await StatusBar.setStyle({ style: 'DARK' });
-            await StatusBar.setBackgroundColor({ color: '#161925' });
-          } else {
-            await StatusBar.setStyle({ style: 'LIGHT' });
-            await StatusBar.setBackgroundColor({ color: '#f8f9fa' });
+          const isDark = document.documentElement.classList.contains('dark') || document.documentElement.style.colorScheme === 'dark';
+          const bgColor = isDark ? '#0f172a' : '#ffffff';
+          const statusBarColor = isDark ? '#161925' : '#f8f9fa';
+          const style = isDark ? 'DARK' : 'LIGHT';
+
+          if (StatusBar) {
+            await StatusBar.setStyle({ style: style });
+            await StatusBar.setBackgroundColor({ color: statusBarColor });
+          }
+          
+          const med = window.median || window.gonative;
+          if (med && med.statusbar && typeof med.statusbar.set === 'function') {
+             med.statusbar.set({ style: isDark ? 'light' : 'dark', color: statusBarColor });
+          }
+          // Some median forks have navigation bar color API
+          if (med && med.screen && typeof med.screen.setNavigationBarColor === 'function') {
+             med.screen.setNavigationBarColor(bgColor);
           }
         } catch(e) {}
       };
@@ -382,7 +392,7 @@
       setTimeout(syncStatusBar, 500);
 
       const observer = new MutationObserver(syncStatusBar);
-      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     }
   }
 
