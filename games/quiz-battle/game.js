@@ -1,4 +1,4 @@
-
+﻿
 const _badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
 
 function _safePrompt() {
@@ -220,7 +220,7 @@ async function createRoom() {
     currentSettings = course === 'MBA' ? `MBA - ${sem} - ${sub} (${qCount} Qs)` : `${topic} (${qCount} Qs)`;
     roomState.maxQs = qCount;
     
-    // 1. Build Static Fallback Pool (MBA only — other courses rely on AI)
+    // 1. Build Static Fallback Pool (MBA only â€” other courses rely on AI)
     let fallbackPool = [];
     if (course === 'MBA') {
         let subjects = (sub === 'All') ? (QUIZ_DATA.structure && QUIZ_DATA.structure['MBA'] && QUIZ_DATA.structure['MBA'][sem] ? QUIZ_DATA.structure['MBA'][sem] : []) : [sub];
@@ -660,14 +660,14 @@ function renderQuestion(q, qNum, totalQ, deadline) {
     updateLiveScoresUI();
 
     answered = false;
-    document.getElementById('game-q-num').textContent = Q /;
+    document.getElementById('game-q-num').textContent = 'Q ' + qNum + '/' + totalQ;
     document.getElementById('question-text').textContent = q.q;
     
     const grid = document.getElementById('options-grid');
     grid.innerHTML = '';
     const letters = ['A', 'B', 'C', 'D'];
     q.options.forEach((opt, idx) => {
-        grid.innerHTML += <button id="opt-" class="option-btn p-4 rounded-xl text-left font-semibold text-lg" onclick="submitAnswer()">. </button>;
+        grid.innerHTML += '<button id="opt-' + idx + '" class="option-btn p-4 rounded-xl text-left font-semibold text-lg" onclick="submitAnswer(' + idx + ')">' + letters[idx] + '. ' + opt + '</button>';
     });
     
     document.getElementById('answer-feedback').classList.add('hidden');
@@ -678,16 +678,16 @@ function renderQuestion(q, qNum, totalQ, deadline) {
         const now = Date.now() + (typeof serverTimeOffset !== 'undefined' ? serverTimeOffset : 0);
         timeRemaining = Math.max(0, Math.ceil((deadline - now) / 1000));
     }
-    document.getElementById('game-timer').textContent = timeRemaining + "s";
+    document.getElementById('game-timer').textContent = timeRemaining + 's';
     const bar = document.getElementById('timer-bar');
-    bar.style.width = ${(timeRemaining/15)*100}%;
+    bar.style.width = ((timeRemaining/15)*100) + '%';
     
     if(questionTimer) clearInterval(questionTimer);
     questionTimer = setInterval(() => {
         timeRemaining--;
         if (timeRemaining < 0) timeRemaining = 0;
-        document.getElementById('game-timer').textContent = timeRemaining + "s";
-        bar.style.width = ${(timeRemaining/15)*100}%;
+        document.getElementById('game-timer').textContent = timeRemaining + 's';
+        bar.style.width = ((timeRemaining/15)*100) + '%';
         if(timeRemaining <= 0) clearInterval(questionTimer);
     }, 1000);
 }
@@ -793,10 +793,10 @@ function showLeaderboard(scores, passedTotalQ = null) {
                 <div class="flex items-center gap-3">
                     <span class="font-bold text-slate-400">#${idx+1}</span>
                     <div>
-                        <p class="font-bold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' 🔌' : ''}</p>
-                        <p class="text-xs text-slate-500 mt-0.5">✅ ${correct} / ${totalQ} correct</p>
+                        <p class="font-bold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' ðŸ”Œ' : ''}</p>
+                        <p class="text-xs text-slate-500 mt-0.5">âœ… ${correct} / ${totalQ} correct</p>
                     </div>
-                    ${idx===0 && !p.disconnected ? '<span class="text-yellow-500">🏆</span>' : ''}
+                    ${idx===0 && !p.disconnected ? '<span class="text-yellow-500">ðŸ†</span>' : ''}
                 </div>
                 <span class="font-bold text-slate-900 text-lg">${scores[p.id] || 0} pts</span>
             </div>
@@ -842,7 +842,7 @@ function migrateHost(hostId) {
 
     if (!roomState.backupQuestions) { isMigrating = false; return; }
 
-    // *** DO NOT close hostConn here — closing it kills all Firebase listeners
+    // *** DO NOT close hostConn here â€” closing it kills all Firebase listeners
     // and makes the guest permanently deaf if original host reconnects. ***
     // We only close hostConn AFTER we win the transaction.
 
@@ -852,7 +852,7 @@ function migrateHost(hostId) {
         return; // Someone else claimed
     }, (error, committed, snapshot) => {
         if (committed && snapshot.val() === myId) {
-            // WE won the transaction — now safe to close hostConn
+            // WE won the transaction â€” now safe to close hostConn
             if (hostConn) { hostConn.close(); hostConn = null; }
             isHost = true;
             roomState.questions = roomState.backupQuestions;
@@ -1005,4 +1005,5 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+
 

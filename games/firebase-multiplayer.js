@@ -100,27 +100,42 @@ class PeerConnection {
 window.Peer = class Peer {
     constructor(id) {
         window._solmatesPeer = this;
+        let isExplicitHost = false;
         if (!id) {
             let existingId = sessionStorage.getItem('solmates_guest_id');
             id = existingId || ('GUEST-' + Math.random().toString(36).substr(2, 8).toUpperCase());
             sessionStorage.setItem('solmates_guest_id', id);
+        } else if (id.startsWith('SOLMATES-')) {
+            isExplicitHost = true;
         }
+        
         this.id = id.replace('SOLMATES-', '');
         this.disconnected = false; this.destroyed = false;
         this._handlers = { open: [], connection: [], error: [], disconnected: [], close: [] };
-        this._isHostRole = false; this._hostInitDone = false;
-        // _initHost() NOT called here. Triggered by on('connection') = host role detection.
+        
+        this._isHostRole = isExplicitHost; 
+        this._hostInitDone = false;
+        
+        if (isExplicitHost) {
+            window._solmatesHostId = this.id;
+            setTimeout(() => {
+                if (!this._hostInitDone) {
+                    this._hostInitDone = true;
+                    this._initHost();
+                }
+            }, 50);
+        } else {
+            setTimeout(() => {
+                this._fire('open', this.id);
+            }, 50);
+        }
     }
 
     on(event, cb) {
         if (this._handlers[event]) this._handlers[event].push(cb);
         // Role detection: first 'connection' listener = this client is Host.
         // Guest calls peer.connect(hostId) instead — never registers 'connection'.
-        if (event === 'connection' && !this._hostInitDone) {
-            this._hostInitDone = true; this._isHostRole = true;
-            window._solmatesHostId = this.id; // Only set for actual host
-            setTimeout(() => this._initHost(), 50);
-        }
+        
     }
 
     async _initHost() {
