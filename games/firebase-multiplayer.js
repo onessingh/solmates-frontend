@@ -291,8 +291,17 @@ window.Peer = class Peer {
             const evalHostDisconnect = (disconnectTime) => {
                 if (!disconnectTime || !conn.open) return;
                 const elapsed = Date.now() + serverTimeOffset - disconnectTime;
+                
+                // Dynamic threshold: 60s for lobby, 15s for game
+                let isStarted = false;
+                if (typeof gameState !== 'undefined' && gameState) isStarted = gameState.gameStarted;
+                else if (typeof roomState !== 'undefined' && roomState) isStarted = roomState.gameStarted;
+                else if (window._solmatesGameStarted) isStarted = true;
+                
+                const disconnectThreshold = isStarted ? 15000 : 60000;
+                
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
-                if (elapsed > 15000) {
+                if (elapsed > disconnectThreshold) {
                     if (!disconnectFired) {
                         if (conn._handlers.host_disconnect) conn._handlers.host_disconnect.forEach(cb => cb());
                         disconnectFired = true;
@@ -303,7 +312,7 @@ window.Peer = class Peer {
                         if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
                         earlyFired = true;
                     }
-                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(15000 - elapsed, 2000)));
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(disconnectThreshold - elapsed, 2000)));
                 } else {
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(6000 - elapsed, 1000)));
                 }
