@@ -295,6 +295,7 @@
     <button class="ctab" onclick="showCat(this,'leverage')"><i class="fas fa-balance-scale"></i> Leverage</button>
     <button class="ctab" onclick="showCat(this,'efficiency')"><i class="fas fa-cogs"></i> Efficiency</button>
     <button class="ctab" onclick="showCat(this,'market')"><i class="fas fa-tags"></i> Market</button>
+    <button class="ctab" onclick="showCat(this,'black-scholes')"><i class="fas fa-chart-pie"></i> Black-Scholes</button>
   </div>
 
   <div class="ratios-grid" id="ratiosGrid"></div>
@@ -503,8 +504,286 @@ function showCat(btn, cat) {
   renderRatios();
 }
 
+function N(x) {
+    let sign = (x < 0) ? -1 : 1;
+    x = Math.abs(x) / Math.sqrt(2.0);
+    let t = 1.0 / (1.0 + 0.3275911 * x);
+    let a1 =  0.254829592;
+    let a2 = -0.284496736;
+    let a3 =  1.421413741;
+    let a4 = -1.453152027;
+    let a5 =  1.061405429;
+    let erf = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+    return 0.5 * (1.0 + sign * erf);
+}
+
+function phi(x) {
+    return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+}
+
+function calcGreeksAndPrices(S, K, T, v, r, q, type) {
+    const d1 = (Math.log(S / K) + (r - q + (v * v) / 2) * T) / (v * Math.sqrt(T));
+    const d2 = d1 - v * Math.sqrt(T);
+
+    const Nd1 = N(d1);
+    const Nd2 = N(d2);
+    const N_d1 = N(-d1);
+    const N_d2 = N(-d2);
+    
+    let price, delta, gamma, theta, vega, rho;
+    
+    gamma = Math.exp(-q * T) * phi(d1) / (S * v * Math.sqrt(T));
+    vega = S * Math.exp(-q * T) * phi(d1) * Math.sqrt(T);
+    const vega_1pct = vega / 100;
+
+    if (type === 'call') {
+        price = S * Math.exp(-q * T) * Nd1 - K * Math.exp(-r * T) * Nd2;
+        delta = Math.exp(-q * T) * Nd1;
+        theta = -(S * Math.exp(-q * T) * phi(d1) * v) / (2 * Math.sqrt(T)) - r * K * Math.exp(-r * T) * Nd2 + q * S * Math.exp(-q * T) * Nd1;
+        rho = K * T * Math.exp(-r * T) * Nd2;
+    } else {
+        price = K * Math.exp(-r * T) * N_d2 - S * Math.exp(-q * T) * N_d1;
+        delta = Math.exp(-q * T) * (Nd1 - 1);
+        theta = -(S * Math.exp(-q * T) * phi(d1) * v) / (2 * Math.sqrt(T)) + r * K * Math.exp(-r * T) * N_d2 - q * S * Math.exp(-q * T) * N_d1;
+        rho = -K * T * Math.exp(-r * T) * N_d2;
+    }
+    
+    const theta_1day = theta / 365;
+    const rho_1pct = rho / 100;
+
+    return {
+        price, d1, d2, Nd1, Nd2, delta, gamma, theta_1day, vega_1pct, rho_1pct, T, v, r, q, N_d1, N_d2
+    };
+}
+
+function setBSMode(mode) {
+    document.querySelectorAll('.bs-mtab').forEach(b => b.classList.remove('active'));
+    if(mode === 'manual') {
+        document.querySelector('.bs-mtab:nth-child(1)').classList.add('active');
+        document.getElementById('bs-parser-section').style.display = 'none';
+        document.getElementById('bs-inputs-section').style.display = 'block';
+        document.getElementById('bs-detected-title').style.display = 'none';
+        document.getElementById('bs-calc-btn-text').innerText = "Calculate";
+    } else {
+        document.querySelector('.bs-mtab:nth-child(2)').classList.add('active');
+        document.getElementById('bs-parser-section').style.display = 'block';
+        document.getElementById('bs-inputs-section').style.display = 'none';
+        document.getElementById('bs-parse-error').innerText = '';
+        document.getElementById('bs-result').style.display = 'none';
+    }
+}
+
+function parseBSQuestion() {
+    const text = document.getElementById('bs-question-text').value.toLowerCase();
+    document.getElementById('bs-parse-error').innerText = '';
+    
+    let S, K, T, v, r, q, type;
+    
+    let sMatch = text.match(/(?:stock(?: is)? trading at|current stock price|share price|underlying price|current market price|stock price)[^\d]*([\d.,]+)/i) || text.match(/s\s*=\s*([\d.,]+)/i);
+    if(sMatch) S = parseFloat(sMatch[1].replace(/,/g, ''));
+
+    let kMatch = text.match(/(?:strike price|exercise price|strike|exercise price of the option)[^\d]*([\d.,]+)/i) || text.match(/k\s*=\s*([\d.,]+)/i);
+    if(kMatch) K = parseFloat(kMatch[1].replace(/,/g, ''));
+
+    let tDaysMatch = text.match(/([\d.,]+)\s*days/i);
+    let tMonthsMatch = text.match(/([\d.,]+)\s*months/i);
+    let tYearsMatch = text.match(/([\d.,]+)\s*year/i) || text.match(/maturity in ([\d.,]+)/i);
+    if(tDaysMatch) T = parseFloat(tDaysMatch[1]);
+    else if(tMonthsMatch) T = parseFloat(tMonthsMatch[1]) * 30;
+    else if(tYearsMatch) T = parseFloat(tYearsMatch[1]) * 365;
+
+    let vMatch = text.match(/(?:volatility|standard deviation|σ)[^\d]*([\d.,]+)\s*%/i) || text.match(/(?:volatility|standard deviation|σ) is ([\d.,]+)/i);
+    if(vMatch) v = parseFloat(vMatch[1]);
+
+    let rMatch = text.match(/(?:risk-free rate|risk free interest rate|treasury rate|r)[^\d]*([\d.,]+)\s*%/i) || text.match(/(?:risk-free rate|r) is ([\d.,]+)/i);
+    if(rMatch) r = parseFloat(rMatch[1]);
+
+    let qMatch = text.match(/(?:dividend yield|annual dividend yield|dividend|q)[^\d]*([\d.,]+)\s*%/i) || text.match(/(?:dividend yield|q) is ([\d.,]+)/i);
+    if(qMatch) q = parseFloat(qMatch[1]);
+    else q = 0;
+
+    if(text.includes('put')) type = 'put';
+    else if(text.includes('call')) type = 'call';
+
+    let missing = [];
+    if(S===undefined||isNaN(S)) missing.push('Stock Price');
+    if(K===undefined||isNaN(K)) missing.push('Strike Price');
+    if(T===undefined||isNaN(T)) missing.push('Days to Expiry');
+    if(v===undefined||isNaN(v)) missing.push('Volatility');
+    if(r===undefined||isNaN(r)) missing.push('Risk-Free Rate');
+    
+    if(missing.length > 0) {
+        document.getElementById('bs-parse-error').innerText = "Could not detect: " + missing.join(", ") + ". Please enter them manually.";
+        document.getElementById('bs-parse-error').style.color = "var(--danger)";
+    } else {
+        document.getElementById('bs-parse-error').innerText = "Detection successful. Please review the values.";
+        document.getElementById('bs-parse-error').style.color = "var(--success)";
+    }
+
+    if(S!==undefined && !isNaN(S)) document.getElementById('bs_S').value = S;
+    if(K!==undefined && !isNaN(K)) document.getElementById('bs_K').value = K;
+    if(T!==undefined && !isNaN(T)) document.getElementById('bs_T').value = T;
+    if(v!==undefined && !isNaN(v)) document.getElementById('bs_v').value = v;
+    if(r!==undefined && !isNaN(r)) document.getElementById('bs_r').value = r;
+    if(q!==undefined && !isNaN(q)) document.getElementById('bs_q').value = q;
+    if(type) document.getElementById('bs_type').value = type;
+
+    document.getElementById('bs-inputs-section').style.display = 'block';
+    document.getElementById('bs-detected-title').style.display = 'block';
+    document.getElementById('bs-calc-btn-text').innerText = "Solve";
+}
+
+function solveBlackScholes() {
+    const type = document.getElementById('bs_type').value;
+    const S = parseFloat(document.getElementById('bs_S').value);
+    const K = parseFloat(document.getElementById('bs_K').value);
+    const T_days = parseFloat(document.getElementById('bs_T').value);
+    const v_pct = parseFloat(document.getElementById('bs_v').value);
+    const r_pct = parseFloat(document.getElementById('bs_r').value);
+    const q_pct = parseFloat(document.getElementById('bs_q').value) || 0;
+
+    if (isNaN(S) || S <= 0) { alert('Please enter a valid stock price greater than 0.'); return; }
+    if (isNaN(K) || K <= 0) { alert('Please enter a valid strike price greater than 0.'); return; }
+    if (isNaN(T_days) || T_days <= 0) { alert('Please enter days to expiry greater than 0.'); return; }
+    if (isNaN(v_pct) || v_pct <= 0) { alert('Please enter volatility greater than 0%.'); return; }
+    if (isNaN(r_pct)) { alert('Please enter a valid risk-free rate.'); return; }
+
+    const T = T_days / 365;
+    const v = v_pct / 100;
+    const r = r_pct / 100;
+    const q = q_pct / 100;
+
+    const res = calcGreeksAndPrices(S, K, T, v, r, q, type);
+    
+    let resultHTML = `
+      <div class="res-main">₹ ${res.price.toFixed(2)}</div>
+      <div class="res-label">Option Price</div>
+      
+      <div style="margin-top: 15px; text-align: left; background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid var(--border);">
+        <h4 style="margin-bottom: 10px; color: var(--primary);">Calculation Details</h4>
+        <div class="bs-step-row"><span>Stock Price (S)</span><span>${S}</span></div>
+        <div class="bs-step-row"><span>Strike Price (K)</span><span>${K}</span></div>
+        <div class="bs-step-row"><span>Time to Expiry (T)</span><span>${res.T.toFixed(5)} years</span></div>
+        <div class="bs-step-row"><span>Volatility (σ)</span><span>${(res.v * 100).toFixed(2)}%</span></div>
+        <div class="bs-step-row"><span>Risk-Free Rate (r)</span><span>${(res.r * 100).toFixed(2)}%</span></div>
+        <div class="bs-step-row"><span>Dividend Yield (q)</span><span>${(res.q * 100).toFixed(2)}%</span></div>
+        <div class="bs-step-row"><span>Option Type</span><span style="text-transform: capitalize;">${type}</span></div>
+        
+        <div class="bs-step-row" style="margin-top:10px;"><span>d1</span><span>${res.d1.toFixed(4)}</span></div>
+        <div class="bs-step-row"><span>d2</span><span>${res.d2.toFixed(4)}</span></div>
+        <div class="bs-step-row"><span>N(d1)</span><span>${res.Nd1.toFixed(6)}</span></div>
+        <div class="bs-step-row"><span>N(d2)</span><span>${res.Nd2.toFixed(6)}</span></div>
+      </div>
+
+      <h4 style="margin-top: 20px; color: var(--primary); text-align: left;">Greeks</h4>
+      <div class="bs-greeks-grid">
+        <div class="bs-greek-card">
+          <div class="bs-greek-val">${res.delta.toFixed(4)}</div>
+          <div class="bs-greek-lbl">Delta</div>
+        </div>
+        <div class="bs-greek-card">
+          <div class="bs-greek-val">${res.gamma.toFixed(4)}</div>
+          <div class="bs-greek-lbl">Gamma</div>
+        </div>
+        <div class="bs-greek-card">
+          <div class="bs-greek-val">${res.theta_1day.toFixed(4)}</div>
+          <div class="bs-greek-lbl">Theta (Daily)</div>
+        </div>
+        <div class="bs-greek-card">
+          <div class="bs-greek-val">${res.vega_1pct.toFixed(4)}</div>
+          <div class="bs-greek-lbl">Vega (per 1%)</div>
+        </div>
+        <div class="bs-greek-card">
+          <div class="bs-greek-val">${res.rho_1pct.toFixed(4)}</div>
+          <div class="bs-greek-lbl">Rho (per 1%)</div>
+        </div>
+      </div>
+
+      <details style="margin-top: 15px; text-align: left;">
+         <summary style="cursor: pointer; color: var(--accent); font-weight: 600;">Show Calculation Steps</summary>
+         <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text); padding: 10px; background: rgba(0,0,0,0.03); border-radius: 8px;">
+            <p><strong>Step 1:</strong> Convert days into years<br/>T = ${T_days} / 365 = ${res.T.toFixed(5)}</p>
+            <p style="margin-top:8px;"><strong>Step 2:</strong> Convert percentages<br/>σ = ${v_pct}% = ${res.v}<br/>r = ${r_pct}% = ${res.r}<br/>q = ${q_pct}% = ${res.q}</p>
+            <p style="margin-top:8px;"><strong>Step 3:</strong> Calculate d1<br/>d1 = [ln(${S}/${K}) + (${res.r} - ${res.q} + ${res.v}²/2) * ${res.T.toFixed(5)}] / (${res.v} * √${res.T.toFixed(5)}) = ${res.d1.toFixed(4)}</p>
+            <p style="margin-top:8px;"><strong>Step 4:</strong> Calculate d2<br/>d2 = ${res.d1.toFixed(4)} - ${res.v} * √${res.T.toFixed(5)} = ${res.d2.toFixed(4)}</p>
+            <p style="margin-top:8px;"><strong>Step 5:</strong> Calculate N(d1) and N(d2)<br/>N(d1) = ${res.Nd1.toFixed(6)}<br/>N(d2) = ${res.Nd2.toFixed(6)}</p>
+            <p style="margin-top:8px;"><strong>Step 6:</strong> Apply ${type} formula<br/>
+            ${type === 'call' ? `C = ${S} * e^(-${res.q}*${res.T.toFixed(5)}) * ${res.Nd1.toFixed(6)} - ${K} * e^(-${res.r}*${res.T.toFixed(5)}) * ${res.Nd2.toFixed(6)}` : `P = ${K} * e^(-${res.r}*${res.T.toFixed(5)}) * ${res.N_d2.toFixed(6)} - ${S} * e^(-${res.q}*${res.T.toFixed(5)}) * ${res.N_d1.toFixed(6)}`}</p>
+            <p style="margin-top:8px;"><strong>Step 7:</strong> Final Option Price = ₹ ${res.price.toFixed(2)}</p>
+         </div>
+      </details>
+    `;
+    
+    document.getElementById('bs-result').innerHTML = resultHTML;
+    document.getElementById('bs-result').style.display = 'block';
+}
+
+
 function renderRatios() {
   const grid = document.getElementById('ratiosGrid');
+  if (currentCat === 'black-scholes') {
+    grid.innerHTML = `
+<div class="ratio-card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+  <div class="rc-head" style="margin-bottom: 20px;">
+    <div class="rc-info">
+      <div class="rc-name" style="font-size: 1.2rem;">Black-Scholes Option Calculator</div>
+    </div>
+  </div>
+  <div class="bs-modes">
+    <div class="bs-mode-tabs" style="display: flex; gap: 8px; margin-bottom: 20px;">
+      <button class="bs-mtab active" onclick="setBSMode('manual')" style="flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--primary); color: white; font-weight: 600; cursor: pointer;">Manual Calculator</button>
+      <button class="bs-mtab" onclick="setBSMode('parser')" style="flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--card); color: var(--text); font-weight: 600; cursor: pointer;">Solve from Question</button>
+    </div>
+    
+    <div id="bs-parser-section" style="display:none; margin-bottom: 20px;">
+      <div class="inp-group">
+        <label>Paste your Black-Scholes question</label>
+        <textarea id="bs-question-text" class="rc-inp" rows="5" placeholder="Example: A stock is currently trading at ₹500. The strike price is ₹520, expiry is 30 days, volatility is 25%, risk-free rate is 6% and dividend yield is 1%. Calculate the European call option value using Black-Scholes model." style="resize: vertical;"></textarea>
+      </div>
+      <button class="btn-calc" style="margin-top: 10px;" onclick="parseBSQuestion()">
+         Detect Values
+      </button>
+      <div id="bs-parse-error" style="margin-top: 10px; font-size: 0.85rem;"></div>
+    </div>
+
+    <div id="bs-inputs-section">
+       <h4 id="bs-detected-title" style="display:none; margin-bottom: 15px; color: var(--primary);">Detected Values</h4>
+       <div class="rc-inputs">
+         <div class="inp-group">
+           <label>Option Type</label>
+           <select id="bs_type" class="rc-inp">
+              <option value="call">Call</option>
+              <option value="put">Put</option>
+           </select>
+         </div>
+         <div class="inp-group"><label>Current Stock Price (S)</label><input type="number" id="bs_S" class="rc-inp" placeholder="0"></div>
+         <div class="inp-group"><label>Strike Price (K)</label><input type="number" id="bs_K" class="rc-inp" placeholder="0"></div>
+         <div class="inp-group"><label>Days to Expiry</label><input type="number" id="bs_T" class="rc-inp" placeholder="0"></div>
+         <div class="inp-group"><label>Volatility (σ) %</label><input type="number" id="bs_v" class="rc-inp" placeholder="0"></div>
+         <div class="inp-group"><label>Risk-Free Rate (r) %</label><input type="number" id="bs_r" class="rc-inp" placeholder="0"></div>
+         <div class="inp-group"><label>Dividend Yield (q) % (Optional)</label><input type="number" id="bs_q" class="rc-inp" placeholder="0"></div>
+       </div>
+       <button class="btn-calc" style="margin-top: 15px;" onclick="solveBlackScholes()">
+          <i class="fas fa-calculator"></i> <span id="bs-calc-btn-text">Calculate</span>
+       </button>
+    </div>
+    
+    <div id="bs-result" class="result-box" style="margin-top: 20px;"></div>
+  </div>
+</div>
+<style>
+.bs-step-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.bs-greeks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; margin-bottom: 15px; }
+@media(max-width:500px){ .bs-greeks-grid { grid-template-columns: repeat(2, 1fr); } }
+.bs-greek-card { background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid var(--border); }
+.bs-greek-val { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+.bs-greek-lbl { font-size: 0.75rem; color: var(--light); margin-top: 3px; }
+.dark .bs-greek-card { background: #334155; }
+.dark .bs-step-row { border-color: #475569; }
+</style>
+`;
+    return;
+  }
   grid.innerHTML = RATIOS[currentCat].map((ratio, idx) => {
     const inputsHTML = ratio.inputs.map(inp => `
       <div class="inp-group">
