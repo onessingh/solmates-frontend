@@ -394,14 +394,28 @@ function startGame() {
     const activeCount = players.filter(p => !p.disconnected).length;
     window.SolmatesSync.show(`Waiting for players... (1/${activeCount})`);
     
-    broadcast({ type: 'SYNC_PREPARE' });
-    
-    clearTimeout(gameState._syncTimeout);
-    gameState._syncTimeout = setTimeout(() => { if (gameState.syncing) finishSyncStart(); }, 5000);
-    
-    if (gameState.readyPlayers.size >= activeCount) {
-        finishSyncStart();
-    }
+    // -- HOST CONNECTION GUARD -------------------------------------------------
+    // Mobile Host returns from background with suspended WebSocket.
+    // Confirm Firebase is live before SYNC_PREPARE broadcast.
+    const doHostBroadcast = () => {
+        broadcast({ type: 'SYNC_PREPARE' });;
+        clearTimeout(gameState._syncTimeout);
+        gameState._syncTimeout = setTimeout(() => { if (gameState.syncing) finishSyncStart(); }, 5000);
+        if (gameState.readyPlayers.size >= activeCount) { finishSyncStart(); }
+    };
+    db.ref('.info/connected').once('value', snap => {
+        if (snap.val() === true) {
+            doHostBroadcast();
+        } else {
+            db.goOnline();
+            const connRef = db.ref('.info/connected');
+            const waitHandler = snap2 => {
+                if (snap2.val() === true) { connRef.off('value', waitHandler); doHostBroadcast(); }
+            };
+            connRef.on('value', waitHandler);
+            setTimeout(() => { connRef.off('value', waitHandler); if (gameState.syncing) doHostBroadcast(); }, 4000);
+        }
+    });
 }
 
 function finishSyncStart() {
