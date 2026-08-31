@@ -32,16 +32,9 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
         console.log('[MP RECONNECTING CLEARED]');
     }
     
-    if (!gameState.gameStarted) {
-        let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
-        console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
-        gameState.gameStarted = true;
-        // Don't unhide screen-game blindly because it might be screen-case-read
-        // The specific handlers will handle screen transition.
-        if (sourceData.caseData && !gameState.caseData) {
-            gameState.caseData = sourceData.caseData;
-        }
-    }
+    // Do NOT set gameState.gameStarted here. Handlers own that state + guard conditions.
+    let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
+    console.log('[MP QUESTION RECOVERY] source=' + sourceName + ' hostConn.open=' + hOpen);
 }
 
 function showToast(msg) {
