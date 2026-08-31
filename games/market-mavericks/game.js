@@ -62,6 +62,22 @@ const MARKET_EVENTS = {
 };
 
 // ---- Toast ----
+
+function enterGameFromAuthoritativeState(sourceData, sourceName) {
+    console.log('[MP ENTER GAME] source=' + sourceName);
+    if (window.SolmatesSync) window.SolmatesSync.hide();
+    if (window.SolmatesHostStatus) {
+        window.SolmatesHostStatus.hide();
+        console.log('[MP RECONNECTING CLEARED]');
+    }
+    
+    if (!gameState.gameStarted) {
+        let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
+        console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
+        gameState.gameStarted = true;
+    }
+}
+
 function showToast(msg) {
     const c = document.getElementById('toast-container');
     const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
@@ -308,9 +324,9 @@ function handleGuestData(data) {
         hostConn.send({ type: 'SYNC_READY', id: myId });
         return;
     }
-    if (data.type === 'START_EVENT') { window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
+    if (data.type === 'START_EVENT') { enterGameFromAuthoritativeState(data, 'START_EVENT'); window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
     if (data.type === 'TRADE_COUNT') { const el = document.getElementById('waiting-count'); if (el) el.textContent = `${data.count} / ${data.total} traded`; }
-    if (data.type === 'EVENT_RESULT') { gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
+    if (data.type === 'EVENT_RESULT') { enterGameFromAuthoritativeState(data, 'EVENT_RESULT_RECOVERY'); gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
 

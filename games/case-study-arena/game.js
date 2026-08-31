@@ -23,6 +23,27 @@ let tickInterval = null;
 let revealTimer = null;
 
 // ---------- Toast ----------
+
+function enterGameFromAuthoritativeState(sourceData, sourceName) {
+    console.log('[MP ENTER GAME] source=' + sourceName);
+    if (window.SolmatesSync) window.SolmatesSync.hide();
+    if (window.SolmatesHostStatus) {
+        window.SolmatesHostStatus.hide();
+        console.log('[MP RECONNECTING CLEARED]');
+    }
+    
+    if (!gameState.gameStarted) {
+        let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
+        console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
+        gameState.gameStarted = true;
+        // Don't unhide screen-game blindly because it might be screen-case-read
+        // The specific handlers will handle screen transition.
+        if (sourceData.caseData && !gameState.caseData) {
+            gameState.caseData = sourceData.caseData;
+        }
+    }
+}
+
 function showToast(msg) {
     const c = document.getElementById('toast-container');
     const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
@@ -441,12 +462,12 @@ function handleGuestData(data) {
         return;
     }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; renderPlayers(); }
-    if (data.type === 'START_GAME') { window.SolmatesSync.hide(); gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }
+    if (data.type === 'START_GAME') { enterGameFromAuthoritativeState(data, 'START_GAME'); window.SolmatesSync.hide(); gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }
     if (data.type === 'BACKUP_CASE_DATA') { if (data.caseData && !gameState.readPhaseStarted) { gameState.readPhaseStarted = true; gameState.caseData = data.caseData; startReadPhase(); } }
-    if (data.type === 'READ_CASE') { gameState.caseData = data.caseData; startReadPhase(); }
+    if (data.type === 'READ_CASE') { enterGameFromAuthoritativeState(data, 'READ_CASE_RECOVERY'); gameState.caseData = data.caseData; startReadPhase(); }
       if (data.type === 'READY_STATUS') { updateReadyStatus(data.readyCount, data.total); }
-    if (data.type === 'QUESTION') { gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
-    if (data.type === 'REVEAL') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
+    if (data.type === 'QUESTION') { enterGameFromAuthoritativeState(data, 'QUESTION_RECOVERY'); gameState.qIndex = data.qIndex; showQuestion(data.qIndex, data.question); }
+    if (data.type === 'REVEAL') { enterGameFromAuthoritativeState(data, 'REVEAL_RECOVERY'); gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; revealAnswers(data.answers, data.correctIdx); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
 

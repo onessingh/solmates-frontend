@@ -452,25 +452,33 @@ function connectToHost(hostId) {
                 window.SolmatesSync.show("Syncing with host...");
                 hostConn.send({ type: 'SYNC_READY', id: myId });
             } else if(data.type === 'START_GAME') {
-                window.SolmatesSync.hide();
+                enterGameFromAuthoritativeState(data, 'START_GAME');
                 if (data.questions) roomState.backupQuestions = data.questions;
-                if (!roomState.gameStarted) {
-                    roomState.gameStarted = true;
-                    startGameUI();
-                    // Auto-recovery: if QUESTION doesn't arrive in 3s, ask host to resend
-                    setTimeout(() => {
-                        if (!roomState.questionReceived && hostConn) {
-                            hostConn.send({ type: 'REQUEST_RECOVERY' });
-                        }
-                    }, 3000);
-                }
+                document.getElementById('question-text').textContent = "Get Ready...";
+                document.getElementById('options-grid').innerHTML = '';
+                // Auto-recovery: if QUESTION doesn't arrive in 3s, ask host to resend
+                setTimeout(() => {
+                    if (!roomState.questionReceived && hostConn) {
+                        hostConn.send({ type: 'REQUEST_RECOVERY' });
+                    }
+                }, 3000);
             } else if(data.type === 'BACKUP_QUESTIONS') {
                 if (data.questions) roomState.backupQuestions = data.questions;
             } else if(data.type === 'QUESTION') {
+                enterGameFromAuthoritativeState(data, 'QUESTION_RECOVERY');
                 roomState.questionReceived = true;
                 roomState.currentQ = data.qNum - 1;
+                
+                let timeRemaining = 15;
+                if (data.deadline) {
+                    const now = Date.now() + (typeof serverTimeOffset !== 'undefined' ? serverTimeOffset : 0);
+                    timeRemaining = Math.max(0, Math.ceil((data.deadline - now) / 1000));
+                }
+                console.log('[MP QUESTION RECOVERY] deadline=' + data.deadline + ' remaining=' + timeRemaining);
+                
                 renderQuestion(data.question, data.qNum, data.totalQ, data.deadline);
             } else if(data.type === 'RESULT') {
+                enterGameFromAuthoritativeState(data, 'RESULT_RECOVERY');
                 roomState.correctCounts = data.correctCounts || {};
                 roomState.scores = data.scores || {};
                 showResult(data.correctIdx, data.scores);
@@ -600,6 +608,27 @@ function finishSyncStart() {
     setTimeout(() => broadcast({ type: 'BACKUP_QUESTIONS', questions: roomState.questions }), 300);
     startGameUI();
     setTimeout(sendNextQuestion, 2000);
+}
+
+
+function enterGameFromAuthoritativeState(sourceData, sourceName) {
+    console.log('[MP ENTER GAME] source=' + sourceName);
+    if (window.SolmatesSync) window.SolmatesSync.hide();
+    if (window.SolmatesHostStatus) {
+        window.SolmatesHostStatus.hide();
+        console.log('[MP RECONNECTING CLEARED]');
+    }
+    
+    if (!roomState.gameStarted) {
+        let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
+        console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
+        roomState.gameStarted = true;
+        hideAllScreens();
+        document.getElementById('screen-game').classList.remove('hidden');
+        if (!roomState.backupQuestions && sourceData.questions) {
+            roomState.backupQuestions = sourceData.questions;
+        }
+    }
 }
 
 function startGameUI() {

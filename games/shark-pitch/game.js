@@ -69,6 +69,22 @@ const CHALLENGES = {
 };
 
 // ---- Toast ----
+
+function enterGameFromAuthoritativeState(sourceData, sourceName) {
+    console.log('[MP ENTER GAME] source=' + sourceName);
+    if (window.SolmatesSync) window.SolmatesSync.hide();
+    if (window.SolmatesHostStatus) {
+        window.SolmatesHostStatus.hide();
+        console.log('[MP RECONNECTING CLEARED]');
+    }
+    
+    if (!gameState.gameStarted) {
+        let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
+        console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
+        gameState.gameStarted = true;
+    }
+}
+
 function showToast(msg) {
     const c = document.getElementById('toast-container');
     const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
@@ -330,11 +346,11 @@ function handleGuestData(data) {
         hostConn.send({ type: 'SYNC_READY', id: myId });
         return;
     }
-    if (data.type === 'START_ROUND') { window.SolmatesSync.hide(); if (gameState.round !== data.round) { gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
+    if (data.type === 'START_ROUND') { enterGameFromAuthoritativeState(data, 'START_ROUND'); window.SolmatesSync.hide(); if (gameState.round !== data.round) { gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
     if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; gameState._pendingRound = data.round; gameState._pendingTotalRounds = data.totalRounds; }
-    if (data.type === 'ROUND_RESULTS_DATA') { showRoundResults(data.results, gameState._pendingRound || gameState.round, gameState._pendingTotalRounds || gameState.totalRounds); }
+    if (data.type === 'ROUND_RESULTS_DATA') { enterGameFromAuthoritativeState(data, 'ROUND_RESULTS_DATA_RECOVERY'); showRoundResults(data.results, gameState._pendingRound || gameState.round, gameState._pendingTotalRounds || gameState.totalRounds); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
 }
 
