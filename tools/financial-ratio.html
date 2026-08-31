@@ -578,32 +578,42 @@ function parseBSQuestion() {
     
     let detected = { S: null, K: null, T: null, v: null, r: null, q: null, type: null };
     
-    let sMatch = text.match(/(?:stock(?: is)?(?: currently)? trading at|current stock price|share price|underlying price|current market price|stock price)[^\d]*([\d.,]+)/i) || text.match(/s\s*=\s*([\d.,]+)/i);
+    const digitPattern = '([\\d.,]*\\d[\\d.,]*)';
+    
+    const sPattern = new RegExp('(?:market price of (?:a|the) (?:share|stock)|market price|share price|current market price|current market value|stock(?: is)?(?: currently)? trading at|currently trading at|stock(?: is)?(?: currently)? valued at|share(?: is)?(?: currently)? valued at|current value of the stock|stock(?: is)? priced at|share(?: is)? priced at|underlying asset(?: is)?(?: currently)? priced at|underlying asset price|underlying price|current stock price|stock price|s\\s*=)[^\\d]*' + digitPattern, 'i');
+    let sMatch = text.match(sPattern);
     if(sMatch) {
         let val = parseFloat(sMatch[1].replace(/,/g, ''));
         if(!isNaN(val)) detected.S = val;
     }
 
-    let kMatch = text.match(/(?:strike price|exercise price|strike|exercise price of the option)[^\d]*([\d.,]+)/i) || text.match(/k\s*=\s*([\d.,]+)/i);
+    const kPattern = new RegExp('(?:exercise price of (?:the|a) option|exercise price of the european call option|exercise price|strike price|strike|k\\s*=)[^\\d]*' + digitPattern, 'i');
+    let kMatch = text.match(kPattern);
     if(kMatch) {
         let val = parseFloat(kMatch[1].replace(/,/g, ''));
         if(!isNaN(val)) detected.K = val;
     }
 
-    let tDaysMatch = text.match(/([\d.,]+)\s*days/i);
-    let tMonthsMatch = text.match(/([\d.,]+)\s*months/i);
-    let tYearsMatch = text.match(/([\d.,]+)\s*year/i) || text.match(/maturity in ([\d.,]+)/i);
+    const tDaysPattern = new RegExp(digitPattern + '\\s*(?:days)', 'i');
+    const tMonthsPattern = new RegExp(digitPattern + '\\s*(?:months)', 'i');
+    const tYearsPattern = new RegExp(digitPattern + '\\s*(?:years?)', 'i');
+    let tDaysMatch = text.match(tDaysPattern);
+    let tMonthsMatch = text.match(tMonthsPattern);
+    let tYearsMatch = text.match(tYearsPattern);
     if(tDaysMatch) detected.T = parseFloat(tDaysMatch[1]);
     else if(tMonthsMatch) detected.T = parseFloat(tMonthsMatch[1]) * 30;
     else if(tYearsMatch) detected.T = parseFloat(tYearsMatch[1]) * 365;
 
-    let vMatch = text.match(/(?:volatility|standard deviation|σ|annualized volatility)[^\d]*([\d.,]+)\s*%/i) || text.match(/(?:volatility|standard deviation|σ) is ([\d.,]+)/i) || text.match(/volatility is ([\d.,]+)/i);
+    const vPattern = new RegExp('(?:annualized volatility|annual volatility|volatility|standard deviation|σ)[^\\d]*' + digitPattern, 'i');
+    let vMatch = text.match(vPattern);
     if(vMatch) detected.v = parseFloat(vMatch[1]);
 
-    let rMatch = text.match(/(?:risk-free rate|risk free interest rate|treasury rate|r)[^\d]*([\d.,]+)\s*%/i) || text.match(/(?:risk-free rate|r) is ([\d.,]+)/i) || text.match(/risk-free rate is ([\d.,]+)/i);
+    const rPattern = new RegExp('(?:continuously compounded risk-free(?: interest)? rate|risk-free(?: interest)? rate|risk free(?: interest)? rate|interest rate|r\\s*=)[^\\d]*' + digitPattern, 'i');
+    let rMatch = text.match(rPattern);
     if(rMatch) detected.r = parseFloat(rMatch[1]);
 
-    let qMatch = text.match(/(?:dividend yield|annual dividend yield|dividend|q)[^\d]*([\d.,]+)\s*%/i) || text.match(/(?:dividend yield|q) is ([\d.,]+)/i) || text.match(/dividend yield is ([\d.,]+)/i);
+    const qPattern = new RegExp('(?:annual dividend yield|dividend yield|annual dividend|dividend|q\\s*=)[^\\d]*' + digitPattern, 'i');
+    let qMatch = text.match(qPattern);
     if(qMatch) detected.q = parseFloat(qMatch[1]);
     else detected.q = 0; // default
 
