@@ -345,6 +345,15 @@ function manualJoinRoom() {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
+            if (!gameState.gameStarted) {
+                window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
+                if (window.SolmatesHostStatus) {
+                    const el = window.SolmatesHostStatus._getOrCreate();
+                    el.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p><button onclick="window.location.href='/games/'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>';
+                    el.style.display = 'flex';
+                }
+                return;
+            }
             if (typeof migrateHost === 'function') migrateHost(code);
         });
         hostConn.on('host_reconnect', () => {
@@ -851,6 +860,15 @@ function manualJoinRoomReconnect(code) {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
+            if (!gameState.gameStarted) {
+                window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
+                if (window.SolmatesHostStatus) {
+                    const el = window.SolmatesHostStatus._getOrCreate();
+                    el.innerHTML = '<h3 style="margin:0 0 8px;font-size:17px;color:#dc2626;">&#128308; Host has left</h3><p style="margin:0 0 14px;font-size:13px;color:#6b7280;">The game was not started. The room is now closed.</p><button onclick="window.location.href='/games/'" style="padding:8px 18px;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;">Go Home</button>';
+                    el.style.display = 'flex';
+                }
+                return;
+            }
             if (typeof migrateHost === 'function') migrateHost(code);
         });
         hostConn.on('host_reconnect', () => {

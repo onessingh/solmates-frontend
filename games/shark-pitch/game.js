@@ -296,7 +296,7 @@ function manualJoinRoom() {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
-            if (typeof migrateHost === 'function') migrateHost(code);
+            if (typeof migrateHost === 'function') migrateHost(ROOM_PREFIX + code);
         });
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
@@ -803,7 +803,7 @@ function manualJoinRoomReconnect(code) {
             window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting();
         });
         hostConn.on('host_disconnect', () => {
-            if (typeof migrateHost === 'function') migrateHost(code);
+            if (typeof migrateHost === 'function') migrateHost(ROOM_PREFIX + code);
         });
         hostConn.on('host_reconnect', () => {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();

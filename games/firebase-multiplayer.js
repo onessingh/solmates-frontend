@@ -292,20 +292,20 @@ window.Peer = class Peer {
                 if (!disconnectTime || !conn.open) return;
                 const elapsed = Date.now() + serverTimeOffset - disconnectTime;
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
-                if (elapsed > 28000) {
+                if (elapsed > 20000) {
                     if (!disconnectFired) {
                         if (conn._handlers.host_disconnect) conn._handlers.host_disconnect.forEach(cb => cb());
                         disconnectFired = true;
                     }
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(300000 - elapsed, 10000)));
-                } else if (elapsed > 10000) {
+                } else if (elapsed > 8000) {
                     if (!earlyFired) {
                         if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb());
                         earlyFired = true;
                     }
-                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(28000 - elapsed, 2000)));
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(20000 - elapsed, 2000)));
                 } else {
-                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(10000 - elapsed, 1000)));
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(8000 - elapsed, 1000)));
                 }
             };
             const hostDisconnectedRef = db.ref('solmates-rooms/' + hostId + '/hostDisconnectedAt');
