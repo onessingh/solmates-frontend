@@ -999,17 +999,17 @@
       }
 
       .content-box h3 {
-        font-size: 20px;
+        font-size: 14px;
         font-weight: 500;
-        line-height: 1.25;
+        line-height: 1.3;
         letter-spacing: normal;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
       }
 
       .notice-category-text {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 400;
-        margin: 0 0 10px 0;
+        margin: 0 0 8px 0;
       }
 
       .meta-box {
@@ -1017,22 +1017,22 @@
       }
 
       .notice-date-badge {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 400;
         word-spacing: 2px;
       }
 
       .view-btn-wrapper {
-        margin-top: 22px;
+        margin-top: 20px;
       }
 
       .view-btn {
-        height: 45px;
-        padding: 0 22px;
-        min-width: 200px;
-        max-width: 220px;
+        height: 41px;
+        padding: 0 20px;
+        min-width: 180px;
+        max-width: 210px;
         width: fit-content;
-        font-size: 17px;
+        font-size: 15px;
         font-weight: 500;
         gap: 10px;
       }
@@ -2665,8 +2665,8 @@
         return text
             // Bullet points: lines starting with "* " become bullet points
             .replace(/(^|\n)\*\s+(.*)/g, '$1&#8226; $2') 
-            // Bold: text wrapped in *asterisks* (medium-bold, not heavy)
-            .replace(/\*([^\*]+)\*/g, '<strong style="font-weight: 600; color: var(--text-main);">$1</strong>')
+            // Bold: text wrapped in *asterisks* (medium weight, not heavy)
+            .replace(/\*([^\*]+)\*/g, '<strong style="font-weight: 500; color: var(--text-main);">$1</strong>')
             // Links: match http/https but EXCLUDE trailing brackets ] or parentheses )
             .replace(/(https?:\/\/[^\s<\]\)]+)/g, '<a href="$1" target="_blank" style="color:#0071e3; text-decoration:underline; font-weight: 600;">$1</a>')
             // Newlines to <br>
