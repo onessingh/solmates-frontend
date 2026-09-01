@@ -32,6 +32,7 @@ function saveProfile() {
     }
     err.style.display = 'none';
     localStorage.setItem('solmates_nickname', name);
+    if (typeof myName !== 'undefined') myName = name;
     document.getElementById('profile-modal').classList.remove('active');
     
     // Update UI elements if they exist
@@ -334,11 +335,12 @@ function manualJoinRoom() {
             document.getElementById('invite-link').textContent = window.location.origin + window.location.pathname + '?room=' + code;
             document.getElementById('btn-start-game').classList.add('hidden');
             document.getElementById('wait-host-msg').classList.remove('hidden');
-            // Optimistically add self so lobby shows our name immediately
-            if (!players.find(p => p.id === myId)) {
-                players.push({ id: myId, name: myName, score: 0, disconnected: false });
-                renderLobby();
-            }
+            // Show connecting state until host data arrives
+            document.getElementById('lobby-topic').textContent = "Connecting to host...";
+            const countEl = document.getElementById('player-count');
+            if (countEl) countEl.textContent = "-";
+            const pList = document.getElementById('players-list');
+            if (pList) pList.innerHTML = '<div class="player-item" style="opacity:0.7">Waiting for host data...</div>';
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });
@@ -394,7 +396,7 @@ function handleGuestData(data) {
         hostConn.send({ type: 'SYNC_READY', id: myId });
         return;
     }
-    if (data.type === 'START_EVENT') { enterGameFromAuthoritativeState(data, 'START_EVENT'); window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; if (gameState.eventIndex !== data.eventIndex || !gameState.gameStarted) { gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); } }
+    if (data.type === 'START_EVENT') { enterGameFromAuthoritativeState(data, 'START_EVENT'); window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); }
     if (data.type === 'TRADE_COUNT') { const el = document.getElementById('waiting-count'); if (el) el.textContent = `${data.count} / ${data.total} traded`; }
     if (data.type === 'EVENT_RESULT') { enterGameFromAuthoritativeState(data, 'EVENT_RESULT_RECOVERY'); gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
     if (data.type === 'END_GAME') { showLeaderboard(); }

@@ -32,6 +32,7 @@ function saveProfile() {
     }
     err.style.display = 'none';
     localStorage.setItem('solmates_nickname', name);
+    if (typeof myName !== 'undefined') myName = name;
     document.getElementById('profile-modal').classList.remove('active');
     
     // Update UI elements if they exist
@@ -384,11 +385,12 @@ function manualJoinRoom() {
             document.getElementById('lobby-topic').textContent = "Waiting for host...";
             document.getElementById('btn-start-game').classList.add('hidden');
             document.getElementById('wait-host-msg').classList.remove('hidden');
-            // Optimistically add self so lobby shows our name immediately
-            if (!players.find(p => p.id === myId)) {
-                players.push({ id: myId, name: myName, score: 0, disconnected: false });
-                renderPlayers();
-            }
+            // Show connecting state until host data arrives
+            document.getElementById('lobby-topic').textContent = "Connecting to host...";
+            const countEl = document.getElementById('player-count');
+            if (countEl) countEl.textContent = "-";
+            const pList = document.getElementById('players-list');
+            if (pList) pList.innerHTML = '<div class="player-item" style="opacity:0.7">Waiting for host data...</div>';
         });
         hostConn.on('data', handleGuestData);
         hostConn.on('close', () => { if (typeof isHost !== 'undefined' && isHost) return; if (typeof isMigrating !== 'undefined' && isMigrating) return; window.SolmatesHostStatus && window.SolmatesHostStatus.showReconnecting(); });

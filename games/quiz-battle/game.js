@@ -31,6 +31,7 @@ function saveProfile() {
     }
     err.style.display = 'none';
     localStorage.setItem('solmates_nickname', name);
+    if (typeof myName !== 'undefined') myName = name;
     myName = name;
     const welcomeName = document.getElementById('welcome-name');
     const welcomeAvatar = document.getElementById('welcome-avatar');
@@ -325,7 +326,7 @@ async function createRoom() {
             }
             
             conn.on('open', () => {
-                try { conn.send({ type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false }); } catch(e) {}
+                try { conn.send({ type: 'STATE_SYNC', players: roomState.players, topic: currentSettings, gameStarted: roomState.gameStarted || false, questions: roomState.questions || (roomState.pool ? roomState.pool.slice(0, roomState.maxQs || 10) : []) }); } catch(e) {}
             });
             conn.on('data', (data) => {
                 guestConns[conn.peer] = conn;
@@ -355,7 +356,7 @@ async function createRoom() {
                         roomState.players.push({ id: conn.peer, name: data.name, score: 0, disconnected: false });
                         roomState.correctCounts[conn.peer] = 0;
                     }
-                    broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
+                    broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions || (roomState.pool ? roomState.pool.slice(0, roomState.maxQs || 10) : []) });
                     renderLobby();
                 } else if(data.type === 'ANSWER') {
                     handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
@@ -365,7 +366,7 @@ async function createRoom() {
                 const p = roomState.players.find(pl => pl.id === conn.peer);
                 if (p) { p.disconnected = true; showToast(`${p.name} disconnected`); }
                 delete guestConns[conn.peer];
-                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
+                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions || (roomState.pool ? roomState.pool.slice(0, roomState.maxQs || 10) : []) });
                 if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
             });
         });
@@ -916,6 +917,8 @@ function migrateHost(hostId) {
         return;
     }
     isMigrating = true;
+    roomState.pool = roomState.backupQuestions;
+    roomState.questions = roomState.backupQuestions;
     let pList = typeof players !== 'undefined' ? players : (typeof roomState !== 'undefined' ? roomState.players : []);
     let hostName = "Host";
     if (pList && pList.length > 0) {
@@ -995,7 +998,7 @@ function migrateHost(hostId) {
                                 if (roomState.questions && roomState.questions.length > 0 && roomState.currentQ > 0) {
                                     conn.send({ type: 'SYNC_STATE', state: { roomState, timeRemaining, currentSettings } });
                                 }
-                                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
+                                broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions || (roomState.pool ? roomState.pool.slice(0, roomState.maxQs || 10) : []) });
                                 if (!roomState.backupQuestions) renderLobby();
                             } else if(data.type === 'ANSWER') {
                                 handleGuestAnswer(conn.peer, data.answerIdx, data.timeLeft);
@@ -1011,7 +1014,7 @@ function migrateHost(hostId) {
                                 }
                             }
                             delete guestConns[conn.peer];
-                            broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions });
+                            broadcast({ type: 'LOBBY_UPDATE', players: roomState.players, topic: currentSettings, questions: roomState.questions || (roomState.pool ? roomState.pool.slice(0, roomState.maxQs || 10) : []) });
                             if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
                         });
                     });
