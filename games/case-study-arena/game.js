@@ -1,3 +1,52 @@
+
+function containsProfanity(text) {
+    if (window.solmatesCheckProfanity) return window.solmatesCheckProfanity(text);
+    return false;
+}
+function hasInvalidChars(text) {
+    if (window.solmatesHasInvalidChars) return window.solmatesHasInvalidChars(text);
+    return /[*#$!^%~@?&]/.test(text);
+}
+function openProfileModal() {
+    let modal = document.getElementById('profile-modal');
+    if(modal) modal.classList.add('active');
+    const saved = localStorage.getItem('solmates_nickname');
+    if (saved) {
+        let input = document.getElementById('nickname-input');
+        if(input) input.value = saved;
+    }
+}
+function saveProfile() {
+    const name = document.getElementById('nickname-input').value.trim();
+    const err = document.getElementById('profanity-error');
+    if (!name) { err.textContent = "Please enter a name."; err.style.display = 'block'; return; }
+    if (hasInvalidChars(name)) {
+        err.textContent = "Characters like * # $ ! ^ % ~ @ ? & are not allowed.";
+        err.style.display = 'block';
+        return;
+    }
+    if (containsProfanity(name)) {
+        err.textContent = "Please choose a clean and appropriate nickname.";
+        err.style.display = 'block';
+        return;
+    }
+    err.style.display = 'none';
+    localStorage.setItem('solmates_nickname', name);
+    document.getElementById('profile-modal').classList.remove('active');
+    
+    // Update UI elements if they exist
+    let nameEl = document.getElementById('welcome-name');
+    if (nameEl) nameEl.textContent = name;
+    let avEl = document.getElementById('welcome-avatar');
+    if (avEl) avEl.textContent = name.charAt(0).toUpperCase();
+    
+    showToast("Profile saved!");
+}
+
+if (!localStorage.getItem('solmates_nickname')) {
+    document.addEventListener('DOMContentLoaded', openProfileModal);
+}
+
 // ===== Case Study Arena — multiplayer logic =====
 const ROOM_PREFIX = 'SOLMATES-CS-';
 const TIME_LIMIT_MS = 15000;
@@ -55,8 +104,10 @@ function showToast(msg) {
 // ---------- Screen navigation ----------
 function hideAllScreens() { ['screen-welcome', 'screen-create', 'screen-join', 'screen-lobby', 'screen-case-read', 'screen-game', 'screen-leaderboard'].forEach(id => document.getElementById(id).classList.add('hidden')); }
 function uiShowWelcome() { hideAllScreens(); document.getElementById('screen-welcome').classList.remove('hidden'); }
-function uiShowCreateRoom() { hideAllScreens(); document.getElementById('screen-create').classList.remove('hidden'); populateSemesters(); }
-function uiShowJoinRoom() { hideAllScreens(); document.getElementById('screen-join').classList.remove('hidden'); }
+function uiShowCreateRoom() {
+    if (!localStorage.getItem('solmates_nickname')) { openProfileModal(); return; } hideAllScreens(); document.getElementById('screen-create').classList.remove('hidden'); populateSemesters(); }
+function uiShowJoinRoom() {
+    if (!localStorage.getItem('solmates_nickname')) { openProfileModal(); return; } hideAllScreens(); document.getElementById('screen-join').classList.remove('hidden'); }
 
 function populateSemesters() {
     const sel = document.getElementById('select-semester');
@@ -83,7 +134,8 @@ function updateSubjects() {
     const room = new URLSearchParams(window.location.search).get('room');
     if (room) { pendingRoomCode = room.toUpperCase(); window.addEventListener('DOMContentLoaded', () => document.getElementById('url-join-box').classList.remove('hidden')); }
 })();
-function joinViaUrl() { if (!pendingRoomCode) return; document.getElementById('room-code-input').value = pendingRoomCode; uiShowJoinRoom(); manualJoinRoom(); }
+function joinViaUrl() {
+    if (!localStorage.getItem('solmates_nickname')) { openProfileModal(); return; } if (!pendingRoomCode) return; document.getElementById('room-code-input').value = pendingRoomCode; uiShowJoinRoom(); manualJoinRoom(); }
 
 // ---------- Peer setup ----------
 function initPeer(onOpen, onFail) {

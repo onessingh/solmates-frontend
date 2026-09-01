@@ -1,4 +1,4 @@
-﻿// Firebase Multiplayer Engine (Replaces PeerJS)
+// Firebase Multiplayer Engine (Replaces PeerJS)
 // v390: goOffline removed, role detection fixed, stateVersion added, syncId added
 
 if (!window.firebase || !window.firebase.apps.length) {
@@ -423,7 +423,7 @@ window.Peer = class Peer {
                 // Dynamic threshold: 120s for lobby (host is often just away sharing the invite
                 // link and can take up to ~a minute to come back), 15s for an in-progress game
                 // (guests should recover/migrate quickly once gameplay has started).
-                const disconnectThreshold = isStarted ? 15000 : 120000;
+                const disconnectThreshold = isStarted ? 15000 : 40000;
 
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
                 if (elapsed > disconnectThreshold) {
