@@ -514,7 +514,7 @@ function startGame() {
     gameState.questions = shuffled;
     players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; });
     gameState.qIndex = -1;
-    gameState.gameStarted = true;
+    gameState.gameStarted = true; window._solmatesGameStarted = true;
     
     gameState.syncing = true;
     gameState.readyPlayers = new Set([myId]);
@@ -567,7 +567,7 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
     if (!gameState.gameStarted) {
         let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
         console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
-        gameState.gameStarted = true;
+        gameState.gameStarted = true; window._solmatesGameStarted = true;
         hideAllScreens();
         document.getElementById('screen-game').classList.remove('hidden');
         if (!gameState.questions && sourceData.questions) {

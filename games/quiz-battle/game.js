@@ -587,7 +587,7 @@ function copyInviteLink() {
 // Game Logic
 function startGame() {
     if(!isHost) return;
-    roomState.gameStarted = true;
+    roomState.gameStarted = true; window._solmatesGameStarted = true;
     
     // Use the pool that was already built in createRoom()
     let finalPool = roomState.pool || [];
@@ -661,7 +661,7 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
     if (!roomState.gameStarted) {
         let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
         console.log('[MP QUESTION RECOVERY] gameStarted before=false gameStarted after=true hostConn.open=' + hOpen);
-        roomState.gameStarted = true;
+        roomState.gameStarted = true; window._solmatesGameStarted = true;
         hideAllScreens();
         document.getElementById('screen-game').classList.remove('hidden');
         if (!roomState.backupQuestions && sourceData.questions) {

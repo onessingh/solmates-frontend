@@ -87,7 +87,7 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
     // "the game was never started" and shows the wrong "room closed" message instead of
     // attempting a real host migration.
     if (!gameState.gameStarted) {
-        gameState.gameStarted = true;
+        gameState.gameStarted = true; window._solmatesGameStarted = true;
         hideAllScreens();
         document.getElementById('screen-game').classList.remove('hidden');
     }
@@ -519,7 +519,7 @@ function handleGuestData(data) {
         return;
     }
     if (data.type === 'LOBBY_UPDATE') { players = data.players; gameState.topic = data.topic; document.getElementById('lobby-topic').textContent = `${data.topic} Case Study`; renderPlayers(); }
-    if (data.type === 'START_GAME') { enterGameFromAuthoritativeState(data, 'START_GAME'); window.SolmatesSync.hide(); gameState.gameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }
+    if (data.type === 'START_GAME') { enterGameFromAuthoritativeState(data, 'START_GAME'); window.SolmatesSync.hide(); gameState.gameStarted = true; window._solmatesGameStarted = true; gameState.scores = {}; gameState.correctCounts = {}; players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; }); if (data.caseData) { gameState.caseData = data.caseData; if (!gameState.readPhaseStarted) { gameState.readPhaseStarted = true; startReadPhase(); } } /* else: wait for BACKUP_CASE_DATA */ }
     if (data.type === 'BACKUP_CASE_DATA') { if (data.caseData && !gameState.readPhaseStarted) { gameState.readPhaseStarted = true; gameState.caseData = data.caseData; startReadPhase(); } }
     if (data.type === 'READ_CASE') { enterGameFromAuthoritativeState(data, 'READ_CASE_RECOVERY'); gameState.caseData = data.caseData; startReadPhase(); }
       if (data.type === 'READY_STATUS') { updateReadyStatus(data.readyCount, data.total); }
@@ -533,7 +533,7 @@ function startGame() {
     if (!isHost) return;
     players.forEach(p => { gameState.scores[p.id] = 0; gameState.correctCounts[p.id] = 0; gameState.readStatus[p.id] = false; });
     gameState.qIndex = -1;
-    gameState.gameStarted = true;
+    gameState.gameStarted = true; window._solmatesGameStarted = true;
     gameState.readPhaseStarted = true; // Host resets immediately
     
     gameState.syncing = true;

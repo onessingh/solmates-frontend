@@ -133,7 +133,7 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
     // "the game was never started" and shows the wrong "room closed" message instead of
     // attempting a real host migration.
     if (!gameState.gameStarted) {
-        gameState.gameStarted = true;
+        gameState.gameStarted = true; window._solmatesGameStarted = true;
         hideAllScreens();
         document.getElementById('screen-game').classList.remove('hidden');
     }
@@ -408,7 +408,7 @@ function handleGuestData(data) {
         hostConn.send({ type: 'SYNC_READY', id: myId });
         return;
     }
-    if (data.type === 'START_ROUND') { enterGameFromAuthoritativeState(data, 'START_ROUND'); window.SolmatesSync.hide(); if (gameState.round !== data.round) { gameState.gameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
+    if (data.type === 'START_ROUND') { enterGameFromAuthoritativeState(data, 'START_ROUND'); window.SolmatesSync.hide(); if (gameState.round !== data.round) { gameState.gameStarted = true; window._solmatesGameStarted = true; gameState.round = data.round; myPitchSubmitted = false; pitches = {}; startPitchUI(data.challenge, data.round, gameState.totalRounds, gameState.timePerRound); } }
     if (data.type === 'SUBMIT_COLLECTED') { document.getElementById('waiting-for-others').querySelector('div').textContent = `${data.count} / ${data.total} submitted`; }
     if (data.type === 'JUDGING') { showJudging(); }
     if (data.type === 'ROUND_RESULTS') { gameState.scores = data.scores; gameState.correctCounts = data.correctCounts; gameState._pendingRound = data.round; gameState._pendingTotalRounds = data.totalRounds; }
@@ -449,7 +449,7 @@ function copyInviteLink() {
 function startGame() {
     if (!isHost) return;
     gameState.round = 0;
-    gameState.gameStarted = true;
+    gameState.gameStarted = true; window._solmatesGameStarted = true;
     
     gameState.syncing = true;
     gameState.readyPlayers = new Set([myId]);

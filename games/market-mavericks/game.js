@@ -126,7 +126,7 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
     // "the game was never started" and shows the wrong "room closed" message instead of
     // attempting a real host migration.
     if (!gameState.gameStarted) {
-        gameState.gameStarted = true;
+        gameState.gameStarted = true; window._solmatesGameStarted = true;
         hideAllScreens();
         document.getElementById('screen-game').classList.remove('hidden');
     }
@@ -396,7 +396,7 @@ function handleGuestData(data) {
         hostConn.send({ type: 'SYNC_READY', id: myId });
         return;
     }
-    if (data.type === 'START_EVENT') { enterGameFromAuthoritativeState(data, 'START_EVENT'); window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; gameState.gameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); }
+    if (data.type === 'START_EVENT') { enterGameFromAuthoritativeState(data, 'START_EVENT'); window.SolmatesSync.hide(); gameState.portfolios = data.portfolios; gameState.gameStarted = true; window._solmatesGameStarted = true; gameState.eventIndex = data.eventIndex; myTradeSubmitted = false; startEventUI(data.event, data.eventIndex); }
     if (data.type === 'TRADE_COUNT') { const el = document.getElementById('waiting-count'); if (el) el.textContent = `${data.count} / ${data.total} traded`; }
     if (data.type === 'EVENT_RESULT') { enterGameFromAuthoritativeState(data, 'EVENT_RESULT_RECOVERY'); gameState.portfolios = data.portfolios; gameState.correctCounts = data.correctCounts; showEventResult(data.event, data.change, data.results, data.eventIndex, data.totalEvents); }
     if (data.type === 'END_GAME') { showLeaderboard(); }
@@ -435,7 +435,7 @@ function copyInviteLink() {
 function startGame() {
     if (!isHost) return;
     gameState.eventIndex = 0;
-    gameState.gameStarted = true;
+    gameState.gameStarted = true; window._solmatesGameStarted = true;
     players.forEach(p => { gameState.portfolios[p.id] = STARTING_CASH; gameState.correctCounts[p.id] = 0; });
     
     gameState.syncing = true;
