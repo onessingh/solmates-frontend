@@ -2428,16 +2428,19 @@
 
     window.formatNoticeDescription = function(text) {
         if (!text) return 'New MBA notification found.';
-        // If it already contains HTML (from older Quill notices), return as is
         if (text.includes('<p>') || text.includes('<br>') || text.includes('<b>') || text.includes('href=')) {
             return text;
         }
         
         return text
-            .replace(/(^|\n)\*\s+(.*)/g, '$1• $2') // bullet points
-            .replace(/\*([^\*]+)\*/g, '<b>$1</b>') // bold
-            .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#0071e3; text-decoration:underline;">$1</a>') // links
-            .replace(/\n/g, '<br>'); // newlines
+            // Bullet points: lines starting with "* " become bullet points
+            .replace(/(^|\n)\*\s+(.*)/g, '$1&#8226; $2') 
+            // Bold: text wrapped in *asterisks* (Make sure font-weight is explicitly heavy)
+            .replace(/\*([^\*]+)\*/g, '<strong style="font-weight: 800; color: var(--text-main);">$1</strong>')
+            // Links: match http/https but EXCLUDE trailing brackets ] or parentheses )
+            .replace(/(https?:\/\/[^\s<\]\)]+)/g, '<a href="$1" target="_blank" style="color:#0071e3; text-decoration:underline; font-weight: 600;">$1</a>')
+            // Newlines to <br>
+            .replace(/\n/g, '<br>');
     };
 
 
