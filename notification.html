@@ -1797,6 +1797,9 @@
                   linkHtml = `<a href="${notice.link}" target="_blank" class="${btnClass}" onclick="${clickHandler}">${btnText}</a>`;
               }
           }
+          
+          const isNew = hasValidDate && (Date.now() - dateObj.getTime() < 24 * 60 * 60 * 1000) && (typeof seenIds !== 'undefined' ? !seenIds.includes(uniqueKey) : true);
+          const newBadge = isNew ? `<span class="new-badge">NEW</span>` : '';
 
           // [v111.9] SURGICAL SELECTION HARDENING: Prevent Touch-to-Search on prefix labels
           let formattedSubject = displaySubject;
