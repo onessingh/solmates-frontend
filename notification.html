@@ -1330,19 +1330,19 @@
   </div>
 
   <!-- Add Notice Modal -->
-  <div class="admin-modal" id="addNoticeModal">
+  <div class="admin-modal" id="addNoticeModal_DELETED">
     <div class="admin-modal-content">
       <button class="close-modal" onclick="closeAddNoticeModal()">&times;</button>
       <h2 id="modalTitle">Add Notification</h2>
-      <div class="modal-type-picker" id="modalTypePicker" style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <button type="button" class="type-btn active" id="typeNotice" onclick="setModalType('notice')">Notice</button>
+      <div class="modal-type-picker" id="modalTypePicker_DELETED" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button type="button" class="type-btn active" id="typeNotice_DELETED" onclick="setModalType('notice')">Notice</button>
         <button type="button" class="type-btn" id="typeClass" onclick="setModalType('class')">Live Class</button>
         <button type="button" class="type-btn" id="typeGreeting" onclick="setModalType('greeting')">Greeting</button>
       </div>
-      <form id="addNoticeForm">
+      <form id="addNoticeForm_DELETED">
         <div class="form-group">
           <label>Select Semester</label>
-          <select id="noticeSem">
+          <select id="noticeSem_DELETED">
             <option value="1">Semester 1</option>
             <option value="2">Semester 2</option>
             <option value="3">Semester 3</option>
@@ -1356,17 +1356,18 @@
         <div id="noticeFields">
           <div class="form-group">
             <label>Title</label>
-            <input type="text" id="noticeTitle" placeholder="e.g. Revised Exam Schedule">
+            <input type="text" id="noticeTitle_DELETED" placeholder="e.g. Revised Exam Schedule">
           </div>
 
 <div class="form-group">
           <label>Description (Optional / Auto-generated)</label>
           
+          <div id="postFields" style="display:none;">
           <!-- IMAGE UPLOAD -->
           <div class="form-group" style="margin-top:5px;">
             <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
-            <input type="file" id="noticeImageFile" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
-            <input type="hidden" id="noticeImageUrl">
+            <input type="file" id="noticeImageFile_DELETED" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
+            <input type="hidden" id="noticeImageUrl_DELETED">
             <p id="imageUploadStatus" style="font-size:12px; color:blue; margin-top:5px; display:none;">Uploading image...</p>
           </div>
           
@@ -1374,10 +1375,11 @@
           <!-- Description -->
           <div class="form-group" style="margin-top:5px;">
             <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
-            <textarea id="noticeDesc" rows="1" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
+            <textarea id="noticeDesc_DELETED" rows="1" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
           </div>
   
-        </div>
+        
+        </div></div>
         </div>
 
         <!-- Live Class Fields (Hidden by default) -->
@@ -1412,14 +1414,14 @@
 
         <div class="form-group" id="noticeLinkGroup">
           <label>Link (URL) - Optional, leave empty for "Coming Soon"</label>
-          <input type="url" id="noticeLink" placeholder="https://...">
+          <input type="url" id="noticeLink_DELETED" placeholder="https://...">
         </div>
         <div class="form-group">
           <label>Date (DD-MM-YYYY)</label>
-          <input type="text" id="noticeDate" placeholder="17-03-2026" required>
+          <input type="text" id="noticeDate_DELETED" placeholder="17-03-2026" required>
         </div>
         
-        <button type="button" class="submit-btn" id="addNoticeBtn" onclick="submitNoticeForm(event)">Add Notification V2</button>
+        <button type="button" class="submit-btn" id="addNoticeBtn_DELETED" onclick="submitNoticeForm(event)">Add Notification V2</button>
       </form>
     </div>
   </div>
@@ -1929,6 +1931,7 @@
                 <h3 class="subject-text" translate="no" style="word-break: break-word;">${formattedSubject}</h3>
                 
                 ${(!isLiveClass && (notice.description || notice.imageUrl)) ? `
+                  ${notice.isRichPost ? `
                   <div class="desc-wrapper" style="margin: 8px 0; font-size: 14px; color: var(--text-muted); word-break: break-word; overflow-wrap: anywhere; background: rgba(0,0,0,0.02); padding: 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
                     ${notice.imageUrl ? `<div class="expanded-image" style="display:none; margin-bottom:12px;"><img src="${notice.imageUrl}" style="width:100%; border-radius:12px; max-height:300px; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>` : ''}
                     <div class="desc-content" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5;">
@@ -1943,13 +1946,17 @@
                         event.stopPropagation();
                     " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:8px;">View More <i class="fas fa-chevron-down"></i></button>
                   </div>
+                ` : `
+                  ${notice.imageUrl ? `<img src="${notice.imageUrl}" style="width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;">` : ''}
+                  ${!isLiveClass ? `<div style="font-size:14px; margin: 4px 0 10px 0; color:var(--text-muted); word-wrap:break-word; line-height: 1.5;">${window.formatNoticeDescription(notice.description)}</div>` : ''}
+                `}
                 ` : ''}
 
                 <div class="meta-box" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
                   <div style="display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 13.5px;">
-                    ${dateHtml}
-                    ${timeHtml}
-                  </div>
+                      ${notice.isRichPost ? '' : dateHtml}
+                      ${timeHtml}
+                    </div>
                   ${linkHtml ? `<div style="margin-top: 8px; width: 100%;">${linkHtml}</div>` : ''}
                 </div>
                 <div class="admin-only admin-action-bar" style="display:none;">
@@ -2270,18 +2277,24 @@
       
       // Secondary fields (Hidden for Greetings)
       if (type === 'greeting') {
-          if (linkGroup) linkGroup.style.display = 'none';
-          if (dateGroup) dateGroup.style.display = 'none';
-          
-          submitBtn.textContent = 'Send Broadcast';
-          if (titleInput) titleInput.required = false;
-      } else {
-          if (linkGroup) linkGroup.style.display = 'block';
-          if (dateGroup) dateGroup.style.display = 'block';
-          
-          submitBtn.textContent = (type === 'notice') ? 'Add Notification' : 'Add Live Class';
-          if (titleInput) titleInput.required = (type === 'notice');
-      }
+            if (linkGroup) linkGroup.style.display = 'none';
+            if (dateGroup) dateGroup.style.display = 'none';
+            if (document.getElementById('postFields')) document.getElementById('postFields').style.display = 'none';
+            submitBtn.textContent = 'Send Broadcast';
+            if (titleInput) titleInput.required = false;
+        } else if (type === 'post') {
+            if (linkGroup) linkGroup.style.display = 'none';
+            if (dateGroup) dateGroup.style.display = 'none';
+            if (document.getElementById('postFields')) document.getElementById('postFields').style.display = 'block';
+            submitBtn.textContent = 'Add Community Post';
+            if (titleInput) titleInput.required = true;
+        } else {
+            if (linkGroup) linkGroup.style.display = 'block';
+            if (dateGroup) dateGroup.style.display = 'block';
+            if (document.getElementById('postFields')) document.getElementById('postFields').style.display = 'none';
+            submitBtn.textContent = (type === 'notice') ? 'Add Notification' : 'Add Live Class';
+            if (titleInput) titleInput.required = (type === 'notice');
+        }
     }
 
     function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
@@ -2494,7 +2507,11 @@
         const sem = document.getElementById('noticeSem').value;
         const rawLink = document.getElementById('noticeLink').value;
         const link = rawLink.trim() || '#pending';
-        const date = document.getElementById('noticeDate').value;
+        let date = document.getElementById('noticeDate').value;
+        
+        if (currentModalType === 'post' && !date) {
+            date = new Date().toISOString().split('T')[0];
+        }
         
         if (!date) { 
             alert("Please enter the Date!"); 
@@ -2529,7 +2546,7 @@
             return;
         }
   
-        if (currentModalType === 'notice') {
+        if (currentModalType === 'notice' || currentModalType === 'post') {
             const nTitle = document.getElementById('noticeTitle');
             if (nTitle) {
                 title = nTitle.value;
@@ -2559,7 +2576,7 @@
             if (manualDesc) description += " | " + manualDesc;
         }
   
-        const payload = { title, link, date, description, imageUrl };
+        const payload = { title, link, date, description, imageUrl, isRichPost: currentModalType === 'post' };
         submitBtn.textContent = editingNoticeId ? 'Updating...' : 'Adding...';
   
         let res;
@@ -3061,6 +3078,7 @@
       
       <div id="modalTypePicker" style="display:flex;  padding:5px; border-radius:12px; margin-bottom:20px;">
         <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:1;">Notification</button>
+        <button id="typePost" class="tab-btn" onclick="setModalType('post')" style="flex:1;">Post</button>
         <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:1;">Live Class</button>
       </div>
 
