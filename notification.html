@@ -2462,7 +2462,7 @@
       const link = rawLink.trim() || '#pending';
       const date = document.getElementById('noticeDate').value;
       
-      let title, description;
+      let title, description, imageUrl = document.getElementById('noticeImageUrl') ? document.getElementById('noticeImageUrl').value : '';
 
       // [v104.2] GREETING BROADCAST LOGIC
       if (currentModalType === 'greeting') {
