@@ -217,14 +217,14 @@
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
-            meta.setAttribute('content', 'light only');
+            meta.setAttribute('content', 'light dark');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             // Force light mode for new users to override OS dark mode in PWA status bar
-            meta.setAttribute('content', 'light only');
+            meta.setAttribute('content', 'light dark');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');

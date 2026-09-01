@@ -129,6 +129,28 @@
 
 
         .player-item { padding: 12px; border-radius: 8px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; background: #fff; color: #0f172a; margin-bottom: 8px; }
+
+        /* Player Profile modal — matches the /games/ hub's nickname card */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box {
+            background: var(--card-bg); padding: 32px; border-radius: 24px;
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); transform: translateY(20px); transition: transform 0.3s;
+        }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .modal-box input {
+            width: calc(100% - 32px); padding: 16px; margin: 16px 0; border-radius: 12px;
+            border: 1px solid #e2e8f0; font-size: 1rem; outline: none; transition: border 0.2s;
+            background: var(--primary); color: var(--text-main);
+        }
+        .modal-box input:focus { border-color: #0ea5e9; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; margin-bottom: 12px; display: none; }
 </style>
 
 
@@ -218,14 +240,14 @@
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
-            meta.setAttribute('content', 'light only');
+            meta.setAttribute('content', 'light dark');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             // Force light mode for new users to override OS dark mode in PWA status bar
-            meta.setAttribute('content', 'light only');
+            meta.setAttribute('content', 'light dark');
             if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
@@ -285,6 +307,19 @@
 </head>
 <body>
     <div id="toast-container"></div>
+
+    <!-- Player Profile modal — same card used on the /games/ hub, shown immediately for
+         first-time visitors (including those arriving straight from an invite link), not just
+         when they click Join. -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal-box">
+            <h2 style="margin: 0 0 8px 0; font-weight: 700;">Player Profile</h2>
+            <p style="color: var(--text-muted); margin: 0 0 16px 0; font-size: 0.9rem;">Set a nickname to play games</p>
+            <p class="error-msg" id="profanity-error">Please choose a clean and appropriate nickname.</p>
+            <input type="text" id="nickname-input" placeholder="Enter your nickname" maxlength="15" />
+            <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
+        </div>
+    </div>
 
     <div class="header-bar">
         <h1><i data-lucide="swords"></i> Quiz Battle</h1>
@@ -464,7 +499,7 @@
 
     <script src="/games/ai-game-connector.js"></script>
     <script src="/games/quiz-battle/data.js"></script>
-    <script src="/games/quiz-battle/game.js?v=95"></script>
+    <script src="/games/quiz-battle/game.js?v=96"></script>
     <script>
         lucide.createIcons();
         // Load nickname from local storage if exists
@@ -484,7 +519,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <!-- Firebase Multiplayer Engine (Mock PeerJS) -->
-    <script src="/games/firebase-multiplayer.js?v=95"></script>
+    <script src="/games/firebase-multiplayer.js?v=96"></script>
 </body>
 </html>
 

@@ -1,24 +1,42 @@
 
-const _badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
-
-function _validateName(name) {
-    if (!name) return { ok: false, error: 'Please enter a nickname.' };
-    if (/[*#$!^%~@?&]/.test(name)) return { ok: false, error: 'Characters like * # $ ! ^ % ~ @ ? & are not allowed.' };
-    let lower = name.toLowerCase().replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a');
-    if (_badWords.some(w => lower.includes(w))) return { ok: false, error: 'Please choose a clean and appropriate nickname.' };
-    if (name.length > 15) return { ok: false, error: 'Nickname must be 15 characters or less.' };
-    return { ok: true, name };
+// Player Profile modal — identical card/flow to the one on the /games/ hub, shown immediately
+// on page load for first-time visitors (including invite-link opens), not just when Join is
+// clicked. Uses the same shared profanity filter (/js/profanity.js) as the hub.
+function containsProfanity(text) {
+    if (window.solmatesCheckProfanity) return window.solmatesCheckProfanity(text);
+    return false;
 }
-
-// Reliable, in-page name prompt (used to be window.prompt(), which silently does nothing in
-// WhatsApp/Instagram-style in-app browsers — that's what made the "Join Invite Link Room" button
-// look dead for first-time users). Falls back to a generic name only if the modal itself can't
-// load for some reason.
-async function _askNickname() {
-    if (window.SolmatesModal && window.SolmatesModal.promptName) {
-        return await window.SolmatesModal.promptName("What's your name?", 'Other players will see this nickname.', _validateName);
+function hasInvalidChars(text) {
+    if (window.solmatesHasInvalidChars) return window.solmatesHasInvalidChars(text);
+    return /[*#$!^%~@?&]/.test(text);
+}
+function openProfileModal() {
+    document.getElementById('profile-modal').classList.add('active');
+    const saved = localStorage.getItem('solmates_nickname');
+    if (saved) document.getElementById('nickname-input').value = saved;
+}
+function saveProfile() {
+    const name = document.getElementById('nickname-input').value.trim();
+    const err = document.getElementById('profanity-error');
+    if (!name) { err.textContent = "Please enter a name."; err.style.display = 'block'; return; }
+    if (hasInvalidChars(name)) {
+        err.textContent = "Characters like * # $ ! ^ % ~ @ ? & are not allowed.";
+        err.style.display = 'block';
+        return;
     }
-    return "Player";
+    if (containsProfanity(name)) {
+        err.textContent = "Please choose a clean and appropriate nickname.";
+        err.style.display = 'block';
+        return;
+    }
+    err.style.display = 'none';
+    localStorage.setItem('solmates_nickname', name);
+    myName = name;
+    const welcomeName = document.getElementById('welcome-name');
+    const welcomeAvatar = document.getElementById('welcome-avatar');
+    if (welcomeName) welcomeName.textContent = name;
+    if (welcomeAvatar) welcomeAvatar.textContent = name.charAt(0).toUpperCase();
+    document.getElementById('profile-modal').classList.remove('active');
 }
 
 // State variables
@@ -42,41 +60,27 @@ let timeRemaining = 15;
 let answered = false;
 let currentSettings = "";
 
+// Force the profile modal open immediately if there's no saved nickname yet — this covers
+// someone opening an invite link directly, not just clicking Create/Join Room.
+if (!localStorage.getItem('solmates_nickname')) {
+    document.addEventListener('DOMContentLoaded', openProfileModal);
+}
+
 // UI Navigation
 function hideAllScreens() {
     document.querySelectorAll('.main-container > div').forEach(el => el.classList.add('hidden'));
 }
 function uiShowWelcome() { hideAllScreens(); document.getElementById('screen-welcome').classList.remove('hidden'); }
-async function uiShowCreateRoom() {
-    try {
-        myName = localStorage.getItem('solmates_nickname');
-        if(!myName) {
-            myName = await _askNickname();
-            if (!myName) return;
-            localStorage.setItem('solmates_nickname', myName);
-            document.getElementById('welcome-name').textContent = myName;
-            document.getElementById('welcome-avatar').textContent = myName.charAt(0).toUpperCase();
-        }
-    } catch(e) {
-        myName = "Player";
-    }
+function uiShowCreateRoom() {
+    myName = localStorage.getItem('solmates_nickname');
+    if (!myName) { openProfileModal(); return; }
     hideAllScreens();
     document.getElementById('screen-create').classList.remove('hidden');
     populateSemesters();
 }
-async function uiShowJoinRoom() {
-    try {
-        myName = localStorage.getItem('solmates_nickname');
-        if(!myName) {
-            myName = await _askNickname();
-            if (!myName) return;
-            localStorage.setItem('solmates_nickname', myName);
-            document.getElementById('welcome-name').textContent = myName;
-            document.getElementById('welcome-avatar').textContent = myName.charAt(0).toUpperCase();
-        }
-    } catch(e) {
-        myName = "Player";
-    }
+function uiShowJoinRoom() {
+    myName = localStorage.getItem('solmates_nickname');
+    if (!myName) { openProfileModal(); return; }
     hideAllScreens();
     document.getElementById('screen-join').classList.remove('hidden');
 }
@@ -368,20 +372,11 @@ async function createRoom() {
     });
 }
 
-async function joinViaUrl() {
-    // Ask for a nickname the same way Create/Join Room do, but through the reliable in-page
-    // modal (not window.prompt(), which is silently disabled in WhatsApp/Instagram-style
-    // in-app browsers — that's what used to make this button look completely dead).
-    try { myName = localStorage.getItem('solmates_nickname'); } catch(e) { myName = null; }
-    if (!myName) {
-        myName = await _askNickname();
-        if (!myName) return;
-        try {
-            localStorage.setItem('solmates_nickname', myName);
-            document.getElementById('welcome-name').textContent = myName;
-            document.getElementById('welcome-avatar').textContent = myName.charAt(0).toUpperCase();
-        } catch(e) {}
-    }
+function joinViaUrl() {
+    // By the time this runs, the Player Profile modal has already forced a nickname to be set
+    // on page load — but guard anyway in case someone dismissed it somehow.
+    myName = localStorage.getItem('solmates_nickname');
+    if (!myName) { openProfileModal(); return; }
     const url = new URL(window.location.href);
     const roomId = url.searchParams.get('room');
     if (!roomId) return;

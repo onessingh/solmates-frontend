@@ -101,7 +101,7 @@
                 document.documentElement.classList.add('dark');
                 if (darkStyle) darkStyle.setAttribute('media', 'screen');
             } else if (theme === 'light') {
-                meta.setAttribute('content', 'light only');
+                meta.setAttribute('content', 'light dark');
                 if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
                 document.documentElement.style.colorScheme = 'light';
                 document.documentElement.classList.remove('dark');
@@ -312,7 +312,7 @@
 </div>
 
 <script src="/games/ai-game-connector.js"></script>
-<script src="/games/shark-pitch/game.js?v=95"></script>
+<script src="/games/shark-pitch/game.js?v=96"></script>
 <script>
     lucide.createIcons();
     const savedName = localStorage.getItem('solmates_nickname');
@@ -331,7 +331,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <!-- Firebase Multiplayer Engine (Mock PeerJS) -->
-    <script src="/games/firebase-multiplayer.js?v=95"></script>
+    <script src="/games/firebase-multiplayer.js?v=96"></script>
 </body>
 </html>
 
