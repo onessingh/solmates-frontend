@@ -1309,123 +1309,6 @@
     <i class="fas fa-plus"></i>
   </button>
 
-  <!-- Admin Login Modal -->
-  <div class="admin-modal" id="adminModal">
-    <div class="admin-modal-content">
-      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
-      <h2>Admin Login</h2>
-      <form id="adminLoginForm">
-        <div class="form-group">
-          <label>Admin ID</label>
-          <input type="text" id="adminId" required>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="adminPassword" required autocomplete="current-password">
-        </div>
-        <div class="error-message" id="loginError"></div>
-        <button type="submit" class="login-btn">Login</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Add Notice Modal -->
-  <div class="admin-modal" id="addNoticeModal_DELETED">
-    <div class="admin-modal-content">
-      <button class="close-modal" onclick="closeAddNoticeModal()">&times;</button>
-      <h2 id="modalTitle">Add Notification</h2>
-      <div class="modal-type-picker" id="modalTypePicker_DELETED" style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <button type="button" class="type-btn active" id="typeNotice_DELETED" onclick="setModalType('notice')">Notice</button>
-        <button type="button" class="type-btn" id="typeClass" onclick="setModalType('class')">Live Class</button>
-        <button type="button" class="type-btn" id="typeGreeting" onclick="setModalType('greeting')">Greeting</button>
-      </div>
-      <form id="addNoticeForm_DELETED">
-        <div class="form-group">
-          <label>Select Semester</label>
-          <select id="noticeSem_DELETED">
-            <option value="1">Semester 1</option>
-            <option value="2">Semester 2</option>
-            <option value="3">Semester 3</option>
-            <option value="4">Semester 4</option>
-            <option value="0">General/Others</option>
-            <option value="all">All Semesters (Push Only)</option>
-          </select>
-        </div>
-
-        <!-- Standard Notice Fields -->
-        <div id="noticeFields">
-          <div class="form-group">
-            <label>Title</label>
-            <input type="text" id="noticeTitle_DELETED" placeholder="e.g. Revised Exam Schedule">
-          </div>
-
-<div class="form-group">
-          <label>Description (Optional / Auto-generated)</label>
-          
-          <div id="postFields" style="display:none;">
-          <!-- IMAGE UPLOAD -->
-          <div class="form-group" style="margin-top:5px;">
-            <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
-            <input type="file" id="noticeImageFile_DELETED" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
-            <input type="hidden" id="noticeImageUrl_DELETED">
-            <p id="imageUploadStatus" style="font-size:12px; color:blue; margin-top:5px; display:none;">Uploading image...</p>
-          </div>
-          
-          
-          <!-- Description -->
-          <div class="form-group" style="margin-top:5px;">
-            <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
-            <textarea id="noticeDesc_DELETED" rows="1" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
-          </div>
-  
-        
-        </div></div>
-        </div>
-
-        <!-- Live Class Fields (Hidden by default) -->
-        <div id="classFields" style="display: none;">
-          <div class="form-group">
-            <label>Subject / Class Name</label>
-            <input type="text" id="classSubject" placeholder="e.g. Marketing Management">
-          </div>
-          <div class="form-group" style="display: flex; gap: 10px;">
-            <div style="flex: 1;">
-              <label>Class Time</label>
-              <input type="text" id="classTime" placeholder="2:00 PM - 3:00 PM">
-            </div>
-            <div style="flex: 1;">
-              <label>Teacher (Optional)</label>
-              <input type="text" id="classTeacher" placeholder="Dr. Sharma">
-            </div>
-          </div>
-        </div>
-        
-        <!-- Greeting Fields (v104.2) -->
-        <div id="greetingFields" style="display: none;">
-          <div class="form-group">
-            <label>Push Title (Optional)</label>
-            <input type="text" id="greetingTitle" placeholder="e.g. Happy Diwali Students!">
-          </div>
-          <div class="form-group">
-            <label>Greeting Message (Will be sent as push notification)</label>
-            <textarea id="greetingMessage" placeholder="Type your message here..."></textarea>
-          </div>
-        </div>
-
-        <div class="form-group" id="noticeLinkGroup">
-          <label>Link (URL) - Optional, leave empty for "Coming Soon"</label>
-          <input type="url" id="noticeLink_DELETED" placeholder="https://...">
-        </div>
-        <div class="form-group">
-          <label>Date (DD-MM-YYYY)</label>
-          <input type="text" id="noticeDate_DELETED" placeholder="17-03-2026" required>
-        </div>
-        
-        <button type="button" class="submit-btn" id="addNoticeBtn_DELETED" onclick="submitNoticeForm(event)">Add Notification V2</button>
-      </form>
-    </div>
-  </div>
-
   <!-- config.js is already loaded with defer in <head>
 
   <meta name="theme-color" content="#ffffff">, not needed here -->
@@ -2265,13 +2148,19 @@
       const titleInput = document.getElementById('noticeTitle');
 
       // Reset actives
-      [noticeBtn, classBtn, greetingBtn].forEach(b => b.classList.remove('active'));
+      
+        const postBtn = document.getElementById('typePost');
+        if(noticeBtn) noticeBtn.classList.remove('active');
+        if(classBtn) classBtn.classList.remove('active');
+        if(greetingBtn) greetingBtn.classList.remove('active');
+        if(postBtn) postBtn.classList.remove('active');
+
       if (document.getElementById(`type${type.charAt(0).toUpperCase() + type.slice(1)}`)) {
           document.getElementById(`type${type.charAt(0).toUpperCase() + type.slice(1)}`).classList.add('active');
       }
 
       // Toggle Fields
-      noticeFields.style.display = (type === 'notice') ? 'block' : 'none';
+      noticeFields.style.display = (type === 'notice' || type === 'post') ? 'block' : 'none';
       classFields.style.display = (type === 'class') ? 'block' : 'none';
       greetingFields.style.display = (type === 'greeting') ? 'block' : 'none';
       
@@ -3077,9 +2966,10 @@
       <h2 id="modalTitle" style="margin-bottom:20px;">Add Notification</h2>
       
       <div id="modalTypePicker" style="display:flex;  padding:5px; border-radius:12px; margin-bottom:20px;">
-        <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:1;">Notification</button>
-        <button id="typePost" class="tab-btn" onclick="setModalType('post')" style="flex:1;">Post</button>
-        <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:1;">Live Class</button>
+        <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Notice</button>
+        <button id="typePost" class="tab-btn" onclick="setModalType('post')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Post</button>
+        <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Live Class</button>
+        <button id="typeGreeting" class="tab-btn" onclick="setModalType('greeting')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Greeting</button>
       </div>
 
       <form id="addNoticeForm">
@@ -3116,6 +3006,17 @@
           </div>
         </div>
 
+                <div id="greetingFields" style="display: none;">
+          <div class="form-group">
+            <label>Push Title (Optional)</label>
+            <input type="text" id="greetingTitle" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="e.g. Happy Diwali Students!">
+          </div>
+          <div class="form-group">
+            <label>Greeting Message (Will be sent as push notification)</label>
+            <textarea id="greetingMessage" rows="2" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type your message here..."></textarea>
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Attachment Link (Optional)</label>
           <input type="text" id="noticeLink" placeholder="Leave empty for #pending" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;">
@@ -3127,6 +3028,7 @@
         <div class="form-group">
           <label>Description (Optional for Classes)</label>
           
+          <div id="postFields" style="display:none;">
           <!-- IMAGE UPLOAD -->
           <div class="form-group" style="margin-top:5px;">
             <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
@@ -3141,6 +3043,7 @@
             <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
             <textarea id="noticeDesc" rows="1" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
           </div>
+        </div>
   
         </div>
 
