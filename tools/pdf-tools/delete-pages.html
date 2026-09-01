@@ -115,7 +115,7 @@
       const savedTheme = localStorage.getItem('solmates_theme');
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       
-      const applyDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      const applyDark = savedTheme === 'dark'; // Always default to light if no theme is saved
       
       if (applyDark) {
           document.documentElement.classList.add('dark');
