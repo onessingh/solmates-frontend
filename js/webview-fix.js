@@ -70,9 +70,11 @@
     document.head.appendChild(style);
   }
 
-  // Permission trigger on first interaction
+  // Permission trigger on first interaction (RESTRICTED TO TWA ONLY)
   ['click', 'touchstart'].forEach(evt => {
     window.addEventListener(evt, function() {
+      const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+      if (!isStandaloneApp) return;
       if (typeof Notification !== 'undefined' && Notification.permission === 'default' && typeof Notification.requestPermission === 'function') {
         Notification.requestPermission().catch(() => {});
       }
