@@ -5370,16 +5370,29 @@
 
         // Restored 5-second auto-prompt for TWA users
         setTimeout(async () => {
-          if (typeof Notification === 'undefined' || typeof Notification.requestPermission !== 'function') return;
-          // Only prompt if not already granted or denied
-          if (Notification.permission === 'default') {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted' && window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
-                    window.solmatesAPI.subscribeToPush();
-                }
-            } catch(e) {
-                console.warn('Auto-prompt blocked or failed:', e);
+          const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+          if (!isStandaloneApp) return; // Do NOT prompt in regular browser
+
+          // Try native Capacitor permission first if available
+          if (window.Capacitor && window.Capacitor.isNative) {
+             try { 
+                if (window.Capacitor.Plugins.PushNotifications) await window.Capacitor.Plugins.PushNotifications.requestPermissions(); 
+                else if (window.Capacitor.Plugins.LocalNotifications) await window.Capacitor.Plugins.LocalNotifications.requestPermissions(); 
+             } catch(e){}
+          } 
+          
+          // Fallback to Web Push for TWA
+          if (typeof Notification !== 'undefined' && typeof Notification.requestPermission === 'function') {
+            // Only prompt if not already granted or denied
+            if (Notification.permission === 'default') {
+              try {
+                  const permission = await Notification.requestPermission();
+                  if (permission === 'granted' && window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+                      window.solmatesAPI.subscribeToPush();
+                  }
+              } catch(e) {
+                  console.warn('Auto-prompt blocked or failed:', e);
+              }
             }
           }
         }, 5000);

@@ -2969,7 +2969,7 @@
         const btn = document.getElementById('notifyToggleBtn');
         if (!btn) return;
 
-        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || document.referrer.includes('android-app');
+        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
         if (!isStandaloneApp) {
             btn.style.display = 'none';
             return;
@@ -3020,7 +3020,7 @@
     }
 
     function checkSoftPromptAvailability() {
-        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || document.referrer.includes('android-app');
+        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
         
         if (!isStandaloneApp) return;
 
