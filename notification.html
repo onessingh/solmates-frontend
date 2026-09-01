@@ -999,15 +999,17 @@
       }
 
       .content-box h3 {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
-        line-height: 1.18;
-        margin-bottom: 6px;
+        line-height: 1.22;
+        letter-spacing: normal;
+        margin-bottom: 8px;
       }
 
       .notice-category-text {
-        font-size: 16px;
-        margin: 2px 0 8px 0;
+        font-size: 17px;
+        font-weight: 500;
+        margin: 0 0 10px 0;
       }
 
       .meta-box {
@@ -1015,8 +1017,9 @@
       }
 
       .notice-date-badge {
-        font-size: 14px;
+        font-size: 17px;
         font-weight: 500;
+        word-spacing: 2px;
       }
 
       .view-btn-wrapper {
@@ -1315,6 +1318,19 @@
         color: var(--text-main) !important;
         border-color: var(--border-color) !important;
       }
+      .notification-card {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+      }
+      .notification-card:hover {
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3) !important;
+      }
+      /* Document icon container - remove the bright light-mode glow/outline */
+      .icon-box {
+        background: rgba(248, 250, 252, 0.06) !important;
+        border: 1px solid rgba(248, 250, 252, 0.12) !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+      }
       /* Tabs container - dark mode visibility fix */
       .tabs {
         background: var(--bg-card) !important;
@@ -1341,10 +1357,15 @@
         background: var(--brand-primary) !important;
         color: var(--bg-body) !important;
       }
-      .card-btn, .view-btn, .all-sem-label, .type-btn.active {
+      .card-btn, .all-sem-label, .type-btn.active {
         background: var(--bg-card-hover) !important;
         color: var(--text-main) !important;
         border-color: var(--border-color) !important;
+      }
+      .view-btn:not(.join-btn) {
+        background: rgba(248, 250, 252, 0.08) !important;
+        color: var(--text-main) !important;
+        border: 1px solid rgba(248, 250, 252, 0.16) !important;
       }
       .view-btn.join-btn {
         background: linear-gradient(135deg, #28C76F 0%, #0396FF 100%) !important;
