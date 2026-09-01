@@ -1,27 +1,24 @@
 
 const _badWords = ['fuck', 'shit', 'bitch', 'asshole', 'sex', 'porn', 'dick', 'pussy', 'slut', 'whore', 'cunt', 'bastard', 'chutiya', 'madarchod', 'bhenchod', 'behenchod', 'bhenchodd', 'bsdk', 'bhosdike', 'bhosdi', 'randi', 'raand', 'gandu', 'gand', 'gaand', 'jhant', 'jhantu', 'kutta', 'kamina', 'harami', 'lover', 'fucker', 'motherfucker', 'bc', 'mc', '4uck', 'suck', 'xxx', 'xnxx', 'hamster', 'lund', 'lauda', 'lawda', 'lodu', 'loda', 'chod', 'chodu', 'mother', 'father', 'nude', 'naked', 'boobs', 'tits', 'booty', 'ass'];
 
-function _safePrompt() {
-    let name = "";
-    while(true) {
-        name = prompt("Please enter your nickname:");
-        if (!name) return null;
-        name = name.trim();
-        if (/[*#$!^%~@?&]/.test(name)) {
-            alert("Characters like * # $ ! ^ % ~ @ ? & are not allowed.");
-            continue;
-        }
-        let lower = name.toLowerCase().replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a');
-        if (_badWords.some(w => lower.includes(w))) {
-            alert("Please choose a clean and appropriate nickname.");
-            continue;
-        }
-        if (name.length > 15) {
-            alert("Nickname must be 15 characters or less.");
-            continue;
-        }
-        return name;
+function _validateName(name) {
+    if (!name) return { ok: false, error: 'Please enter a nickname.' };
+    if (/[*#$!^%~@?&]/.test(name)) return { ok: false, error: 'Characters like * # $ ! ^ % ~ @ ? & are not allowed.' };
+    let lower = name.toLowerCase().replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/@/g, 'a');
+    if (_badWords.some(w => lower.includes(w))) return { ok: false, error: 'Please choose a clean and appropriate nickname.' };
+    if (name.length > 15) return { ok: false, error: 'Nickname must be 15 characters or less.' };
+    return { ok: true, name };
+}
+
+// Reliable, in-page name prompt (used to be window.prompt(), which silently does nothing in
+// WhatsApp/Instagram-style in-app browsers — that's what made the "Join Invite Link Room" button
+// look dead for first-time users). Falls back to a generic name only if the modal itself can't
+// load for some reason.
+async function _askNickname() {
+    if (window.SolmatesModal && window.SolmatesModal.promptName) {
+        return await window.SolmatesModal.promptName("What's your name?", 'Other players will see this nickname.', _validateName);
     }
+    return "Player";
 }
 
 // State variables
@@ -50,11 +47,11 @@ function hideAllScreens() {
     document.querySelectorAll('.main-container > div').forEach(el => el.classList.add('hidden'));
 }
 function uiShowWelcome() { hideAllScreens(); document.getElementById('screen-welcome').classList.remove('hidden'); }
-function uiShowCreateRoom() {
+async function uiShowCreateRoom() {
     try {
         myName = localStorage.getItem('solmates_nickname');
         if(!myName) {
-            myName = _safePrompt();
+            myName = await _askNickname();
             if (!myName) return;
             localStorage.setItem('solmates_nickname', myName);
             document.getElementById('welcome-name').textContent = myName;
@@ -67,11 +64,11 @@ function uiShowCreateRoom() {
     document.getElementById('screen-create').classList.remove('hidden');
     populateSemesters();
 }
-function uiShowJoinRoom() {
+async function uiShowJoinRoom() {
     try {
         myName = localStorage.getItem('solmates_nickname');
         if(!myName) {
-            myName = _safePrompt();
+            myName = await _askNickname();
             if (!myName) return;
             localStorage.setItem('solmates_nickname', myName);
             document.getElementById('welcome-name').textContent = myName;
@@ -371,18 +368,26 @@ async function createRoom() {
     });
 }
 
-function joinViaUrl() {
-    // Match the other games: never block on a native prompt() here. Invite links are most
-    // often opened from an in-app browser (WhatsApp/Instagram/etc.) where prompt() is silently
-    // disabled, which used to make this button appear completely dead. Fall back to the saved
-    // nickname, or a generic default — the same behavior as Shark Pitch/Rapid Fire/etc.
-    try { myName = localStorage.getItem('solmates_nickname') || myName || "Player"; } catch(e) { myName = myName || "Player"; }
+async function joinViaUrl() {
+    // Ask for a nickname the same way Create/Join Room do, but through the reliable in-page
+    // modal (not window.prompt(), which is silently disabled in WhatsApp/Instagram-style
+    // in-app browsers — that's what used to make this button look completely dead).
+    try { myName = localStorage.getItem('solmates_nickname'); } catch(e) { myName = null; }
+    if (!myName) {
+        myName = await _askNickname();
+        if (!myName) return;
+        try {
+            localStorage.setItem('solmates_nickname', myName);
+            document.getElementById('welcome-name').textContent = myName;
+            document.getElementById('welcome-avatar').textContent = myName.charAt(0).toUpperCase();
+        } catch(e) {}
+    }
     const url = new URL(window.location.href);
     const roomId = url.searchParams.get('room');
     if (!roomId) return;
     // Route through the join screen + manualJoinRoom() flow the other games use (so the
-    // "Connecting..." status text shows), but skip uiShowJoinRoom()'s own name-prompt logic —
-    // it would re-check localStorage and pop a blocking prompt() again, undoing the fallback above.
+    // "Connecting..." status text shows), skipping uiShowJoinRoom()'s own name-prompt logic
+    // since we've already resolved the name above.
     document.getElementById('room-code-input').value = roomId;
     hideAllScreens();
     document.getElementById('screen-join').classList.remove('hidden');
@@ -900,9 +905,16 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
-    // Bug3: pool fallback if backupQuestions missing in 300ms gap
-    if (!roomState.backupQuestions && roomState.pool && roomState.pool.length > 0) {
-        roomState.backupQuestions = roomState.pool.slice(0, roomState.maxQs || 10);
+    // Be tolerant about where the question set comes from — backupQuestions is set from several
+    // broadcast paths already, but if for any reason it never arrived, fall back to whatever
+    // question set we actually have (roomState.questions, populated as soon as the game started)
+    // rather than giving up and leaving the room stuck with no host.
+    if (!roomState.backupQuestions || roomState.backupQuestions.length === 0) {
+        if (roomState.questions && roomState.questions.length > 0) {
+            roomState.backupQuestions = roomState.questions;
+        } else if (roomState.pool && roomState.pool.length > 0) {
+            roomState.backupQuestions = roomState.pool.slice(0, roomState.maxQs || 10);
+        }
     }
     if (!roomState.backupQuestions || roomState.backupQuestions.length === 0) {
         if (typeof showToast === 'function') showToast('Host left - no question data.');

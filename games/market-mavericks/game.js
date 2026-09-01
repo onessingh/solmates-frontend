@@ -71,7 +71,15 @@ function enterGameFromAuthoritativeState(sourceData, sourceName) {
         console.log('[MP RECONNECTING CLEARED]');
     }
     
-    // Do NOT set gameState.gameStarted here. Handlers own that state + guard conditions.
+    // Whichever message got the guest back into a live game state, make sure gameStarted
+    // actually reflects that — otherwise a host disconnect later can be mistaken for
+    // "the game was never started" and shows the wrong "room closed" message instead of
+    // attempting a real host migration.
+    if (!gameState.gameStarted) {
+        gameState.gameStarted = true;
+        hideAllScreens();
+        document.getElementById('screen-game').classList.remove('hidden');
+    }
     let hOpen = (typeof hostConn !== 'undefined' && hostConn) ? hostConn.open : false;
     console.log('[MP QUESTION RECOVERY] source=' + sourceName + ' hostConn.open=' + hOpen);
 }

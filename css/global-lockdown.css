@@ -4,6 +4,10 @@
  */
 
 /* 1. Remove native browser highlights and system tools */
+:root {
+  color-scheme: light dark;
+}
+
 * {
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;

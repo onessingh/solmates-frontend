@@ -65,6 +65,16 @@ window.SolmatesModal = {
                 cursor: pointer; background: #3b82f6; color: white; transition: opacity .15s ease;
             }
             #sol-modal-ok:hover { opacity: 0.88; }
+            #sol-modal-input {
+                width: 100%; box-sizing: border-box; margin: 4px 0 4px; padding: 11px 14px;
+                border-radius: 10px; font-size: 14px; font-family: Inter, sans-serif;
+                border: 1.5px solid rgba(15, 23, 42, 0.14); background: #f8fafc; color: #0f172a;
+                outline: none; transition: border-color .15s ease;
+            }
+            #sol-modal-input:focus { border-color: #3b82f6; }
+            html.dark #sol-modal-input { background: #0f172a; color: #f1f5f9; border-color: rgba(255,255,255,0.14); }
+            #sol-modal-error { display: none; color: #dc2626; font-size: 12px; margin: 2px 0 10px; text-align: left; }
+            html.dark #sol-modal-error { color: #f87171; }
         `;
         document.head.appendChild(style);
     },
@@ -86,6 +96,46 @@ window.SolmatesModal = {
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
         overlay.querySelector('#sol-modal-ok').addEventListener('click', close);
         requestAnimationFrame(() => overlay.classList.add('sol-modal-show'));
+    },
+    // Reliable, in-page replacement for prompt() — works inside WhatsApp/Instagram in-app
+    // browsers and other webviews where window.prompt() is silently disabled. `validate(name)`
+    // should return { ok: true, name } or { ok: false, error }. Resolves to the accepted name,
+    // or null if the user dismisses the modal without entering one.
+    promptName: function(title, message, validate) {
+        this._ensureStyles();
+        return new Promise((resolve) => {
+            let overlay = document.getElementById('sol-modal-overlay');
+            if (overlay) overlay.remove();
+            overlay = document.createElement('div');
+            overlay.id = 'sol-modal-overlay';
+            overlay.innerHTML = `
+                <div id="sol-modal-card">
+                    <div id="sol-modal-icon">&#128075;</div>
+                    <h3 id="sol-modal-title" style="color:#0f172a;">${title || "What's your name?"}</h3>
+                    <p id="sol-modal-msg">${message || 'Other players will see this nickname.'}</p>
+                    <input id="sol-modal-input" type="text" maxlength="20" placeholder="Enter your nickname" autocomplete="off">
+                    <p id="sol-modal-error"></p>
+                    <button id="sol-modal-ok">Continue</button>
+                </div>`;
+            document.body.appendChild(overlay);
+            const titleEl = overlay.querySelector('#sol-modal-title');
+            titleEl.style.color = '';
+            const input = overlay.querySelector('#sol-modal-input');
+            const errorEl = overlay.querySelector('#sol-modal-error');
+            let resolved = false;
+            const finish = (val) => { if (resolved) return; resolved = true; close(); resolve(val); };
+            const close = () => { overlay.classList.remove('sol-modal-show'); setTimeout(() => overlay.remove(), 180); };
+            const submit = () => {
+                const val = input.value.trim();
+                const result = validate ? validate(val) : (val ? { ok: true, name: val } : { ok: false, error: 'Please enter a name.' });
+                if (!result.ok) { errorEl.textContent = result.error || 'Please enter a valid name.'; errorEl.style.display = 'block'; return; }
+                finish(result.name);
+            };
+            overlay.querySelector('#sol-modal-ok').addEventListener('click', submit);
+            input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) finish(null); });
+            requestAnimationFrame(() => { overlay.classList.add('sol-modal-show'); input.focus(); });
+        });
     }
 };
 
@@ -208,10 +258,19 @@ window.Peer = class Peer {
         await db.ref('solmates-rooms/' + this.id + '/active').set(true);
         await db.ref('solmates-rooms/' + this.id + '/timestamp').set(firebase.database.ServerValue.TIMESTAMP);
         const hostPresenceRef = db.ref('solmates-rooms/' + this.id + '/hostDisconnectedAt');
+        // Guard against overlapping invocations: page load can cause the underlying socket to
+        // reconnect once or twice in quick succession (extensions, DNS/TLS hiccups, dev tools),
+        // firing '.info/connected' several times right at startup. Without this guard an older,
+        // still-in-flight invocation could race with a newer one and leave a stale
+        // hostDisconnectedAt behind even though the host is actually online — which is what made
+        // guests briefly see a false "Host reconnecting..." banner right after joining.
+        let connGen = 0;
         db.ref('.info/connected').on('value', async snap => {
+            const gen = ++connGen;
             if (snap.val() === true) {
                 this._fire('network_state', { online: true });
                 await hostPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+                if (gen !== connGen) return; // a newer connection event has already superseded this one
                 await hostPresenceRef.remove();
                 if (this._lastGameStartPayload) {
                     db.ref('solmates-rooms/' + this.id + '/gameState').set({ ...this._lastGameStartPayload, ts: Date.now() });
@@ -373,14 +432,17 @@ window.Peer = class Peer {
                         disconnectFired = true;
                     }
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(300000 - elapsed, 10000)));
-                } else if (elapsed > 6000) {
+                } else if (elapsed > 12000) {
                     earlyFired = true;
                     const secondsLeft = Math.max(1, Math.ceil((disconnectThreshold - elapsed) / 1000));
                     if (conn._handlers.host_disconnect_early) conn._handlers.host_disconnect_early.forEach(cb => cb(secondsLeft));
                     // Keep ticking the countdown once a second while in this band.
                     disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), 1000));
                 } else {
-                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(6000 - elapsed, 1000)));
+                    // Below 12s: don't show anything yet. Most disconnect blips at this point are
+                    // just the socket briefly reconnecting during page load/network hiccups, and
+                    // self-correct within a couple seconds — no need to alarm the guest for those.
+                    disconnectTimers.push(setTimeout(() => evalHostDisconnect(disconnectTime), Math.max(12000 - elapsed, 1000)));
                 }
             };
             const hostDisconnectedRef = db.ref('solmates-rooms/' + hostId + '/hostDisconnectedAt');
@@ -509,11 +571,38 @@ window.SolmatesAlert = {
 };
 
 window.SolmatesSync = {
+    _ensureStyles: function() {
+        if (document.getElementById('sol-sync-styles')) return;
+        const style = document.createElement('style');
+        style.id = 'sol-sync-styles';
+        style.textContent = `
+            @keyframes sol-spin { 100% { transform: rotate(360deg); } }
+            #sol-sync-overlay {
+                position: fixed; inset: 0; z-index: 999999;
+                background: rgba(248, 250, 252, 0.97);
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                font-family: Inter, sans-serif;
+            }
+            html.dark #sol-sync-overlay { background: rgba(2, 6, 23, 0.97); }
+            #sol-sync-spinner {
+                width: 60px; height: 60px; border-radius: 50%;
+                border: 5px solid #e2e8f0; border-top-color: #0ea5e9;
+                animation: sol-spin 1s linear infinite;
+            }
+            html.dark #sol-sync-spinner { border-color: #334155; border-top-color: #38bdf8; }
+            #sol-sync-title { margin-top: 24px; font-size: 24px; font-weight: 700; color: #0f172a; text-align: center; }
+            html.dark #sol-sync-title { color: #f1f5f9; }
+            #sol-sync-text { margin-top: 12px; font-size: 16px; color: #64748b; text-align: center; }
+            html.dark #sol-sync-text { color: #94a3b8; }
+        `;
+        document.head.appendChild(style);
+    },
     show: function(msg) {
+        this._ensureStyles();
         let el = document.getElementById('sol-sync-overlay');
-        if (!el) { el = document.createElement('div'); el.id = 'sol-sync-overlay'; el.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Inter,sans-serif;'; document.body.appendChild(el); }
+        if (!el) { el = document.createElement('div'); el.id = 'sol-sync-overlay'; document.body.appendChild(el); }
         el.style.display = 'flex';
-        el.innerHTML = '<div style="width:60px;height:60px;border:5px solid #e2e8f0;border-top-color:#0ea5e9;border-radius:50%;animation:sol-spin 1s linear infinite;"></div><h2 style="margin-top:24px;font-size:24px;font-weight:700;color:#0f172a;text-align:center;">Starting Game</h2><p id="sol-sync-text" style="margin-top:12px;font-size:16px;color:#64748b;text-align:center;">' + msg + '</p><style>@keyframes sol-spin { 100% { transform: rotate(360deg); } }</style>';
+        el.innerHTML = '<div id="sol-sync-spinner"></div><h2 id="sol-sync-title">Starting Game</h2><p id="sol-sync-text">' + msg + '</p>';
     },
     update: function(msg) { let p = document.getElementById('sol-sync-text'); if (p) p.textContent = msg; },
     hide: function() { let el = document.getElementById('sol-sync-overlay'); if (el) el.style.display = 'none'; }
