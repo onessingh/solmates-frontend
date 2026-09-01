@@ -5368,8 +5368,21 @@
           }
         });
 
-        // Removed 5-second setTimeout auto-prompt to comply with mobile browser policies
-        // Users will now only subscribe via direct interaction (e.g. Bell icon on notification.html)
+        // Restored 5-second auto-prompt for TWA users
+        setTimeout(async () => {
+          if (typeof Notification === 'undefined' || typeof Notification.requestPermission !== 'function') return;
+          // Only prompt if not already granted or denied
+          if (Notification.permission === 'default') {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted' && window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+                    window.solmatesAPI.subscribeToPush();
+                }
+            } catch(e) {
+                console.warn('Auto-prompt blocked or failed:', e);
+            }
+          }
+        }, 5000);
         if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
           // Attempt silent token refresh for already subscribed users
           window.solmatesAPI.silentPushTokenRefresh();
