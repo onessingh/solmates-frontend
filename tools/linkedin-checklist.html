@@ -283,8 +283,8 @@
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (!theme) {
-            theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            localStorage.setItem('solmates_theme', theme);
+            theme = 'light';
+            localStorage.setItem('solmates_theme', 'light');
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');

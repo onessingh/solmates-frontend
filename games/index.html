@@ -620,8 +620,8 @@
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (!theme) {
-            theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            localStorage.setItem('solmates_theme', theme);
+            theme = 'light';
+            localStorage.setItem('solmates_theme', 'light');
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
@@ -797,7 +797,7 @@
             <p style="color: var(--text-muted); margin: 0 0 16px 0; font-size: 0.9rem;">Set a nickname to play games</p>
             <p class="error-msg" id="profanity-error">Please choose a clean and appropriate nickname.</p>
             <input type="text" id="nickname-input" placeholder="Enter your nickname" maxlength="15" />
-            <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
+            <button class="btn-primary" style="width: 100%; padding: 14px; font-weight: 600; margin-top: 8px;" onclick="saveProfile()">Save Profile</button>
         </div>
     </div>
 
