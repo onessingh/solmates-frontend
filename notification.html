@@ -2966,8 +2966,15 @@
 
     /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
         function updateNotifyUI() {
-      const btn = document.getElementById('notifyToggleBtn');
-      if (!btn) return;
+        const btn = document.getElementById('notifyToggleBtn');
+        if (!btn) return;
+
+        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || document.referrer.includes('android-app');
+        if (!isStandaloneApp) {
+            btn.style.display = 'none';
+            return;
+        }
+        btn.style.display = 'inline-flex';
 
       const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
       const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
@@ -3013,14 +3020,14 @@
     }
 
     function checkSoftPromptAvailability() {
-      const isNativeApp = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
-      
-      const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
-      const now = Date.now();
-      
-      // Allow banner if it's a native app (since we don't care about browser permission) OR if browser permission is default
-      if ((isNativeApp || perm === 'default') && (!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
+        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || document.referrer.includes('android-app');
+        
+        if (!isStandaloneApp) return;
+
+        const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
+        const now = Date.now();
+        
+        if ((!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
         setTimeout(() => {
           const banner = document.getElementById('soft-prompt-banner');
           if (banner) banner.classList.add('active');
