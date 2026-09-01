@@ -1753,6 +1753,7 @@
           const noticeId = notice.id || notice._id;
           const noticeLink = (notice.link || '').trim();
           const isPending = !noticeLink || noticeLink === '#pending' || noticeLink === '#';
+          const isRichPost = notice.isRichPost || noticeLink === '#richpost';
           const isLiveClass = isLiveCheck(notice);
 
           const isTimetable = String(notice.title).includes('[Timetable]');
@@ -1788,13 +1789,14 @@
           const dateHtml = (displayDate && displayDate !== 'None') ? `<span class="no-select-meta"><b class="no-select-meta">Date:</b> ${displayDate}</span>` : '';
           const timeHtml = displayTime ? `<span class="no-select-meta"><b class="no-select-meta">Schedule:</b> ${displayTime}</span>` : '';
           
-          const linkHtml = isPending 
-            ? `<button class="view-btn pending" disabled><i class="fas fa-clock"></i> Coming Soon...</button>`
-            : (notice.link && notice.link !== '#' && notice.link !== '#pending' && notice.link.startsWith('http'))
-              ? `<a href="${notice.link}" target="_blank" class="${btnClass}" onclick="${clickHandler}">${btnText}</a>`
-              : `<button class="${btnClass}" onclick="${clickHandler}; showNoticeDetail('${(notice.title||'').replace(/'/g,"\\'")}', '${(notice.description||notice.subtitle||'No additional details available.').replace(/'/g,"\\'")}', '${notice.date||''}')">${btnText}</button>`;
-          const isNew = hasValidDate && (Date.now() - dateObj.getTime() < 24 * 60 * 60 * 1000) && !seenIds.includes(uniqueKey);
-          const newBadge = isNew ? `<span class="new-badge">NEW</span>` : '';
+          let linkHtml = '';
+          if (!isRichPost) {
+              if (isPending) {
+                  linkHtml = `<button class="view-btn pending" disabled><i class="fas fa-clock"></i> Coming Soon...</button>`;
+              } else if (notice.link && notice.link !== '#' && notice.link !== '#pending' && notice.link !== '#richpost' && notice.link.startsWith('http')) {
+                  linkHtml = `<a href="${notice.link}" target="_blank" class="${btnClass}" onclick="${clickHandler}">${btnText}</a>`;
+              }
+          }
 
           // [v111.9] SURGICAL SELECTION HARDENING: Prevent Touch-to-Search on prefix labels
           let formattedSubject = displaySubject;
@@ -1814,7 +1816,7 @@
                 <h3 class="subject-text" translate="no" style="word-break: break-word;">${formattedSubject}</h3>
                 
                 ${(!isLiveClass && (notice.description || notice.imageUrl)) ? `
-                  ${notice.isRichPost ? `
+                  ${isRichPost ? `
                   <div class="desc-wrapper" style="margin: 8px 0; font-size: 14px; color: var(--text-muted); word-break: break-word; overflow-wrap: anywhere; background: rgba(0,0,0,0.02); padding: 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
                     ${notice.imageUrl ? `<div class="expanded-image" style="display:none; margin-bottom:12px;"><img src="${notice.imageUrl}" style="width:100%; border-radius:12px; max-height:300px; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>` : ''}
                     <div class="desc-content" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5;">
@@ -1837,7 +1839,7 @@
 
                 <div class="meta-box" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
                   <div style="display: flex; flex-direction: column; gap: 2px; color: var(--text-muted); font-size: 13.5px;">
-                      ${notice.isRichPost ? '' : dateHtml}
+                      ${isRichPost ? '' : dateHtml}
                       ${timeHtml}
                     </div>
                   ${linkHtml ? `<div style="margin-top: 8px; width: 100%;">${linkHtml}</div>` : ''}
@@ -2395,7 +2397,8 @@
     try {
         const sem = document.getElementById('noticeSem').value;
         const rawLink = document.getElementById('noticeLink').value;
-        const link = rawLink.trim() || '#pending';
+        let link = rawLink.trim() || '#pending';
+        if (currentModalType === 'post') link = '#richpost';
         let date = document.getElementById('noticeDate').value;
         
         if (currentModalType === 'post' && !date) {
