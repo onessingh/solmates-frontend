@@ -5352,8 +5352,14 @@
 
         if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
-        const swUrl = './sw.js?v=87';
+        const swUrl = './sw.js?v=92';
+        
+        // Force unregister old workers before registering new
+        const oldRegs = await navigator.serviceWorker.getRegistrations();
+        for(let r of oldRegs) { if(r.active && !r.active.scriptURL.includes('v=92')) await r.unregister(); }
         const registration = await navigator.serviceWorker.register(swUrl);
+        registration.update();
+        
         
         // [v116.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
         // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
