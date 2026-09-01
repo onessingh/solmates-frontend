@@ -2090,7 +2090,11 @@
           const noticeId = notice.id || notice._id;
           const noticeLink = (notice.link || '').trim();
           const isPending = !noticeLink || noticeLink === '#pending' || noticeLink === '#';
-          const isRichPost = notice.isRichPost || noticeLink === '#richpost';
+          const isRichPost = notice.isRichPost || noticeLink.startsWith('#richpost');
+          let finalImageUrl = notice.imageUrl || '';
+          if (noticeLink.startsWith('#richpost:')) {
+              finalImageUrl = noticeLink.substring('#richpost:'.length);
+          }
           const isLiveClass = isLiveCheck(notice);
 
           const isTimetable = String(notice.title).includes('[Timetable]');
@@ -2165,7 +2169,7 @@
                 ${isLiveClass ? `<div class="live-indicator"><span class="pulse-dot"></span> LIVE CLASS</div>` : ''}
                 <h3 class="subject-text" translate="no" style="word-break: break-word;">${formattedSubject}</h3>
                 
-                ${(!isLiveClass && (notice.description || notice.imageUrl)) ? `
+                ${(!isLiveClass && (notice.description || finalImageUrl)) ? `
                   ${isRichPost ? `
                   <div class="desc-wrapper" style="margin: 6px 0 0 0; font-size: 13.5px; color: var(--text-muted); word-break: break-word; overflow-wrap: anywhere; background: rgba(0,0,0,0.02); padding: 8px 10px 6px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
                     <div class="desc-content" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.45;">
@@ -2173,7 +2177,7 @@
                     </div>
                     <button type="button" class="view-more-btn"
                         data-modal-title="${escAttr(formattedSubject)}"
-                        data-modal-image="${escAttr(notice.imageUrl || '')}"
+                        data-modal-image="${escAttr(finalImageUrl || '')}"
                         data-modal-desc="${escAttr(window.formatNoticeDescription(notice.description))}"
                         data-modal-icon-class="${escAttr(iconClass)}"
                         data-modal-icon-bg="${escAttr(iconBg)}"
@@ -2182,7 +2186,7 @@
                         style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:2px;">View More <i class="fas fa-chevron-down"></i></button>
                   </div>
                 ` : `
-                  ${notice.imageUrl ? `<img src="${notice.imageUrl}" loading="lazy" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
+                  ${finalImageUrl ? `<img src="${finalImageUrl}" loading="lazy" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
                   ${!isLiveClass ? `<div class="notice-category-text" style="word-wrap:break-word;">${window.formatNoticeDescription(notice.description)}</div>` : ''}
                 `}
                 ` : ''}
@@ -2748,7 +2752,10 @@
         const sem = document.getElementById('noticeSem').value;
         const rawLink = document.getElementById('noticeLink').value;
         let link = rawLink.trim() || '#pending';
-        if (currentModalType === 'post') link = '#richpost';
+        if (currentModalType === 'post') {
+              link = '#richpost';
+              if (imageUrl) link += ':' + imageUrl;
+          }
         let date = document.getElementById('noticeDate').value;
         
         if (currentModalType === 'post' && !date) {
