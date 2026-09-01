@@ -68,7 +68,7 @@
         document.getElementById('solmates-install-btn').onclick = (e) => {
             e.stopPropagation();
             banner.remove();
-            window.location.href = '/solmates.apk?v=19';
+            window.location.href = '/solmates.apk?v=21';
         };
 
         // Hide when clicking outside
