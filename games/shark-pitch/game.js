@@ -187,7 +187,7 @@ function initPeer(onOpen, onFail) {
         }
     });
     let opened = false;
-    const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 12000);
+    const failTimer = setTimeout(() => { if (!opened) { showToast("Could not reach server."); if (onFail) onFail(); } }, 40000);
     peer.on('open', pid => { opened = true; clearTimeout(failTimer); myId = pid.replace(ROOM_PREFIX, '');
                     isMigrating = false; onOpen(myId); });
     peer.on('error', err => { if (!opened) { clearTimeout(failTimer); showToast("Connection error: " + err.type); if (onFail) onFail(); } });
@@ -323,7 +323,7 @@ function manualJoinRoom() {
             ]
         }
     });
-    const failTimer = setTimeout(() => showToast("Connection timed out."), 12000);
+    const failTimer = setTimeout(() => showToast("Connection timed out."), 40000);
 
     peer.on('open', () => {
         peer.on('disconnected', () => { console.log('Peer disconnected, reconnecting...'); peer.reconnect(); });
@@ -746,10 +746,13 @@ function migrateHost(hostId) {
     // We need firebase database reference
     const db = firebase.database();
     db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
-        if (currentData === null) return myId;
-        return; // Someone else claimed
+        const now = Date.now();
+        if (currentData === null || typeof currentData !== 'object' || (now - currentData.ts > 60000)) {
+            return { id: myId, ts: now };
+        }
+        return;
     }, (error, committed, snapshot) => {
-        if (committed && snapshot.val() === myId) {
+        if (committed && snapshot.val() && snapshot.val().id === myId) {
             isHost = true;
             
             let oldHostPlayer = players.find(p => p.id === hostId);
@@ -770,8 +773,6 @@ function migrateHost(hostId) {
                 gameState.scores[oldHostPlayer.id] = gameState.scores[hostId] || 0;
             }
             let myOldId = myId;
-            
-            if (peer) peer.destroy();
             
             setTimeout(() => {
                 // Re-init peer as host using the same room code
@@ -872,7 +873,7 @@ function manualJoinRoomReconnect(code) {
             ]
         }
     });
-    const failTimer = setTimeout(() => { statusEl.textContent = "Could not connect."; }, 12000);
+    const failTimer = setTimeout(() => { statusEl.textContent = "Could not connect."; }, 40000);
     peer.on('open', () => {
         hostConn = peer.connect(ROOM_PREFIX + code, { reliable: true });
         hostConn.on('open', () => {

@@ -935,10 +935,13 @@ function migrateHost(hostId) {
 
     const db = firebase.database();
     db.ref(`solmates-rooms/${hostId}/newHost`).transaction((currentData) => {
-        if (currentData === null) return myId;
-        return; // Someone else claimed
+        const now = Date.now();
+        if (currentData === null || typeof currentData !== 'object' || (now - currentData.ts > 60000)) {
+            return { id: myId, ts: now };
+        }
+        return;
     }, (error, committed, snapshot) => {
-        if (committed && snapshot.val() === myId) {
+        if (committed && snapshot.val() && snapshot.val().id === myId) {
             window.SolmatesHostStatus && window.SolmatesHostStatus.hide();
             // WE won the transaction â€” now safe to close hostConn
             if (hostConn) { hostConn.close(); hostConn = null; }
@@ -955,7 +958,6 @@ function migrateHost(hostId) {
             }
             let myOldId = myId;
 
-            if (peer) peer.destroy();
             setTimeout(() => {
                 initPeer((id) => {
                     let me = roomState.players.find(p => p.id === myOldId || p.name === myName);
