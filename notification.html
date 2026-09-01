@@ -1827,7 +1827,7 @@
                         if (img) img.style.display = 'block';
                         this.style.display='none'; 
                         event.stopPropagation();
-                    " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:8px;">View More <i class="fas fa-chevron-down"></i></button>
+                    " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:8px;">View Full Post <i class="fas fa-expand"></i></button>
                   </div>
                 ` : `
                   ${notice.imageUrl ? `<img src="${notice.imageUrl}" style="width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;">` : ''}
@@ -2966,10 +2966,10 @@
       <h2 id="modalTitle" style="margin-bottom:20px;">Add Notification</h2>
       
       <div id="modalTypePicker" style="display:flex;  padding:5px; border-radius:12px; margin-bottom:20px;">
-        <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Notice</button>
-        <button id="typePost" class="tab-btn" onclick="setModalType('post')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Post</button>
-        <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Live Class</button>
-        <button id="typeGreeting" class="tab-btn" onclick="setModalType('greeting')" style="flex:1; min-width:80px; padding:8px 5px; font-size:12px;">Greeting</button>
+        <button id="typeNotice" class="tab-btn active" onclick="setModalType('notice')" style="flex:0 0 auto; min-width:70px; padding:8px 10px; font-size:12px;">Notice</button>
+        <button id="typePost" class="tab-btn" onclick="setModalType('post')" style="flex:0 0 auto; min-width:70px; padding:8px 10px; font-size:12px;">Post</button>
+        <button id="typeClass" class="tab-btn" onclick="setModalType('class')" style="flex:0 0 auto; min-width:70px; padding:8px 10px; font-size:12px;">Live Class</button>
+        <button id="typeGreeting" class="tab-btn" onclick="setModalType('greeting')" style="flex:0 0 auto; min-width:70px; padding:8px 10px; font-size:12px;">Greeting</button>
       </div>
 
       <form id="addNoticeForm">
@@ -3017,7 +3017,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="noticeLinkGroup">
           <label>Attachment Link (Optional)</label>
           <input type="text" id="noticeLink" placeholder="Leave empty for #pending" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;">
         </div>
