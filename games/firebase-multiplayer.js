@@ -419,11 +419,15 @@ window.Peer = class Peer {
                 if (typeof gameState !== 'undefined' && gameState) isStarted = gameState.gameStarted;
                 else if (typeof roomState !== 'undefined' && roomState) isStarted = roomState.gameStarted;
                 else if (window._solmatesGameStarted) isStarted = true;
+                else {
+                    const screenGame = document.getElementById('screen-game');
+                    if (screenGame && !screenGame.classList.contains('hidden')) isStarted = true;
+                }
                 
                 // Dynamic threshold: 120s for lobby (host is often just away sharing the invite
                 // link and can take up to ~a minute to come back), 15s for an in-progress game
                 // (guests should recover/migrate quickly once gameplay has started).
-                const disconnectThreshold = isStarted ? 15000 : 40000;
+                const disconnectThreshold = isStarted ? 15000 : 120000;
 
                 if (elapsed > 300000) { conn._handlers.close.forEach(cb => cb()); inboxRef.off(); hostDisconnectedRef.off(); return; }
                 if (elapsed > disconnectThreshold) {
