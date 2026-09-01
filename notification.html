@@ -884,6 +884,20 @@
       box-shadow: 0 15px 35px rgba(40, 199, 111, 0.45);
     }
 
+    /* Category/subtitle text under the notice title (e.g. "Latest MBA Resource") */
+    .notice-category-text {
+      font-size: 14px;
+      margin: 4px 0 10px 0;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Wrapper around the View Details button, controls spacing above it */
+    .view-btn-wrapper {
+      margin-top: 8px;
+      width: 100%;
+    }
+
     .live-indicator {
       display: inline-flex;
       align-items: center;
@@ -972,13 +986,52 @@
       }
 
       .notification-card {
-        padding: 15px;
+        padding: 24px;
+        margin-bottom: 17px;
+        gap: 14px;
+        align-items: flex-start;
       }
 
       .icon-box {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+      }
+
+      .content-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.18;
+        margin-bottom: 6px;
+      }
+
+      .notice-category-text {
         font-size: 16px;
+        margin: 2px 0 8px 0;
+      }
+
+      .meta-box {
+        gap: 4px;
+      }
+
+      .notice-date-badge {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .view-btn-wrapper {
+        margin-top: 22px;
+      }
+
+      .view-btn {
+        height: 45px;
+        padding: 0 22px;
+        min-width: 200px;
+        max-width: 220px;
+        width: fit-content;
+        font-size: 17px;
+        font-weight: 700;
+        gap: 10px;
       }
     }
 
@@ -2011,7 +2064,17 @@
           const displaySubject = info.subject;
           const displayDate = info.date || notice.date;
 
-          const dateHtml = (displayDate && displayDate !== 'None') ? `<span class="no-select-meta"><b class="no-select-meta">Date:</b> ${displayDate}</span>` : '';
+          const formatMobileDate = (dObj, rawStr) => {
+            if (dObj instanceof Date && !isNaN(dObj.getTime())) {
+              const day = dObj.getDate();
+              const month = dObj.toLocaleString('en-US', { month: 'short' });
+              const year = dObj.getFullYear();
+              return `${day} ${month} ${year}`;
+            }
+            return rawStr;
+          };
+          const formattedDisplayDate = (displayDate && displayDate !== 'None') ? formatMobileDate(dateObj, displayDate) : '';
+          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">📅 ${formattedDisplayDate}</span>` : '';
           const timeHtml = displayTime ? `<span class="no-select-meta"><b class="no-select-meta">Schedule:</b> ${displayTime}</span>` : '';
           
           let linkHtml = '';
@@ -2061,7 +2124,7 @@
                   </div>
                 ` : `
                   ${notice.imageUrl ? `<img src="${notice.imageUrl}" loading="lazy" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
-                  ${!isLiveClass ? `<div style="font-size:14px; margin: 4px 0 10px 0; color:var(--text-muted); word-wrap:break-word; line-height: 1.5;">${window.formatNoticeDescription(notice.description)}</div>` : ''}
+                  ${!isLiveClass ? `<div class="notice-category-text" style="word-wrap:break-word;">${window.formatNoticeDescription(notice.description)}</div>` : ''}
                 `}
                 ` : ''}
 
@@ -2070,7 +2133,7 @@
                       ${isRichPost ? '' : dateHtml}
                       ${timeHtml}
                     </div>
-                  ${linkHtml ? `<div style="margin-top: 8px; width: 100%;">${linkHtml}</div>` : ''}
+                  ${linkHtml ? `<div class="view-btn-wrapper">${linkHtml}</div>` : ''}
                 </div>
                 <div class="admin-only admin-action-bar" style="display:none;">
                     <label class="notice-select-label" onclick="event.stopPropagation();">
