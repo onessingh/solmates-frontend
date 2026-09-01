@@ -3,6 +3,16 @@
 
 <head>
 
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      alert("GLOBAL ERROR: " + message + " at line " + lineno);
+    };
+    window.addEventListener("unhandledrejection", function(event) {
+      alert("PROMISE ERROR: " + (event.reason ? event.reason.message : "Unknown"));
+    });
+  </script>
+
+
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
@@ -1348,6 +1358,26 @@
             <label>Title</label>
             <input type="text" id="noticeTitle" placeholder="e.g. Revised Exam Schedule">
           </div>
+
+<div class="form-group">
+          <label>Description (Optional / Auto-generated)</label>
+          
+          <!-- IMAGE UPLOAD -->
+          <div class="form-group" style="margin-top:15px;">
+            <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
+            <input type="file" id="noticeImageFile" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
+            <input type="hidden" id="noticeImageUrl">
+            <p id="imageUploadStatus" style="font-size:12px; color:blue; margin-top:5px; display:none;">Uploading image...</p>
+          </div>
+          
+          
+          <!-- Description -->
+          <div class="form-group" style="margin-top:15px;">
+            <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
+            <textarea id="noticeDesc" rows="4" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
+          </div>
+  
+        </div>
         </div>
 
         <!-- Live Class Fields (Hidden by default) -->
@@ -1388,25 +1418,7 @@
           <label>Date (DD-MM-YYYY)</label>
           <input type="text" id="noticeDate" placeholder="17-03-2026" required>
         </div>
-        <div class="form-group">
-          <label>Description (Optional / Auto-generated)</label>
-          
-          <!-- IMAGE UPLOAD -->
-          <div class="form-group" style="margin-top:15px;">
-            <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
-            <input type="file" id="noticeImageFile" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
-            <input type="hidden" id="noticeImageUrl">
-            <p id="imageUploadStatus" style="font-size:12px; color:blue; margin-top:5px; display:none;">Uploading image...</p>
-          </div>
-          
-          
-          <!-- Description -->
-          <div class="form-group" style="margin-top:15px;">
-            <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
-            <textarea id="noticeDesc" rows="4" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
-          </div>
-  
-        </div>
+        
         <button type="button" class="submit-btn" id="addNoticeBtn" onclick="submitNoticeForm(event)">Add Notification V2</button>
       </form>
     </div>
@@ -2226,7 +2238,7 @@
       const greetingFields = document.getElementById('greetingFields');
       const linkGroup = document.getElementById('noticeLinkGroup');
       const dateGroup = document.getElementById('noticeDate').parentElement;
-      const descGroup = document.getElementById('noticeDesc').parentElement;
+      
       
       const submitBtn = document.getElementById('addNoticeBtn');
       const titleInput = document.getElementById('noticeTitle');
@@ -2246,13 +2258,13 @@
       if (type === 'greeting') {
           if (linkGroup) linkGroup.style.display = 'none';
           if (dateGroup) dateGroup.style.display = 'none';
-          if (descGroup) descGroup.style.display = 'none';
+          
           submitBtn.textContent = 'Send Broadcast';
           if (titleInput) titleInput.required = false;
       } else {
           if (linkGroup) linkGroup.style.display = 'block';
           if (dateGroup) dateGroup.style.display = 'block';
-          if (descGroup) descGroup.style.display = 'block';
+          
           submitBtn.textContent = (type === 'notice') ? 'Add Notification' : 'Add Live Class';
           if (titleInput) titleInput.required = (type === 'notice');
       }
@@ -2432,7 +2444,7 @@
       // Login Form Handler
       const loginForm = document.getElementById('adminLoginForm');
       if (loginForm) loginForm.onsubmit = async (e) => {
-        e.preventDefault();
+        if (e && e.preventDefault) e.preventDefault();
         const adminId = document.getElementById('adminId').value;
         const pass = document.getElementById('adminPassword').value;
         const errorEl = document.getElementById('loginError');
@@ -2454,6 +2466,8 @@
       // Add Notice Handler
       const noticeForm = document.getElementById('addNoticeForm');
       window.submitNoticeForm = async function(e) {
+  alert('Button Clicked! Type: ' + currentModalType);
+  try {
       e.preventDefault();
       const submitBtn = document.getElementById('addNoticeBtn');
       const sem = document.getElementById('noticeSem').value;
@@ -2554,7 +2568,8 @@
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
       }
-    }; // end submitNoticeForm
+    } catch(fatalError) { alert('CRASH IN SUBMIT: ' + fatalError.message); }
+}; // end submitNoticeForm
 
     }); // end DOMContentLoaded form handlers
 
