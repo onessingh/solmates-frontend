@@ -981,14 +981,14 @@
       }
 
       .header-section h1 {
-        font-size: 34px;
-        font-weight: 700;
+        font-size: 31px;
+        font-weight: 600;
         line-height: 1.15;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.3px;
       }
 
       .header-section p {
-        font-size: 19px;
+        font-size: 18px;
         font-weight: 400;
         line-height: 1.4;
         max-width: 320px;
@@ -996,7 +996,7 @@
       }
 
       .tabs {
-        margin-bottom: 44px;
+        margin-bottom: 40px;
       }
 
       .tab-btn {
@@ -1006,7 +1006,7 @@
 
       .notification-card {
         padding: 16px;
-        margin-bottom: 12px;
+        margin-bottom: 17px;
         gap: 14px;
         align-items: flex-start;
       }
@@ -1028,7 +1028,7 @@
       }
 
       .notice-category-text {
-        font-size: 13.5px;
+        font-size: 16.5px;
         font-weight: 400;
         line-height: 1.4;
         margin: 0 0 7px 0;
@@ -1039,7 +1039,7 @@
       }
 
       .notice-date-badge {
-        font-size: 13px;
+        font-size: 16.5px;
         font-weight: 400;
         word-spacing: 1px;
       }
@@ -1369,10 +1369,10 @@
         color: var(--text-main) !important;
         border-color: var(--border-color) !important;
       }
-      .header h1, .empty-state h3 {
+      .header-section h1, .empty-state h3 {
         color: var(--text-main) !important;
       }
-      .header p, .tab-btn, .empty-state p {
+      .header-section p, .tab-btn, .empty-state p {
         color: var(--text-muted) !important;
       }
       .tab-btn.active {
@@ -2151,7 +2151,7 @@
                 
                 ${(!isLiveClass && (notice.description || notice.imageUrl)) ? `
                   ${isRichPost ? `
-                  <div class="desc-wrapper" style="margin: 6px 0 0 0; font-size: 13.5px; color: var(--text-muted); word-break: break-word; overflow-wrap: anywhere; background: rgba(0,0,0,0.02); padding: 8px 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+                  <div class="desc-wrapper" style="margin: 6px 0 0 0; font-size: 13.5px; color: var(--text-muted); word-break: break-word; overflow-wrap: anywhere; background: rgba(0,0,0,0.02); padding: 8px 10px 6px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
                     <div class="desc-content" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.45;">
                       ${window.formatNoticeDescription(notice.description)}
                     </div>
@@ -2163,7 +2163,7 @@
                         data-modal-icon-bg="${escAttr(iconBg)}"
                         data-modal-icon-color="${escAttr(iconColor)}"
                         onclick="event.stopPropagation(); openRichPostModal(this);"
-                        style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:4px;">View More <i class="fas fa-chevron-down"></i></button>
+                        style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:2px;">View More <i class="fas fa-chevron-down"></i></button>
                   </div>
                 ` : `
                   ${notice.imageUrl ? `<img src="${notice.imageUrl}" loading="lazy" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
