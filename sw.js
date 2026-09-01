@@ -53,7 +53,7 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-const CACHE_NAME = 'solmates-cache-v457';
+const CACHE_NAME = 'solmates-cache-v458';
 const STATIC_ASSETS = [
     '/',
     '/index.html',

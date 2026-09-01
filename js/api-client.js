@@ -788,6 +788,9 @@ class SolmatesAPI {
     // Attempt Web Push (PushManager) but DO NOT fail if it's a TWA/Native app
     if (('serviceWorker' in navigator) && ('PushManager' in window)) {
         try {
+            if (Notification.permission !== 'granted') {
+                throw new Error('Permission not granted yet, skipping auto-subscribe to prevent popup.');
+            }
             const registration = await navigator.serviceWorker.ready;
             const publicVapidKey = 'BOviwaoubgZngyc_I9usdbR37cldjChsfiwNR0e0Q9-ouTOSszKa8aeWbO_ezYM2ppwgGsHyxoRBWVRS4g0jmcw';
             subscription = await registration.pushManager.subscribe({
