@@ -999,16 +999,16 @@
       }
 
       .content-box h3 {
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 1.22;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1.25;
         letter-spacing: normal;
         margin-bottom: 8px;
       }
 
       .notice-category-text {
-        font-size: 17px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 400;
         margin: 0 0 10px 0;
       }
 
@@ -1017,8 +1017,8 @@
       }
 
       .notice-date-badge {
-        font-size: 17px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 400;
         word-spacing: 2px;
       }
 
@@ -1033,7 +1033,7 @@
         max-width: 220px;
         width: fit-content;
         font-size: 17px;
-        font-weight: 700;
+        font-weight: 500;
         gap: 10px;
       }
     }
@@ -2665,8 +2665,8 @@
         return text
             // Bullet points: lines starting with "* " become bullet points
             .replace(/(^|\n)\*\s+(.*)/g, '$1&#8226; $2') 
-            // Bold: text wrapped in *asterisks* (Make sure font-weight is explicitly heavy)
-            .replace(/\*([^\*]+)\*/g, '<strong style="font-weight: 800; color: var(--text-main);">$1</strong>')
+            // Bold: text wrapped in *asterisks* (medium-bold, not heavy)
+            .replace(/\*([^\*]+)\*/g, '<strong style="font-weight: 600; color: var(--text-main);">$1</strong>')
             // Links: match http/https but EXCLUDE trailing brackets ] or parentheses )
             .replace(/(https?:\/\/[^\s<\]\)]+)/g, '<a href="$1" target="_blank" style="color:#0071e3; text-decoration:underline; font-weight: 600;">$1</a>')
             // Newlines to <br>
