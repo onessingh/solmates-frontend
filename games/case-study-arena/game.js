@@ -873,9 +873,18 @@ function migrateHost(hostId) {
                     gameState.scores[myId] = gameState.scores[myOldId] || 0;
                     gameState.correctCounts[myId] = gameState.correctCounts[myOldId] || 0;
                     
-                    hideAllScreens();
-                    document.getElementById('screen-game').classList.remove('hidden');
                     if(typeof showToast === 'function') showToast("You are the new host!");
+                    if (!gameState.gameStarted) {
+                        hideAllScreens();
+                        let l = document.getElementById('screen-lobby'); if(l) l.classList.remove('hidden');
+                        let b = document.getElementById('btn-start-game'); if(b) b.classList.remove('hidden');
+                        let w = document.getElementById('wait-host-msg'); if(w) w.classList.add('hidden');
+                        if (typeof renderPlayers === 'function') renderPlayers();
+                        if (typeof renderLobby === 'function') renderLobby();
+                    } else {
+                        hideAllScreens();
+                        document.getElementById('screen-game').classList.remove('hidden');
+                    }
                     
                     peer.on('connection', conn => {
                         guestConns[conn.peer] = conn;

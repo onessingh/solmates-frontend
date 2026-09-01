@@ -959,9 +959,18 @@ function migrateHost(hostId) {
                     if (me) me.id = myId;
                     roomState.scores[myId] = roomState.scores[myOldId] || 0;
                     roomState.correctCounts[myId] = roomState.correctCounts[myOldId] || 0;
-                    hideAllScreens();
-                    document.getElementById('screen-game').classList.remove('hidden');
                     showToast("You are the new host!");
+                    if (!roomState.gameStarted) {
+                        hideAllScreens();
+                        document.getElementById('screen-lobby').classList.remove('hidden');
+                        document.getElementById('btn-start-game').classList.remove('hidden');
+                        document.getElementById('wait-host-msg').classList.add('hidden');
+                        document.getElementById('invite-box').classList.remove('hidden');
+                        if (typeof renderLobby === 'function') renderLobby();
+                    } else {
+                        hideAllScreens();
+                        document.getElementById('screen-game').classList.remove('hidden');
+                    }
                     
                     // Accept reconnecting guests
                     peer.on('connection', (conn) => {
@@ -1009,7 +1018,9 @@ function migrateHost(hostId) {
                     
                     // Resume game
                     setTimeout(() => {
-                        sendNextQuestion();
+                        if (roomState.gameStarted) {
+                            sendNextQuestion();
+                        }
                     }, 1500);
                 // hostId already carries the 'SOLMATES-' prefix (it's the same value used for
                 // peer.connect()). initPeer() adds that prefix itself, so we must pass the bare
