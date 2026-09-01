@@ -2751,7 +2751,8 @@
     try {
         const sem = document.getElementById('noticeSem').value;
         const rawLink = document.getElementById('noticeLink').value;
-        let link = rawLink.trim() || '#pending';
+        let imageUrl = document.getElementById('noticeImageUrl') ? document.getElementById('noticeImageUrl').value : '';
+          let link = rawLink.trim() || '#pending';
         if (currentModalType === 'post') {
               link = '#richpost';
               if (imageUrl) link += ':' + imageUrl;
@@ -2771,8 +2772,6 @@
         
         let title = '';
         let description = '';
-        let imageUrl = document.getElementById('noticeImageUrl') ? document.getElementById('noticeImageUrl').value : '';
-  
         if (currentModalType === 'greeting') {
             const gTitle = document.getElementById('greetingTitle').value.trim();
             const gMsg = document.getElementById('greetingMessage').value.trim();
