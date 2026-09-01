@@ -2466,109 +2466,106 @@
       // Add Notice Handler
       const noticeForm = document.getElementById('addNoticeForm');
       window.submitNoticeForm = async function(e) {
-  alert('Button Clicked! Type: ' + currentModalType);
-  try {
-      e.preventDefault();
-      const submitBtn = document.getElementById('addNoticeBtn');
-      const sem = document.getElementById('noticeSem').value;
-      
-      const rawLink = document.getElementById('noticeLink').value;
-      const link = rawLink.trim() || '#pending';
-      const date = document.getElementById('noticeDate').value;
-      if (!date) { alert("Please enter the Date!"); return; }
-      
-      let title, description, imageUrl = document.getElementById('noticeImageUrl') ? document.getElementById('noticeImageUrl').value : '';
+    if (e && e.preventDefault) e.preventDefault();
+    
+    const submitBtn = document.getElementById('addNoticeBtn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Wait...';
+    submitBtn.disabled = true;
 
-      // [v104.2] GREETING BROADCAST LOGIC
-      if (currentModalType === 'greeting') {
-        const gTitle = document.getElementById('greetingTitle').value.trim();
-        const gMsg = document.getElementById('greetingMessage').value.trim();
-        if (!gMsg) return alert('Bhai, message toh likho!');
-
-        submitBtn.disabled = true;
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Broadcasting...';
-
-        try {
-          const result = await solmatesAPI.broadcastGreeting(gTitle, gMsg, sem);
-          if (result.success) {
-            alert(result.message || 'Broadcast success!');
-            closeAddNoticeModal();
-          } else {
-            alert('Failed: ' + (result.error || 'Server error'));
-          }
-        } catch (err) {
-          alert('Error: ' + err.message);
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
+    try {
+        const sem = document.getElementById('noticeSem').value;
+        const rawLink = document.getElementById('noticeLink').value;
+        const link = rawLink.trim() || '#pending';
+        const date = document.getElementById('noticeDate').value;
+        
+        if (!date) { 
+            alert("Please enter the Date!"); 
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return; 
         }
-        return;
-      }
-
-      if (currentModalType === 'notice') {
-        title = document.getElementById('noticeTitle').value;
-        description = document.getElementById('noticeDesc') ? document.getElementById('noticeDesc').value : '';
-          
-      } else {
-        // LIVE CLASS AUTO-FORMATTING
-        const subject = document.getElementById('classSubject').value;
-        const time = document.getElementById('classTime').value;
-        const teacher = document.getElementById('classTeacher').value;
-
-        title = `[${date}] MBA Sem ${sem}: ${subject} (${time})`;
-
-        // Determine prefix (Today/Tomorrow)
-        const [d, m, y] = date.split('-');
-        const itemDateStr = `${y}-${m}-${d}`;
-        const itemDate = new Date(itemDateStr).setHours(0, 0, 0, 0);
-        const today = new Date().setHours(0, 0, 0, 0);
-        const tomorrow = today + (24 * 60 * 60 * 1000);
-
-        let prefix = "[UPCOMING]";
-        if (itemDate === today) prefix = "[TODAY]";
-        else if (itemDate === tomorrow) prefix = "[TOMORROW]";
-
-        description = `${prefix} MBA Live Class: ${subject}. Time: ${time}. ${teacher ? 'Teacher: ' + teacher : ''}`;
-
-        // If they provided manual description, append it
-        const manualDesc = document.getElementById('noticeDesc').value;
-        if (manualDesc) description += " | " + manualDesc;
-      }
-
-      const payload = { title, link, date, description, imageUrl };
-
-      submitBtn.disabled = true;
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = editingNoticeId ? 'Updating...' : 'Adding...';
-
-      try {
+        
+        let title = '';
+        let description = '';
+        let imageUrl = document.getElementById('noticeImageUrl') ? document.getElementById('noticeImageUrl').value : '';
+  
+        if (currentModalType === 'greeting') {
+            const gTitle = document.getElementById('greetingTitle').value.trim();
+            const gMsg = document.getElementById('greetingMessage').value.trim();
+            if (!gMsg) {
+                alert('Bhai, message toh likho!');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            submitBtn.textContent = 'Broadcasting...';
+            const result = await solmatesAPI.broadcastGreeting(gTitle, gMsg, sem);
+            if (result.success) {
+                alert(result.message || 'Broadcast success!');
+                closeAddNoticeModal();
+            } else {
+                alert('Failed: ' + (result.error || 'Server error'));
+            }
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+  
+        if (currentModalType === 'notice') {
+            const nTitle = document.getElementById('noticeTitle');
+            if (nTitle) {
+                title = nTitle.value;
+            }
+            const nDesc = document.getElementById('noticeDesc');
+            if (nDesc) {
+                description = nDesc.value;
+            }
+        } else {
+            const subject = document.getElementById('classSubject').value;
+            const time = document.getElementById('classTime').value;
+            const teacher = document.getElementById('classTeacher').value;
+            title = `[${date}] MBA Sem ${sem}: ${subject} (${time})`;
+            
+            const [d, m, y] = date.split('-');
+            const itemDateStr = `${y}-${m}-${d}`;
+            const itemDate = new Date(itemDateStr).setHours(0, 0, 0, 0);
+            const today = new Date().setHours(0, 0, 0, 0);
+            const tomorrow = today + (24 * 60 * 60 * 1000);
+            let prefix = "[UPCOMING]";
+            if (itemDate === today) prefix = "[TODAY]";
+            else if (itemDate === tomorrow) prefix = "[TOMORROW]";
+            
+            description = `${prefix} MBA Live Class: ${subject}. Time: ${time}. ${teacher ? 'Teacher: ' + teacher : ''}`;
+            
+            const manualDesc = document.getElementById('noticeDesc') ? document.getElementById('noticeDesc').value : '';
+            if (manualDesc) description += " | " + manualDesc;
+        }
+  
+        const payload = { title, link, date, description, imageUrl };
+        submitBtn.textContent = editingNoticeId ? 'Updating...' : 'Adding...';
+  
         let res;
         if (editingNoticeId) {
-          console.log(`[ADMIN] Updating item ${editingNoticeId} in Sem ${sem}:`, payload);
-          res = await solmatesAPI.updateSOLItem('notifications', sem, editingNoticeId, payload);
+            res = await solmatesAPI.updateSOLItem('notifications', sem, editingNoticeId, payload);
         } else {
-          console.log(`[ADMIN] Adding ${currentModalType} to Sem ${sem}:`, payload);
-          res = await solmatesAPI.addSOLItem('notifications', sem, payload);
+            res = await solmatesAPI.addSOLItem('notifications', sem, payload);
         }
 
         if (res.success) {
-          // Backend handles push automatically now
-          localStorage.removeItem(`cached_notices_sem${sem}`);
-          alert(`${currentModalType === 'notice' ? 'Notification' : 'Live Class'} added successfully!`);
-          closeAddNoticeModal();
-          location.reload();
+            localStorage.removeItem(`cached_notices_sem${sem}`);
+            alert(`${currentModalType === 'notice' ? 'Notification' : 'Live Class'} added successfully!`);
+            closeAddNoticeModal();
+            location.reload();
         } else {
-          alert('Failed to add: ' + (res.error || 'Unknown error'));
+            alert('Failed to add: ' + (res.error || 'Unknown error'));
         }
-      } catch (err) {
-        console.error('[ADMIN] Error:', err);
-        alert('Error: ' + err.message);
-      } finally {
+    } catch (err) {
+        alert('ERROR IN SUBMIT: ' + err.message);
+    } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
-      }
-    } catch(fatalError) { alert('CRASH IN SUBMIT: ' + fatalError.message); }
+    }
 }; // end submitNoticeForm
 
     }); // end DOMContentLoaded form handlers
