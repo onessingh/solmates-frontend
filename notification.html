@@ -125,7 +125,7 @@
       position: fixed;
       top: 0;
       width: 100%;
-      height: 70px;
+      height: calc(70px + env(safe-area-inset-top, 0px));
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -133,9 +133,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 40px 0 24px;
+      padding: env(safe-area-inset-top, 0px) 40px 0 24px;
       z-index: 1000;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+      box-sizing: border-box;
     }
 
     .nav-left {
@@ -173,7 +174,7 @@
     /* ========== Main Content ========== */
     .container {
       max-width: 850px;
-      margin: 100px auto 40px;
+      margin: calc(100px + env(safe-area-inset-top, 0px)) auto 40px;
       padding: 0 24px;
     }
 
@@ -824,6 +825,10 @@
 
     /* ========== Responsive ========== */
     @media (max-width: 600px) {
+      .container {
+        margin-top: calc(115px + env(safe-area-inset-top, 0px));
+      }
+
       .header-section h1 {
         font-size: 26px;
       }
@@ -1821,7 +1826,7 @@
                 ${(!isLiveClass && (notice.description || notice.imageUrl)) ? `
                   ${isRichPost ? `
                   <div class="desc-wrapper" style="margin: 8px 0; font-size: 14px; color: var(--text-muted); word-break: break-word; overflow-wrap: anywhere; background: rgba(0,0,0,0.02); padding: 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
-                    ${notice.imageUrl ? `<div class="expanded-image" style="display:none; margin-bottom:12px;"><img src="${notice.imageUrl}" style="width:100%; border-radius:12px; max-height:300px; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"></div>` : ''}
+                    ${notice.imageUrl ? `<div class="expanded-image" style="display:none; margin-bottom:12px;"><img src="${notice.imageUrl}" loading="lazy" style="width:100%; border-radius:12px; max-height:300px; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onerror="this.parentElement.style.display='none';"></div>` : ''}
                     <div class="desc-content" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5;">
                       ${window.formatNoticeDescription(notice.description)}
                     </div>
@@ -1845,7 +1850,7 @@
                       " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:none; margin-top:8px;">View Less <i class="fas fa-chevron-up"></i></button>
                   </div>
                 ` : `
-                  ${notice.imageUrl ? `<img src="${notice.imageUrl}" style="width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;">` : ''}
+                  ${notice.imageUrl ? `<img src="${notice.imageUrl}" loading="lazy" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
                   ${!isLiveClass ? `<div style="font-size:14px; margin: 4px 0 10px 0; color:var(--text-muted); word-wrap:break-word; line-height: 1.5;">${window.formatNoticeDescription(notice.description)}</div>` : ''}
                 `}
                 ` : ''}
