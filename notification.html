@@ -1826,13 +1826,23 @@
                       ${window.formatNoticeDescription(notice.description)}
                     </div>
                     <button class="view-more-btn" onclick="
-                        this.previousElementSibling.style.display='block'; 
-                        this.previousElementSibling.style.webkitLineClamp='unset'; 
-                        const img = this.parentElement.querySelector('.expanded-image');
-                        if (img) img.style.display = 'block';
-                        this.style.display='none'; 
-                        event.stopPropagation();
-                    " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:8px;">View Full Post <i class="fas fa-expand"></i></button>
+                          this.previousElementSibling.style.display='block'; 
+                          this.previousElementSibling.style.webkitLineClamp='unset'; 
+                          const img = this.parentElement.querySelector('.expanded-image');
+                          if (img) img.style.display = 'block';
+                          this.style.display='none'; 
+                          this.nextElementSibling.style.display='inline-block';
+                          event.stopPropagation();
+                      " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:8px;">View More <i class="fas fa-chevron-down"></i></button>
+                      <button class="view-less-btn" onclick="
+                          this.previousElementSibling.previousElementSibling.style.display='-webkit-box'; 
+                          this.previousElementSibling.previousElementSibling.style.webkitLineClamp='2'; 
+                          const img = this.parentElement.querySelector('.expanded-image');
+                          if (img) img.style.display = 'none';
+                          this.style.display='none'; 
+                          this.previousElementSibling.style.display='inline-block';
+                          event.stopPropagation();
+                      " style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0; cursor:pointer; font-size:13px; display:none; margin-top:8px;">View Less <i class="fas fa-chevron-up"></i></button>
                   </div>
                 ` : `
                   ${notice.imageUrl ? `<img src="${notice.imageUrl}" style="width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;">` : ''}
