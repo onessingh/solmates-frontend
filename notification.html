@@ -3088,8 +3088,10 @@
       if (overlay) overlay.style.display = 'none';
     }
 
-        async function handleNotifyToggle() {
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
+    async function handleNotifyToggle() {
+      const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
+      const hasNativeCapacitor = (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+      const hasNativeFCM = !!fcmToken || hasNativeCapacitor;
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       
       if (hasNativeFCM) {
@@ -3106,8 +3108,7 @@
 
       if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
       const perm = Notification.permission;
-      const isTwaOrNative = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      if (perm === 'denied' && !isTwaOrNative) { showRepairGuide(); return; }
+      if (perm === 'denied') { showRepairGuide(); return; }
       const btn = document.getElementById('notifyToggleBtn');
       
       if (perm === 'granted' && localEnabled) {
