@@ -5,7 +5,7 @@
 
 /* 1. Remove native browser highlights and system tools */
 :root {
-  color-scheme: light dark;
+  color-scheme: only light;
 }
 
 * {
