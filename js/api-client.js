@@ -799,8 +799,8 @@ class SolmatesAPI {
             });
         } catch (err) {
             console.warn('[PushManager] Failed to subscribe:', err);
-            // If it's a normal browser (not TWA), we MUST have a subscription. Re-throw.
-            if (!isTWA) throw err;
+            // If it's a normal browser (not TWA) or if it's a TWA WITHOUT a native fcmToken, we MUST have a subscription. Re-throw.
+            if (!isTWA || !fcmToken) throw err;
         }
     } else if (!isTWA) {
         throw new Error('Push notifications are not supported in this browser.');
