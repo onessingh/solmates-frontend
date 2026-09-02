@@ -627,7 +627,8 @@
       width: 100%;
       height: auto;
       max-height: 250px;
-      object-fit: cover;
+      object-fit: contain;
+      background: #ffffff;
       border-top-left-radius: 22px;
       border-top-right-radius: 22px;
       display: block;
@@ -3497,16 +3498,16 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="semSelectionModal" class="admin-modal">
   <div class="admin-modal-content" style="max-width: 420px; text-align: center; border-radius: 24px; padding: 32px;">
     <button class="toast-close" onclick="closeSemSelectionModal()"><i class="fas fa-times"></i></button>
-    <div style="width: 60px; height: 60px; background: rgba(15, 43, 70, 0.05); color: var(--brand-primary); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 20px;">
+    <div style="width: 60px; height: 60px; background: rgba(15, 43, 70, 0.05); color: #0f2b46; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 20px;">
       <i class="fas fa-sliders-h"></i>
     </div>
-    <h2 style="margin-bottom: 8px; font-weight: 800; color: var(--brand-primary);">Choose Semesters</h2>
-    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Select the semesters you want to receive instant alerts for.</p>
+    <h2 style="margin-bottom: 8px; font-weight: 800; color: #0f2b46;">Choose Semesters</h2>
+    <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">Select the semesters you want to receive instant alerts for.</p>
     
     <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; text-align: left;">
-      <label class="all-sem-label" style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s;">
-        <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: var(--brand-primary);">
-        <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: var(--brand-primary);">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
+      <label style="display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 14px 18px; border-radius: 14px; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s;">
+        <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: #0f2b46;">
+        <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: #0f2b46;">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
       </label>
       
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -3517,7 +3518,32 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
 
-    <button onclick="confirmSemSelection()" class="submit-btn" id="confirmSemSubBtn" style="width: 100%; border-radius: 14px; padding: 16px; font-size: 16px;">Save Preferences</button>
+    <button id="confirmSemSubBtn" onclick="confirmSemSelection()" style="width: 100%; background: #0f2b46; color: white; padding: 14px; border: none; border-radius: 16px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 8px 20px rgba(15, 43, 70, 0.2); transition: all 0.3s;">
+      Confirm Subscription
+    </button>
+
+    <style>
+      .sem-check-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        padding: 12px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        border: 1px solid #e2e8f0;
+        font-weight: 600;
+        font-size: 14px;
+        color: #4a5568;
+        transition: all 0.2s;
+      }
+      .sem-check-label:has(input:checked) {
+        border-color: #0f2b46;
+        background: rgba(15, 43, 70, 0.02);
+        color: #0f2b46;
+      }
+      .sem-check-label input { width: 16px; height: 16px; accent-color: #0f2b46; cursor: pointer; }
+    </style>
   </div>
 </div>
 </body>
