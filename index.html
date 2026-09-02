@@ -11,6 +11,10 @@
       const fcmToken = urlParams.get('fcm_token');
       if (fcmToken) {
         localStorage.setItem('solmates_fcm_token', fcmToken);
+        if (!localStorage.getItem('sol_subscribed_sems')) {
+            localStorage.setItem('sol_subscribed_sems', JSON.stringify(['all']));
+            localStorage.setItem('sol_notif_enabled', 'true');
+        }
         // Clean URL to prevent sharing token
         urlParams.delete('fcm_token');
         const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
