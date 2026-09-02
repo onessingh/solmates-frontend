@@ -3,7 +3,7 @@
  * Handles offline caching. Web Push has been removed as notifications are natively handled by Android App.
  */
 
-const CACHE_NAME = 'solmates-cache-v493';
+const CACHE_NAME = 'solmates-cache-v494';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -69,3 +69,4 @@ self.addEventListener('fetch', event => {
             })
     );
 });
+
