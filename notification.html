@@ -2985,17 +2985,12 @@
         btn.style.display = 'inline-flex';
 
       const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+      
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       const text = btn.querySelector('span');
       const icon = btn.querySelector('i');
 
-      if (perm === 'denied') {
-        btn.className = 'notify-status-btn denied';
-        if (text) text.innerText = 'Notifications Blocked';
-        icon.className = 'fas fa-bell-slash';
-        return;
-      }
+      
 
       if (hasNativeFCM && localEnabled) {
         btn.className = 'notify-status-btn granted';
@@ -3012,10 +3007,7 @@
         return;
       }
 
-      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') {
-        btn.style.display = 'none';
-        return;
-      }
+      
 
       if (perm === 'granted' && localEnabled) {
         btn.className = 'notify-status-btn granted';
@@ -3110,11 +3102,6 @@
       const hasNativeFCM = !!fcmToken || hasNativeCapacitor || isStandalone;
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
 
-      if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
-        showRepairGuide();
-        return;
-      }
-
       if (hasNativeFCM) {
           if (localEnabled) {
               if (confirm("Stop receiving notifications on this device?")) {
@@ -3127,8 +3114,6 @@
           return;
       }
 
-      if (typeof Notification === 'undefined' || !Notification.permission || typeof Notification.requestPermission !== 'function') return;
-      const perm = Notification.permission;
       if (perm === 'denied') { showRepairGuide(); return; }
       const btn = document.getElementById('notifyToggleBtn');
       
@@ -3557,6 +3542,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </body>
 </html>
+
 
 
 

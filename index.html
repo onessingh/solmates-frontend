@@ -5405,21 +5405,7 @@
              } catch(e){}
           } 
           
-          // Fallback to Web Push for TWA
-          if (typeof Notification !== 'undefined' && typeof Notification.requestPermission === 'function') {
-            // Only prompt if not already granted or denied
-            if (Notification.permission === 'default') {
-              try {
-                  const permission = await Notification.requestPermission();
-                  if (permission === 'granted' && window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
-                      window.solmatesAPI.subscribeToPush();
-                  }
-              } catch(e) {
-                  console.warn('Auto-prompt blocked or failed:', e);
-              }
-            }
-          }
-        }, 5000);
+          }, 5000);
         if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
           // Attempt silent token refresh for already subscribed users
           window.solmatesAPI.silentPushTokenRefresh();
@@ -5485,6 +5471,7 @@
 </body>
 
 </html>
+
 
 
 

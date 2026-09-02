@@ -767,59 +767,28 @@ class SolmatesAPI {
     return outputArray;
   }
 
-  async subscribeToPush(semesters = null) {
-    const isTWA = window.matchMedia('(display-mode: standalone)').matches ||
-                  (typeof window.isWebView === 'function' && window.isWebView()) ||
-                  (typeof window.isMedianApp === 'function' && window.isMedianApp()) ||
-                  !!localStorage.getItem('solmates_fcm_token') ||
-                  !!localStorage.getItem('sol_fcm_token');
-
+    async subscribeToPush(semesters = null) {
     if (!semesters) {
         const savedSem = localStorage.getItem('solmates_active_semester');
         semesters = savedSem ? [savedSem] : ['all'];
     }
     
     const deviceId = this.getDeviceId();
-    const appSource = (window.location.search.includes('source=pwa') || window.location.search.includes('source=twa')) ? 'twa' : (typeof window.isMedianApp === 'function' && window.isMedianApp()) ? 'apk' : 'web';
-
-    let subscription = null;
     const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
-
-    // Attempt Web Push (PushManager) but DO NOT fail if it's a TWA/Native app
-    if (('serviceWorker' in navigator) && ('PushManager' in window) && !isTWA) {
-        try {
-            if (Notification.permission !== 'granted') {
-                throw new Error('Permission not granted yet, skipping auto-subscribe to prevent popup.');
-            }
-            const registration = await navigator.serviceWorker.ready;
-            const publicVapidKey = 'BOviwaoubgZngyc_I9usdbR37cldjChsfiwNR0e0Q9-ouTOSszKa8aeWbO_ezYM2ppwgGsHyxoRBWVRS4g0jmcw';
-            subscription = await registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: this.urlBase64ToUint8Array(publicVapidKey)
-            });
-        } catch (err) {
-            console.warn('[PushManager] Failed to subscribe:', err);
-            // If it's a normal browser (not TWA) or if it's a TWA WITHOUT a native fcmToken, we MUST have a subscription. Re-throw.
-            if (!isTWA || !fcmToken) throw err;
-        }
-    } else if (!isTWA) {
-        throw new Error('Push notifications are not supported in this browser.');
-    }
-
-    if (!subscription && isTWA && fcmToken) {
-        subscription = { endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) };
+    
+    if (!fcmToken) {
+        throw new Error('FCM Token not found. Notifications require the Android App.');
     }
 
     return await this.request('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify({
-        subscription,
-        fcmToken: fcmToken || null,
+        subscription: { endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) },
+        fcmToken: fcmToken,
         deviceId,
         semesters: Array.isArray(semesters) ? semesters : [semesters],
         metadata: {
-          isApp: isTWA,
-          appSource,
+          isApp: true,
           platform: navigator.platform,
           userAgent: navigator.userAgent
         }
@@ -828,16 +797,13 @@ class SolmatesAPI {
   }
 
   async silentPushTokenRefresh() {
-    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+    const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
+    if (!fcmToken) return;
     try {
       let semesters = null;
       const savedSem = localStorage.getItem('sol_subscribed_sems');
       if (savedSem) {
         try { semesters = JSON.parse(savedSem); } catch (e) {}
-      } else {
-        const activeSem = localStorage.getItem('solmates_active_semester');
-        if (activeSem) semesters = [activeSem];
-        else semesters = ['all'];
       }
       await this.subscribeToPush(semesters);
     } catch (error) {
@@ -846,23 +812,20 @@ class SolmatesAPI {
   }
 
   async unsubscribeFromPush() {
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    if (subscription) {
-      await subscription.unsubscribe();
+    const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
+    if (fcmToken) {
       return await this.request('/notifications/unsubscribe', {
         method: 'POST',
-        body: JSON.stringify({ endpoint: subscription.endpoint })
+        body: JSON.stringify({ endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) })
       });
     }
     return { success: true };
   }
 
   async getPushSubscription() {
-    if (!('serviceWorker' in navigator)) return null;
-    const registration = await navigator.serviceWorker.ready;
-    return await registration.pushManager.getSubscription();
+    return null;
   }
+
 
   // ========== RECYCLE BIN METHODS (v85.0) ==========
   async getRecycleBin() {
@@ -1089,3 +1052,6 @@ window.solmatesPromptNickname = function() {
         return name;
     }
 };
+
+
+
