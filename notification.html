@@ -3027,12 +3027,12 @@
           btn.className = 'notify-status-btn granted';
           if (text) text.innerText = 'App Notifications Active';
           icon.className = 'fas fa-check-circle';
-          closeRepairGuide();
+          
         } else {
           btn.className = 'notify-status-btn';
           if (text) text.innerText = 'Allow Notifications (App)';
           icon.className = 'fas fa-bell';
-          closeRepairGuide();
+          
           
         }
       }
@@ -3055,7 +3055,8 @@
         const browserPerm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
         const perm = (browserPerm === 'denied' || localStorage.getItem('sol_native_permission_denied') === 'true') ? 'denied' : 'granted';
         if (perm === 'denied') {
-            showRepairGuide();
+            alert("Please allow notifications in your phone's App Settings to continue.");
+            window.location.href = "intent:#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;S.android.provider.extra.APP_PACKAGE=in.solmates.app;end";
             return;
         }
 
@@ -3476,6 +3477,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </body>
 </html>
+
+
+
 
 
 
