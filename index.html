@@ -5,6 +5,19 @@
 
   <meta id="theme-color-meta" name="theme-color" content="#ffffff">
   <script>
+    // [Fix] COMPLETELY block Chrome Web Push popup in Native App
+    (function() {
+      const isTWA = window.matchMedia('(display-mode: standalone)').matches || 
+                    (typeof window.isMedianApp === 'function' && window.isMedianApp()) || 
+                    !!localStorage.getItem('solmates_fcm_token') || 
+                    document.referrer.includes('android-app://');
+      if (isTWA && typeof window !== 'undefined' && window.Notification) {
+          window.Notification.requestPermission = function() {
+              return Promise.resolve('denied');
+          };
+      }
+    })();
+
     // Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
     (function() {
       var t = localStorage.getItem('solmates_theme');
