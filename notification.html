@@ -3055,8 +3055,13 @@
         const browserPerm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
         const perm = (browserPerm === 'denied' || localStorage.getItem('sol_native_permission_denied') === 'true') ? 'denied' : 'granted';
         if (perm === 'denied') {
-            alert("Please allow notifications in your phone's App Settings to continue.");
-            window.location.href = "intent:#Intent;action=android.settings.APP_NOTIFICATION_SETTINGS;S.android.provider.extra.APP_PACKAGE=in.solmates.app;end";
+            if (confirm("Notifications are blocked! Do you want to open App Settings to allow them?")) {
+                const a = document.createElement('a');
+                a.href = "intent:in.solmates.app#Intent;scheme=package;action=android.settings.APPLICATION_DETAILS_SETTINGS;end;";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
             return;
         }
 
