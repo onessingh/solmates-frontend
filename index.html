@@ -5422,7 +5422,7 @@
           } 
           
           }, 5000);
-        if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
+        if (localStorage.getItem("sol_notif_enabled") !== "false" && window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === "function") {
           // Attempt silent token refresh for already subscribed users
           window.solmatesAPI.silentPushTokenRefresh();
         }

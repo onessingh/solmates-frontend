@@ -3072,7 +3072,7 @@
         const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
 
         if (localEnabled) {
-            if (confirm("Stop receiving notifications on this device?")) {
+            if (confirm("Stop receiving notifications on this device?")) { try { window.solmatesAPI && window.solmatesAPI.unsubscribeFromPush(); } catch(e){} 
                 localStorage.setItem('sol_notif_enabled', 'false');
                 updateNotifyUI();
             }
