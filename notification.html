@@ -1513,41 +1513,7 @@
       </button>
     </div>
       </header>
-    <div style="padding: 15px; margin: 10px; background: #fff3f3; border-radius: 12px; border: 1px solid #ef4444; text-align: center;">
-      <h3 style="color: #ef4444; margin-bottom: 10px;">Fix Push Notifications</h3>
-      <button onclick="forceDebugTokenSync()" style="width:100%; padding:14px; background:#ef4444; color:white; border:none; border-radius:12px; font-weight:bold;">FIX PUSH TOKEN (CLICK HERE)</button>
-    </div>
-    <script>
-      function forceDebugTokenSync() {
-          const fcmToken = localStorage.getItem('solmates_fcm_token');
-          if (!fcmToken) {
-              alert('FCM Token not found in browser. Please restart app completely.');
-              return;
-          }
-          const deviceId = window.solmatesAPI ? window.solmatesAPI.getDeviceId() : 'manual-' + Date.now();
-          const payload = {
-              subscription: { endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) },
-              fcmToken: fcmToken,
-              deviceId: deviceId,
-              semesters: ['all', '0', '1', '2', '3', '4'],
-              metadata: { isApp: true, forceDebug: true }
-          };
-          const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
-          fetch(apiUrl + '/notifications/subscribe', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
-          }).then(res => res.json()).then(data => {
-              if(data.success) {
-                  alert('SUCCESS! Token successfully saved to server. Now send the broadcast!');
-              } else {
-                  alert('SERVER ERROR: ' + data.error);
-              }
-          }).catch(err => {
-              alert('NETWORK ERROR: ' + err.message);
-          });
-      }
-    </script>
+    
 
   <div class="container">
     <div class="header-section">
@@ -3538,6 +3504,7 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </body>
 </html>
+
 
 
 
