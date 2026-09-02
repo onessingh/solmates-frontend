@@ -29,6 +29,7 @@
           urlParams.delete('fcm_token');
           modified = true;
         }
+        if (urlParams.has('v')) { urlParams.delete('v'); modified = true; }
         
         if (modified) {
           const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
@@ -5485,6 +5486,7 @@
 </body>
 
 </html>
+
 
 
 
