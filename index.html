@@ -5,6 +5,20 @@
 
   <meta id="theme-color-meta" name="theme-color" content="#ffffff">
   <script>
+    // Extract Native FCM Token from TWA URL parameter
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fcmToken = urlParams.get('fcm_token');
+      if (fcmToken) {
+        localStorage.setItem('solmates_fcm_token', fcmToken);
+        // Clean URL to prevent sharing token
+        urlParams.delete('fcm_token');
+        const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    })();
+
+
 // Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
     (function() {
       var t = localStorage.getItem('solmates_theme');
