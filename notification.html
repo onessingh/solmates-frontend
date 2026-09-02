@@ -18,6 +18,7 @@
         const fcmToken = urlParams.get('fcm_token');
         if (fcmToken) {
           localStorage.setItem('solmates_fcm_token', fcmToken);
+          localStorage.removeItem('sol_push_last_sync'); // Force resync
           urlParams.delete('fcm_token');
           modified = true;
         }
@@ -3502,6 +3503,7 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </body>
 </html>
+
 
 
 

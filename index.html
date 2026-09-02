@@ -22,6 +22,7 @@
         const fcmToken = urlParams.get('fcm_token');
         if (fcmToken) {
           localStorage.setItem('solmates_fcm_token', fcmToken);
+          localStorage.removeItem('sol_push_last_sync'); // Force resync
           if (!localStorage.getItem('sol_subscribed_sems')) {
               localStorage.setItem('sol_subscribed_sems', JSON.stringify(['all']));
               localStorage.setItem('sol_notif_enabled', 'true');
@@ -5486,6 +5487,7 @@
 </body>
 
 </html>
+
 
 
 
