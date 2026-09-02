@@ -786,7 +786,7 @@ class SolmatesAPI {
     const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
 
     // Attempt Web Push (PushManager) but DO NOT fail if it's a TWA/Native app
-    if (('serviceWorker' in navigator) && ('PushManager' in window)) {
+    if (('serviceWorker' in navigator) && ('PushManager' in window) && !isTWA) {
         try {
             if (Notification.permission !== 'granted') {
                 throw new Error('Permission not granted yet, skipping auto-subscribe to prevent popup.');
