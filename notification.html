@@ -2972,147 +2972,80 @@
       }, 2000);
     }
 
-    /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
-        function updateNotifyUI() {
+          /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
+      function updateNotifyUI() {
         const btn = document.getElementById('notifyToggleBtn');
         if (!btn) return;
 
         const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+        
+        // Pure App/FCM logic ONLY. No Web Push.
         if (!isStandaloneApp) {
             btn.style.display = 'none';
             return;
         }
         btn.style.display = 'inline-flex';
 
-      const hasNativeFCM = !!localStorage.getItem('solmates_fcm_token') || !!localStorage.getItem('sol_fcm_token') || (typeof window.isWebView === 'function' && window.isWebView()) || (typeof window.isMedianApp === 'function' && window.isMedianApp()) || window.matchMedia('(display-mode: standalone)').matches;
-      
-      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
-      const text = btn.querySelector('span');
-      const icon = btn.querySelector('i');
+        const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
+        const text = btn.querySelector('span');
+        const icon = btn.querySelector('i');
 
-      
-
-      if (hasNativeFCM && localEnabled) {
-        btn.className = 'notify-status-btn granted';
-        if (text) text.innerText = 'App Notifications Active';
-        icon.className = 'fas fa-check-circle';
-        closeRepairGuide();
-        return;
-      } else if (hasNativeFCM && !localEnabled) {
-        btn.className = 'notify-status-btn';
-        if (text) text.innerText = 'Allow Notifications (App)';
-        icon.className = 'fas fa-bell';
-        closeRepairGuide();
-        checkSoftPromptAvailability();
-        return;
-      }
-
-      
-
-      if (perm === 'granted' && localEnabled) {
-        btn.className = 'notify-status-btn granted';
-        if (text) text.innerText = 'Deny Notifications';
-        icon.className = 'fas fa-bell';
-        closeRepairGuide();
-      } else if (perm === 'denied' && !hasNativeFCM && !window.matchMedia('(display-mode: standalone)').matches) {
-        btn.className = 'notify-status-btn denied';
-        if (text) text.innerText = 'Notifications Blocked';
-        icon.className = 'fas fa-bell-slash';
-      } else {
-        btn.className = 'notify-status-btn';
-        if (text) text.innerText = 'Allow Notifications';
-        icon.className = 'fas fa-bell';
-        checkSoftPromptAvailability();
-      }
-    }
-
-    function checkSoftPromptAvailability() {
-        const isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
-        
-        if (!isStandaloneApp) return;
-
-        const lastDismissed = localStorage.getItem('sol_soft_prompt_dismissed');
-        const now = Date.now();
-        
-        if ((!lastDismissed || (now - parseInt(lastDismissed) > 3 * 24 * 60 * 60 * 1000))) {
-        setTimeout(() => {
-          const banner = document.getElementById('soft-prompt-banner');
-          if (banner) banner.classList.add('active');
-        }, 3000);
-      }
-    }
-
-    function dismissSoftPrompt() {
-      localStorage.setItem('sol_soft_prompt_dismissed', Date.now().toString());
-      const banner = document.getElementById('soft-prompt-banner');
-      if (banner) banner.classList.remove('active');
-    }
-
-    async function acceptSoftPrompt() {
-      dismissSoftPrompt();
-      handleNotifyToggle();
-    }
-
-    function showRepairGuide() {
-      const overlay = document.getElementById('repair-guide-overlay');
-      const stepsContainer = document.getElementById('repair-steps-container');
-      const subtitle = document.getElementById('repair-subtitle');
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      const isAPK = typeof window.isMedianApp === 'function' && window.isMedianApp();
-      
-      const stepStyle = "display: flex; align-items: flex-start; gap: 10px; text-align: left; background: var(--bg-nav, #f8fafc); padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border-color, #eee);";
-      const numStyle = "width: 20px; height: 20px; background: #0f2b46; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; margin-top: 2px;";
-      const titleStyle = "display: block; color: var(--text-main, #333); font-size: 13px; margin-bottom: 2px; font-weight: 700;";
-      const descStyle = "color: var(--text-muted, #666); font-size: 12px; line-height: 1.4;";
-
-      if (isAPK) {
-        subtitle.innerText = "Notifications are not set up in the SOLMATES App:";
-        stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">System Settings</b><span style="${descStyle}">Tap the button below to open App Settings directly.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Allow All</b><span style="${descStyle}">Go to 'Notifications' and turn ON all toggles.</span></div></div>
-          <button onclick="window.openNativeSettings()" style="margin-top:10px; width:100%; padding:12px; border-radius:12px; background:#0f2b46; color:white; border:none; font-weight:700;">Open App Settings</button>
-        `;
-      } else if (isStandalone) {
-        subtitle.innerText = "Notifications are blocked for the Home Screen App:";
-        stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">App Icon</b><span style="${descStyle}">Long-press the SOLMATES icon on your home screen.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">App Info</b><span style="${descStyle}">Tap "App Info" (i icon).</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Enable</b><span style="${descStyle}">Go to "Notifications" and turn ON all toggles.</span></div></div>`;
-      } else {
-        subtitle.innerText = "Notifications are blocked in Chrome settings:";
-        stepsContainer.innerHTML = `
-          <div style="${stepStyle}"><div style="${numStyle}">1</div><div><b style="${titleStyle}">Three Dots (⋮)</b><span style="${descStyle}">Tap ⋮ at the top-right of your browser.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">2</div><div><b style="${titleStyle}">Settings ⚙️</b><span style="${descStyle}">Tap 'Settings'.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">3</div><div><b style="${titleStyle}">Site Settings</b><span style="${descStyle}">Scroll down and tap 'Site Settings'.</span></div></div>
-          <div style="${stepStyle}"><div style="${numStyle}">4</div><div><b style="${titleStyle}">Notifications</b><span style="${descStyle}">Tap 'Notifications' → find solmates.in under 'Not Allowed' → tap ⋮ next to it and select <b>Allow</b>.</span></div></div>`;
-      }
-
-      overlay.style.display = 'flex';
-    }
-
-    function closeRepairGuide() {
-      const overlay = document.getElementById('repair-guide-overlay');
-      if (overlay) overlay.style.display = 'none';
-    }
-
-    async function handleNotifyToggle() {
-      const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
-      const hasNativeCapacitor = (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      const hasNativeFCM = !!fcmToken || hasNativeCapacitor || isStandalone;
-      const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
-
-      if (hasNativeFCM) {
-          if (localEnabled) {
-              if (confirm("Stop receiving notifications on this device?")) {
-                  localStorage.setItem('sol_notif_enabled', 'false');
-                  updateNotifyUI();
-              }
-          } else {
-              openSemSelectionModal();
-          }
+        if (perm === 'denied') {
+          btn.className = 'notify-status-btn denied';
+          if (text) text.innerText = 'Notifications Blocked';
+          icon.className = 'fas fa-bell-slash';
           return;
+        }
+
+        if (localEnabled) {
+          btn.className = 'notify-status-btn granted';
+          if (text) text.innerText = 'App Notifications Active';
+          icon.className = 'fas fa-check-circle';
+          closeRepairGuide();
+        } else {
+          btn.className = 'notify-status-btn';
+          if (text) text.innerText = 'Allow Notifications (App)';
+          icon.className = 'fas fa-bell';
+          closeRepairGuide();
+          checkSoftPromptAvailability();
+        }
       }
+
+      function showRepairGuide() {
+        const overlay = document.getElementById('repair-guide-overlay');
+        if (overlay) overlay.style.display = 'flex';
+      }
+
+      function closeRepairGuide() {
+        const overlay = document.getElementById('repair-guide-overlay');
+        if (overlay) overlay.style.display = 'none';
+      }
+
+      async function handleNotifyToggle() {
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
+        
+        if (!isStandalone) return;
+
+        const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        if (perm === 'denied') {
+            showRepairGuide();
+            return;
+        }
+
+        const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
+
+        if (localEnabled) {
+            if (confirm("Stop receiving notifications on this device?")) {
+                localStorage.setItem('sol_notif_enabled', 'false');
+                updateNotifyUI();
+            }
+        } else {
+            openSemSelectionModal();
+        }
+      }
+
+
 
       if (perm === 'denied') { showRepairGuide(); return; }
       const btn = document.getElementById('notifyToggleBtn');
@@ -3542,6 +3475,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </body>
 </html>
+
 
 
 
