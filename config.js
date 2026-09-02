@@ -1,3 +1,21 @@
+
+// [Fix] Bypass Web Push permission checks in Native App to force Native Firebase flow
+(function() {
+  try {
+    const isTWA = window.matchMedia('(display-mode: standalone)').matches || 
+                  (typeof window.isMedianApp === 'function' && window.isMedianApp()) || 
+                  !!localStorage.getItem('solmates_fcm_token') || 
+                  document.referrer.includes('android-app://');
+    if (isTWA) {
+      if (typeof window.Notification === 'undefined') window.Notification = {};
+      window.Notification.requestPermission = function() { return Promise.resolve('granted'); };
+      try {
+        Object.defineProperty(window.Notification, 'permission', { get: function() { return 'granted'; }, configurable: true });
+      } catch (e) {}
+    }
+  } catch(e) {}
+})();
+
 // Robust Storage Fallback (v113.6)
 (function() {
   let storageSupported = true;
