@@ -9,9 +9,7 @@
     if (isTWA) {
       if (typeof window.Notification === 'undefined') window.Notification = {};
       window.Notification.requestPermission = function() { return Promise.resolve('granted'); };
-      try {
-        Object.defineProperty(window.Notification, 'permission', { get: function() { return 'granted'; }, configurable: true });
-      } catch (e) {}
+      // Removed permission spoofing so we can detect if user blocked notifications in Android settings
     }
   } catch(e) {}
 })();

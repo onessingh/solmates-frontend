@@ -2990,6 +2990,13 @@
       const text = btn.querySelector('span');
       const icon = btn.querySelector('i');
 
+      if (perm === 'denied') {
+        btn.className = 'notify-status-btn denied';
+        if (text) text.innerText = 'Notifications Blocked';
+        icon.className = 'fas fa-bell-slash';
+        return;
+      }
+
       if (hasNativeFCM && localEnabled) {
         btn.className = 'notify-status-btn granted';
         if (text) text.innerText = 'App Notifications Active';
@@ -3102,7 +3109,12 @@
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const hasNativeFCM = !!fcmToken || hasNativeCapacitor || isStandalone;
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
-      
+
+      if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+        showRepairGuide();
+        return;
+      }
+
       if (hasNativeFCM) {
           if (localEnabled) {
               if (confirm("Stop receiving notifications on this device?")) {
@@ -3545,6 +3557,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </body>
 </html>
+
+
+
 
 
 
