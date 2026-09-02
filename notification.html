@@ -4,7 +4,31 @@
 <head>
 
   <script>
-    window.onerror = function(message, source, lineno, colno, error) {
+      (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let modified = false;
+        const fcmDenied = urlParams.get('fcm_denied');
+        if (fcmDenied === 'true') {
+          localStorage.setItem('sol_native_permission_denied', 'true');
+          urlParams.delete('fcm_denied');
+          modified = true;
+        } else if (urlParams.has('fcm_token')) {
+          localStorage.removeItem('sol_native_permission_denied');
+        }
+        const fcmToken = urlParams.get('fcm_token');
+        if (fcmToken) {
+          localStorage.setItem('solmates_fcm_token', fcmToken);
+          urlParams.delete('fcm_token');
+          modified = true;
+        }
+        if (urlParams.has('v')) { urlParams.delete('v'); modified = true; }
+        if (modified) {
+          const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+          window.history.replaceState({}, document.title, newUrl);
+        }
+      })();
+
+      window.onerror = function(message, source, lineno, colno, error) {
       alert("GLOBAL ERROR: " + message + " at line " + lineno);
     };
     window.addEventListener("unhandledrejection", function(event) {
@@ -2986,7 +3010,8 @@
         }
         btn.style.display = 'inline-flex';
 
-        const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        const browserPerm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        const perm = (browserPerm === 'denied' || localStorage.getItem('sol_native_permission_denied') === 'true') ? 'denied' : 'granted';
         const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
         const text = btn.querySelector('span');
         const icon = btn.querySelector('i');
@@ -3027,7 +3052,8 @@
         
         if (!isStandalone) return;
 
-        const perm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        const browserPerm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
+        const perm = (browserPerm === 'denied' || localStorage.getItem('sol_native_permission_denied') === 'true') ? 'denied' : 'granted';
         if (perm === 'denied') {
             showRepairGuide();
             return;
@@ -3450,6 +3476,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </body>
 </html>
+
+
+
 
 
 
