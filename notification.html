@@ -3047,7 +3047,15 @@
         if (overlay) overlay.style.display = 'none';
       }
 
-      async function handleNotifyToggle() {
+              function openAndroidSettings() {
+            const a = document.createElement('a');
+            a.href = "intent:in.solmates.app#Intent;scheme=package;action=android.settings.APPLICATION_DETAILS_SETTINGS;end;";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        async function handleNotifyToggle() {
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
         
         if (!isStandalone) return;
@@ -3055,13 +3063,7 @@
         const browserPerm = typeof Notification !== 'undefined' ? Notification.permission : 'default';
         const perm = (browserPerm === 'denied' || localStorage.getItem('sol_native_permission_denied') === 'true') ? 'denied' : 'granted';
         if (perm === 'denied') {
-            if (confirm("Notifications are blocked! Do you want to open App Settings to allow them?")) {
-                const a = document.createElement('a');
-                a.href = "intent:in.solmates.app#Intent;scheme=package;action=android.settings.APPLICATION_DETAILS_SETTINGS;end;";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
+            document.getElementById('repair-guide-overlay').style.display = 'flex';
             return;
         }
 
@@ -3480,8 +3482,19 @@ document.addEventListener('DOMContentLoaded', function() {
     </style>
   </div>
 </div>
+  <div id="repair-guide-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);">
+    <div style="background: var(--bg-card, #fff); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <div style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"><i class="fas fa-bell-slash"></i></div>
+      <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main, #333); margin-bottom: 10px;">Notifications Blocked</h2>
+      <p style="font-size: 15px; color: var(--text-muted, #666); margin-bottom: 25px; line-height: 1.5;">Apke phone settings mein notifications band hain. Ise chalu karne ke liye setting kholein aur allow karein.</p>
+      <button onclick="openAndroidSettings()" style="width: 100%; padding: 14px; background: #0071e3; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; margin-bottom: 12px;">Open Settings</button>
+      <button onclick="document.getElementById('repair-guide-overlay').style.display='none';" style="width: 100%; padding: 14px; background: #f1f5f9; color: #334155; border: none; border-radius: 12px; font-size: 16px; font-weight: 600;">Close</button>
+    </div>
+  </div>
 </body>
 </html>
+
+
 
 
 
