@@ -3470,6 +3470,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- Rich Post Detail Modal -->
+<div id="richPostModalOverlay" class="rp-modal-overlay" onclick="closeRichPostModal()">
+  <div class="rp-modal" onclick="event.stopPropagation()">
+    <button class="rp-modal-close" onclick="closeRichPostModal()"><i class="fas fa-times"></i></button>
+    <div class="rp-modal-content">
+      <div id="rpModalImageWrap" style="display:none;"><img id="rpModalImage" src="" alt="Notice Image" /></div>
+      <div id="rpModalIconPlaceholder" class="rp-icon-placeholder"></div>
+      <h2 id="rpModalTitle" class="rp-modal-title"></h2>
+      <div id="rpModalDesc" class="rp-modal-desc"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 
