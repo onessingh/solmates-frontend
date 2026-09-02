@@ -623,6 +623,16 @@
       animation: rpPopOut 0.18s ease forwards;
     }
 
+    #rpModalImage {
+      width: 100%;
+      height: auto;
+      max-height: 250px;
+      object-fit: cover;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      display: block;
+    }
+
     .rp-modal-close {
       position: absolute;
       top: 12px;
@@ -3091,7 +3101,8 @@
     async function handleNotifyToggle() {
       const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
       const hasNativeCapacitor = (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
-      const hasNativeFCM = !!fcmToken || hasNativeCapacitor;
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      const hasNativeFCM = !!fcmToken || hasNativeCapacitor || isStandalone;
       const localEnabled = localStorage.getItem('sol_notif_enabled') !== 'false';
       
       if (hasNativeFCM) {
@@ -3480,6 +3491,33 @@ document.addEventListener('DOMContentLoaded', function() {
       <h2 id="rpModalTitle" class="rp-modal-title"></h2>
       <div id="rpModalDesc" class="rp-modal-desc"></div>
     </div>
+  </div>
+</div>
+<!-- Semester Selection Modal (v88.7) -->
+<div id="semSelectionModal" class="admin-modal">
+  <div class="admin-modal-content" style="max-width: 420px; text-align: center; border-radius: 24px; padding: 32px;">
+    <button class="toast-close" onclick="closeSemSelectionModal()"><i class="fas fa-times"></i></button>
+    <div style="width: 60px; height: 60px; background: rgba(15, 43, 70, 0.05); color: var(--brand-primary); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 20px;">
+      <i class="fas fa-sliders-h"></i>
+    </div>
+    <h2 style="margin-bottom: 8px; font-weight: 800; color: var(--brand-primary);">Choose Semesters</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Select the semesters you want to receive instant alerts for.</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; text-align: left;">
+      <label class="all-sem-label" style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s;">
+        <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: var(--brand-primary);">
+        <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: var(--brand-primary);">All Semesters</div><div style="font-size: 12px; color: #94a3b8;">Subscribe to every update</div></div>
+      </label>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="1"> <span>Sem 1</span></label>
+        <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="2"> <span>Sem 2</span></label>
+        <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="3"> <span>Sem 3</span></label>
+        <label class="sem-check-label"><input type="checkbox" class="sem-sub-check" value="4"> <span>Sem 4</span></label>
+      </div>
+    </div>
+
+    <button onclick="saveSemSubscription()" class="submit-btn" id="saveSemSubBtn" style="width: 100%; border-radius: 14px; padding: 16px; font-size: 16px;">Save Preferences</button>
   </div>
 </div>
 </body>
