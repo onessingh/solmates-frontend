@@ -3503,7 +3503,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; text-align: left;">
       <label style="display: flex; align-items: center; gap: 12px; background: var(--bg-card, #f8fafc); padding: 14px 18px; border-radius: 14px; cursor: pointer; border: 1px solid var(--border-color, #e2e8f0); transition: all 0.2s;">
-        <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: var(--brand-primary, #0f2b46);">
+        <input type="checkbox" id="sem_all" onchange="toggleAllSemCheckboxes(this.checked)" style="width: 18px; height: 18px; accent-color: #0071e3;">
         <div style="flex: 1;"><div style="font-weight: 700; font-size: 15px; color: var(--text-main, #0f2b46);">All Semesters</div><div style="font-size: 12px; color: var(--text-muted, #94a3b8);">Subscribe to every update</div></div>
       </label>
       
@@ -3515,7 +3515,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </div>
 
-    <button id="confirmSemSubBtn" onclick="confirmSemSelection()" style="width: 100%; background: var(--brand-primary, #0f2b46); color: white; padding: 14px; border: none; border-radius: 16px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 8px 20px rgba(15, 43, 70, 0.2); transition: all 0.3s;">
+    <button id="confirmSemSubBtn" onclick="confirmSemSelection()" style="width: 100%; background: var(--brand-primary, #0f2b46); color: var(--bg-body, white); padding: 14px; border: none; border-radius: 16px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); transition: all 0.3s;">
       Confirm Subscription
     </button>
 
@@ -3535,11 +3535,11 @@ document.addEventListener('DOMContentLoaded', function() {
         transition: all 0.2s;
       }
       .sem-check-label:has(input:checked) {
-        border-color: var(--brand-primary, #0f2b46);
-        background: rgba(15, 43, 70, 0.02);
+        border-color: var(--brand-primary, #0071e3);
+        background: var(--bg-nav, rgba(15, 43, 70, 0.05));
         color: var(--text-main, #0f2b46);
       }
-      .sem-check-label input { width: 16px; height: 16px; accent-color: var(--brand-primary, #0f2b46); cursor: pointer; }
+      .sem-check-label input { width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer; }
     </style>
   </div>
 </div>
