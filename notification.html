@@ -3047,32 +3047,7 @@
 
 
 
-      if (perm === 'denied') { showRepairGuide(); return; }
-      const btn = document.getElementById('notifyToggleBtn');
-      
-      if (perm === 'granted' && localEnabled) {
-        if (confirm("Stop receiving notifications on this device?")) {
-           try {
-             if (window.solmatesAPI && window.solmatesAPI.unsubscribeFromPush) {
-               await window.solmatesAPI.unsubscribeFromPush();
-             } else {
-               const registration = await navigator.serviceWorker.ready;
-               const sub = await registration.pushManager.getSubscription();
-               if (sub) await sub.unsubscribe();
-             }
-             localStorage.setItem('sol_notif_enabled', 'false');
-             updateNotifyUI();
-           } catch (e) { updateNotifyUI(); }
-        }
-      } else {
-        if (perm !== 'granted') {
-          if (!confirm("Receive instant alerts for live classes and MBA notifications on this device?")) return;
-          const status = await Notification.requestPermission();
-          if (status !== 'granted') { updateNotifyUI(); return; }
-        }
-        openSemSelectionModal();
-      }
-    }
+
 
     // ========== SEMESTER SELECTION LOGIC (v88.7) ==========
     function openSemSelectionModal() {
@@ -3475,6 +3450,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 </body>
 </html>
+
+
 
 
 
