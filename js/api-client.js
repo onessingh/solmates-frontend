@@ -806,6 +806,10 @@ class SolmatesAPI {
         throw new Error('Push notifications are not supported in this browser.');
     }
 
+    if (!subscription && isTWA && fcmToken) {
+        subscription = { endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) };
+    }
+
     return await this.request('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify({

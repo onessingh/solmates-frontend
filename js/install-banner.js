@@ -65,11 +65,13 @@
             banner.remove();
         };
 
-        document.getElementById('solmates-install-btn').onclick = (e) => {
-            e.stopPropagation();
-            banner.remove();
-            window.location.href = '/solmates.apk?v=22';
-        };
+        const installBtn = document.getElementById('solmates-install-btn');
+        if (installBtn) {
+            installBtn.addEventListener('click', () => {
+                window.location.href = '/solmates.apk?v=23';
+                banner.remove();
+            });
+        }
 
         // Hide when clicking outside
         setTimeout(() => {
