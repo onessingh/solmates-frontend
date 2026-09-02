@@ -3483,16 +3483,26 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
   <div id="repair-guide-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 11000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);">
-    <div style="background: var(--bg-card, #fff); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-      <div style="font-size: 48px; color: #ef4444; margin-bottom: 20px;"><i class="fas fa-bell-slash"></i></div>
-      <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main, #333); margin-bottom: 10px;">Notifications Blocked</h2>
-      <p style="font-size: 15px; color: var(--text-muted, #666); margin-bottom: 25px; line-height: 1.5;">Apke phone settings mein notifications band hain. Ise chalu karne ke liye setting kholein aur allow karein.</p>
-      <button onclick="openAndroidSettings()" style="width: 100%; padding: 14px; background: #0071e3; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; margin-bottom: 12px;">Open Settings</button>
-      <button onclick="document.getElementById('repair-guide-overlay').style.display='none';" style="width: 100%; padding: 14px; background: #f1f5f9; color: #334155; border: none; border-radius: 12px; font-size: 16px; font-weight: 600;">Close</button>
+    <div style="background: var(--bg-card, #fff); padding: 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <div style="text-align: center; font-size: 48px; color: #ef4444; margin-bottom: 15px;"><i class="fas fa-bell-slash"></i></div>
+      <h2 style="text-align: center; font-size: 22px; font-weight: 800; color: var(--text-main, #333); margin-bottom: 25px;">Notifications Blocked</h2>
+      <div style="font-size: 15px; color: var(--text-main, #444); line-height: 1.6; margin-bottom: 30px;">
+        <strong>How to fix this:</strong>
+        <ol style="margin-top: 10px; padding-left: 20px; color: var(--text-muted, #555);">
+            <li style="margin-bottom: 8px;">Go to your phone's <strong>Settings</strong></li>
+            <li style="margin-bottom: 8px;">Tap on <strong>Apps</strong> (or Apps & Notifications)</li>
+            <li style="margin-bottom: 8px;">Find and select <strong>Solmates</strong></li>
+            <li style="margin-bottom: 8px;">Tap on <strong>Notifications</strong></li>
+            <li style="margin-bottom: 8px;">Turn on <strong>Allow Notifications</strong></li>
+            <li style="margin-bottom: 8px;">Swipe away (Force close) this app and open it again.</li>
+        </ol>
+      </div>
+      <button onclick="document.getElementById('repair-guide-overlay').style.display='none';" style="width: 100%; padding: 14px; background: #0071e3; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600;">I Understand</button>
     </div>
   </div>
 </body>
 </html>
+
 
 
 
