@@ -343,13 +343,12 @@ if (typeof document !== "undefined") {
           }
           // E. Dynamically manage theme-color meta tags for PWA/TWS status bar
           const updateThemeColor = (theme) => {
-              const isDark = theme === 'dark' || (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+              const isDark = theme === 'dark';
               const color = isDark ? '#0f172a' : '#ffffff';
-              document.querySelectorAll('meta[name="theme-color"]').forEach(el => el.remove());
-              const metaTheme = document.createElement('meta');
-              metaTheme.name = 'theme-color';
-              metaTheme.content = color;
-              document.head.appendChild(metaTheme);
+              const metaTheme = document.getElementById('theme-color-meta');
+    if (metaTheme) {
+        metaTheme.setAttribute('content', color);
+    }
           };
           updateThemeColor(localStorage.getItem('solmates_theme'));
           

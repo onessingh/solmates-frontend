@@ -41,8 +41,14 @@
 
 // Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
     (function() {
-      var t = localStorage.getItem('solmates_theme');
-      
+      var t = localStorage.getItem('solmates_theme') || 'light';
+      var m = document.getElementById('theme-color-meta');
+
+      if (m) {
+        m.setAttribute('content', t === 'dark' ? '#0f172a' : '#ffffff');
+      }
+
+      document.documentElement.setAttribute('data-solmates-theme', t);
     })();
   </script>
   <meta name="color-scheme" content="only light">
@@ -5474,11 +5480,7 @@
       updateThemeIcon(saved);
       
       // Listen for OS theme changes if not overridden
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('solmates_theme')) {
-          updateThemeIcon(null);
-        }
-      });
+      
     });
 </script>
   <script src="/js/install-banner.js?v=89" defer></script>

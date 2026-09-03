@@ -391,10 +391,10 @@
         } catch(e) {}
       };
 
-      setTimeout(syncStatusBar, 500);
+      syncStatusBar();
 
       const observer = new MutationObserver(syncStatusBar);
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
     }
   }
 
