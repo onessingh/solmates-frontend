@@ -1,24 +1,24 @@
 /**
- * SOLMATES Service Worker (v483)
- * Handles offline caching. Web Push has been removed as notifications are natively handled by Android App.
+ * SOLMATES Service Worker (v512)
+ * HTML always network-first + theme-color #0f172a forcefully injected via setAttribute override.
  */
 
-const CACHE_NAME = 'solmates-cache-v511';const STATIC_ASSETS = [
-    '/',
-    '/index.html',
+const CACHE_NAME = 'solmates-cache-v512';
+
+const STATIC_ASSETS = [
     '/notification.html',
-    '/css/styles.css',
     '/js/api-client.js',
-    '/js/admin.js',
     '/android-chrome-192x192.png',
     '/android-chrome-512x512.png',
     '/apple-touch-icon.png',
-    '/favicon.ico',
-    '/favicon-32x32.png',
-    '/favicon-16x16.png'
+    '/favicon.ico'
 ];
 
-self.addEventListener('install', event => {
+// This script is injected into EVERY HTML page by the SW.
+// It overrides Element.prototype.setAttribute so OLD code can NEVER set theme-color to #ffffff.
+const THEME_FIX = '<script>(function(){function f(){var m=document.getElementById("theme-color-meta");if(m&&m.getAttribute("content")!=="#0f172a")m.setAttribute("content","#0f172a");}f();var o=Element.prototype.setAttribute;Element.prototype.setAttribute=function(n,v){if(n==="content"&&this.id==="theme-color-meta")return o.call(this,n,"#0f172a");return o.call(this,n,v);};setInterval(f,300);})()+<'+'/script>';
+
+self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(STATIC_ASSETS))
@@ -26,74 +26,48 @@ self.addEventListener('install', event => {
     );
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener("activate", event => {
     event.waitUntil(
-        // Step 1: Delete ALL old caches
-        caches.keys().then(cacheNames => {
-            return Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
-        })
-        // Step 2: Claim all clients immediately
-        .then(() => self.clients.claim())
-        // Step 3: Force all open windows to reload with fresh HTML from network
-        .then(() => self.clients.matchAll({ type: 'window', includeUncontrolled: true }))
-        .then(clients => {
-            return Promise.all(clients.map(client => {
-                // Add cache-buster param so browser fetches fresh from network
-                var freshUrl = client.url.split('?')[0] + '?_sw=511';
-                return client.navigate(freshUrl);
-            }));
-        })
+        caches.keys()
+            .then(keys => Promise.all(keys.map(k => caches.delete(k))))
+            .then(() => self.clients.claim())
     );
 });
 
+self.addEventListener("fetch", event => {
+    if (event.request.method !== "GET") return;
+    if (event.request.url.includes("/api/")) return;
 
-self.addEventListener('fetch', event => {
-    if (event.request.method !== 'GET') return;
-    if (event.request.url.includes('/api/')) return;
+    const url = new URL(event.request.url);
+    const isHTML = event.request.destination === "document"
+        || url.pathname === "/"
+        || url.pathname.endsWith("/index.html")
+        || url.pathname.endsWith(".html");
 
-    // HTML pages: ALWAYS fetch fresh from network (Network-First)
-    // This ensures index.html is never served stale from cache
-    if (event.request.destination === 'document' || event.request.url.endsWith('/') || event.request.url.endsWith('/index.html')) {
+    if (isHTML) {
         event.respondWith(
-            fetch(event.request).then(networkResponse => {
-                const responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
-                return networkResponse;
-            }).catch(() => caches.match(event.request))
+            fetch(event.request, { cache: "reload" })
+                .then(res => res.text().then(html => {
+                    html = html.replace("<head>", "<head>" + THEME_FIX);
+                    return new Response(html, {
+                        status: res.status,
+                        headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" }
+                    });
+                }))
+                .catch(() => caches.match("/index.html")
+                    .then(cached => cached || new Response("Offline", { status: 503 })))
         );
         return;
     }
 
-    // Other assets: cache-first
     event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                if (response) return response;
-                return fetch(event.request).then(networkResponse => {
-                    if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-                        return networkResponse;
-                    }
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, responseToCache);
-                    });
-                    return networkResponse;
-                }).catch(() => {
-                    return caches.match('/index.html');
-                });
-            })
+        caches.match(event.request).then(cached => {
+            if (cached) return cached;
+            return fetch(event.request).then(res => {
+                if (!res || res.status !== 200 || res.type !== "basic") return res;
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, res.clone()));
+                return res;
+            }).catch(() => caches.match("/index.html"));
+        })
     );
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
