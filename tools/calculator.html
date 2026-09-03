@@ -12,6 +12,8 @@
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
 })();
 </script>
+  <meta name="theme-color" content="#ffffff">
+
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
@@ -407,20 +409,20 @@
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
-            
+            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'only light');
-            
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             // Force light mode for new users to override OS dark mode in PWA status bar
             meta.setAttribute('content', 'only light');
-            
+            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
@@ -493,27 +495,55 @@
       <p>Standard DU/SOL CGPA to Percentage & GPA Tools</p>
     </div>
 
-    <!-- CGPA to Percentage -->
+    <!-- CGPA <-> Percentage Converter (Tabbed) -->
     <div class="calc-card">
-      <h2 class="card-title"><i class="fas fa-percent"></i> CGPA to Percentage Converter</h2>
-      <div class="input-group" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
-        <div style="flex: 1; min-width: 200px;">
-          <label>Enter your CGPA:</label>
-          <input type="number" id="cgpaInput" class="input-field" placeholder="e.g., 8.5" step="0.01" min="0" max="10" oninput="calculatePercentage()">
+      <h2 class="card-title"><i class="fas fa-percent"></i> CGPA &harr; Percentage Converter</h2>
+
+      <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--border-color,#e2e8f0);">
+        <button id="tab-c2p" onclick="switchConverterTab('c2p')" style="flex:1;padding:10px;border:none;background:none;font-weight:600;cursor:pointer;color:#6366f1;border-bottom:3px solid #6366f1;transition:all 0.2s;">CGPA &rarr; Percentage</button>
+        <button id="tab-p2c" onclick="switchConverterTab('p2c')" style="flex:1;padding:10px;border:none;background:none;font-weight:600;cursor:pointer;color:var(--text-secondary,#64748b);border-bottom:3px solid transparent;transition:all 0.2s;">Percentage &rarr; CGPA</button>
+      </div>
+
+      <div id="panel-c2p">
+        <div class="input-group" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+          <div style="flex: 1; min-width: 200px;">
+            <label>Enter your CGPA:</label>
+            <input type="number" id="cgpaInput" class="input-field" placeholder="e.g., 8.5" step="0.01" min="0" max="10" oninput="calculatePercentage()">
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <label>Admission Batch:</label>
+            <select id="cgpaMultiplier" class="input-field" onchange="calculatePercentage()">
+              <option value="10">2022 &amp; Onwards (UGCF/NEP)</option>
+              <option value="9.5">Before 2022 (CBCS)</option>
+            </select>
+          </div>
         </div>
-        <div style="flex: 1; min-width: 200px;">
-          <label>Admission Batch:</label>
-          <select id="cgpaMultiplier" class="input-field" onchange="calculatePercentage()">
-            <option value="10">2022 & Onwards (UGCF/NEP)</option>
-            <option value="9.5">Before 2022 (CBCS)</option>
-          </select>
+        <div id="percentageResult" class="result-box">
+          <div class="result-val" id="percentVal">--</div>
+          <div class="result-label">Aggregated Percentage</div>
+          <div class="formula-tag" id="formulaTag">Formula: CGPA x 10 (DU Standard)</div>
         </div>
       </div>
-      
-      <div id="percentageResult" class="result-box">
-        <div class="result-val" id="percentVal">--</div>
-        <div class="result-label">Aggregated Percentage</div>
-        <div class="formula-tag" id="formulaTag">Formula: CGPA × 10 (DU Standard)</div>
+
+      <div id="panel-p2c" style="display:none;">
+        <div class="input-group" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+          <div style="flex: 1; min-width: 200px;">
+            <label>Enter your Percentage (%):</label>
+            <input type="number" id="percentInput" class="input-field" placeholder="e.g., 75.5" step="0.1" min="0" max="100" oninput="calculateCGPAFromPercent()">
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <label>Admission Batch:</label>
+            <select id="percentDivisor" class="input-field" onchange="calculateCGPAFromPercent()">
+              <option value="10">2022 &amp; Onwards (UGCF/NEP)</option>
+              <option value="9.5">Before 2022 (CBCS)</option>
+            </select>
+          </div>
+        </div>
+        <div id="cgpaFromPercentResult" class="result-box">
+          <div class="result-val" id="cgpaFromPercentVal">--</div>
+          <div class="result-label">Estimated CGPA</div>
+          <div class="formula-tag" id="cgpaFromPercentFormula">Formula: Percentage / 10 (DU Standard)</div>
+        </div>
       </div>
     </div>
 
@@ -694,6 +724,32 @@
       calculateSubjectSGPA();
     }
 
+    function switchConverterTab(tab) {
+      document.getElementById('panel-c2p').style.display = tab === 'c2p' ? 'block' : 'none';
+      document.getElementById('panel-p2c').style.display = tab === 'p2c' ? 'block' : 'none';
+      document.getElementById('tab-c2p').style.color = tab === 'c2p' ? '#6366f1' : 'var(--text-secondary,#64748b)';
+      document.getElementById('tab-p2c').style.color = tab === 'p2c' ? '#6366f1' : 'var(--text-secondary,#64748b)';
+      document.getElementById('tab-c2p').style.borderBottom = tab === 'c2p' ? '3px solid #6366f1' : '3px solid transparent';
+      document.getElementById('tab-p2c').style.borderBottom = tab === 'p2c' ? '3px solid #6366f1' : '3px solid transparent';
+    }
+
+    function calculateCGPAFromPercent() {
+      const input = document.getElementById('percentInput');
+      const box = document.getElementById('cgpaFromPercentResult');
+      const val = document.getElementById('cgpaFromPercentVal');
+      const divisorEl = document.getElementById('percentDivisor');
+      const divisor = divisorEl ? parseFloat(divisorEl.value) : 10;
+      const percent = parseFloat(input.value);
+      if (percent > 0 && percent <= 100) {
+        const cgpa = (percent / divisor).toFixed(2);
+        val.innerText = cgpa;
+        const fTag = document.getElementById('cgpaFromPercentFormula');
+        if (fTag) fTag.innerText = 'Formula: Percentage / ' + divisor + ' (DU Standard)';
+        box.style.display = 'block';
+      } else {
+        box.style.display = 'none';
+      }
+    }
     function calculatePercentage() {
       const input = document.getElementById('cgpaInput');
       const box = document.getElementById('percentageResult');
