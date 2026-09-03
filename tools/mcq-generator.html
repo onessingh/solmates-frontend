@@ -460,41 +460,56 @@
 
   <script>
     // URL param population for Exam Prep AI integration
-    function safeParseJSON(text) {
+    // Parses the plain-text "Q: / A) / B) / C) / D) / CORRECT: / EXPLANATION: / HINGLISH: / ===END===" format.
+    // This is intentionally forgiving: a broken/missing field only drops that ONE question instead of
+    // failing the entire batch the way JSON.parse() used to.
+    function parseMCQText(text, difficulty) {
         if (!text) throw new Error("Empty response");
-        let attempt = text.trim();
-        const start = attempt.indexOf('[');
-        const end = attempt.lastIndexOf(']');
-        const startObj = attempt.indexOf('{');
-        const endObj = attempt.lastIndexOf('}');
-        
-        let firstArr = (start !== -1) ? start : Infinity;
-        let firstObj = (startObj !== -1) ? startObj : Infinity;
-        
-        if (firstArr < firstObj && firstArr !== Infinity) {
-            // It's likely an array. 
-            // If we don't have a matching end, just slice from start
-            attempt = attempt.substring(start, end !== -1 ? end + 1 : attempt.length);
-        } else if (firstObj !== Infinity) {
-            // It's likely an object.
-            attempt = attempt.substring(startObj, endObj !== -1 ? endObj + 1 : attempt.length);
-        }
-        
-        attempt = attempt.replace(/,\s*([\}\]])/g, '$1'); // clean trailing commas
-        
-        // Very aggressive bracket repair for truncated JSON
-        try { return JSON.parse(attempt); } catch(e1) {}
-        try { return JSON.parse(attempt + ']'); } catch(e2) {}
-        try { return JSON.parse(attempt + ']}'); } catch(e3) {}
-        try { return JSON.parse(attempt + ']}'); } catch(e4) {}
-        try { return JSON.parse(attempt + '}]'); } catch(e5) {}
-        try { return JSON.parse(attempt + '}}]'); } catch(e6) {}
-        try { return JSON.parse(attempt + '"}'); } catch(e7) {}
-        try { return JSON.parse(attempt + '"]'); } catch(e8) {}
-        try { return JSON.parse(attempt + '"}]'); } catch(e9) {}
-        
-        // If all fail, throw the original error
-        return JSON.parse(attempt);
+
+        let clean = text.replace(/\r\n/g, '\n').trim();
+        // Strip stray markdown fences or "Sure, here are..." style intros if the AI adds them anyway
+        clean = clean.replace(/^```[a-z]*\n?/i, '').replace(/```$/i, '').trim();
+        clean = clean.replace(/^(sure|here are|here is|here's|okay|ok)[^\n]*:?\n/i, '').trim();
+        const firstQ = clean.indexOf('Q:');
+        if (firstQ > 0) clean = clean.substring(firstQ);
+
+        let blocks = clean.split(/===\s*END\s*===/i).map(b => b.trim()).filter(Boolean);
+        if (blocks.length === 0) blocks = [clean];
+
+        const questions = [];
+
+        blocks.forEach((block) => {
+            const qMatch = block.match(/Q:\s*([\s\S]*?)\n\s*A\)/i);
+            const aMatch = block.match(/A\)\s*([\s\S]*?)\n\s*B\)/i);
+            const bMatch = block.match(/B\)\s*([\s\S]*?)\n\s*C\)/i);
+            const cMatch = block.match(/C\)\s*([\s\S]*?)\n\s*D\)/i);
+            const dMatch = block.match(/D\)\s*([\s\S]*?)(?:\n\s*CORRECT:|$)/i);
+            const correctMatch = block.match(/CORRECT:\s*([A-D])/i);
+            const expMatch = block.match(/EXPLANATION:\s*([\s\S]*?)(?:\n\s*HINGLISH:|$)/i);
+            const hinglishMatch = block.match(/HINGLISH:\s*([\s\S]*?)$/i);
+
+            // Skip this one block if the essentials are missing — don't fail the whole batch
+            if (!qMatch || !aMatch || !bMatch || !correctMatch) return;
+
+            const options = [aMatch[1], bMatch[1], cMatch ? cMatch[1] : null, dMatch ? dMatch[1] : null]
+                .filter(Boolean)
+                .map(o => o.trim());
+
+            const correctIndex = correctMatch[1].toUpperCase().charCodeAt(0) - 65; // A=0, B=1, C=2, D=3
+
+            questions.push({
+                id: questions.length + 1,
+                q: qMatch[1].trim(),
+                options: options,
+                correct: correctIndex,
+                explanation: expMatch ? expMatch[1].trim() : '',
+                hinglish_explanation: hinglishMatch ? hinglishMatch[1].trim() : '',
+                tag: difficulty
+            });
+        });
+
+        if (questions.length === 0) throw new Error("No valid questions could be parsed from AI response");
+        return questions;
     }
     
     window.onload = () => {
@@ -539,35 +554,30 @@
       try {
         const prompt = `Generate exactly ${count} multiple-choice questions for ${exam}, subject: ${subject}, topic: ${topic}.
 Difficulty: ${difficulty}. Language: ${lang}. Type: ${qType}.
-Output strictly in the following JSON array format, and nothing else:
-[
-  {
-    "id": 1,
-    "q": "Question text...",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correct": 1, 
-    "explanation": "Explanation for why option index 1 is correct.",
-    "hinglish_explanation": "Wahi same explanation asan Hinglish me."
-    }
-  ]
-  CRITICAL INSTRUCTION: Keep all explanations EXTREMELY concise (maximum 1-2 lines).
-    "tag": "${difficulty}"
-  }
-]
-Note: "correct" must be an integer index (0-3) corresponding to the correct option.`;
 
-        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
+Output EACH question in EXACTLY this plain text format (no JSON, no markdown, no numbering):
+
+Q: <question text>
+A) <option A>
+B) <option B>
+C) <option C>
+D) <option D>
+CORRECT: <A or B or C or D>
+EXPLANATION: <1-2 line explanation of why the correct option is right>
+HINGLISH: <same explanation in simple Hinglish>
+===END===
+
+Repeat this exact block for all ${count} questions, one after another, each one ending with "===END===" on its own line.
+Do not write any intro, outro, or commentary. Start your response directly with "Q:". Keep explanations extremely concise (max 1-2 lines).`;
+
+        const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Follow the exact plain text format above. Start immediately with 'Q:'. No JSON, no markdown, no extra text.", []);
         const resText = res.message || res.reply;
         if (res.success && resText) {
-            
+
             try {
-                let cleanText = repairIncompleteJSON(resText);
-                let parsed = safeParseJSON(cleanText);
-                if (parsed.questions) parsed = parsed.questions;
- // Handle wrapped objects
-                generatedQuestions = parsed;
+                generatedQuestions = parseMCQText(resText, difficulty);
             } catch (parseErr) {
-                console.error("JSON Parse Error:", parseErr, resText.substring(0, 200));
+                console.error("Parse Error:", parseErr, resText.substring(0, 200));
                 throw new Error("Invalid response format from AI");
             }
         } else {
@@ -590,27 +600,6 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
     }
 
     
-    function repairIncompleteJSON(str) {
-        let clean = str.trim();
-        // Remove markdown blocks if any
-        clean = clean.replace(/^`{3}json/i, '').replace(/`{3}$/, '').trim();
-        
-        if (clean.endsWith(']')) return clean; // Looks complete
-        
-        // Find the last complete object
-        const lastBrace = clean.lastIndexOf('}');
-        if (lastBrace !== -1) {
-            clean = clean.substring(0, lastBrace + 1);
-            // Remove any trailing comma at the very end of the truncated string
-            clean = clean.replace(/,\s*$/, '');
-            clean += '\n]';
-        } else {
-            // If there's not even one complete object, we can't save it
-            clean += ']';
-        }
-        return clean;
-    }
-
     function renderQuestions() {
       const container = document.getElementById('questions-container');
       const showExp = document.getElementById('include-exp').checked;

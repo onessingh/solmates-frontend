@@ -472,44 +472,65 @@
   </div>
 
   <script>
-    function safeParseJSON(text) {
+    // Parses the plain-text "SECTION: / Q<n>: / OPTIONS: / MARKS: / ANSWER: / ===Q=== / ===SECTION===" format.
+    // Forgiving by design: a broken question only drops that ONE question, and a broken section only
+    // drops that ONE section, instead of the old JSON.parse() failing the entire paper.
+    function parsePaperText(text) {
         if (!text) throw new Error("Empty response");
-        let attempt = text.trim();
-        attempt = attempt.replace(/```json/gi, '').replace(/```/g, '').trim();
-        // Prevent unescaped newline crashes inside JSON
-        attempt = attempt.replace(/[\n\r\t]+/g, ' ');
-        const start = attempt.indexOf('[');
-        const end = attempt.lastIndexOf(']');
-        const startObj = attempt.indexOf('{');
-        const endObj = attempt.lastIndexOf('}');
-        
-        let firstArr = (start !== -1) ? start : Infinity;
-        let firstObj = (startObj !== -1) ? startObj : Infinity;
-        
-        if (firstArr < firstObj && firstArr !== Infinity) {
-            // It's likely an array. 
-            // If we don't have a matching end, just slice from start
-            attempt = attempt.substring(start, end !== -1 ? end + 1 : attempt.length);
-        } else if (firstObj !== Infinity) {
-            // It's likely an object.
-            attempt = attempt.substring(startObj, endObj !== -1 ? endObj + 1 : attempt.length);
-        }
-        
-        attempt = attempt.replace(/,\s*([\}\]])/g, '$1'); // clean trailing commas
-        
-        // Very aggressive bracket repair for truncated JSON
-        try { return JSON.parse(attempt); } catch(e1) {}
-        try { return JSON.parse(attempt + ']'); } catch(e2) {}
-        try { return JSON.parse(attempt + ']}'); } catch(e3) {}
-        try { return JSON.parse(attempt + ']}'); } catch(e4) {}
-        try { return JSON.parse(attempt + '}]'); } catch(e5) {}
-        try { return JSON.parse(attempt + '}}]'); } catch(e6) {}
-        try { return JSON.parse(attempt + '"}'); } catch(e7) {}
-        try { return JSON.parse(attempt + '"]'); } catch(e8) {}
-        try { return JSON.parse(attempt + '"}]'); } catch(e9) {}
-        
-        // If all fail, throw the original error
-        return JSON.parse(attempt);
+
+        let clean = text.replace(/\r\n/g, '\n').trim();
+        clean = clean.replace(/^```[a-z]*\n?/i, '').replace(/```$/i, '').trim();
+        clean = clean.replace(/^(sure|here are|here is|here's|okay|ok)[^\n]*:?\n/i, '').trim();
+        const firstSection = clean.indexOf('SECTION:');
+        if (firstSection > 0) clean = clean.substring(firstSection);
+
+        let sectionBlocks = clean.split(/===\s*SECTION\s*===/i).map(b => b.trim()).filter(Boolean);
+        if (sectionBlocks.length === 0) sectionBlocks = [clean];
+
+        const sections = [];
+
+        sectionBlocks.forEach((secBlock) => {
+            const titleMatch = secBlock.match(/SECTION:\s*(.*)/i);
+            if (!titleMatch) return; // skip a section we can't even identify
+
+            const sectionTitle = titleMatch[1].trim();
+            const restOfSection = secBlock.substring(secBlock.indexOf(titleMatch[0]) + titleMatch[0].length);
+
+            let qBlocks = restOfSection.split(/===\s*Q\s*===/i).map(b => b.trim()).filter(Boolean);
+
+            const questions = [];
+            qBlocks.forEach((qBlock) => {
+                const qMatch = qBlock.match(/Q(\d+):\s*([\s\S]*?)\n\s*OPTIONS:/i);
+                const optsMatch = qBlock.match(/OPTIONS:\s*([\s\S]*?)\n\s*MARKS:/i);
+                const marksMatch = qBlock.match(/MARKS:\s*(\d+)/i);
+                const answerMatch = qBlock.match(/ANSWER:\s*([\s\S]*?)$/i);
+
+                if (!qMatch) return; // skip a question we can't identify
+
+                let options = [];
+                if (optsMatch) {
+                    const optsRaw = optsMatch[1].trim();
+                    if (!/^NONE$/i.test(optsRaw)) {
+                        options = optsRaw.split('\n').map(o => o.trim()).filter(Boolean);
+                    }
+                }
+
+                questions.push({
+                    qNum: parseInt(qMatch[1], 10) || (questions.length + 1),
+                    text: qMatch[2].trim(),
+                    options: options,
+                    marks: marksMatch ? parseInt(marksMatch[1], 10) : 1,
+                    answer: answerMatch ? answerMatch[1].trim() : 'Answer not provided'
+                });
+            });
+
+            if (questions.length > 0) {
+                sections.push({ sectionTitle: sectionTitle, questions: questions });
+            }
+        });
+
+        if (sections.length === 0) throw new Error("No valid sections could be parsed from AI response");
+        return sections;
     }
     
     window.onload = () => {
@@ -566,31 +587,41 @@
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
             const prompt = ctxPrompt + `Generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}.
-CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. However, the JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English. Do not translate the JSON keys.
+CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. The structural labels below ("SECTION:", "Q<n>:", "OPTIONS:", "MARKS:", "ANSWER:") MUST strictly remain in English exactly as shown. Do not translate these labels.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
-Output strictly in JSON format as an array of sections:
-[
-  {
-    "sectionTitle": "SECTION A (Objective Type)",
-    "questions": [
-      {
-        "qNum": 1,
-        "text": "Question text?",
-        "options": ["(A) Opt 1", "(B) Opt 2", "(C) Opt 3", "(D) Opt 4"], 
-        "marks": 1,
-        "answer": "(A) Opt 1 - Explanation"
-      }
-    ]
-  }
-]
-Note: Set "options" to null or an empty array if the question is subjective. For subjective questions, you MUST provide a brief point-wise hint or marking scheme in the "answer" field. Make the questions realistic for the exam type.`;
 
-            const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
+Output the paper in EXACTLY this plain text format (no JSON, no markdown):
+
+SECTION: <section title, e.g. SECTION A (Objective Type)>
+Q1: <question text>
+OPTIONS:
+(A) <option 1>
+(B) <option 2>
+(C) <option 3>
+(D) <option 4>
+MARKS: <marks for this question>
+ANSWER: <correct option with brief explanation>
+===Q===
+Q2: <next question text>
+OPTIONS: NONE
+MARKS: <marks>
+ANSWER: <brief point-wise marking scheme / model answer>
+===Q===
+===SECTION===
+SECTION: <next section title>
+...
+
+Rules:
+- For objective/MCQ questions, list OPTIONS as shown with (A)/(B)/(C)/(D).
+- For subjective questions, write "OPTIONS: NONE" and give a brief point-wise hint or marking scheme in ANSWER.
+- End every question block with "===Q===" on its own line, and every section with "===SECTION===" on its own line.
+- Do not add any intro, outro, or commentary. Start your response directly with "SECTION:". Make the questions realistic for the exam type.`;
+
+            const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Follow the exact plain text format above. Start immediately with 'SECTION:'. No JSON, no markdown, no extra text.", []);
             const resText = res.message || res.reply;
             window.lastRawResponse = resText;
             if (res.success && resText) {
-                sections = safeParseJSON(resText);
-                if (sections.sections) sections = sections.sections;
+                sections = parsePaperText(resText);
                 success = true;
             } else {
                 throw new Error("Failed response");
