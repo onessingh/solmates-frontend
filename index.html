@@ -5453,8 +5453,7 @@
       darkStyle.media = newTheme === 'dark' ? 'all' : 'not all';
       localStorage.setItem('solmates_theme', newTheme);
       document.documentElement.setAttribute('data-solmates-theme', newTheme);
-      updateThemeIcon(newTheme);
-    }
+      updateThemeIcon(newTheme); let meta = document.getElementById('theme-color-meta'); if (meta) { meta.setAttribute('content', newTheme === 'dark' ? '#0f172a' : '#ffffff'); } }
     
     function updateThemeIcon(theme) {
       const icon = document.getElementById('themeToggleIcon');
@@ -5487,6 +5486,9 @@
 </body>
 
 </html>
+
+
+
 
 
 
