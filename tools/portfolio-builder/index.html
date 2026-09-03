@@ -1138,7 +1138,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${name} - Portfolio</title>
   <style>
-    __PORTFOLIO_THEME_CSS__
+    ${themeCSS}
     .header-container {
       display: flex;
       align-items: center;
@@ -1222,7 +1222,7 @@
         if (key === 'solmates_theme') updateMetaColorScheme();
     };
 })();
-</script>
+<\/script>
 </head>
 <body>
   <header>
@@ -1236,7 +1236,7 @@
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
 })();
 <\/script>
-  <div class="container header-container">
+    <div class="container header-container">
       <div class="header-content">
         <h1>${name}</h1>
         <div class="title">${title}</div>
@@ -1289,7 +1289,7 @@
     </div>
   </footer>
 </body>
-  </html>`.replace('__PORTFOLIO_THEME_CSS__', () => themeCSS);
+</html>`;
     }
 
     
