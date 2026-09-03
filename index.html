@@ -69,7 +69,10 @@
       var m = document.getElementById('theme-color-meta');
 
       if (m) {
-        m.setAttribute('content', t === 'dark' ? '#0f172a' : '#ffffff');
+        // Use OS theme for status bar (because Android OS controls bg, Chrome controls icons)
+        // They must match! OS dark = need white icons = dark theme-color
+        var osIsDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        m.setAttribute('content', osIsDark ? '#0f172a' : '#ffffff');
       }
 
       document.documentElement.setAttribute('data-solmates-theme', t);
@@ -3050,6 +3053,13 @@
 
 <script id="color-scheme-sync">
 (function() {
+    // FIX: theme-color MUST match OS theme (phone dark/light), NOT app theme
+    // Android OS controls status bar BACKGROUND via OS theme
+    // Chrome controls ICONS via theme-color luminance
+    // They must match => theme-color should follow OS theme
+    function getOsColor() {
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#0f172a' : '#ffffff';
+    }
     function updateMetaColorScheme() {
         var themeMeta = document.getElementById('theme-color-meta');
         var darkStyle = document.getElementById('solmates-dark-style');
@@ -3058,22 +3068,12 @@
             theme = 'light';
             localStorage.setItem('solmates_theme', 'light');
         }
+        // Always use OS color for status bar icons
+        if (themeMeta) { themeMeta.setAttribute('content', getOsColor()); }
         if (theme === 'dark') {
-            
-            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
-            
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
-        } else if (theme === 'light') {
-            
-            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); }
-            
-            document.documentElement.classList.remove('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
-            
-            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); }
-            
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         }
@@ -5532,6 +5532,7 @@
 </body>
 
 </html>
+
 
 
 

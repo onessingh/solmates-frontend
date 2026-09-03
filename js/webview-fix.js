@@ -371,7 +371,8 @@
       const syncStatusBar = async () => {
         try {
           const isDark = document.documentElement.classList.contains('dark') || document.documentElement.style.colorScheme === 'dark';
-          const bgColor = isDark ? '#0f172a' : '#ffffff';
+          const osIsDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const bgColor = osIsDark ? '#0f172a' : '#ffffff';
           const statusBarColor = isDark ? '#161925' : '#f8f9fa';
           const style = isDark ? 'DARK' : 'LIGHT';
 
@@ -403,3 +404,4 @@
   });
 
 })();
+
