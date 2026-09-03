@@ -472,44 +472,63 @@
   </div>
 
   <script>
+    // Robust JSON extractor: strips markdown fences, fixes raw newlines inside
+    // strings (a common cause of "Unexpected token" errors), and uses a
+    // bracket-depth walk to repair truncated JSON instead of guessing suffixes.
     function safeParseJSON(text) {
         if (!text) throw new Error("Empty response");
+
         let attempt = text.trim();
         attempt = attempt.replace(/```json/gi, '').replace(/```/g, '').trim();
-        // Prevent unescaped newline crashes inside JSON
+        // Raw (unescaped) newlines/tabs inside a JSON string are invalid JSON.
         attempt = attempt.replace(/[\n\r\t]+/g, ' ');
+
         const start = attempt.indexOf('[');
-        const end = attempt.lastIndexOf(']');
         const startObj = attempt.indexOf('{');
-        const endObj = attempt.lastIndexOf('}');
-        
         let firstArr = (start !== -1) ? start : Infinity;
         let firstObj = (startObj !== -1) ? startObj : Infinity;
-        
-        if (firstArr < firstObj && firstArr !== Infinity) {
-            // It's likely an array. 
-            // If we don't have a matching end, just slice from start
-            attempt = attempt.substring(start, end !== -1 ? end + 1 : attempt.length);
-        } else if (firstObj !== Infinity) {
-            // It's likely an object.
-            attempt = attempt.substring(startObj, endObj !== -1 ? endObj + 1 : attempt.length);
+
+        if (firstArr === Infinity && firstObj === Infinity) {
+            throw new Error("No JSON object/array found in AI response");
         }
-        
-        attempt = attempt.replace(/,\s*([\}\]])/g, '$1'); // clean trailing commas
-        
-        // Very aggressive bracket repair for truncated JSON
-        try { return JSON.parse(attempt); } catch(e1) {}
-        try { return JSON.parse(attempt + ']'); } catch(e2) {}
-        try { return JSON.parse(attempt + ']}'); } catch(e3) {}
-        try { return JSON.parse(attempt + ']}'); } catch(e4) {}
-        try { return JSON.parse(attempt + '}]'); } catch(e5) {}
-        try { return JSON.parse(attempt + '}}]'); } catch(e6) {}
-        try { return JSON.parse(attempt + '"}'); } catch(e7) {}
-        try { return JSON.parse(attempt + '"]'); } catch(e8) {}
-        try { return JSON.parse(attempt + '"}]'); } catch(e9) {}
-        
-        // If all fail, throw the original error
-        return JSON.parse(attempt);
+        attempt = attempt.substring(Math.min(firstArr, firstObj));
+
+        // Attempt 1: trim to the last matching close bracket and parse directly.
+        const lastArr = attempt.lastIndexOf(']');
+        const lastObj = attempt.lastIndexOf('}');
+        const lastBracket = Math.max(lastArr, lastObj);
+        if (lastBracket !== -1) {
+            let candidate = attempt.substring(0, lastBracket + 1);
+            candidate = candidate.replace(/,\s*([\}\]])/g, '$1');
+            try { return JSON.parse(candidate); } catch (e) {}
+        }
+
+        // Attempt 2: bracket-depth walk to auto-close truncated JSON.
+        return JSON.parse(repairByBracketBalance(attempt));
+    }
+
+    function repairByBracketBalance(text) {
+        let stack = [];
+        let inString = false, escape = false;
+        for (let i = 0; i < text.length; i++) {
+            const ch = text[i];
+            if (inString) {
+                if (escape) escape = false;
+                else if (ch === '\\') escape = true;
+                else if (ch === '"') inString = false;
+                continue;
+            }
+            if (ch === '"') { inString = true; continue; }
+            if (ch === '{' || ch === '[') stack.push(ch);
+            else if (ch === '}' || ch === ']') stack.pop();
+        }
+        let repaired = text;
+        if (inString) repaired += '"';
+        repaired = repaired.replace(/,\s*$/, '');
+        for (let j = stack.length - 1; j >= 0; j--) {
+            repaired += (stack[j] === '{') ? '}' : ']';
+        }
+        return repaired.replace(/,\s*([\}\]])/g, '$1');
     }
     
     window.onload = () => {
@@ -588,16 +607,23 @@ Note: Set "options" to null or an empty array if the question is subjective. For
             const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after. No markdown code blocks.", []);
             const resText = res.message || res.reply;
             window.lastRawResponse = resText;
-            if (res.success && resText) {
-                sections = safeParseJSON(resText);
-                if (sections.sections) sections = sections.sections;
-                success = true;
-            } else {
-                throw new Error("Failed response");
+            if (!res.success || !resText) throw new Error("Failed response");
+
+            let parsed = safeParseJSON(resText);
+            if (parsed && parsed.sections) parsed = parsed.sections;
+            if (!Array.isArray(parsed) || parsed.length === 0) {
+                throw new Error("AI response did not contain any sections");
             }
+            // Drop sections whose questions array is missing/empty rather than
+            // failing the whole paper over one truncated/malformed section.
+            const validSections = parsed.filter(s => s && Array.isArray(s.questions) && s.questions.length > 0);
+            if (validSections.length === 0) throw new Error("No valid sections in AI response");
+
+            sections = validSections;
+            success = true;
         } catch (e) {
             retries--;
-            console.error("Retry attempt failed:", e);
+            console.error("Retry attempt failed:", e, (window.lastRawResponse || '').substring(0, 300));
             if (retries < 0) throw e;
         }
       }
@@ -612,7 +638,8 @@ Note: Set "options" to null or an empty array if the question is subjective. For
       } catch (err) {
         console.error(err);
         document.getElementById('result-mode').style.display = 'block';
-        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format. Please try again.</p><p style="font-size:0.8rem;color:red;margin-bottom:15px;" id="err-debug"></p><button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
+        const debugSnippet = (window.lastRawResponse || '').substring(0, 200).replace(/</g, '&lt;');
+        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format after multiple attempts. Please try again.</p>' + (debugSnippet ? '<p style="font-size:0.7rem;color:#999;text-align:left;background:#0003;padding:8px;border-radius:6px;max-height:100px;overflow:auto;white-space:pre-wrap;" id="err-debug">' + debugSnippet + '</p>' : '<p id="err-debug"></p>') + '<button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
         document.getElementById('loader').style.display = 'none';
       }
     }
