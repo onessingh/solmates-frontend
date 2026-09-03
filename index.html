@@ -43,21 +43,15 @@
     (function() {
       var t = localStorage.getItem('solmates_theme') || 'light';
       var m = document.getElementById('theme-color-meta');
-  var cs = document.getElementById('color-scheme-meta');
-  var scs = document.getElementById('supported-color-schemes-meta');
 
       if (m) {
     m.setAttribute('content', '#0f172a');
   }
-  if (cs) cs.setAttribute('content', t);
-  if (scs) scs.setAttribute('content', t);
-  
 
       document.documentElement.setAttribute('data-solmates-theme', t);
     })();
+
   </script>
-  <meta id="color-scheme-meta" name="color-scheme" content="light">
-  <meta id="supported-color-schemes-meta" name="supported-color-schemes" content="light">
       <script>
       window.addEventListener("message", function(event) {
           if (event.ports && event.ports.length > 0) {
