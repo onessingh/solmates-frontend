@@ -3,7 +3,7 @@
  * Handles offline caching. Web Push has been removed as notifications are natively handled by Android App.
  */
 
-const CACHE_NAME = 'solmates-cache-v508';const STATIC_ASSETS = [
+const CACHE_NAME = 'solmates-cache-v509';const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/notification.html',
@@ -41,12 +41,23 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // Only cache GET requests
     if (event.request.method !== 'GET') return;
-
-    // Do not cache API requests
     if (event.request.url.includes('/api/')) return;
 
+    // HTML pages: ALWAYS fetch fresh from network (Network-First)
+    // This ensures index.html is never served stale from cache
+    if (event.request.destination === 'document' || event.request.url.endsWith('/') || event.request.url.endsWith('/index.html')) {
+        event.respondWith(
+            fetch(event.request).then(networkResponse => {
+                const responseToCache = networkResponse.clone();
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+                return networkResponse;
+            }).catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // Other assets: cache-first
     event.respondWith(
         caches.match(event.request)
             .then(response => {
@@ -61,13 +72,13 @@ self.addEventListener('fetch', event => {
                     });
                     return networkResponse;
                 }).catch(() => {
-                    if (event.request.destination === 'document') {
-                        return caches.match('/index.html');
-                    }
+                    return caches.match('/index.html');
                 });
             })
     );
 });
+
+
 
 
 
