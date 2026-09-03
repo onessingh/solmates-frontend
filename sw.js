@@ -1,9 +1,9 @@
 /**
- * SOLMATES Service Worker (v512)
- * HTML always network-first + theme-color #0f172a forcefully injected via setAttribute override.
+ * SOLMATES Service Worker (v514)
+ * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v513';
+const CACHE_NAME = 'solmates-cache-v514';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -13,10 +13,6 @@ const STATIC_ASSETS = [
     '/apple-touch-icon.png',
     '/favicon.ico'
 ];
-
-// This script is injected into EVERY HTML page by the SW.
-// It overrides Element.prototype.setAttribute so OLD code can NEVER set theme-color to #ffffff.
-const THEME_FIX = '<script>(function(){function f(){var m=document.getElementById("theme-color-meta");if(m&&m.getAttribute("content")!=="#0f172a")m.setAttribute("content","#0f172a");}f();var o=Element.prototype.setAttribute;Element.prototype.setAttribute=function(n,v){if(n==="content"&&this.id==="theme-color-meta")return o.call(this,n,"#0f172a");return o.call(this,n,v);};setInterval(f,300);})()+<'+'/script>';
 
 self.addEventListener("install", event => {
     event.waitUntil(
@@ -42,20 +38,17 @@ self.addEventListener("fetch", event => {
     const isHTML = event.request.destination === "document"
         || url.pathname === "/"
         || url.pathname.endsWith("/index.html")
-        || url.pathname.endsWith(".html");
+        || url.pathname.endsWith(".html")
+        || url.pathname.endsWith("/");
 
     if (isHTML) {
         event.respondWith(
-            fetch(event.request, { cache: "reload" })
-                .then(res => res.text().then(html => {
-                    html = html.replace("<head>", "<head>" + THEME_FIX);
-                    return new Response(html, {
-                        status: res.status,
-                        headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" }
-                    });
-                }))
-                .catch(() => caches.match("/index.html")
-                    .then(cached => cached || new Response("Offline", { status: 503 })))
+            fetch(event.request)
+                .then(networkResponse => {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+                    return networkResponse;
+                }).catch(() => caches.match(event.request).then(cached => cached || caches.match("/index.html")))
         );
         return;
     }
@@ -71,4 +64,3 @@ self.addEventListener("fetch", event => {
         })
     );
 });
-
