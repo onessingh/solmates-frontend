@@ -344,7 +344,7 @@ if (typeof document !== "undefined") {
           // E. Dynamically manage theme-color meta tags for PWA/TWS status bar
           const updateThemeColor = (theme) => {
               const isDark = theme === 'dark';
-              const color = '#0f172a';
+              const color = isDark ? '#0f172a' : '#ffffff';
               const metaTheme = document.getElementById('theme-color-meta');
     if (metaTheme) {
         metaTheme.setAttribute('content', color);
