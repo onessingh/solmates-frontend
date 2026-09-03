@@ -292,11 +292,11 @@
       </div>
 
       <!-- Letter Tab -->
-      <div id="tab-letter" class="tab-content">
+      <div id="tab-letter" class="tab-content active">
         <div class="document-preview" id="letter-doc">
           [Your letter will appear here]
         </div>
-        <button class="action-btn" onclick="copyLetter()"><i class="fas fa-copy"></i> Copy Email Text</button>
+        <button class="action-btn" id="copy-letter-btn" onclick="copyLetter()" style="display: none;"><i class="fas fa-copy"></i> Copy Email Text</button>
       </div>
 
       <!-- Handover Tab -->
@@ -320,7 +320,7 @@
             <input type="checkbox"> <span><strong>Asset Return:</strong> Laptop, ID card, corporate credit cards, etc.</span>
           </div>
         </div>
-        <button class="action-btn" onclick="downloadHandover()"><i class="fas fa-download"></i> Save as Image</button>
+        <button class="action-btn" id="download-handover-btn" onclick="downloadHandover()" style="display: none;"><i class="fas fa-download"></i> Save as Image</button>
       </div>
 
     </div>
@@ -356,7 +356,11 @@
       document.getElementById('out-title').innerText = title;
       
       document.getElementById('empty-state').style.display = 'none';
-      
+
+      // Show action buttons now that content has been generated
+      document.getElementById('copy-letter-btn').style.display = 'inline-flex';
+      document.getElementById('download-handover-btn').style.display = 'inline-flex';
+
       // Force switch to letter tab
       switchTab('tab-letter', document.querySelector('.tab-btn'));
     }
