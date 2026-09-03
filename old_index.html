@@ -2996,19 +2996,19 @@
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
-            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); themeMeta.removeAttribute('media'); }
+            if (themeMeta) {  themeMeta.removeAttribute('media'); }
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'only light');
-            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
+            if (themeMeta) {  themeMeta.removeAttribute('media'); }
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             meta.setAttribute('content', 'only light');
-            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
+            if (themeMeta) {  themeMeta.removeAttribute('media'); }
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');

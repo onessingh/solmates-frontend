@@ -11,7 +11,6 @@
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
 })();
 </script>
-  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta charset="UTF-8">
@@ -57,20 +56,20 @@
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
-            if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
+            
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'only light');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+            
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             // Force light mode for new users to override OS dark mode in PWA status bar
             meta.setAttribute('content', 'only light');
-            if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+            
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');

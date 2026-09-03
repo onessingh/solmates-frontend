@@ -72,7 +72,6 @@
   </style>
 
   <meta name="color-scheme" content="only light">
-  <meta name="theme-color" content="#ffffff">
   <script id="color-scheme-sync">
     (function() {
         function updateMetaColorScheme() {
@@ -86,17 +85,17 @@
         }
             if (theme === 'dark') {
                 meta.setAttribute('content', 'dark only');
-                if (themeMeta) themeMeta.setAttribute('content', '#0f172a');
+                
                 document.documentElement.style.colorScheme = 'dark';
                 document.documentElement.classList.add('dark');
             } else if (theme === 'light') {
                 meta.setAttribute('content', 'only light');
-                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+                
                 document.documentElement.style.colorScheme = 'light';
                 document.documentElement.classList.remove('dark');
             } else {
                 meta.setAttribute('content', 'only light');
-                if (themeMeta) themeMeta.setAttribute('content', '#ffffff');
+                
                 document.documentElement.style.colorScheme = 'light';
                 document.documentElement.classList.remove('dark');
             }
