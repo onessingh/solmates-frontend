@@ -3,7 +3,7 @@
 
 <head>
 
-  <meta id="theme-color-meta" name="theme-color" content="#ffffff">
+  <meta id="theme-color-meta" name="theme-color" content="#0f172a">
   <script>
           // Extract Native FCM Token and permissions from TWA URL parameter
       (function() {
@@ -47,8 +47,7 @@
   var scs = document.getElementById('supported-color-schemes-meta');
 
       if (m) {
-    var color = t === 'dark' ? '#0f172a' : '#ffffff';
-    m.setAttribute('content', color);
+    m.setAttribute('content', '#0f172a');
   }
   if (cs) cs.setAttribute('content', t);
   if (scs) scs.setAttribute('content', t);
@@ -3045,19 +3044,19 @@
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark');
-            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); themeMeta.removeAttribute('media'); }
+            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             meta.setAttribute('content', 'light');
-            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
+            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             meta.setAttribute('content', 'light');
-            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
+            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
@@ -5510,6 +5509,7 @@
 </body>
 
 </html>
+
 
 
 
