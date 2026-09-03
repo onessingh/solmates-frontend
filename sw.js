@@ -3,7 +3,7 @@
  * HTML always network-first + theme-color #0f172a forcefully injected via setAttribute override.
  */
 
-const CACHE_NAME = 'solmates-cache-v512';
+const CACHE_NAME = 'solmates-cache-v513';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -71,3 +71,4 @@ self.addEventListener("fetch", event => {
         })
     );
 });
+

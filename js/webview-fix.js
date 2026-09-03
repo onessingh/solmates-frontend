@@ -371,7 +371,7 @@
       const syncStatusBar = async () => {
         try {
           const isDark = document.documentElement.classList.contains('dark') || document.documentElement.style.colorScheme === 'dark';
-          const bgColor = isDark ? '#0f172a' : '#ffffff';
+          const bgColor = '#0f172a';
           const statusBarColor = isDark ? '#161925' : '#f8f9fa';
           const style = isDark ? 'DARK' : 'LIGHT';
 
