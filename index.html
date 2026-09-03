@@ -3144,6 +3144,23 @@
 </head>
 
 <body>
+<!-- Branded splash overlay: shows dark blue + logo during the brief TWA warm-up flash -->
+<div id="sm-launch-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;transition:opacity 0.25s ease;">
+  <img src="/icons/icon-192.png" alt="Solmates" style="width:88px;height:88px;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+  <div style="margin-top:16px;color:#94a3b8;font-size:13px;font-family:system-ui,sans-serif;letter-spacing:0.05em;">SOLMATES</div>
+</div>
+<script>
+(function(){
+  function removeSplash(){
+    var el=document.getElementById('sm-launch-overlay');
+    if(el){el.style.opacity='0';setTimeout(function(){el&&el.remove();},260);}
+  }
+  if(document.readyState==='complete'){removeSplash();}
+  else{window.addEventListener('load',removeSplash);}
+  // Fallback: remove after 1.5s max even if load event doesn't fire
+  setTimeout(removeSplash, 1500);
+})();
+</script>
 
   <!-- Admin Login Modal -->
   <div class="admin-modal" id="adminModal">

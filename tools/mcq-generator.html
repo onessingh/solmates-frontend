@@ -598,6 +598,11 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
 
             let cleanText = repairIncompleteJSON(resText);
             let parsed = safeParseJSON(cleanText);
+            if (parsed && typeof parsed.error === 'string') {
+                // The AI itself declined the request (persona/system-prompt restriction),
+                // not a JSON formatting problem — surface this distinctly.
+                throw new Error("AI declined the request: " + parsed.error.substring(0, 150));
+            }
             if (parsed && parsed.questions) parsed = parsed.questions; // Handle wrapped objects
             if (!Array.isArray(parsed)) throw new Error("AI response was not a question array");
 
@@ -614,6 +619,9 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
           } catch (parseErr) {
             lastErr = parseErr;
             console.error("JSON Parse Error (attempt left: " + attempts + "):", parseErr, lastRaw.substring(0, 300));
+            if ((parseErr.message || '').startsWith('AI declined the request')) {
+              break; // retrying won't help against a persona/system-prompt refusal
+            }
           }
         }
         if (lastErr) {
@@ -632,7 +640,12 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
           console.error(err);
           document.getElementById('result-mode').style.display = 'block';
           const debugSnippet = (window.lastRawResponse || '').substring(0, 200).replace(/</g, '&lt;');
-        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Failed to generate paper</h3><p style="color:var(--light);margin-bottom:15px;">The AI response was not in the expected format after 3 attempts. Please try again.</p>' + (debugSnippet ? '<p style="font-size:0.7rem;color:#999;text-align:left;background:#0003;padding:8px;border-radius:6px;max-height:100px;overflow:auto;white-space:pre-wrap;">' + debugSnippet + '</p>' : '') + '<button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
+          const isDecline = (err.message || '').startsWith('AI declined the request');
+          const heading = isDecline ? 'AI declined this request' : 'Failed to generate paper';
+          const bodyMsg = isDecline
+            ? 'The AI assistant refused this request due to its own system instructions, rather than a formatting error. Please check the chatbot\'s system prompt / allowed scope for this tool on the backend.'
+            : 'The AI response was not in the expected format after 3 attempts. Please try again.';
+        document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">' + heading + '</h3><p style="color:var(--light);margin-bottom:15px;">' + bodyMsg + '</p>' + (debugSnippet ? '<p style="font-size:0.7rem;color:#999;text-align:left;background:#0003;padding:8px;border-radius:6px;max-height:100px;overflow:auto;white-space:pre-wrap;">' + debugSnippet + '</p>' : '') + '<button onclick="location.reload()" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Try Again</button></div>';
           document.getElementById('loader').style.display = 'none';
       }
     }
