@@ -5472,7 +5472,14 @@
       darkStyle.media = newTheme === 'dark' ? 'all' : 'not all';
       localStorage.setItem('solmates_theme', newTheme);
       document.documentElement.setAttribute('data-solmates-theme', newTheme);
-      updateThemeIcon(newTheme);  }
+      updateThemeIcon(newTheme);
+
+      // Force Chrome TWA to recompute status bar icon contrast
+      // Chrome recalculates icon color only on navigation, not DOM mutation
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        location.reload();
+      }
+    }
     
     function updateThemeIcon(theme) {
       const icon = document.getElementById('themeToggleIcon');
@@ -5501,6 +5508,7 @@
 </body>
 
 </html>
+
 
 
 
