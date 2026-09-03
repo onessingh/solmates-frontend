@@ -1,6 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
 
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="only light">
@@ -418,6 +428,16 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <header class="viewer-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
     <div class="header-left">
       <button class="back-btn" onclick="goBack()">
         <i class="fas fa-arrow-left"></i>

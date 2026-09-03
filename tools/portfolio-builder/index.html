@@ -1,6 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
 
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light dark">
@@ -1086,7 +1096,27 @@
           </style>
         `;
         
-        finalHtml = finalHtml.replace('<head>', '<head>\n  ' + mobileFixes);
+        finalHtml = finalHtml.replace('<head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>', '<head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>\n  ' + mobileFixes);
         
         return finalHtml;
       }
@@ -1114,6 +1144,16 @@
       return `<!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
 
   <meta name="theme-color" content="#ffffff">
   <meta charset="UTF-8">
@@ -1208,6 +1248,16 @@
 </head>
 <body>
   <header>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
     <div class="container header-container">
       <div class="header-content">
         <h1>${name}</h1>

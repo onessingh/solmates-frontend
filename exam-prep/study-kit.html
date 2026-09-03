@@ -1,6 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Smart Study Kit | Exam Prep AI</title>
@@ -1050,7 +1060,17 @@ function printContent(title, bodyHTML) {
 
   const doc = iframe.contentDocument || iframe.contentWindow.document;
   doc.open();
-  doc.write(`<!DOCTYPE html><html><head><title>${title}</title>
+  doc.write(`<!DOCTYPE html><html><head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script><title>${title}</title>
     <style>
       * { box-sizing: border-box; }
       body { font-family: Arial, sans-serif; padding: 30px; max-width: 820px; margin: 0 auto; font-size: 13px; }

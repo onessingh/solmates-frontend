@@ -1,7 +1,17 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
 
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light dark">
@@ -244,6 +254,16 @@
         <aside class="form-panel" aria-label="Resume form">
           <article class="panel-section" data-section-form="personalInfo" aria-labelledby="personal-info-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="personal-info-title">Personal Information</h2>
             </header>
             <div class="profile-upload">
@@ -303,6 +323,16 @@
 
           <article class="panel-section" data-section-form="summary" aria-labelledby="summary-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="summary-title">Professional Summary</h2>
             </header>
             <div class="field">
@@ -315,6 +345,16 @@
 
           <article class="panel-section" data-section-form="objective" aria-labelledby="objective-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="objective-title">Career Objective</h2>
             </header>
             <div class="field">
@@ -325,6 +365,16 @@
 
           <article class="panel-section" data-section-form="highlights" aria-labelledby="highlights-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="highlights-title">Key Highlights</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="highlights">Add
                 Highlight</button>
@@ -334,6 +384,16 @@
 
           <article class="panel-section" data-section-form="coreCompetencies" aria-labelledby="competencies-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="competencies-title">Core Competencies</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="coreCompetencies">Add
                 Competency</button>
@@ -343,6 +403,16 @@
 
           <article class="panel-section" data-section-form="experience" aria-labelledby="experience-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="experience-title">Work Experience</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="experience">Add
                 Experience</button>
@@ -352,6 +422,16 @@
 
           <article class="panel-section" data-section-form="education" aria-labelledby="education-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="education-title">Education</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="education">Add
                 Education</button>
@@ -361,6 +441,16 @@
 
           <article class="panel-section" data-section-form="skills" aria-labelledby="skills-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="skills-title">Skills</h2>
             </header>
             <div class="field">
@@ -380,6 +470,16 @@
 
           <article class="panel-section" data-section-form="certifications" aria-labelledby="certifications-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="certifications-title">Certifications</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="certifications">Add
                 Certification</button>
@@ -389,6 +489,16 @@
 
           <article class="panel-section" data-section-form="projects" aria-labelledby="projects-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="projects-title">Projects</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="projects">Add
                 Project</button>
@@ -398,6 +508,16 @@
 
           <article class="panel-section" data-section-form="internships" aria-labelledby="internships-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="internships-title">Internships / Training</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="internships">Add
                 Internship</button>
@@ -407,6 +527,16 @@
 
           <article class="panel-section" data-section-form="awards" aria-labelledby="awards-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="awards-title">Achievements & Awards</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="awards">Add Award</button>
             </header>
@@ -415,6 +545,16 @@
 
           <article class="panel-section" data-section-form="publications" aria-labelledby="publications-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="publications-title">Publications / Research</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="publications">Add
                 Publication</button>
@@ -424,6 +564,16 @@
 
           <article class="panel-section" data-section-form="volunteer" aria-labelledby="volunteer-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="volunteer-title">Volunteer Experience</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="volunteer">Add
                 Volunteer</button>
@@ -433,6 +583,16 @@
 
           <article class="panel-section" data-section-form="leadership" aria-labelledby="leadership-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="leadership-title">Leadership Experience</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="leadership">Add
                 Leadership</button>
@@ -442,6 +602,16 @@
 
           <article class="panel-section" data-section-form="technicalStack" aria-labelledby="tech-stack-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="tech-stack-title">Technical Stack</h2>
             </header>
             <div class="form-grid">
@@ -463,6 +633,16 @@
 
           <article class="panel-section" data-section-form="languages" aria-labelledby="languages-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="languages-title">Languages</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="languages">Add
                 Language</button>
@@ -472,6 +652,16 @@
 
           <article class="panel-section" data-section-form="references" aria-labelledby="references-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="references-title">References</h2>
               <button class="btn btn-ghost" type="button" data-action="add-item" data-target="references">Add
                 Reference</button>
@@ -481,6 +671,16 @@
 
           <article class="panel-section" data-section-form="personalDetails" aria-labelledby="personal-details-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="personal-details-title">Personal Details</h2>
             </header>
             <div class="form-grid">
@@ -510,6 +710,16 @@
 
           <article class="panel-section" aria-labelledby="section-manager-title">
             <header class="section-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
               <h2 id="section-manager-title">Section Manager</h2>
             </header>
             <p class="field-hint">Enable/disable sections and reorder how they appear in preview and export.</p>
@@ -678,6 +888,16 @@
     </section>
 <section class="templates rb-tab-content" id="templates" style="display: none;" aria-labelledby="templates-title">
       <header class="templates-header section-header" id="templates-accordion-header" style="cursor:pointer; background:var(--bg-card); padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
         <h2 id="templates-title">Professional Template Gallery <i class="fas fa-chevron-down accordion-icon" style="float:right; margin-top:5px; transition: transform 0.3s;"></i></h2>
         <p>Choose a layout optimized for ATS parsing and recruiter readability. Click to instantly switch.</p>
       </header>
@@ -1445,6 +1665,16 @@
     <div class="modal-overlay" data-action="close-error"></div>
     <div class="modal-content" style="border-top: 5px solid var(--color-danger);">
       <header class="modal-header">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
         <h3 style="color: var(--color-danger); display: flex; align-items: center; gap: 10px;">
           <span style="font-size: 1.5rem;">??</span> Validation Failed
         </h3>

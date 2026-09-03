@@ -13,102 +13,23 @@
 })();
 </script>
 
-  <meta id="theme-color-meta" name="theme-color" content="#0f172a">
-  <meta name="color-scheme" content="light dark">
+  <meta id="theme-color-meta" name="theme-color" content="#ffffff">
   <script>
-  // ONE-TIME NUCLEAR CACHE CLEAR (v509) — runs once per user, then never again
-  (function() {
-    var NUKE_VERSION = 'sol-cache-nuke-v509';
-    if (localStorage.getItem(NUKE_VERSION)) return; // already ran
-    localStorage.setItem(NUKE_VERSION, '1');
-    if ('serviceWorker' in navigator && 'caches' in window) {
-      Promise.all([
-        // Unregister ALL service workers
-        navigator.serviceWorker.getRegistrations().then(function(regs) {
-          return Promise.all(regs.map(function(r) { return r.unregister(); }));
-        }),
-        // Delete ALL caches
-        caches.keys().then(function(keys) {
-          return Promise.all(keys.map(function(k) { return caches.delete(k); }));
-        })
-      ]).then(function() {
-        location.reload(true); // hard reload — get fresh HTML from server
-      });
-    }
-  })();
-  </script>
-
-  <script>
-          // Extract Native FCM Token and permissions from TWA URL parameter
-      (function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let modified = false;
-
-        const fcmDenied = urlParams.get('fcm_denied');
-        if (fcmDenied === 'true') {
-          localStorage.setItem('sol_native_permission_denied', 'true');
-          urlParams.delete('fcm_denied');
-          modified = true;
-        } else if (urlParams.has('fcm_token')) {
-          localStorage.removeItem('sol_native_permission_denied');
-        }
-
-        const fcmToken = urlParams.get('fcm_token');
-        if (fcmToken) {
-          localStorage.setItem('solmates_fcm_token', fcmToken);
-          localStorage.removeItem('sol_push_last_sync'); // Force resync
-          if (!localStorage.getItem('sol_subscribed_sems')) {
-              localStorage.setItem('sol_subscribed_sems', JSON.stringify(['all']));
-              localStorage.setItem('sol_notif_enabled', 'true');
-          }
-          urlParams.delete('fcm_token');
-          modified = true;
-        }
-        if (urlParams.has('v')) { urlParams.delete('v'); modified = true; }
-        
-        if (modified) {
-          const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
-          window.history.replaceState({}, document.title, newUrl);
-        }
-      })();
-
-
-// Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
+    // Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
     (function() {
-      var t = localStorage.getItem('solmates_theme') || 'light';
+      var t = localStorage.getItem('solmates_theme');
       var m = document.getElementById('theme-color-meta');
-
-      if (m) {
-        // Use OS theme for status bar (because Android OS controls bg, Chrome controls icons)
-        // They must match! OS dark = need white icons = dark theme-color
-        var osIsDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        m.setAttribute('content', osIsDark ? '#0f172a' : '#ffffff');
-      }
-
-      document.documentElement.setAttribute('data-solmates-theme', t);
+      if (t === 'dark' && m) m.setAttribute('content', '#0f172a');
     })();
-
   </script>
-      <script>
-      window.addEventListener("message", function(event) {
-          if (event.ports && event.ports.length > 0) {
-              window.twaPort = event.ports[0];
-              window.twaPort.postMessage("SOLMATES_THEME:" + (localStorage.getItem('solmates_theme') || 'light'));
-          }
-      });
-      function notifyAndroidTheme() {
-          var theme = localStorage.getItem('solmates_theme') || 'light';
-          if (window.twaPort) {
-              window.twaPort.postMessage("SOLMATES_THEME:" + theme);
-          }
-      }
-    </script>
-    <meta charset="UTF-8">
+  <meta name="color-scheme" content="only light">
+  <meta name="supported-color-schemes" content="only light">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SOLMATES – DU SOL MBA Student Community, Study Material & Notes</title>
+  <title>SOLMATES ΓÇô DU SOL MBA Student Community, Study Material & Notes</title>
   <script src="/config.js?v=97" defer></script>
   <script src="/js/sol-cache.js?v=89" defer></script>
-  <script src="/js/api-client.js?v=93" defer></script>
+  <script src="/js/api-client.js?v=89" defer></script>
   <script src="/js/webview-fix.js?v=92" defer></script>
   <script src="/js/prefetch-helper.js?v=89" defer></script>
   <!-- socket.io loaded dynamically -->
@@ -122,7 +43,7 @@
   <!-- [v111.9] GOOGLE SUPPRESSION: Disables intrusive Touch-to-Search popups -->
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=97">
-  <!-- 🔥 Favicon (All sizes) -->
+  <!-- ≡ƒöÑ Favicon (All sizes) -->
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" />
@@ -142,7 +63,7 @@
   <!-- Manifest -->
   
 
-  <!-- 🔥 OG (Link Preview) -->
+  <!-- ≡ƒöÑ OG (Link Preview) -->
   
   
   
@@ -1410,7 +1331,7 @@
         padding: 80px 15px 30px;
       }
 
-      /* LOGO DESKTOP पर और बड़ा */
+      /* LOGO DESKTOP αñ¬αñ░ αñöαñ░ αñ¼αñíαñ╝αñ╛ */
       .logo-mark {
         width: 150px !important;
         height: 150px !important;
@@ -1536,7 +1457,7 @@
         padding: 60px 15px 20px;
       }
 
-      /* Phone view में logo थोड़ा छोटा */
+      /* Phone view αñ«αÑçαñé logo αñÑαÑïαñíαñ╝αñ╛ αñ¢αÑïαñƒαñ╛ */
       .logo-mark {
         width: 90px !important;
         height: 90px !important;
@@ -1574,7 +1495,7 @@
         font-size: 20px;
       }
 
-      /* WhatsApp dropdown mobile के लिए optimize */
+      /* WhatsApp dropdown mobile αñòαÑç αñ▓αñ┐αñÅ optimize */
       .whatsapp-dropdown {
         width: 100px;
         padding: 8px;
@@ -3006,9 +2927,9 @@
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
   <!-- config.js loaded once at top (deferred), no need to repeat here -->
   <script>
-    // [v116.6] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // [v116.6] NUCLEAR AUTO-UPDATE SYSTEM ΓÇö ASYNC + LOOP-GUARD FIX
     // Bug: previous sync version fired reload(true) after 500ms without awaiting
-    // cache.delete() and sw.unregister() — on slow devices these weren't done yet
+    // cache.delete() and sw.unregister() ΓÇö on slow devices these weren't done yet
     // causing an infinite reload loop (version still mismatched after reload).
     (async function() {
       try {
@@ -3019,7 +2940,7 @@
 
         if (savedVersion && savedVersion !== currentVersion) {
           // Loop-guard: sessionStorage is cleared on hard reload, not on soft navigation
-          // If this flag is set, a reload is already in progress — don't trigger another
+          // If this flag is set, a reload is already in progress ΓÇö don't trigger another
           if (sessionStorage.getItem('sol_update_in_progress')) return;
           sessionStorage.setItem('sol_update_in_progress', '1');
 
@@ -3063,56 +2984,58 @@
 
 <script id="color-scheme-sync">
 (function() {
-    // FIX: theme-color MUST match OS theme (phone dark/light), NOT app theme
-    // Android OS controls status bar BACKGROUND via OS theme
-    // Chrome controls ICONS via theme-color luminance
-    // They must match => theme-color should follow OS theme
-    function getOsColor() {
-        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#0f172a' : '#ffffff';
-    }
     function updateMetaColorScheme() {
+        var meta = document.querySelector('meta[name="color-scheme"]');
         var themeMeta = document.getElementById('theme-color-meta');
         var darkStyle = document.getElementById('solmates-dark-style');
+        if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (!theme) {
             theme = 'light';
             localStorage.setItem('solmates_theme', 'light');
         }
-        // Always use OS color for status bar icons
-        if (themeMeta) { themeMeta.setAttribute('content', getOsColor()); }
         if (theme === 'dark') {
+            meta.setAttribute('content', 'dark only');
+            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); themeMeta.removeAttribute('media'); }
+            document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
+        } else if (theme === 'light') {
+            meta.setAttribute('content', 'only light');
+            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
+            document.documentElement.style.colorScheme = 'light';
+            document.documentElement.classList.remove('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
+            meta.setAttribute('content', 'only light');
+            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); themeMeta.removeAttribute('media'); }
+            document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         }
     }
     updateMetaColorScheme();
-      if (typeof notifyAndroidTheme === 'function') notifyAndroidTheme();
     window.addEventListener('storage', function(e) {
         if (e.key === 'solmates_theme') updateMetaColorScheme();
-      if (typeof notifyAndroidTheme === 'function') notifyAndroidTheme();
     });
     var originalSetItem = localStorage.setItem;
     localStorage.setItem = function(key, value) {
         originalSetItem.apply(this, arguments);
         if (key === 'solmates_theme') updateMetaColorScheme();
-      if (typeof notifyAndroidTheme === 'function') notifyAndroidTheme();
     };
 })();
 </script>
     <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="Access the SOLMATES – DU SOL MBA Student Community, Study Material & Notes and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="description" content="Access the SOLMATES ΓÇô DU SOL MBA Student Community, Study Material & Notes and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, SOLMATES, Student, Community,, Study, Material, Notes">
     <meta name="author" content="Shivarn Singh">
-    <meta property="og:title" content="SOLMATES – DU SOL MBA Student Community, Study Material & Notes">
-    <meta property="og:description" content="Access the SOLMATES – DU SOL MBA Student Community, Study Material & Notes and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta property="og:title" content="SOLMATES ΓÇô DU SOL MBA Student Community, Study Material & Notes">
+    <meta property="og:description" content="Access the SOLMATES ΓÇô DU SOL MBA Student Community, Study Material & Notes and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta property="og:image" content="/preview.png">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SOLMATES – DU SOL MBA Student Community, Study Material & Notes">
-    <meta name="twitter:description" content="Access the SOLMATES – DU SOL MBA Student Community, Study Material & Notes and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="twitter:title" content="SOLMATES ΓÇô DU SOL MBA Student Community, Study Material & Notes">
+    <meta name="twitter:description" content="Access the SOLMATES ΓÇô DU SOL MBA Student Community, Study Material & Notes and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
     <meta name="twitter:image" content="/preview.png">
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
@@ -3382,11 +3305,11 @@
         </svg>
 
         <h1>SOLMATES</h1>
-        <p class="tagline">Connect • Learn • Belong</p>
+        <p class="tagline">Connect ΓÇó Learn ΓÇó Belong</p>
 
         <!-- Integrated Search Bar Back Inside but with Wide Container -->
         <div class="hero-search-wrapper">
-          <div class="greeting-text" id="dynamicGreeting">Welcome to SOLMATES! 🚀</div>
+          <div class="greeting-text" id="dynamicGreeting">Welcome to SOLMATES! ≡ƒÜÇ</div>
           <form class="search-container" id="heroSearchForm" onsubmit="event.preventDefault(); triggerHeroSearch();">
             <i class="fas fa-search search-icon" onclick="triggerHeroSearch()" title="Open Mate AI"
               style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 13; cursor: pointer; color: var(--brand-primary);"></i>
@@ -3418,7 +3341,7 @@
           <p>Skill assessment, learning paths, certifications, and personal development resources.</p>
         </a>
 
-        <a href="/games" class="main-option-card">
+        <a href="/games/" class="main-option-card">
           <i class="fas fa-gamepad"></i>
           <h2>Solmates Arena</h2>
           <p>Multiplayer Study Hub - Gamify your learning, compete, and grow.</p>
@@ -3459,7 +3382,7 @@
           class="fab fa-linkedin"></i></a>
       <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
     </div>
-    <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+    <p>2026 SOLMATES ΓÇó A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
   </footer>
 
   <script>
@@ -3722,7 +3645,7 @@
           // Store admin status flag for UI
           localStorage.setItem('solmates_admin_logged_in', 'true');
 
-          // Close modal and swap Login → Logout button, stay on home page
+          // Close modal and swap Login ΓåÆ Logout button, stay on home page
           closeAdminModal();
           adminLoginBtn.style.display = 'none';
           adminLogoutBtn.style.display = 'flex';
@@ -3770,112 +3693,112 @@
     const CHAT_SESSIONS_KEY = 'solmates_chat_sessions';
 
         const GREETINGS_MORNING = [
-      "Good Morning! Aaj kya crack karein? 🎯",
-      "Shubh Prabhat! Chalo padhte hain. ☕",
-      "Morning! Aaj ka goal kya hai? 📚",
-      "Rise and shine! Ready to help. ✨",
-      "Hey buddy! Padhai shuru karein? 🚀",
-      "Morning! Ready to dominate? 🔥",
-      "Start with fresh learning! 📖",
-      "Utho aur shuru ho jao! 🏃‍♂️",
-      "Naya din, naye challenges! 💪",
-      "Good morning boss! Phod dena hai. 💯",
-      "Wake up! Kuch naya seekhte hain. 🌅",
-      "Breakfast done? Let's study! 🥞",
-      "Morning champ! Ready for hustle? 💼",
-      "Aalas chhodo, kitabein uthao! ☀️",
-      "Build your tomorrow, today! 🚀",
-      "Good morning! Chapters finish karein? 📖",
-      "Suraj nikal gaya, syllabus kab? 🌞",
-      "Fresh morning, fresh mindset! 🏔️",
-      "Strong coffee aur ek chapter? ☕",
-      "Sapne bade, mehnat badi! 🌟",
-      "Uth gaye? Action ka time hai! 🎬",
-      "Morning hustle! Let's go! 📈",
-      "Make today productive! ⚡",
-      "Good Morning! Plan set hai? 📅",
-      "New morning, new energy! 📘"
+      "Good Morning! Aaj kya crack karein? ≡ƒÄ»",
+      "Shubh Prabhat! Chalo padhte hain. Γÿò",
+      "Morning! Aaj ka goal kya hai? ≡ƒôÜ",
+      "Rise and shine! Ready to help. Γ£¿",
+      "Hey buddy! Padhai shuru karein? ≡ƒÜÇ",
+      "Morning! Ready to dominate? ≡ƒöÑ",
+      "Start with fresh learning! ≡ƒôû",
+      "Utho aur shuru ho jao! ≡ƒÅâΓÇìΓÖé∩╕Å",
+      "Naya din, naye challenges! ≡ƒÆ¬",
+      "Good morning boss! Phod dena hai. ≡ƒÆ»",
+      "Wake up! Kuch naya seekhte hain. ≡ƒîà",
+      "Breakfast done? Let's study! ≡ƒÑ₧",
+      "Morning champ! Ready for hustle? ≡ƒÆ╝",
+      "Aalas chhodo, kitabein uthao! ΓÿÇ∩╕Å",
+      "Build your tomorrow, today! ≡ƒÜÇ",
+      "Good morning! Chapters finish karein? ≡ƒôû",
+      "Suraj nikal gaya, syllabus kab? ≡ƒî₧",
+      "Fresh morning, fresh mindset! ≡ƒÅö∩╕Å",
+      "Strong coffee aur ek chapter? Γÿò",
+      "Sapne bade, mehnat badi! ≡ƒîƒ",
+      "Uth gaye? Action ka time hai! ≡ƒÄ¼",
+      "Morning hustle! Let's go! ≡ƒôê",
+      "Make today productive! ΓÜí",
+      "Good Morning! Plan set hai? ≡ƒôà",
+      "New morning, new energy! ≡ƒôÿ"
     ];
     const GREETINGS_EVENING = [
-      "Good Evening! Chai aur revision? ☕📚",
-      "Evening buddy! Kuch naya seekhein? 🌟",
-      "Hey! Aaj ka din kaisa raha? 🤝",
-      "Ready for evening sessions? 📖",
-      "What's on your mind tonight? 📝",
-      "1% luck, 99% preparation! 🏆",
-      "Shaam ho gayi, hustle baki hai! 🌆",
-      "Evening vibes! Syllabus niptao. 🎒",
-      "Thak gaye? Thoda aur push karo! 💪",
-      "Good Evening! Ek ghanta aur? ⏳",
-      "Snacks ready? Padhai shuru! 🍿",
-      "Sunset and study! Perfect. 🌇",
-      "Stop when you're done! 🔥",
-      "Shaam ka time, sabse prime! 🧠",
-      "Aakhri push! Kuch bada karte hain. 🎯",
-      "Chai pee li? Ab notes khol lo! ☕",
-      "Din gaya, padhai abhi baaki hai. ⏳",
-      "Evening session! No distractions. 📵",
-      "Alag banna hai to padhna padega! 💪",
-      "Revision ka waqt ho gaya hai. 🔄",
-      "Shaam productive honi chahiye! 🌆",
-      "Thoda break, and back to hustle! 🚶‍♂️",
-      "Good evening champ! Kitna cover kiya? 📊",
-      "Hawa mast, padhai bhi mast! 🌬️",
-      "Evening wrap-up! Finish it. ✅"
+      "Good Evening! Chai aur revision? Γÿò≡ƒôÜ",
+      "Evening buddy! Kuch naya seekhein? ≡ƒîƒ",
+      "Hey! Aaj ka din kaisa raha? ≡ƒñ¥",
+      "Ready for evening sessions? ≡ƒôû",
+      "What's on your mind tonight? ≡ƒô¥",
+      "1% luck, 99% preparation! ≡ƒÅå",
+      "Shaam ho gayi, hustle baki hai! ≡ƒîå",
+      "Evening vibes! Syllabus niptao. ≡ƒÄÆ",
+      "Thak gaye? Thoda aur push karo! ≡ƒÆ¬",
+      "Good Evening! Ek ghanta aur? ΓÅ│",
+      "Snacks ready? Padhai shuru! ≡ƒì┐",
+      "Sunset and study! Perfect. ≡ƒîç",
+      "Stop when you're done! ≡ƒöÑ",
+      "Shaam ka time, sabse prime! ≡ƒºá",
+      "Aakhri push! Kuch bada karte hain. ≡ƒÄ»",
+      "Chai pee li? Ab notes khol lo! Γÿò",
+      "Din gaya, padhai abhi baaki hai. ΓÅ│",
+      "Evening session! No distractions. ≡ƒô╡",
+      "Alag banna hai to padhna padega! ≡ƒÆ¬",
+      "Revision ka waqt ho gaya hai. ≡ƒöä",
+      "Shaam productive honi chahiye! ≡ƒîå",
+      "Thoda break, and back to hustle! ≡ƒÜ╢ΓÇìΓÖé∩╕Å",
+      "Good evening champ! Kitna cover kiya? ≡ƒôè",
+      "Hawa mast, padhai bhi mast! ≡ƒî¼∩╕Å",
+      "Evening wrap-up! Finish it. Γ£à"
     ];
     const GREETINGS_NIGHT = [
-      "Raat gayi, par padhai nahi! 🦉💡",
-      "Still up? Let's finish this. 💪",
-      "Night owl mode ON! 🌙",
-      "Late night study session? 💻",
-      "Good Night buddy! Sona kab hai? 🚀",
-      "Dream big, study bigger! ✨",
-      "Finish strong before sleeping! 🏁",
-      "Shor kam, focus zyada! 🤫",
-      "Neend aa rahi? Ek topic bas! ☕",
-      "Midnight motivation! You got this! 🌌",
-      "Jo sote hain wo khote hain! 🛡️",
-      "Raaton ki neend gawa kar success! 🏆",
-      "Good night? Abhi syllabus baki hai. 📚",
-      "Peaceful night, deep focus! 🧘‍♂️",
-      "One step closer to your dream! 💡",
-      "Duniya so rahi, aap padh rahe. Respect! 🫡",
-      "Raat ki shanti, syllabus tez! 🤫",
-      "Ek coffee aur ek chapter? ☕📖",
-      "Night focus! Only studying. 📵",
-      "Target complete karke sona! 🎯",
-      "Neend aa rahi? Muh dho lo! 🚰",
-      "Late night grind! Mehnat rang layegi. 🌈",
-      "Doing great! Thoda aur push karo. 🚀",
-      "Aadhi raat, aadhi kitabein! 📚",
-      "Shh! Study in progress... 🤫💡"
+      "Raat gayi, par padhai nahi! ≡ƒªë≡ƒÆí",
+      "Still up? Let's finish this. ≡ƒÆ¬",
+      "Night owl mode ON! ≡ƒîÖ",
+      "Late night study session? ≡ƒÆ╗",
+      "Good Night buddy! Sona kab hai? ≡ƒÜÇ",
+      "Dream big, study bigger! Γ£¿",
+      "Finish strong before sleeping! ≡ƒÅü",
+      "Shor kam, focus zyada! ≡ƒñ½",
+      "Neend aa rahi? Ek topic bas! Γÿò",
+      "Midnight motivation! You got this! ≡ƒîî",
+      "Jo sote hain wo khote hain! ≡ƒ¢í∩╕Å",
+      "Raaton ki neend gawa kar success! ≡ƒÅå",
+      "Good night? Abhi syllabus baki hai. ≡ƒôÜ",
+      "Peaceful night, deep focus! ≡ƒºÿΓÇìΓÖé∩╕Å",
+      "One step closer to your dream! ≡ƒÆí",
+      "Duniya so rahi, aap padh rahe. Respect! ≡ƒ½í",
+      "Raat ki shanti, syllabus tez! ≡ƒñ½",
+      "Ek coffee aur ek chapter? Γÿò≡ƒôû",
+      "Night focus! Only studying. ≡ƒô╡",
+      "Target complete karke sona! ≡ƒÄ»",
+      "Neend aa rahi? Muh dho lo! ≡ƒÜ░",
+      "Late night grind! Mehnat rang layegi. ≡ƒîê",
+      "Doing great! Thoda aur push karo. ≡ƒÜÇ",
+      "Aadhi raat, aadhi kitabein! ≡ƒôÜ",
+      "Shh! Study in progress... ≡ƒñ½≡ƒÆí"
     ];
     const GREETINGS_AFTERNOON = [
-      "Good Afternoon! Padhai kaisi hai? 🧠",
-      "Hey! Chalo brain workout karein. ⚡",
-      "Afternoon! Taiyari kaisi chal rahi? 📝",
-      "Lunch break done? Back to work! 🏗️",
-      "Check out today's market news! 📉",
-      "Good Afternoon! Need a boost? 🚀",
-      "Keep moving forward! 🧗",
-      "Dopahar ki neend bhagao! ☀️",
-      "Lunch wali neend? No chance! ☕",
-      "Half day gone! Make it count. ⏳",
-      "Afternoon slump? Deep breath! 🌬️",
-      "Bache hue tasks niptate hain! 📋",
-      "Don't lose the momentum. 🏃‍♀️",
-      "Productivity on high alert! 🚨",
-      "Thoda aur focus, doing great! 👍",
-      "Dopahar ho gayi! Focus maintain rakho. 🎯",
-      "Lunch heavy tha? Easy topic uthao! 🍔",
-      "Quick power nap, then books? 💤",
-      "Neend ko bye, career ko hi! 👋",
-      "Sun is shining, keep studying! ☀️",
-      "Afternoon grind is tough! 💪",
-      "Break lamba ho gaya, ab padhai! ⏱️",
-      "Boring topics abhi nipta lo! 🥱",
-      "Keep your focus sharp today! 🗡️",
-      "Din badh raha, syllabus bhi? 🚶‍♂️"
+      "Good Afternoon! Padhai kaisi hai? ≡ƒºá",
+      "Hey! Chalo brain workout karein. ΓÜí",
+      "Afternoon! Taiyari kaisi chal rahi? ≡ƒô¥",
+      "Lunch break done? Back to work! ≡ƒÅù∩╕Å",
+      "Check out today's market news! ≡ƒôë",
+      "Good Afternoon! Need a boost? ≡ƒÜÇ",
+      "Keep moving forward! ≡ƒºù",
+      "Dopahar ki neend bhagao! ΓÿÇ∩╕Å",
+      "Lunch wali neend? No chance! Γÿò",
+      "Half day gone! Make it count. ΓÅ│",
+      "Afternoon slump? Deep breath! ≡ƒî¼∩╕Å",
+      "Bache hue tasks niptate hain! ≡ƒôï",
+      "Don't lose the momentum. ≡ƒÅâΓÇìΓÖÇ∩╕Å",
+      "Productivity on high alert! ≡ƒÜ¿",
+      "Thoda aur focus, doing great! ≡ƒæì",
+      "Dopahar ho gayi! Focus maintain rakho. ≡ƒÄ»",
+      "Lunch heavy tha? Easy topic uthao! ≡ƒìö",
+      "Quick power nap, then books? ≡ƒÆñ",
+      "Neend ko bye, career ko hi! ≡ƒæï",
+      "Sun is shining, keep studying! ΓÿÇ∩╕Å",
+      "Afternoon grind is tough! ≡ƒÆ¬",
+      "Break lamba ho gaya, ab padhai! ΓÅ▒∩╕Å",
+      "Boring topics abhi nipta lo! ≡ƒÑ▒",
+      "Keep your focus sharp today! ≡ƒùí∩╕Å",
+      "Din badh raha, syllabus bhi? ≡ƒÜ╢ΓÇìΓÖé∩╕Å"
     ];
 
     const SEARCH_SUGGESTIONS_MOBILE = [
@@ -4443,7 +4366,7 @@
 
       // Simulated Quiz based on pattern (Can be made dynamic with AI call)
       setTimeout(() => {
-        addChatMessage("Theek hai! Chalo check karte hain aapne kitna samjha. 🧠\n\n1. What is the core concept of this topic?\n2. Can you name one advantage of this?\n3. How would you apply this in a real scenario?", 'ai', false);
+        addChatMessage("Theek hai! Chalo check karte hain aapne kitna samjha. ≡ƒºá\n\n1. What is the core concept of this topic?\n2. Can you name one advantage of this?\n3. How would you apply this in a real scenario?", 'ai', false);
         btn.parentElement.remove();
       }, 1000);
     }
@@ -4653,7 +4576,7 @@
               if (relatedLinks.length > 0) {
                 const resDiv = document.createElement('div');
                 resDiv.className = 'suggested-resources';
-                resDiv.innerHTML = `<span class="res-label">📚 Related Resources</span><div class="res-links"></div>`;
+                resDiv.innerHTML = `<span class="res-label">≡ƒôÜ Related Resources</span><div class="res-links"></div>`;
                 const linksCont = resDiv.querySelector('.res-links');
                 relatedLinks.forEach(link => {
                   linksCont.innerHTML += `<a href="javascript:void(0)" onclick="window.location.href='${link.url}'" class="res-link"><i class="fas fa-external-link-alt"></i> ${link.name}</a>`;
@@ -4694,7 +4617,7 @@
 
     function shareWhatsApp(btn) {
       const rawText = btn.parentElement.getAttribute('data-raw');
-      const shareText = `*Solmates AI says:*\n\n${rawText}\n\n_Shared via Solmates - Your MBA Study Buddy_ 🎓`;
+      const shareText = `*Solmates AI says:*\n\n${rawText}\n\n_Shared via Solmates - Your MBA Study Buddy_ ≡ƒÄô`;
       const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
       window.open(url, '_blank');
     }
@@ -5374,7 +5297,7 @@
       }
     }
 
-    // Force refresh notification count on BFCache restore — with 1s delay
+    // Force refresh notification count on BFCache restore ΓÇö with 1s delay
     window.addEventListener('pageshow', (event) => {
       setTimeout(fetchNotificationCount, 1000);
     });
@@ -5458,9 +5381,9 @@
         registration.update();
         
         
-        // [v116.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
+        // [v116.5] controllerchange guard ΓÇö 'refreshed' flag prevents infinite reload loop
         // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
-        // controllerchange fires AFTER nuclear reload, triggering a second reload → infinite loop.
+        // controllerchange fires AFTER nuclear reload, triggering a second reload ΓåÆ infinite loop.
         let _swRefreshed = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
           if (_swRefreshed) return; // already reloaded once, don't loop
@@ -5484,8 +5407,22 @@
              } catch(e){}
           } 
           
-          }, 5000);
-        if (localStorage.getItem("sol_notif_enabled") !== "false" && window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === "function") {
+          // Fallback to Web Push for TWA
+          if (typeof Notification !== 'undefined' && typeof Notification.requestPermission === 'function') {
+            // Only prompt if not already granted or denied
+            if (Notification.permission === 'default') {
+              try {
+                  const permission = await Notification.requestPermission();
+                  if (permission === 'granted' && window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+                      window.solmatesAPI.subscribeToPush();
+                  }
+              } catch(e) {
+                  console.warn('Auto-prompt blocked or failed:', e);
+              }
+            }
+          }
+        }, 5000);
+        if (window.solmatesAPI && typeof window.solmatesAPI.silentPushTokenRefresh === 'function') {
           // Attempt silent token refresh for already subscribed users
           window.solmatesAPI.silentPushTokenRefresh();
         }
@@ -5517,7 +5454,6 @@
       localStorage.setItem('solmates_theme', newTheme);
       document.documentElement.setAttribute('data-solmates-theme', newTheme);
       updateThemeIcon(newTheme);
-
     }
     
     function updateThemeIcon(theme) {
@@ -5540,41 +5476,17 @@
       updateThemeIcon(saved);
       
       // Listen for OS theme changes if not overridden
-      
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('solmates_theme')) {
+          updateThemeIcon(null);
+        }
+      });
     });
 </script>
   <script src="/js/install-banner.js?v=89" defer></script>
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
