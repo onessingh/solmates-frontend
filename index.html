@@ -3,7 +3,7 @@
 
 <head>
 
-  <meta id="theme-color-meta" name="theme-color" content="#ffffff">
+  <meta id="theme-color-meta" name="theme-color" content="#0f172a">
   <script>
           // Extract Native FCM Token and permissions from TWA URL parameter
       (function() {
@@ -42,8 +42,7 @@
 // Set theme-color IMMEDIATELY before anything renders (for TWA nav bar)
     (function() {
       var t = localStorage.getItem('solmates_theme');
-      var m = document.getElementById('theme-color-meta');
-      if (t === 'dark' && m) m.setAttribute('content', '#0f172a');
+      
     })();
   </script>
   <meta name="color-scheme" content="only light">
@@ -5453,7 +5452,7 @@
       darkStyle.media = newTheme === 'dark' ? 'all' : 'not all';
       localStorage.setItem('solmates_theme', newTheme);
       document.documentElement.setAttribute('data-solmates-theme', newTheme);
-      updateThemeIcon(newTheme); let meta = document.getElementById('theme-color-meta'); if (meta) { meta.setAttribute('content', newTheme === 'dark' ? '#0f172a' : '#ffffff'); } }
+      updateThemeIcon(newTheme);  }
     
     function updateThemeIcon(theme) {
       const icon = document.getElementById('themeToggleIcon');
@@ -5486,6 +5485,7 @@
 </body>
 
 </html>
+
 
 
 
