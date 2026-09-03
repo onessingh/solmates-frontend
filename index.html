@@ -3033,31 +3033,29 @@
 <script id="color-scheme-sync">
 (function() {
     function updateMetaColorScheme() {
-        var meta = document.querySelector('meta[name="color-scheme"]');
         var themeMeta = document.getElementById('theme-color-meta');
         var darkStyle = document.getElementById('solmates-dark-style');
-        if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
         if (!theme) {
             theme = 'light';
             localStorage.setItem('solmates_theme', 'light');
         }
         if (theme === 'dark') {
-            meta.setAttribute('content', 'dark');
+            
             if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
-            document.documentElement.style.colorScheme = 'dark';
+            
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
-            meta.setAttribute('content', 'light');
+            
             if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
-            document.documentElement.style.colorScheme = 'light';
+            
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
-            meta.setAttribute('content', 'light');
+            
             if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
-            document.documentElement.style.colorScheme = 'light';
+            
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         }
@@ -5509,6 +5507,9 @@
 </body>
 
 </html>
+
+
+
 
 
 
