@@ -3,7 +3,7 @@
  * Handles offline caching. Web Push has been removed as notifications are natively handled by Android App.
  */
 
-const CACHE_NAME = 'solmates-cache-v510';const STATIC_ASSETS = [
+const CACHE_NAME = 'solmates-cache-v511';const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/notification.html',
@@ -28,17 +28,24 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
     event.waitUntil(
+        // Step 1: Delete ALL old caches
         caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        }).then(() => self.clients.claim())
+            return Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+        })
+        // Step 2: Claim all clients immediately
+        .then(() => self.clients.claim())
+        // Step 3: Force all open windows to reload with fresh HTML from network
+        .then(() => self.clients.matchAll({ type: 'window', includeUncontrolled: true }))
+        .then(clients => {
+            return Promise.all(clients.map(client => {
+                // Add cache-buster param so browser fetches fresh from network
+                var freshUrl = client.url.split('?')[0] + '?_sw=511';
+                return client.navigate(freshUrl);
+            }));
+        })
     );
 });
+
 
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
@@ -77,6 +84,7 @@ self.addEventListener('fetch', event => {
             })
     );
 });
+
 
 
 
