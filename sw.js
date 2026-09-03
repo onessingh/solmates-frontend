@@ -3,12 +3,7 @@
  * Handles offline caching. Web Push has been removed as notifications are natively handled by Android App.
  */
 
-<<<<<<< HEAD
-const CACHE_NAME = 'solmates-cache-v502';
-=======
-const CACHE_NAME = 'solmates-cache-v494';
->>>>>>> parent of fa1b15bd (Bump service worker cache to v495 to enforce notification UI fixes)
-const STATIC_ASSETS = [
+const CACHE_NAME = 'solmates-cache-v505';const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/notification.html',
@@ -75,11 +70,7 @@ self.addEventListener('fetch', event => {
 });
 
 
-<<<<<<< HEAD
 
 
 
-
-=======
->>>>>>> parent of fa1b15bd (Bump service worker cache to v495 to enforce notification UI fixes)
 
