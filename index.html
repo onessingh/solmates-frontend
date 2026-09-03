@@ -4,6 +4,7 @@
 <head>
 
   <meta id="theme-color-meta" name="theme-color" content="#0f172a">
+  <meta name="color-scheme" content="light dark">
   <script>
   // ONE-TIME NUCLEAR CACHE CLEAR (v509) — runs once per user, then never again
   (function() {
@@ -68,8 +69,8 @@
       var m = document.getElementById('theme-color-meta');
 
       if (m) {
-    m.setAttribute('content', '#0f172a');
-  }
+        m.setAttribute('content', t === 'dark' ? '#0f172a' : '#ffffff');
+      }
 
       document.documentElement.setAttribute('data-solmates-theme', t);
     })();
@@ -3065,13 +3066,13 @@
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
         } else if (theme === 'light') {
             
-            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
+            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); }
             
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
             
-            if (themeMeta) { themeMeta.setAttribute('content', '#0f172a'); }
+            if (themeMeta) { themeMeta.setAttribute('content', '#ffffff'); }
             
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
@@ -5531,6 +5532,9 @@
 </body>
 
 </html>
+
+
+
 
 
 
