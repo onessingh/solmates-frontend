@@ -1095,27 +1095,7 @@
           </style>
         `;
         
-        finalHtml = finalHtml.replace('<head>
-<script>
-// OS-based theme-color for TWA status bar
-(function(){
-  var m=document.getElementById('theme-color-meta');
-  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
-  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
-  setOsColor();
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
-})();
-</script>', '<head>
-<script>
-// OS-based theme-color for TWA status bar
-(function(){
-  var m=document.getElementById('theme-color-meta');
-  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
-  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
-  setOsColor();
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
-})();
-</script>\n  ' + mobileFixes);
+        finalHtml = finalHtml.replace('<head>', '<head>\n  ' + mobileFixes);
         
         return finalHtml;
       }
@@ -1152,13 +1132,13 @@
   setOsColor();
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
 })();
-</script>
+<\/script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${name} - Portfolio</title>
   <style>
-    ${themeCSS}
+    __PORTFOLIO_THEME_CSS__
     .header-container {
       display: flex;
       align-items: center;
@@ -1242,7 +1222,7 @@
         if (key === 'solmates_theme') updateMetaColorScheme();
     };
 })();
-<\/script>
+</script>
 </head>
 <body>
   <header>
@@ -1255,8 +1235,8 @@
   setOsColor();
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
 })();
-</script>
-    <div class="container header-container">
+<\/script>
+  <div class="container header-container">
       <div class="header-content">
         <h1>${name}</h1>
         <div class="title">${title}</div>
@@ -1309,7 +1289,7 @@
     </div>
   </footer>
 </body>
-</html>`;
+  </html>`.replace('__PORTFOLIO_THEME_CSS__', () => themeCSS);
     }
 
     
