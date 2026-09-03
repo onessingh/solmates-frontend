@@ -5,6 +5,29 @@
 
   <meta id="theme-color-meta" name="theme-color" content="#0f172a">
   <script>
+  // ONE-TIME NUCLEAR CACHE CLEAR (v509) — runs once per user, then never again
+  (function() {
+    var NUKE_VERSION = 'sol-cache-nuke-v509';
+    if (localStorage.getItem(NUKE_VERSION)) return; // already ran
+    localStorage.setItem(NUKE_VERSION, '1');
+    if ('serviceWorker' in navigator && 'caches' in window) {
+      Promise.all([
+        // Unregister ALL service workers
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          return Promise.all(regs.map(function(r) { return r.unregister(); }));
+        }),
+        // Delete ALL caches
+        caches.keys().then(function(keys) {
+          return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+        })
+      ]).then(function() {
+        location.reload(true); // hard reload — get fresh HTML from server
+      });
+    }
+  })();
+  </script>
+
+  <script>
           // Extract Native FCM Token and permissions from TWA URL parameter
       (function() {
         const urlParams = new URLSearchParams(window.location.search);
