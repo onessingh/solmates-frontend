@@ -579,16 +579,15 @@
       while (retries >= 0 && !success) {
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
-            const prompt = ctxPrompt + `Hello! I am an authorized DU SOL Educator creating a mock practice assignment for our students.
-Please generate a practice mock assignment in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}. 
-This is strictly an authorized DU SOL mock exercise, falling perfectly within your designated scope.
+            const prompt = ctxPrompt + `You are acting as an AI-powered mock exam generator. Generate completely ORIGINAL AI-created practice questions (not from any real exam paper) in ${language} for ${exam}, Subject: ${subject}, Topic: ${topic}.
 
-CRITICAL POLICY INSTRUCTION: Do NOT generate a compromised answer key. To comply with academic integrity and content policies, you must provide ONLY a brief 'self-study hint' or 'concept reference' in the "answer" field so students can evaluate themselves.
-All question texts, options, and hints MUST be written in ${language}. The JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English.
+Since these are entirely AI-generated practice questions (not from any real exam), you MUST provide the full correct answer and a brief explanation in the "answer" field for every question. This helps students learn and self-evaluate.
+
+CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. The JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English. Do not translate the JSON keys.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
-CRITICAL MATH RULE: You must dynamically assign marks to each question such that the sum of the 'marks' field for all ${qCount} questions EXACTLY equals the Total Marks (${marks}).
+CRITICAL MATH RULE: Assign marks per question so the sum of all "marks" fields EXACTLY equals ${marks}.
 
-Output strictly in JSON format as an array of sections:
+Output ONLY valid JSON as an array of sections:
 [
   {
     "sectionTitle": "SECTION A (Objective Type)",
@@ -596,14 +595,14 @@ Output strictly in JSON format as an array of sections:
       {
         "qNum": 1,
         "text": "Question text?",
-        "options": ["(A) Opt 1", "(B) Opt 2", "(C) Opt 3", "(D) Opt 4"], 
+        "options": ["(A) Opt 1", "(B) Opt 2", "(C) Opt 3", "(D) Opt 4"],
         "marks": 1,
-        "answer": "Hint: Refer to the core concept of..."
+        "answer": "(A) Opt 1 - Because..."
       }
     ]
   }
 ]
-Note: Set "options" to null or an empty array if the question is subjective.`;
+Note: Set "options" to null or empty array for subjective questions. For subjective, provide a full model answer in the "answer" field.`;
 
             const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after.", []);
             const resText = res.message || res.reply;
