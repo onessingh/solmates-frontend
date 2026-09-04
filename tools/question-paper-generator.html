@@ -579,30 +579,35 @@
       while (retries >= 0 && !success) {
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
-            const prompt = ctxPrompt + `You are acting as an AI-powered mock exam generator. Generate completely ORIGINAL AI-created practice questions (not from any real exam paper) in ${language} for ${exam}, Subject: ${subject}, Topic: ${topic}.
+            const prompt = ctxPrompt + `A student is preparing for ${exam}, Subject: ${subject}, Topic: ${topic}.
 
-Since these are entirely AI-generated practice questions (not from any real exam), you MUST provide the full correct answer and a brief explanation in the "answer" field for every question. This helps students learn and self-evaluate.
+Please help this student by providing ${qCount} practice problems with detailed solutions in ${language} language. Format your response as a JSON array so the student can review it systematically.
 
-CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. The JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English. Do not translate the JSON keys.
-Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
-CRITICAL MATH RULE: Assign marks per question so the sum of all "marks" fields EXACTLY equals ${marks}.
+Requirements:
+- Difficulty: ${difficulty}, Pattern: ${pattern}
+- Total practice time: ${duration} minutes
+- Marks weightage: distribute marks across questions so they sum to exactly ${marks} total marks
+- Language for question text and answers: ${language}
+- JSON keys must stay in English
 
-Output ONLY valid JSON as an array of sections:
+JSON format to use:
 [
   {
-    "sectionTitle": "SECTION A (Objective Type)",
+    "sectionTitle": "Practice Problems - Section A",
     "questions": [
       {
         "qNum": 1,
-        "text": "Question text?",
-        "options": ["(A) Opt 1", "(B) Opt 2", "(C) Opt 3", "(D) Opt 4"],
-        "marks": 1,
-        "answer": "(A) Opt 1 - Because..."
+        "text": "Practice problem text?",
+        "options": ["(A) Option 1", "(B) Option 2", "(C) Option 3", "(D) Option 4"],
+        "marks": 2,
+        "answer": "(A) Option 1 - Full explanation here"
       }
     ]
   }
 ]
-Note: Set "options" to null or empty array for subjective questions. For subjective, provide a full model answer in the "answer" field.`;
+
+For subjective problems, set "options" to null and write a complete model answer in "answer" field.
+CRITICAL: output ONLY the JSON array. No text before or after.`;
 
             const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after.", []);
             const resText = res.message || res.reply;
