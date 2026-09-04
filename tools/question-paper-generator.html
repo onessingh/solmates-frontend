@@ -374,7 +374,7 @@
           </div>
           <div class="form-group">
             <label>Total Questions</label>
-            <input type="number" id="q-count" class="form-control" value="15">
+            <input type="number" id="q-count" class="form-control" value="15" min="1" max="25">
           </div>
         </div>
 
@@ -551,7 +551,12 @@
       const subject = document.getElementById('subject').value || 'General Subject';
       const marks = document.getElementById('marks').value || '100';
       const duration = document.getElementById('duration').value || '120';
-      const qCount = parseInt(document.getElementById('q-count').value);
+      let qCount = parseInt(document.getElementById('q-count').value);
+        if (qCount > 25) {
+            alert('To prevent AI token limits, the maximum number of questions allowed is 25.\nAutomatically capping at 25.');
+            qCount = 25;
+            document.getElementById('q-count').value = 25;
+        }
       const pattern = document.getElementById('pattern').value;
       const topic = document.getElementById('unit').value || 'Syllabus';
       const difficulty = document.getElementById('difficulty').value;
@@ -574,7 +579,7 @@
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
             const prompt = ctxPrompt + `Generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}.
 CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. However, the JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English. Do not translate the JSON keys.
-Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
+Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.\nCRITICAL MATH RULE: You must dynamically assign marks to each question such that the sum of the 'marks' field for all ${qCount} questions EXACTLY equals the Total Marks (${marks}).
 Output strictly in JSON format as an array of sections:
 [
   {
