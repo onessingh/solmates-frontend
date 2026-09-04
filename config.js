@@ -1,4 +1,4 @@
-
+﻿
 // [Fix] Bypass Web Push permission checks in Native App to force Native Firebase flow
 (function() {
   try {
@@ -303,7 +303,7 @@ if (typeof document !== "undefined") {
     /* 
     setInterval(function() {
         const startTime = performance.now();
-        /* debugger */ 
+        // debugger removed 
         if (performance.now() - startTime > 100) {
             // User likely focused the debugger
             window.location.reload(); 
