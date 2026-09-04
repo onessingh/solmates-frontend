@@ -3,7 +3,7 @@
  * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v529';
+const CACHE_NAME = 'solmates-cache-v530';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -48,7 +48,7 @@ self.addEventListener("fetch", event => {
                     const responseToCache = networkResponse.clone();
                     caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
                     return networkResponse;
-                }).catch(() => caches.match(event.request).then(cached => cached || caches.match("/index.html")))
+                }).catch(() => caches.match(event.request).then(cached => cached || caches.match("/index.html").then(idx => idx || new Response("Offline", { status: 503 }))))
         );
         return;
     }
@@ -60,7 +60,7 @@ self.addEventListener("fetch", event => {
                 if (!res || res.status !== 200 || res.type !== "basic") return res;
                 const responseToCache = res.clone(); caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
                 return res;
-            }).catch(() => caches.match("/index.html"));
+            }).catch(() => new Response("", { status: 404, statusText: "Not Found" }));
         })
     );
 });
