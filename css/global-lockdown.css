@@ -43,3 +43,19 @@ input, textarea, select {
 html.dark ::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
 html.dark ::-webkit-input-placeholder { color: #94a3b8 !important; opacity: 1 !important; }
 html.dark ::-moz-placeholder { color: #94a3b8 !important; opacity: 1 !important; }
+
+/* --- TWA / App Smoothness Enhancements --- */
+html {
+    scroll-behavior: smooth !important;
+}
+body {
+    -webkit-overflow-scrolling: touch !important;
+}
+a, button, .btn, .back-btn {
+    touch-action: manipulation !important; /* Removes 300ms tap delay */
+    -webkit-tap-highlight-color: transparent !important; /* Removes blue tap highlight on Android */
+}
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
