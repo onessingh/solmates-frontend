@@ -1,525 +1,645 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://solmates.in/</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-classes.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/database/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-elearning.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/journey/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-exams.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/feedback.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-jobs.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/privacy.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-notes.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/notification.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-oneshot.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/search.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-professor.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/resumebuilder/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-pyq.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/job-search/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/admin/manage-youtube.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/careertest.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/ai-chatbot.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/interview.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/classes/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/email-generator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/elearning-subjects.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/ats-checker.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/folder-content.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/cover-letter.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/salary-calculator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/view.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/linkedin-checklist.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/youtube-browse.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/portfolio-builder/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/database/youtube-content.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/notice-period/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/exam-prep/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/corporate-translator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/exam-prep/overview.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/resignation-kit.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/exam-prep/study-kit.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/freelance-calculator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/exam-prep/subjects.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/ai-excuse-generator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/feedback.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/exam-prep/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/games/case-study-arena/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/ai-study-companion/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/games/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/flashcards.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/games/market-mavericks/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/planner/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/games/quiz-battle/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/mcq-generator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/games/rapid-fire/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/question-paper-generator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/games/shark-pitch/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/zero-size-pdf.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/calculator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/journey/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/coverpage.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/notification.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/converter.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/privacy-policy.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/compressor.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/certification-guide.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/attendance.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/company-culture.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/assignment-tracker.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/growth-opportunities.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/teleprompter.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/text-humanizer.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/interest-inventory.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/merge.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/job-market.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/split.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/learning-path.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/zip-creator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/project-ideas.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/compress.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/salary-insights.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/pdf-to-word.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/skill-gap.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/pdf-to-ppt.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/skills/skill-tracker.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/word-to-pdf.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/ai-excuse-generator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/excel-to-pdf.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/ai-study-companion/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/pdf-to-jpg.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/assignment-tracker.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/jpg-to-pdf.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/ats-checker.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/watermark.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/attendance.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/rotate.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/break-even.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/html-to-pdf.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/business-case.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/unlock.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/business-validator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/protect.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/calculator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/organize.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/compressor.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/page-numbers.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/converter.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/scan.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/corporate-translator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/ocr.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/cover-letter.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/ai-summarizer.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/coverpage.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/translate.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/custom-services.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/delete-pages.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/email-generator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/add-pages.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/financial-ratio.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pdf-tools/favicon-generator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/flashcards.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/business-validator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/freelance-calculator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/gst-calculator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/gst-calculator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/swot-maker.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/business-case.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/interview.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/financial-ratio.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/job-search/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/break-even.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/linkedin-checklist.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/pestle-maker.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/loan-calculator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/startup-valuation.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/mcq-generator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/tools/loan-calculator.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/notice-period/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/personality-test.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/add-pages.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/aptitude-test.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/ai-summarizer.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/interest-inventory.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/compress.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/skill-gap.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/delete-pages.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/learning-path.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/excel-to-pdf.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/certification-guide.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/favicon-generator.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/skill-tracker.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/html-to-pdf.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/project-ideas.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/index.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/salary-insights.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/jpg-to-pdf.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/job-market.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/merge.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/company-culture.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/ocr.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/skills/growth-opportunities.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/organize.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/games/case-study-arena/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/page-numbers.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/games/market-mavericks/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/pdf-to-jpg.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/games/quiz-battle/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/pdf-to-ppt.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/games/rapid-fire/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/pdf-to-word.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://solmates.in/games/shark-pitch/index.html</loc>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/protect.html</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/rotate.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/scan.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/split.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/translate.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/unlock.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/watermark.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/word-to-pdf.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pdf-tools/zip-creator.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/pestle-maker.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/planner/index.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/portfolio-builder/index.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/question-paper-generator.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/resignation-kit.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/resumebuilder/index.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/salary-calculator.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/startup-valuation.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/swot-maker.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/teleprompter.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/text-humanizer.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://solmates.in/c:/Users/Toshiba/OneDrive/Desktop/solmates/frontend/tools/zero-size-pdf.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
