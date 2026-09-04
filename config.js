@@ -1,4 +1,4 @@
-﻿
+
 // [Fix] Bypass Web Push permission checks in Native App to force Native Firebase flow
 (function() {
   try {
