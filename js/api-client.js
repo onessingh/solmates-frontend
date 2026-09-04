@@ -956,7 +956,7 @@ if (typeof module !== 'undefined' && module.exports) {
     // 3. DevTools freeze trap (slows down reverse engineering)
     setInterval(function() {
         const before = new Date().getTime();
-        (function() { debugger; }());
+        /* debugger trap removed */
         const after = new Date().getTime();
         if (after - before > 100) {
             // DevTools is open and paused the debugger
@@ -988,11 +988,7 @@ if (typeof module !== 'undefined' && module.exports) {
         }
 
         // Detect via performance profile
-        const start = performance.now();
-        debugger;
-        if (performance.now() - start > 100) {
-            devtoolsOpen = true;
-        }
+        /* second trap removed */
 
         if (devtoolsOpen) {
             // Nuke the page completely if they try to bypass

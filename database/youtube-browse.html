@@ -984,19 +984,7 @@
     document.onkeydown = function(e) {
         if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) return false;
     };
-    setInterval(function() {
-        let devtoolsOpen = false;
-        const threshold = 160;
-        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) devtoolsOpen = true;
-        const start = performance.now();
-        debugger;
-        if (performance.now() - start > 100) devtoolsOpen = true;
-        if (devtoolsOpen) {
-            document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%;'>Security Violation: Access Denied.</h1>";
-            document.head.innerHTML = "";
-            window.location.replace("about:blank");
-        }
-    }, 1000);
+    /* Aggressive devtools polling removed */
 })();
 </script>
 

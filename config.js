@@ -303,7 +303,7 @@ if (typeof document !== "undefined") {
     /* 
     setInterval(function() {
         const startTime = performance.now();
-        debugger; 
+        /* debugger */ 
         if (performance.now() - startTime > 100) {
             // User likely focused the debugger
             window.location.reload(); 
