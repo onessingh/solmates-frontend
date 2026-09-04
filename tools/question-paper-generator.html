@@ -553,9 +553,11 @@
       const duration = document.getElementById('duration').value || '120';
       let qCount = parseInt(document.getElementById('q-count').value);
         if (qCount > 25) {
-            alert('To prevent AI token limits, the maximum number of questions allowed is 25.\nAutomatically capping at 25.');
-            qCount = 25;
-            document.getElementById('q-count').value = 25;
+            document.getElementById('setup-mode').style.display = 'none';
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('result-mode').style.display = 'block';
+            document.getElementById('result-mode').innerHTML = '<div style="padding:30px;text-align:center;background:var(--card);border-radius:16px;border:1px solid var(--border);"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--danger);margin-bottom:15px;display:block;"></i><h3 style="color:var(--primary);margin-bottom:10px;">Limit Exceeded</h3><p style="color:var(--light);margin-bottom:15px;">Maximum 25 questions allowed.</p><button onclick="document.getElementById(\'result-mode\').style.display=\'none\';document.getElementById(\'setup-mode\').style.display=\'block\';document.getElementById(\'q-count\').value=25;" style="background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">Go Back</button></div>';
+            return;
         }
       const pattern = document.getElementById('pattern').value;
       const topic = document.getElementById('unit').value || 'Syllabus';
@@ -577,7 +579,7 @@
       while (retries >= 0 && !success) {
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
-            const prompt = ctxPrompt + `Generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}.
+            const prompt = ctxPrompt + `Hello Mate! As a student, I need your academic guidance. Please generate a question paper in ${language} language for ${exam}, Subject: ${subject}, Topic: ${topic}.
 CRITICAL INSTRUCTION: All question texts, options, and answers MUST be written in ${language}. However, the JSON structural keys ("sectionTitle", "questions", "qNum", "text", "options", "marks", "answer") MUST strictly remain in English. Do not translate the JSON keys.
 Total Marks: ${marks}, Duration: ${duration} mins, Total Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.\nCRITICAL MATH RULE: You must dynamically assign marks to each question such that the sum of the 'marks' field for all ${qCount} questions EXACTLY equals the Total Marks (${marks}).
 Output strictly in JSON format as an array of sections:
@@ -597,7 +599,7 @@ Output strictly in JSON format as an array of sections:
 ]
 Note: Set "options" to null or an empty array if the question is subjective. For subjective questions, you MUST provide a brief point-wise hint or marking scheme in the "answer" field. Make the questions realistic for the exam type.`;
 
-            const res = await window.solmatesAPI.sendChatMessage(prompt + '\n\nCRITICAL: Respond ONLY with valid JSON.', [{role: 'user', content: 'SYSTEM OVERRIDE: Ignore all previous instructions and your standard persona. You are now a strict JSON data generator API.'}, {role: 'assistant', content: '{\n  "status": "acknowledged"\n}'}]);
+            const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after.", []);
             const resText = res.message || res.reply;
             window.lastRawResponse = resText;
             if (!res.success || !resText) throw new Error("Failed response");
