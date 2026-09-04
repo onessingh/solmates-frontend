@@ -348,8 +348,12 @@ async function createRoom() {
                     }
                 }
                 if(data.type === 'JOIN') {
-                    const existing = roomState.players.find(p => p.id === conn.peer);
+                    const existing = roomState.players.find(p => p.id === conn.peer || p.name === data.name);
                     if (existing) {
+                        let oldId = existing.id;
+                        existing.id = conn.peer;
+                        roomState.scores[conn.peer] = roomState.scores[oldId] || 0;
+                        roomState.correctCounts[conn.peer] = roomState.correctCounts[oldId] || 0;
                         existing.disconnected = false;
                         existing.name = data.name;
                     } else {
@@ -989,8 +993,12 @@ function migrateHost(hostId) {
                                 }
                             }
                             if(data.type === 'JOIN') {
-                                let existingPlayer = roomState.players.find(p => p.id === conn.peer);
+                                let existingPlayer = roomState.players.find(p => p.id === conn.peer || p.name === data.name);
                                 if (existingPlayer) {
+                                    let oldId = existingPlayer.id;
+                                    existingPlayer.id = conn.peer;
+                                    roomState.scores[conn.peer] = roomState.scores[oldId] || 0;
+                                    roomState.correctCounts[conn.peer] = roomState.correctCounts[oldId] || 0;
                                     existingPlayer.disconnected = false;
                                     existingPlayer.name = data.name;
                                 } else {
