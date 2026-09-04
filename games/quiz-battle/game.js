@@ -1,5 +1,5 @@
-
-// Player Profile modal — identical card/flow to the one on the /games/ hub, shown immediately
+﻿
+// Player Profile modal â€” identical card/flow to the one on the /games/ hub, shown immediately
 // on page load for first-time visitors (including invite-link opens), not just when Join is
 // clicked. Uses the same shared profanity filter (/js/profanity.js) as the hub.
 function containsProfanity(text) {
@@ -61,7 +61,7 @@ let timeRemaining = 15;
 let answered = false;
 let currentSettings = "";
 
-// Force the profile modal open immediately if there's no saved nickname yet — this covers
+// Force the profile modal open immediately if there's no saved nickname yet â€” this covers
 // someone opening an invite link directly, not just clicking Create/Join Room.
 if (!localStorage.getItem('solmates_nickname')) {
     document.addEventListener('DOMContentLoaded', openProfileModal);
@@ -375,7 +375,7 @@ async function createRoom() {
 
 function joinViaUrl() {
     // By the time this runs, the Player Profile modal has already forced a nickname to be set
-    // on page load — but guard anyway in case someone dismissed it somehow.
+    // on page load â€” but guard anyway in case someone dismissed it somehow.
     myName = localStorage.getItem('solmates_nickname');
     if (!myName) { openProfileModal(); return; }
     const url = new URL(window.location.href);
@@ -608,7 +608,7 @@ function startGame() {
     const activeCount = roomState.players.filter(p => !p.disconnected).length;
     window.SolmatesSync.show(`Waiting for players... (1/${activeCount})`);
     
-    // ── HOST CONNECTION GUARD ─────────────────────────────────────────────────
+    // â”€â”€ HOST CONNECTION GUARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // Mobile Host may return from background with a momentarily-suspended WebSocket.
     // Confirm Firebase is actually connected before broadcasting SYNC_PREPARE,
     // so the write is guaranteed to reach the server and trigger Guest listeners.
@@ -623,7 +623,7 @@ function startGame() {
         if (snap.val() === true) {
             doHostBroadcast();
         } else {
-            // Not yet connected — go online and wait for the connection event once
+            // Not yet connected â€” go online and wait for the connection event once
             db.goOnline();
             const connRef = db.ref('.info/connected');
             const waitHandler = snap2 => {
@@ -901,7 +901,7 @@ let isMigrating = false;
 function migrateHost(hostId) {
     if (window.SolmatesHostStatus) window.SolmatesHostStatus.hide();
     if (isMigrating) return;
-    // Be tolerant about where the question set comes from — backupQuestions is set from several
+    // Be tolerant about where the question set comes from â€” backupQuestions is set from several
     // broadcast paths already, but if for any reason it never arrived, fall back to whatever
     // question set we actually have (roomState.questions, populated as soon as the game started)
     // rather than giving up and leaving the room stuck with no host.
@@ -1029,7 +1029,7 @@ function migrateHost(hostId) {
                     }, 1500);
                 // hostId already carries the 'SOLMATES-' prefix (it's the same value used for
                 // peer.connect()). initPeer() adds that prefix itself, so we must pass the bare
-                // id here — otherwise the new host registers under a double-prefixed room key
+                // id here â€” otherwise the new host registers under a double-prefixed room key
                 // that doesn't match the room the other guests are still listening on, and the
                 // migration silently does nothing from their point of view.
                 }, hostId.replace('SOLMATES-', ''));
