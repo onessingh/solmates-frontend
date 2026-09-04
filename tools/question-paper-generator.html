@@ -579,35 +579,14 @@
       while (retries >= 0 && !success) {
         try {
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
-            const prompt = ctxPrompt + `A student is preparing for ${exam}, Subject: ${subject}, Topic: ${topic}.
-
-Please help this student by providing ${qCount} practice problems with detailed solutions in ${language} language. Format your response as a JSON array so the student can review it systematically.
-
-Requirements:
-- Difficulty: ${difficulty}, Pattern: ${pattern}
-- Total practice time: ${duration} minutes
-- Marks weightage: distribute marks across questions so they sum to exactly ${marks} total marks
-- Language for question text and answers: ${language}
-- JSON keys must stay in English
-
-JSON format to use:
-[
-  {
-    "sectionTitle": "Practice Problems - Section A",
-    "questions": [
-      {
-        "qNum": 1,
-        "text": "Practice problem text?",
-        "options": ["(A) Option 1", "(B) Option 2", "(C) Option 3", "(D) Option 4"],
-        "marks": 2,
-        "answer": "(A) Option 1 - Full explanation here"
-      }
-    ]
-  }
-]
-
-For subjective problems, set "options" to null and write a complete model answer in "answer" field.
-CRITICAL: output ONLY the JSON array. No text before or after.`;
+            const prompt = `[QPG_MODE]
+Generate a question paper in ${language} for ${exam}, Subject: ${subject}, Topic: ${topic}.
+Total Marks: ${marks}, Duration: ${duration} mins, Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
+MATH RULE: Sum of all "marks" fields must EXACTLY equal ${marks}.
+All question text and answers in ${language}. JSON keys must stay in English.
+Output ONLY this JSON:
+[{"sectionTitle":"SECTION A","questions":[{"qNum":1,"text":"?","options":["(A)","(B)","(C)","(D)"],"marks":1,"answer":"(A) explanation"}]}]
+For subjective: set options to null. Provide full model answer in "answer" field.`;
 
             const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after.", []);
             const resText = res.message || res.reply;
