@@ -364,10 +364,7 @@
         </div>
 
         <div class="grid-3">
-          <div class="form-group">
-            <label>Total Marks</label>
-            <input type="number" id="marks" class="form-control" value="70">
-          </div>
+          
           <div class="form-group">
             <label>Duration (Mins)</label>
             <input type="number" id="duration" class="form-control" value="180">
@@ -415,7 +412,7 @@
     <div id="loader" class="loader-overlay">
       <div class="spinner"></div>
       <h3 style="color: var(--primary);">Drafting Question Paper...</h3>
-      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Structuring sections and verifying marks...</p>
+      <p style="color: var(--light); font-size: 0.9rem; margin-top: 10px;" id="loader-msg">Structuring sections...</p>
     </div>
 
     <!-- Result Mode -->
@@ -433,7 +430,7 @@
           <h3 id="p-subject">SUBJECT: PHYSICS</h3>
           <div class="paper-meta">
             <div>Time Allowed: <span id="p-time">3 hours</span></div>
-            <div>Maximum Marks: <span id="p-marks">70</span></div>
+            
           </div>
           <div class="paper-instructions">
             <strong>General Instructions:</strong><br>
@@ -534,7 +531,7 @@
       }
       window.solmatesAPI = new SolmatesAPI();
       const urlParams = new URLSearchParams(window.location.search);
-      const fields = ['exam', 'subject', 'unit', 'marks', 'duration', 'difficulty'];
+      const fields = ['exam', 'subject', 'unit', 'duration', 'difficulty'];
       fields.forEach(f => {
         if (urlParams.has(f)) {
           const el = document.getElementById(f);
@@ -549,7 +546,6 @@
     async function generatePaper() {
       const exam = document.getElementById('exam').value || 'MOCK EXAM';
       const subject = document.getElementById('subject').value || 'General Subject';
-      const marks = document.getElementById('marks').value || '100';
       const duration = document.getElementById('duration').value || '120';
       let qCount = parseInt(document.getElementById('q-count').value);
                 if (qCount > 25) {
@@ -568,7 +564,6 @@
       
       document.getElementById('p-exam').innerText = `${exam} Examination`;
       document.getElementById('p-subject').innerText = `SUBJECT: ${subject.toUpperCase()}`;
-      document.getElementById('p-marks').innerText = marks;
       document.getElementById('p-time').innerText = duration >= 60 ? `${duration/60} hours` : `${duration} mins`;
 
       try {
@@ -581,11 +576,10 @@
             const ctxPrompt = typeof ExamContextManager !== 'undefined' ? ExamContextManager.getPromptString() : '';
             const prompt = `[QPG_MODE]
 Generate a question paper in ${language} for ${exam}, Subject: ${subject}, Topic: ${topic}.
-Total Marks: ${marks}, Duration: ${duration} mins, Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
-MATH RULE: Sum of all "marks" fields must EXACTLY equal ${marks}.
+Duration: ${duration} mins, Questions: ${qCount}, Difficulty: ${difficulty}, Pattern: ${pattern}.
 All question text and answers in ${language}. JSON keys must stay in English.
 Output ONLY this JSON:
-[{"sectionTitle":"SECTION A","questions":[{"qNum":1,"text":"?","options":["(A)","(B)","(C)","(D)"],"marks":1,"answer":"(A) explanation"}]}]
+[{"sectionTitle":"SECTION A","questions":[{"qNum":1,"text":"?","options":["(A)","(B)","(C)","(D)"],"answer":"(A) explanation"}]}]
 For subjective: set options to null. Provide full model answer in "answer" field.`;
 
             const res = await window.solmatesAPI.sendChatMessage(prompt + "\n\nCRITICAL: Respond ONLY with valid JSON. No extra text before or after.", []);
@@ -680,7 +674,7 @@ For subjective: set options to null. Provide full model answer in "answer" field
                 ${q.text}
                 ${optsHtml}
               </div>
-              <div class="q-marks">[${q.marks}]</div>
+              
             </div>
           `;
           
