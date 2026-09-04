@@ -446,3 +446,15 @@ html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-action-btn.
 
 html[data-solmates-theme="light"] #sol-floating-notepad .sol-notepad-new-btn { color: white !important; }
 
+
+@media print {
+  #sol-floating-notepad,
+  #sol-notepad-minimized-icon,
+  #sol-notepad-close-zone,
+  .chatbot-widget,
+  #sol-chatbot,
+  .floating-chat,
+  #sol-chat-bubble {
+    display: none !important;
+  }
+}
