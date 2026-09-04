@@ -866,10 +866,10 @@ function showLeaderboard(scores, passedTotalQ = null) {
                 <div class="flex items-center gap-3">
                     <span class="font-bold text-slate-400">#${idx+1}</span>
                     <div>
-                        <p class="font-bold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' ðŸ”Œ' : ''}</p>
-                        <p class="text-xs text-slate-500 mt-0.5">âœ… ${correct} / ${totalQ} correct</p>
+                        <p class="font-bold text-slate-800">${p.name}${isMe ? ' (You)' : ''}${p.disconnected ? ' 🔌' : ''}</p>
+                        <p class="text-xs text-slate-500 mt-0.5">✅ ${correct} / ${totalQ} correct</p>
                     </div>
-                    ${idx===0 && !p.disconnected ? '<span class="text-yellow-500">ðŸ†</span>' : ''}
+                    ${idx===0 && !p.disconnected ? '<span class="text-yellow-500">🏆</span>' : ''}
                 </div>
                 <span class="font-bold text-slate-900 text-lg">${scores[p.id] || 0} pts</span>
             </div>
