@@ -25,6 +25,9 @@ window.solmatesBadWords = [
     'bhadwa', 'bhadwe', 'bhadwi',
     'hijra', 'chhakka',
     'bc', 'mc',
+
+    // Extended Hindi/English slang
+    'boor', 'bur', 'bhur', 'bhurr', 'bhonsd', 'bhosad', 'bhosada', 'chud', 'chuda', 'chodo', 'chodna', 'chudai', 'chudakkad', 'chuche', 'chuchi', 'chuchiyan', 'mammay', 'mamma', 'tharki', 'tharak', 'mooth', 'muthi', 'budiya', 'tatti', 'tatte', 'hagna', 'mutna', 'jhat', 'jhaat', 'jhatu', 'jhaantu', 'pel', 'pelu', 'pela', 'rakhel', 'dalal', 'bhadava', 'nigga', 'nigger', 'fag', 'faggot', 'retard', 'dyke', 'tranny',
 ];
 
 window.solmatesCheckProfanity = function(text) {
