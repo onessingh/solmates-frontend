@@ -106,14 +106,14 @@
           position: sticky;
           top: 80px;
           height: calc(100vh - 100px);
-          overflow-y: auto;
+          overflow-y: auto; scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
           margin-top: 0 !important;
           padding-right: 15px;
         }
         .preview-column::-webkit-scrollbar { width: 6px; }
         .preview-column::-webkit-scrollbar-track { background: transparent; }
-        .preview-column::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .preview-column::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .preview-column::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+        .preview-column::-webkit-scrollbar-thumb:hover { background: #64748b; }
     }
     
     .card {
@@ -198,13 +198,13 @@
         gap: 10px;
         margin-bottom: 20px;
         max-height: 260px;
-        overflow-y: auto;
+        overflow-y: auto; scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9;
         padding-right: 5px;
       }
       .theme-grid::-webkit-scrollbar { width: 6px; }
       .theme-grid::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-      .theme-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-      .theme-grid::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      .theme-grid::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+      .theme-grid::-webkit-scrollbar-thumb:hover { background: #64748b; }
     @media (max-width: 768px) {
       .theme-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -691,7 +691,7 @@
       </div>
       <p style="color: #64748b; font-size: 0.9rem; margin-top: 0; margin-bottom: 20px;">Click on any template to apply it instantly.</p>
       <input type="text" id="modalThemeSearch" placeholder="Search templates... (e.g. Minimal, Dark, Cyber)" class="form-control" oninput="filterModalThemes()" style="margin-bottom: 20px;">
-      <div id="modal-theme-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; overflow-y: auto; padding-right: 10px; flex: 1;">
+      <div id="modal-theme-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #94a3b8 #f1f5f9; padding-right: 10px; flex: 1;">
         <!-- Rendered by JS -->
       </div>
     </div>
