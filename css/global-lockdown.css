@@ -85,10 +85,10 @@ a, button, .btn, .back-btn {
   .whatsapp-option .option-desc { font-size: 10px; }
 }
 @media (max-width: 768px) {
-  .whatsapp-dropdown { width: 95px; padding: 6px; }
-  .whatsapp-options { gap: 4px; flex-direction: row; }
-  .whatsapp-option { padding: 6px 4px; }
-  .whatsapp-option i { font-size: 16px; margin-bottom: 2px; }
-  .whatsapp-option .option-text { font-size: 9px; }
+  .whatsapp-dropdown { width: 85px; padding: 4px; }
+  .whatsapp-options { gap: 2px; flex-direction: row; }
+  .whatsapp-option { padding: 4px 2px; }
+  .whatsapp-option i { font-size: 14px; margin-bottom: 2px; }
+  .whatsapp-option .option-text { font-size: 8px; }
   .whatsapp-option .option-desc { font-size: 7px; }
 }
