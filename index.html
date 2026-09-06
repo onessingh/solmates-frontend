@@ -3008,6 +3008,17 @@
 })();
 </script>
 
+
+  <style>
+    /* Premium Startup Fade-In to prevent jarring eye-hurting flashes */
+    @keyframes appFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    body {
+      animation: appFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+  </style>
 </head>
 
 <body>
@@ -5423,6 +5434,7 @@
 </body>
 
 </html>
+
 
 
 
