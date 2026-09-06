@@ -1,11 +1,11 @@
-{
+﻿{
   "name": "Solmates",
   "short_name": "Solmates",
   "description": "SOL Student Community - Notes, Tools, Career Resources for MBA Students",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0f172a",
+  "theme_color": "#ffffff",
   "orientation": "any",
   "scope": "/",
   "lang": "en",
@@ -62,5 +62,6 @@
     }
   ]
 }
+
 
 
