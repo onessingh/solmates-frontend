@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1446,6 +1446,22 @@
         color: white !important;
         border: none !important;
       }
+    /* Post Image Skeleton */
+    .post-img-loading {
+      background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s infinite;
+      min-height: 150px;
+    }
+    @keyframes skeleton-shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .post-img-loaded {
+      animation: none !important;
+      background: none !important;
+      min-height: auto !important;
+    }
 </style>
 <script>
     (function() {
@@ -2259,7 +2275,7 @@
                         style="background:none; border:none; color:var(--brand-primary); font-weight:800; padding:5px 0 0; cursor:pointer; font-size:13px; display:inline-block; margin-top:2px;">View More <i class="fas fa-chevron-down"></i></button>
                   </div>
                 ` : `
-                  ${finalImageUrl ? `<img src="${finalImageUrl}" loading="lazy" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
+                  ${finalImageUrl ? `<img src="${finalImageUrl}" loading="lazy" class="post-img-loading" onload="this.classList.replace('post-img-loading', 'post-img-loaded')" style="display:block; width:100%; border-radius:12px; margin-bottom:10px; max-height:200px; object-fit:cover;" onerror="this.style.display='none';">` : ''}
                   ${!isLiveClass ? `<div class="notice-category-text" style="word-wrap:break-word;">${window.formatNoticeDescription(notice.description)}</div>` : ''}
                 `}
                 ` : ''}
