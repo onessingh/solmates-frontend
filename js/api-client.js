@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SOLMATES API Client - Complete Fixed Version
  * REMOVED: Custom cache-control headers causing CORS issues
  */
@@ -42,7 +42,7 @@ if (window.location.hostname !== 'localhost' && window.location.hostname !== '12
 }
 */
 
-const _API_CONFIG_ERROR_MSG = '❌ PRODUCTION_API_URL not configured! Edit config.js and set window.PRODUCTION_API_URL to your backend URL.';
+const _API_CONFIG_ERROR_MSG = 'âŒ PRODUCTION_API_URL not configured! Edit config.js and set window.PRODUCTION_API_URL to your backend URL.';
 
 const getAPIBaseURL = () => {
   if (window.API_CONFIG && window.API_CONFIG.baseURL) {
@@ -74,7 +74,7 @@ const getAPIBaseURL = () => {
           box-shadow: 0 8px 32px rgba(0,0,0,0.15);
           max-width: 500px;
         ">
-          <div style="font-size: 64px; margin-bottom: 20px;">⚠️</div>
+          <div style="font-size: 64px; margin-bottom: 20px;">âš ï¸</div>
           <h2 style="color: #dc3545; margin-bottom: 16px;">Configuration Error</h2>
           <p style="color: #666; margin-bottom: 24px;">
             The application is not properly configured for production.
@@ -110,7 +110,7 @@ const getAPIBaseURL = () => {
 };
 
 const API_BASE_URL = getAPIBaseURL();
-// [v116.4] Reduced from 60s to 10s — 60s caused 3-4 min mobile freeze on Render cold starts
+// [v116.4] Reduced from 60s to 10s â€” 60s caused 3-4 min mobile freeze on Render cold starts
 const REQUEST_TIMEOUT = 10000;
 
 class SolmatesAPI {
@@ -119,7 +119,7 @@ class SolmatesAPI {
     this.adminToken = localStorage.getItem('solmates_admin_token');
 
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      console.log('✅ API Client initialized:', this.baseURL);
+      console.log('âœ… API Client initialized:', this.baseURL);
     }
   }
 
@@ -183,9 +183,9 @@ class SolmatesAPI {
         let errorMsg = data.error || 'API request failed';
         if (data.details) {
           if (Array.isArray(data.details)) {
-            errorMsg += ' — ' + data.details.map(d => d.message || d).join('; ');
+            errorMsg += ' â€” ' + data.details.map(d => d.message || d).join('; ');
           } else if (typeof data.details === 'string') {
-            errorMsg += ' — ' + data.details;
+            errorMsg += ' â€” ' + data.details;
           }
         }
 
@@ -437,7 +437,7 @@ class SolmatesAPI {
     });
   }
 
-  // ── Cache helpers (30s TTL) ───────────────────────────────────────────────
+  // â”€â”€ Cache helpers (30s TTL) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   getCache(key) {
     try {
       const raw = sessionStorage.getItem('solcache_v2_' + key);
@@ -983,9 +983,7 @@ if (typeof module !== 'undefined' && module.exports) {
         const threshold = 160;
         
         // Detect via screen size difference (DevTools takes up space)
-        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
-            devtoolsOpen = true;
-        }
+        // DevTools size detection removed to fix Ctrl+ Zoom bugs
 
         // Detect via performance profile
         /* second trap removed */
@@ -1048,6 +1046,7 @@ window.solmatesPromptNickname = function() {
         return name;
     }
 };
+
 
 
 
