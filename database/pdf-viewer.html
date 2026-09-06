@@ -698,6 +698,47 @@
 
     window.onload = init;
   </script>
+
+  <script>
+    // Visual Viewport API Hack to keep Header immune to page zoom
+    if (window.visualViewport) {
+      const header = document.querySelector(".viewer-header");
+      const container = document.querySelector(".viewer-container");
+      if (header && container) {
+        // Must be absolute for independent transform
+        header.style.position = "absolute";
+        header.style.top = "0";
+        header.style.left = "0";
+        header.style.transformOrigin = "top left";
+        header.style.zIndex = "10000";
+        
+        // Push the container down so it is not hidden under the absolute header
+        // The header is usually 64px tall
+        container.style.marginTop = "64px";
+
+        function updateHeader() {
+          const vv = window.visualViewport;
+          const scale = 1 / vv.scale;
+          const offsetX = vv.offsetLeft;
+          const offsetY = vv.offsetTop;
+          
+          header.style.transform = "translate(" + offsetX + "px, " + offsetY + "px) scale(" + scale + ")";
+          header.style.width = (vv.width * vv.scale) + "px";
+        }
+
+        window.visualViewport.addEventListener("resize", updateHeader);
+        window.visualViewport.addEventListener("scroll", updateHeader);
+        
+        // Smooth loop for aggressive sync
+        function loop() {
+          updateHeader();
+          requestAnimationFrame(loop);
+        }
+        loop();
+      }
+    }
+  </script>
+
 </body>
 </html>
 
