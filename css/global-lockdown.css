@@ -92,3 +92,16 @@ a, button, .btn, .back-btn {
   .whatsapp-option .option-text { font-size: 8px; }
   .whatsapp-option .option-desc { font-size: 7px; }
 }
+
+/* ========== PRINT STYLES (Hide URL, Date, Time) ========== */
+@media print {
+  @page {
+    /* Setting margin to 0 prevents the browser from printing default headers (Date/Title) and footers (URL) */
+    margin: 0;
+  }
+  body {
+    /* Add padding back so content doesn't stick to the very edge of the paper */
+    padding-top: 10mm;
+    padding-bottom: 10mm;
+  }
+}
