@@ -702,27 +702,31 @@
   </script>
 
   <script>
-    // Visual Viewport API Hack - Hardware Accelerated
+    // Visual Viewport API Hack - Smart Hide/Show (User Idea)
     if (window.visualViewport) {
-      const header = document.querySelector("header"); // Selects any header!
-      const container = document.querySelector("main"); // Selects the main container
+      const header = document.querySelector("header"); 
+      const container = document.querySelector("main"); 
       if (header && container) {
         header.style.position = "absolute";
         header.style.top = "0";
         header.style.left = "0";
         header.style.transformOrigin = "top left";
         header.style.zIndex = "10000";
-        header.style.willChange = "transform, width";
-          header.style.contain = "layout paint size";
-          header.style.backfaceVisibility = "hidden";
-          header.style.perspective = 1000;
-          header.style.transformStyle = "preserve-3d";
+        header.style.willChange = "transform, width, opacity";
+        header.style.contain = "layout paint size";
+        header.style.backfaceVisibility = "hidden";
+        header.style.perspective = 1000;
+        header.style.transformStyle = "preserve-3d";
+        
+        // Smooth fade effect
+        header.style.transition = "opacity 0.15s ease-in-out";
         
         container.style.flex = "none";
         container.style.height = "calc(100dvh - 64px)";
-        container.style.marginTop = "64px"; // Fixed height to prevent hiding under absolute header
+        container.style.marginTop = "64px"; 
 
         let isUpdating = false;
+        let hideTimeout = null;
 
         function updateHeader() {
           if(!window.visualViewport) return;
@@ -731,26 +735,36 @@
           const offsetX = vv.offsetLeft;
           const offsetY = vv.offsetTop;
           
-          // Use translate3d for GPU acceleration to minimize tearing/jitter
           header.style.transform = "translate3d(" + offsetX + "px, " + offsetY + "px, 0) scale(" + scale + ")";
           header.style.width = (vv.width * vv.scale) + "px";
           isUpdating = false;
         }
 
         function onViewportChange() {
+          // Hide header instantly during zoom/pan
+          header.style.opacity = "0";
+          header.style.pointerEvents = "none";
+          
           if (!isUpdating) {
             isUpdating = true;
             requestAnimationFrame(updateHeader);
           }
+          
+          clearTimeout(hideTimeout);
+          hideTimeout = setTimeout(() => {
+            // Force a final position update before showing
+            updateHeader();
+            // Show header again after user stops
+            header.style.opacity = "1";
+            header.style.pointerEvents = "auto";
+          }, 250);
         }
 
         window.visualViewport.addEventListener("resize", onViewportChange);
         window.visualViewport.addEventListener("scroll", onViewportChange);
         
-        // Initial setup
         updateHeader();
         
-        // Also run a loop during active touch to prevent lag
         document.addEventListener("touchmove", onViewportChange, {passive: true});
       }
     }
