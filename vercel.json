@@ -1,4 +1,4 @@
-{
+﻿{
     "cleanUrls":  true,
     "trailingSlash":  false,
     "rewrites":  [
@@ -462,7 +462,16 @@
                           "permanent":  false
                       }
                   ],
-        "headers":  [
+    "headers":  [
+                    {
+                        "headers":  [
+                                        {
+                                            "key":  "Cache-Control",
+                                            "value":  "public, max-age=604800, immutable"
+                                        }
+                                    ],
+                        "source":  "/.well-known/assetlinks.json"
+                    },
                     {
                         "headers":  [
                                         {
