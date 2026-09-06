@@ -929,6 +929,58 @@
             }, 100);
         });
     </script>
+
+  <script>
+    // Visual Viewport API Hack - Hardware Accelerated
+    if (window.visualViewport) {
+      const header = document.querySelector("header"); // Selects any header!
+      const container = document.querySelector("main"); // Selects the main container
+      if (header && container) {
+        header.style.position = "absolute";
+        header.style.top = "0";
+        header.style.left = "0";
+        header.style.transformOrigin = "top left";
+        header.style.zIndex = "10000";
+        header.style.willChange = "transform";
+        
+        container.style.flex = "none";
+        container.style.height = "calc(100dvh - 64px)";
+        container.style.marginTop = "64px"; // Fixed height to prevent hiding under absolute header
+
+        let isUpdating = false;
+
+        function updateHeader() {
+          if(!window.visualViewport) return;
+          const vv = window.visualViewport;
+          const scale = 1 / vv.scale;
+          const offsetX = vv.offsetLeft;
+          const offsetY = vv.offsetTop;
+          
+          // Use translate3d for GPU acceleration to minimize tearing/jitter
+          header.style.transform = "translate3d(" + offsetX + "px, " + offsetY + "px, 0) scale(" + scale + ")";
+          header.style.width = (vv.width * vv.scale) + "px";
+          isUpdating = false;
+        }
+
+        function onViewportChange() {
+          if (!isUpdating) {
+            isUpdating = true;
+            requestAnimationFrame(updateHeader);
+          }
+        }
+
+        window.visualViewport.addEventListener("resize", onViewportChange);
+        window.visualViewport.addEventListener("scroll", onViewportChange);
+        
+        // Initial setup
+        updateHeader();
+        
+        // Also run a loop during active touch to prevent lag
+        document.addEventListener("touchmove", onViewportChange, {passive: true});
+      }
+    }
+  </script>
+
 </body>
 </html>
 
