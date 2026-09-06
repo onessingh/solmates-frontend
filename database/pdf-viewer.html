@@ -712,7 +712,11 @@
         header.style.left = "0";
         header.style.transformOrigin = "top left";
         header.style.zIndex = "10000";
-        header.style.willChange = "transform";
+        header.style.willChange = "transform, width";
+          header.style.contain = "layout paint size";
+          header.style.backfaceVisibility = "hidden";
+          header.style.perspective = 1000;
+          header.style.transformStyle = "preserve-3d";
         
         container.style.flex = "none";
         container.style.height = "calc(100dvh - 64px)";
