@@ -93,15 +93,26 @@ a, button, .btn, .back-btn {
   .whatsapp-option .option-desc { font-size: 7px; }
 }
 
-/* ========== PRINT STYLES (Hide URL, Date, Time) ========== */
+/* ========== PRINT STYLES (Hide URL, Date, Time & Fix Cutoffs) ========== */
 @media print {
   @page {
-    /* Setting margin to 0 prevents the browser from printing default headers (Date/Title) and footers (URL) */
+    /* Removes browser default headers (Date/Title) and footers (URL) */
     margin: 0;
   }
   body {
-    /* Add padding back so content doesn't stick to the very edge of the paper */
-    padding-top: 10mm;
-    padding-bottom: 10mm;
+    /* Add safe 15mm padding around the entire paper so text doesn't touch the edge */
+    padding: 15mm !important;
+    box-sizing: border-box !important;
+  }
+  .container, .paper-container {
+    /* Prevent double padding */
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  .letter-container {
+    /* For absolute positioned containers like Cover Letter */
+    padding: 15mm !important;
+    box-sizing: border-box !important;
   }
 }
