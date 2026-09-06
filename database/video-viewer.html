@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -1032,7 +1032,14 @@
         setTimeout(updateHeader, 1500);
         setTimeout(updateHeader, 3000);
         
-        document.addEventListener("touchmove", onViewportChange, {passive: true});
+                // Smart touchmove: skip hide if touch is on notepad/icon
+        document.addEventListener("touchmove", function(e) {
+          const notepadIcon = document.getElementById("sol-notepad-minimized-icon");
+          const notepadPanel = document.getElementById("sol-floating-notepad");
+          if (notepadIcon && notepadIcon.contains(e.target)) return;
+          if (notepadPanel && notepadPanel.contains(e.target)) return;
+          onViewportChange();
+        }, {passive: true});
       }
     }
   </script>

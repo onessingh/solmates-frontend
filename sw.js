@@ -1,9 +1,9 @@
-﻿/**
+/**
  * SOLMATES Service Worker (v514)
  * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v593';
+const CACHE_NAME = 'solmates-cache-v599';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -65,14 +65,34 @@ self.addEventListener("fetch", event => {
     );
 });
 
+// ===== PUSH =====
+self.addEventListener("push", event => {
+    let data = {};
+    try { data = event.data ? event.data.json() : {}; } catch(e) {}
+    const title = data.title || 'SOLMATES';
+    const options = {
+        body: data.body || 'New update available!',
+        icon: data.icon || '/android-chrome-192x192.png',
+        badge: data.badge || '/favicon-32x32.png',
+        data: { url: data.url || '/' },
+        vibrate: [200, 100, 200],
+        requireInteraction: false
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+});
 
-
-
-
-
-
-
-
-
-
-
+// ===== NOTIFICATIONCLICK =====
+self.addEventListener("notificationclick", event => {
+    event.notification.close();
+    const targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
+    const fullUrl = new URL(targetUrl, self.location.origin).href;
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+            for (const client of windowClients) {
+                if (client.url === fullUrl && 'focus' in client) return client.focus();
+            }
+            if (windowClients.length > 0 && 'navigate' in windowClients[0]) return windowClients[0].focus().then(c => c.navigate(fullUrl));
+            if (clients.openWindow) return clients.openWindow(fullUrl);
+        })
+    );
+});
