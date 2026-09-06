@@ -974,9 +974,11 @@
           const notepadIcon = document.getElementById("sol-notepad-minimized-icon");
           const notepadPanel = document.getElementById("sol-floating-notepad");
           
-          // Flawless math for bottom-right fixed elements
-          const shiftX = (vv.offsetLeft + vv.width) - document.documentElement.clientWidth;
-          const shiftY = (vv.offsetTop + vv.height) - document.documentElement.clientHeight;
+          // Robust math using vv.scale instead of clientWidth/Height
+          const layoutW = vv.width * vv.scale;
+          const layoutH = vv.height * vv.scale;
+          const shiftX = (vv.offsetLeft + vv.width) - layoutW;
+          const shiftY = (vv.offsetTop + vv.height) - layoutH;
           
           if (notepadIcon) {
             notepadIcon.style.transformOrigin = "bottom right";
@@ -995,7 +997,6 @@
         }
 
         function onViewportChange() {
-          // Hide instantly during zoom/pan
           header.style.opacity = "0";
           header.style.pointerEvents = "none";
           
@@ -1020,13 +1021,16 @@
                 if (notepadIcon) { notepadIcon.style.opacity = "1"; notepadIcon.style.pointerEvents = "auto"; }
                 if (notepadPanel) { notepadPanel.style.opacity = "1"; notepadPanel.style.pointerEvents = "auto"; }
             }, 100);
-          }, 600); 
+          }, 1600); // 1.6s delay as requested by user
         }
 
         window.visualViewport.addEventListener("resize", onViewportChange);
         window.visualViewport.addEventListener("scroll", onViewportChange);
         
+        // Try multiple times to catch late-injected notepad
         setTimeout(updateHeader, 500); 
+        setTimeout(updateHeader, 1500);
+        setTimeout(updateHeader, 3000);
         
         document.addEventListener("touchmove", onViewportChange, {passive: true});
       }
