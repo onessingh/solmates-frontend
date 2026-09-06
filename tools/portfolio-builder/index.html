@@ -615,7 +615,7 @@
     
     <!-- Mobile Templates Navigation -->
     <div class="mobile-only" style="margin-bottom: 20px; text-align: center;">
-      <button class="export-btn" onclick="document.getElementById('preview-section').scrollIntoView({behavior: 'smooth'})"><i class="fas fa-palette"></i> Choose Templates</button>
+      <button type="button" class="export-btn" onclick="var e=document.getElementById('preview-section');if(e)window.scrollTo({top:e.getBoundingClientRect().top+window.scrollY-60,behavior:'smooth'});"><i class="fas fa-palette"></i> Choose Templates</button>
     </div>
     
     </div> <!-- END form-column -->
@@ -662,7 +662,7 @@
         <iframe id="preview-frame" sandbox="allow-same-origin allow-scripts"></iframe>
       </div>
 
-      <button class="export-btn" onclick="exportWebsite()"><i class="fas fa-file-archive"></i> Download Website ZIP</button>
+      <button type="button" class="export-btn" onclick="exportWebsite()"><i class="fas fa-file-archive"></i> Download Website ZIP</button>
       <p style="color: #64748b; margin-top: 15px; font-size: 0.9rem;">Extract the ZIP and upload to GitHub Pages, Netlify, or Vercel.</p>
     </div>
 
