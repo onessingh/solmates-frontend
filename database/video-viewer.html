@@ -949,7 +949,7 @@
         header.style.backfaceVisibility = "hidden";
         header.style.perspective = 1000;
         header.style.transformStyle = "preserve-3d";
-        header.style.transition = "opacity 0.2s ease-in-out";
+        header.style.transition = "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
         
         container.style.flex = "none";
         container.style.height = "calc(100dvh - 64px)";
@@ -981,13 +981,13 @@
           if (notepadIcon) {
             notepadIcon.style.transformOrigin = "bottom right";
             notepadIcon.style.willChange = "transform, opacity";
-            notepadIcon.style.transition = "opacity 0.2s ease-in-out";
+            notepadIcon.style.transition = "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
             notepadIcon.style.transform = "translate3d(" + shiftX + "px, " + shiftY + "px, 0) scale(" + scale + ")";
           }
           if (notepadPanel && !notepadPanel.classList.contains("hidden")) {
             notepadPanel.style.transformOrigin = "bottom right";
             notepadPanel.style.willChange = "transform, opacity";
-            notepadPanel.style.transition = "opacity 0.2s ease-in-out";
+            notepadPanel.style.transition = "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
             notepadPanel.style.transform = "translate3d(" + shiftX + "px, " + shiftY + "px, 0) scale(" + scale + ")";
           }
           
@@ -1020,7 +1020,7 @@
                 if (notepadIcon) { notepadIcon.style.opacity = "1"; notepadIcon.style.pointerEvents = "auto"; }
                 if (notepadPanel) { notepadPanel.style.opacity = "1"; notepadPanel.style.pointerEvents = "auto"; }
             }, 100);
-          }, 1500); 
+          }, 600); 
         }
 
         window.visualViewport.addEventListener("resize", onViewportChange);
