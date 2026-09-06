@@ -931,10 +931,11 @@
     </script>
 
   <script>
-    // Visual Viewport API Hack - Smart Hide/Show (User Idea)
+    // Visual Viewport API Hack - Smart Hide/Show (Header + Notepad)
     if (window.visualViewport) {
       const header = document.querySelector("header"); 
       const container = document.querySelector("main"); 
+      
       if (header && container) {
         header.style.position = "absolute";
         header.style.top = "0";
@@ -946,8 +947,6 @@
         header.style.backfaceVisibility = "hidden";
         header.style.perspective = 1000;
         header.style.transformStyle = "preserve-3d";
-        
-        // Smooth fade effect
         header.style.transition = "opacity 0.15s ease-in-out";
         
         container.style.flex = "none";
@@ -961,18 +960,46 @@
           if(!window.visualViewport) return;
           const vv = window.visualViewport;
           const scale = 1 / vv.scale;
+          
+          // Header (Top-Left Anchor)
           const offsetX = vv.offsetLeft;
           const offsetY = vv.offsetTop;
-          
           header.style.transform = "translate3d(" + offsetX + "px, " + offsetY + "px, 0) scale(" + scale + ")";
           header.style.width = (vv.width * vv.scale) + "px";
+          
+          // Notepad & Icon (Bottom-Right Anchor)
+          const notepadIcon = document.getElementById("sol-notepad-minimized-icon");
+          const notepadPanel = document.getElementById("sol-floating-notepad");
+          
+          // Flawless math for bottom-right fixed elements
+          const shiftX = (vv.offsetLeft + vv.width) - document.documentElement.clientWidth;
+          const shiftY = (vv.offsetTop + vv.height) - document.documentElement.clientHeight;
+          
+          if (notepadIcon) {
+            notepadIcon.style.transformOrigin = "bottom right";
+            notepadIcon.style.willChange = "transform, opacity";
+            notepadIcon.style.transition = "opacity 0.15s ease-in-out";
+            notepadIcon.style.transform = "translate3d(" + shiftX + "px, " + shiftY + "px, 0) scale(" + scale + ")";
+          }
+          if (notepadPanel && !notepadPanel.classList.contains("hidden")) {
+            notepadPanel.style.transformOrigin = "bottom right";
+            notepadPanel.style.willChange = "transform, opacity";
+            notepadPanel.style.transition = "opacity 0.15s ease-in-out";
+            notepadPanel.style.transform = "translate3d(" + shiftX + "px, " + shiftY + "px, 0) scale(" + scale + ")";
+          }
+          
           isUpdating = false;
         }
 
         function onViewportChange() {
-          // Hide header instantly during zoom/pan
+          // Hide instantly during zoom/pan
           header.style.opacity = "0";
           header.style.pointerEvents = "none";
+          
+          const notepadIcon = document.getElementById("sol-notepad-minimized-icon");
+          const notepadPanel = document.getElementById("sol-floating-notepad");
+          if (notepadIcon) { notepadIcon.style.opacity = "0"; notepadIcon.style.pointerEvents = "none"; }
+          if (notepadPanel) { notepadPanel.style.opacity = "0"; notepadPanel.style.pointerEvents = "none"; }
           
           if (!isUpdating) {
             isUpdating = true;
@@ -981,18 +1008,21 @@
           
           clearTimeout(hideTimeout);
           hideTimeout = setTimeout(() => {
-            // Force a final position update before showing
             updateHeader();
-            // Show header again after user stops
+            
+            // Show after user stops
             header.style.opacity = "1";
             header.style.pointerEvents = "auto";
+            if (notepadIcon) { notepadIcon.style.opacity = "1"; notepadIcon.style.pointerEvents = "auto"; }
+            if (notepadPanel) { notepadPanel.style.opacity = "1"; notepadPanel.style.pointerEvents = "auto"; }
           }, 250);
         }
 
         window.visualViewport.addEventListener("resize", onViewportChange);
         window.visualViewport.addEventListener("scroll", onViewportChange);
         
-        updateHeader();
+        // Initial setup
+        setTimeout(updateHeader, 500); // Give JS time to inject notepad
         
         document.addEventListener("touchmove", onViewportChange, {passive: true});
       }
