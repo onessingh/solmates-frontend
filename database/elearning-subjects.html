@@ -1302,7 +1302,7 @@
                         if (!isGeneric && bookLink) { openViewer(bookLink, cleanName); return; }
                         isNavigating = true; card.classList.add('navigating');
                         setTimeout(() => {
-                            window.location.href = `/database/folder-content.html?category=${CATEGORY}&semester=${SEMESTER}&folderId=${subject.id}&name=${encodeURIComponent(cleanName)}&parentName=E-Books`;
+                            window.location.href = `/database/folder-content.html?category=${CATEGORY}&semester=${SEMESTER}&folderId=${subject.id}&name=${encodeURIComponent(cleanName)}&parentName=' + (CATEGORY === 'hc-elearning' ? 'Healthcare E-Books' : 'E-Books') + '`;
                         }, 150);
                     };
                     grid.appendChild(card);
