@@ -615,7 +615,7 @@
         if (msg.toLowerCase().includes('locked')) {
           grid.innerHTML = '<div class="empty"><i class="fas fa-lock" style="font-size:2rem;color:#f59e0b;margin-bottom:10px;"></i><br><strong>This folder is locked by the Administrator.</strong></div>';
         } else {
-          grid.innerHTML = '<div class="empty">Error loading content.</div>';
+          grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
         }
       }
     }
