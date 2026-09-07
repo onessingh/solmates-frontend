@@ -1196,6 +1196,14 @@
     let isNavigating = false;
     const urlParams = new URLSearchParams(window.location.search);
     const CATEGORY = urlParams.get('category') || 'youtube';
+    // Update title for Healthcare
+    if (CATEGORY === 'hc-youtube') {
+      const t = document.getElementById('pageTitle');
+      if (t) t.textContent = 'Healthcare YouTube Videos';
+      const s = document.getElementById('pageSubtitle');
+      if (s) s.textContent = 'Curated playlists & lectures for MBA in Healthcare';
+      document.title = 'Healthcare YouTube Videos - SOLMATES';
+    }
 
 
 

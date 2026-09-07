@@ -940,6 +940,12 @@
 
         const fromParam = p.get('category');
         const CATEGORY = fromParam || 'elearning';
+        // Update title for Healthcare
+        if (CATEGORY === 'hc-elearning') {
+            const t = document.getElementById('pageMainTitle');
+            if (t) t.textContent = 'Healthcare E-Books';
+            document.title = 'Healthcare E-Books - SOLMATES';
+        }
         let currentTab = 'sol';
         let isNavigating = false;
         let otherVisible = localStorage.getItem('elearning_other_visible_root') !== 'false';

@@ -828,9 +828,24 @@
 })();
 </script>
 
-</head>
 
-<body style="background: linear-gradient(135deg, #f8fafc 0%, #d1fae5 100%);">
+    <style>
+      body {
+        background: linear-gradient(135deg, #f8fafc 0%, #d1fae5 100%) !important;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        body { background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important; }
+        .category-card { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
+        .category-card:hover { border-color: #10b981 !important; background: #0f2d21 !important; }
+        .category-card h2, .category-card p { color: #e2e8f0 !important; }
+        .database-header p { color: #94a3b8 !important; }
+        .database-container { background: transparent !important; }
+      }
+    </style>
+  </head>
+
+<body>
 
   <header class="top-nav">
 <script>
