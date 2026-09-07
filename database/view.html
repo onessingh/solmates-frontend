@@ -541,7 +541,10 @@
     const CAT_LABELS = {
       'live-classes': 'Live Portal', 'recorded-class': 'Recorded Class', 'notes': 'Study Notes',
       'pyqs': 'Previous Year Papers', 'oneshot': 'One-Shot Revision', 'youtube': 'Video Lessons',
-      'elearning': 'E-Books', 'professor': 'Class Materials'
+      'elearning': 'E-Books', 'professor': 'Class Materials',
+      'hc-recorded-class': 'Healthcare Recorded Classes', 'hc-notes': 'Healthcare Notes',
+      'hc-pyqs': 'Healthcare PYQs', 'hc-oneshot': 'Healthcare One-Shot', 'hc-youtube': 'Healthcare Video Lessons',
+      'hc-elearning': 'Healthcare E-Books', 'hc-professor': 'Healthcare Class Materials'
     };
 
     function init() {
@@ -569,8 +572,8 @@
 
     async function onSemesterClick(s) {
       if (isNavigating) return;
-      if (CATEGORY === 'elearning') { window.location.href = `/database/elearning-subjects.html?semester=${s}`; return; }
-      if (CATEGORY === 'youtube') { window.location.href = `/database/youtube-browse?semester=${s}`; return; }
+      if (CATEGORY.includes('elearning')) { window.location.href = `/database/elearning-subjects.html?category=${CATEGORY}&semester=${s}`; return; }
+      if (CATEGORY.includes('youtube')) { window.location.href = `/database/youtube-browse.html?category=${CATEGORY}&semester=${s}`; return; }
       semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
       history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);
       document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${s}`;

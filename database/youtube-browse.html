@@ -1309,7 +1309,7 @@
 
       // De-Dupe & Merge Templates
       let subjects = [...folders];
-      if (SEMESTER_SUBJECTS[sem]) {
+      if (CATEGORY === 'youtube' && SEMESTER_SUBJECTS[sem]) {
         SEMESTER_SUBJECTS[sem].forEach(name => {
           if (!subjects.find(f => (f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim() === name.toUpperCase().trim())) {
             subjects.push({ id: null, name, _virtual: true });
@@ -1318,14 +1318,14 @@
       }
       subjects.sort((a, b) => a.name.localeCompare(b.name));
 
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (isAdmin) document.getElementById('adminBar').classList.add('visible');
+
       if (subjects.length === 0) {
         if (isStale) return; // Wait
         grid.innerHTML = `<div class="state-block" style="grid-column:1/-1;"><i class="fab fa-youtube"></i><strong>No Subjects</strong></div>`;
         return;
       }
-
-      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
-      if (isAdmin) document.getElementById('adminBar').classList.add('visible');
 
       const frag = document.createDocumentFragment();
       const seenNames = new Set();
@@ -1471,19 +1471,19 @@
 
             if (match) {
               // If already exists, just navigate to it instead of creating
-              navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${match.id}&name=${encodeURIComponent(name)}`);
+              navigateTo(`/database/youtube-content.html?category=${CATEGORY}&semester=${currentSemester}&folderId=${match.id}&name=${encodeURIComponent(name)}`);
               return;
             }
 
             const r = await window.solmatesAPI.addSOLFolder({ name, category: CATEGORY, semester: currentSemester });
-            navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${r.data.id}&name=${encodeURIComponent(name)}`);
+            navigateTo(`/database/youtube-content.html?category=${CATEGORY}&semester=${currentSemester}&folderId=${r.data.id}&name=${encodeURIComponent(name)}`);
           } catch (e) { alert('Error: ' + e.message); }
         } else {
-          navigateTo(`/database/youtube-content?semester=${currentSemester}&name=${encodeURIComponent(name)}&noContent=true`);
+          navigateTo(`/database/youtube-content.html?category=${CATEGORY}&semester=${currentSemester}&name=${encodeURIComponent(name)}&noContent=true`);
         }
         return;
       }
-      navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${folderId}&name=${encodeURIComponent(name)}`);
+      navigateTo(`/database/youtube-content.html?category=${CATEGORY}&semester=${currentSemester}&folderId=${folderId}&name=${encodeURIComponent(name)}`);
     }
 
 

@@ -1542,7 +1542,7 @@
 
   <script>
     const p = new URLSearchParams(window.location.search);
-    let CATEGORY = 'youtube';
+    let CATEGORY = p.get('category') || 'youtube';
     let SEMESTER = parseInt(p.get('semester')) || 1;
     let FOLDER_ID = p.get('folderId') || null;
     let FOLDER_NAME = p.get('name') || 'Videos';
