@@ -1181,6 +1181,109 @@
   </article>
 </div>
 
+
+    <script>
+    // ===== HEALTHCARE SECTION LOCK BUTTONS (Admin Only) =====
+    const HC_SECTIONS = [
+      { cat: 'hc-recorded-class', lockKey: '__HC_RC_LOCKED__' },
+      { cat: 'hc-notes',          lockKey: '__HC_NOTES_LOCKED__' },
+      { cat: 'hc-pyqs',           lockKey: '__HC_PYQS_LOCKED__' },
+      { cat: 'hc-oneshot',        lockKey: '__HC_ONESHOT_LOCKED__' },
+      { cat: 'hc-elearning',      lockKey: '__HC_EBOOKS_LOCKED__' },
+      { cat: 'hc-youtube',        lockKey: '__HC_YT_LOCKED__' },
+      { cat: 'hc-professor',      lockKey: '__HC_CM_LOCKED__' },
+    ];
+
+    async function initHcSectionLocks() {
+      if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) return;
+
+      // Get all lock folders from backend once
+      let lockFolders = [];
+      try {
+        const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+        lockFolders = (res && res.data) ? res.data : [];
+      } catch(e) { return; }
+
+      // Map each card to its category
+      document.querySelectorAll('.category-card[href]').forEach(card => {
+        const href = card.getAttribute('href') || '';
+        let matchedSection = null;
+
+        for (const sec of HC_SECTIONS) {
+          if (href.includes(sec.cat)) { matchedSection = sec; break; }
+        }
+        if (!matchedSection) return;
+
+        const lockFolder = lockFolders.find(f => (f.name||'').includes(matchedSection.lockKey));
+        let isLocked = !!lockFolder;
+
+        // Apply initial locked state
+        function applyState() {
+          const lockOverlay = card.querySelector('.sec-lock-overlay');
+          if (isLocked) {
+            card.classList.add('is-locked');
+            if (lockOverlay) lockOverlay.style.display = 'flex';
+          } else {
+            card.classList.remove('is-locked');
+            if (lockOverlay) lockOverlay.style.display = 'none';
+          }
+          const btn = card.querySelector('.sec-lock-btn');
+          if (btn) {
+            btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
+            btn.title = isLocked ? 'Unlock this section' : 'Lock this section';
+          }
+        }
+
+        // Add lock overlay icon if not present
+        if (!card.querySelector('.sec-lock-overlay')) {
+          const overlay = document.createElement('div');
+          overlay.className = 'sec-lock-overlay lock-overlay';
+          overlay.style.cssText = 'display:none;';
+          overlay.innerHTML = '<i class="fas fa-lock"></i>';
+          card.appendChild(overlay);
+        }
+
+        // Add lock button for admin
+        if (!card.querySelector('.sec-lock-btn')) {
+          const btn = document.createElement('button');
+          btn.className = 'sec-lock-btn';
+          btn.style.cssText = 'position:absolute; bottom:10px; right:10px; background:#4f46e5; color:white; border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; z-index:22;';
+          card.appendChild(btn);
+
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            try {
+              if (isLocked) {
+                // Unlock - find and delete the lock folder
+                const res2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+                const flds = (res2 && res2.data) ? res2.data : [];
+                const lf = flds.find(f => (f.name||'').includes(matchedSection.lockKey));
+                if (lf) await window.solmatesAPI.deleteSOLFolder(lf.id);
+                isLocked = false;
+              } else {
+                // Lock - create lock folder
+                await window.solmatesAPI.addSOLFolder({ name: matchedSection.lockKey, category: 'hc-recorded-class', semester: 0 });
+                isLocked = true;
+              }
+              applyState();
+            } catch(err) {
+              alert('Error: ' + err.message);
+            } finally {
+              btn.disabled = false;
+            }
+          });
+        }
+
+        applyState();
+      });
+    }
+
+    setTimeout(initHcSectionLocks, 700);
+    </script>
+
 </body>
 
 </html>

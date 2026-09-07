@@ -1001,39 +1001,53 @@
 </head>
 
 <body>
+    
     <script>
-      // ===== HEALTHCARE LOCK GUARD =====
+      // ===== HEALTHCARE SECTION LOCK GUARD =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
         const cat = p.get('category') || '';
-        const isHC = window.location.href.includes('/healthcare') || cat.startsWith('hc-');
-        if (!isHC) return;
+        if (!cat.startsWith('hc-')) return;
         
-        // Wait for API to be ready
+        // Lock key map
+        const LOCK_MAP = {
+          'hc-recorded-class': '__HC_RC_LOCKED__',
+          'hc-notes':          '__HC_NOTES_LOCKED__',
+          'hc-pyqs':           '__HC_PYQS_LOCKED__',
+          'hc-oneshot':        '__HC_ONESHOT_LOCKED__',
+          'hc-elearning':      '__HC_EBOOKS_LOCKED__',
+          'hc-youtube':        '__HC_YT_LOCKED__',
+          'hc-professor':      '__HC_CM_LOCKED__',
+        };
+        const sectionLockKey = LOCK_MAP[cat];
+        const globalLockKey = '__HC_LOCKED__';
+        
         let tries = 0;
         while (!window.solmatesAPI && tries < 20) {
           await new Promise(r => setTimeout(r, 200));
           tries++;
         }
         if (!window.solmatesAPI) return;
-        
-        // Admin can always pass
         if (window.solmatesAPI.isAdminLoggedIn()) return;
         
         try {
           const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
           const folders = (res && res.data) ? res.data : [];
-          const isLocked = folders.some(f => (f.name || '').includes('__HC_LOCKED__'));
-          if (isLocked) {
+          
+          const globalLocked = folders.some(f => (f.name||'').includes(globalLockKey));
+          const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
+          
+          if (globalLocked || sectionLocked) {
+            const reason = globalLocked ? 'MBA in Healthcare is locked.' : 'This section is locked.';
             document.body.innerHTML = `
               <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:30px;font-family:-apple-system,sans-serif;background:#f8fafc;">
                 <div style="font-size:4rem;margin-bottom:20px;">🔒</div>
-                <h2 style="margin:0 0 12px;color:#1e293b;font-size:1.5rem;">MBA in Healthcare</h2>
-                <p style="color:#64748b;margin:0 0 24px;max-width:350px;">This section is currently locked. Content is being prepared and will be available soon!</p>
-                <a href="/database" style="background:#059669;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">← Back to Database</a>
+                <h2 style="margin:0 0 12px;color:#1e293b;font-size:1.5rem;">Content Locked</h2>
+                <p style="color:#64748b;margin:0 0 24px;max-width:350px;">${reason} Content is being prepared and will be available soon!</p>
+                <a href="/database/healthcare" style="background:#059669;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">← Back to Healthcare</a>
               </div>`;
           }
-        } catch(e) { console.warn('HC lock check failed:', e.message); }
+        } catch(e) { console.warn('HC section lock check failed:', e.message); }
       })();
     </script>
 
