@@ -884,7 +884,7 @@
 
     <div class="container">
         <div class="page-header">
-            <h1><i class="fas fa-book-open" style="color:var(--accent)"></i> E-Books</h1>
+            <h1><i class="fas fa-book-open" style="color:var(--accent)"></i> <span id="pageMainTitle">E-Books</span></h1>
             <p id="pageDesc">Loading subjects...</p>
         </div>
 
@@ -1067,7 +1067,15 @@
                 if (window.isRefreshing) {
                     grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
                 } else {
-                    grid.innerHTML = '<div class="loading">No subjects found.</div>';
+                    grid.innerHTML = `
+  <div style="text-align:center; padding:60px 20px; color:#94a3b8;">
+    <div style="font-size:3.5rem; margin-bottom:16px; opacity:0.4;">
+      <i class="fas fa-book-open"></i>
+    </div>
+    <h3 style="margin:0 0 8px; font-size:1.1rem; font-weight:600; color:#64748b;">No E-Books Added Yet</h3>
+    <p style="margin:0; font-size:0.9rem; color:#94a3b8;">Admin will add E-Books here soon.</p>
+  </div>
+`;
                 }
                 return;
             }

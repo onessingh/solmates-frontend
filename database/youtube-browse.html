@@ -1031,8 +1031,8 @@
 
   <!-- Hero -->
   <div class="hero">
-    <h1><i class="fab fa-youtube"></i> YouTube Videos</h1>
-    <p>Curated playlists &amp; lectures for all MBA semesters</p>
+    <h1><i class="fab fa-youtube"></i> <span id="pageTitle">YouTube Videos</span></h1>
+    <p id="pageSubtitle">Curated playlists &amp; lectures for all MBA semesters</p>
   </div>
 
   <div class="container" id="mainContainer">
@@ -1326,7 +1326,15 @@
 
       if (subjects.length === 0) {
         if (isStale) return; // Wait
-        grid.innerHTML = `<div class="state-block" style="grid-column:1/-1;"><i class="fab fa-youtube"></i><strong>No Subjects</strong></div>`;
+        grid.innerHTML = `
+  <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#94a3b8;">
+    <div style="font-size:3.5rem; margin-bottom:16px; opacity:0.4;">
+      <i class="fab fa-youtube"></i>
+    </div>
+    <h3 style="margin:0 0 8px; font-size:1.1rem; font-weight:600; color:#64748b;">No Subjects Added Yet</h3>
+    <p style="margin:0; font-size:0.9rem; color:#94a3b8;">Admin will add subjects here soon.</p>
+  </div>
+`;
         return;
       }
 

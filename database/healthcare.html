@@ -560,21 +560,6 @@
       text-align: center;
     }
 
-    .recycle-bin-card {
-      border: 1px dashed #6366f1 !important;
-      background: #f5f3ff !important;
-    }
-
-    .recycle-bin-card:hover {
-      background: #ede9fe !important;
-      border-color: #4f46e5 !important;
-    }
-
-    .recycle-bin-card .category-icon {
-      background: #e0e7ff;
-      color: #6366f1;
-    }
-
     .bin-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -741,13 +726,6 @@
           a[href="/database/ai-knowledge"] {
             
             
-          }
-          .recycle-bin-card {
-            background: rgba(99, 102, 241, 0.1) !important;
-            border-color: rgba(99, 102, 241, 0.3) !important;
-          }
-          .recycle-bin-card:hover {
-            background: rgba(99, 102, 241, 0.2) !important;
           }
 
         /* Hardcoded class overrides for Dark Mode */
@@ -971,23 +949,6 @@
             <div class="category-icon"><i class="fas fa-folder-open"></i></div>
           </a>
 </div>
-
-      <!-- Recycle Bin Folder (Admin Only) -->
-      <div id="recycleBinFolder" style="display: none;">
-        <a href="/database/recycle-bin" class="category-card">
-          <div class="category-info">
-            <h2>Recycle Bin <span
-                style="font-size: 10px; background: #64748b; color: #fff; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px;">ADMIN</span>
-            </h2>
-            <p>Restore deleted folders, notes, and classes. Items auto-delete after 7 days.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-trash-alt"></i>
-          </div>
-        </a>
-      </div>
-
-    </div>
   </div>
   </div>
 
@@ -1111,8 +1072,6 @@
 
       if (isAdmin) {
         document.getElementById('adminIndicator').style.display = 'block';
-        const binFolder = document.getElementById('recycleBinFolder');
-        if (binFolder) binFolder.style.display = 'block';
 
         const kCard = document.getElementById('adminKnowledgeCard');
         if (kCard) kCard.style.display = 'block';
