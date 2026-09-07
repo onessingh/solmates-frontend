@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1194,7 +1194,8 @@
     const SEM_ICONS = { 1: 'fas fa-graduation-cap', 2: 'fas fa-book-open', 3: 'fas fa-chart-line', 4: 'fas fa-trophy' };
     let currentSemester = null;
     let isNavigating = false;
-    const CATEGORY = 'youtube';
+    const urlParams = new URLSearchParams(window.location.search);
+    const CATEGORY = urlParams.get('category') || 'youtube';
 
 
 

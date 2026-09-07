@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -939,7 +939,7 @@
         const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
         const fromParam = p.get('category');
-        const CATEGORY = (fromParam === 'ebooks') ? 'ebooks' : 'elearning';
+        const CATEGORY = fromParam || 'elearning';
         let currentTab = 'sol';
         let isNavigating = false;
         let otherVisible = localStorage.getItem('elearning_other_visible_root') !== 'false';

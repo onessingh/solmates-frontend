@@ -921,280 +921,56 @@
 
       <!-- Categories -->
       <div class="categories-grid">
-        <!-- Live Classes -->
-        <a href="/database/classes/" class="category-card">
-          <div class="category-info">
-            <h2>Live Portal</h2>
-              <p>Join active sessions, view upcoming schedules, and access live webinars.</p>
-            </div>
-            <div class="category-icon">
-              <i class="fas fa-video"></i>
-            </div>
-          </a>
-
-          <!-- MBA in Healthcare -->
-          <a href="/database/healthcare.html" class="category-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+          <a href="/database/view?category=hc-recorded-class" class="category-card">
             <div class="category-info">
-              <h2 style="color: white;">MBA in Healthcare</h2>
-              <p style="color: rgba(255,255,255,0.9);">Exclusive materials, notes, PYQs, and classes for the Healthcare stream.</p>
+              <h2>Recorded Classes</h2>
+              <p>Access previous live sessions and class recordings for Healthcare.</p>
             </div>
-            <div class="category-icon">
-              <i class="fas fa-heartbeat" style="color: white;"></i>
-            </div>
+            <div class="category-icon"><i class="fas fa-play-circle"></i></div>
           </a>
-
-        <!-- Recorded Classes -->
-        <a href="/database/view?category=recorded-class" class="category-card">
-          <div class="category-info">
-            <h2>Recorded Classes</h2>
-            <p>Access previous live sessions and class recordings organized by semester.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-play-circle"></i>
-          </div>
-        </a>
-
-        <!-- Notes -->
-        <a href="/database/notes" class="category-card">
-          <div class="category-info">
-            <h2>Notes</h2>
-            <p>Detailed subject notes organized chapter-wise for comprehensive study and reference.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-file-alt"></i>
-          </div>
-        </a>
-
-        <!-- PYQs -->
-        <a href="/database/pyqs" class="category-card">
-          <div class="category-info">
-            <h2>PYQs</h2>
-            <p>Previous year question papers to help you understand exam patterns and important topics.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-history"></i>
-          </div>
-        </a>
-
-        <!-- One-Shot Notes -->
-        <a href="/database/oneshot" class="category-card">
-          <div class="category-info">
-            <h2>One-Shot Notes</h2>
-            <p>Quick revision notes covering entire chapters in a single, easy-to-digest format.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-bolt"></i>
-          </div>
-        </a>
-
-        <!-- E-Books -->
-        <a href="/database/view?category=elearning" class="category-card">
-          <div class="category-info">
-            <h2>E-Books</h2>
-            <p>Short chapter-wise summaries and complete topic coverage for self-paced learning.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-laptop"></i>
-          </div>
-        </a>
-
-        <!-- YouTube Videos -->
-        <a href="/database/youtube-browse" class="category-card">
-          <div class="category-info">
-            <h2>YouTube Videos</h2>
-            <p>Curated playlists and educational videos from top educators for visual learning.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fab fa-youtube"></i>
-          </div>
-        </a>
-
-        <!-- Class Materials -->
-        <a href="/database/professor" class="category-card">
-          <div class="category-info">
-            <h2>Class Materials</h2>
-            <p>Handwritten class notes, presentations, lecture slides, and questions.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-folder-open"></i>
-          </div>
-        </a>
-
-        <div id="adminKnowledgeCard" style="display: none;">
-          <a href="/database/ai-knowledge" class="category-card"
-            >
+          <a href="/database/view?category=hc-notes" class="category-card">
             <div class="category-info">
-              <h2>AI Knowledge Folder <span
-                  style="font-size: 10px; background: #64748b; color: #fff; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px;">ADMIN</span>
-              </h2>
-              <p>Internal documentation used by Mate AI for context and training.</p>
+              <h2>Notes</h2>
+              <p>Comprehensive subject-wise study notes for Healthcare.</p>
             </div>
-            <div class="category-icon">
-              <i class="fas fa-brain" ></i>
-            </div>
+            <div class="category-icon"><i class="fas fa-file-alt"></i></div>
           </a>
-        </div>
+          <a href="/database/view?category=hc-pyqs" class="category-card">
+            <div class="category-info">
+              <h2>PYQs</h2>
+              <p>Previous year question papers with solutions.</p>
+            </div>
+            <div class="category-icon"><i class="fas fa-history"></i></div>
+          </a>
+          <a href="/database/view?category=hc-oneshot" class="category-card">
+            <div class="category-info">
+              <h2>One-Shot Notes</h2>
+              <p>Quick summary notes and revision materials.</p>
+            </div>
+            <div class="category-icon"><i class="fas fa-bolt"></i></div>
+          </a>
+          <a href="/database/elearning-subjects.html?category=hc-elearning" class="category-card">
+            <div class="category-info">
+              <h2>E-Books</h2>
+              <p>Official study material and recommended e-books.</p>
+            </div>
+            <div class="category-icon"><i class="fas fa-laptop"></i></div>
+          </a>
+          <a href="/database/youtube-browse.html?category=hc-youtube" class="category-card">
+            <div class="category-info">
+              <h2>YouTube Videos</h2>
+              <p>Curated playlists and educational videos.</p>
+            </div>
+            <div class="category-icon"><i class="fab fa-youtube"></i></div>
+          </a>
+          <a href="/database/view?category=hc-professor" class="category-card">
+            <div class="category-info">
+              <h2>Class Materials</h2>
+              <p>PPTs, handouts, and materials shared by professors.</p>
+            </div>
+            <div class="category-icon"><i class="fas fa-folder-open"></i></div>
+          </a>
       </div>
-
-      <!-- Recycle Bin Folder (Admin Only) -->
-      <div id="recycleBinFolder" style="display: none;">
-        <a href="/database/recycle-bin" class="category-card">
-          <div class="category-info">
-            <h2>Recycle Bin <span
-                style="font-size: 10px; background: #64748b; color: #fff; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px;">ADMIN</span>
-            </h2>
-            <p>Restore deleted folders, notes, and classes. Items auto-delete after 7 days.</p>
-          </div>
-          <div class="category-icon">
-            <i class="fas fa-trash-alt"></i>
-          </div>
-        </a>
-      </div>
-
-    </div>
-  </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="social">
-      <div class="whatsapp-container">
-        <div class="whatsapp-icon" id="whatsappIcon">
-          <i class="fab fa-whatsapp"></i>
-        </div>
-        <div class="whatsapp-dropdown" id="whatsappDropdown">
-          <div class="whatsapp-options">
-            <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
-              <i class="fas fa-users"></i>
-              <span class="option-text">Community</span>
-              <span class="option-desc">Join Group</span>
-            </a>
-            <a href="https://whatsapp.com/channel/0029Vb6iO1GKmCPIg5fdUv0Z" target="_blank" class="whatsapp-option">
-              <i class="fas fa-broadcast-tower"></i>
-              <span class="option-text">Channel</span>
-              <span class="option-desc">Updates</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <a href="https://twitter.com/teamsolmates" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://facebook.com/teamsolmates" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
-      <a href="https://t.me/solmates_channelbot" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
-      <a href="https://instagram.com/teamsolmates" target="_blank" title="Instagram"><i
-          class="fab fa-instagram"></i></a>
-      <a href="https://youtube.com/@teamsolmates" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-      <a href="https://www.linkedin.com/company/teamsomates/" target="_blank" title="LinkedIn"><i
-          class="fab fa-linkedin"></i></a>
-      <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
-    </div>
-    <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
-  </footer>
-
-  <script>
-    // ========== MOBILE MENU ==========
-    let menuOpen = false;
-
-    function toggleMobileMenu() {
-      const mobileNav = document.getElementById('mobileNav');
-      if (!mobileNav) return;
-
-      menuOpen = !menuOpen;
-
-      if (menuOpen) {
-        mobileNav.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        // Close other things if open
-        if (typeof whatsappOpen !== 'undefined' && whatsappOpen) closeWhatsappDropdown();
-
-        // Add listener to close on click outside
-        document.addEventListener('click', closeMenuOnClickOutside);
-      } else {
-        forceCloseMobileMenu();
-      }
-    }
-
-    function forceCloseMobileMenu() {
-      const mobileNav = document.getElementById('mobileNav');
-      if (!mobileNav) return;
-
-      menuOpen = false;
-      mobileNav.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      document.removeEventListener('click', closeMenuOnClickOutside);
-    }
-
-    function closeMenuOnClickOutside(e) {
-      const mobileNav = document.getElementById('mobileNav');
-      const menuBtn = document.querySelector('.mobile-menu-btn');
-      // If clicking the overlay background (not nested links) OR outside menuBtn
-      if (menuOpen && mobileNav && (e.target === mobileNav || (!mobileNav.contains(e.target) && !menuBtn.contains(e.target)))) {
-        forceCloseMobileMenu();
-      }
-    }
-
-    // ========== WHATSAPP DROPDOWN ==========
-    const whatsappIcon = document.getElementById('whatsappIcon');
-    const whatsappDropdown = document.getElementById('whatsappDropdown');
-    let whatsappOpen = false;
-    let whatsappTimeout;
-
-    whatsappIcon.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (!whatsappOpen) {
-        whatsappDropdown.classList.add('show');
-        whatsappOpen = true;
-        document.addEventListener('click', closeWhatsappOnClickOutside);
-        clearTimeout(whatsappTimeout);
-        whatsappTimeout = setTimeout(() => {
-          if (whatsappOpen) closeWhatsappDropdown();
-        }, 5000);
-      } else {
-        closeWhatsappDropdown();
-      }
-    });
-
-    function closeWhatsappDropdown() {
-      whatsappDropdown.classList.remove('show');
-      whatsappOpen = false;
-      document.removeEventListener('click', closeWhatsappOnClickOutside);
-      clearTimeout(whatsappTimeout);
-    }
-
-    function closeWhatsappOnClickOutside(e) {
-      if (!whatsappIcon.contains(e.target) && !whatsappDropdown.contains(e.target)) {
-        closeWhatsappDropdown();
-      }
-    }
-
-
-    // ========== ADMIN LOGIN DETECTION ==========
-    function detectAdminLogin() {
-      const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
-      const adminIndicator = document.getElementById('adminIndicator');
-
-      if (isAdmin) {
-        document.getElementById('adminIndicator').style.display = 'block';
-        const binFolder = document.getElementById('recycleBinFolder');
-        if (binFolder) binFolder.style.display = 'block';
-
-        const kCard = document.getElementById('adminKnowledgeCard');
-        if (kCard) kCard.style.display = 'block';
-
-        addAdminFeatures();
-      }
-    }
-
-    // ========== ADMIN FEATURES ==========
-    function addAdminFeatures() {
-      const MANAGE_PAGES = {
-        '/database/classes/': '/admin/manage-classes',
-        '/database/view?category=recorded-class': '/admin/manage-recorded',
-        '/database/notes': '/admin/manage-notes',
-        '/database/pyqs': '/admin/manage-pyq',
-        '/database/oneshot': '/admin/manage-oneshot',
-        '/database/youtube-browse': '/admin/manage-youtube',
-        '/database/view?category=elearning': '/admin/manage-elearning',
         '/database/professor': '/admin/manage-professor'
       };
 
@@ -1252,7 +1028,6 @@
 </body>
 
 </html>
-
 
 
 
