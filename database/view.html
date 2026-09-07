@@ -448,7 +448,7 @@
         if (window.solmatesAPI.isAdminLoggedIn()) return;
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
           const folders = (res && res.data) ? res.data : [];
           
           const globalLocked = folders.some(f => (f.name||'').includes(globalLockKey));

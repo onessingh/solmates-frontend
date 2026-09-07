@@ -1195,7 +1195,7 @@
       async function checkHcLockState() {
         if (!hcCard || !window.solmatesAPI) return;
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
           const folders = (res && res.data) ? res.data : [];
           const lockFolder = folders.find(f => (f.name || '').includes(HC_LOCK_FOLDER));
           hcIsLockedGlobal = !!lockFolder;
@@ -1228,7 +1228,7 @@
               toggleBtn.disabled = true;
               try {
                 if (hcIsLockedGlobal) {
-                  const res2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+                  const res2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
                   const folders2 = (res2 && res2.data) ? res2.data : [];
                   const lockF = folders2.find(f => (f.name || '').includes(HC_LOCK_FOLDER));
                   if (lockF) await window.solmatesAPI.deleteSOLFolder(lockF.id);
@@ -1237,6 +1237,7 @@
                   await window.solmatesAPI.addSOLFolder({ name: HC_LOCK_FOLDER, category: 'hc-recorded-class', semester: 0 });
                   hcIsLockedGlobal = true;
                 }
+                if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
                 applyHcLockUI();
               } catch(err) {
                 alert('Error: ' + err.message);
