@@ -1306,6 +1306,9 @@
       const grid = document.getElementById('subjectGrid');
       const loadingState = document.getElementById('loadingState');
       const subjectView = document.getElementById('subjectView');
+      
+      subjectView.style.display = 'block';
+      document.getElementById('subjectLabel').innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
 
       // De-Dupe & Merge Templates
       let subjects = [...folders];
@@ -1386,11 +1389,7 @@
       });
 
       grid.replaceChildren(frag);
-      subjectView.style.display = 'block';
-      // Update Subject Label
-      document.getElementById('subjectLabel').innerHTML = `
-      <i class="fab fa-youtube"></i> Semester ${sem} • Subjects
-    `;
+      
     }
 
     // -- Admin Actions --------------------------------------------------------
