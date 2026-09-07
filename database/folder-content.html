@@ -1261,17 +1261,10 @@
         if (isEBook || CATEGORY === 'youtube') {
           const icon = isEBook ? 'fa-book' : 'fa-play-circle';
           const label = isEBook ? 'E-Books' : 'Video Lessons';
-          let displayTitle = FOLDER_NAME;
-            if (CATEGORY.startsWith('hc-')) {
-              displayTitle = 'Healthcare ' + displayTitle;
-            }
-            titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${displayTitle}`;
-          } else {
-            let displayTitle = FOLDER_NAME;
-            if (CATEGORY.startsWith('hc-')) {
-              displayTitle = 'Healthcare ' + displayTitle;
-            }
-            titleEl.innerText = displayTitle;
+          titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${FOLDER_NAME}`;
+          document.getElementById('pageSub').innerText = `${label} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
+        } else {
+          titleEl.innerText = FOLDER_NAME;
           document.getElementById('pageSub').innerText = `${CAT_LABELS[CATEGORY] || CATEGORY} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         }
       }
@@ -1725,7 +1718,6 @@
               displayTitle = 'Healthcare ' + displayTitle;
             }
             titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${displayTitle}`;
-          }
           }
         } catch (e) {
           console.error(e);
