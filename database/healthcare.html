@@ -845,12 +845,20 @@
           tries++;
         }
         if (!window.solmatesAPI) return;
-        if (window.solmatesAPI.isAdminLoggedIn()) return;
+        const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         try {
           const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
           const folders = (res && res.data) ? res.data : [];
           const isLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           if (isLocked) {
+            if (isAdmin) {
+              const t = document.createElement('div');
+              t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+              t.innerHTML = '🔒 HC Globally Locked (Admin Bypass Active)';
+              document.body.appendChild(t);
+              setTimeout(() => t.remove(), 4000);
+              return;
+            }
             const isDark = document.documentElement.classList.contains('dark');
             const overlay = document.createElement('div');
             overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
@@ -1215,6 +1223,14 @@ async function initHcSectionLocks() {
     function applyState() {
       let lockOv = card.querySelector('.sec-lock-overlay');
       if (isLocked) {
+            if (isAdmin) {
+              const t = document.createElement('div');
+              t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+              t.innerHTML = '🔒 HC Globally Locked (Admin Bypass Active)';
+              document.body.appendChild(t);
+              setTimeout(() => t.remove(), 4000);
+              return;
+            }
         card.classList.add('is-locked');
         if (!lockOv) {
           lockOv = document.createElement('div');
@@ -1248,6 +1264,14 @@ async function initHcSectionLocks() {
         btn.disabled = true;
         try {
           if (isLocked) {
+            if (isAdmin) {
+              const t = document.createElement('div');
+              t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+              t.innerHTML = '🔒 HC Globally Locked (Admin Bypass Active)';
+              document.body.appendChild(t);
+              setTimeout(() => t.remove(), 4000);
+              return;
+            }
             const r2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
             const flds = (r2 && r2.data) ? r2.data : [];
             const lf = flds.find(function(f) { return (f.name||'').includes(matchedSection.lockKey); });
