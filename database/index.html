@@ -258,22 +258,53 @@
       opacity: 0.5;
     }
 
+    .category-card.is-locked {
+      pointer-events: none;
+    }
+    .category-card.is-locked .sec-lock-btn,
+    .category-card.is-locked .admin-lock-btn {
+      pointer-events: auto;
+    }
     .lock-overlay {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: var(--bg-card);
-      color: #ef4444;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: grayscale(100%) blur(3px);
+      -webkit-backdrop-filter: grayscale(100%) blur(3px);
+      border-radius: 12px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
-      z-index: 20;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      border: 1px solid #fee2e2;
+      z-index: 10;
+    }
+    html.dark .lock-overlay {
+      background: rgba(0, 0, 0, 0.75);
+    }
+    .lock-overlay::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.1) 15px, transparent 15px, transparent 30px);
+      border-radius: 12px;
+      z-index: -1;
+    }
+    .lock-overlay i.fa-lock {
+      font-size: 38px;
+      color: #ef4444;
+      filter: drop-shadow(0 4px 12px rgba(239,68,68,0.5));
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .lock-overlay .lock-text {
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
     }
 
     /* ========== Page Content ========== */
@@ -934,7 +965,7 @@
 
           <!-- MBA in Healthcare -->
           <a href="/database/healthcare.html" class="category-card" id="hcCard">
-            <div class="lock-overlay" id="hcLockIcon" style="display:none;"><i class="fas fa-lock"></i></div>
+            <div class="lock-overlay" id="hcLockIcon" style="display:none;"><i class="fas fa-lock"></i><div class="lock-text">LOCKED</div></div>
             <div class="category-info">
               <h2>MBA in Healthcare</h2>
               <p>Exclusive materials, notes, PYQs, and classes for the Healthcare stream.</p>
@@ -1372,7 +1403,7 @@
               if (!card.querySelector('.lock-overlay')) {
                 const lockOv = document.createElement('div');
                 lockOv.className = 'lock-overlay';
-                lockOv.innerHTML = '<i class="fas fa-lock"></i>';
+                lockOv.innerHTML = '<i class="fas fa-lock"></i><div class="lock-text">LOCKED</div>';
                 card.appendChild(lockOv);
               }
               card.classList.add('is-locked');
@@ -1403,7 +1434,7 @@
               if (!lockOv) {
                 lockOv = document.createElement('div');
                 lockOv.className = 'lock-overlay';
-                lockOv.innerHTML = '<i class="fas fa-lock"></i>';
+                lockOv.innerHTML = '<i class="fas fa-lock"></i><div class="lock-text">LOCKED</div>';
                 card.appendChild(lockOv);
               }
               lockOv.style.display = 'flex';
