@@ -261,7 +261,8 @@
     .category-card.is-locked {
       pointer-events: none;
     }
-    .category-card.is-locked .sec-lock-btn {
+    .category-card.is-locked .sec-lock-btn,
+    .category-card.is-locked .admin-lock-btn {
       pointer-events: auto;
     }
     .lock-overlay {
@@ -269,40 +270,53 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: grayscale(100%) blur(3px);
-      -webkit-backdrop-filter: grayscale(100%) blur(3px);
+      background: rgba(248, 250, 252, 0.5);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 10;
+      overflow: hidden;
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
     }
     html.dark .lock-overlay {
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(15, 23, 42, 0.6);
     }
-    .lock-overlay::before {
-      content: '';
+    
+    /* Left and Right chains (Zanjeer) */
+    .lock-overlay::before,
+    .lock-overlay::after {
+      content: '0c1'; /* FontAwesome link icon */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
       position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(45deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.1) 15px, transparent 15px, transparent 30px);
-      border-radius: 12px;
+      top: 50%;
+      font-size: 85px;
+      color: #64748b;
+      opacity: 0.35;
       z-index: -1;
     }
-    .lock-overlay i.fa-lock {
-      font-size: 38px;
-      color: #ef4444;
-      filter: drop-shadow(0 4px 12px rgba(239,68,68,0.5));
-      margin-bottom: 8px;
+    html.dark .lock-overlay::before,
+    html.dark .lock-overlay::after {
+      color: #94a3b8;
     }
-    .lock-overlay .lock-text {
-      color: white;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    .lock-overlay::before {
+      left: 0;
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .lock-overlay::after {
+      right: 0;
+      transform: translateY(-50%) rotate(-45deg);
+    }
+    
+    .lock-overlay i.fa-lock {
+      font-size: 48px;
+      color: #fbbf24; /* Pile rang ka tala (Yellow lock) */
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+      display: inline-block;
+      z-index: 2;
     }
 
     /* ========== Page Content ========== */
@@ -1259,7 +1273,7 @@ async function initHcSectionLocks() {
           lockOv.className = 'sec-lock-overlay lock-overlay';
           card.appendChild(lockOv);
         }
-        lockOv.innerHTML = '<i class="fas fa-lock"></i><div class="lock-text">LOCKED</div>';
+        lockOv.innerHTML = '<i class="fas fa-lock"></i>';
         lockOv.style.display = 'flex';
       } else {
         card.classList.remove('is-locked');
