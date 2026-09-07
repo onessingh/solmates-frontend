@@ -8,49 +8,74 @@ body {
 .hero { background: transparent !important; }
 
 /* Healthcare Dark Mode */
-@media (prefers-color-scheme: dark) {
-  body { 
-    background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important; 
-    background-attachment: fixed !important;
-  }
-  
-  .category-card, .subject-card, .item-card, .folder-card, .file-card, .state-block, .topic-block { 
-    background: #1e293b !important; 
-    border-color: #334155 !important; 
-    color: #f1f5f9 !important; 
-  }
-  
-  .category-card:hover, .subject-card:hover, .item-card:hover, .folder-card:hover, .file-card:hover, .topic-block:hover { 
-    border-color: #10b981 !important; 
-    background: #0f2d21 !important; 
-  }
-  
-  h1, h2, h3, h4, h5, h6, .subject-name h3, .folder-info h3, .hero h1 { 
-    color: #f8fafc !important; 
-  }
-  
-  p, .hero p, .page-header p, .database-header p, .empty-state p { 
-    color: #cbd5e1 !important; 
-  }
-  
-  .database-container, .container { 
-    background: transparent !important; 
-  }
-  
-  /* Breadcrumbs */
-  .breadcrumb, .bc-item, .bc-sep {
-    color: #94a3b8 !important;
-  }
-  .breadcrumb .bc-item:hover {
-    color: #10b981 !important;
-  }
-  
-  /* Header Nav */
-  header {
-    background: #0f172a !important;
-    border-bottom: 1px solid #1e293b !important;
-  }
-  .nav-logo, .nav-links a {
-    color: #f8fafc !important;
-  }
+html.dark body { 
+  background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important; 
+  background-attachment: fixed !important;
+}
+
+html.dark .category-card, 
+html.dark .subject-card, 
+html.dark .item-card, 
+html.dark .folder-card, 
+html.dark .file-card, 
+html.dark .state-block, 
+html.dark .topic-block { 
+  background: #1e293b !important; 
+  border-color: #334155 !important; 
+  color: #f1f5f9 !important; 
+}
+
+html.dark .category-card:hover, 
+html.dark .subject-card:hover, 
+html.dark .item-card:hover, 
+html.dark .folder-card:hover, 
+html.dark .file-card:hover, 
+html.dark .topic-block:hover { 
+  border-color: #10b981 !important; 
+  background: #0f2d21 !important; 
+}
+
+html.dark h1, 
+html.dark h2, 
+html.dark h3, 
+html.dark h4, 
+html.dark h5, 
+html.dark h6, 
+html.dark .subject-name h3, 
+html.dark .folder-info h3, 
+html.dark .hero h1 { 
+  color: #f8fafc !important; 
+}
+
+html.dark p, 
+html.dark .hero p, 
+html.dark .page-header p, 
+html.dark .database-header p, 
+html.dark .empty-state p { 
+  color: #cbd5e1 !important; 
+}
+
+html.dark .database-container, 
+html.dark .container { 
+  background: transparent !important; 
+}
+
+/* Breadcrumbs */
+html.dark .breadcrumb, 
+html.dark .bc-item, 
+html.dark .bc-sep {
+  color: #94a3b8 !important;
+}
+html.dark .breadcrumb .bc-item:hover {
+  color: #10b981 !important;
+}
+
+/* Header Nav */
+html.dark header {
+  background: #0f172a !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+html.dark .nav-logo, 
+html.dark .nav-links a {
+  color: #f8fafc !important;
 }
