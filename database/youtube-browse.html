@@ -1465,7 +1465,7 @@
         if (isAdmin) {
           try {
             // Double check before creating virtual
-            const semRes = await window.solmatesAPI.getSOLFolders('youtube', currentSemester, null);
+            const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, currentSemester, null);
             const existing = (semRes && semRes.data) ? semRes.data : [];
             const match = existing.find(f => (f.name || '').toUpperCase() === name.toUpperCase());
 
@@ -1475,7 +1475,7 @@
               return;
             }
 
-            const r = await window.solmatesAPI.addSOLFolder({ name, category: 'youtube', semester: currentSemester });
+            const r = await window.solmatesAPI.addSOLFolder({ name, category: CATEGORY, semester: currentSemester });
             navigateTo(`/database/youtube-content?semester=${currentSemester}&folderId=${r.data.id}&name=${encodeURIComponent(name)}`);
           } catch (e) { alert('Error: ' + e.message); }
         } else {
