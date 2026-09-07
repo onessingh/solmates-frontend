@@ -1031,7 +1031,7 @@
     <div class="breadcrumb">
         <span onclick="window.location='/database'">Database</span>
         <i class="fas fa-chevron-right sep"></i>
-        <span onclick="window.location='/database/elearning'">E-Books</span>
+        <span id="bc-ebooks-link" style="cursor:pointer;">E-Books</span>
         <i class="fas fa-chevron-right sep"></i>
         <span class="current" id="semBreadcrumb">Semester</span>
     </div>
@@ -1093,12 +1093,23 @@
         const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
         const fromParam = p.get('category');
+        
         const CATEGORY = fromParam || 'elearning';
+        const bLinkDef = document.getElementById('bc-ebooks-link');
+        if (bLinkDef && CATEGORY !== 'hc-elearning') {
+            bLinkDef.onclick = () => window.location='/database/view?category=elearning';
+        }
+
         // Update title for Healthcare
         if (CATEGORY === 'hc-elearning') {
             const t = document.getElementById('pageMainTitle');
             if (t) t.textContent = 'Healthcare E-Books';
             document.title = 'Healthcare E-Books - SOLMATES';
+            const bLink = document.getElementById('bc-ebooks-link');
+            if (bLink) {
+                bLink.textContent = 'Healthcare E-Books';
+                bLink.onclick = () => window.location='/database/view?category=hc-elearning';
+            }
         }
         let currentTab = 'sol';
         let isNavigating = false;
