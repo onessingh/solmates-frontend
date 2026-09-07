@@ -1333,12 +1333,12 @@
     // MBA_SECTION_LOCKS
     const MBA_SECTIONS = [
       { cat: 'recorded-class', lockKey: '__MBA_RC_LOCKED__',   sel: '[href*="recorded-class"]' },
-      { cat: 'notes',          lockKey: '__MBA_NOTES_LOCKED__', sel: '[href*="category=notes"]' },
-      { cat: 'pyqs',           lockKey: '__MBA_PYQS_LOCKED__',  sel: '[href*="category=pyqs"]' },
-      { cat: 'oneshot',        lockKey: '__MBA_OS_LOCKED__',    sel: '[href*="category=oneshot"]' },
+      { cat: 'notes',          lockKey: '__MBA_NOTES_LOCKED__', sel: '[href*="/database/notes"]' },
+      { cat: 'pyqs',           lockKey: '__MBA_PYQS_LOCKED__',  sel: '[href*="/database/pyqs"]' },
+      { cat: 'oneshot',        lockKey: '__MBA_OS_LOCKED__',    sel: '[href*="/database/oneshot"]' },
       { cat: 'elearning',      lockKey: '__MBA_EL_LOCKED__',    sel: '[href*="category=elearning"]' },
       { cat: 'youtube',        lockKey: '__MBA_YT_LOCKED__',    sel: '[href*="youtube-browse"]:not([href*="hc-"])' },
-      { cat: 'professor',      lockKey: '__MBA_CM_LOCKED__',    sel: '[href*="category=professor"]' },
+      { cat: 'professor',      lockKey: '__MBA_CM_LOCKED__',    sel: '[href*="/database/professor"]' },
       { cat: 'live-classes',   lockKey: '__MBA_LIVE_LOCKED__',  sel: '[href*="live-classes"],[href*="/database/classes"]' },
     ];
 

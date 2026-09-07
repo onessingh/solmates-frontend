@@ -422,7 +422,16 @@
       // ===== MBA SECTION LOCK GUARD =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
-        const cat = p.get('category') || '';
+        const cat = (function() {
+          const c = p.get('category');
+          if (c) return c;
+          const path = window.location.pathname.toLowerCase();
+          if (path.includes('/notes')) return 'notes';
+          if (path.includes('/pyqs')) return 'pyqs';
+          if (path.includes('/oneshot')) return 'oneshot';
+          if (path.includes('/professor')) return 'professor';
+          return '';
+        })();
         
         // If it's a healthcare category, the HC guard handles it.
         if (cat.startsWith('hc-')) return;
@@ -484,7 +493,16 @@
       // ===== HEALTHCARE SECTION LOCK GUARD v2 =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
-        const cat = p.get('category') || '';
+        const cat = (function() {
+          const c = p.get('category');
+          if (c) return c;
+          const path = window.location.pathname.toLowerCase();
+          if (path.includes('/notes')) return 'notes';
+          if (path.includes('/pyqs')) return 'pyqs';
+          if (path.includes('/oneshot')) return 'oneshot';
+          if (path.includes('/professor')) return 'professor';
+          return '';
+        })();
         const isHC = window.location.href.includes('/healthcare') || cat.startsWith('hc-');
         if (!isHC) return;
         
