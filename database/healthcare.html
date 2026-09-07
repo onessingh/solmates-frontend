@@ -970,7 +970,167 @@
             </div>
             <div class="category-icon"><i class="fas fa-folder-open"></i></div>
           </a>
+</div>
+
+      <!-- Recycle Bin Folder (Admin Only) -->
+      <div id="recycleBinFolder" style="display: none;">
+        <a href="/database/recycle-bin" class="category-card">
+          <div class="category-info">
+            <h2>Recycle Bin <span
+                style="font-size: 10px; background: #64748b; color: #fff; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px;">ADMIN</span>
+            </h2>
+            <p>Restore deleted folders, notes, and classes. Items auto-delete after 7 days.</p>
+          </div>
+          <div class="category-icon">
+            <i class="fas fa-trash-alt"></i>
+          </div>
+        </a>
       </div>
+
+    </div>
+  </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="social">
+      <div class="whatsapp-container">
+        <div class="whatsapp-icon" id="whatsappIcon">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="whatsapp-dropdown" id="whatsappDropdown">
+          <div class="whatsapp-options">
+            <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
+              <i class="fas fa-users"></i>
+              <span class="option-text">Community</span>
+              <span class="option-desc">Join Group</span>
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb6iO1GKmCPIg5fdUv0Z" target="_blank" class="whatsapp-option">
+              <i class="fas fa-broadcast-tower"></i>
+              <span class="option-text">Channel</span>
+              <span class="option-desc">Updates</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="https://twitter.com/teamsolmates" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://facebook.com/teamsolmates" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://t.me/solmates_channelbot" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+      <a href="https://instagram.com/teamsolmates" target="_blank" title="Instagram"><i
+          class="fab fa-instagram"></i></a>
+      <a href="https://youtube.com/@teamsolmates" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.linkedin.com/company/teamsomates/" target="_blank" title="LinkedIn"><i
+          class="fab fa-linkedin"></i></a>
+      <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
+    </div>
+    <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+  </footer>
+
+  <script>
+    // ========== MOBILE MENU ==========
+    let menuOpen = false;
+
+    function toggleMobileMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      if (!mobileNav) return;
+
+      menuOpen = !menuOpen;
+
+      if (menuOpen) {
+        mobileNav.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Close other things if open
+        if (typeof whatsappOpen !== 'undefined' && whatsappOpen) closeWhatsappDropdown();
+
+        // Add listener to close on click outside
+        document.addEventListener('click', closeMenuOnClickOutside);
+      } else {
+        forceCloseMobileMenu();
+      }
+    }
+
+    function forceCloseMobileMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      if (!mobileNav) return;
+
+      menuOpen = false;
+      mobileNav.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('click', closeMenuOnClickOutside);
+    }
+
+    function closeMenuOnClickOutside(e) {
+      const mobileNav = document.getElementById('mobileNav');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      // If clicking the overlay background (not nested links) OR outside menuBtn
+      if (menuOpen && mobileNav && (e.target === mobileNav || (!mobileNav.contains(e.target) && !menuBtn.contains(e.target)))) {
+        forceCloseMobileMenu();
+      }
+    }
+
+    // ========== WHATSAPP DROPDOWN ==========
+    const whatsappIcon = document.getElementById('whatsappIcon');
+    const whatsappDropdown = document.getElementById('whatsappDropdown');
+    let whatsappOpen = false;
+    let whatsappTimeout;
+
+    whatsappIcon.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!whatsappOpen) {
+        whatsappDropdown.classList.add('show');
+        whatsappOpen = true;
+        document.addEventListener('click', closeWhatsappOnClickOutside);
+        clearTimeout(whatsappTimeout);
+        whatsappTimeout = setTimeout(() => {
+          if (whatsappOpen) closeWhatsappDropdown();
+        }, 5000);
+      } else {
+        closeWhatsappDropdown();
+      }
+    });
+
+    function closeWhatsappDropdown() {
+      whatsappDropdown.classList.remove('show');
+      whatsappOpen = false;
+      document.removeEventListener('click', closeWhatsappOnClickOutside);
+      clearTimeout(whatsappTimeout);
+    }
+
+    function closeWhatsappOnClickOutside(e) {
+      if (!whatsappIcon.contains(e.target) && !whatsappDropdown.contains(e.target)) {
+        closeWhatsappDropdown();
+      }
+    }
+
+
+    // ========== ADMIN LOGIN DETECTION ==========
+    function detectAdminLogin() {
+      const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
+      const adminIndicator = document.getElementById('adminIndicator');
+
+      if (isAdmin) {
+        document.getElementById('adminIndicator').style.display = 'block';
+        const binFolder = document.getElementById('recycleBinFolder');
+        if (binFolder) binFolder.style.display = 'block';
+
+        const kCard = document.getElementById('adminKnowledgeCard');
+        if (kCard) kCard.style.display = 'block';
+
+        addAdminFeatures();
+      }
+    }
+
+    // ========== ADMIN FEATURES ==========
+    function addAdminFeatures() {
+      const MANAGE_PAGES = {
+        '/database/classes/': '/admin/manage-classes',
+        '/database/view?category=recorded-class': '/admin/manage-recorded',
+        '/database/notes': '/admin/manage-notes',
+        '/database/pyqs': '/admin/manage-pyq',
+        '/database/oneshot': '/admin/manage-oneshot',
+        '/database/youtube-browse': '/admin/manage-youtube',
+        '/database/view?category=elearning': '/admin/manage-elearning',
         '/database/professor': '/admin/manage-professor'
       };
 
@@ -1028,6 +1188,7 @@
 </body>
 
 </html>
+
 
 
 
