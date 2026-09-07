@@ -270,64 +270,33 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      background: rgba(248, 250, 252, 0.6);
+      background: rgba(248, 250, 252, 0.4);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 10;
-      overflow: hidden;
-      backdrop-filter: blur(1.5px);
-      -webkit-backdrop-filter: blur(1.5px);
+      backdrop-filter: blur(3px) grayscale(80%);
+      -webkit-backdrop-filter: blur(3px) grayscale(80%);
     }
     html.dark .lock-overlay {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.5);
     }
     
-    /* Cross Chains (Zanjeer in an X shape) */
-    .lock-overlay::before,
-    .lock-overlay::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: -25%;
-      width: 150%;
-      height: 18px;
-      /* Seamless SVG Chain Pattern */
-      background-image: url('data:image/svg+xml;utf8,<svg width="24" height="18" viewBox="0 0 24 18" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3" width="18" height="12" rx="6" fill="none" stroke="%2394a3b8" stroke-width="3"/><rect x="15" y="0" width="5" height="18" rx="2.5" fill="%2364748b"/></svg>');
-      background-repeat: repeat-x;
-      background-position: center;
-      z-index: 1;
-      opacity: 0.9;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-    }
-    html.dark .lock-overlay::before,
-    html.dark .lock-overlay::after {
-      background-image: url('data:image/svg+xml;utf8,<svg width="24" height="18" viewBox="0 0 24 18" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3" width="18" height="12" rx="6" fill="none" stroke="%2364748b" stroke-width="3"/><rect x="15" y="0" width="5" height="18" rx="2.5" fill="%23334155"/></svg>');
-    }
-    
-    .lock-overlay::before {
-      transform: translateY(-50%) rotate(22deg);
-    }
-    .lock-overlay::after {
-      transform: translateY(-50%) rotate(-22deg);
-    }
-    
-    /* Center Yellow Lock */
     .lock-overlay i.fa-lock {
-      font-size: 42px;
-      color: #fbbf24; /* Peela Tala */
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
-      display: inline-block;
-      z-index: 2;
-      background: #1e293b;
-      width: 80px;
-      height: 80px;
-      line-height: 80px;
+      font-size: 28px;
+      color: #fbbf24;
+      background: rgba(15, 23, 42, 0.8);
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
       text-align: center;
       border-radius: 50%;
-      border: 4px solid #334155;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: inline-block;
+      z-index: 2;
     }
 
     /* ========== Page Content ========== */
