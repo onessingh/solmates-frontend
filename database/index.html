@@ -1327,6 +1327,131 @@
   </article>
 </div>
 
+
+    <script>
+    // ===== MBA SECTION LOCKS (Admin) =====
+    // MBA_SECTION_LOCKS
+    const MBA_SECTIONS = [
+      { cat: 'recorded-class', lockKey: '__MBA_RC_LOCKED__',   sel: '[href*="recorded-class"]' },
+      { cat: 'notes',          lockKey: '__MBA_NOTES_LOCKED__', sel: '[href*="category=notes"]' },
+      { cat: 'pyqs',           lockKey: '__MBA_PYQS_LOCKED__',  sel: '[href*="category=pyqs"]' },
+      { cat: 'oneshot',        lockKey: '__MBA_OS_LOCKED__',    sel: '[href*="category=oneshot"]' },
+      { cat: 'elearning',      lockKey: '__MBA_EL_LOCKED__',    sel: '[href*="category=elearning"]' },
+      { cat: 'youtube',        lockKey: '__MBA_YT_LOCKED__',    sel: '[href*="youtube-browse"]:not([href*="hc-"])' },
+      { cat: 'professor',      lockKey: '__MBA_CM_LOCKED__',    sel: '[href*="category=professor"]' },
+      { cat: 'live-classes',   lockKey: '__MBA_LIVE_LOCKED__',  sel: '[href*="live-classes"],[href*="/database/classes"]' },
+    ];
+
+    async function initMbaSectionLocks() {
+      if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) {
+        // Non-admin: check and block locked sections
+        let lockFolders = [];
+        try {
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          lockFolders = (res && res.data) ? res.data : [];
+        } catch(e) { return; }
+
+        document.querySelectorAll('.category-card[href]').forEach(card => {
+          const href = card.getAttribute('href') || '';
+          for (const sec of MBA_SECTIONS) {
+            if (!card.matches(sec.sel)) continue;
+            const isLocked = lockFolders.some(f => (f.name||'').includes(sec.lockKey));
+            if (isLocked) {
+              card.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isDark = document.documentElement.classList.contains('dark');
+                if (document.getElementById('mba-lock-modal')) return;
+                const overlay = document.createElement('div');
+                overlay.id = 'mba-lock-modal';
+                overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);`;
+                overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#fff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,0.15);font-family:-apple-system,sans-serif"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked. Content will be available soon!</p><button onclick="document.getElementById('mba-lock-modal').remove()" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Go Back</button></div>`;
+                document.body.appendChild(overlay);
+                overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
+              });
+              // Add lock icon overlay on card
+              if (!card.querySelector('.lock-overlay')) {
+                const lockOv = document.createElement('div');
+                lockOv.className = 'lock-overlay';
+                lockOv.innerHTML = '<i class="fas fa-lock"></i>';
+                card.appendChild(lockOv);
+              }
+              card.classList.add('is-locked');
+            }
+            break;
+          }
+        });
+        return;
+      }
+
+      // Admin: show lock toggle buttons
+      let lockFolders = [];
+      try {
+        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+        lockFolders = (res && res.data) ? res.data : [];
+      } catch(e) { return; }
+
+      document.querySelectorAll('.category-card[href]').forEach(card => {
+        for (const sec of MBA_SECTIONS) {
+          if (!card.matches(sec.sel)) continue;
+          const lockFolder = lockFolders.find(f => (f.name||'').includes(sec.lockKey));
+          let isLocked = !!lockFolder;
+
+          function applyState() {
+            let lockOv = card.querySelector('.lock-overlay');
+            if (isLocked) {
+              card.classList.add('is-locked');
+              if (!lockOv) {
+                lockOv = document.createElement('div');
+                lockOv.className = 'lock-overlay';
+                lockOv.innerHTML = '<i class="fas fa-lock"></i>';
+                card.appendChild(lockOv);
+              }
+              lockOv.style.display = 'flex';
+            } else {
+              card.classList.remove('is-locked');
+              if (lockOv) lockOv.style.display = 'none';
+            }
+            const btn = card.querySelector('.sec-lock-btn');
+            if (btn) {
+              btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
+              btn.title = isLocked ? 'Unlock' : 'Lock';
+            }
+          }
+
+          if (!card.querySelector('.sec-lock-btn')) {
+            const btn = document.createElement('button');
+            btn.className = 'sec-lock-btn';
+            btn.style.cssText = 'position:absolute;bottom:10px;right:10px;background:#4f46e5;color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:22;';
+            card.appendChild(btn);
+            btn.addEventListener('click', async (e) => {
+              e.preventDefault(); e.stopPropagation();
+              btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+              btn.disabled = true;
+              try {
+                if (isLocked) {
+                  const r2 = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+                  const flds = (r2 && r2.data) ? r2.data : [];
+                  const lf = flds.find(f => (f.name||'').includes(sec.lockKey));
+                  if (lf) await window.solmatesAPI.deleteSOLFolder(lf.id);
+                  isLocked = false;
+                } else {
+                  await window.solmatesAPI.addSOLFolder({ name: sec.lockKey, category: 'recorded-class', semester: 0 });
+                  isLocked = true;
+                }
+                if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+                applyState();
+              } catch(err) { alert('Error: ' + err.message); }
+              finally { btn.disabled = false; }
+            });
+          }
+          applyState();
+          break;
+        }
+      });
+    }
+
+    setTimeout(initMbaSectionLocks, 700);
+    </script>
 </body>
 
 </html>

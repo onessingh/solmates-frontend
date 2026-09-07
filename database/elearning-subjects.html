@@ -855,14 +855,15 @@
 
 <body>
     
+    
     <script>
-      // ===== HEALTHCARE SECTION LOCK GUARD =====
+      // ===== HEALTHCARE SECTION LOCK GUARD v2 =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
         const cat = p.get('category') || '';
-        if (!cat.startsWith('hc-')) return;
+        const isHC = window.location.href.includes('/healthcare') || cat.startsWith('hc-');
+        if (!isHC) return;
         
-        // Lock key map
         const LOCK_MAP = {
           'hc-recorded-class': '__HC_RC_LOCKED__',
           'hc-notes':          '__HC_NOTES_LOCKED__',
@@ -873,7 +874,6 @@
           'hc-professor':      '__HC_CM_LOCKED__',
         };
         const sectionLockKey = LOCK_MAP[cat];
-        const globalLockKey = '__HC_LOCKED__';
         
         let tries = 0;
         while (!window.solmatesAPI && tries < 20) {
@@ -886,21 +886,56 @@
         try {
           const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
           const folders = (res && res.data) ? res.data : [];
-          
-          const globalLocked = folders.some(f => (f.name||'').includes(globalLockKey));
+          const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
           
           if (globalLocked || sectionLocked) {
-            const reason = globalLocked ? 'MBA in Healthcare is locked.' : 'This section is locked.';
-            document.body.innerHTML = `
-              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:30px;font-family:-apple-system,sans-serif;background:#f8fafc;">
-                <div style="font-size:4rem;margin-bottom:20px;">🔒</div>
-                <h2 style="margin:0 0 12px;color:#1e293b;font-size:1.5rem;">Content Locked</h2>
-                <p style="color:#64748b;margin:0 0 24px;max-width:350px;">${reason} Content is being prepared and will be available soon!</p>
-                <a href="/database/healthcare" style="background:#059669;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">← Back to Healthcare</a>
-              </div>`;
+            const isDark = document.documentElement.classList.contains('dark') || 
+                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+              position: fixed; inset: 0; z-index: 99999;
+              display: flex; align-items: center; justify-content: center;
+              background: ${isDark ? 'rgba(15,23,42,0.97)' : 'rgba(248,250,252,0.97)'};
+              backdrop-filter: blur(8px);
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            `;
+            overlay.innerHTML = \`
+              <div style="
+                background: \${isDark ? '#1e293b' : '#ffffff'}; 
+                border: 1px solid \${isDark ? '#334155' : '#e2e8f0'};
+                border-radius: 20px; 
+                padding: 48px 40px; 
+                text-align: center; 
+                max-width: 380px; 
+                width: 90%;
+                box-shadow: 0 25px 60px \${isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.12)'};
+              ">
+                <div style="
+                  width: 80px; height: 80px; border-radius: 50%;
+                  background: linear-gradient(135deg, #059669, #10b981);
+                  display: flex; align-items: center; justify-content: center;
+                  margin: 0 auto 24px; font-size: 2rem;
+                  box-shadow: 0 8px 24px rgba(5,150,105,0.3);
+                ">🔒</div>
+                <h2 style="margin: 0 0 10px; font-size: 1.4rem; color: \${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 700;">Content Locked</h2>
+                <p style="margin: 0 0 28px; color: \${isDark ? '#94a3b8' : '#64748b'}; font-size: 0.9rem; line-height: 1.6;">
+                  This section is currently being prepared.<br>It will be available soon!
+                </p>
+                <a href="/database/healthcare" style="
+                  display: inline-flex; align-items: center; gap: 8px;
+                  background: linear-gradient(135deg, #059669, #10b981); 
+                  color: white; padding: 12px 28px; border-radius: 50px; 
+                  text-decoration: none; font-weight: 600; font-size: 0.9rem;
+                  box-shadow: 0 4px 15px rgba(5,150,105,0.3);
+                ">← Back to Healthcare</a>
+              </div>
+            \`;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
           }
-        } catch(e) { console.warn('HC section lock check failed:', e.message); }
+        } catch(e) { console.warn('HC lock check failed:', e.message); }
       })();
     </script>
 
