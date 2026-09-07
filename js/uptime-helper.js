@@ -47,3 +47,24 @@
     }
   });
 })();
+
+
+// --- HEALTHCARE DYNAMIC THEME INJECTOR ---
+(function() {
+  function injectHealthcareTheme() {
+    const isHealthcare = window.location.href.includes('/healthcare') || 
+                         window.location.search.includes('category=hc-');
+    if (isHealthcare) {
+      if (!document.getElementById('hc-theme-css')) {
+        const link = document.createElement('link');
+        link.id = 'hc-theme-css';
+        link.rel = 'stylesheet';
+        link.href = '/css/healthcare-theme.css?v=1';
+        document.head.appendChild(link);
+      }
+    }
+  }
+  
+  if (document.head) injectHealthcareTheme();
+  else document.addEventListener('DOMContentLoaded', injectHealthcareTheme);
+})();

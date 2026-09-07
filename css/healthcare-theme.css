@@ -1,0 +1,56 @@
+﻿/* Healthcare Dynamic Theme */
+
+body { 
+  background: linear-gradient(135deg, #f8fafc 0%, #d1fae5 100%) !important; 
+  background-attachment: fixed !important;
+}
+
+.hero { background: transparent !important; }
+
+/* Healthcare Dark Mode */
+@media (prefers-color-scheme: dark) {
+  body { 
+    background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important; 
+    background-attachment: fixed !important;
+  }
+  
+  .category-card, .subject-card, .item-card, .folder-card, .file-card, .state-block, .topic-block { 
+    background: #1e293b !important; 
+    border-color: #334155 !important; 
+    color: #f1f5f9 !important; 
+  }
+  
+  .category-card:hover, .subject-card:hover, .item-card:hover, .folder-card:hover, .file-card:hover, .topic-block:hover { 
+    border-color: #10b981 !important; 
+    background: #0f2d21 !important; 
+  }
+  
+  h1, h2, h3, h4, h5, h6, .subject-name h3, .folder-info h3, .hero h1 { 
+    color: #f8fafc !important; 
+  }
+  
+  p, .hero p, .page-header p, .database-header p, .empty-state p { 
+    color: #cbd5e1 !important; 
+  }
+  
+  .database-container, .container { 
+    background: transparent !important; 
+  }
+  
+  /* Breadcrumbs */
+  .breadcrumb, .bc-item, .bc-sep {
+    color: #94a3b8 !important;
+  }
+  .breadcrumb .bc-item:hover {
+    color: #10b981 !important;
+  }
+  
+  /* Header Nav */
+  header {
+    background: #0f172a !important;
+    border-bottom: 1px solid #1e293b !important;
+  }
+  .nav-logo, .nav-links a {
+    color: #f8fafc !important;
+  }
+}
