@@ -1186,24 +1186,34 @@
       }
     }
 
-      // ========== HEALTHCARE LOCK LOGIC ==========
+      // ========== HEALTHCARE LOCK LOGIC (Backend-Based) ==========
       const hcCard = document.getElementById('hcCard');
       const hcLockIcon = document.getElementById('hcLockIcon');
-      
-      function updateHcLockState() {
-        if (!hcCard) return;
-        const isLocked = localStorage.getItem('healthcare_locked') === 'true';
+      const HC_LOCK_FOLDER = '__HC_LOCKED__';
+      let hcIsLockedGlobal = false;
+
+      async function checkHcLockState() {
+        if (!hcCard || !window.solmatesAPI) return;
+        try {
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+          const folders = (res && res.data) ? res.data : [];
+          const lockFolder = folders.find(f => (f.name || '').includes(HC_LOCK_FOLDER));
+          hcIsLockedGlobal = !!lockFolder;
+          applyHcLockUI();
+        } catch(e) {
+          console.warn('Could not check HC lock state:', e.message);
+        }
+      }
+
+      function applyHcLockUI() {
         const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
-        
-        if (isLocked) {
+        if (hcIsLockedGlobal) {
           hcCard.classList.add('is-locked');
           if (hcLockIcon) hcLockIcon.style.display = 'flex';
         } else {
           hcCard.classList.remove('is-locked');
           if (hcLockIcon) hcLockIcon.style.display = 'none';
         }
-
-        // Add or remove toggle button for Admin
         if (isAdmin) {
           let toggleBtn = hcCard.querySelector('.admin-lock-btn');
           if (!toggleBtn) {
@@ -1211,34 +1221,46 @@
             toggleBtn.className = 'admin-lock-btn';
             toggleBtn.style.cssText = 'position:absolute; bottom:10px; right:10px; background:#4f46e5; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; z-index:22;';
             hcCard.appendChild(toggleBtn);
-            
-            toggleBtn.addEventListener('click', (e) => {
+            toggleBtn.addEventListener('click', async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              const currentlyLocked = localStorage.getItem('healthcare_locked') === 'true';
-              localStorage.setItem('healthcare_locked', !currentlyLocked);
-              updateHcLockState();
+              toggleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+              toggleBtn.disabled = true;
+              try {
+                if (hcIsLockedGlobal) {
+                  const res2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null);
+                  const folders2 = (res2 && res2.data) ? res2.data : [];
+                  const lockF = folders2.find(f => (f.name || '').includes(HC_LOCK_FOLDER));
+                  if (lockF) await window.solmatesAPI.deleteSOLFolder(lockF.id);
+                  hcIsLockedGlobal = false;
+                } else {
+                  await window.solmatesAPI.addSOLFolder({ name: HC_LOCK_FOLDER, category: 'hc-recorded-class', semester: 0 });
+                  hcIsLockedGlobal = true;
+                }
+                applyHcLockUI();
+              } catch(err) {
+                alert('Error: ' + err.message);
+              } finally {
+                toggleBtn.disabled = false;
+              }
             });
           }
-          toggleBtn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
-          toggleBtn.title = isLocked ? 'Unlock for Users' : 'Lock for Users';
+          toggleBtn.innerHTML = hcIsLockedGlobal ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
+          toggleBtn.title = hcIsLockedGlobal ? 'Unlock for All Users' : 'Lock for All Users';
         }
       }
 
       if (hcCard) {
         hcCard.addEventListener('click', (e) => {
-          const isLocked = localStorage.getItem('healthcare_locked') === 'true';
           const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
-          if (isLocked && !isAdmin) {
+          if (hcIsLockedGlobal && !isAdmin) {
             e.preventDefault();
-            alert('MBA in Healthcare is currently locked and coming soon!');
+            alert('MBA in Healthcare is coming soon! Content is being added.');
           }
         });
       }
 
-      // Run on load and after checking auth
-      document.addEventListener('DOMContentLoaded', updateHcLockState);
-      setTimeout(updateHcLockState, 500);
+      setTimeout(checkHcLockState, 600);
 
     // ========== ADMIN FEATURES ==========
     function addAdminFeatures() {
