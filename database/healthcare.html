@@ -1198,7 +1198,8 @@ const HC_SECTIONS = [
 ];
 
 async function initHcSectionLocks() {
-  if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) return;
+  if (!window.solmatesAPI) return;
+  const isAdmin = window.solmatesAPI.isAdminLoggedIn();
 
   let lockFolders = [];
   try {
@@ -1235,15 +1236,19 @@ async function initHcSectionLocks() {
         card.classList.remove('is-locked');
         if (lockOv) lockOv.style.display = 'none';
       }
-      const btn = card.querySelector('.sec-lock-btn');
-      if (btn) {
-        btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
-        btn.title = isLocked ? 'Unlock this section' : 'Lock this section';
-        btn.style.background = isLocked ? '#10b981' : '#4f46e5';
+      
+      // Admin button logic
+      if (isAdmin) {
+        const btn = card.querySelector('.sec-lock-btn');
+        if (btn) {
+          btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
+          btn.title = isLocked ? 'Unlock this section' : 'Lock this section';
+          btn.style.background = isLocked ? '#10b981' : '#4f46e5';
+        }
       }
     }
 
-    if (!card.querySelector('.sec-lock-btn')) {
+    if (isAdmin && !card.querySelector('.sec-lock-btn')) {
       const btn = document.createElement('button');
       btn.className = 'sec-lock-btn';
       btn.style.cssText = 'position:absolute;bottom:10px;right:10px;color:white;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:22;transition:all 0.2s;';
@@ -1271,6 +1276,23 @@ async function initHcSectionLocks() {
           alert('Lock error: ' + err.message);
         }
         btn.disabled = false;
+      });
+    }
+
+    // For non-admin, block click if locked
+    if (!isAdmin) {
+      card.addEventListener('click', function(e) {
+        if (card.classList.contains('is-locked')) {
+          e.preventDefault();
+          const isDark = document.documentElement.classList.contains('dark') || window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (document.getElementById('hc-sec-lock-modal')) return;
+          const overlay = document.createElement('div');
+          overlay.id = 'hc-sec-lock-modal';
+          overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
+          overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(5,150,105,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked. Content will be available soon!</p><button onclick="document.getElementById('hc-sec-lock-modal').remove()" style="background:linear-gradient(135deg,#059669,#10b981);color:white;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(5,150,105,0.3)">← Go Back</button></div>`;
+          document.body.appendChild(overlay);
+          overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
+        }
       });
     }
 
