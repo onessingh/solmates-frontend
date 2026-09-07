@@ -1260,12 +1260,17 @@
       if (titleEl) {
         if (isEBook || CATEGORY === 'youtube') {
           const icon = isEBook ? 'fa-book' : 'fa-play-circle';
-          const label = isEBook ? 'E-Books' : 'Video Lessons';
-          titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${FOLDER_NAME}`;
+          const label = isEBook ? (CATEGORY.startsWith('hc-') ? 'Healthcare E-Books' : 'E-Books') : 'Video Lessons';
+          let displayTitle = FOLDER_NAME;
+          if (CATEGORY.startsWith('hc-')) displayTitle = 'Healthcare ' + displayTitle;
+          titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${displayTitle}`;
           document.getElementById('pageSub').innerText = `${label} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         } else {
-          titleEl.innerText = FOLDER_NAME;
-          document.getElementById('pageSub').innerText = `${CAT_LABELS[CATEGORY] || CATEGORY} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          let displayTitle = FOLDER_NAME;
+          if (CATEGORY.startsWith('hc-')) displayTitle = 'Healthcare ' + displayTitle;
+          titleEl.innerText = displayTitle;
+          let catLabel = CAT_LABELS[CATEGORY] || CATEGORY;
+          document.getElementById('pageSub').innerText = `${catLabel} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         }
       }
       buildBreadcrumb();
