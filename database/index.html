@@ -933,12 +933,13 @@
           </a>
 
           <!-- MBA in Healthcare -->
-          <a href="/database/healthcare.html" class="category-card">
+          <a href="/database/healthcare.html" class="category-card" id="hcCard">
+            <div class="lock-overlay" id="hcLockIcon" style="display:none;"><i class="fas fa-lock"></i></div>
             <div class="category-info">
               <h2>MBA in Healthcare</h2>
               <p>Exclusive materials, notes, PYQs, and classes for the Healthcare stream.</p>
             </div>
-            <div class="category-icon">
+            <div class="category-icon main-icon">
               <i class="fas fa-heartbeat"></i>
             </div>
           </a>
@@ -1184,6 +1185,60 @@
         addAdminFeatures();
       }
     }
+
+      // ========== HEALTHCARE LOCK LOGIC ==========
+      const hcCard = document.getElementById('hcCard');
+      const hcLockIcon = document.getElementById('hcLockIcon');
+      
+      function updateHcLockState() {
+        if (!hcCard) return;
+        const isLocked = localStorage.getItem('healthcare_locked') === 'true';
+        const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+        
+        if (isLocked) {
+          hcCard.classList.add('is-locked');
+          if (hcLockIcon) hcLockIcon.style.display = 'flex';
+        } else {
+          hcCard.classList.remove('is-locked');
+          if (hcLockIcon) hcLockIcon.style.display = 'none';
+        }
+
+        // Add or remove toggle button for Admin
+        if (isAdmin) {
+          let toggleBtn = hcCard.querySelector('.admin-lock-btn');
+          if (!toggleBtn) {
+            toggleBtn = document.createElement('button');
+            toggleBtn.className = 'admin-lock-btn';
+            toggleBtn.style.cssText = 'position:absolute; bottom:10px; right:10px; background:#4f46e5; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; z-index:22;';
+            hcCard.appendChild(toggleBtn);
+            
+            toggleBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const currentlyLocked = localStorage.getItem('healthcare_locked') === 'true';
+              localStorage.setItem('healthcare_locked', !currentlyLocked);
+              updateHcLockState();
+            });
+          }
+          toggleBtn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
+          toggleBtn.title = isLocked ? 'Unlock for Users' : 'Lock for Users';
+        }
+      }
+
+      if (hcCard) {
+        hcCard.addEventListener('click', (e) => {
+          const isLocked = localStorage.getItem('healthcare_locked') === 'true';
+          const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+          if (isLocked && !isAdmin) {
+            e.preventDefault();
+            alert('MBA in Healthcare is currently locked and coming soon!');
+          }
+        });
+      }
+
+      // Run on load and after checking auth
+      document.addEventListener('DOMContentLoaded', updateHcLockState);
+      setTimeout(updateHcLockState, 500);
 
     // ========== ADMIN FEATURES ==========
     function addAdminFeatures() {
