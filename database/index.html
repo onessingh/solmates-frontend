@@ -867,6 +867,28 @@
 </head>
 
 <body>
+  <script>
+  // Prevent fast-click bypass before locks are loaded
+  window._mbaLocksReady = false;
+  document.addEventListener('click', function(e) {
+    if (window._mbaLocksReady) return;
+    const card = e.target.closest('.category-card');
+    if (card) {
+      e.preventDefault();
+      e.stopPropagation();
+      let t = document.getElementById('lock-wait-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'lock-wait-toast';
+        t.innerText = 'Checking access...';
+        t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:white;padding:10px 20px;border-radius:20px;z-index:99999;font-size:14px;pointer-events:none;';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 1500);
+      }
+    }
+  }, true);
+  </script>
+
 
   <header class="top-nav">
 <script>
@@ -1363,7 +1385,7 @@
         try {
           const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
           lockFolders = (res && res.data) ? res.data : [];
-        } catch(e) { return; }
+        } catch(e) { window._mbaLocksReady = true; return; }
 
         document.querySelectorAll('.category-card[href]').forEach(card => {
           const href = card.getAttribute('href') || '';
@@ -1402,7 +1424,7 @@
       try {
         const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
         lockFolders = (res && res.data) ? res.data : [];
-      } catch(e) { return; }
+      } catch(e) { window._mbaLocksReady = true; return; }
 
       document.querySelectorAll('.category-card[href]').forEach(card => {
         for (const sec of MBA_SECTIONS) {
