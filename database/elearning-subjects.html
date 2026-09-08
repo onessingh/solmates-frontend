@@ -914,8 +914,7 @@
               return;
             }
 
-            const isDark = document.documentElement.classList.contains('dark') || 
-                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = localStorage.getItem('solmates_theme') === 'dark' || document.documentElement.classList.contains('dark');
             
             const overlay = document.createElement('div');
             overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
@@ -986,8 +985,7 @@
               document.body.style.paddingTop = '45px';
               return;
             }
-            const isDark = document.documentElement.classList.contains('dark') || 
-                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = localStorage.getItem('solmates_theme') === 'dark' || document.documentElement.classList.contains('dark');
             
             const overlay = document.createElement('div');
             overlay.style.cssText = `
