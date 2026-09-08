@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1083,7 +1083,7 @@
           // Block rendering while checking lock state (MBA)
           const __lockBlockerMba = document.createElement('div');
           __lockBlockerMba.id = 'lock-blocker-mba';
-          __lockBlockerMba.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerMba.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-body, #fff);display:flex;align-items:center;justify-content:center;';
           __lockBlockerMba.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
           document.documentElement.appendChild(__lockBlockerMba);
 
@@ -1154,7 +1154,7 @@
           // Block rendering while checking lock state (HC)
           const __lockBlockerHc = document.createElement('div');
           __lockBlockerHc.id = 'lock-blocker-hc';
-          __lockBlockerHc.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerHc.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-body, #fff);display:flex;align-items:center;justify-content:center;';
           __lockBlockerHc.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
           document.documentElement.appendChild(__lockBlockerHc);
 

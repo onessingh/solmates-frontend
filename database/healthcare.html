@@ -1332,7 +1332,7 @@ async function initHcSectionLocks() {
       card.addEventListener('click', function(e) {
         if (card.classList.contains('is-locked')) {
           e.preventDefault();
-          const isDark = document.documentElement.classList.contains('dark') || window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const isDark = localStorage.getItem('solmates_theme') === 'dark' || document.documentElement.classList.contains('dark');
           if (document.getElementById('hc-sec-lock-modal')) return;
           const overlay = document.createElement('div');
           overlay.id = 'hc-sec-lock-modal';
