@@ -1022,20 +1022,18 @@
         };
         const sectionLockKey = LOCK_MAP[cat];
 
-          // Block rendering while checking lock state
-          const __lockBlocker2 = document.createElement('div');
-          __lockBlocker2.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
-          __lockBlocker2.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
-          document.documentElement.appendChild(__lockBlocker2);
-
+          
         if (!sectionLockKey) return;
 
-          // Block rendering while checking lock state
-          const __lockBlocker = document.createElement('div');
-          __lockBlocker.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
-          __lockBlocker.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
-          document.documentElement.appendChild(__lockBlocker);
+          // Block rendering while checking lock state (MBA)
+          const __lockBlockerMba = document.createElement('div');
+          __lockBlockerMba.id = 'lock-blocker-mba';
+          __lockBlockerMba.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerMba.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
+          document.documentElement.appendChild(__lockBlockerMba);
 
+
+          
         
         let tries = 0;
         while (!window.solmatesAPI && tries < 20) {
@@ -1073,9 +1071,9 @@
             document.body.style.overflow = 'hidden';
           }
         
-          if (__lockBlocker2 && __lockBlocker2.parentNode) __lockBlocker2.remove();
-
-          } catch(e) { console.warn('MBA lock check failed:', e.message); }
+          
+          } catch(e) {
+              if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); console.warn('MBA lock check failed:', e.message); }
       })();
     </script>
     
@@ -1098,6 +1096,14 @@
           'hc-professor':      '__HC_CM_LOCKED__',
         };
         const sectionLockKey = LOCK_MAP[cat];
+
+          // Block rendering while checking lock state (HC)
+          const __lockBlockerHc = document.createElement('div');
+          __lockBlockerHc.id = 'lock-blocker-hc';
+          __lockBlockerHc.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerHc.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
+          document.documentElement.appendChild(__lockBlockerHc);
+
         
         let tries = 0;
         while (!window.solmatesAPI && tries < 20) {
@@ -1116,9 +1122,9 @@
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
           
           
-          if (__lockBlocker2 && __lockBlocker2.parentNode) __lockBlocker2.remove();
-
-            if (globalLocked || sectionLocked) {
+          
+            if (__lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove();
+              if (globalLocked || sectionLocked) {
             if (isAdmin) {
               const t = document.createElement('div');
               t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
@@ -1172,7 +1178,8 @@
             document.body.appendChild(overlay);
             document.body.style.overflow = 'hidden';
           }
-        } catch(e) { console.warn('HC lock check failed:', e.message); }
+        } catch(e) {
+              if (__lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); console.warn('HC lock check failed:', e.message); }
       })();
     </script>
 
