@@ -1040,7 +1040,7 @@
           await new Promise(r => setTimeout(r, 200));
           tries++;
         }
-        if (!window.solmatesAPI) return;
+        if (!window.solmatesAPI) { if (typeof __lockBlockerMba !== 'undefined' && __lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); if (typeof __lockBlockerHc !== 'undefined' && __lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); return; }
         
         // Admin notification bypass
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
@@ -1049,6 +1049,7 @@
           const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
           const folders = (res && res.data) ? res.data : [];
           const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
+          if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
           
           if (sectionLocked) {
             if (isAdmin) {
@@ -1109,7 +1110,7 @@
           await new Promise(r => setTimeout(r, 200));
           tries++;
         }
-        if (!window.solmatesAPI) return;
+        if (!window.solmatesAPI) { if (typeof __lockBlockerMba !== 'undefined' && __lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); if (typeof __lockBlockerHc !== 'undefined' && __lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); return; }
         
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
 
