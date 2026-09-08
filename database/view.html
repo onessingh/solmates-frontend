@@ -562,10 +562,10 @@
               if (globalLocked || sectionLocked) {
             if (isAdmin) {
               const t = document.createElement('div');
-              t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
-              t.innerHTML = '🔒 HC Locked (Admin Bypass Active)';
+              t.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:12px 16px;text-align:center;font-size:14px;font-weight:bold;z-index:999999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+              t.innerHTML = '⚠️ THIS SECTION IS LOCKED TO STUDENTS. You are viewing it via Admin Bypass.';
               document.body.appendChild(t);
-              setTimeout(() => t.remove(), 4000);
+              document.body.style.paddingTop = '45px';
               return;
             }
             const isDark = document.documentElement.classList.contains('dark') || 
