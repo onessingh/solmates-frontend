@@ -1012,6 +1012,39 @@
         <div class="whatsapp-icon" id="whatsappIcon">
           <i class="fab fa-whatsapp"></i>
         </div>
+        <script>
+          (function() {
+            try {
+              const cachedLocks = JSON.parse(localStorage.getItem('solmates_hc_locks_cache') || '{}');
+              const _HC_SECTIONS = [
+                { cat: 'hc-recorded-class', lockKey: '__HC_RC_LOCKED__' },
+                { cat: 'hc-notes',          lockKey: '__HC_NOTES_LOCKED__' },
+                { cat: 'hc-pyqs',           lockKey: '__HC_PYQS_LOCKED__' },
+                { cat: 'hc-oneshot',        lockKey: '__HC_ONESHOT_LOCKED__' },
+                { cat: 'hc-elearning',      lockKey: '__HC_EBOOKS_LOCKED__' },
+                { cat: 'hc-youtube',        lockKey: '__HC_YT_LOCKED__' },
+                { cat: 'hc-professor',      lockKey: '__HC_CM_LOCKED__' }
+              ];
+              document.querySelectorAll('.categories-grid .category-card').forEach(function(card) {
+                const href = card.getAttribute('href') || '';
+                let matchedSection = null;
+                for (let i = 0; i < _HC_SECTIONS.length; i++) {
+                  if (href.includes(_HC_SECTIONS[i].cat)) { matchedSection = _HC_SECTIONS[i]; break; }
+                }
+                if (!matchedSection) return;
+                if (cachedLocks[matchedSection.lockKey]) {
+                  card.classList.add('is-locked');
+                  const lockOv = document.createElement('div');
+                  lockOv.className = 'sec-lock-overlay lock-overlay';
+                  lockOv.innerHTML = '<i class="fas fa-lock"></i>';
+                  lockOv.style.display = 'flex';
+                  card.appendChild(lockOv);
+                  card.onclick = function(e) { e.preventDefault(); e.stopPropagation(); }; // Instant block!
+                }
+              });
+            } catch(e) {}
+          })();
+        </script>
         <div class="whatsapp-dropdown" id="whatsappDropdown">
           <div class="whatsapp-options">
             <a href="https://chat.whatsapp.com/DFejXtuLG4eCu3elaJZ5Ty" target="_blank" class="whatsapp-option">
