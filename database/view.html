@@ -422,6 +422,7 @@
       // ===== MBA SECTION LOCK GUARD =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
+        if (p.get('folderId')) return; // Already inside a subfolder — lock check passed on parent page
         const cat = (function() {
           const c = p.get('category');
           if (c) return c;
@@ -508,6 +509,7 @@
       // ===== HEALTHCARE SECTION LOCK GUARD v2 =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
+        if (p.get('folderId')) return; // Already inside a subfolder — lock check passed on parent page
         const cat = (function() {
           const c = p.get('category');
           if (c) return c;
