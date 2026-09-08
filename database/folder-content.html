@@ -1056,6 +1056,186 @@
 </head>
 
 <body>
+    <script>
+      // ===== MBA SECTION LOCK GUARD =====
+      (async function() {
+        const p = new URLSearchParams(window.location.search);
+        const cat = p.get('category') || '';
+        
+        // If it's a healthcare category, the HC guard handles it.
+        if (cat.startsWith('hc-')) return;
+        
+        const LOCK_MAP = {
+          'recorded-class': '__MBA_RC_LOCKED__',
+          'notes':          '__MBA_NOTES_LOCKED__',
+          'pyqs':           '__MBA_PYQS_LOCKED__',
+          'oneshot':        '__MBA_OS_LOCKED__',
+          'elearning':      '__MBA_EL_LOCKED__',
+          'youtube':        '__MBA_YT_LOCKED__',
+          'professor':      '__MBA_CM_LOCKED__',
+          'live-classes':   '__MBA_LIVE_LOCKED__'
+        };
+        const sectionLockKey = LOCK_MAP[cat];
+
+          
+        if (!sectionLockKey) return;
+
+          // Block rendering while checking lock state (MBA)
+          const __lockBlockerMba = document.createElement('div');
+          __lockBlockerMba.id = 'lock-blocker-mba';
+          __lockBlockerMba.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerMba.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
+          document.documentElement.appendChild(__lockBlockerMba);
+
+
+          
+        
+        let tries = 0;
+        while (!window.solmatesAPI && tries < 20) {
+          await new Promise(r => setTimeout(r, 200));
+          tries++;
+        }
+        if (!window.solmatesAPI) return;
+        
+        // Admin notification bypass
+        const isAdmin = window.solmatesAPI.isAdminLoggedIn();
+        
+        try {
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const folders = (res && res.data) ? res.data : [];
+          const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
+          
+          if (sectionLocked) {
+            if (isAdmin) {
+              // Just show a small toast for admin so they know it's locked but they bypassed it
+              const toast = document.createElement('div');
+              toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+              toast.innerHTML = '🔒 Section Locked (Admin Bypass Active)';
+              document.body.appendChild(toast);
+              setTimeout(() => toast.remove(), 4000);
+              return;
+            }
+
+            const isDark = document.documentElement.classList.contains('dark') || 
+                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
+            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently being prepared.<br>It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Back to Database</a></div>`;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+          }
+        
+          
+          } catch(e) {
+              if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); console.warn('MBA lock check failed:', e.message); }
+      })();
+    </script>
+
+    <script>
+      // ===== HEALTHCARE SECTION LOCK GUARD v2 =====
+      (async function() {
+        const p = new URLSearchParams(window.location.search);
+        const cat = p.get('category') || '';
+        const isHC = window.location.href.includes('/healthcare') || cat.startsWith('hc-');
+        if (!isHC) return;
+        
+        const LOCK_MAP = {
+          'hc-recorded-class': '__HC_RC_LOCKED__',
+          'hc-notes':          '__HC_NOTES_LOCKED__',
+          'hc-pyqs':           '__HC_PYQS_LOCKED__',
+          'hc-oneshot':        '__HC_ONESHOT_LOCKED__',
+          'hc-elearning':      '__HC_EBOOKS_LOCKED__',
+          'hc-youtube':        '__HC_YT_LOCKED__',
+          'hc-professor':      '__HC_CM_LOCKED__',
+        };
+        const sectionLockKey = LOCK_MAP[cat];
+
+          // Block rendering while checking lock state (HC)
+          const __lockBlockerHc = document.createElement('div');
+          __lockBlockerHc.id = 'lock-blocker-hc';
+          __lockBlockerHc.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-color, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerHc.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
+          document.documentElement.appendChild(__lockBlockerHc);
+
+        
+        let tries = 0;
+        while (!window.solmatesAPI && tries < 20) {
+          await new Promise(r => setTimeout(r, 200));
+          tries++;
+        }
+        if (!window.solmatesAPI) return;
+        
+        const isAdmin = window.solmatesAPI.isAdminLoggedIn();
+
+        
+        try {
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const folders = (res && res.data) ? res.data : [];
+          const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
+          const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
+          
+          
+          
+            if (__lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove();
+              if (globalLocked || sectionLocked) {
+            if (isAdmin) {
+              const t = document.createElement('div');
+              t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+              t.innerHTML = '🔒 HC Locked (Admin Bypass Active)';
+              document.body.appendChild(t);
+              setTimeout(() => t.remove(), 4000);
+              return;
+            }
+            const isDark = document.documentElement.classList.contains('dark') || 
+                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+              position: fixed; inset: 0; z-index: 99999;
+              display: flex; align-items: center; justify-content: center;
+              background: ${isDark ? 'rgba(15,23,42,0.97)' : 'rgba(248,250,252,0.97)'};
+              backdrop-filter: blur(8px);
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            `;
+            overlay.innerHTML = \`
+              <div style="
+                background: \${isDark ? '#1e293b' : '#ffffff'}; 
+                border: 1px solid \${isDark ? '#334155' : '#e2e8f0'};
+                border-radius: 20px; 
+                padding: 48px 40px; 
+                text-align: center; 
+                max-width: 380px; 
+                width: 90%;
+                box-shadow: 0 25px 60px \${isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.12)'};
+              ">
+                <div style="
+                  width: 80px; height: 80px; border-radius: 50%;
+                  background: linear-gradient(135deg, #059669, #10b981);
+                  display: flex; align-items: center; justify-content: center;
+                  margin: 0 auto 24px; font-size: 2rem;
+                  box-shadow: 0 8px 24px rgba(5,150,105,0.3);
+                ">🔒</div>
+                <h2 style="margin: 0 0 10px; font-size: 1.4rem; color: \${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 700;">Content Locked</h2>
+                <p style="margin: 0 0 28px; color: \${isDark ? '#94a3b8' : '#64748b'}; font-size: 0.9rem; line-height: 1.6;">
+                  This section is currently being prepared.<br>It will be available soon!
+                </p>
+                <a href="/database/healthcare" style="
+                  display: inline-flex; align-items: center; gap: 8px;
+                  background: linear-gradient(135deg, #059669, #10b981); 
+                  color: white; padding: 12px 28px; border-radius: 50px; 
+                  text-decoration: none; font-weight: 600; font-size: 0.9rem;
+                  box-shadow: 0 4px 15px rgba(5,150,105,0.3);
+                ">← Back to Healthcare</a>
+              </div>
+            \`;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+          }
+        } catch(e) {
+              if (__lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); console.warn('HC lock check failed:', e.message); }
+      })();
+    </script>
 
 
   <header class="top-nav">
