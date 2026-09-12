@@ -99,6 +99,68 @@
 # Admin dashboard removed - redirect to home
 /admin-dashboard    /     302
 
+
+# Clean URL redirects for .html pages
+/ai-chatbot                                   /ai-chatbot.html                              200
+/exam-prep/overview                           /exam-prep/overview.html                      200
+/exam-prep/study-kit                          /exam-prep/study-kit.html                     200
+/exam-prep/subjects                           /exam-prep/subjects.html                      200
+/feedback                                     /feedback.html                                200
+/privacy-policy                               /privacy-policy.html                          200
+/tools/ai-excuse-generator                    /tools/ai-excuse-generator.html               200
+/tools/assignment-tracker                     /tools/assignment-tracker.html                200
+/tools/ats-checker                            /tools/ats-checker.html                       200
+/tools/attendance                             /tools/attendance.html                        200
+/tools/break-even                             /tools/break-even.html                        200
+/tools/business-case                          /tools/business-case.html                     200
+/tools/business-validator                     /tools/business-validator.html                200
+/tools/calculator                             /tools/calculator.html                        200
+/tools/corporate-translator                   /tools/corporate-translator.html              200
+/tools/cover-letter                           /tools/cover-letter.html                      200
+/tools/coverpage                              /tools/coverpage.html                         200
+/tools/custom-services                        /tools/custom-services.html                   200
+/tools/email-generator                        /tools/email-generator.html                   200
+/tools/financial-ratio                        /tools/financial-ratio.html                   200
+/tools/flashcards                             /tools/flashcards.html                        200
+/tools/freelance-calculator                   /tools/freelance-calculator.html              200
+/tools/gst-calculator                         /tools/gst-calculator.html                    200
+/tools/linkedin-checklist                     /tools/linkedin-checklist.html                200
+/tools/loan-calculator                        /tools/loan-calculator.html                   200
+/tools/mcq-generator                          /tools/mcq-generator.html                     200
+/tools/pdf-tools/add-pages                    /tools/pdf-tools/add-pages.html               200
+/tools/pdf-tools/ai-summarizer                /tools/pdf-tools/ai-summarizer.html           200
+/tools/pdf-tools/compress                     /tools/pdf-tools/compress.html                200
+/tools/pdf-tools/delete-pages                 /tools/pdf-tools/delete-pages.html            200
+/tools/pdf-tools/excel-to-pdf                 /tools/pdf-tools/excel-to-pdf.html            200
+/tools/pdf-tools/favicon-generator            /tools/pdf-tools/favicon-generator.html       200
+/tools/pdf-tools/html-to-pdf                  /tools/pdf-tools/html-to-pdf.html             200
+/tools/pdf-tools/jpg-to-pdf                   /tools/pdf-tools/jpg-to-pdf.html              200
+/tools/pdf-tools/merge                        /tools/pdf-tools/merge.html                   200
+/tools/pdf-tools/ocr                          /tools/pdf-tools/ocr.html                     200
+/tools/pdf-tools/organize                     /tools/pdf-tools/organize.html                200
+/tools/pdf-tools/page-numbers                 /tools/pdf-tools/page-numbers.html            200
+/tools/pdf-tools/pdf-to-jpg                   /tools/pdf-tools/pdf-to-jpg.html              200
+/tools/pdf-tools/pdf-to-ppt                   /tools/pdf-tools/pdf-to-ppt.html              200
+/tools/pdf-tools/pdf-to-word                  /tools/pdf-tools/pdf-to-word.html             200
+/tools/pdf-tools/protect                      /tools/pdf-tools/protect.html                 200
+/tools/pdf-tools/rotate                       /tools/pdf-tools/rotate.html                  200
+/tools/pdf-tools/scan                         /tools/pdf-tools/scan.html                    200
+/tools/pdf-tools/split                        /tools/pdf-tools/split.html                   200
+/tools/pdf-tools/translate                    /tools/pdf-tools/translate.html               200
+/tools/pdf-tools/unlock                       /tools/pdf-tools/unlock.html                  200
+/tools/pdf-tools/watermark                    /tools/pdf-tools/watermark.html               200
+/tools/pdf-tools/word-to-pdf                  /tools/pdf-tools/word-to-pdf.html             200
+/tools/pdf-tools/zip-creator                  /tools/pdf-tools/zip-creator.html             200
+/tools/pestle-maker                           /tools/pestle-maker.html                      200
+/tools/question-paper-generator               /tools/question-paper-generator.html          200
+/tools/resignation-kit                        /tools/resignation-kit.html                   200
+/tools/salary-calculator                      /tools/salary-calculator.html                 200
+/tools/startup-valuation                      /tools/startup-valuation.html                 200
+/tools/swot-maker                             /tools/swot-maker.html                        200
+/tools/teleprompter                           /tools/teleprompter.html                      200
+/tools/text-humanizer                         /tools/text-humanizer.html                    200
+/tools/zero-size-pdf                          /tools/zero-size-pdf.html                     200
+
 # Fallback for any other route - proper 404
 /*                  /404.html                       404
 
