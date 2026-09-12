@@ -99,6 +99,6 @@
 # Admin dashboard removed - redirect to home
 /admin-dashboard    /     302
 
-# Fallback for any other route - serve index
-/*                  /index.html                     200
+# Fallback for any other route - proper 404
+/*                  /404.html                       404
 
