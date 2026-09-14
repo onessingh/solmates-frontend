@@ -2075,12 +2075,22 @@
       const regularNotices = [];
 
       // [v116.6] PINNED COMMUNITY POSTS: Rich Posts (Admin "Add Community Post") always stay on top
+      const pinnedNotices = [];
       const communityPosts = [];
       const nonPinnedFiltered = [];
+      
       filtered.forEach(n => {
         const linkTrim = (n.link || '').trim();
-        if (n.isRichPost || linkTrim === '#richpost') communityPosts.push(n);
+        if (n.isPinned) pinnedNotices.push(n);
+        else if (n.isRichPost || linkTrim === '#richpost') communityPosts.push(n);
         else nonPinnedFiltered.push(n);
+      });
+
+      // Sort Explicitly Pinned Notices (latest first)
+      pinnedNotices.sort((a, b) => {
+        const dA = parseNoticeDate(a.date, a.title).getTime();
+        const dB = parseNoticeDate(b.date, b.title).getTime();
+        return (isNaN(dB) ? -1 : dB) - (isNaN(dA) ? -1 : dA);
       });
 
       // Newest Community Post first
@@ -2142,7 +2152,7 @@
         return getStartTimeVal(a.title) - getStartTimeVal(b.title);
       });
 
-      const finalNoticesRaw = communityPosts.concat(todayLive, regularNotices, futureLive);
+      const finalNoticesRaw = pinnedNotices.concat(communityPosts, todayLive, regularNotices, futureLive);
       
       // v89.0: SMART DEDUPLICATION (Keep linked version over pending version)
       const dedupeMap = new Map();
@@ -2255,7 +2265,8 @@
                 ${newBadge}
               </div>
               <div class="content-box" style="overflow: hidden; max-width: 100%;">
-                ${isLiveClass ? `<div class="live-indicator"><span class="pulse-dot"></span> LIVE CLASS</div>` : ''}
+                ${notice.isPinned ? `<div class="live-indicator" style="background: rgba(255,152,0,0.1); color: #ff9800; border-color: rgba(255,152,0,0.2); margin-bottom: 6px;"><i class="fas fa-thumbtack" style="font-size: 10px; margin-right: 4px;"></i> PINNED</div>` : ''}
+                  ${isLiveClass ? `<div class="live-indicator"><span class="pulse-dot"></span> LIVE CLASS</div>` : ''}
                 <h3 class="subject-text" translate="no" style="word-break: break-word;">${formattedSubject}</h3>
                 
                 ${(!isLiveClass && (notice.description || finalImageUrl)) ? `
