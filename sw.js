@@ -3,7 +3,7 @@
  * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v673';
+const CACHE_NAME = 'solmates-cache-v674';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -67,19 +67,33 @@ self.addEventListener("fetch", event => {
 
 // ===== PUSH =====
 self.addEventListener("push", event => {
-    let data = {};
-    try { data = event.data ? event.data.json() : {}; } catch(e) {}
-    const title = data.title || 'SOLMATES';
+    let payload = {};
+    try { payload = event.data ? event.data.json() : {}; } catch(e) {}
+    
+    // Handle both FCM nested structure and flat structure
+    const title = (payload.notification && payload.notification.title) ? payload.notification.title : (payload.title || 'SOLMATES');
+    const body = (payload.notification && payload.notification.body) ? payload.notification.body : (payload.body || 'New update available!');
+    
+    // Extract URL from various possible payload formats
+    let targetUrl = '/';
+    if (payload.data && payload.data.url) targetUrl = payload.data.url;
+    else if (payload.data && payload.data.link) targetUrl = payload.data.link;
+    else if (payload.url) targetUrl = payload.url;
+    else if (payload.link) targetUrl = payload.link;
+    else if (payload.notification && payload.notification.click_action) targetUrl = payload.notification.click_action;
+    
     const options = {
-        body: data.body || 'New update available!',
-        icon: data.icon || '/android-chrome-192x192.png',
-        badge: data.badge || '/favicon-32x32.png',
-        data: { url: data.url || '/' },
+        body: body,
+        icon: payload.icon || (payload.notification && payload.notification.icon) || '/android-chrome-192x192.png',
+        badge: payload.badge || '/favicon-32x32.png',
+        data: { url: targetUrl },
         vibrate: [200, 100, 200],
         requireInteraction: false
     };
     event.waitUntil(self.registration.showNotification(title, options));
 });
+
+
 
 // ===== NOTIFICATIONCLICK =====
 self.addEventListener("notificationclick", event => {
