@@ -3,7 +3,7 @@
  * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v704';
+const CACHE_NAME = 'solmates-cache-v705';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -75,7 +75,7 @@ self.addEventListener("push", event => {
     const body = (payload.notification && payload.notification.body) ? payload.notification.body : (payload.body || 'New update available!');
     
     // Extract URL from various possible payload formats
-    let targetUrl = '/';
+    let targetUrl = '/notification';
     if (payload.data && payload.data.url) targetUrl = payload.data.url;
     else if (payload.data && payload.data.link) targetUrl = payload.data.link;
     else if (payload.url) targetUrl = payload.url;
@@ -98,7 +98,7 @@ self.addEventListener("push", event => {
 // ===== NOTIFICATIONCLICK =====
 self.addEventListener("notificationclick", event => {
     event.notification.close();
-    const targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/';
+    const targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/notification';
     const fullUrl = new URL(targetUrl, self.location.origin).href;
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
