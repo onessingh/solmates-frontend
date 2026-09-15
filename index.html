@@ -10844,6 +10844,20 @@
 
 
 
+
+<script>
+  // Auto-open AI Chatbot if triggered from Platform Guide
+  window.addEventListener('load', () => {
+    if (window.location.search.includes('action=chat') || window.location.hash === '#chat') {
+      setTimeout(() => {
+        if(typeof openChatModal === 'function') {
+          openChatModal();
+          history.replaceState(null, null, window.location.pathname);
+        }
+      }, 300);
+    }
+  });
+</script>
 </body>
 
 
