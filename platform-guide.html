@@ -203,6 +203,116 @@
       }
     })();
   </script>
+
+<style>
+  .guide-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Inter', sans-serif;
+  }
+  .guide-header {
+    text-align: center;
+    background: linear-gradient(135deg, var(--brand-primary, #4a90e2), #ff9800);
+    color: white;
+    padding: 50px 20px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  .guide-header .header-icon i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.2);
+    padding: 20px;
+    border-radius: 50%;
+  }
+  .guide-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+  }
+  .guide-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .guide-content {
+    display: grid;
+    gap: 25px;
+  }
+  .guide-section {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease;
+  }
+  .guide-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  }
+  .guide-section h2 {
+    color: var(--brand-primary, #4a90e2);
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+    padding-bottom: 15px;
+  }
+  .guide-section p {
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    font-size: 15px;
+  }
+  .guide-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .guide-section ul li {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    color: #555;
+    line-height: 1.6;
+    font-size: 14.5px;
+  }
+  .guide-section ul li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    color: #ff9800;
+    font-weight: bold;
+  }
+  .guide-section ul li strong {
+    color: #222;
+  }
+  
+  /* Dark mode support */
+  body.dark-mode .guide-section {
+    background: #1e1e1e;
+    border-color: #333;
+  }
+  body.dark-mode .guide-section p, 
+  body.dark-mode .guide-section ul li {
+    color: #ccc;
+  }
+  body.dark-mode .guide-section ul li strong {
+    color: #fff;
+  }
+  body.dark-mode .guide-section h2 {
+    border-bottom-color: #333;
+  }
+</style>
+
 </head>
 <body>
 
@@ -222,7 +332,7 @@
     <!-- Section 1: Privacy Commitment -->
     <div class="card">
       <div class="section-title"><i class="fas fa-user-shield"></i> 1. Our Privacy Commitment</div>
-      <div class="policy-content">
+      <div class="guide-content">
         <div class="highlight-box">
           <p><strong>Zero Accounts. Zero Data Collection.</strong> SOLMATES is built on the philosophy of frictionless learning. We do not require you to sign up, log in, or provide any personal information like names, emails, or phone numbers to use our core platform.</p>
         </div>
@@ -239,7 +349,7 @@
     <!-- Section 2: Platform Overview & Terms -->
     <div class="card">
       <div class="section-title"><i class="fas fa-layer-group"></i> 2. Platform Overview & Terms of Use</div>
-      <div class="policy-content">
+      <div class="guide-content">
         <p>By using SOLMATES, you agree to utilize our platform responsibly. We offer various educational and productivity sections designed specifically for students and learners:</p>
         
         <div class="feature-grid">
@@ -277,7 +387,7 @@
     <!-- Section 3: AdSense & Third-Party -->
     <div class="card">
       <div class="section-title"><i class="fas fa-ad"></i> 3. Advertising & Cookies (Google AdSense)</div>
-      <div class="policy-content">
+      <div class="guide-content">
         <p>To keep SOLMATES completely free for students, we monetize the platform using Google AdSense. Google and third-party vendors use cookies to serve advertisements based on your prior visits to our website or other websites.</p>
         
         <h3>Google DoubleClick DART Cookie</h3>
@@ -295,7 +405,7 @@
     <!-- Section 4: Disclaimers -->
     <div class="card" style="margin-bottom: 0;">
       <div class="section-title"><i class="fas fa-balance-scale"></i> 4. Disclaimer & Limitations</div>
-      <div class="policy-content">
+      <div class="guide-content">
         <p><strong>"As-Is" Service:</strong> All tools, including AI generations, ATS scoring, and academic databases, are provided "as is" and "as available". While we strive for accuracy, we make no guarantees regarding the absolute correctness, reliability, or completeness of the AI-generated answers or study materials.</p>
         <p><strong>No Liability:</strong> In no event shall SOLMATES or its creators be held liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use our platform, including but not limited to academic grades, job application outcomes, or data loss.</p>
         <p><strong>Consent:</strong> By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions.</p>
