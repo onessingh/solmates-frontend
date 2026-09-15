@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q6GVS9XX1M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q6GVS9XX1M');
+</script>
+
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SOLMATES Platform Guide | DU SOL MBA Tools, Resources & Features</title>
+  <meta name="description" content="SOLMATES Privacy Policy - Learn how we collect, use, and protect your personal data. Our commitment to student privacy and data security at solmates.in.">
+  <meta name="color-scheme" content="only light">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f2b46;
+      --primary-light: #1a426b;
+      --accent: #c0962d;
+      --accent-hover: #d4a93a;
+      --bg: #f4f7fb;
+      --text: #334155;
+      --text-dark: #0f172a;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 10px 30px -10px rgba(15, 43, 70, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: 'Inter', sans-serif; 
+      line-height: 1.7; 
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--text-dark); transition: color 0.3s ease; }
+    
+    a { color: var(--accent); text-decoration: none; transition: 0.3s; }
+    a:hover { color: var(--accent-hover); }
+    
+    a.break-link { word-break: break-all; overflow-wrap: break-word; }
+
+    /* Navbar */
+    .nav {
+      position: sticky; top: 0; 
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 16px 5%; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; /* Centered */
+      z-index: 100;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .nav-brand {
+      color: var(--primary); font-family: 'Outfit', sans-serif;
+      font-weight: 700; font-size: 22px; display: flex; align-items: center; gap: 10px;
+    }
+    .nav-brand i { color: var(--accent); }
+
+    /* Header */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 60px 20px;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 40px;
+      background: var(--bg); clip-path: polygon(0 100%, 100% 100%, 100% 0);
+      transition: background-color 0.3s ease;
+    }
+    .hero h1 { color: white; font-size: 36px; margin-bottom: 12px; }
+    .hero p { color: rgba(255,255,255,0.8); font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+    /* Content Container */
+    .container { max-width: 900px; margin: 40px auto 80px; padding: 0 20px; }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 30px;
+      transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .section-title {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 22px; font-weight: 600;
+      padding-bottom: 15px; margin-bottom: 20px;
+      border-bottom: 2px solid var(--bg);
+      transition: border-color 0.3s ease;
+    }
+    .section-title i {
+      background: var(--bg); color: var(--primary);
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .policy-content p { margin-bottom: 16px; font-size: 15.5px; }
+    
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px; margin: 20px 0;
+    }
+    .feature-item {
+      background: var(--bg); padding: 15px; border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .feature-item i { color: var(--accent); margin-bottom: 8px; font-size: 20px; }
+    .feature-item h4 { font-family: 'Outfit', sans-serif; font-size: 16px; margin-bottom: 5px; color: var(--primary); transition: color 0.3s ease; }
+    .feature-item p { font-size: 13.5px; margin: 0; color: var(--text); }
+
+    ul.custom-list { list-style: none; margin-bottom: 20px; }
+    ul.custom-list li {
+      position: relative; padding-left: 28px; margin-bottom: 12px; font-size: 15.5px;
+    }
+    ul.custom-list li::before {
+      content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+      position: absolute; left: 0; top: 2px; color: var(--accent);
+    }
+
+    .highlight-box {
+      background: rgba(192, 150, 45, 0.08); border-left: 4px solid var(--accent);
+      padding: 15px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px;
+    }
+    .highlight-box p { margin: 0; color: var(--text-dark); font-weight: 500; transition: color 0.3s ease; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 28px; }
+      .card { padding: 25px 20px; }
+      .section-title { font-size: 20px; }
+      .nav { padding: 15px 20px; }
+    }
+  </style>
+
+  <!-- Dark Mode Native Integration -->
+  <style id="theme-dark-style" media="not all">
+    :root {
+      --bg: #0f172a;
+      --text: #cbd5e1;
+      --text-dark: #f8fafc;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --primary: #e2e8f0;
+      --primary-light: #94a3b8;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav {
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    .highlight-box {
+      background: rgba(192, 150, 45, 0.15);
+    }
+    
+    .nav-brand { color: #f8fafc; }
+  </style>
+
+  <script>
+    // Immediately apply saved theme to avoid flash
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      const darkStyle = document.getElementById('theme-dark-style');
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (savedTheme && darkStyle) {
+        if (savedTheme === 'dark') {
+          darkStyle.media = 'all';
+          
+        } else if (savedTheme === 'light') {
+          darkStyle.media = 'not all';
+          
+        }
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="nav">
+    <a href="/" class="nav-brand"><i class="fas fa-graduation-cap"></i> SOLMATES</a>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>Privacy Policy & Terms of Service</h1>
+    <p>We believe in transparency, speed, and privacy. Read how we protect you while providing a seamless educational platform.</p>
+  </div>
+
+  <div class="container">
+    
+    <!-- Section 1: Privacy Commitment -->
+    <div class="card">
+      <div class="section-title"><i class="fas fa-user-shield"></i> 1. Our Privacy Commitment</div>
+      <div class="policy-content">
+        <div class="highlight-box">
+          <p><strong>Zero Accounts. Zero Data Collection.</strong> SOLMATES is built on the philosophy of frictionless learning. We do not require you to sign up, log in, or provide any personal information like names, emails, or phone numbers to use our core platform.</p>
+        </div>
+        <p>At SOLMATES (accessible from solmates.in), the privacy of our visitors is our utmost priority. Since we do not operate a user-account system, we inherently minimize any data exposure.</p>
+        
+        <h3>Local Storage (Your Device, Your Data)</h3>
+        <p>To ensure you have a highly personalized experience, we use your browser's <strong>Local Storage</strong>. This means any preferences you set�such as dark mode toggles, AI chat history, bookmarked tools, or game scores�are saved entirely on your own device. We do not transmit or store this data on our servers.</p>
+
+        <h3>Push Notifications</h3>
+        <p>We may request permission to send you Push Notifications (via OneSignal or similar services) strictly for educational updates, new features, or reminders. You are never forced to accept this, and you can instantly revoke this permission at any time through your browser or device settings.</p>
+      </div>
+    </div>
+
+    <!-- Section 2: Platform Overview & Terms -->
+    <div class="card">
+      <div class="section-title"><i class="fas fa-layer-group"></i> 2. Platform Overview & Terms of Use</div>
+      <div class="policy-content">
+        <p>By using SOLMATES, you agree to utilize our platform responsibly. We offer various educational and productivity sections designed specifically for students and learners:</p>
+        
+        <div class="feature-grid">
+          <div class="feature-item">
+            <i class="fas fa-database"></i>
+            <h4>Database</h4>
+            <p>Curated study materials, academic resources, and organized YouTube video playlists based on university semesters.</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-tools"></i>
+            <h4>Tools</h4>
+            <p>AI-powered utilities like Resume Builders, ATS Checkers, Text Humanizers, and Study Companions to boost productivity.</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-laptop-code"></i>
+            <h4>Skills</h4>
+            <p>Resources and roadmaps to help you master new technical and soft skills for your career journey.</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-gamepad"></i>
+            <h4>Games</h4>
+            <p>Interactive and educational games (Quiz Battle, Case Study Arena) to help you learn while having fun.</p>
+          </div>
+        </div>
+
+        <h3>Acceptable Use</h3>
+        <ul class="custom-list">
+          <li>The AI tools and resources are provided for educational assistance and should not replace formal academic guidance.</li>
+          <li>You may not use bots, scrapers, or automated systems to exploit or overload the platform.</li>
+          <li>We reserve the right to modify, suspend, or discontinue any tool or feature at our discretion without prior notice.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 3: AdSense & Third-Party -->
+    <div class="card">
+      <div class="section-title"><i class="fas fa-ad"></i> 3. Advertising & Cookies (Google AdSense)</div>
+      <div class="policy-content">
+        <p>To keep SOLMATES completely free for students, we monetize the platform using Google AdSense. Google and third-party vendors use cookies to serve advertisements based on your prior visits to our website or other websites.</p>
+        
+        <h3>Google DoubleClick DART Cookie</h3>
+        <p>Google acts as a third-party vendor on our site. It uses DART cookies to serve contextual or personalized ads. However, you can choose to decline the use of DART cookies and personalized advertising by visiting the Google Ad and Content Network Privacy Policy at:</p>
+        <p><a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" class="break-link">https://policies.google.com/technologies/ads</a></p>
+
+        <h3>Log Files</h3>
+        <p>Like standard web platforms, we utilize basic log files (such as those provided by Cloudflare or our hosting provider) to monitor website health, traffic trends, and prevent DDoS attacks. These logs may capture IP addresses, browser types, and timestamp data, but they are completely anonymized and are not linked to any personally identifiable individual.</p>
+        
+        <h3>Third-Party Privacy Policies</h3>
+        <p>Our Privacy Policy does not apply to other advertisers or websites. If you click on a third-party ad, we advise you to consult their respective Privacy Policies for detailed information. You can easily disable cookies directly through your individual browser options.</p>
+      </div>
+    </div>
+
+    <!-- Section 4: Disclaimers -->
+    <div class="card" style="margin-bottom: 0;">
+      <div class="section-title"><i class="fas fa-balance-scale"></i> 4. Disclaimer & Limitations</div>
+      <div class="policy-content">
+        <p><strong>"As-Is" Service:</strong> All tools, including AI generations, ATS scoring, and academic databases, are provided "as is" and "as available". While we strive for accuracy, we make no guarantees regarding the absolute correctness, reliability, or completeness of the AI-generated answers or study materials.</p>
+        <p><strong>No Liability:</strong> In no event shall SOLMATES or its creators be held liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use our platform, including but not limited to academic grades, job application outcomes, or data loss.</p>
+        <p><strong>Consent:</strong> By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions.</p>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
