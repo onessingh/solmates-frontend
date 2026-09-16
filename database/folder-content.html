@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -26,16 +26,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=709">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=708">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Folder - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=709"></script>
-  <script src="/js/uptime-helper.js?v=709"></script>
-  <script src="/js/api-client.js?v=709"></script>
-  <script src="/js/sol-cache.js?v=709"></script>
-  <script src="/js/prefetch-helper.js?v=709"></script>
+  <script src="/config.js?v=708"></script>
+  <script src="/js/uptime-helper.js?v=708"></script>
+  <script src="/js/api-client.js?v=708"></script>
+  <script src="/js/sol-cache.js?v=708"></script>
+  <script src="/js/prefetch-helper.js?v=708"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <style>
@@ -1111,7 +1111,7 @@
               // Just show a small toast for admin so they know it's locked but they bypassed it
               const toast = document.createElement('div');
               toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
-              toast.innerHTML = 'ðŸ”’ Section Locked (Admin Bypass Active)';
+              toast.innerHTML = '🔒 Section Locked (Admin Bypass Active)';
               document.body.appendChild(toast);
               setTimeout(() => toast.remove(), 4000);
               return;
@@ -1121,7 +1121,7 @@
             
             const overlay = document.createElement('div');
             overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
-            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">ðŸ”’</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently being prepared.<br>It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">â† Back to Database</a></div>`;
+            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently being prepared.<br>It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Back to Database</a></div>`;
             document.body.appendChild(overlay);
             document.body.style.overflow = 'hidden';
           }
@@ -1182,7 +1182,7 @@
             if (isAdmin) {
               const t = document.createElement('div');
               t.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:12px 16px;text-align:center;font-size:14px;font-weight:bold;z-index:999999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
-              t.innerHTML = 'âš ï¸ THIS SECTION IS LOCKED TO STUDENTS. You are viewing it via Admin Bypass.';
+              t.innerHTML = '⚠️ THIS SECTION IS LOCKED TO STUDENTS. You are viewing it via Admin Bypass.';
               document.body.appendChild(t);
               document.body.style.paddingTop = '45px';
               return;
@@ -1214,7 +1214,7 @@
                   display: flex; align-items: center; justify-content: center;
                   margin: 0 auto 24px; font-size: 2rem;
                   box-shadow: 0 8px 24px rgba(5,150,105,0.3);
-                ">ðŸ”’</div>
+                ">🔒</div>
                 <h2 style="margin: 0 0 10px; font-size: 1.4rem; color: ${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 700;">Content Locked</h2>
                 <p style="margin: 0 0 28px; color: ${isDark ? '#94a3b8' : '#64748b'}; font-size: 0.9rem; line-height: 1.6;">
                   This section is currently being prepared.<br>It will be available soon!
@@ -1225,7 +1225,7 @@
                   color: white; padding: 12px 28px; border-radius: 50px; 
                   text-decoration: none; font-weight: 600; font-size: 0.9rem;
                   box-shadow: 0 4px 15px rgba(5,150,105,0.3);
-                ">â† Back to Healthcare</a>
+                ">← Back to Healthcare</a>
               </div>
             `;
             document.body.appendChild(overlay);
@@ -1278,7 +1278,7 @@
         style="display:none">
         <i class="fas fa-folder-plus"></i> New Folder
       </button>
-      <!-- FIX 5: Renamed to btnNewFolderDefault â€¢ used for non-elearning categories -->
+      <!-- FIX 5: Renamed to btnNewFolderDefault • used for non-elearning categories -->
       <button class="btn-create btn-folder" id="btnNewFolderDefault" onclick="openModal('folderModal', 'folder')"
         style="display:none">
         <i class="fas fa-folder-plus"></i> New Folder
@@ -1443,13 +1443,13 @@
           let displayTitle = FOLDER_NAME;
           if (CATEGORY.startsWith('hc-')) displayTitle = 'Healthcare ' + displayTitle;
           titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${displayTitle}`;
-          document.getElementById('pageSub').innerText = `${label} â€¢ ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          document.getElementById('pageSub').innerText = `${label} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         } else {
           let displayTitle = FOLDER_NAME;
           if (CATEGORY.startsWith('hc-')) displayTitle = 'Healthcare ' + displayTitle;
           titleEl.innerText = displayTitle;
           let catLabel = CAT_LABELS[CATEGORY] || CATEGORY;
-          document.getElementById('pageSub').innerText = `${catLabel} â€¢ ${ordinals[SEMESTER] || SEMESTER} Semester`;
+          document.getElementById('pageSub').innerText = `${catLabel} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
         }
       }
       buildBreadcrumb();
@@ -2022,5 +2022,4 @@
 </body>
 
 </html>
-
 

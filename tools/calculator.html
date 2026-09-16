@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -25,7 +25,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=709">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=708">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CGPA & Academic Calculator | SOLMATES</title>
@@ -754,7 +754,7 @@
         const percentage = (cgpa * mult).toFixed(1);
         val.innerText = percentage + '%';
         const fTag = document.getElementById('formulaTag');
-        if(fTag) fTag.innerText = 'Formula: CGPA Ã— ' + mult + ' (DU Standard)';
+        if(fTag) fTag.innerText = 'Formula: CGPA × ' + mult + ' (DU Standard)';
         box.style.display = 'block';
       } else {
         box.style.display = 'none';
@@ -819,5 +819,4 @@
 
 </body>
 </html>
-
 
