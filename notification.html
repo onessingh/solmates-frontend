@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -78,14 +78,14 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=708">
-  <script src="/config.js?v=708" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=709">
+  <script src="/config.js?v=709" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=708" defer></script>
-  <script src="/js/webview-fix.js?v=708" defer></script>
-  <script src="/js/sol-cache.js?v=708" defer></script>
+  <script src="/js/api-client.js?v=709" defer></script>
+  <script src="/js/webview-fix.js?v=709" defer></script>
+  <script src="/js/sol-cache.js?v=709" defer></script>
   <script>
-    // [v116.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
+    // [v116.6] NUCLEAR AUTO-UPDATE â€¢ ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
@@ -1647,7 +1647,7 @@
         <div style="background:#fff;border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
             <h3 style="margin:0;font-size:1rem;font-weight:700;color:#1a1a2e;line-height:1.4;flex:1;">${title}</h3>
-            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">×</button>
+            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">Ã—</button>
           </div>
           ${date ? `<p style="margin:0 0 12px;font-size:0.8rem;color:#888;"><b>Date:</b> ${date}</p>` : ''}
           <p style="margin:0;font-size:0.9rem;color:#444;line-height:1.6;">${description}</p>
@@ -2236,7 +2236,7 @@
             return rawStr;
           };
           const formattedDisplayDate = (displayDate && displayDate !== 'None') ? formatMobileDate(dateObj, displayDate) : '';
-          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">📅 ${formattedDisplayDate}</span>` : '';
+          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">ðŸ“… ${formattedDisplayDate}</span>` : '';
           const timeHtml = displayTime ? `<span class="no-select-meta"><b class="no-select-meta">Schedule:</b> ${displayTime}</span>` : '';
           
           let linkHtml = '';
@@ -3264,10 +3264,10 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=708';
+        const swUrl = './sw.js?v=709';
         const registration = await navigator.serviceWorker.register(swUrl);
         
-        // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
+        // [v116.5] refreshed flag + pageOpenTime guard â€¢ prevents infinite reload loop
         const _pageOpenTime = Date.now();
         let _swRefreshed = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -3573,6 +3573,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
+
 
 
 

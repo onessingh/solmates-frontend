@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -1421,14 +1421,14 @@
         projData = [];
         
         // Find lines with year ranges like "2020 - 2023" or "2019-Present"
-        const expLines = lines.filter(l => /(?:201[0-9]|202[0-9])\s*[-–to]+\s*(?:20[1-2][0-9]|Present|Current)/i.test(l));
+        const expLines = lines.filter(l => /(?:201[0-9]|202[0-9])\s*[-â€“to]+\s*(?:20[1-2][0-9]|Present|Current)/i.test(l));
         if(expLines.length > 0) {
             expLines.forEach((l, i) => {
                 if(i < 3) {
                     expData.push({
                         role: "Role " + (i+1),
                         company: "Company",
-                        year: l.match(/(?:201[0-9]|202[0-9])\s*[-–to]+\s*(?:20[1-2][0-9]|Present|Current)/i)[0],
+                        year: l.match(/(?:201[0-9]|202[0-9])\s*[-â€“to]+\s*(?:20[1-2][0-9]|Present|Current)/i)[0],
                         desc: l.substring(0, 50) + "..."
                     });
                 }
@@ -1464,6 +1464,7 @@
   </script>
 </body>
 </html>
+
 
 
 

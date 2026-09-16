@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -26,7 +26,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=708">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=709">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MBA in Healthcare | DU SOL Study Material & Notes</title>
@@ -701,10 +701,10 @@
     /* dark mode moved */
     </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=708"></script>
-  <script src="/js/uptime-helper.js?v=708"></script>
-  <script src="/js/api-client.js?v=708"></script>
-  <script src="/js/sol-cache.js?v=708"></script>
+  <script src="/config.js?v=709"></script>
+  <script src="/js/uptime-helper.js?v=709"></script>
+  <script src="/js/api-client.js?v=709"></script>
+  <script src="/js/sol-cache.js?v=709"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -869,7 +869,7 @@
             if (isAdmin) {
               const t = document.createElement('div');
               t.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
-              t.innerHTML = '🔒 HC Globally Locked (Admin Bypass Active)';
+              t.innerHTML = 'ðŸ”’ HC Globally Locked (Admin Bypass Active)';
               document.body.appendChild(t);
               setTimeout(() => t.remove(), 4000);
               return;
@@ -877,7 +877,7 @@
             const isDark = document.documentElement.classList.contains('dark');
             const overlay = document.createElement('div');
             overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
-            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#fff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(5,150,105,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">MBA in Healthcare</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked and being prepared. It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#059669,#10b981);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(5,150,105,0.3)">← Back to Database</a></div>`;
+            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#fff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(5,150,105,0.3)">ðŸ”’</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">MBA in Healthcare</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked and being prepared. It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#059669,#10b981);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(5,150,105,0.3)">â† Back to Database</a></div>`;
             document.body.appendChild(overlay);
             document.body.style.overflow = 'hidden';
           }
@@ -1070,7 +1070,7 @@
           class="fab fa-linkedin"></i></a>
       <a href="mailto:du.solmates@gmail.com" title="Email"><i class="fa fa-envelope"></i></a>
     </div>
-    <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+    <p>2026 SOLMATES â€¢ A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
   </footer>
 
   <script>
@@ -1331,7 +1331,7 @@ async function initHcSectionLocks() {
           const overlay = document.createElement('div');
           overlay.id = 'hc-sec-lock-modal';
           overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
-          overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(5,150,105,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked. Content will be available soon!</p><button onclick="document.getElementById('hc-sec-lock-modal').remove()" style="background:linear-gradient(135deg,#059669,#10b981);color:white;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(5,150,105,0.3)">← Go Back</button></div>`;
+          overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(5,150,105,0.3)">ðŸ”’</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked. Content will be available soon!</p><button onclick="document.getElementById('hc-sec-lock-modal').remove()" style="background:linear-gradient(135deg,#059669,#10b981);color:white;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(5,150,105,0.3)">â† Go Back</button></div>`;
           document.body.appendChild(overlay);
           overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
         }
@@ -1347,6 +1347,7 @@ initHcSectionLocks();
 </body>
 
 </html>
+
 
 
 
