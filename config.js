@@ -1,4 +1,4 @@
-
+﻿
 // [Fix] Bypass Web Push permission checks in Native App to force Native Firebase flow
 (function() {
   try {
@@ -9,7 +9,7 @@
     if (isTWA) {
       if (typeof window.Notification === 'undefined') window.Notification = {};
       window.Notification.requestPermission = function() { return Promise.resolve('granted'); };
-      // Removed permission spoofing so we can detect if user blocked notifications in Android settings
+      Object.defineProperty(Notification, 'permission', { get: () => 'granted', configurable: true });
     }
   } catch(e) {}
 })();
@@ -196,13 +196,13 @@ window.addEventListener('afterprint', function() {
  * =============================================================================
  */
 
-// ⚠️  REPLACE THIS WITH YOUR ACTUAL BACKEND URL BEFORE DEPLOYMENT
+// âš ï¸  REPLACE THIS WITH YOUR ACTUAL BACKEND URL BEFORE DEPLOYMENT
 // Examples:
 // - Render: 'https://solmates-backend-w27e.onrender.com/api'
 // - Heroku: 'https://solmates-api.herokuapp.com/api'
 // - Railway: 'https://solmates-backend.up.railway.app/api'
 
-// Production backend URL — Render deployment (must match backend CORS FRONTEND_URL)
+// Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
 window.PRODUCTION_API_URL = 'https://solmates-backend-w27e.onrender.com/api';
 
 // RENDER_BACKEND_URL: Used by Socket.io to connect directly to backend
@@ -238,10 +238,10 @@ window.RENDER_BACKEND_URL = 'https://solmates-backend-w27e.onrender.com';
  * 5. No CORS errors appear
  * 
  * If you see "PRODUCTION_API_URL not configured" error:
- *   → You forgot to update this file with your backend URL
+ *   â†’ You forgot to update this file with your backend URL
  * 
  * If you see CORS errors:
- *   → Check backend FRONTEND_URL environment variable matches your frontend domain
+ *   â†’ Check backend FRONTEND_URL environment variable matches your frontend domain
  * 
  * =============================================================================
  */
@@ -364,6 +364,7 @@ if (typeof document !== "undefined") {
         else document.addEventListener('DOMContentLoaded', inject);
     })();
 }
+
 
 
 
