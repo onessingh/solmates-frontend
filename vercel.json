@@ -1,4 +1,4 @@
-{
+﻿{
     "cleanUrls":  true,
     "trailingSlash":  false,
     "rewrites":  [
@@ -449,12 +449,7 @@
                      {
                          "source":  "/skills/skill-tracker/",
                          "destination":  "/skills/skill-tracker"
-                     },
-                     {
-                         "source":  "/:path*",
-                         "destination":  "/index.html"
-                     }
-                 ],
+                     }],
     "redirects":  [
                       {
                           "source":  "/admin-dashboard",
@@ -499,3 +494,4 @@
                     }
                 ]
 }
+
