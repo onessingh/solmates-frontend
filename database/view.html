@@ -1,4 +1,4 @@
-<html lang="en" translate="no">
+﻿<html lang="en" translate="no">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q6GVS9XX1M"></script>
@@ -422,7 +422,7 @@
       // ===== MBA SECTION LOCK GUARD =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
-        if (p.get('folderId')) return; // Already inside a subfolder — lock check passed on parent page
+        if (p.get('folderId')) return; // Already inside a subfolder â€” lock check passed on parent page
         const cat = (function() {
           const c = p.get('category');
           if (c) return c;
@@ -483,7 +483,7 @@
               // Just show a small toast for admin so they know it's locked but they bypassed it
               const toast = document.createElement('div');
               toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
-              toast.innerHTML = '🔒 Section Locked (Admin Bypass Active)';
+              toast.innerHTML = 'ðŸ”’ Section Locked (Admin Bypass Active)';
               document.body.appendChild(toast);
               setTimeout(() => toast.remove(), 4000);
               return;
@@ -493,7 +493,7 @@
             
             const overlay = document.createElement('div');
             overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
-            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently being prepared.<br>It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Back to Database</a></div>`;
+            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">ðŸ”’</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently being prepared.<br>It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">â† Back to Database</a></div>`;
             document.body.appendChild(overlay);
             document.body.style.overflow = 'hidden';
           }
@@ -509,7 +509,7 @@
       // ===== HEALTHCARE SECTION LOCK GUARD v2 =====
       (async function() {
         const p = new URLSearchParams(window.location.search);
-        if (p.get('folderId')) return; // Already inside a subfolder — lock check passed on parent page
+        if (p.get('folderId')) return; // Already inside a subfolder â€” lock check passed on parent page
         const cat = (function() {
           const c = p.get('category');
           if (c) return c;
@@ -565,7 +565,7 @@
             if (isAdmin) {
               const t = document.createElement('div');
               t.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:12px 16px;text-align:center;font-size:14px;font-weight:bold;z-index:999999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
-              t.innerHTML = '⚠️ THIS SECTION IS LOCKED TO STUDENTS. You are viewing it via Admin Bypass.';
+              t.innerHTML = 'âš ï¸ THIS SECTION IS LOCKED TO STUDENTS. You are viewing it via Admin Bypass.';
               document.body.appendChild(t);
               document.body.style.paddingTop = '45px';
               return;
@@ -597,7 +597,7 @@
                   display: flex; align-items: center; justify-content: center;
                   margin: 0 auto 24px; font-size: 2rem;
                   box-shadow: 0 8px 24px rgba(5,150,105,0.3);
-                ">🔒</div>
+                ">ðŸ”’</div>
                 <h2 style="margin: 0 0 10px; font-size: 1.4rem; color: ${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 700;">Content Locked</h2>
                 <p style="margin: 0 0 28px; color: ${isDark ? '#94a3b8' : '#64748b'}; font-size: 0.9rem; line-height: 1.6;">
                   This section is currently being prepared.<br>It will be available soon!
@@ -608,7 +608,7 @@
                   color: white; padding: 12px 28px; border-radius: 50px; 
                   text-decoration: none; font-weight: 600; font-size: 0.9rem;
                   box-shadow: 0 4px 15px rgba(5,150,105,0.3);
-                ">← Back to Healthcare</a>
+                ">â† Back to Healthcare</a>
               </div>
             `;
             document.body.appendChild(overlay);
@@ -749,6 +749,7 @@
 
     function init() {
       document.getElementById('pageTitle').innerText = CAT_LABELS[CATEGORY] || 'Database';
+        document.title = (CAT_LABELS[CATEGORY] || 'Database') + ' - DU SOL MBA | Solmates';
       if (window.solmatesAPI.isAdminLoggedIn()) {
         document.getElementById('adminBar').style.display = 'flex';
         document.getElementById('adminIndicator').classList.add('active');
@@ -761,7 +762,7 @@
           navStack = [{ name: `Semester ${semester}`, folderId: null }, { name: urlName || 'Folder', folderId: urlFolderId }];
         } else navStack = [{ name: `Semester ${semester}`, folderId: null }];
         window.history.replaceState({ stack: [...navStack], folderId, semester }, '', window.location.href);
-        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${semester}`;
+        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} â€¢ Semester ${semester}`;
         updateBreadcrumb();
         loadContent();
       } else {
@@ -776,7 +777,7 @@
       if (CATEGORY.includes('youtube')) { window.location.href = `/database/youtube-browse.html?category=${CATEGORY}&semester=${s}`; return; }
       semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
       history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);
-      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${s}`;
+      document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} â€¢ Semester ${s}`;
       updateBreadcrumb();
       if (window.solmatesAPI.isAdminLoggedIn()) document.getElementById('adminBar').style.display = 'flex';
       await loadContent();
@@ -1166,7 +1167,7 @@
         if (!semester) {
           renderSemesters(true); // true = don't push state
         } else {
-          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${semester}`;
+          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} â€¢ Semester ${semester}`;
           updateBreadcrumb();
           loadContent();
         }
@@ -1204,6 +1205,7 @@
 
 </body>
 </html>
+
 
 
 

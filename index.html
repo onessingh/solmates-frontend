@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en">
 
@@ -54,7 +54,7 @@
 
   <script>
 
-  // ONE-TIME NUCLEAR CACHE CLEAR (v509) — runs once per user, then never again
+  // ONE-TIME NUCLEAR CACHE CLEAR (v509) â€” runs once per user, then never again
 
   (function() {
 
@@ -86,7 +86,7 @@
 
       ]).then(function() {
 
-        location.reload(true); // hard reload — get fresh HTML from server
+        location.reload(true); // hard reload â€” get fresh HTML from server
 
       });
 
@@ -266,7 +266,7 @@
 
   <link rel="stylesheet" href="/css/global-lockdown.css?v=711">
 
-  <!-- 🔥 Favicon (All sizes) -->
+  <!-- ðŸ”¥ Favicon (All sizes) -->
 
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -306,7 +306,7 @@
 
 
 
-  <!-- 🔥 OG (Link Preview) -->
+  <!-- ðŸ”¥ OG (Link Preview) -->
 
   
 
@@ -2520,7 +2520,7 @@
 
 
 
-      /* LOGO DESKTOP पर और बड़ा */
+      /* LOGO DESKTOP à¤ªà¤° à¤”à¤° à¤¬à¤¡à¤¼à¤¾ */
 
       .logo-mark {
 
@@ -2772,7 +2772,7 @@
 
 
 
-      /* Phone view में logo थोड़ा छोटा */
+      /* Phone view à¤®à¥‡à¤‚ logo à¤¥à¥‹à¤¡à¤¼à¤¾ à¤›à¥‹à¤Ÿà¤¾ */
 
       .logo-mark {
 
@@ -2848,7 +2848,7 @@
 
 
 
-      /* WhatsApp dropdown mobile के लिए optimize */
+      /* WhatsApp dropdown mobile à¤•à¥‡ à¤²à¤¿à¤ optimize */
 
       .whatsapp-dropdown {
 
@@ -5712,11 +5712,11 @@
 
   <script>
 
-    // [v116.6] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // [v116.6] NUCLEAR AUTO-UPDATE SYSTEM â€” ASYNC + LOOP-GUARD FIX
 
     // Bug: previous sync version fired reload(true) after 500ms without awaiting
 
-    // cache.delete() and sw.unregister() — on slow devices these weren't done yet
+    // cache.delete() and sw.unregister() â€” on slow devices these weren't done yet
 
     // causing an infinite reload loop (version still mismatched after reload).
 
@@ -5738,7 +5738,7 @@
 
           // Loop-guard: sessionStorage is cleared on hard reload, not on soft navigation
 
-          // If this flag is set, a reload is already in progress — don't trigger another
+          // If this flag is set, a reload is already in progress â€” don't trigger another
 
           if (sessionStorage.getItem('sol_update_in_progress')) return;
 
@@ -6043,279 +6043,19 @@
 
   <!-- Admin Login Modal -->
 
-  <div class="admin-modal" id="adminModal">
+  
 
-    <div class="admin-modal-content">
 
-      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
 
-      <h2>Admin Login</h2>
 
-      <form id="adminLoginForm">
 
-        <div class="form-group">
 
-          <label for="adminId">Admin ID</label>
 
-          <input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off" required>
 
-        </div>
 
-        <div class="form-group">
 
-          <label for="adminPassword">Password</label>
 
-          <input type="text" id="adminPassword" placeholder="Enter password" style="-webkit-text-security: disc;" autocomplete="off" spellcheck="false" required>
-
-        </div>
-
-        <div class="error-message" id="loginError">Invalid credentials. Please try again.</div>
-
-        <button type="submit" class="login-btn">Login</button>
-
-      </form>
-
-    </div>
-
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-  <!-- AI Chat Interface Modal -->
-
-  <div class="ai-chat-modal" id="aiChatModal">
-
-
-
-    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="toggleChatSidebar(true)"></div>
-
-
-
-    <!-- Left Sidebar (Chat History) -->
-
-    <div class="chat-sidebar" id="chatSidebar">
-
-      <div class="sidebar-header" style="display: flex; gap: 10px; align-items: center;">
-
-        <button class="new-chat-btn" onclick="startNewChat()">
-
-          <i class="fas fa-plus"></i> New Chat
-
-        </button>
-
-        <button class="mobile-sidebar-close" onclick="toggleChatSidebar()"
-
-          style="display: none; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
-
-          <i class="fas fa-times"></i>
-
-        </button>
-
-      </div>
-
-      <div class="sidebar-history" id="sidebarHistory">
-
-        <div class="sidebar-label">Recent Chats</div>
-
-        <!-- History items load here dynamically -->
-
-      </div>
-
-    </div>
-
-
-
-    <!-- Main Chat Area -->
-
-    <div class="chat-main">
-
-      <div class="chat-header-wrapper">
-
-        <div class="chat-header">
-
-          <div class="chat-header-info">
-
-            <button class="sidebar-toggle" onclick="toggleChatSidebar()">
-
-              <i class="fas fa-bars"></i>
-
-            </button>
-
-            <i class="fas fa-robot"></i>
-
-            <h2>Mate AI Assistant</h2>
-
-          </div>
-
-          <div class="chat-header-actions" style="display: flex; gap: 10px; align-items: center;">
-
-            <button class="close-chat" onclick="closeChatModal()">
-
-              <i class="fas fa-times"></i>
-
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="chat-container" id="chatContainer">
-
-        <div class="chat-messages" id="chatMessages">
-
-          <div class="chat-welcome" id="chatWelcome">
-
-            <i class="fas fa-sparkles" style="font-size: 40px; color: #c0962d; margin-bottom: 20px;"></i>
-
-            <h2>What can I help with?</h2>
-
-
-
-            <div class="search-suggestions">
-
-              <div class="suggestion-group">
-
-                <div class="suggestion-tags">
-
-                  <div class="suggestion-tag" onclick="useQuickQuestion('MBA 1st Sem Notes')">MBA 1st Sem Notes</div>
-
-                  <div class="suggestion-tag" onclick="useQuickQuestion('Syllabus for Semester 2')">Syllabus for
-
-                    Semester 2</div>
-
-                  <div class="suggestion-tag" onclick="useQuickQuestion('How to build a Resume?')">How to build a
-
-                    Resume?</div>
-
-                </div>
-
-              </div>
-
-
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="chat-footer">
-
-        <div class="chat-input-wrapper">
-
-          <div class="mode-selector-wrapper">
-
-            <button class="mode-trigger" id="modeTrigger" onclick="toggleModeDropdown()">
-
-              <i class="fas fa-graduation-cap" id="modeIcon"></i>
-
-              <span id="modeLabel">Teacher</span>
-
-              <i class="fas fa-chevron-down"></i>
-
-            </button>
-
-            <div class="mode-dropdown" id="modeDropdown">
-
-              <div class="mode-option active" id="opt-teacher" onclick="selectStudyMode('teacher')">
-
-                <i class="fas fa-graduation-cap"></i>
-
-                <div>
-
-                  Teacher Mode
-
-                  <span class="mode-desc">Explains with examples</span>
-
-                </div>
-
-              </div>
-
-              <div class="mode-option" id="opt-exam" onclick="selectStudyMode('exam')">
-
-                <i class="fas fa-bolt"></i>
-
-                <div>
-
-                  Exam Mode
-
-                  <span class="mode-desc">Quick bullet points</span>
-
-                </div>
-
-              </div>
-
-              <div class="mode-option" id="opt-speed" onclick="selectStudyMode('speed')">
-
-                <i class="fas fa-tachometer-alt"></i>
-
-                <div>
-
-                  Speed Mode
-
-                  <span class="mode-desc">Direct links & answers</span>
-
-                </div>
-
-              </div>
-
-              <div class="mode-option" id="opt-planner" onclick="selectStudyMode('planner')">
-
-                <i class="fas fa-calendar-alt"></i>
-
-                <div>
-
-                  Study Planner
-
-                  <span class="mode-desc">Custom daily schedule</span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <form class="chat-input-form" onsubmit="event.preventDefault(); sendChatHubMessage();"
-
-            style="flex: 1; position: relative; display: flex; align-items: center;">
-
-            <input type="search" class="chat-input" id="chatInput" placeholder="Ask me anything..." autocomplete="off"
-
-              enterkeyhint="search">
-
-            <button type="submit" class="send-btn" id="chatSendBtn">
-
-              <i class="fas fa-paper-plane"></i>
-
-            </button>
-
-          </form>
-
-        </div>
-
-      </div>
-
-    </div> <!-- end chat-main -->
-
-  </div>
+  
 
 
 
@@ -6514,7 +6254,7 @@
 
         <h1>SOLMATES</h1>
 
-        <p class="tagline">Connect • Learn • Belong</p>
+        <p class="tagline">Connect â€¢ Learn â€¢ Belong</p>
 
 
 
@@ -6522,7 +6262,7 @@
 
         <div class="hero-search-wrapper">
 
-          <div class="greeting-text" id="dynamicGreeting">Welcome to SOLMATES! 🚀</div>
+          <div class="greeting-text" id="dynamicGreeting">Welcome to SOLMATES! ðŸš€</div>
 
           <form class="search-container" id="heroSearchForm" onsubmit="event.preventDefault(); triggerHeroSearch();">
 
@@ -6668,7 +6408,7 @@
 
     </div>
 
-    <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
+    <p>2026 SOLMATES â€¢ A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
 
   </footer>
 
@@ -7194,7 +6934,7 @@
 
 
 
-          // Close modal and swap Login → Logout button, stay on home page
+          // Close modal and swap Login â†’ Logout button, stay on home page
 
           closeAdminModal();
 
@@ -7290,217 +7030,217 @@
 
         const GREETINGS_MORNING = [
 
-      "Good Morning! Aaj kya crack karein? 🎯",
+      "Good Morning! Aaj kya crack karein? ðŸŽ¯",
 
-      "Shubh Prabhat! Chalo padhte hain. ☕",
+      "Shubh Prabhat! Chalo padhte hain. â˜•",
 
-      "Morning! Aaj ka goal kya hai? 📚",
+      "Morning! Aaj ka goal kya hai? ðŸ“š",
 
-      "Rise and shine! Ready to help. ✨",
+      "Rise and shine! Ready to help. âœ¨",
 
-      "Hey buddy! Padhai shuru karein? 🚀",
+      "Hey buddy! Padhai shuru karein? ðŸš€",
 
-      "Morning! Ready to dominate? 🔥",
+      "Morning! Ready to dominate? ðŸ”¥",
 
-      "Start with fresh learning! 📖",
+      "Start with fresh learning! ðŸ“–",
 
-      "Utho aur shuru ho jao! 🏃‍♂️",
+      "Utho aur shuru ho jao! ðŸƒâ€â™‚ï¸",
 
-      "Naya din, naye challenges! 💪",
+      "Naya din, naye challenges! ðŸ’ª",
 
-      "Good morning boss! Phod dena hai. 💯",
+      "Good morning boss! Phod dena hai. ðŸ’¯",
 
-      "Wake up! Kuch naya seekhte hain. 🌅",
+      "Wake up! Kuch naya seekhte hain. ðŸŒ…",
 
-      "Breakfast done? Let's study! 🥞",
+      "Breakfast done? Let's study! ðŸ¥ž",
 
-      "Morning champ! Ready for hustle? 💼",
+      "Morning champ! Ready for hustle? ðŸ’¼",
 
-      "Aalas chhodo, kitabein uthao! ☀️",
+      "Aalas chhodo, kitabein uthao! â˜€ï¸",
 
-      "Build your tomorrow, today! 🚀",
+      "Build your tomorrow, today! ðŸš€",
 
-      "Good morning! Chapters finish karein? 📖",
+      "Good morning! Chapters finish karein? ðŸ“–",
 
-      "Suraj nikal gaya, syllabus kab? 🌞",
+      "Suraj nikal gaya, syllabus kab? ðŸŒž",
 
-      "Fresh morning, fresh mindset! 🏔️",
+      "Fresh morning, fresh mindset! ðŸ”ï¸",
 
-      "Strong coffee aur ek chapter? ☕",
+      "Strong coffee aur ek chapter? â˜•",
 
-      "Sapne bade, mehnat badi! 🌟",
+      "Sapne bade, mehnat badi! ðŸŒŸ",
 
-      "Uth gaye? Action ka time hai! 🎬",
+      "Uth gaye? Action ka time hai! ðŸŽ¬",
 
-      "Morning hustle! Let's go! 📈",
+      "Morning hustle! Let's go! ðŸ“ˆ",
 
-      "Make today productive! ⚡",
+      "Make today productive! âš¡",
 
-      "Good Morning! Plan set hai? 📅",
+      "Good Morning! Plan set hai? ðŸ“…",
 
-      "New morning, new energy! 📘"
+      "New morning, new energy! ðŸ“˜"
 
     ];
 
     const GREETINGS_EVENING = [
 
-      "Good Evening! Chai aur revision? ☕📚",
+      "Good Evening! Chai aur revision? â˜•ðŸ“š",
 
-      "Evening buddy! Kuch naya seekhein? 🌟",
+      "Evening buddy! Kuch naya seekhein? ðŸŒŸ",
 
-      "Hey! Aaj ka din kaisa raha? 🤝",
+      "Hey! Aaj ka din kaisa raha? ðŸ¤",
 
-      "Ready for evening sessions? 📖",
+      "Ready for evening sessions? ðŸ“–",
 
-      "What's on your mind tonight? 📝",
+      "What's on your mind tonight? ðŸ“",
 
-      "1% luck, 99% preparation! 🏆",
+      "1% luck, 99% preparation! ðŸ†",
 
-      "Shaam ho gayi, hustle baki hai! 🌆",
+      "Shaam ho gayi, hustle baki hai! ðŸŒ†",
 
-      "Evening vibes! Syllabus niptao. 🎒",
+      "Evening vibes! Syllabus niptao. ðŸŽ’",
 
-      "Thak gaye? Thoda aur push karo! 💪",
+      "Thak gaye? Thoda aur push karo! ðŸ’ª",
 
-      "Good Evening! Ek ghanta aur? ⏳",
+      "Good Evening! Ek ghanta aur? â³",
 
-      "Snacks ready? Padhai shuru! 🍿",
+      "Snacks ready? Padhai shuru! ðŸ¿",
 
-      "Sunset and study! Perfect. 🌇",
+      "Sunset and study! Perfect. ðŸŒ‡",
 
-      "Stop when you're done! 🔥",
+      "Stop when you're done! ðŸ”¥",
 
-      "Shaam ka time, sabse prime! 🧠",
+      "Shaam ka time, sabse prime! ðŸ§ ",
 
-      "Aakhri push! Kuch bada karte hain. 🎯",
+      "Aakhri push! Kuch bada karte hain. ðŸŽ¯",
 
-      "Chai pee li? Ab notes khol lo! ☕",
+      "Chai pee li? Ab notes khol lo! â˜•",
 
-      "Din gaya, padhai abhi baaki hai. ⏳",
+      "Din gaya, padhai abhi baaki hai. â³",
 
-      "Evening session! No distractions. 📵",
+      "Evening session! No distractions. ðŸ“µ",
 
-      "Alag banna hai to padhna padega! 💪",
+      "Alag banna hai to padhna padega! ðŸ’ª",
 
-      "Revision ka waqt ho gaya hai. 🔄",
+      "Revision ka waqt ho gaya hai. ðŸ”„",
 
-      "Shaam productive honi chahiye! 🌆",
+      "Shaam productive honi chahiye! ðŸŒ†",
 
-      "Thoda break, and back to hustle! 🚶‍♂️",
+      "Thoda break, and back to hustle! ðŸš¶â€â™‚ï¸",
 
-      "Good evening champ! Kitna cover kiya? 📊",
+      "Good evening champ! Kitna cover kiya? ðŸ“Š",
 
-      "Hawa mast, padhai bhi mast! 🌬️",
+      "Hawa mast, padhai bhi mast! ðŸŒ¬ï¸",
 
-      "Evening wrap-up! Finish it. ✅"
+      "Evening wrap-up! Finish it. âœ…"
 
     ];
 
     const GREETINGS_NIGHT = [
 
-      "Raat gayi, par padhai nahi! 🦉💡",
+      "Raat gayi, par padhai nahi! ðŸ¦‰ðŸ’¡",
 
-      "Still up? Let's finish this. 💪",
+      "Still up? Let's finish this. ðŸ’ª",
 
-      "Night owl mode ON! 🌙",
+      "Night owl mode ON! ðŸŒ™",
 
-      "Late night study session? 💻",
+      "Late night study session? ðŸ’»",
 
-      "Good Night buddy! Sona kab hai? 🚀",
+      "Good Night buddy! Sona kab hai? ðŸš€",
 
-      "Dream big, study bigger! ✨",
+      "Dream big, study bigger! âœ¨",
 
-      "Finish strong before sleeping! 🏁",
+      "Finish strong before sleeping! ðŸ",
 
-      "Shor kam, focus zyada! 🤫",
+      "Shor kam, focus zyada! ðŸ¤«",
 
-      "Neend aa rahi? Ek topic bas! ☕",
+      "Neend aa rahi? Ek topic bas! â˜•",
 
-      "Midnight motivation! You got this! 🌌",
+      "Midnight motivation! You got this! ðŸŒŒ",
 
-      "Jo sote hain wo khote hain! 🛡️",
+      "Jo sote hain wo khote hain! ðŸ›¡ï¸",
 
-      "Raaton ki neend gawa kar success! 🏆",
+      "Raaton ki neend gawa kar success! ðŸ†",
 
-      "Good night? Abhi syllabus baki hai. 📚",
+      "Good night? Abhi syllabus baki hai. ðŸ“š",
 
-      "Peaceful night, deep focus! 🧘‍♂️",
+      "Peaceful night, deep focus! ðŸ§˜â€â™‚ï¸",
 
-      "One step closer to your dream! 💡",
+      "One step closer to your dream! ðŸ’¡",
 
-      "Duniya so rahi, aap padh rahe. Respect! 🫡",
+      "Duniya so rahi, aap padh rahe. Respect! ðŸ«¡",
 
-      "Raat ki shanti, syllabus tez! 🤫",
+      "Raat ki shanti, syllabus tez! ðŸ¤«",
 
-      "Ek coffee aur ek chapter? ☕📖",
+      "Ek coffee aur ek chapter? â˜•ðŸ“–",
 
-      "Night focus! Only studying. 📵",
+      "Night focus! Only studying. ðŸ“µ",
 
-      "Target complete karke sona! 🎯",
+      "Target complete karke sona! ðŸŽ¯",
 
-      "Neend aa rahi? Muh dho lo! 🚰",
+      "Neend aa rahi? Muh dho lo! ðŸš°",
 
-      "Late night grind! Mehnat rang layegi. 🌈",
+      "Late night grind! Mehnat rang layegi. ðŸŒˆ",
 
-      "Doing great! Thoda aur push karo. 🚀",
+      "Doing great! Thoda aur push karo. ðŸš€",
 
-      "Aadhi raat, aadhi kitabein! 📚",
+      "Aadhi raat, aadhi kitabein! ðŸ“š",
 
-      "Shh! Study in progress... 🤫💡"
+      "Shh! Study in progress... ðŸ¤«ðŸ’¡"
 
     ];
 
     const GREETINGS_AFTERNOON = [
 
-      "Good Afternoon! Padhai kaisi hai? 🧠",
+      "Good Afternoon! Padhai kaisi hai? ðŸ§ ",
 
-      "Hey! Chalo brain workout karein. ⚡",
+      "Hey! Chalo brain workout karein. âš¡",
 
-      "Afternoon! Taiyari kaisi chal rahi? 📝",
+      "Afternoon! Taiyari kaisi chal rahi? ðŸ“",
 
-      "Lunch break done? Back to work! 🏗️",
+      "Lunch break done? Back to work! ðŸ—ï¸",
 
-      "Check out today's market news! 📉",
+      "Check out today's market news! ðŸ“‰",
 
-      "Good Afternoon! Need a boost? 🚀",
+      "Good Afternoon! Need a boost? ðŸš€",
 
-      "Keep moving forward! 🧗",
+      "Keep moving forward! ðŸ§—",
 
-      "Dopahar ki neend bhagao! ☀️",
+      "Dopahar ki neend bhagao! â˜€ï¸",
 
-      "Lunch wali neend? No chance! ☕",
+      "Lunch wali neend? No chance! â˜•",
 
-      "Half day gone! Make it count. ⏳",
+      "Half day gone! Make it count. â³",
 
-      "Afternoon slump? Deep breath! 🌬️",
+      "Afternoon slump? Deep breath! ðŸŒ¬ï¸",
 
-      "Bache hue tasks niptate hain! 📋",
+      "Bache hue tasks niptate hain! ðŸ“‹",
 
-      "Don't lose the momentum. 🏃‍♀️",
+      "Don't lose the momentum. ðŸƒâ€â™€ï¸",
 
-      "Productivity on high alert! 🚨",
+      "Productivity on high alert! ðŸš¨",
 
-      "Thoda aur focus, doing great! 👍",
+      "Thoda aur focus, doing great! ðŸ‘",
 
-      "Dopahar ho gayi! Focus maintain rakho. 🎯",
+      "Dopahar ho gayi! Focus maintain rakho. ðŸŽ¯",
 
-      "Lunch heavy tha? Easy topic uthao! 🍔",
+      "Lunch heavy tha? Easy topic uthao! ðŸ”",
 
-      "Quick power nap, then books? 💤",
+      "Quick power nap, then books? ðŸ’¤",
 
-      "Neend ko bye, career ko hi! 👋",
+      "Neend ko bye, career ko hi! ðŸ‘‹",
 
-      "Sun is shining, keep studying! ☀️",
+      "Sun is shining, keep studying! â˜€ï¸",
 
-      "Afternoon grind is tough! 💪",
+      "Afternoon grind is tough! ðŸ’ª",
 
-      "Break lamba ho gaya, ab padhai! ⏱️",
+      "Break lamba ho gaya, ab padhai! â±ï¸",
 
-      "Boring topics abhi nipta lo! 🥱",
+      "Boring topics abhi nipta lo! ðŸ¥±",
 
-      "Keep your focus sharp today! 🗡️",
+      "Keep your focus sharp today! ðŸ—¡ï¸",
 
-      "Din badh raha, syllabus bhi? 🚶‍♂️"
+      "Din badh raha, syllabus bhi? ðŸš¶â€â™‚ï¸"
 
     ];
 
@@ -8636,7 +8376,7 @@
 
       setTimeout(() => {
 
-        addChatMessage("Theek hai! Chalo check karte hain aapne kitna samjha. 🧠\n\n1. What is the core concept of this topic?\n2. Can you name one advantage of this?\n3. How would you apply this in a real scenario?", 'ai', false);
+        addChatMessage("Theek hai! Chalo check karte hain aapne kitna samjha. ðŸ§ \n\n1. What is the core concept of this topic?\n2. Can you name one advantage of this?\n3. How would you apply this in a real scenario?", 'ai', false);
 
         btn.parentElement.remove();
 
@@ -9056,7 +8796,7 @@
 
                 resDiv.className = 'suggested-resources';
 
-                resDiv.innerHTML = `<span class="res-label">📚 Related Resources</span><div class="res-links"></div>`;
+                resDiv.innerHTML = `<span class="res-label">ðŸ“š Related Resources</span><div class="res-links"></div>`;
 
                 const linksCont = resDiv.querySelector('.res-links');
 
@@ -9138,7 +8878,7 @@
 
       const rawText = btn.parentElement.getAttribute('data-raw');
 
-      const shareText = `*Solmates AI says:*\n\n${rawText}\n\n_Shared via Solmates - Your MBA Study Buddy_ 🎓`;
+      const shareText = `*Solmates AI says:*\n\n${rawText}\n\n_Shared via Solmates - Your MBA Study Buddy_ ðŸŽ“`;
 
       const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
@@ -10498,7 +10238,7 @@
 
 
 
-    // Force refresh notification count on BFCache restore — with 1s delay
+    // Force refresh notification count on BFCache restore â€” with 1s delay
 
     window.addEventListener('pageshow', (event) => {
 
@@ -10666,11 +10406,11 @@
 
         
 
-        // [v116.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
+        // [v116.5] controllerchange guard â€” 'refreshed' flag prevents infinite reload loop
 
         // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
 
-        // controllerchange fires AFTER nuclear reload, triggering a second reload → infinite loop.
+        // controllerchange fires AFTER nuclear reload, triggering a second reload â†’ infinite loop.
 
         let _swRefreshed = false;
 
@@ -10858,11 +10598,278 @@
     }
   });
 </script>
+
+
+  <!-- Relocated Modals for SEO -->
+<div class="admin-modal" id="adminModal">
+
+    <div class="admin-modal-content">
+
+      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
+
+      <h2>Admin Login</h2>
+
+      <form id="adminLoginForm">
+
+        <div class="form-group">
+
+          <label for="adminId">Admin ID</label>
+
+          <input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off" required>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="adminPassword">Password</label>
+
+          <input type="text" id="adminPassword" placeholder="Enter password" style="-webkit-text-security: disc;" autocomplete="off" spellcheck="false" required>
+
+        </div>
+
+        <div class="error-message" id="loginError">Invalid credentials. Please try again.</div>
+
+        <button type="submit" class="login-btn">Login</button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+<!-- AI Chat Interface Modal -->
+
+  <div class="ai-chat-modal" id="aiChatModal">
+
+
+
+    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="toggleChatSidebar(true)"></div>
+
+
+
+    <!-- Left Sidebar (Chat History) -->
+
+    <div class="chat-sidebar" id="chatSidebar">
+
+      <div class="sidebar-header" style="display: flex; gap: 10px; align-items: center;">
+
+        <button class="new-chat-btn" onclick="startNewChat()">
+
+          <i class="fas fa-plus"></i> New Chat
+
+        </button>
+
+        <button class="mobile-sidebar-close" onclick="toggleChatSidebar()"
+
+          style="display: none; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
+
+          <i class="fas fa-times"></i>
+
+        </button>
+
+      </div>
+
+      <div class="sidebar-history" id="sidebarHistory">
+
+        <div class="sidebar-label">Recent Chats</div>
+
+        <!-- History items load here dynamically -->
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Main Chat Area -->
+
+    <div class="chat-main">
+
+      <div class="chat-header-wrapper">
+
+        <div class="chat-header">
+
+          <div class="chat-header-info">
+
+            <button class="sidebar-toggle" onclick="toggleChatSidebar()">
+
+              <i class="fas fa-bars"></i>
+
+            </button>
+
+            <i class="fas fa-robot"></i>
+
+            <h2>Mate AI Assistant</h2>
+
+          </div>
+
+          <div class="chat-header-actions" style="display: flex; gap: 10px; align-items: center;">
+
+            <button class="close-chat" onclick="closeChatModal()">
+
+              <i class="fas fa-times"></i>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="chat-container" id="chatContainer">
+
+        <div class="chat-messages" id="chatMessages">
+
+          <div class="chat-welcome" id="chatWelcome">
+
+            <i class="fas fa-sparkles" style="font-size: 40px; color: #c0962d; margin-bottom: 20px;"></i>
+
+            <h2>What can I help with?</h2>
+
+
+
+            <div class="search-suggestions">
+
+              <div class="suggestion-group">
+
+                <div class="suggestion-tags">
+
+                  <div class="suggestion-tag" onclick="useQuickQuestion('MBA 1st Sem Notes')">MBA 1st Sem Notes</div>
+
+                  <div class="suggestion-tag" onclick="useQuickQuestion('Syllabus for Semester 2')">Syllabus for
+
+                    Semester 2</div>
+
+                  <div class="suggestion-tag" onclick="useQuickQuestion('How to build a Resume?')">How to build a
+
+                    Resume?</div>
+
+                </div>
+
+              </div>
+
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="chat-footer">
+
+        <div class="chat-input-wrapper">
+
+          <div class="mode-selector-wrapper">
+
+            <button class="mode-trigger" id="modeTrigger" onclick="toggleModeDropdown()">
+
+              <i class="fas fa-graduation-cap" id="modeIcon"></i>
+
+              <span id="modeLabel">Teacher</span>
+
+              <i class="fas fa-chevron-down"></i>
+
+            </button>
+
+            <div class="mode-dropdown" id="modeDropdown">
+
+              <div class="mode-option active" id="opt-teacher" onclick="selectStudyMode('teacher')">
+
+                <i class="fas fa-graduation-cap"></i>
+
+                <div>
+
+                  Teacher Mode
+
+                  <span class="mode-desc">Explains with examples</span>
+
+                </div>
+
+              </div>
+
+              <div class="mode-option" id="opt-exam" onclick="selectStudyMode('exam')">
+
+                <i class="fas fa-bolt"></i>
+
+                <div>
+
+                  Exam Mode
+
+                  <span class="mode-desc">Quick bullet points</span>
+
+                </div>
+
+              </div>
+
+              <div class="mode-option" id="opt-speed" onclick="selectStudyMode('speed')">
+
+                <i class="fas fa-tachometer-alt"></i>
+
+                <div>
+
+                  Speed Mode
+
+                  <span class="mode-desc">Direct links & answers</span>
+
+                </div>
+
+              </div>
+
+              <div class="mode-option" id="opt-planner" onclick="selectStudyMode('planner')">
+
+                <i class="fas fa-calendar-alt"></i>
+
+                <div>
+
+                  Study Planner
+
+                  <span class="mode-desc">Custom daily schedule</span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <form class="chat-input-form" onsubmit="event.preventDefault(); sendChatHubMessage();"
+
+            style="flex: 1; position: relative; display: flex; align-items: center;">
+
+            <input type="search" class="chat-input" id="chatInput" placeholder="Ask me anything..." autocomplete="off"
+
+              enterkeyhint="search">
+
+            <button type="submit" class="send-btn" id="chatSendBtn">
+
+              <i class="fas fa-paper-plane"></i>
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div> <!-- end chat-main -->
+
+  </div>
 </body>
 
 
 
 </html>
+
 
 
 
