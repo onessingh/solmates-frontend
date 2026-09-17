@@ -5981,57 +5981,70 @@
 
   <!-- Unified Entity Graph: Solmates + Shivarn Singh -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": "https://shivarnsingh-portfolio.vercel.app/#person",
-        "name": "Shivarn Singh",
-        "url": "https://shivarnsingh-portfolio.vercel.app/",
-        "jobTitle": "Technical Lead & Founder",
-        "sameAs": [
-          "https://www.linkedin.com/in/onessingh",
-          "https://www.instagram.com/__s.singh._/",
-          "https://www.facebook.com/shivarnsingh.raj",
-          "https://www.snapchat.com/add/one_ssingh",
-          "https://x.com/one_ssingh",
-          "https://t.me/one_ssingh"
-        ]
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://solmates.in/#organization",
-        "name": "SOLMATES",
-        "url": "https://solmates.in/",
-        "logo": "https://solmates.in/preview.png",
-        "description": "DU SOL MBA Student Community Platform",
-        "foundingDate": "2024",
-        "founder": {
-          "@id": "https://shivarnsingh-portfolio.vercel.app/#person"
-        }
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://solmates.in/#website",
-        "url": "https://solmates.in/",
-        "name": "SOLMATES",
-        "description": "MBA student community platform with comprehensive study materials and resources",
-        "publisher": {
-          "@id": "https://solmates.in/#organization"
-        },
-        "author": {
-          "@id": "https://shivarnsingh-portfolio.vercel.app/#person"
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://solmates.in/database?q={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://shivarnsingh-portfolio.vercel.app/#person",
+      "name": "Shivarn Singh",
+      "url": "https://shivarnsingh-portfolio.vercel.app/",
+      "jobTitle": "Technical Lead & Founder",
+      "sameAs": [
+        "https://www.linkedin.com/in/onessingh",
+        "https://www.instagram.com/__s.singh._/",
+        "https://www.facebook.com/shivarnsingh.raj",
+        "https://www.snapchat.com/add/one_ssingh",
+        "https://x.com/one_ssingh",
+        "https://t.me/one_ssingh"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://solmates.in/#organization",
+      "name": "SOLMATES",
+      "url": "https://solmates.in/",
+      "logo": "https://solmates.in/preview.png",
+      "description": "DU SOL MBA Student Community Platform",
+      "foundingDate": "2024",
+      "founder": {
+        "@id": "https://shivarnsingh-portfolio.vercel.app/#person"
       }
-    ]
-  }
-  </script>
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://solmates.in/#website",
+      "url": "https://solmates.in/",
+      "name": "SOLMATES",
+      "description": "MBA student community platform with comprehensive study materials and resources",
+      "publisher": {
+        "@id": "https://solmates.in/#organization"
+      },
+      "author": {
+        "@id": "https://shivarnsingh-portfolio.vercel.app/#person"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://solmates.in/database?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://solmates.in/#software",
+      "name": "SOLMATES App",
+      "operatingSystem": "Android, Web",
+      "applicationCategory": "EducationalApplication",
+      "url": "https://solmates.in/",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      }
+    }
+  ]
+}
+</script>
 
 </head>
 
