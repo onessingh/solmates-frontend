@@ -6431,6 +6431,271 @@
     <p>2026 SOLMATES • A STUDENT COMMUNITY - BY STUDENTS FOR STUDENTS.</p>
 
   </footer>
+<!-- Relocated Modals for SEO -->
+<div class="admin-modal" id="adminModal">
+
+    <div class="admin-modal-content">
+
+      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
+
+      <h2>Admin Login</h2>
+
+      <form id="adminLoginForm">
+
+        <div class="form-group">
+
+          <label for="adminId">Admin ID</label>
+
+          <input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off" required>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="adminPassword">Password</label>
+
+          <input type="text" id="adminPassword" placeholder="Enter password" style="-webkit-text-security: disc;" autocomplete="off" spellcheck="false" required>
+
+        </div>
+
+        <div class="error-message" id="loginError">Invalid credentials. Please try again.</div>
+
+        <button type="submit" class="login-btn">Login</button>
+
+      </form>
+
+    </div>
+
+  </div>
+<!-- AI Chat Interface Modal -->
+
+  <div class="ai-chat-modal" id="aiChatModal">
+
+
+
+    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="toggleChatSidebar(true)"></div>
+
+
+
+    <!-- Left Sidebar (Chat History) -->
+
+    <div class="chat-sidebar" id="chatSidebar">
+
+      <div class="sidebar-header" style="display: flex; gap: 10px; align-items: center;">
+
+        <button class="new-chat-btn" onclick="startNewChat()">
+
+          <i class="fas fa-plus"></i> New Chat
+
+        </button>
+
+        <button class="mobile-sidebar-close" onclick="toggleChatSidebar()"
+
+          style="display: none; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
+
+          <i class="fas fa-times"></i>
+
+        </button>
+
+      </div>
+
+      <div class="sidebar-history" id="sidebarHistory">
+
+        <div class="sidebar-label">Recent Chats</div>
+
+        <!-- History items load here dynamically -->
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Main Chat Area -->
+
+    <div class="chat-main">
+
+      <div class="chat-header-wrapper">
+
+        <div class="chat-header">
+
+          <div class="chat-header-info">
+
+            <button class="sidebar-toggle" onclick="toggleChatSidebar()">
+
+              <i class="fas fa-bars"></i>
+
+            </button>
+
+            <i class="fas fa-robot"></i>
+
+            <h2>Mate AI Assistant</h2>
+
+          </div>
+
+          <div class="chat-header-actions" style="display: flex; gap: 10px; align-items: center;">
+
+            <button class="close-chat" onclick="closeChatModal()">
+
+              <i class="fas fa-times"></i>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="chat-container" id="chatContainer">
+
+        <div class="chat-messages" id="chatMessages">
+
+          <div class="chat-welcome" id="chatWelcome">
+
+            <i class="fas fa-sparkles" style="font-size: 40px; color: #c0962d; margin-bottom: 20px;"></i>
+
+            <h2>What can I help with?</h2>
+
+
+
+            <div class="search-suggestions">
+
+              <div class="suggestion-group">
+
+                <div class="suggestion-tags">
+
+                  <div class="suggestion-tag" onclick="useQuickQuestion('MBA 1st Sem Notes')">MBA 1st Sem Notes</div>
+
+                  <div class="suggestion-tag" onclick="useQuickQuestion('Syllabus for Semester 2')">Syllabus for
+
+                    Semester 2</div>
+
+                  <div class="suggestion-tag" onclick="useQuickQuestion('How to build a Resume?')">How to build a
+
+                    Resume?</div>
+
+                </div>
+
+              </div>
+
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="chat-footer">
+
+        <div class="chat-input-wrapper">
+
+          <div class="mode-selector-wrapper">
+
+            <button class="mode-trigger" id="modeTrigger" onclick="toggleModeDropdown()">
+
+              <i class="fas fa-graduation-cap" id="modeIcon"></i>
+
+              <span id="modeLabel">Teacher</span>
+
+              <i class="fas fa-chevron-down"></i>
+
+            </button>
+
+            <div class="mode-dropdown" id="modeDropdown">
+
+              <div class="mode-option active" id="opt-teacher" onclick="selectStudyMode('teacher')">
+
+                <i class="fas fa-graduation-cap"></i>
+
+                <div>
+
+                  Teacher Mode
+
+                  <span class="mode-desc">Explains with examples</span>
+
+                </div>
+
+              </div>
+
+              <div class="mode-option" id="opt-exam" onclick="selectStudyMode('exam')">
+
+                <i class="fas fa-bolt"></i>
+
+                <div>
+
+                  Exam Mode
+
+                  <span class="mode-desc">Quick bullet points</span>
+
+                </div>
+
+              </div>
+
+              <div class="mode-option" id="opt-speed" onclick="selectStudyMode('speed')">
+
+                <i class="fas fa-tachometer-alt"></i>
+
+                <div>
+
+                  Speed Mode
+
+                  <span class="mode-desc">Direct links & answers</span>
+
+                </div>
+
+              </div>
+
+              <div class="mode-option" id="opt-planner" onclick="selectStudyMode('planner')">
+
+                <i class="fas fa-calendar-alt"></i>
+
+                <div>
+
+                  Study Planner
+
+                  <span class="mode-desc">Custom daily schedule</span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <form class="chat-input-form" onsubmit="event.preventDefault(); sendChatHubMessage();"
+
+            style="flex: 1; position: relative; display: flex; align-items: center;">
+
+            <input type="search" class="chat-input" id="chatInput" placeholder="Ask me anything..." autocomplete="off"
+
+              enterkeyhint="search">
+
+            <button type="submit" class="send-btn" id="chatSendBtn">
+
+              <i class="fas fa-paper-plane"></i>
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div> <!-- end chat-main -->
+
+  </div>
+
+
 
 
 
@@ -10619,269 +10884,6 @@
   });
 </script>
 
-<!-- Relocated Modals for SEO -->
-<div class="admin-modal" id="adminModal">
-
-    <div class="admin-modal-content">
-
-      <button class="close-modal" onclick="closeAdminModal()">&times;</button>
-
-      <h2>Admin Login</h2>
-
-      <form id="adminLoginForm">
-
-        <div class="form-group">
-
-          <label for="adminId">Admin ID</label>
-
-          <input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off" required>
-
-        </div>
-
-        <div class="form-group">
-
-          <label for="adminPassword">Password</label>
-
-          <input type="text" id="adminPassword" placeholder="Enter password" style="-webkit-text-security: disc;" autocomplete="off" spellcheck="false" required>
-
-        </div>
-
-        <div class="error-message" id="loginError">Invalid credentials. Please try again.</div>
-
-        <button type="submit" class="login-btn">Login</button>
-
-      </form>
-
-    </div>
-
-  </div>
-<!-- AI Chat Interface Modal -->
-
-  <div class="ai-chat-modal" id="aiChatModal">
-
-
-
-    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="toggleChatSidebar(true)"></div>
-
-
-
-    <!-- Left Sidebar (Chat History) -->
-
-    <div class="chat-sidebar" id="chatSidebar">
-
-      <div class="sidebar-header" style="display: flex; gap: 10px; align-items: center;">
-
-        <button class="new-chat-btn" onclick="startNewChat()">
-
-          <i class="fas fa-plus"></i> New Chat
-
-        </button>
-
-        <button class="mobile-sidebar-close" onclick="toggleChatSidebar()"
-
-          style="display: none; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
-
-          <i class="fas fa-times"></i>
-
-        </button>
-
-      </div>
-
-      <div class="sidebar-history" id="sidebarHistory">
-
-        <div class="sidebar-label">Recent Chats</div>
-
-        <!-- History items load here dynamically -->
-
-      </div>
-
-    </div>
-
-
-
-    <!-- Main Chat Area -->
-
-    <div class="chat-main">
-
-      <div class="chat-header-wrapper">
-
-        <div class="chat-header">
-
-          <div class="chat-header-info">
-
-            <button class="sidebar-toggle" onclick="toggleChatSidebar()">
-
-              <i class="fas fa-bars"></i>
-
-            </button>
-
-            <i class="fas fa-robot"></i>
-
-            <h2>Mate AI Assistant</h2>
-
-          </div>
-
-          <div class="chat-header-actions" style="display: flex; gap: 10px; align-items: center;">
-
-            <button class="close-chat" onclick="closeChatModal()">
-
-              <i class="fas fa-times"></i>
-
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="chat-container" id="chatContainer">
-
-        <div class="chat-messages" id="chatMessages">
-
-          <div class="chat-welcome" id="chatWelcome">
-
-            <i class="fas fa-sparkles" style="font-size: 40px; color: #c0962d; margin-bottom: 20px;"></i>
-
-            <h2>What can I help with?</h2>
-
-
-
-            <div class="search-suggestions">
-
-              <div class="suggestion-group">
-
-                <div class="suggestion-tags">
-
-                  <div class="suggestion-tag" onclick="useQuickQuestion('MBA 1st Sem Notes')">MBA 1st Sem Notes</div>
-
-                  <div class="suggestion-tag" onclick="useQuickQuestion('Syllabus for Semester 2')">Syllabus for
-
-                    Semester 2</div>
-
-                  <div class="suggestion-tag" onclick="useQuickQuestion('How to build a Resume?')">How to build a
-
-                    Resume?</div>
-
-                </div>
-
-              </div>
-
-
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <div class="chat-footer">
-
-        <div class="chat-input-wrapper">
-
-          <div class="mode-selector-wrapper">
-
-            <button class="mode-trigger" id="modeTrigger" onclick="toggleModeDropdown()">
-
-              <i class="fas fa-graduation-cap" id="modeIcon"></i>
-
-              <span id="modeLabel">Teacher</span>
-
-              <i class="fas fa-chevron-down"></i>
-
-            </button>
-
-            <div class="mode-dropdown" id="modeDropdown">
-
-              <div class="mode-option active" id="opt-teacher" onclick="selectStudyMode('teacher')">
-
-                <i class="fas fa-graduation-cap"></i>
-
-                <div>
-
-                  Teacher Mode
-
-                  <span class="mode-desc">Explains with examples</span>
-
-                </div>
-
-              </div>
-
-              <div class="mode-option" id="opt-exam" onclick="selectStudyMode('exam')">
-
-                <i class="fas fa-bolt"></i>
-
-                <div>
-
-                  Exam Mode
-
-                  <span class="mode-desc">Quick bullet points</span>
-
-                </div>
-
-              </div>
-
-              <div class="mode-option" id="opt-speed" onclick="selectStudyMode('speed')">
-
-                <i class="fas fa-tachometer-alt"></i>
-
-                <div>
-
-                  Speed Mode
-
-                  <span class="mode-desc">Direct links & answers</span>
-
-                </div>
-
-              </div>
-
-              <div class="mode-option" id="opt-planner" onclick="selectStudyMode('planner')">
-
-                <i class="fas fa-calendar-alt"></i>
-
-                <div>
-
-                  Study Planner
-
-                  <span class="mode-desc">Custom daily schedule</span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <form class="chat-input-form" onsubmit="event.preventDefault(); sendChatHubMessage();"
-
-            style="flex: 1; position: relative; display: flex; align-items: center;">
-
-            <input type="search" class="chat-input" id="chatInput" placeholder="Ask me anything..." autocomplete="off"
-
-              enterkeyhint="search">
-
-            <button type="submit" class="send-btn" id="chatSendBtn">
-
-              <i class="fas fa-paper-plane"></i>
-
-            </button>
-
-          </form>
-
-        </div>
-
-      </div>
-
-    </div> <!-- end chat-main -->
-
-  </div>
 </body>
 
 
