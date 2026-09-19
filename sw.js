@@ -3,7 +3,7 @@
  * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v714';
+const CACHE_NAME = 'solmates-cache-v715';
 
 const STATIC_ASSETS = [
     '/notification.html',
