@@ -2066,8 +2066,8 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
         <p class="qsub">Ask us anything, we're here for you &#128591;</p>
       </div>
       <div class="qfield"><label>Full Name *</label><input type="text" id="qName" placeholder="S.Singh" maxlength="60"></div>
-      <div class="qfield"><label>Phone Number *</label><input type="tel" id="qPhone" placeholder="10-digit mobile number" maxlength="10"></div>
-      <div class="qfield"><label>Email Address <span class="qopt">(optional)</span></label><input type="email" id="qGmail" placeholder="john@example.com"></div>
+      <div class="qfield"><label>Phone Number <span class="qopt">(or Email)</span></label><input type="tel" id="qPhone" placeholder="10-digit mobile number" maxlength="10"></div>
+      <div class="qfield"><label>Email Address <span class="qopt">(or Phone)</span></label><input type="email" id="qGmail" placeholder="john@example.com"></div>
       <div style="display:flex; gap:10px;">
         <div class="qfield" style="flex:1;"><label>Semester *</label>
           <select id="qSemester"><option value="">-- Select --</option><option value="1st Sem">1st Sem</option><option value="2nd Sem">2nd Sem</option><option value="3rd Sem">3rd Sem</option><option value="4th Sem">4th Sem</option></select>
@@ -2109,16 +2109,16 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
   window.submitQuery=async function(){
     var n=(document.getElementById("qName").value||"").trim(),ph=(document.getElementById("qPhone").value||"").trim(),gm=(document.getElementById("qGmail").value||"").trim(),sm=document.getElementById("qSemester").value,qt=document.getElementById("qType").value,qq=(document.getElementById("qQuestion").value||"").trim();
     if(!n){alert("Please enter your full name.");return;}
-    if(!ph||!/^[0-9]{10}$/.test(ph)){alert("Please enter a valid 10-digit phone number.");return;}
+    if(!ph && !gm){alert("Please provide either your Phone Number or Email Address.");return;}if(ph && !/^[0-9]{10}$/.test(ph)){alert("Please enter a valid 10-digit phone number.");return;}
     if(!sm){alert("Please select your semester.");return;}
     if(!qt){alert("Please select a topic.");return;}
     if(!qq){alert("Please describe your query.");return;}
     if(window.solmatesCheckProfanity && (window.solmatesCheckProfanity(n) || window.solmatesCheckProfanity(qq))){alert("Please keep your query respectful and appropriate.");return;}
-    if(!qRL(ph)){alert("You have reached the limit of 3 queries per day. Please try again tomorrow.");return;}
+    if(!qRL(ph || gm)){alert("You have reached the limit of 3 queries per day. Please try again tomorrow.");return;}
     var btn=document.getElementById("qSubmitBtn");btn.disabled=true;btn.innerHTML="Sending...";
     var ctx=qCtx(),ts=new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
     var url = window.location.href;
-    var msg="\u2753 Student Query\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udc64 "+n+"\n\ud83d\udcf1 "+ph+"\n\ud83d\udce7 "+(gm||"Not provided")+"\n\ud83c\udf93 "+sm+"\n\ud83d\udcc2 "+qt+"\n\ud83d\udccc Context: "+ctx+"\n\ud83d\udd17 Link: "+url+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"+qq+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u23f0 "+ts+" IST";
+    var msg="\u2753 Student Query\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udc64 "+n+"\n\ud83d\udcf1 "+(ph||"Not provided")+"\n\ud83d\udce7 "+(gm||"Not provided")+"\n\ud83c\udf93 "+sm+"\n\ud83d\udcc2 "+qt+"\n\ud83d\udccc Context: "+ctx+"\n\ud83d\udd17 Link: "+url+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"+qq+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u23f0 "+ts+" IST";
     try{
       var r=await fetch("https://api.telegram.org/bot8597525439:AAEV6WWYB3KXReoaNmbUoNWQqCyPvUe2laY/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"1772865405",text:msg})});
       if(!r.ok)throw new Error("err");
