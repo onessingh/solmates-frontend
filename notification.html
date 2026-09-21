@@ -78,12 +78,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=718">
-  <script src="/config.js?v=718" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=719">
+  <script src="/config.js?v=719" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=718" defer></script>
-  <script src="/js/webview-fix.js?v=718" defer></script>
-  <script src="/js/sol-cache.js?v=718" defer></script>
+  <script src="/js/api-client.js?v=719" defer></script>
+  <script src="/js/webview-fix.js?v=719" defer></script>
+  <script src="/js/sol-cache.js?v=719" defer></script>
   <script>
     // [v116.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -3263,7 +3263,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=718';
+        const swUrl = './sw.js?v=719';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
@@ -3592,7 +3592,8 @@ document.addEventListener('DOMContentLoaded', function() {
 #queryModalOverlay.open #queryModal { transform: scale(1); }
 #queryModal::-webkit-scrollbar { width: 6px; }
 #queryModal::-webkit-scrollbar-track { background: transparent; margin: 16px 0; }
-#queryModal::-webkit-scrollbar-thumb { background: var(--qsub, #94a3b8); border-radius: 10px; }
+#queryModal::-webkit-scrollbar-thumb { background: #64748b; border-radius: 10px; }
+#queryModal::-webkit-scrollbar-thumb:hover { background: #475569; }
 #qHeader { text-align: center; margin-bottom: 20px; }
 #queryModal h2 { color: var(--qhead, #0f2b46); font-size: 20px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.5px; }
 #queryModal p.qsub { color: var(--qsub, #64748b); font-size: 13px; margin: 0; font-weight: 500; }
