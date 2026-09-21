@@ -3584,7 +3584,7 @@ document.addEventListener('DOMContentLoaded', function() {
 #queryFloatBtn:hover{transform:translateY(-2px)}
 #queryModalOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:center;justify-content:center;padding:14px}
 #queryModalOverlay.open{display:flex}
-#queryModal{background:var(--qbg,#fff);color:var(--qtxt,#1a1a1a);border-radius:16px;padding:20px 18px 18px;width:100%;max-width:370px;max-height:88vh;overflow-y:auto;position:relative;box-shadow:0 16px 50px rgba(0,0,0,.22)}
+#queryModal{box-sizing:border-box;background:var(--qbg,#fff);color:var(--qtxt,#1a1a1a);border-radius:16px;padding:20px 18px 30px;width:100%;max-width:370px;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 16px 50px rgba(0,0,0,.22)}
 #queryModal h2{color:var(--qhead,#0f2b46);font-size:17px;margin-bottom:2px}
 #queryModal p.qsub{color:var(--qsub,#666);font-size:12px;margin-bottom:14px}
 .qfield{margin-bottom:11px}
@@ -3593,11 +3593,11 @@ document.addEventListener('DOMContentLoaded', function() {
 .qfield input:focus,.qfield select:focus,.qfield textarea:focus{border-color:#0f2b46}
 .qfield textarea{resize:vertical;min-height:75px}
 .qchar{font-size:10px;color:#999;text-align:right;margin-top:2px}
-#qSubmitBtn{width:100%;padding:11px;background:#0f2b46;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;transition:background .2s}
+#qSubmitBtn{width:100%;padding:11px;background:#0f2b46;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;margin-bottom:20px;transition:background .2s}
 #qSubmitBtn:hover{background:#1a3c5e}
 #qSubmitBtn:disabled{background:#aaa;cursor:not-allowed}
 #qCloseBtn{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;color:var(--qsub,#666);cursor:pointer;line-height:1}
-#qSuccessMsg{display:none;text-align:center;padding:16px 0}
+#qSuccessMsg{display:none;text-align:center;padding:16px 0 30px}
 #qSuccessMsg .qcheck{font-size:42px}
 #qSuccessMsg h3{color:var(--qhead,#0f2b46);margin:8px 0 5px;font-size:16px}
 #qSuccessMsg p{color:var(--qsub,#555);font-size:13px}
