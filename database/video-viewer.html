@@ -932,6 +932,8 @@
 
 
 
+
+
 <!-- ===== ASK QUERY WIDGET ===== -->
 <style>
 #queryFloatBtn{position:fixed;bottom:75px;right:16px;z-index:9999;background:#0f2b46;color:#fff;border:none;border-radius:50px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(15,43,70,.35);display:flex;align-items:center;gap:5px;transition:transform .2s}
@@ -983,12 +985,15 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal {--qbg:#1
     <div id="qSuccessMsg"><div class="qcheck">&#10004;&#65039;</div><h3>Query Sent!</h3><p>We will reach out on your number soon &#128591;</p></div>
   </div>
 </div>
+<script src="/js/profanity.js"></script>
 <script>
 (function(){
+  var isViewer = window.location.pathname.includes("viewer");
+  if(isViewer) { document.getElementById("queryFloatBtn").style.bottom = "140px"; }
+  var isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+  if(isAdmin) { document.getElementById("queryFloatBtn").style.display = "none"; }
   function qT(){var t=localStorage.getItem("solmates_theme")||"light";if(t==="dark")document.documentElement.setAttribute("data-solmates-theme","dark");else document.documentElement.removeAttribute("data-solmates-theme");}
   qT();window.addEventListener("storage",function(e){if(e.key==="solmates_theme")qT();});
-  var BAD=["fuck","shit","chutiya","madarchod","bhenchod","bsdk","randi","gandu","lund","lauda","chod","sex","porn","xxx"];
-  function qBad(t){if(!t)return false;var l=t.toLowerCase();return BAD.some(function(w){return l.includes(w);});}
   function qCtx(){try{var p=window.location.pathname,q=new URLSearchParams(window.location.search);if(p.includes("pdf-viewer"))return "PDF: "+(q.get("file")||q.get("name")||"PDF");if(p.includes("video-viewer"))return "Video: "+(q.get("title")||q.get("name")||"Video");return "Notification Page";}catch(e){return "Solmates";}}
   function qRL(ph){try{var k="qrl_"+ph,d=JSON.parse(localStorage.getItem(k)||'{"count":0,"date":""}'),t=new Date().toDateString();if(d.date!==t)d={count:0,date:t};if(d.count>=3)return false;d.count++;localStorage.setItem(k,JSON.stringify(d));return true;}catch(e){return true;}}
   window.openQueryModal=function(){document.getElementById("queryModalOverlay").classList.add("open");document.getElementById("qFormSection").style.display="block";document.getElementById("qSuccessMsg").style.display="none";document.getElementById("qSubmitBtn").disabled=false;qT();};
@@ -1001,11 +1006,12 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal {--qbg:#1
     if(!sm){alert("Please select your semester.");return;}
     if(!qt){alert("Please select query type.");return;}
     if(!qq){alert("Please write your question.");return;}
-    if(qBad(n)||qBad(qq)){alert("Please keep your query respectful.");return;}
+    if(window.solmatesCheckProfanity && (window.solmatesCheckProfanity(n) || window.solmatesCheckProfanity(qq))){alert("Please keep your query respectful. Avoid inappropriate language.");return;}
     if(!qRL(ph)){alert("You have sent 3 queries today. Try again tomorrow.");return;}
     var btn=document.getElementById("qSubmitBtn");btn.disabled=true;btn.textContent="Sending...";
     var ctx=qCtx(),ts=new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
-    var msg="\u2753 Student Query\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udc64 "+n+"\n\ud83d\udcf1 "+ph+"\n\ud83d\udce7 "+(gm||"Not provided")+"\n\ud83c\udf93 "+sm+"\n\ud83d\udcc2 "+qt+"\n\ud83d\udccc "+ctx+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"+qq+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u23f0 "+ts+" IST";
+    var url = window.location.href;
+    var msg="\u2753 Student Query\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udc64 "+n+"\n\ud83d\udcf1 "+ph+"\n\ud83d\udce7 "+(gm||"Not provided")+"\n\ud83c\udf93 "+sm+"\n\ud83d\udcc2 "+qt+"\n\ud83d\udccc Context: "+ctx+"\n\ud83d\udd17 Link: "+url+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"+qq+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u23f0 "+ts+" IST";
     try{
       var r=await fetch("https://api.telegram.org/bot8597525439:AAEV6WWYB3KXReoaNmbUoNWQqCyPvUe2laY/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"1772865405",text:msg})});
       if(!r.ok)throw new Error("err");
