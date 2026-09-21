@@ -3116,7 +3116,8 @@
 #queryModalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 15px; }
 #queryModalOverlay.open { display: flex; animation: qFadeIn 0.3s ease; }
 @keyframes qFadeIn { from { opacity: 0; } to { opacity: 1; } }
-#queryModal { box-sizing: border-box; background: var(--qbg, rgba(255,255,255,0.98)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: var(--qtxt, #1e293b); border: 1px solid var(--qborder, rgba(0,0,0,0.08)); border-radius: 20px; padding: 24px 22px 30px; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#queryModal { box-sizing: border-box; background: var(--qbg, rgba(255,255,255,0.98)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: var(--qtxt, #1e293b); border: 1px solid var(--qborder, rgba(0,0,0,0.08)); border-radius: 20px; padding: 0; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#qFormSection { padding: 24px 22px 30px; }
 #queryModalOverlay.open #queryModal { transform: scale(1); }
 #queryModal::-webkit-scrollbar { width: 6px; }
 #queryModal::-webkit-scrollbar-thumb { background: var(--qborder, #cbd5e1); border-radius: 10px; }
