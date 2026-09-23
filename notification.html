@@ -1903,7 +1903,9 @@
 
     function renderNotices(data, semester) {
       const list = document.getElementById(`sem${semester}`);
-      window.lastFetchedNotices = data; // Store for editing
+      window.lastFetchedNotices = data;
+        const visibleNotices = data.filter(n => n.folderId !== 'AWARENESS');
+        data = visibleNotices; // Store for editing
 
       const parseNoticeDate = (dateStr, title = '') => {
         let ds = dateStr;

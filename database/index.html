@@ -863,6 +863,40 @@
 })();
 </script>
 
+
+  <style>
+    /* Safety Awareness Section */
+    .awareness-container { margin-bottom: 40px; background: var(--bg-card); border-radius: 16px; border-left: 5px solid #ef4444; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .awareness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .awareness-title { font-size: 20px; color: #ef4444; display: flex; align-items: center; gap: 8px; font-weight: bold; margin: 0; }
+    .awareness-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+    .awareness-list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .awareness-list::-webkit-scrollbar { height: 6px; }
+    .awareness-list::-webkit-scrollbar-track { background: transparent; }
+    .awareness-list::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
+    .awareness-card { min-width: 280px; max-width: 300px; background: var(--bg-main); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px; scroll-snap-align: start; flex-shrink: 0; }
+    .aware-card-head { display: flex; align-items: center; gap: 12px; }
+    .aware-avatar { width: 45px; height: 45px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-weight: bold; font-size: 20px; }
+    .aware-info h4 { color: var(--text-main); font-size: 16px; margin: 0; font-weight: 700; text-transform: capitalize; }
+    .aware-info p { color: #ef4444; font-size: 13px; font-weight: 600; margin: 2px 0 0; }
+    .aware-desc { color: var(--text-muted); font-size: 13px; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .aware-btn { width: 100%; padding: 10px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .aware-btn:hover { background: #fee2e2; }
+    /* Awareness Modal */
+    #awModalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(4px); }
+    #awModal { background: var(--bg-card); border-radius: 16px; width: 100%; max-width: 400px; padding: 25px; box-sizing: border-box; }
+    #awModal h3 { margin-top: 0; margin-bottom: 20px; color: #ef4444; display: flex; justify-content: space-between; align-items: center; font-size: 18px; }
+    .aw-field { margin-bottom: 15px; }
+    .aw-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--text-main); }
+    .aw-field input, .aw-field textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main); box-sizing: border-box; font-family: inherit; }
+    #awSubmit { width: 100%; padding: 12px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    #awSubmit:disabled { opacity: 0.7; cursor: not-allowed; }
+    /* Proof Viewer */
+    #awProofOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 20px; flex-direction: column; }
+    #awProofImg { max-width: 100%; max-height: 80vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain; }
+    .aw-proof-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 35px; cursor: pointer; background: transparent; border: none; }
+  </style>
+
 </head>
 
 <body>
@@ -960,7 +994,24 @@
   <!-- DATABASE CONTENT -->
   <div class="page-content">
     <div class="database-container">
-      <div class="database-header">
+      
+        <!-- Safety & Awareness Section -->
+        <div class="awareness-container" id="awarenessSection" style="display: none;">
+          <div class="awareness-header">
+            <h2 class="awareness-title">
+              <i class="fas fa-shield-alt"></i> Community Safety Alerts
+            </h2>
+            <button id="addAwarenessBtn" class="admin-only" style="display:none; background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;" onclick="openAwModal()">+ Add Alert</button>
+          </div>
+          <p class="awareness-subtitle">
+            Zero tolerance for harassment or abusive behavior towards girls in our community. Defaulters will be permanently exposed here.
+          </p>
+          <div class="awareness-list" id="awList">
+            <!-- Cards will be injected via JS -->
+          </div>
+        </div>
+
+        <div class="database-header">
         <h1 id="db-title"><i class="fas fa-database"></i> MBA Study Material</h1>
         <p>Your comprehensive DU SOL resource hub for live classes, MBA notes, PYQs, and one-shot videos.</p>
       </div>
@@ -1645,6 +1696,187 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
 })();
 </script>
 <!-- ===== END ASK QUERY WIDGET ===== -->
+
+  <!-- Add Awareness Modal (Admin Only) -->
+  <div id="awModalOverlay">
+    <div id="awModal">
+      <h3>Add Defaulter Alert <span style="cursor:pointer; color:var(--text-muted); font-size:24px;" onclick="closeAwModal()">&times;</span></h3>
+      <form id="awForm" onsubmit="submitAw(event)">
+        <div class="aw-field">
+          <label>Defaulter Name</label>
+          <input type="text" id="awName" required placeholder="e.g. Rahul Kumar">
+        </div>
+        <div class="aw-field">
+          <label>Masked Phone Number</label>
+          <input type="text" id="awPhone" required placeholder="e.g. +91 98***XXXX12">
+        </div>
+        <div class="aw-field">
+          <label>Incident Details</label>
+          <textarea id="awDesc" required rows="3" placeholder="What did they do? e.g. Sent inappropriate messages in DMs."></textarea>
+        </div>
+        <div class="aw-field">
+          <label>Screenshot / Proof Image</label>
+          <input type="file" id="awFile" accept="image/*" required>
+        </div>
+        <button type="submit" id="awSubmit">Publish Alert</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Proof Modal -->
+  <div id="awProofOverlay">
+    <button class="aw-proof-close" onclick="closeAwProof()">&times;</button>
+    <img id="awProofImg" src="" alt="Proof">
+  </div>
+
+
+<script>
+// --- AWARENESS LOGIC ---
+const IMGBB_API_KEY_AW = '40db24ee6e32a8be2abcf8c7d1915746';
+
+function openAwModal() { document.getElementById('awModalOverlay').style.display = 'flex'; }
+function closeAwModal() { document.getElementById('awModalOverlay').style.display = 'none'; }
+function openAwProof(url) { 
+  document.getElementById('awProofImg').src = url; 
+  document.getElementById('awProofOverlay').style.display = 'flex'; 
+}
+function closeAwProof() { document.getElementById('awProofOverlay').style.display = 'none'; }
+
+async function loadAwareness() {
+  try {
+    const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+    const response = await fetch(`${apiUrl}/sol/notifications/all?_t=${Date.now()}`);
+    if (!response.ok) return;
+    const data = await response.json();
+    
+    let alerts = [];
+    Object.values(data).forEach(semNotices => {
+      alerts = alerts.concat(semNotices.filter(n => n.folderId === 'AWARENESS'));
+    });
+    
+    // Sort newest first
+    alerts.reverse(); // Notifications are usually appended, reverse to get latest
+
+    const list = document.getElementById('awList');
+    const section = document.getElementById('awarenessSection');
+    const addBtn = document.getElementById('addAwarenessBtn');
+    
+    const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+    if (isAdmin) {
+      addBtn.style.display = 'block';
+      section.style.display = 'block';
+    } else if (alerts.length > 0) {
+      section.style.display = 'block';
+    }
+
+    if (alerts.length === 0) {
+      list.innerHTML = `<p style="color:var(--text-muted); font-size:14px; padding: 10px;">No alerts currently active. Community is safe.</p>`;
+      return;
+    }
+
+    list.innerHTML = alerts.map(alert => `
+      <div class="awareness-card">
+        <div class="aware-card-head">
+          <div class="aware-avatar">${alert.title.charAt(0).toUpperCase()}</div>
+          <div class="aware-info">
+            <h4>${alert.title}</h4>
+            <p>${alert.date}</p>
+          </div>
+        </div>
+        <p class="aware-desc">${alert.description}</p>
+        <button class="aware-btn" onclick="openAwProof('${alert.link}')">View Proof</button>
+        ${isAdmin ? `<button class="aware-btn" style="margin-top:8px; border-color:var(--border-color); color:var(--text-muted);" onclick="deleteAw('${alert.id || alert._id}', this)">🗑️ Remove</button>` : ''}
+      </div>
+    `).join('');
+
+  } catch(err) {
+    console.error("Error loading awareness:", err);
+  }
+}
+
+async function deleteAw(id, btnElem) {
+  if(!confirm("Remove this alert?")) return;
+  btnElem.innerText = "Removing...";
+  try {
+    const token = localStorage.getItem('solmates_admin_token');
+    const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+    // Notifications are typically deleted from a specific semester, but we stored in sem 1.
+    // Try deleting from 1
+    let res = await fetch(`${apiUrl}/sol/notifications/1/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if(res.ok) {
+      loadAwareness();
+    } else {
+      alert("Failed to delete. Wait 5 mins and try again or delete from backend.");
+      btnElem.innerText = "🗑️ Remove";
+    }
+  } catch(e) {
+    alert("Error: " + e.message);
+  }
+}
+
+async function submitAw(e) {
+  e.preventDefault();
+  const btn = document.getElementById('awSubmit');
+  btn.disabled = true;
+  btn.innerText = 'Uploading Image...';
+  
+  try {
+    const file = document.getElementById('awFile').files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    const imgRes = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY_AW, {
+      method: 'POST',
+      body: formData
+    });
+    const imgData = await imgRes.json();
+    if (!imgData.success) throw new Error("Image upload failed");
+    
+    const imageUrl = imgData.data.url;
+    
+    btn.innerText = 'Publishing...';
+    
+    const payload = {
+      title: document.getElementById('awName').value.trim(),
+      link: imageUrl,
+      date: document.getElementById('awPhone').value.trim(),
+      description: document.getElementById('awDesc').value.trim(),
+      folderId: 'AWARENESS'
+    };
+    
+    const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+    const token = localStorage.getItem('solmates_admin_token');
+    
+    const res = await fetch(`${apiUrl}/sol/notifications/1`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!res.ok) throw new Error("Failed to save to database");
+    
+    alert("Alert published successfully!");
+    closeAwModal();
+    document.getElementById('awForm').reset();
+    loadAwareness();
+    
+  } catch (err) {
+    alert("Error: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerText = 'Publish Alert';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadAwareness);
+</script>
+
 </body>
 
 </html>
