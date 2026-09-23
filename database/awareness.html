@@ -164,6 +164,23 @@
   }
   .remove-btn:hover { border-color: #ef4444; color: #ef4444; }
 
+  /* Pin styles */
+  .pin-btn {
+    width: 100%; padding: 9px; background: transparent; color: #f59e0b;
+    border: 1px solid #f59e0b; border-radius: 10px; font-size: 13px;
+    cursor: pointer; margin-top: 8px; transition: 0.2s; font-weight: 600;
+  }
+  .pin-btn:hover { background: #fef3c7; }
+  .pin-btn.pinned { background: #fef3c7; color: #d97706; border-color: #d97706; }
+  .alert-card.pinned-card { border-color: #f59e0b; box-shadow: 0 4px 20px rgba(245,158,11,0.2); }
+  html[data-solmates-theme=dark] .alert-card.pinned-card { border-color: #f59e0b; box-shadow: 0 4px 20px rgba(245,158,11,0.15); }
+  .pin-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #fef3c7; color: #d97706; font-size: 11px; font-weight: 700;
+    padding: 3px 8px; border-radius: 20px; margin-bottom: 8px;
+  }
+  html[data-solmates-theme=dark] .pin-badge { background: rgba(245,158,11,0.2); color: #fbbf24; }
+
   /* ===== EMPTY / LOADING ===== */
   .empty-state { text-align: center; padding: 60px 20px; }
   .empty-state i { font-size: 56px; color: #dcfce7; margin-bottom: 16px; }
@@ -417,6 +434,28 @@ function previewFiles(input) {
   });
 }
 
+// ===== PIN HELPERS =====
+var MAX_PINS = 3;
+function getPinned() { try { return JSON.parse(localStorage.getItem('awareness_pinned') || '[]'); } catch(e) { return []; } }
+function setPinned(arr) { localStorage.setItem('awareness_pinned', JSON.stringify(arr.slice(0, MAX_PINS))); }
+function togglePin(id) {
+  var pinned = getPinned();
+  var idx = pinned.indexOf(id);
+  if (idx !== -1) {
+    pinned.splice(idx, 1);
+    setPinned(pinned);
+    loadAlerts();
+  } else {
+    if (pinned.length >= MAX_PINS) {
+      alert('Maximum 3 alerts can be pinned. Unpin one first.');
+      return;
+    }
+    pinned.unshift(id);
+    setPinned(pinned);
+    loadAlerts();
+  }
+}
+
 // ===== LOAD ALERTS =====
 async function loadAlerts() {
   var grid = document.getElementById('alertsGrid');
@@ -445,9 +484,25 @@ async function loadAlerts() {
       return;
     }
 
+    // Sort: pinned first, then rest
+    var pinned = getPinned();
+    alerts.sort(function(a, b) {
+      var aId = a.id || a._id || '';
+      var bId = b.id || b._id || '';
+      var aPinned = pinned.indexOf(aId) !== -1;
+      var bPinned = pinned.indexOf(bId) !== -1;
+      if (aPinned && !bPinned) return -1;
+      if (!aPinned && bPinned) return 1;
+      // Both pinned: preserve pin order
+      if (aPinned && bPinned) return pinned.indexOf(aId) - pinned.indexOf(bId);
+      return 0;
+    });
+
     grid.innerHTML = alerts.map(function(alert) {
+      var id = alert.id || alert._id || '';
+      var isPinned = pinned.indexOf(id) !== -1;
       var initial = (alert.title || '?').charAt(0).toUpperCase();
-      // Check if link is JSON array of images or single URL
+
       var images = [];
       try {
         var parsed = JSON.parse(alert.link);
@@ -461,18 +516,25 @@ async function loadAlerts() {
         thumbsHtml += '<img class="screenshot-thumb" src="' + url + '" alt="Proof ' + (i+1) + '" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')" loading="lazy">';
       });
 
-      var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + (alert.id || alert._id) + '\', this)"><i class="fas fa-trash-alt"></i> Remove Alert</button>' : '';
+      var pinBadge = isPinned ? '<div class="pin-badge"><i class="fas fa-thumbtack"></i> Pinned</div>' : '';
+      var pinBtn = isAdmin
+        ? '<button class="pin-btn ' + (isPinned ? 'pinned' : '') + '" onclick="togglePin(\'' + id + '\')">'
+          + '<i class="fas fa-thumbtack"></i> ' + (isPinned ? 'Unpin' : 'Pin to Top') + '</button>'
+        : '';
+      var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + id + '\', this)"><i class="fas fa-trash-alt"></i> Remove Alert</button>' : '';
 
-      return '<div class="alert-card">' +
+      return '<div class="alert-card ' + (isPinned ? 'pinned-card' : '') + '">' +
         '<div class="alert-card-top">' +
           '<div class="alert-avatar">' + initial + '</div>' +
           '<div><div class="alert-name">' + (alert.title || 'Unknown') + '</div>' +
           '<div class="alert-phone"><i class="fas fa-phone-alt"></i> ' + (alert.date || 'Not provided') + '</div></div>' +
         '</div>' +
         '<div class="alert-body">' +
+          pinBadge +
           '<p class="alert-desc">' + (alert.description || 'No description.') + '</p>' +
           '<div class="screenshots-row">' + thumbsHtml + '</div>' +
           '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' +
+          pinBtn +
           removeHtml +
         '</div>' +
       '</div>';
