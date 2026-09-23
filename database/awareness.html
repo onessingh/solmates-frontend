@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=735">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=736">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=735"></script>
-<script src="/js/api-client.js?v=735" defer></script>
+<script src="/config.js?v=736"></script>
+<script src="/js/api-client.js?v=736" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -426,6 +426,14 @@
       <input type="file" id="awFile" accept="image/*" multiple onchange="previewFiles(this)">
       <div id="filePreviewRow"></div>
     </div>
+    
+    <div class="form-field">
+      <label>Voice Note / Audio Proof (Optional)</label>
+      <input type="file" id="awVoice" accept="audio/*" style="display:none;" onchange="previewAdminVoice(this)">
+      <button type="button" onclick="document.getElementById('awVoice').click()" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:transparent; color:var(--text-main); font-size:13px; cursor:pointer;"><i class="fas fa-microphone"></i> Select Audio File</button>
+      <div id="awVoicePreview"></div>
+    </div>
+    
     <button id="submitAlertBtn" onclick="submitAlert()">
       <i class="fas fa-paper-plane"></i> Publish Alert
     </button>
@@ -517,12 +525,31 @@ function openAddModal() { document.getElementById('addModalOverlay').classList.a
 function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
 
 var selectedAlertFiles = [];
+var selectedAdminVoice = null;
+var existingAdminVoiceUrl = null;
 var editAlertId = null;
 var existingImageUrls = [];
+
+function previewAdminVoice(input) {
+  if (input.files && input.files[0]) {
+    selectedAdminVoice = input.files[0];
+    var url = URL.createObjectURL(selectedAdminVoice);
+    document.getElementById('awVoicePreview').innerHTML = '<div class="audio-preview-card">' +
+      '<audio controls src="' + url + '"></audio>' +
+      '<button class="preview-close-btn" onclick="removeAdminVoice()" style="position:absolute; right: -5px; top: -5px;">&times;</button></div>';
+  }
+}
+function removeAdminVoice() {
+  selectedAdminVoice = null;
+  existingAdminVoiceUrl = null; // Clear existing if any
+  document.getElementById('awVoice').value = '';
+  document.getElementById('awVoicePreview').innerHTML = '';
+}
 
 function openAddModal() {
   editAlertId = null;
   existingImageUrls = [];
+  existingAdminVoiceUrl = null;
   document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-shield-alt"></i> Add Defaulter Alert';
   document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-paper-plane"></i> Publish Alert';
   document.getElementById('awName').value = '';
@@ -533,11 +560,12 @@ function openAddModal() {
   document.querySelector('input[name="awAvatar"][value="👤"]').checked = true;
   selectedAlertFiles = [];
   renderPreviews();
+  removeAdminVoice();
   document.getElementById('addModalOverlay').classList.add('open');
 }
 
 function openEditModal(alertStr) {
-  var alertData = JSON.parse(alertStr);
+  var alertData = JSON.parse(decodeURIComponent(alertStr));
   editAlertId = alertData.id || alertData._id;
   
   var rawTitle = alertData.title || '?';
@@ -577,13 +605,36 @@ function openEditModal(alertStr) {
   
   document.getElementById('awDesc').value = desc;
   
+  // Extract images vs audio link
   try {
     var parsed = JSON.parse(alertData.link);
-    existingImageUrls = Array.isArray(parsed) ? parsed : [alertData.link];
-  } catch(e) { existingImageUrls = [alertData.link]; }
+    existingImageUrls = [];
+    existingAdminVoiceUrl = null;
+    if (Array.isArray(parsed)) {
+      parsed.forEach(function(u) {
+        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+        else existingImageUrls.push(u);
+      });
+    } else {
+      var u = alertData.link;
+      if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+      else existingImageUrls.push(u);
+    }
+  } catch(e) { 
+    var u = alertData.link;
+    if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+    else existingImageUrls = [u]; 
+  }
   
   selectedAlertFiles = [];
   renderPreviews();
+  
+  removeAdminVoice();
+  if (existingAdminVoiceUrl) {
+    document.getElementById('awVoicePreview').innerHTML = '<div class="audio-preview-card">' +
+      '<audio controls src="' + existingAdminVoiceUrl + '"></audio>' +
+      '<button class="preview-close-btn" onclick="removeAdminVoice()" style="position:absolute; right: -5px; top: -5px;">&times;</button></div>';
+  }
   
   document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-edit"></i> Edit Alert';
   document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
@@ -845,17 +896,32 @@ async function loadAlerts() {
       }
 
       var images = [];
+      var audioUrl = null;
       try {
         var parsed = JSON.parse(alert.link);
-        if (Array.isArray(parsed)) images = parsed;
-        else images = [alert.link];
-      } catch(e) { images = [alert.link]; }
+        if (Array.isArray(parsed)) {
+          parsed.forEach(function(u) {
+            if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+            else images.push(u);
+          });
+        } else {
+          var u = alert.link;
+          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+          else images.push(u);
+        }
+      } catch(e) {
+        var u = alert.link;
+        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+        else images = [u];
+      }
 
       var imagesJson = JSON.stringify(images).replace(/'/g, '&#39;');
       var thumbsHtml = '';
       images.forEach(function(url, i) {
         thumbsHtml += '<img class="screenshot-thumb" src="' + url + '" alt="Proof ' + (i+1) + '" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')" loading="lazy">';
       });
+      
+      var audioHtml = audioUrl ? '<div style="margin-top:10px; margin-bottom:10px;"><audio controls src="' + audioUrl + '" style="height:35px; width:100%; border-radius:10px;"></audio></div>' : '';
 
       var pinBadge = isPinned ? '<div class="pin-badge"><i class="fas fa-thumbtack"></i> Pinned</div>' : '';
       var pinBtn = isAdmin
@@ -863,7 +929,7 @@ async function loadAlerts() {
           + '<i class="fas fa-thumbtack"></i> ' + (isPinned ? 'Unpin' : 'Pin to Top') + '</button>'
         : '';
       
-      var alertDataJson = JSON.stringify(alert).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+      var alertDataJson = encodeURIComponent(JSON.stringify(alert));
       var editHtml = isAdmin ? '<button class="pin-btn" onclick="openEditModal(\'' + alertDataJson + '\')" style="color:#3b82f6; border-color:#3b82f6;"><i class="fas fa-edit"></i> Edit</button>' : '';
       var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + id + '\', this)"><i class="fas fa-trash-alt"></i> Remove</button>' : '';
 
@@ -876,6 +942,7 @@ async function loadAlerts() {
         '<div class="alert-body">' +
           pinBadge +
           '<p class="alert-desc">' + formatWhatsAppText(alert.description || 'No description.') + '</p>' +
+          audioHtml +
           '<div class="screenshots-row">' + thumbsHtml + '</div>' +
           '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' +
           pinBtn +
@@ -944,11 +1011,27 @@ async function submitAlert() {
       }
     }
 
+    var voiceUrl = existingAdminVoiceUrl;
+    // Upload new voice note if selected
+    if (selectedAdminVoice) {
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading Audio...';
+      var fdAudio = new FormData();
+      fdAudio.append('reqtype', 'fileupload');
+      fdAudio.append('fileToUpload', selectedAdminVoice);
+      var audioRes = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: fdAudio });
+      if (!audioRes.ok) throw new Error('Audio upload failed');
+      voiceUrl = await audioRes.text();
+    }
+
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (isEdit ? 'Updating...' : 'Publishing...');
+
+    var finalLinks = [];
+    if (voiceUrl) finalLinks.push(voiceUrl);
+    finalLinks = finalLinks.concat(imageUrls);
 
     var payload = {
       title: fullTitle,
-      link: imageUrls.length === 1 ? imageUrls[0] : JSON.stringify(imageUrls),
+      link: finalLinks.length === 1 ? finalLinks[0] : JSON.stringify(finalLinks),
       date: phone || 'Number not provided',
       description: fullDesc,
       folderId: 'AWARENESS'
