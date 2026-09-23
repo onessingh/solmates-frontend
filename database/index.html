@@ -26,7 +26,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=727">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=728">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MBA Notes Free Download PDF | Semester-wise DU SOL Study Material</title>
@@ -716,10 +716,10 @@
     /* dark mode moved */
     </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=727"></script>
-  <script src="/js/uptime-helper.js?v=727"></script>
-  <script src="/js/api-client.js?v=727"></script>
-  <script src="/js/sol-cache.js?v=727"></script>
+  <script src="/config.js?v=728"></script>
+  <script src="/js/uptime-helper.js?v=728"></script>
+  <script src="/js/api-client.js?v=728"></script>
+  <script src="/js/sol-cache.js?v=728"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -882,6 +882,19 @@
     .aware-desc { color: var(--text-muted); font-size: 13px; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .aware-btn { width: 100%; padding: 10px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .aware-btn:hover { background: #fee2e2; }
+    /* Awareness Cards */
+    #awList::-webkit-scrollbar { height: 6px; }
+    #awList::-webkit-scrollbar-track { background: transparent; }
+    #awList::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 10px; }
+    .awareness-card { min-width: 270px; max-width: 290px; background: var(--bg-card, #fff); border: 1.5px solid #fecaca; border-radius: 14px; padding: 16px; flex-shrink: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 12px rgba(239,68,68,0.07); }
+    .aware-card-head { display: flex; align-items: center; gap: 12px; }
+    .aware-avatar { width: 42px; height: 42px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; color: #ef4444; font-weight: 800; font-size: 18px; flex-shrink: 0; }
+    .aware-info h4 { color: var(--text-main, #0f172a); font-size: 15px; margin: 0; font-weight: 700; }
+    .aware-info p { color: #ef4444; font-size: 12px; font-weight: 600; margin: 2px 0 0; }
+    .aware-desc { color: var(--text-muted, #64748b); font-size: 13px; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .aware-btn { width: 100%; padding: 9px; background: transparent; border: 1.5px solid #ef4444; color: #ef4444; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .aware-btn:hover { background: #fee2e2; }
+    
     /* Awareness Modal */
     #awModalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(4px); }
     #awModal { background: var(--bg-card); border-radius: 16px; width: 100%; max-width: 400px; padding: 25px; box-sizing: border-box; }
@@ -996,7 +1009,7 @@
     <div class="database-container">
       
         <!-- Safety & Awareness Section -->
-        <div class="awareness-container" id="awarenessSection" style="display: none;">
+        <div class="awareness-container" id="awarenessSection" style="display: none !important; height:0; overflow:hidden;">
           <div class="awareness-header">
             <h2 class="awareness-title">
               <i class="fas fa-shield-alt"></i> Community Safety Alerts
@@ -1015,6 +1028,31 @@
         <h1 id="db-title"><i class="fas fa-database"></i> MBA Study Material</h1>
         <p>Your comprehensive DU SOL resource hub for live classes, MBA notes, PYQs, and one-shot videos.</p>
       </div>
+
+      <!-- ===== COMMUNITY SAFETY ALERTS ===== -->
+      <div id="awarenessFullSection" style="display:none; margin-bottom: 32px;">
+        <!-- Header Row -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px;height:38px;background:#fee2e2;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <i class="fas fa-shield-alt" style="color:#ef4444;font-size:18px;"></i>
+            </div>
+            <div>
+              <h2 style="margin:0;font-size:18px;font-weight:800;color:#ef4444;">Community Safety Alerts</h2>
+              <p style="margin:0;font-size:12px;color:#94a3b8;">Zero tolerance for harassment</p>
+            </div>
+          </div>
+          <button id="addAwarenessBtn" onclick="openAwModal()" style="display:none; background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:10px; cursor:pointer; font-weight:700; font-size:13px; gap:6px; align-items:center;">
+            <i class="fas fa-plus"></i> Add Alert
+          </button>
+        </div>
+
+        <!-- Alert Cards Row -->
+        <div id="awList" style="display:flex; gap:14px; overflow-x:auto; padding-bottom:8px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+      <!-- ===== END COMMUNITY SAFETY ALERTS ===== -->
 
       <!-- Categories -->
       <div class="categories-grid">
@@ -1745,7 +1783,7 @@ function openAwProof(url) {
 function closeAwProof() { document.getElementById('awProofOverlay').style.display = 'none'; }
 
 async function loadAwareness() {
-  var section = document.getElementById('awarenessSection');
+  var section = document.getElementById('awarenessFullSection') || document.getElementById('awarenessSection');
   var addBtn = document.getElementById('addAwarenessBtn');
   var list = document.getElementById('awList');
   var token = localStorage.getItem('solmates_admin_token');
