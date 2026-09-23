@@ -328,6 +328,18 @@
       <input type="text" id="awPhone" placeholder="e.g. +91 98***XXXX12">
     </div>
     <div class="form-field">
+      <label>Semester / Affiliation *</label>
+      <select id="awSemester">
+        <option value="" disabled selected>-- Select --</option>
+        <option value="1st Semester (SOL MBA)">1st Semester (SOL MBA)</option>
+        <option value="2nd Semester (SOL MBA)">2nd Semester (SOL MBA)</option>
+        <option value="3rd Semester (SOL MBA)">3rd Semester (SOL MBA)</option>
+        <option value="4th Semester (SOL MBA)">4th Semester (SOL MBA)</option>
+        <option value="Outside / Non-SOL">Outside / Non-SOL</option>
+        <option value="Unknown">Unknown</option>
+      </select>
+    </div>
+    <div class="form-field">
       <label>Incident Description *</label>
       <textarea id="awDesc" rows="4" placeholder="Describe what happened clearly..."></textarea>
     </div>
@@ -491,11 +503,15 @@ async function removeAlert(id, btn) {
 async function submitAlert() {
   var name = document.getElementById('awName').value.trim();
   var phone = document.getElementById('awPhone').value.trim();
+  var sem = document.getElementById('awSemester').value;
   var desc = document.getElementById('awDesc').value.trim();
   var files = document.getElementById('awFile').files;
 
   if (!name || !desc) { alert('Name and description are required.'); return; }
+  if (!sem) { alert('Please select semester / affiliation.'); return; }
   if (!files.length) { alert('Please select at least one screenshot.'); return; }
+
+  var fullDesc = '[' + sem + ']\n' + desc;
 
   var btn = document.getElementById('submitAlertBtn');
   btn.disabled = true;
@@ -520,7 +536,7 @@ async function submitAlert() {
       title: name,
       link: imageUrls.length === 1 ? imageUrls[0] : JSON.stringify(imageUrls),
       date: phone || 'Number not provided',
-      description: desc,
+      description: fullDesc,
       folderId: 'AWARENESS'
     };
 
@@ -536,6 +552,7 @@ async function submitAlert() {
     closeAddModal();
     document.getElementById('awName').value = '';
     document.getElementById('awPhone').value = '';
+    document.getElementById('awSemester').selectedIndex = 0;
     document.getElementById('awDesc').value = '';
     document.getElementById('awFile').value = '';
     document.getElementById('filePreviewRow').innerHTML = '';
