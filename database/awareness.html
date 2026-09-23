@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=738">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=739">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=738"></script>
-<script src="/js/api-client.js?v=738" defer></script>
+<script src="/config.js?v=739"></script>
+<script src="/js/api-client.js?v=739" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -613,17 +613,17 @@ function openEditModal(alertStr) {
       var parsed = JSON.parse(alertData.link);
       if (Array.isArray(parsed)) {
         parsed.forEach(function(u) {
-          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrl = u;
           else existingImageUrls.push(u);
         });
       } else {
         var u = alertData.link;
-        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrl = u;
         else existingImageUrls.push(u);
       }
     } catch(e) { 
       var u = alertData.link;
-      if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+      if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrl = u;
       else existingImageUrls = [u]; 
     }
   }
@@ -904,17 +904,17 @@ async function loadAlerts() {
           var parsed = JSON.parse(alert.link);
           if (Array.isArray(parsed)) {
             parsed.forEach(function(u) {
-              if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+              if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrl = u;
               else images.push(u);
             });
           } else {
             var u = alert.link;
-            if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+            if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrl = u;
             else images.push(u);
           }
         } catch(e) {
           var u = alert.link;
-          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrl = u;
           else images = [u];
         }
       }
@@ -1016,15 +1016,18 @@ async function submitAlert() {
     }
 
     var voiceUrl = existingAdminVoiceUrl;
-    // Upload new voice note if selected
+    // Compress and encode audio to Base64
     if (selectedAdminVoice) {
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading Audio...';
-      var fdAudio = new FormData();
-      fdAudio.append('reqtype', 'fileupload');
-      fdAudio.append('fileToUpload', selectedAdminVoice);
-      var audioRes = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: fdAudio });
-      if (!audioRes.ok) throw new Error('Audio upload failed');
-      voiceUrl = await audioRes.text();
+      if (selectedAdminVoice.size > 2000000) {
+        throw new Error("Audio file too large. Max allowed is 2 MB.");
+      }
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Audio...';
+      voiceUrl = await new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function(e) { resolve(e.target.result); };
+        reader.onerror = function() { reject(new Error("Failed to read audio file")); };
+        reader.readAsDataURL(selectedAdminVoice);
+      });
     }
 
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (isEdit ? 'Updating...' : 'Publishing...');
