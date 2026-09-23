@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=731">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=732">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=731"></script>
-<script src="/js/api-client.js?v=731" defer></script>
+<script src="/config.js?v=732"></script>
+<script src="/js/api-client.js?v=732" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -269,8 +269,17 @@
   #filePreviewRow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .file-preview-thumb {
     width: 60px; height: 60px; border-radius: 8px; object-fit: cover;
-    border: 2px solid #ef4444; position: relative;
+    border: 2px solid #ef4444; position: relative; display: block;
   }
+  .preview-close-btn {
+    position: absolute; top: -6px; right: -6px;
+    background: #ef4444; color: white; border: none;
+    border-radius: 50%; width: 20px; height: 20px;
+    font-size: 14px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    line-height: 1; z-index: 10;
+  }
+  .preview-close-btn:hover { background: #dc2626; transform: scale(1.1); }
 
   #submitAlertBtn {
     width: 100%; padding: 14px; background: #ef4444; color: white;
@@ -414,24 +423,59 @@ function closeProof() { document.getElementById('proofOverlay').classList.remove
 function handleOverlayClick(e) { if (e.target === document.getElementById('proofOverlay')) closeProof(); }
 function toggleZoom(img) { img.classList.toggle('zoomed'); }
 
-// ===== ADD MODAL =====
+// ===== ADD MODAL & FILES =====
 function openAddModal() { document.getElementById('addModalOverlay').classList.add('open'); }
 function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
 
+var selectedAlertFiles = [];
+
 function previewFiles(input) {
+  var newFiles = Array.from(input.files);
+  newFiles.forEach(function(f) { selectedAlertFiles.push(f); });
+  input.value = ''; // Reset input so same file can be selected again
+  renderPreviews();
+}
+
+function renderPreviews() {
   var row = document.getElementById('filePreviewRow');
   row.innerHTML = '';
-  var files = Array.from(input.files);
-  files.forEach(function(f) {
+  selectedAlertFiles.forEach(function(f, index) {
     var reader = new FileReader();
     reader.onload = function(e) {
+      var wrap = document.createElement('div');
+      wrap.style.position = 'relative';
+      wrap.style.display = 'inline-block';
+      
       var img = document.createElement('img');
       img.src = e.target.result;
       img.className = 'file-preview-thumb';
-      row.appendChild(img);
+      
+      var closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '&times;';
+      closeBtn.className = 'preview-close-btn';
+      closeBtn.onclick = function() {
+        selectedAlertFiles.splice(index, 1);
+        renderPreviews();
+      };
+      
+      wrap.appendChild(img);
+      wrap.appendChild(closeBtn);
+      row.appendChild(wrap);
     };
     reader.readAsDataURL(f);
   });
+}
+
+// ===== WHATSAPP FORMATTING =====
+function formatWhatsAppText(text) {
+  if (!text) return '';
+  text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+  text = text.replace(/_([^_]+)_/g, '<em>$1</em>');
+  text = text.replace(/~([^~]+)~/g, '<del>$1</del>');
+  text = text.replace(/\n/g, '<br>');
+  return text;
 }
 
 // ===== PIN HELPERS =====
@@ -531,7 +575,7 @@ async function loadAlerts() {
         '</div>' +
         '<div class="alert-body">' +
           pinBadge +
-          '<p class="alert-desc">' + (alert.description || 'No description.') + '</p>' +
+          '<p class="alert-desc">' + formatWhatsAppText(alert.description || 'No description.') + '</p>' +
           '<div class="screenshots-row">' + thumbsHtml + '</div>' +
           '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' +
           pinBtn +
@@ -567,7 +611,7 @@ async function submitAlert() {
   var phone = document.getElementById('awPhone').value.trim();
   var sem = document.getElementById('awSemester').value;
   var desc = document.getElementById('awDesc').value.trim();
-  var files = document.getElementById('awFile').files;
+  var files = selectedAlertFiles;
 
   if (!name || !desc) { alert('Name and description are required.'); return; }
   if (!sem) { alert('Please select semester / affiliation.'); return; }
@@ -617,7 +661,8 @@ async function submitAlert() {
     document.getElementById('awSemester').selectedIndex = 0;
     document.getElementById('awDesc').value = '';
     document.getElementById('awFile').value = '';
-    document.getElementById('filePreviewRow').innerHTML = '';
+    selectedAlertFiles = [];
+    renderPreviews();
     loadAlerts();
     alert('Alert published!');
 
