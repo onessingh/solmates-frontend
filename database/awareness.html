@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=734">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=735">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=734"></script>
-<script src="/js/api-client.js?v=734" defer></script>
+<script src="/config.js?v=735"></script>
+<script src="/js/api-client.js?v=735" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -517,22 +517,94 @@ function openAddModal() { document.getElementById('addModalOverlay').classList.a
 function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
 
 var selectedAlertFiles = [];
+var editAlertId = null;
+var existingImageUrls = [];
+
+function openAddModal() {
+  editAlertId = null;
+  existingImageUrls = [];
+  document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-shield-alt"></i> Add Defaulter Alert';
+  document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-paper-plane"></i> Publish Alert';
+  document.getElementById('awName').value = '';
+  document.getElementById('awPhone').value = '';
+  document.getElementById('awSemester').selectedIndex = 0;
+  document.getElementById('awDesc').value = '';
+  document.getElementById('awFile').value = '';
+  document.querySelector('input[name="awAvatar"][value="👤"]').checked = true;
+  selectedAlertFiles = [];
+  renderPreviews();
+  document.getElementById('addModalOverlay').classList.add('open');
+}
+
+function openEditModal(alertStr) {
+  var alertData = JSON.parse(alertStr);
+  editAlertId = alertData.id || alertData._id;
+  
+  var rawTitle = alertData.title || '?';
+  var avatar = '👤';
+  var name = rawTitle;
+  if (rawTitle.indexOf('||') !== -1) {
+    var parts = rawTitle.split('||');
+    avatar = parts[0];
+    name = parts[1];
+  }
+
+  var fullDesc = alertData.description || '';
+  var sem = '';
+  var desc = fullDesc;
+  if (fullDesc.startsWith('[')) {
+    var closeIdx = fullDesc.indexOf(']\n');
+    if (closeIdx !== -1) {
+      sem = fullDesc.substring(1, closeIdx);
+      desc = fullDesc.substring(closeIdx + 2);
+    }
+  }
+
+  // Pre-fill form
+  var avatarRadio = document.querySelector('input[name="awAvatar"][value="' + avatar + '"]');
+  if (avatarRadio) avatarRadio.checked = true;
+  document.getElementById('awName').value = name;
+  document.getElementById('awPhone').value = alertData.date || '';
+  
+  var semSelect = document.getElementById('awSemester');
+  semSelect.selectedIndex = 0; // default
+  for (var i = 0; i < semSelect.options.length; i++) {
+    if (semSelect.options[i].value === sem) {
+      semSelect.selectedIndex = i;
+      break;
+    }
+  }
+  
+  document.getElementById('awDesc').value = desc;
+  
+  try {
+    var parsed = JSON.parse(alertData.link);
+    existingImageUrls = Array.isArray(parsed) ? parsed : [alertData.link];
+  } catch(e) { existingImageUrls = [alertData.link]; }
+  
+  selectedAlertFiles = [];
+  renderPreviews();
+  
+  document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-edit"></i> Edit Alert';
+  document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
+  
+  document.getElementById('addModalOverlay').classList.add('open');
+}
+
+function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
 
 // ===== PHONE AUTO-MASKING =====
 document.getElementById('awPhone').addEventListener('blur', function(e) {
   var val = e.target.value.trim();
   if (!val) return;
-  // If user already typed *** manually, skip
   if (val.indexOf('*') !== -1) return;
   
-  // Basic auto-masking for 10 digit Indian number: 9876543210 -> 987***3210
   var digits = val.replace(/\D/g, '');
   if (digits.length >= 10) {
     var last10 = digits.slice(-10);
     var prefix = val.substring(0, val.indexOf(last10));
     e.target.value = prefix + last10.substring(0,3) + '***' + last10.substring(6);
   } else if (val.length > 5) {
-    // Generic masking if not 10 digits
     var mid = Math.floor(val.length / 2);
     e.target.value = val.substring(0, mid-1) + '***' + val.substring(mid+2);
   }
@@ -586,7 +658,6 @@ function removeReportVoice() {
   document.getElementById('rpVoicePreview').innerHTML = '';
 }
 
-// Telegram Bot credentials (same as Ask Query widget)
 const TG_BOT_TOKEN = '8597525439:AAEV6WWYB3KXReoaNmbUoNWQqCyPvUe2laY';
 const TG_CHAT_ID = '1772865405';
 
@@ -607,14 +678,12 @@ async function submitReport() {
                   "🗣️ *Reporter:* " + user + "\n\n" +
                   "📝 *Description:*\n" + desc;
                   
-    // Send Text
     await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: TG_CHAT_ID, text: textMsg, parse_mode: 'Markdown' })
     });
 
-    // Send Voice Note if exists
     if (selectedReportVoice) {
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Voice Note...';
       var fdVoice = new FormData();
@@ -623,7 +692,6 @@ async function submitReport() {
       await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendVoice', { method: 'POST', body: fdVoice });
     }
 
-    // Send Photos if exist
     if (selectedReportFiles.length > 0) {
       for (var i = 0; i < selectedReportFiles.length; i++) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Photo ' + (i+1) + '/' + selectedReportFiles.length + '...';
@@ -636,7 +704,6 @@ async function submitReport() {
 
     alert('Report submitted successfully! The admin will review it shortly.');
     
-    // Reset
     closeReportModal();
     document.getElementById('rpOffender').value = '';
     document.getElementById('rpUser').value = '';
@@ -662,28 +729,29 @@ function previewFiles(input) {
 function renderPreviews() {
   var row = document.getElementById('filePreviewRow');
   row.innerHTML = '';
+  
+  if (editAlertId && selectedAlertFiles.length === 0 && existingImageUrls.length > 0) {
+    // Show existing images if no new files selected
+    existingImageUrls.forEach(function(url) {
+      var wrap = document.createElement('div');
+      wrap.style.position = 'relative'; wrap.style.display = 'inline-block';
+      var img = document.createElement('img');
+      img.src = url; img.className = 'file-preview-thumb';
+      wrap.appendChild(img); row.appendChild(wrap);
+    });
+  }
+
   selectedAlertFiles.forEach(function(f, index) {
     var reader = new FileReader();
     reader.onload = function(e) {
       var wrap = document.createElement('div');
-      wrap.style.position = 'relative';
-      wrap.style.display = 'inline-block';
-      
+      wrap.style.position = 'relative'; wrap.style.display = 'inline-block';
       var img = document.createElement('img');
-      img.src = e.target.result;
-      img.className = 'file-preview-thumb';
-      
+      img.src = e.target.result; img.className = 'file-preview-thumb';
       var closeBtn = document.createElement('button');
-      closeBtn.innerHTML = '&times;';
-      closeBtn.className = 'preview-close-btn';
-      closeBtn.onclick = function() {
-        selectedAlertFiles.splice(index, 1);
-        renderPreviews();
-      };
-      
-      wrap.appendChild(img);
-      wrap.appendChild(closeBtn);
-      row.appendChild(wrap);
+      closeBtn.innerHTML = '&times;'; closeBtn.className = 'preview-close-btn';
+      closeBtn.onclick = function() { selectedAlertFiles.splice(index, 1); renderPreviews(); };
+      wrap.appendChild(img); wrap.appendChild(closeBtn); row.appendChild(wrap);
     };
     reader.readAsDataURL(f);
   });
@@ -751,7 +819,6 @@ async function loadAlerts() {
       return;
     }
 
-    // Sort: pinned first, then rest
     var pinned = getPinned();
     alerts.sort(function(a, b) {
       var aId = a.id || a._id || '';
@@ -760,7 +827,6 @@ async function loadAlerts() {
       var bPinned = pinned.indexOf(bId) !== -1;
       if (aPinned && !bPinned) return -1;
       if (!aPinned && bPinned) return 1;
-      // Both pinned: preserve pin order
       if (aPinned && bPinned) return pinned.indexOf(aId) - pinned.indexOf(bId);
       return 0;
     });
@@ -796,7 +862,10 @@ async function loadAlerts() {
         ? '<button class="pin-btn ' + (isPinned ? 'pinned' : '') + '" onclick="togglePin(\'' + id + '\')">'
           + '<i class="fas fa-thumbtack"></i> ' + (isPinned ? 'Unpin' : 'Pin to Top') + '</button>'
         : '';
-      var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + id + '\', this)"><i class="fas fa-trash-alt"></i> Remove Alert</button>' : '';
+      
+      var alertDataJson = JSON.stringify(alert).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+      var editHtml = isAdmin ? '<button class="pin-btn" onclick="openEditModal(\'' + alertDataJson + '\')" style="color:#3b82f6; border-color:#3b82f6;"><i class="fas fa-edit"></i> Edit</button>' : '';
+      var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + id + '\', this)"><i class="fas fa-trash-alt"></i> Remove</button>' : '';
 
       return '<div class="alert-card ' + (isPinned ? 'pinned-card' : '') + '">' +
         '<div class="alert-card-top">' +
@@ -810,7 +879,7 @@ async function loadAlerts() {
           '<div class="screenshots-row">' + thumbsHtml + '</div>' +
           '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' +
           pinBtn +
-          removeHtml +
+          '<div style="display:flex; gap:8px;">' + editHtml + removeHtml + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
@@ -836,9 +905,10 @@ async function removeAlert(id, btn) {
   } catch(e) { alert('Error: ' + e.message); }
 }
 
-// ===== SUBMIT ALERT (Multi-image) =====
+// ===== SUBMIT ALERT (Multi-image + EDIT) =====
 async function submitAlert() {
-  var avatar = document.querySelector('input[name="awAvatar"]:checked').value;
+  var avatarInput = document.querySelector('input[name="awAvatar"]:checked');
+  var avatar = avatarInput ? avatarInput.value : '👤';
   var name = document.getElementById('awName').value.trim();
   var phone = document.getElementById('awPhone').value.trim();
   var sem = document.getElementById('awSemester').value;
@@ -847,29 +917,34 @@ async function submitAlert() {
 
   if (!name || !desc) { alert('Name and description are required.'); return; }
   if (!sem) { alert('Please select semester / affiliation.'); return; }
-  if (!files.length) { alert('Please select at least one screenshot.'); return; }
+  if (!editAlertId && !files.length) { alert('Please select at least one screenshot.'); return; }
 
   var fullDesc = '[' + sem + ']\n' + desc;
   var fullTitle = avatar + '||' + name;
 
   var btn = document.getElementById('submitAlertBtn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading images...';
+  var isEdit = !!editAlertId;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (isEdit ? 'Saving...' : 'Uploading images...');
 
   try {
-    // Upload all images to ImgBB
-    var imageUrls = [];
-    for (var i = 0; i < files.length; i++) {
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading ' + (i+1) + '/' + files.length + '...';
-      var fd = new FormData();
-      fd.append('image', files[i]);
-      var imgRes = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_KEY, { method: 'POST', body: fd });
-      var imgData = await imgRes.json();
-      if (!imgData.success) throw new Error('Image ' + (i+1) + ' upload failed');
-      imageUrls.push(imgData.data.url);
+    var imageUrls = existingImageUrls;
+    
+    // Upload new images if any are selected (replaces old ones)
+    if (files.length > 0) {
+      imageUrls = [];
+      for (var i = 0; i < files.length; i++) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading ' + (i+1) + '/' + files.length + '...';
+        var fd = new FormData();
+        fd.append('image', files[i]);
+        var imgRes = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_KEY, { method: 'POST', body: fd });
+        var imgData = await imgRes.json();
+        if (!imgData.success) throw new Error('Image ' + (i+1) + ' upload failed');
+        imageUrls.push(imgData.data.url);
+      }
     }
 
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (isEdit ? 'Updating...' : 'Publishing...');
 
     var payload = {
       title: fullTitle,
@@ -880,8 +955,12 @@ async function submitAlert() {
     };
 
     var token = localStorage.getItem('solmates_admin_token');
-    var saveRes = await fetch(API_URL + '/sol/notifications/1', {
-      method: 'POST',
+    
+    var endpoint = API_URL + '/sol/notifications/1';
+    if (isEdit) endpoint += '/' + editAlertId;
+    
+    var saveRes = await fetch(endpoint, {
+      method: isEdit ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify(payload)
     });
@@ -889,21 +968,14 @@ async function submitAlert() {
     if (!saveRes.ok) throw new Error('Failed to save. Check network.');
 
     closeAddModal();
-    document.getElementById('awName').value = '';
-    document.getElementById('awPhone').value = '';
-    document.getElementById('awSemester').selectedIndex = 0;
-    document.getElementById('awDesc').value = '';
-    document.getElementById('awFile').value = '';
-    selectedAlertFiles = [];
-    renderPreviews();
     loadAlerts();
-    alert('Alert published!');
+    alert(isEdit ? 'Alert updated successfully!' : 'Alert published!');
 
   } catch(err) {
     alert('Error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish Alert';
+    btn.innerHTML = isEdit ? '<i class="fas fa-save"></i> Save Changes' : '<i class="fas fa-paper-plane"></i> Publish Alert';
   }
 }
 
