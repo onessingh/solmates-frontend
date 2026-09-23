@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=739">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=740">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=739"></script>
-<script src="/js/api-client.js?v=739" defer></script>
+<script src="/config.js?v=740"></script>
+<script src="/js/api-client.js?v=740" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -564,8 +564,12 @@ function openAddModal() {
   document.getElementById('addModalOverlay').classList.add('open');
 }
 
-function openEditModal(alertStr) {
-  var alertData = JSON.parse(decodeURIComponent(alertStr));
+window.allAwarenessAlerts = [];
+
+function openEditModalById(id) {
+  var alertData = window.allAwarenessAlerts.find(function(a) { return (a.id || a._id) === id; });
+  if (!alertData) return;
+  
   editAlertId = alertData.id || alertData._id;
   
   var rawTitle = alertData.title || '?';
@@ -883,6 +887,8 @@ async function loadAlerts() {
       if (aPinned && bPinned) return pinned.indexOf(aId) - pinned.indexOf(bId);
       return 0;
     });
+    
+    window.allAwarenessAlerts = alerts;
 
     grid.innerHTML = alerts.map(function(alert) {
       var id = alert.id || alert._id || '';
@@ -933,8 +939,7 @@ async function loadAlerts() {
           + '<i class="fas fa-thumbtack"></i> ' + (isPinned ? 'Unpin' : 'Pin to Top') + '</button>'
         : '';
       
-      var alertDataJson = encodeURIComponent(JSON.stringify(alert)).replace(/'/g, "%27");
-      var editHtml = isAdmin ? '<button class="pin-btn" onclick="openEditModal(\'' + alertDataJson + '\')" style="color:#3b82f6; border-color:#3b82f6;"><i class="fas fa-edit"></i> Edit</button>' : '';
+      var editHtml = isAdmin ? '<button class="pin-btn" onclick="openEditModalById(\'' + id + '\')" style="color:#3b82f6; border-color:#3b82f6;"><i class="fas fa-edit"></i> Edit</button>' : '';
       var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + id + '\', this)"><i class="fas fa-trash-alt"></i> Remove</button>' : '';
 
       return '<div class="alert-card ' + (isPinned ? 'pinned-card' : '') + '">' +
