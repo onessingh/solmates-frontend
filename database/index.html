@@ -26,7 +26,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=726">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=727">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MBA Notes Free Download PDF | Semester-wise DU SOL Study Material</title>
@@ -716,10 +716,10 @@
     /* dark mode moved */
     </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=726"></script>
-  <script src="/js/uptime-helper.js?v=726"></script>
-  <script src="/js/api-client.js?v=726"></script>
-  <script src="/js/sol-cache.js?v=726"></script>
+  <script src="/config.js?v=727"></script>
+  <script src="/js/uptime-helper.js?v=727"></script>
+  <script src="/js/api-client.js?v=727"></script>
+  <script src="/js/sol-cache.js?v=727"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -1745,55 +1745,54 @@ function openAwProof(url) {
 function closeAwProof() { document.getElementById('awProofOverlay').style.display = 'none'; }
 
 async function loadAwareness() {
+  var section = document.getElementById('awarenessSection');
+  var addBtn = document.getElementById('addAwarenessBtn');
+  var list = document.getElementById('awList');
+  var token = localStorage.getItem('solmates_admin_token');
+  var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
+
+  if (isAdmin) {
+    section.style.display = 'block';
+    addBtn.style.display = 'inline-block';
+    list.innerHTML = '<p style="color:#64748b;font-size:14px;padding:10px 0;">Loading alerts...</p>';
+  }
+
   try {
-    const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
-    const response = await fetch(`${apiUrl}/sol/notifications/all?_t=${Date.now()}`);
-    if (!response.ok) return;
-    const data = await response.json();
-    
-    let alerts = [];
-    Object.values(data).forEach(semNotices => {
-      alerts = alerts.concat(semNotices.filter(n => n.folderId === 'AWARENESS'));
-    });
-    
-    // Sort newest first
-    alerts.reverse(); // Notifications are usually appended, reverse to get latest
-
-    const list = document.getElementById('awList');
-    const section = document.getElementById('awarenessSection');
-    const addBtn = document.getElementById('addAwarenessBtn');
-    
-    const token = localStorage.getItem('solmates_admin_token');
-        const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
-    if (isAdmin) {
-      addBtn.style.display = 'block';
-      section.style.display = 'block';
-    } else if (alerts.length > 0) {
-      section.style.display = 'block';
-    }
-
-    if (alerts.length === 0) {
-      list.innerHTML = `<p style="color:var(--text-muted); font-size:14px; padding: 10px;">No alerts currently active. Community is safe.</p>`;
+    var apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+    var response = await fetch(apiUrl + '/sol/notifications/all?_t=' + Date.now());
+    if (!response.ok) {
+      if (isAdmin) list.innerHTML = '<p style="color:#ef4444;font-size:13px;padding:10px 0;">Could not load alerts. Add a new one to start.</p>';
       return;
     }
-
-    list.innerHTML = alerts.map(alert => `
-      <div class="awareness-card">
-        <div class="aware-card-head">
-          <div class="aware-avatar">${alert.title.charAt(0).toUpperCase()}</div>
-          <div class="aware-info">
-            <h4>${alert.title}</h4>
-            <p>${alert.date}</p>
-          </div>
-        </div>
-        <p class="aware-desc">${alert.description}</p>
-        <button class="aware-btn" onclick="openAwProof('${alert.link}')">View Proof</button>
-        ${isAdmin ? `<button class="aware-btn" style="margin-top:8px; border-color:var(--border-color); color:var(--text-muted);" onclick="deleteAw('${alert.id || alert._id}', this)">🗑️ Remove</button>` : ''}
-      </div>
-    `).join('');
-
+    var data = await response.json();
+    var alerts = [];
+    if (Array.isArray(data)) {
+      alerts = data.filter(function(n){ return n.folderId === 'AWARENESS'; });
+    } else if (typeof data === 'object') {
+      Object.values(data).forEach(function(semNotices){
+        if (Array.isArray(semNotices)) {
+          semNotices.forEach(function(n){ if (n.folderId === 'AWARENESS') alerts.push(n); });
+        }
+      });
+    }
+    alerts.reverse();
+    if (!isAdmin && alerts.length === 0) { section.style.display = 'none'; return; }
+    if (!isAdmin) section.style.display = 'block';
+    if (alerts.length === 0) {
+      list.innerHTML = '<p style="color:#64748b;font-size:14px;padding:10px 0;">No alerts currently active. Community is safe.</p>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < alerts.length; i++) {
+      var alert = alerts[i];
+      var initial = (alert.title || '?').charAt(0).toUpperCase();
+      var removeBtn = isAdmin ? '<button class="aware-btn" style="margin-top:8px;" onclick="deleteAw('' + (alert.id || alert._id) + '', this)">Remove</button>' : '';
+      html += '<div class="awareness-card"><div class="aware-card-head"><div class="aware-avatar">' + initial + '</div><div class="aware-info"><h4>' + (alert.title || '') + '</h4><p>' + (alert.date || '') + '</p></div></div><p class="aware-desc">' + (alert.description || '') + '</p><button class="aware-btn" onclick="openAwProof('' + alert.link + '')">View Proof</button>' + removeBtn + '</div>';
+    }
+    list.innerHTML = html;
   } catch(err) {
-    console.error("Error loading awareness:", err);
+    console.error('Error loading awareness:', err);
+    if (isAdmin) list.innerHTML = '<p style="color:#ef4444;font-size:13px;padding:10px 0;">Error: ' + err.message + '</p>';
   }
 }
 
