@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=737">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=738">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=737"></script>
-<script src="/js/api-client.js?v=737" defer></script>
+<script src="/config.js?v=738"></script>
+<script src="/js/api-client.js?v=738" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -606,24 +606,26 @@ function openEditModal(alertStr) {
   document.getElementById('awDesc').value = desc;
   
   // Extract images vs audio link
-  try {
-    var parsed = JSON.parse(alertData.link);
-    existingImageUrls = [];
-    existingAdminVoiceUrl = null;
-    if (Array.isArray(parsed)) {
-      parsed.forEach(function(u) {
+  existingImageUrls = [];
+  existingAdminVoiceUrl = null;
+  if (alertData.link) {
+    try {
+      var parsed = JSON.parse(alertData.link);
+      if (Array.isArray(parsed)) {
+        parsed.forEach(function(u) {
+          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
+          else existingImageUrls.push(u);
+        });
+      } else {
+        var u = alertData.link;
         if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
         else existingImageUrls.push(u);
-      });
-    } else {
+      }
+    } catch(e) { 
       var u = alertData.link;
       if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
-      else existingImageUrls.push(u);
+      else existingImageUrls = [u]; 
     }
-  } catch(e) { 
-    var u = alertData.link;
-    if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) existingAdminVoiceUrl = u;
-    else existingImageUrls = [u]; 
   }
   
   selectedAlertFiles = [];
@@ -897,22 +899,24 @@ async function loadAlerts() {
 
       var images = [];
       var audioUrl = null;
-      try {
-        var parsed = JSON.parse(alert.link);
-        if (Array.isArray(parsed)) {
-          parsed.forEach(function(u) {
+      if (alert.link) {
+        try {
+          var parsed = JSON.parse(alert.link);
+          if (Array.isArray(parsed)) {
+            parsed.forEach(function(u) {
+              if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
+              else images.push(u);
+            });
+          } else {
+            var u = alert.link;
             if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
             else images.push(u);
-          });
-        } else {
+          }
+        } catch(e) {
           var u = alert.link;
           if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
-          else images.push(u);
+          else images = [u];
         }
-      } catch(e) {
-        var u = alert.link;
-        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1) audioUrl = u;
-        else images = [u];
       }
 
       var imagesJson = JSON.stringify(images).replace(/'/g, '&#39;');
@@ -929,7 +933,7 @@ async function loadAlerts() {
           + '<i class="fas fa-thumbtack"></i> ' + (isPinned ? 'Unpin' : 'Pin to Top') + '</button>'
         : '';
       
-      var alertDataJson = encodeURIComponent(JSON.stringify(alert));
+      var alertDataJson = encodeURIComponent(JSON.stringify(alert)).replace(/'/g, "%27");
       var editHtml = isAdmin ? '<button class="pin-btn" onclick="openEditModal(\'' + alertDataJson + '\')" style="color:#3b82f6; border-color:#3b82f6;"><i class="fas fa-edit"></i> Edit</button>' : '';
       var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + id + '\', this)"><i class="fas fa-trash-alt"></i> Remove</button>' : '';
 
