@@ -26,7 +26,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=725">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=726">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MBA Notes Free Download PDF | Semester-wise DU SOL Study Material</title>
@@ -716,10 +716,10 @@
     /* dark mode moved */
     </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=725"></script>
-  <script src="/js/uptime-helper.js?v=725"></script>
-  <script src="/js/api-client.js?v=725"></script>
-  <script src="/js/sol-cache.js?v=725"></script>
+  <script src="/config.js?v=726"></script>
+  <script src="/js/uptime-helper.js?v=726"></script>
+  <script src="/js/api-client.js?v=726"></script>
+  <script src="/js/sol-cache.js?v=726"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -1335,7 +1335,8 @@
       }
 
       function applyHcLockUI() {
-        const token = localStorage.getItem('solmates_admin_token');\n    const isAdmin = (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
+        const token = localStorage.getItem('solmates_admin_token');
+        const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
         if (hcIsLockedGlobal) {
           hcCard.classList.add('is-locked');
           if (hcLockIcon) hcLockIcon.style.display = 'flex';
@@ -1382,7 +1383,8 @@
 
       if (hcCard) {
         hcCard.addEventListener('click', (e) => {
-          const token = localStorage.getItem('solmates_admin_token');\n    const isAdmin = (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
+          const token = localStorage.getItem('solmates_admin_token');
+        const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
           if (hcIsLockedGlobal && !isAdmin) {
             e.preventDefault();
             alert('MBA in Healthcare is coming soon! Content is being added.');
@@ -1761,7 +1763,8 @@ async function loadAwareness() {
     const section = document.getElementById('awarenessSection');
     const addBtn = document.getElementById('addAwarenessBtn');
     
-    const token = localStorage.getItem('solmates_admin_token');\n    const isAdmin = (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
+    const token = localStorage.getItem('solmates_admin_token');
+        const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) || !!token;
     if (isAdmin) {
       addBtn.style.display = 'block';
       section.style.display = 'block';
