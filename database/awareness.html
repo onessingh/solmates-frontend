@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q6GVS9XX1M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Q6GVS9XX1M');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Safety Alerts | SOLMATES</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=730">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="/js/api.js?v=730" defer></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+  .page-header {
+    background: linear-gradient(135deg, #7f1d1d, #ef4444);
+    padding: 40px 20px 30px;
+    text-align: center;
+    color: white;
+  }
+  .page-header .shield-icon {
+    width: 64px; height: 64px; background: rgba(255,255,255,0.2);
+    border-radius: 18px; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 30px;
+  }
+  .page-header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .page-header p { font-size: 14px; opacity: 0.85; line-height: 1.5; max-width: 400px; margin: 0 auto; }
+
+  .back-btn {
+    position: absolute; top: 16px; left: 16px;
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    padding: 8px 14px; border-radius: 20px; cursor: pointer;
+    font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+    text-decoration: none;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.3); }
+
+  .content-area {
+    max-width: 900px; margin: 0 auto; padding: 30px 16px 80px;
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .alert-count {
+    background: #fee2e2; color: #ef4444; padding: 6px 14px;
+    border-radius: 20px; font-size: 13px; font-weight: 700;
+  }
+  #addAlertBtn {
+    display: none; background: #ef4444; color: white;
+    border: none; padding: 10px 20px; border-radius: 12px;
+    cursor: pointer; font-weight: 700; font-size: 14px;
+    display: none; align-items: center; gap: 8px;
+    transition: 0.2s;
+  }
+  #addAlertBtn:hover { background: #dc2626; transform: translateY(-1px); }
+
+  /* Alert Cards Grid */
+  .alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .alert-card {
+    background: white; border-radius: 16px;
+    border: 1.5px solid #fecaca;
+    box-shadow: 0 2px 12px rgba(239,68,68,0.08);
+    overflow: hidden; transition: 0.2s;
+  }
+  .alert-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(239,68,68,0.15); }
+
+  .alert-card-top {
+    background: linear-gradient(135deg, #fee2e2, #fff1f2);
+    padding: 20px; display: flex; align-items: center; gap: 14px;
+    border-bottom: 1px solid #fecaca;
+  }
+  .alert-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #ef4444; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; flex-shrink: 0;
+  }
+  .alert-name { font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+  .alert-phone { font-size: 12px; color: #ef4444; font-weight: 600; }
+  .alert-body { padding: 16px 20px 20px; }
+  .alert-desc { font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 16px; }
+  .alert-date { font-size: 11px; color: #94a3b8; margin-bottom: 14px; display: flex; align-items: center; gap: 4px; }
+
+  .proof-btn {
+    width: 100%; padding: 11px; background: #ef4444; color: white;
+    border: none; border-radius: 10px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .proof-btn:hover { background: #dc2626; }
+
+  .remove-btn {
+    width: 100%; padding: 9px; background: transparent; color: #94a3b8;
+    border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px;
+    cursor: pointer; margin-top: 8px; transition: 0.2s;
+  }
+  .remove-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: #94a3b8;
+  }
+  .empty-state i { font-size: 60px; color: #dcfce7; margin-bottom: 16px; }
+  .empty-state h3 { font-size: 20px; color: #16a34a; font-weight: 700; margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+  /* Loading */
+  .loading-state { text-align: center; padding: 60px 20px; color: #94a3b8; font-size: 15px; }
+
+  /* Disclaimer */
+  .disclaimer {
+    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 24px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .disclaimer i { color: #f97316; font-size: 16px; margin-top: 2px; flex-shrink: 0; }
+  .disclaimer p { font-size: 12px; color: #92400e; line-height: 1.5; }
+
+  /* Proof Viewer Modal */
+  #proofOverlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92); z-index: 10000;
+    align-items: center; justify-content: center;
+    padding: 20px; flex-direction: column;
+  }
+  #proofOverlay.open { display: flex; }
+  #proofImg { max-width: 100%; max-height: 82vh; border-radius: 12px; object-fit: contain; }
+  .proof-close {
+    position: absolute; top: 16px; right: 20px;
+    color: white; font-size: 36px; cursor: pointer;
+    background: none; border: none; line-height: 1;
+  }
+  .proof-caption { color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 12px; text-align: center; }
+
+  /* Add Alert Modal */
+  #addModalOverlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 10001;
+    align-items: center; justify-content: center; padding: 16px;
+    backdrop-filter: blur(4px);
+  }
+  #addModalOverlay.open { display: flex; }
+  #addModal {
+    background: white; border-radius: 20px; width: 100%; max-width: 420px;
+    padding: 28px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  #addModal h3 {
+    margin: 0 0 6px; color: #ef4444; font-size: 20px; font-weight: 800;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #addModal p.sub { color: #94a3b8; font-size: 13px; margin-bottom: 24px; }
+  .form-field { margin-bottom: 16px; }
+  .form-field label { display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+  .form-field input, .form-field textarea, .form-field select {
+    width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0;
+    border-radius: 12px; font-size: 14px; color: #0f172a;
+    background: #f8fafc; outline: none; font-family: inherit;
+    transition: 0.2s;
+  }
+  .form-field input:focus, .form-field textarea:focus {
+    border-color: #ef4444; background: white;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+  }
+  .form-field textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+  #submitAlertBtn {
+    width: 100%; padding: 14px; background: #ef4444; color: white;
+    border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
+    cursor: pointer; margin-top: 8px; transition: 0.2s;
+  }
+  #submitAlertBtn:disabled { background: #cbd5e1; cursor: not-allowed; }
+  #submitAlertBtn:hover:not(:disabled) { background: #dc2626; }
+  .modal-close-btn { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; }
+  .modal-close-btn:hover { color: #0f172a; }
+</style>
+</head>
+<body>
+
+<div class="page-header" style="position: relative;">
+  <a href="/database" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+  <div class="shield-icon"><i class="fas fa-shield-alt"></i></div>
+  <h1>Community Safety Alerts</h1>
+  <p>Zero tolerance for harassment. Protecting every student in the SOLMATES community.</p>
+</div>
+
+<div class="content-area">
+
+  <div class="disclaimer">
+    <i class="fas fa-info-circle"></i>
+    <p>This board is maintained by SOLMATES Admin. Phone numbers are partially masked for legal compliance. For full details or police assistance, contact Admin directly.</p>
+  </div>
+
+  <div class="top-bar">
+    <span class="alert-count" id="alertCount">Loading...</span>
+    <button id="addAlertBtn" onclick="openAddModal()">
+      <i class="fas fa-plus"></i> Add Alert
+    </button>
+  </div>
+
+  <div id="alertsGrid" class="alerts-grid">
+    <div class="loading-state"><i class="fas fa-spinner fa-spin" style="font-size:30px;color:#ef4444;"></i><br><br>Loading alerts...</div>
+  </div>
+
+</div>
+
+<!-- Proof Viewer -->
+<div id="proofOverlay">
+  <button class="proof-close" onclick="closeProof()">&times;</button>
+  <img id="proofImg" src="" alt="Proof Screenshot">
+  <p class="proof-caption">Screenshot submitted as evidence</p>
+</div>
+
+<!-- Add Alert Modal (Admin Only) -->
+<div id="addModalOverlay">
+  <div id="addModal">
+    <h3>
+      Add Defaulter Alert
+      <button class="modal-close-btn" onclick="closeAddModal()">&times;</button>
+    </h3>
+    <p class="sub">This alert will be visible to all SOLMATES users.</p>
+
+    <div class="form-field">
+      <label>Full Name of Defaulter *</label>
+      <input type="text" id="awName" placeholder="e.g. Rahul Kumar" required>
+    </div>
+    <div class="form-field">
+      <label>Masked Phone Number *</label>
+      <input type="text" id="awPhone" placeholder="e.g. +91 98***XXXX12 (mask for legal safety)">
+    </div>
+    <div class="form-field">
+      <label>What did they do? *</label>
+      <textarea id="awDesc" rows="4" placeholder="Describe the incident clearly. e.g. Sent inappropriate DMs to multiple girls in the community." required></textarea>
+    </div>
+    <div class="form-field">
+      <label>Screenshot / Proof *</label>
+      <input type="file" id="awFile" accept="image/*" required>
+    </div>
+    <button id="submitAlertBtn" onclick="submitAlert()">Publish Alert</button>
+  </div>
+</div>
+
+<script>
+const IMGBB_KEY = '40db24ee6e32a8be2abcf8c7d1915746';
+const API_URL = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+
+function openProof(url, name) {
+  document.getElementById('proofImg').src = url;
+  document.getElementById('proofOverlay').classList.add('open');
+}
+function closeProof() { document.getElementById('proofOverlay').classList.remove('open'); }
+
+function openAddModal() { document.getElementById('addModalOverlay').classList.add('open'); }
+function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
+
+async function loadAlerts() {
+  const grid = document.getElementById('alertsGrid');
+  const countEl = document.getElementById('alertCount');
+  try {
+    const res = await fetch(API_URL + '/sol/notifications/all?_t=' + Date.now());
+    const data = await res.json();
+    let alerts = [];
+    if (Array.isArray(data)) {
+      alerts = data.filter(function(n){ return n.folderId === 'AWARENESS'; });
+    } else {
+      Object.values(data).forEach(function(sem){
+        if (Array.isArray(sem)) sem.forEach(function(n){ if (n.folderId === 'AWARENESS') alerts.push(n); });
+      });
+    }
+    alerts.reverse();
+
+    const token = localStorage.getItem('solmates_admin_token');
+    const isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
+    if (isAdmin) {
+      var btn = document.getElementById('addAlertBtn');
+      btn.style.display = 'flex';
+    }
+
+    countEl.textContent = alerts.length + ' Active Alert' + (alerts.length !== 1 ? 's' : '');
+
+    if (alerts.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><h3>Community is Safe!</h3><p>No harassers found. Let\'s keep it that way.<br>Report any misconduct to the Admin.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = alerts.map(function(alert) {
+      var initial = (alert.title || '?').charAt(0).toUpperCase();
+      var removeHtml = isAdmin ? '<button class="remove-btn" onclick="removeAlert(\'' + (alert.id || alert._id) + '\', this)"><i class="fas fa-trash"></i> Remove Alert</button>' : '';
+      return '<div class="alert-card">' +
+        '<div class="alert-card-top">' +
+          '<div class="alert-avatar">' + initial + '</div>' +
+          '<div><div class="alert-name">' + (alert.title || 'Unknown') + '</div>' +
+          '<div class="alert-phone"><i class="fas fa-phone"></i> ' + (alert.date || 'Not provided') + '</div></div>' +
+        '</div>' +
+        '<div class="alert-body">' +
+          '<p class="alert-desc">' + (alert.description || 'No description.') + '</p>' +
+          '<button class="proof-btn" onclick="openProof(\'' + alert.link + '\', \'' + (alert.title || '') + '\')"><i class="fas fa-image"></i> View Screenshot Proof</button>' +
+          removeHtml +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+  } catch(err) {
+    grid.innerHTML = '<div class="loading-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle" style="font-size:30px;"></i><br><br>Failed to load. Please refresh.</div>';
+    countEl.textContent = 'Error';
+  }
+}
+
+async function removeAlert(id, btn) {
+  if (!confirm('Remove this alert permanently?')) return;
+  btn.textContent = 'Removing...';
+  try {
+    const token = localStorage.getItem('solmates_admin_token');
+    const res = await fetch(API_URL + '/sol/notifications/1/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (res.ok) { loadAlerts(); }
+    else { alert('Delete failed. Try again.'); btn.textContent = 'Remove Alert'; }
+  } catch(e) { alert('Error: ' + e.message); btn.textContent = 'Remove Alert'; }
+}
+
+async function submitAlert() {
+  var name = document.getElementById('awName').value.trim();
+  var phone = document.getElementById('awPhone').value.trim();
+  var desc = document.getElementById('awDesc').value.trim();
+  var file = document.getElementById('awFile').files[0];
+
+  if (!name || !desc || !file) { alert('Please fill all required fields.'); return; }
+
+  var btn = document.getElementById('submitAlertBtn');
+  btn.disabled = true;
+  btn.textContent = 'Uploading image...';
+
+  try {
+    var formData = new FormData();
+    formData.append('image', file);
+    var imgRes = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_KEY, { method: 'POST', body: formData });
+    var imgData = await imgRes.json();
+    if (!imgData.success) throw new Error('Image upload failed');
+
+    btn.textContent = 'Publishing alert...';
+
+    var payload = {
+      title: name,
+      link: imgData.data.url,
+      date: phone || 'Number not provided',
+      description: desc,
+      folderId: 'AWARENESS'
+    };
+
+    var token = localStorage.getItem('solmates_admin_token');
+    var saveRes = await fetch(API_URL + '/sol/notifications/1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(payload)
+    });
+
+    if (!saveRes.ok) throw new Error('Failed to save');
+
+    closeAddModal();
+    document.getElementById('awName').value = '';
+    document.getElementById('awPhone').value = '';
+    document.getElementById('awDesc').value = '';
+    document.getElementById('awFile').value = '';
+    loadAlerts();
+    alert('Alert published successfully!');
+
+  } catch(err) {
+    alert('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Publish Alert';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  loadAlerts();
+  // Also re-check admin after solmatesAPI loads
+  setTimeout(function() {
+    var token = localStorage.getItem('solmates_admin_token');
+    if (token) {
+      document.getElementById('addAlertBtn').style.display = 'flex';
+    }
+  }, 1500);
+});
+</script>
+
+</body>
+</html>
