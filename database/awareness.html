@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=733">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=734">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=733"></script>
-<script src="/js/api-client.js?v=733" defer></script>
+<script src="/config.js?v=734"></script>
+<script src="/js/api-client.js?v=734" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -89,6 +89,15 @@
     align-items: center; gap: 8px; transition: 0.2s;
   }
   #addAlertBtn:hover { background: #dc2626; transform: translateY(-1px); }
+
+  #reportBtn {
+    background: #3b82f6; color: white;
+    border: none; padding: 10px 18px; border-radius: 12px;
+    cursor: pointer; font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; gap: 8px; transition: 0.2s;
+  }
+  #reportBtn:hover { background: #2563eb; transform: translateY(-1px); }
+  .top-bar-btns { display: flex; gap: 10px; flex-wrap: wrap; }
 
   /* ===== DISCLAIMER ===== */
   .disclaimer {
@@ -291,14 +300,23 @@
     line-height: 1; z-index: 10;
   }
   .preview-close-btn:hover { background: #dc2626; transform: scale(1.1); }
+  
+  .audio-preview-card {
+    display: flex; align-items: center; gap: 8px; background: var(--input-bg);
+    border: 1px solid var(--border-color); padding: 8px; border-radius: 8px; margin-top: 8px;
+    font-size: 13px; color: var(--text-main); position: relative;
+  }
+  .audio-preview-card audio { height: 30px; max-width: 200px; }
 
-  #submitAlertBtn {
+  #submitAlertBtn, #submitReportBtn {
     width: 100%; padding: 14px; background: #ef4444; color: white;
     border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
     cursor: pointer; margin-top: 10px; transition: 0.2s;
   }
-  #submitAlertBtn:disabled { background: #cbd5e1; cursor: not-allowed; }
+  #submitAlertBtn:disabled, #submitReportBtn:disabled { background: #cbd5e1; cursor: not-allowed; }
   #submitAlertBtn:hover:not(:disabled) { background: #dc2626; }
+  #submitReportBtn { background: #3b82f6; }
+  #submitReportBtn:hover:not(:disabled) { background: #2563eb; }
 </style>
 </head>
 <body>
@@ -319,9 +337,14 @@
 
   <div class="top-bar">
     <span class="alert-count" id="alertCount">Loading...</span>
-    <button id="addAlertBtn" onclick="openAddModal()">
-      <i class="fas fa-plus"></i> Add Alert
-    </button>
+    <div class="top-bar-btns">
+      <button id="reportBtn" onclick="openReportModal()">
+        <i class="fas fa-bullhorn"></i> Report Incident
+      </button>
+      <button id="addAlertBtn" onclick="openAddModal()">
+        <i class="fas fa-plus"></i> Add Alert
+      </button>
+    </div>
   </div>
 
   <div id="alertsGrid" class="alerts-grid">
@@ -409,6 +432,48 @@
   </div>
 </div>
 
+<!-- Report Incident Modal (For Normal Users) -->
+<div id="reportModalOverlay" onclick="if(event.target===this)closeReportModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:10001; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px);">
+  <div id="reportModal" style="background:var(--bg-card); border-radius:20px; width:100%; max-width:420px; padding:26px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div class="modal-header">
+      <h3 style="color:#3b82f6;"><i class="fas fa-bullhorn"></i> Report to Admin</h3>
+      <button class="modal-close" onclick="closeReportModal()">&times;</button>
+    </div>
+    <p class="modal-sub">This report will be sent directly to the Admin securely. It will NOT be public.</p>
+
+    <div class="form-field">
+      <label>Offender's Name / Details *</label>
+      <input type="text" id="rpOffender" placeholder="Who are you reporting?">
+    </div>
+    <div class="form-field">
+      <label>Your Name & Phone (Optional but recommended)</label>
+      <input type="text" id="rpUser" placeholder="e.g. Rahul, 9876543210">
+    </div>
+    <div class="form-field">
+      <label>What happened? *</label>
+      <textarea id="rpDesc" rows="4" placeholder="Describe the incident in detail..."></textarea>
+    </div>
+    <div class="form-field">
+      <label>Attach Voice Note (Optional)</label>
+      <input type="file" id="rpVoice" accept="audio/*" style="display:none;" onchange="previewReportVoice(this)">
+      <button type="button" onclick="document.getElementById('rpVoice').click()" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:transparent; color:var(--text-main); font-size:13px; cursor:pointer;"><i class="fas fa-microphone"></i> Select Audio File</button>
+      <div id="rpVoicePreview"></div>
+    </div>
+    <div class="form-field">
+      <label>Attach Screenshots (Optional)</label>
+      <div class="file-upload-area" onclick="document.getElementById('rpFile').click()">
+        <i class="fas fa-images"></i>
+        Tap to select screenshots
+      </div>
+      <input type="file" id="rpFile" accept="image/*" multiple onchange="previewReportFiles(this)">
+      <div id="rpFilePreviewRow" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;"></div>
+    </div>
+    <button id="submitReportBtn" onclick="submitReport()">
+      <i class="fas fa-paper-plane"></i> Send to Admin
+    </button>
+  </div>
+</div>
+
 <script>
 const IMGBB_KEY = '40db24ee6e32a8be2abcf8c7d1915746';
 const API_URL = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
@@ -452,6 +517,140 @@ function openAddModal() { document.getElementById('addModalOverlay').classList.a
 function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
 
 var selectedAlertFiles = [];
+
+// ===== PHONE AUTO-MASKING =====
+document.getElementById('awPhone').addEventListener('blur', function(e) {
+  var val = e.target.value.trim();
+  if (!val) return;
+  // If user already typed *** manually, skip
+  if (val.indexOf('*') !== -1) return;
+  
+  // Basic auto-masking for 10 digit Indian number: 9876543210 -> 987***3210
+  var digits = val.replace(/\D/g, '');
+  if (digits.length >= 10) {
+    var last10 = digits.slice(-10);
+    var prefix = val.substring(0, val.indexOf(last10));
+    e.target.value = prefix + last10.substring(0,3) + '***' + last10.substring(6);
+  } else if (val.length > 5) {
+    // Generic masking if not 10 digits
+    var mid = Math.floor(val.length / 2);
+    e.target.value = val.substring(0, mid-1) + '***' + val.substring(mid+2);
+  }
+});
+
+// ===== REPORT MODAL LOGIC =====
+function openReportModal() { document.getElementById('reportModalOverlay').style.display = 'flex'; }
+function closeReportModal() { document.getElementById('reportModalOverlay').style.display = 'none'; }
+
+var selectedReportFiles = [];
+var selectedReportVoice = null;
+
+function previewReportFiles(input) {
+  var newFiles = Array.from(input.files);
+  newFiles.forEach(function(f) { selectedReportFiles.push(f); });
+  input.value = '';
+  renderReportPreviews();
+}
+
+function renderReportPreviews() {
+  var row = document.getElementById('rpFilePreviewRow');
+  row.innerHTML = '';
+  selectedReportFiles.forEach(function(f, index) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var wrap = document.createElement('div');
+      wrap.style.position = 'relative'; wrap.style.display = 'inline-block';
+      var img = document.createElement('img');
+      img.src = e.target.result; img.className = 'file-preview-thumb';
+      var closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '&times;'; closeBtn.className = 'preview-close-btn';
+      closeBtn.onclick = function() { selectedReportFiles.splice(index, 1); renderReportPreviews(); };
+      wrap.appendChild(img); wrap.appendChild(closeBtn); row.appendChild(wrap);
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+function previewReportVoice(input) {
+  if (input.files && input.files[0]) {
+    selectedReportVoice = input.files[0];
+    var url = URL.createObjectURL(selectedReportVoice);
+    document.getElementById('rpVoicePreview').innerHTML = '<div class="audio-preview-card">' +
+      '<audio controls src="' + url + '"></audio>' +
+      '<button class="preview-close-btn" onclick="removeReportVoice()" style="position:absolute; right: -5px; top: -5px;">&times;</button></div>';
+  }
+}
+function removeReportVoice() {
+  selectedReportVoice = null;
+  document.getElementById('rpVoice').value = '';
+  document.getElementById('rpVoicePreview').innerHTML = '';
+}
+
+// Telegram Bot credentials (same as Ask Query widget)
+const TG_BOT_TOKEN = '8597525439:AAEV6WWYB3KXReoaNmbUoNWQqCyPvUe2laY';
+const TG_CHAT_ID = '1772865405';
+
+async function submitReport() {
+  var offender = document.getElementById('rpOffender').value.trim();
+  var user = document.getElementById('rpUser').value.trim() || 'Anonymous';
+  var desc = document.getElementById('rpDesc').value.trim();
+
+  if (!offender || !desc) { alert('Offender details and description are required.'); return; }
+
+  var btn = document.getElementById('submitReportBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending to Admin...';
+
+  try {
+    var textMsg = "🚨 *NEW INCIDENT REPORT* 🚨\n\n" +
+                  "👤 *Reported Offender:* " + offender + "\n" +
+                  "🗣️ *Reporter:* " + user + "\n\n" +
+                  "📝 *Description:*\n" + desc;
+                  
+    // Send Text
+    await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT_ID, text: textMsg, parse_mode: 'Markdown' })
+    });
+
+    // Send Voice Note if exists
+    if (selectedReportVoice) {
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Voice Note...';
+      var fdVoice = new FormData();
+      fdVoice.append('chat_id', TG_CHAT_ID);
+      fdVoice.append('voice', selectedReportVoice);
+      await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendVoice', { method: 'POST', body: fdVoice });
+    }
+
+    // Send Photos if exist
+    if (selectedReportFiles.length > 0) {
+      for (var i = 0; i < selectedReportFiles.length; i++) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Photo ' + (i+1) + '/' + selectedReportFiles.length + '...';
+        var fdPhoto = new FormData();
+        fdPhoto.append('chat_id', TG_CHAT_ID);
+        fdPhoto.append('photo', selectedReportFiles[i]);
+        await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendPhoto', { method: 'POST', body: fdPhoto });
+      }
+    }
+
+    alert('Report submitted successfully! The admin will review it shortly.');
+    
+    // Reset
+    closeReportModal();
+    document.getElementById('rpOffender').value = '';
+    document.getElementById('rpUser').value = '';
+    document.getElementById('rpDesc').value = '';
+    selectedReportFiles = []; renderReportPreviews();
+    removeReportVoice();
+
+  } catch(err) {
+    alert('Failed to send report. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send to Admin';
+  }
+}
 
 function previewFiles(input) {
   var newFiles = Array.from(input.files);
