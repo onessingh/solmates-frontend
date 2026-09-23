@@ -78,12 +78,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=742">
-  <script src="/config.js?v=742" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=743">
+  <script src="/config.js?v=743" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=742" defer></script>
-  <script src="/js/webview-fix.js?v=742" defer></script>
-  <script src="/js/sol-cache.js?v=742" defer></script>
+  <script src="/js/api-client.js?v=743" defer></script>
+  <script src="/js/webview-fix.js?v=743" defer></script>
+  <script src="/js/sol-cache.js?v=743" defer></script>
   <script>
     // [v116.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -2186,8 +2186,21 @@
       
       const nonMeritNotices = [];
       const meritNotices = [];
+      
+      const isMeritList = (title) => {
+        const t = (title || '').toLowerCase();
+        if (t.includes('merit')) return true;
+        if (t.includes('ur list')) return true;
+        if (t.includes('pwbd')) return true;
+        if (t.includes('ews')) return true;
+        if (t.includes('ward')) return true;
+        if (t.includes('armed forces')) return true;
+        if (t.match(/\b(emp|obc|sc|st|cw|ur)\b/)) return true;
+        return false;
+      };
+
       finalNoticesArray.forEach(n => {
-        if (n.title && n.title.toLowerCase().includes('merit list')) meritNotices.push(n);
+        if (isMeritList(n.title)) meritNotices.push(n);
         else nonMeritNotices.push(n);
       });
       const finalNotices = nonMeritNotices.concat(meritNotices);
@@ -3274,7 +3287,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=742';
+        const swUrl = './sw.js?v=743';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
