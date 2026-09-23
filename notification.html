@@ -78,12 +78,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=741">
-  <script src="/config.js?v=741" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=742">
+  <script src="/config.js?v=742" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=741" defer></script>
-  <script src="/js/webview-fix.js?v=741" defer></script>
-  <script src="/js/sol-cache.js?v=741" defer></script>
+  <script src="/js/api-client.js?v=742" defer></script>
+  <script src="/js/webview-fix.js?v=742" defer></script>
+  <script src="/js/sol-cache.js?v=742" defer></script>
   <script>
     // [v116.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -2182,7 +2182,16 @@
         }
       });
 
-      const finalNotices = Array.from(dedupeMap.values());
+      const finalNoticesArray = Array.from(dedupeMap.values());
+      
+      const nonMeritNotices = [];
+      const meritNotices = [];
+      finalNoticesArray.forEach(n => {
+        if (n.title && n.title.toLowerCase().includes('merit list')) meritNotices.push(n);
+        else nonMeritNotices.push(n);
+      });
+      const finalNotices = nonMeritNotices.concat(meritNotices);
+
       const seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
 
       if (finalNotices.length > 0) {
@@ -3265,7 +3274,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=741';
+        const swUrl = './sw.js?v=742';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
