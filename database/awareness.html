@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=764">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=765">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=764"></script>
-<script src="/js/api-client.js?v=764" defer></script>
+<script src="/config.js?v=765"></script>
+<script src="/js/api-client.js?v=765" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -176,10 +176,19 @@
 
   .alert-body { padding: 14px 16px 18px; }
   .alert-desc { font-size: 14.5px; color: var(--text-main); line-height: 1.65; margin-bottom: 16px; }
-    .semester-badge { display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; color: #475569; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 14px; border: 1px solid #e2e8f0; }
+    .semester-badge { display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; color: #475569; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 4px; border: 1px solid #e2e8f0; }
+    html[data-solmates-theme=dark] .semester-badge { background: rgba(255,255,255,0.03); color: #cbd5e1; border-color: rgba(255,255,255,0.1); }
+    html[data-solmates-theme=dark] .semester-badge { display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; color: #475569; padding: 5px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 4px; border: 1px solid #e2e8f0; }
     html[data-solmates-theme=dark] .semester-badge { background: rgba(255,255,255,0.03); color: #cbd5e1; border-color: rgba(255,255,255,0.1); }
 
-  /* Multiple Screenshots */
+  
+    .alert-divider {
+      border: none; border-top: 1px solid #e2e8f0;
+      margin: 10px 0 16px 0; width: 100%;
+    }
+    html[data-solmates-theme=dark] .alert-divider { border-top-color: rgba(255,255,255,0.08); }
+
+    /* Multiple Screenshots */
   .screenshots-row {
     display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
     margin-bottom: 14px; scroll-snap-type: x mandatory;
@@ -1058,7 +1067,7 @@ async function loadAlerts() {
           '</div>' +
         '<div class="alert-body">' +
           pinBadge +
-          '<div class="alert-desc">' + formatWhatsAppText(alert.description || 'No description.').replace(/^\[(.*?)\](?:<br>\s*)+/i, '<div class="semester-badge"><i class="fas fa-bullhorn"></i> $1</div><br>') + '</div>' +
+          '<div class="alert-desc">' + formatWhatsAppText(alert.description || 'No description.').replace(/^\[(.*?)\](?:<br>\s*)+/i, '<div class="semester-badge"><i class="fas fa-bullhorn"></i> $1</div><hr class="alert-divider">') + '</div>' +
           audioHtml +
           '<div class="screenshots-row">' + thumbsHtml + '</div>' +
           (images.length > 0 ? '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' : '') +
