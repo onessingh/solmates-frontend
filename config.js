@@ -327,19 +327,20 @@ if (typeof document !== "undefined") {
               link.href = '/css/global-lockdown.css?v=97';
               document.head.appendChild(link);
           }
-          // C. Inject E-Notepad CSS
-          if (!document.querySelector('link[href*="floating-notepad.css"]')) {
-              const link = document.createElement('link');
-              link.rel = 'stylesheet';
-              link.href = '/css/floating-notepad.css?v=97';
-              document.head.appendChild(link);
-          }
-          // D. Inject E-Notepad JS
-          if (!document.querySelector('script[src*="floating-notepad.js"]')) {
-              const script = document.createElement('script');
-              script.src = '/js/floating-notepad.js?v=97';
-              script.defer = true;
-              document.head.appendChild(script);
+          // C. & D. Inject E-Notepad only if not on awareness page
+          if (!window.location.pathname.includes('/awareness')) {
+              if (!document.querySelector('link[href*="floating-notepad.css"]')) {
+                  const link = document.createElement('link');
+                  link.rel = 'stylesheet';
+                  link.href = '/css/floating-notepad.css?v=97';
+                  document.head.appendChild(link);
+              }
+              if (!document.querySelector('script[src*="floating-notepad.js"]')) {
+                  const script = document.createElement('script');
+                  script.src = '/js/floating-notepad.js?v=97';
+                  script.defer = true;
+                  document.head.appendChild(script);
+              }
           }
           // E. Dynamically manage theme-color meta tags for PWA/TWS status bar
           const updateThemeColor = (theme) => {
