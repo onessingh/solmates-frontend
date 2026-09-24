@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=760">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=761">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=760"></script>
-<script src="/js/api-client.js?v=760" defer></script>
+<script src="/config.js?v=761"></script>
+<script src="/js/api-client.js?v=761" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -75,42 +75,51 @@
   .content-area { max-width: 900px; margin: 0 auto; padding: 24px 16px 80px; }
 
   .top-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
-  }
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; flex-wrap: nowrap; gap: 6px; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .top-bar::-webkit-scrollbar { display: none; }
   .alert-count {
-    background: #fee2e2; color: #ef4444; padding: 6px 14px;
-    border-radius: 20px; font-size: 13px; font-weight: 700;
-  }
-  html[data-solmates-theme=dark] .alert-count { background: rgba(239,68,68,0.15); }
+      background: #fee2e2; color: #ef4444; padding: 5px 10px;
+      border-radius: 20px; font-size: 11.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    }
+  html[data-solmates-theme=dark] .alert-count {
+      background: #fee2e2; color: #ef4444; padding: 5px 10px;
+      border-radius: 20px; font-size: 11.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    }
 
   #addAlertBtn {
-    display: none; background: #ef4444; color: white;
-    border: none; padding: 10px 18px; border-radius: 12px;
-    cursor: pointer; font-weight: 700; font-size: 14px;
-    align-items: center; gap: 8px; transition: 0.2s;
-  }
+      display: none; background: #ef4444; color: white;
+      border: none; padding: 7px 12px; border-radius: 12px;
+      cursor: pointer; font-weight: 700; font-size: 12px;
+      align-items: center; gap: 6px; transition: 0.2s; white-space: nowrap; flex-shrink: 0;
+    }
   #addAlertBtn:hover { background: #dc2626; transform: translateY(-1px); }
 
   #reportBtn {
-    background: #3b82f6; color: white;
-    border: none; padding: 10px 18px; border-radius: 12px;
-    cursor: pointer; font-weight: 700; font-size: 14px;
-    display: flex; align-items: center; gap: 8px; transition: 0.2s;
-  }
+      background: #3b82f6; color: white; border: none;
+      padding: 7px 12px; border-radius: 12px; font-weight: 700;
+      cursor: pointer; font-size: 12px; white-space: nowrap; flex-shrink: 0;
+      display: flex; align-items: center; gap: 6px; transition: 0.2s;
+    }
   #reportBtn:hover { background: #2563eb; transform: translateY(-1px); }
-  .top-bar-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .top-bar-btns { display: flex; gap: 6px; flex-wrap: nowrap; }
 
   /* ===== DISCLAIMER ===== */
   .disclaimer {
-    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px;
-    padding: 12px 16px; margin-bottom: 20px;
-    display: flex; align-items: flex-start; gap: 10px;
-  }
-  html[data-solmates-theme=dark] .disclaimer { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); }
-  .disclaimer i { color: #f97316; font-size: 15px; margin-top: 2px; flex-shrink: 0; }
-  .disclaimer p { font-size: 12px; color: #92400e; line-height: 1.5; }
-  html[data-solmates-theme=dark] .disclaimer p { color: #fdba74; }
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px;
+      padding: 12px 16px; margin-bottom: 20px;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+  html[data-solmates-theme=dark] .disclaimer {
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px;
+      padding: 12px 16px; margin-bottom: 20px;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+  .disclaimer i { color: #3b82f6; font-size: 15px; margin-top: 2px; flex-shrink: 0; }
+  .disclaimer p { font-size: 12px; color: #1e3a8a; line-height: 1.5; }
+  html[data-solmates-theme=dark] .disclaimer p { color: #93c5fd; }
 
   /* ===== CARDS GRID ===== */
   .alerts-grid {
@@ -135,7 +144,7 @@
     display: flex; align-items: center; gap: 12px;
     border-bottom: 1px solid #fecaca;
   }
-  html[data-solmates-theme=dark] .alert-card-top { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.2); }
+  html[data-solmates-theme=dark] .alert-card-top { background: transparent; border-color: rgba(255,255,255,0.05); }
   .alert-avatar {
     width: 48px; height: 48px; border-radius: 50%;
     background: #ef4444; color: white;
@@ -341,7 +350,7 @@
   <div class="top-bar">
     <div style="display:flex; gap:10px; align-items:center;">
         <span class="alert-count" id="alertCount">Loading...</span>
-        <select id="awFilter" onchange="applyFilter()" style="padding:6px 12px; border-radius:20px; border:1px solid rgba(239, 68, 68, 0.2); background:var(--bg-card); color:var(--text-main); font-size:13px; font-weight:700; cursor:pointer; outline:none; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.05);">
+        <select id="awFilter" onchange="applyFilter()" style="padding:5px 8px; border-radius:16px; border:1px solid rgba(239, 68, 68, 0.2); background:var(--bg-card); color:var(--text-main); font-size:11.5px; font-weight:700; cursor:pointer; outline:none; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.05); flex-shrink:0;">
           <option value="all">All</option>
           <option value="1st Semester">Semester 1</option>
           <option value="2nd Semester">Semester 2</option>
