@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=759">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=760">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=759"></script>
-<script src="/js/api-client.js?v=759" defer></script>
+<script src="/config.js?v=760"></script>
+<script src="/js/api-client.js?v=760" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -339,7 +339,17 @@
   </div>
 
   <div class="top-bar">
-    <span class="alert-count" id="alertCount">Loading...</span>
+    <div style="display:flex; gap:10px; align-items:center;">
+        <span class="alert-count" id="alertCount">Loading...</span>
+        <select id="awFilter" onchange="applyFilter()" style="padding:6px 12px; border-radius:20px; border:1px solid rgba(239, 68, 68, 0.2); background:var(--bg-card); color:var(--text-main); font-size:13px; font-weight:700; cursor:pointer; outline:none; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.05);">
+          <option value="all">All</option>
+          <option value="1st Semester">Semester 1</option>
+          <option value="2nd Semester">Semester 2</option>
+          <option value="3rd Semester">Semester 3</option>
+          <option value="4th Semester">Semester 4</option>
+          <option value="Outside">Outsider / Fake</option>
+        </select>
+      </div>
     <div class="top-bar-btns">
       <button id="reportBtn" onclick="openReportModal()">
         <i class="fas fa-bullhorn"></i> Report Incident
@@ -912,26 +922,47 @@ async function loadAlerts() {
         }
       }, 500);
 
-    if (alerts.length === 0) {
-      grid.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><h3>Community is Safe!</h3><p>No reports found. Keep reporting misconduct to the Admin.</p></div>';
+    
+    window.allAwarenessAlerts = alerts;
+    renderAlertsGrid(alerts, false);
+
+
+  } catch(err) {
+    grid.innerHTML = '<div class="loading-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle" style="font-size:28px;"></i><br><br>Failed to load. Please refresh.</div>';
+    countEl.textContent = 'Error';
+  }
+}
+
+  function applyFilter() {
+    var val = document.getElementById('awFilter').value;
+    var filtered = window.allAwarenessAlerts;
+    if (val !== 'all') {
+      filtered = window.allAwarenessAlerts.filter(function(a) {
+        var desc = a.description || '';
+        return desc.toLowerCase().indexOf('[' + val.toLowerCase()) !== -1;
+      });
+    }
+    renderAlertsGrid(filtered, true); // true indicates it's a filtered view so we update count
+  }
+  
+  function renderAlertsGrid(alertsArray, isFilterUpdate) {
+    var grid = document.getElementById('alertsGrid');
+    var countEl = document.getElementById('alertCount');
+    
+    if (isFilterUpdate) {
+      countEl.textContent = alertsArray.length + ' Active Alert' + (alertsArray.length !== 1 ? 's' : '');
+    }
+
+    if (alertsArray.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><h3>Community is Safe!</h3><p>No reports found matching this filter.</p></div>';
       return;
     }
 
     var pinned = getPinned();
-    alerts.sort(function(a, b) {
-      var aId = a.id || a._id || '';
-      var bId = b.id || b._id || '';
-      var aPinned = pinned.indexOf(aId) !== -1;
-      var bPinned = pinned.indexOf(bId) !== -1;
-      if (aPinned && !bPinned) return -1;
-      if (!aPinned && bPinned) return 1;
-      if (aPinned && bPinned) return pinned.indexOf(aId) - pinned.indexOf(bId);
-      return 0;
-    });
-    
-    window.allAwarenessAlerts = alerts;
+    var token = localStorage.getItem('solmates_admin_token');
+    var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-    grid.innerHTML = alerts.map(function(alert) {
+    grid.innerHTML = alertsArray.map(function(alert) {
       var id = alert.id || alert._id || '';
       var isPinned = pinned.indexOf(id) !== -1;
       
@@ -1000,18 +1031,13 @@ async function loadAlerts() {
           '<div class="alert-desc">' + formatWhatsAppText(alert.description || 'No description.').replace(/^\[(.*?)\](?:<br>\s*)+/i, '<div class="semester-badge"><i class="fas fa-bullhorn"></i> $1</div><br>') + '</div>' +
           audioHtml +
           '<div class="screenshots-row">' + thumbsHtml + '</div>' +
-          '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' +
+          (images.length > 0 ? '<button class="proof-btn" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')"><i class="fas fa-search-plus"></i> View & Zoom Proof</button>' : '') +
           pinBtn +
-          '<div style="display:flex; gap:8px;">' + editHtml + removeHtml + '</div>' +
+          '<div style="display:flex; gap:8px; margin-top:8px;">' + editHtml + removeHtml + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
-
-  } catch(err) {
-    grid.innerHTML = '<div class="loading-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle" style="font-size:28px;"></i><br><br>Failed to load. Please refresh.</div>';
-    countEl.textContent = 'Error';
   }
-}
 
   function shareAlert(id) {
     var alertData = window.allAwarenessAlerts.find(function(a) { return (a.id || a._id) === id; });
