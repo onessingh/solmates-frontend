@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=754">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=755">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=754"></script>
-<script src="/js/api-client.js?v=754" defer></script>
+<script src="/config.js?v=755"></script>
+<script src="/js/api-client.js?v=755" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -993,6 +993,7 @@ async function loadAlerts() {
     countEl.textContent = 'Error';
   }
 }
+
   function shareAlert(id) {
     var alertData = window.allAwarenessAlerts.find(function(a) { return (a.id || a._id) === id; });
     if (!alertData) { alert("Alert not found"); return; }
@@ -1001,30 +1002,22 @@ async function loadAlerts() {
     var name = rawTitle;
     if (rawTitle.indexOf('||') !== -1) name = rawTitle.split('||')[1];
 
-    var text = "⚠ *AWARENESS ALERT* ⚠
-";
-    text += "*Name:* " + name + "
-";
+    var text = "⚠ *AWARENESS ALERT* ⚠\n";
+    text += "*Name:* " + name + "\n";
     if (alertData.date && alertData.date !== 'Number not provided') {
-      text += "*Details:* " + alertData.date + "
-";
+      text += "*Details:* " + alertData.date + "\n";
     }
     
     var desc = alertData.description || "";
     if (desc.startsWith('[')) {
-      var closeIdx = desc.indexOf(']
-');
+      var closeIdx = desc.indexOf(']\n');
       if (closeIdx !== -1) {
-        text += "*Semester:* " + desc.substring(1, closeIdx) + "
-";
+        text += "*Semester:* " + desc.substring(1, closeIdx) + "\n";
         desc = desc.substring(closeIdx + 2);
       }
     }
     
-    text += "
-" + desc + "
-
-";
+    text += "\n" + desc + "\n\n";
     text += "👉 *View Proofs & Audio here:* https://solmates.in/database/awareness";
 
     if (navigator.share) {
@@ -1038,8 +1031,7 @@ async function loadAlerts() {
     }
   }
 
-
-// ===== REMOVE ALERT =====
+  // ===== REMOVE ALERT =====
 async function removeAlert(id, btn) {
   if (!confirm('Remove this alert permanently?')) return;
   btn.textContent = 'Removing...';
