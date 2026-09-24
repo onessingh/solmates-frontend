@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=753">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=754">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=753"></script>
-<script src="/js/api-client.js?v=753" defer></script>
+<script src="/config.js?v=754"></script>
+<script src="/js/api-client.js?v=754" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -993,6 +993,51 @@ async function loadAlerts() {
     countEl.textContent = 'Error';
   }
 }
+  function shareAlert(id) {
+    var alertData = window.allAwarenessAlerts.find(function(a) { return (a.id || a._id) === id; });
+    if (!alertData) { alert("Alert not found"); return; }
+    
+    var rawTitle = alertData.title || '?';
+    var name = rawTitle;
+    if (rawTitle.indexOf('||') !== -1) name = rawTitle.split('||')[1];
+
+    var text = "⚠ *AWARENESS ALERT* ⚠
+";
+    text += "*Name:* " + name + "
+";
+    if (alertData.date && alertData.date !== 'Number not provided') {
+      text += "*Details:* " + alertData.date + "
+";
+    }
+    
+    var desc = alertData.description || "";
+    if (desc.startsWith('[')) {
+      var closeIdx = desc.indexOf(']
+');
+      if (closeIdx !== -1) {
+        text += "*Semester:* " + desc.substring(1, closeIdx) + "
+";
+        desc = desc.substring(closeIdx + 2);
+      }
+    }
+    
+    text += "
+" + desc + "
+
+";
+    text += "👉 *View Proofs & Audio here:* https://solmates.in/database/awareness";
+
+    if (navigator.share) {
+      navigator.share({
+        title: 'SOL MATES Awareness Alert',
+        text: text
+      }).catch(function(e) { console.log('Share failed', e); });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('Alert text copied to clipboard! You can paste it in WhatsApp.');
+    }
+  }
+
 
 // ===== REMOVE ALERT =====
 async function removeAlert(id, btn) {
