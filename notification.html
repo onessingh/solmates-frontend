@@ -2738,9 +2738,13 @@
       document.getElementById('noticeDesc').value = notice.description || '';
       
       // Handle Image Pre-fill for Post type
-      document.getElementById('noticeImageUrl').value = notice.imageUrl || '';
-      if (notice.imageUrl) {
-        document.getElementById('existingImagePreviewImg').src = notice.imageUrl;
+      let extractedImageUrl = notice.imageUrl || '';
+      if (notice.link && notice.link.startsWith('#richpost:')) {
+          extractedImageUrl = notice.link.substring('#richpost:'.length);
+      }
+      document.getElementById('noticeImageUrl').value = extractedImageUrl;
+      if (extractedImageUrl) {
+        document.getElementById('existingImagePreviewImg').src = extractedImageUrl;
         document.getElementById('existingImagePreview').style.display = 'block';
       } else {
         document.getElementById('existingImagePreview').style.display = 'none';
