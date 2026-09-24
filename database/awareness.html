@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=746">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=747">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=746"></script>
-<script src="/js/api-client.js?v=746" defer></script>
+<script src="/config.js?v=747"></script>
+<script src="/js/api-client.js?v=747" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -786,19 +786,21 @@ function previewFiles(input) {
 }
 
 function renderPreviews() {
-  var row = document.getElementById('filePreviewRow');
-  row.innerHTML = '';
-  
-  if (editAlertId && selectedAlertFiles.length === 0 && existingImageUrls.length > 0) {
-    // Show existing images if no new files selected
-    existingImageUrls.forEach(function(url) {
-      var wrap = document.createElement('div');
-      wrap.style.position = 'relative'; wrap.style.display = 'inline-block';
-      var img = document.createElement('img');
-      img.src = url; img.className = 'file-preview-thumb';
-      wrap.appendChild(img); row.appendChild(wrap);
-    });
-  }
+    var row = document.getElementById('filePreviewRow');
+    row.innerHTML = '';
+    
+    if (editAlertId && existingImageUrls.length > 0) {
+      existingImageUrls.forEach(function(url, index) {
+        var wrap = document.createElement('div');
+        wrap.style.position = 'relative'; wrap.style.display = 'inline-block';
+        var img = document.createElement('img');
+        img.src = url; img.className = 'file-preview-thumb';
+        var closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '&times;'; closeBtn.className = 'preview-close-btn';
+        closeBtn.onclick = function() { existingImageUrls.splice(index, 1); renderPreviews(); };
+        wrap.appendChild(img); wrap.appendChild(closeBtn); row.appendChild(wrap);
+      });
+    }
 
   selectedAlertFiles.forEach(function(f, index) {
     var reader = new FileReader();
