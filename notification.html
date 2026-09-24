@@ -2182,7 +2182,12 @@
         }
       });
 
-      const finalNoticesArray = Array.from(dedupeMap.values());
+      // Blocklist for scraped notices that Admins want removed but scraper keeps fetching
+      const blocklist = ['mba (exec) healthcare admin prospectus'];
+      const finalNoticesArray = Array.from(dedupeMap.values()).filter(n => {
+         const t = (n.title || '').toLowerCase();
+         return !blocklist.some(b => t.includes(b));
+      });
       
       const nonMeritNotices = [];
       const meritNotices = [];
