@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=767">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=768">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=767"></script>
-<script src="/js/api-client.js?v=767" defer></script>
+<script src="/config.js?v=768"></script>
+<script src="/js/api-client.js?v=768" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -410,14 +410,20 @@
   <div class="top-bar">
     <div style="display:flex; gap:10px; align-items:center;">
         <span class="alert-count" id="alertCount">Loading...</span>
-        <select id="awFilter" onchange="applyFilter()" style="padding:5px 8px; border-radius:16px; border:1px solid rgba(239, 68, 68, 0.2); background:var(--bg-card); color:var(--text-main); font-size:11.5px; font-weight:700; cursor:pointer; outline:none; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.05); flex-shrink:0;">
-          <option value="all">All</option>
-          <option value="1st Semester">Semester 1</option>
-          <option value="2nd Semester">Semester 2</option>
-          <option value="3rd Semester">Semester 3</option>
-          <option value="4th Semester">Semester 4</option>
-          <option value="Outside">Outsider / Fake</option>
-        </select>
+        <div class="custom-select-wrapper" id="filterDropdownWrapper">
+          <div class="custom-select" onclick="document.getElementById('filterDropdownWrapper').classList.toggle('open')">
+            <span id="filterSelectedText">All</span>
+            <i class="fas fa-chevron-down" style="font-size:10px; margin-left:6px; opacity:0.7;"></i>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option selected" onclick="selectCustomFilter('all', 'All', this)">All</div>
+            <div class="custom-option" onclick="selectCustomFilter('1st Semester', 'Semester 1', this)">Semester 1</div>
+            <div class="custom-option" onclick="selectCustomFilter('2nd Semester', 'Semester 2', this)">Semester 2</div>
+            <div class="custom-option" onclick="selectCustomFilter('3rd Semester', 'Semester 3', this)">Semester 3</div>
+            <div class="custom-option" onclick="selectCustomFilter('4th Semester', 'Semester 4', this)">Semester 4</div>
+            <div class="custom-option" onclick="selectCustomFilter('Outside', 'Outsider / Fake', this)">Outsider / Fake</div>
+          </div>
+        </div>
       </div>
     <div class="top-bar-btns">
       <button id="reportBtn" onclick="openReportModal()">
@@ -1002,8 +1008,22 @@ async function loadAlerts() {
   }
 }
 
-  function applyFilter() {
-    var val = document.getElementById('awFilter').value;
+  window.currentFilterValue = 'all';
+
+  function selectCustomFilter(value, text, elem) {
+    window.currentFilterValue = value;
+    document.getElementById('filterSelectedText').textContent = text;
+    document.getElementById('filterDropdownWrapper').classList.remove('open');
+    
+    var opts = document.querySelectorAll('.custom-option');
+    opts.forEach(function(o) { o.classList.remove('selected'); });
+    elem.classList.add('selected');
+    
+    applyCustomFilter();
+  }
+
+  function applyCustomFilter() {
+    var val = window.currentFilterValue;
     var filtered = window.allAwarenessAlerts;
     if (val !== 'all') {
       filtered = window.allAwarenessAlerts.filter(function(a) {
@@ -1011,8 +1031,16 @@ async function loadAlerts() {
         return desc.toLowerCase().indexOf('[' + val.toLowerCase()) !== -1;
       });
     }
-    renderAlertsGrid(filtered, true); // true indicates it's a filtered view so we update count
+    renderAlertsGrid(filtered, true);
   }
+  
+  // Close dropdown if clicked outside
+  window.addEventListener('click', function(e) {
+    var wrapper = document.getElementById('filterDropdownWrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+      wrapper.classList.remove('open');
+    }
+  });
   
   function renderAlertsGrid(alertsArray, isFilterUpdate) {
     var grid = document.getElementById('alertsGrid');
