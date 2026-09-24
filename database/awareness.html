@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=749">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=750">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=749"></script>
-<script src="/js/api-client.js?v=749" defer></script>
+<script src="/config.js?v=750"></script>
+<script src="/js/api-client.js?v=750" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -424,7 +424,7 @@
         Tap to select screenshots<br>
         <small style="opacity:0.7;">You can select multiple images</small>
       </div>
-      <input type="file" id="awFile" accept="image/*" multiple onchange="previewFiles(this)">
+      <input type="file" id="awFile" accept="image/*" multiple style="display:none;" onchange="previewFiles(this)">
       <div id="filePreviewRow"></div>
     </div>
     
@@ -474,7 +474,7 @@
         <i class="fas fa-images"></i>
         Tap to select screenshots
       </div>
-      <input type="file" id="rpFile" accept="image/*" multiple onchange="previewReportFiles(this)">
+      <input type="file" id="rpFile" accept="image/*" multiple style="display:none;" onchange="previewReportFiles(this)">
       <div id="rpFilePreviewRow" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;"></div>
     </div>
     <button id="submitReportBtn" onclick="submitReport()">
