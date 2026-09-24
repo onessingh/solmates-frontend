@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=748">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=747">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=748"></script>
-<script src="/js/api-client.js?v=748" defer></script>
+<script src="/config.js?v=747"></script>
+<script src="/js/api-client.js?v=747" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -430,7 +430,7 @@
     
     <div class="form-field">
       <label>Voice Note / Audio Proof (Optional)</label>
-      <input type="file" id="awVoice" accept="audio/*" multiple style="display:none;" onchange="previewAdminVoice(this)">
+      <input type="file" id="awVoice" accept="audio/*" style="display:none;" onchange="previewAdminVoice(this)">
       <button type="button" onclick="document.getElementById('awVoice').click()" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:transparent; color:var(--text-main); font-size:13px; cursor:pointer;"><i class="fas fa-microphone"></i> Select Audio File</button>
       <div id="awVoicePreview"></div>
     </div>
@@ -526,55 +526,31 @@ function openAddModal() { document.getElementById('addModalOverlay').classList.a
 function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('open'); }
 
 var selectedAlertFiles = [];
-var selectedAdminVoices = [];
-var existingAdminVoiceUrls = [];
+var selectedAdminVoice = null;
+var existingAdminVoiceUrl = null;
 var editAlertId = null;
 var existingImageUrls = [];
 
-function renderVoicePreviews() {
-    var previewContainer = document.getElementById('awVoicePreview');
-    previewContainer.innerHTML = '';
-    existingAdminVoiceUrls.forEach(function(u, idx) {
-      var div = document.createElement('div');
-      div.className = 'audio-preview-card';
-      div.innerHTML = '<audio controls src="' + u + '"></audio>' +
-        '<button class="preview-close-btn" onclick="removeExistingAdminVoice(' + idx + ')" style="position:absolute; right: -5px; top: -5px;">&times;</button>';
-      previewContainer.appendChild(div);
-    });
-    selectedAdminVoices.forEach(function(f, idx) {
-      var url = URL.createObjectURL(f);
-      var div = document.createElement('div');
-      div.className = 'audio-preview-card';
-      div.innerHTML = '<audio controls src="' + url + '"></audio>' +
-        '<button class="preview-close-btn" onclick="removeNewAdminVoice(' + idx + ')" style="position:absolute; right: -5px; top: -5px;">&times;</button>';
-      previewContainer.appendChild(div);
-    });
+function previewAdminVoice(input) {
+  if (input.files && input.files[0]) {
+    selectedAdminVoice = input.files[0];
+    var url = URL.createObjectURL(selectedAdminVoice);
+    document.getElementById('awVoicePreview').innerHTML = '<div class="audio-preview-card">' +
+      '<audio controls src="' + url + '"></audio>' +
+      '<button class="preview-close-btn" onclick="removeAdminVoice()" style="position:absolute; right: -5px; top: -5px;">&times;</button></div>';
   }
-  
-  function previewAdminVoice(input) {
-    if (input.files) {
-      for(var i=0; i<input.files.length; i++) {
-        selectedAdminVoices.push(input.files[i]);
-      }
-      input.value = '';
-      renderVoicePreviews();
-    }
-  }
-  
-  function removeExistingAdminVoice(idx) {
-    existingAdminVoiceUrls.splice(idx, 1);
-    renderVoicePreviews();
-  }
-  
-  function removeNewAdminVoice(idx) {
-    selectedAdminVoices.splice(idx, 1);
-    renderVoicePreviews();
-  }
+}
+function removeAdminVoice() {
+  selectedAdminVoice = null;
+  existingAdminVoiceUrl = null; // Clear existing if any
+  document.getElementById('awVoice').value = '';
+  document.getElementById('awVoicePreview').innerHTML = '';
+}
 
 function openAddModal() {
   editAlertId = null;
   existingImageUrls = [];
-  existingAdminVoiceUrls = [];
+  existingAdminVoiceUrl = null;
   document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-shield-alt"></i> Add Defaulter Alert';
   document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-paper-plane"></i> Publish Alert';
   document.getElementById('awName').value = '';
@@ -636,31 +612,37 @@ function openEditModalById(id) {
   
   // Extract images vs audio link
   existingImageUrls = [];
-  existingAdminVoiceUrls = [];
+  existingAdminVoiceUrl = null;
   if (alertData.link) {
     try {
       var parsed = JSON.parse(alertData.link);
       if (Array.isArray(parsed)) {
         parsed.forEach(function(u) {
-          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrls.push(u);
+          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrl = u;
           else existingImageUrls.push(u);
         });
       } else {
         var u = alertData.link;
-        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrls.push(u);
+        if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrl = u;
         else existingImageUrls.push(u);
       }
     } catch(e) { 
       var u = alertData.link;
-      if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrls.push(u);
+      if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrl = u;
       else existingImageUrls = [u]; 
     }
   }
   
   selectedAlertFiles = [];
   renderPreviews();
-    selectedAdminVoices = [];
-    renderVoicePreviews();
+    selectedAdminVoice = null;
+    document.getElementById('awVoice').value = '';
+    document.getElementById('awVoicePreview').innerHTML = '';
+    if (existingAdminVoiceUrl) {
+    document.getElementById('awVoicePreview').innerHTML = '<div class="audio-preview-card">' +
+      '<audio controls src="' + existingAdminVoiceUrl + '"></audio>' +
+      '<button class="preview-close-btn" onclick="removeAdminVoice()" style="position:absolute; right: -5px; top: -5px;">&times;</button></div>';
+  }
   
   document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-edit"></i> Edit Alert';
   document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
@@ -926,23 +908,23 @@ async function loadAlerts() {
       }
 
       var images = [];
-      var audioUrls = [];
+      var audioUrl = null;
       if (alert.link) {
         try {
           var parsed = JSON.parse(alert.link);
           if (Array.isArray(parsed)) {
             parsed.forEach(function(u) {
-              if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrls.push(u);
+              if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrl = u;
               else images.push(u);
             });
           } else {
             var u = alert.link;
-            if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrls.push(u);
+            if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrl = u;
             else images.push(u);
           }
         } catch(e) {
           var u = alert.link;
-          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrls.push(u);
+          if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) audioUrl = u;
           else images = [u];
         }
       }
@@ -953,10 +935,7 @@ async function loadAlerts() {
         thumbsHtml += '<img class="screenshot-thumb" src="' + url + '" alt="Proof ' + (i+1) + '" onclick="openProof(\'' + imagesJson.replace(/"/g, '&quot;') + '\')" loading="lazy">';
       });
       
-      var audioHtml = '';
-        audioUrls.forEach(function(u) {
-            audioHtml += '<div style="margin-top:10px; margin-bottom:10px;"><audio controls src="' + u + '" style="height:35px; width:100%; border-radius:10px;"></audio></div>';
-        });
+      var audioHtml = audioUrl ? '<div style="margin-top:10px; margin-bottom:10px;"><audio controls src="' + audioUrl + '" style="height:35px; width:100%; border-radius:10px;"></audio></div>' : '';
 
       var pinBadge = isPinned ? '<div class="pin-badge"><i class="fas fa-thumbtack"></i> Pinned</div>' : '';
       var pinBtn = isAdmin
@@ -1018,7 +997,7 @@ async function submitAlert() {
 
   if (!name || !desc) { alert('Name and description are required.'); return; }
   if (!sem) { alert('Please select semester / affiliation.'); return; }
-  // optional screenshots
+  if (!editAlertId && !files.length) { alert('Please select at least one screenshot.'); return; }
 
   var fullDesc = '[' + sem + ']\n' + desc;
   var fullTitle = avatar + '||' + name;
@@ -1045,26 +1024,25 @@ async function submitAlert() {
       }
     }
 
-    var voiceUrls = existingAdminVoiceUrls.slice();
-    if (selectedAdminVoices.length > 0) {
-      for (var i = 0; i < selectedAdminVoices.length; i++) {
-        var f = selectedAdminVoices[i];
-        if (f.size > 2000000) throw new Error("Audio file too large. Max allowed is 2 MB per file.");
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Audio ' + (i+1) + '/' + selectedAdminVoices.length + '...';
-        var b64 = await new Promise(function(resolve, reject) {
-          var reader = new FileReader();
-          reader.onload = function(e) { resolve(e.target.result); };
-          reader.onerror = function() { reject(new Error("Failed to read audio file")); };
-          reader.readAsDataURL(f);
-        });
-        voiceUrls.push(b64);
+    var voiceUrl = existingAdminVoiceUrl;
+    // Compress and encode audio to Base64
+    if (selectedAdminVoice) {
+      if (selectedAdminVoice.size > 2000000) {
+        throw new Error("Audio file too large. Max allowed is 2 MB.");
       }
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Audio...';
+      voiceUrl = await new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function(e) { resolve(e.target.result); };
+        reader.onerror = function() { reject(new Error("Failed to read audio file")); };
+        reader.readAsDataURL(selectedAdminVoice);
+      });
     }
 
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (isEdit ? 'Updating...' : 'Publishing...');
 
     var finalLinks = [];
-    finalLinks = finalLinks.concat(voiceUrls);
+    if (voiceUrl) finalLinks.push(voiceUrl);
     finalLinks = finalLinks.concat(imageUrls);
 
     var payload = {
