@@ -2696,6 +2696,9 @@
     function openAddNoticeModal() {
       editingNoticeId = null;
       document.getElementById('modalTitle').textContent = 'Add Notification';
+      document.getElementById('noticeImageUrl').value = '';
+      if(document.getElementById('existingImagePreview')) document.getElementById('existingImagePreview').style.display = 'none';
+      document.getElementById('noticeImageFile').value = '';
       document.getElementById('modalTypePicker').style.display = 'flex';
       document.getElementById('addNoticeForm').reset();
 
@@ -2724,14 +2727,25 @@
 
       if (!notice) return alert('Bhai, notice nahi mila!');
 
-      const isLiveClass = (notice.description && notice.description.includes('MBA Live Class'));
-      setModalType(isLiveClass ? 'class' : 'notice');
+      const isPost = notice.isRichPost === true || notice.isRichPost === 'true';
+      const isLiveClass = (!isPost && notice.description && notice.description.includes('MBA Live Class'));
+      setModalType(isPost ? 'post' : (isLiveClass ? 'class' : 'notice'));
       document.getElementById('modalTypePicker').style.display = 'none'; // Lock type during edit
 
       document.getElementById('noticeSem').value = semester;
       document.getElementById('noticeLink').value = notice.link || '';
       document.getElementById('noticeDate').value = notice.date || '';
       document.getElementById('noticeDesc').value = notice.description || '';
+      
+      // Handle Image Pre-fill for Post type
+      document.getElementById('noticeImageUrl').value = notice.imageUrl || '';
+      if (notice.imageUrl) {
+        document.getElementById('existingImagePreviewImg').src = notice.imageUrl;
+        document.getElementById('existingImagePreview').style.display = 'block';
+      } else {
+        document.getElementById('existingImagePreview').style.display = 'none';
+      }
+
 
       if (isLiveClass) {
         // Try to parse components from title/desc
@@ -3425,26 +3439,22 @@
           <label>Date (DD-MM-YYYY)</label>
           <input type="text" id="noticeDate" required style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;">
         </div>
-        <div class="form-group">
-          <label>Description (Optional for Classes)</label>
-          
-          <div id="postFields" style="display:none;">
-          <!-- IMAGE UPLOAD -->
-          <div class="form-group" style="margin-top:5px;">
-            <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
-            <input type="file" id="noticeImageFile" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
-            <input type="hidden" id="noticeImageUrl">
-            <p id="imageUploadStatus" style="font-size:12px; color:blue; margin-top:5px; display:none;">Uploading image...</p>
-          </div>
-          
-          
-          <!-- Description -->
-          <div class="form-group" style="margin-top:5px;">
-            <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
-            <textarea id="noticeDesc" rows="1" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
+        <!-- Image Upload (Post Only) -->
+        <div id="postFields" style="display:none;" class="form-group">
+          <label>Image (Optional) - <small>Uploads to ImgBB</small></label>
+          <input type="file" id="noticeImageFile" accept="image/*" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd;">
+          <input type="hidden" id="noticeImageUrl">
+          <p id="imageUploadStatus" style="font-size:12px; color:blue; margin-top:5px; display:none;">Uploading image...</p>
+          <div id="existingImagePreview" style="margin-top: 8px; display:none;">
+            <img id="existingImagePreviewImg" src="" style="max-height:100px; border-radius:8px;">
+            <button type="button" onclick="document.getElementById('noticeImageUrl').value=''; document.getElementById('existingImagePreview').style.display='none';" style="background:red; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; margin-top:4px; cursor:pointer;">Remove Existing Image</button>
           </div>
         </div>
   
+        <!-- Description (For All Types) -->
+        <div class="form-group">
+          <label>Description (WhatsApp Style: *bold*, * bullet, https://)</label>
+          <textarea id="noticeDesc" rows="4" style="width:100%; padding:6px; border-radius:10px; border:1px solid #ddd;" placeholder="Type here..."></textarea>
         </div>
 
         <button type="button" id="addNoticeBtn" onclick="submitNoticeForm(event)" style="width:100%; background:#0f2b46; color:white; padding:12px; border:none; border-radius:12px; font-weight:700;">Submit</button>
