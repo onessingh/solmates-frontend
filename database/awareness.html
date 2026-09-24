@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=757">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=758">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=757"></script>
-<script src="/js/api-client.js?v=757" defer></script>
+<script src="/config.js?v=758"></script>
+<script src="/js/api-client.js?v=758" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -892,6 +892,23 @@ async function loadAlerts() {
     if (isAdmin) document.getElementById('addAlertBtn').style.display = 'flex';
 
     countEl.textContent = alerts.length + ' Active Alert' + (alerts.length !== 1 ? 's' : '');
+      setTimeout(function() {
+        var params = new URLSearchParams(window.location.search);
+        var targetId = params.get('id');
+        if (targetId) {
+          var targetEl = document.getElementById('alert-' + targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetEl.style.transition = 'all 0.5s ease';
+            targetEl.style.boxShadow = '0 0 0 4px #10b981, 0 8px 30px rgba(16,185,129,0.3)';
+            targetEl.style.transform = 'scale(1.02)';
+            setTimeout(function() {
+              targetEl.style.boxShadow = '';
+              targetEl.style.transform = '';
+            }, 3000);
+          }
+        }
+      }, 500);
 
     if (alerts.length === 0) {
       grid.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><h3>Community is Safe!</h3><p>No reports found. Keep reporting misconduct to the Admin.</p></div>';
