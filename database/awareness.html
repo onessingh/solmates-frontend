@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=756">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=757">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=756"></script>
-<script src="/js/api-client.js?v=756" defer></script>
+<script src="/config.js?v=757"></script>
+<script src="/js/api-client.js?v=757" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -1002,7 +1002,7 @@ async function loadAlerts() {
     var name = rawTitle;
     if (rawTitle.indexOf('||') !== -1) name = rawTitle.split('||')[1];
 
-    var text = "⚠ *AWARENESS ALERT* ⚠\n";
+    var text = "\u26A0 *AWARENESS ALERT* \u26A0\n";
     text += "*Name:* " + name + "\n";
     if (alertData.date && alertData.date !== 'Number not provided') {
       text += "*Details:* " + alertData.date + "\n";
@@ -1018,8 +1018,7 @@ async function loadAlerts() {
     }
     
     text += "\n" + desc + "\n\n";
-    text += "👉 *View Proofs & Audio here:*
-https://solmates.in/database/awareness?id=" + id + "\n\n🔄 *Please share this to protect others.*";
+    text += "\uD83D\uDC49 *View Proofs & Audio here:*\nhttps://solmates.in/database/awareness?id=" + id + "\n\n\uD83D\uDD04 *Please share this to protect others.*";
 
     if (navigator.share) {
       navigator.share({
