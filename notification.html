@@ -2727,7 +2727,7 @@
 
       if (!notice) return alert('Bhai, notice nahi mila!');
 
-      const isPost = notice.isRichPost === true || notice.isRichPost === 'true';
+      const isPost = notice.isRichPost === true || notice.isRichPost === 'true' || (notice.link && notice.link.startsWith('#richpost'));
       const isLiveClass = (!isPost && notice.description && notice.description.includes('MBA Live Class'));
       setModalType(isPost ? 'post' : (isLiveClass ? 'class' : 'notice'));
       document.getElementById('modalTypePicker').style.display = 'none'; // Lock type during edit
