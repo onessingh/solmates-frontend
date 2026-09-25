@@ -5,35 +5,123 @@
         "beforeFiles": [
             {
                 "source": "/database/pdf-viewer",
-                "destination": "/api/dynamic-og?page=pdf-viewer"
+                "destination": "/api/dynamic-og?page=pdf-viewer",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
+            },
+            {
+                "source": "/database/pdf-viewer.html",
+                "destination": "/api/dynamic-og?page=pdf-viewer",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/pdf-viewer/",
-                "destination": "/api/dynamic-og?page=pdf-viewer"
+                "destination": "/api/dynamic-og?page=pdf-viewer",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/view",
-                "destination": "/api/dynamic-og?page=view"
+                "destination": "/api/dynamic-og?page=view",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
+            },
+            {
+                "source": "/database/view.html",
+                "destination": "/api/dynamic-og?page=view",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/view/",
-                "destination": "/api/dynamic-og?page=view"
+                "destination": "/api/dynamic-og?page=view",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/youtube-content",
-                "destination": "/api/dynamic-og?page=youtube-content"
+                "destination": "/api/dynamic-og?page=youtube-content",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
+            },
+            {
+                "source": "/database/youtube-content.html",
+                "destination": "/api/dynamic-og?page=youtube-content",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/youtube-content/",
-                "destination": "/api/dynamic-og?page=youtube-content"
+                "destination": "/api/dynamic-og?page=youtube-content",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/folder-content",
-                "destination": "/api/dynamic-og?page=folder-content"
+                "destination": "/api/dynamic-og?page=folder-content",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
+            },
+            {
+                "source": "/database/folder-content.html",
+                "destination": "/api/dynamic-og?page=folder-content",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             },
             {
                 "source": "/database/folder-content/",
-                "destination": "/api/dynamic-og?page=folder-content"
+                "destination": "/api/dynamic-og?page=folder-content",
+                "has": [
+                    {
+                        "type": "query",
+                        "key": "title"
+                    }
+                ]
             }
         ],
         "afterFiles": [
