@@ -886,7 +886,7 @@
                 const viewer = (l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('docs.google.com/presentation') || (l.includes('drive.google.com') && !l.includes('VIDEO') && !l.includes('MP4'))) 
                     ? 'pdf-viewer' 
                     : 'video-viewer';
-                window.location.href = `/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}`;
+                window.location.href = `/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&semester=`;
             } else {
                 window.open(link, '_blank');
             }
