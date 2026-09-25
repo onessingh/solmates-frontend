@@ -7,13 +7,13 @@ module.exports = (req, res) => {
     let filePath = '';
     // Use hardcoded path.join strings so Vercel's NFT (Node File Trace) includes them in the deployment!
     if (page === 'pdf-viewer') {
-        filePath = path.join(process.cwd(), 'database', 'pdf-viewer.html');
+        filePath = path.join(process.cwd(), 'database', '_pdf-viewer.html');
     } else if (page === 'view') {
-        filePath = path.join(process.cwd(), 'database', 'view.html');
+        filePath = path.join(process.cwd(), 'database', '_view.html');
     } else if (page === 'youtube-content') {
-        filePath = path.join(process.cwd(), 'database', 'youtube-content.html');
+        filePath = path.join(process.cwd(), 'database', '_youtube-content.html');
     } else if (page === 'folder-content') {
-        filePath = path.join(process.cwd(), 'database', 'folder-content.html');
+        filePath = path.join(process.cwd(), 'database', '_folder-content.html');
     } else {
         return res.status(404).send('Not found');
     }
