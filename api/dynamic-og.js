@@ -11,8 +11,6 @@ const CATEGORY_TITLES = {
 };
 
 module.exports = (req, res) => {
-    // Vercel rewrites pass query params. 
-    // We check for 'title' (for items), 'name' (for folders), or 'category' (for views)
     const { page, title, name, category } = req.query;
     
     let filePath = '';
@@ -31,7 +29,6 @@ module.exports = (req, res) => {
     try {
         let html = fs.readFileSync(filePath, 'utf8');
 
-        // Determine what dynamic title to inject based on available params
         let rawTitle = title || name;
         if (!rawTitle && category && CATEGORY_TITLES[category.toLowerCase()]) {
             rawTitle = CATEGORY_TITLES[category.toLowerCase()];
@@ -43,14 +40,15 @@ module.exports = (req, res) => {
 
             html = html.replace(/<title>.*?<\/title>/i, `<title>${displayTitle}</title>`);
             
-            const ogTitleRegex = /<meta\s+(?:property|name)="og:title"\s+content="[^"]*"/i;
+            // Match the ENTIRE meta tag including the closing bracket so we don't duplicate it
+            const ogTitleRegex = /<meta\s+(?:property|name)="og:title"\s+content="[^"]*"\s*\/?>/i;
             if (ogTitleRegex.test(html)) {
                 html = html.replace(ogTitleRegex, `<meta property="og:title" content="${displayTitle}">`);
             } else {
                 html = html.replace('</head>', `\n<meta property="og:title" content="${displayTitle}">\n</head>`);
             }
 
-            const twTitleRegex = /<meta\s+(?:property|name)="twitter:title"\s+content="[^"]*"/i;
+            const twTitleRegex = /<meta\s+(?:property|name)="twitter:title"\s+content="[^"]*"\s*\/?>/i;
             if (twTitleRegex.test(html)) {
                 html = html.replace(twTitleRegex, `<meta name="twitter:title" content="${displayTitle}">`);
             } else {
