@@ -78,12 +78,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=781">
-  <script src="/config.js?v=781" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=782">
+  <script src="/config.js?v=782" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=781" defer></script>
-  <script src="/js/webview-fix.js?v=781" defer></script>
-  <script src="/js/sol-cache.js?v=781" defer></script>
+  <script src="/js/api-client.js?v=782" defer></script>
+  <script src="/js/webview-fix.js?v=782" defer></script>
+  <script src="/js/sol-cache.js?v=782" defer></script>
   <script>
     // [v116.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -2157,7 +2157,7 @@
       
       // v89.0: SMART DEDUPLICATION (Keep linked version over pending version)
       const dedupeMap = new Map();
-      const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\s+/g, ' ').trim();
+      const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\s+/g, ' ').trim();
       
       finalNoticesRaw.forEach(n => {
         const isLive = isLiveCheck(n);
@@ -2234,7 +2234,7 @@
 
           // v74.0: Use Link or Normalized Title as a deterministic unique key
           // This prevents re-badging even if the Mongo ID or Title-Date changes.
-          const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\s+/g, ' ').trim();
+          const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\s+/g, ' ').trim();
           const itemLink = (notice.link || '').trim();
           const uniqueKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(notice.title)}`;
 
@@ -3310,7 +3310,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=781';
+        const swUrl = './sw.js?v=782';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
