@@ -3,6 +3,42 @@
     "trailingSlash": false,
     "rewrites": [
         {
+            "source": "/database/pdf-viewer",
+            "destination": "/api/dynamic-og?page=pdf-viewer"
+        },
+        {
+            "source": "/database/pdf-viewer/",
+            "destination": "/api/dynamic-og?page=pdf-viewer"
+        },
+        {
+            "source": "/database/view",
+            "destination": "/api/dynamic-og?page=view"
+        },
+        {
+            "source": "/database/view/",
+            "destination": "/api/dynamic-og?page=view"
+        },
+        {
+            "source": "/database/youtube-content",
+            "destination": "/api/dynamic-og?page=youtube-content"
+        },
+        {
+            "source": "/database/youtube-content/",
+            "destination": "/api/dynamic-og?page=youtube-content"
+        },
+        {
+            "source": "/database/folder-content",
+            "destination": "/api/dynamic-og?page=folder-content"
+        },
+        {
+            "source": "/database/folder-content/",
+            "destination": "/api/dynamic-og?page=folder-content"
+        },
+        {
+            "source": "/api/dynamic-og",
+            "destination": "/api/dynamic-og"
+        },
+        {
             "source": "/api/:path*",
             "destination": "https://solmates-backend-w27e.onrender.com/api/:path*"
         },
@@ -211,14 +247,6 @@
             "destination": "/database/view?category=professor"
         },
         {
-            "source": "/database/view",
-            "destination": "/database/view"
-        },
-        {
-            "source": "/database/view/",
-            "destination": "/database/view"
-        },
-        {
             "source": "/database/youtube",
             "destination": "/database/view?category=youtube"
         },
@@ -233,14 +261,6 @@
         {
             "source": "/database/youtube-browse/",
             "destination": "/database/youtube-browse"
-        },
-        {
-            "source": "/database/youtube-content",
-            "destination": "/database/youtube-content"
-        },
-        {
-            "source": "/database/youtube-content/",
-            "destination": "/database/youtube-content"
         },
         {
             "source": "/database/classes",
@@ -273,14 +293,6 @@
         {
             "source": "/database/elearning/",
             "destination": "/database/view?category=elearning"
-        },
-        {
-            "source": "/database/folder-content",
-            "destination": "/database/folder-content"
-        },
-        {
-            "source": "/database/folder-content/",
-            "destination": "/database/folder-content"
         },
         {
             "source": "/tools/resume",
