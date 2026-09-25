@@ -184,27 +184,27 @@
         },
         {
             "source": "/mba-pyqs",
-            "destination": "/database/view?category=pyqs"
+            "destination": "/api/dynamic-og?page=view&category=pyqs"
         },
         {
             "source": "/mba-pyqs/",
-            "destination": "/database/view?category=pyqs"
+            "destination": "/api/dynamic-og?page=view&category=pyqs"
         },
         {
             "source": "/professor-materials",
-            "destination": "/database/view?category=professor"
+            "destination": "/api/dynamic-og?page=view&category=professor"
         },
         {
             "source": "/professor-materials/",
-            "destination": "/database/view?category=professor"
+            "destination": "/api/dynamic-og?page=view&category=professor"
         },
         {
             "source": "/mba-one-shot",
-            "destination": "/database/view?category=oneshot"
+            "destination": "/api/dynamic-og?page=view&category=oneshot"
         },
         {
             "source": "/mba-one-shot/",
-            "destination": "/database/view?category=oneshot"
+            "destination": "/api/dynamic-og?page=view&category=oneshot"
         },
         {
             "source": "/du-sol-results",
@@ -224,51 +224,51 @@
         },
         {
             "source": "/database/notes",
-            "destination": "/database/view?category=notes"
+            "destination": "/api/dynamic-og?page=view&category=notes"
         },
         {
             "source": "/database/notes/",
-            "destination": "/database/view?category=notes"
+            "destination": "/api/dynamic-og?page=view&category=notes"
         },
         {
             "source": "/database/pyqs",
-            "destination": "/database/view?category=pyqs"
+            "destination": "/api/dynamic-og?page=view&category=pyqs"
         },
         {
             "source": "/database/pyqs/",
-            "destination": "/database/view?category=pyqs"
+            "destination": "/api/dynamic-og?page=view&category=pyqs"
         },
         {
             "source": "/database/pyq",
-            "destination": "/database/view?category=pyqs"
+            "destination": "/api/dynamic-og?page=view&category=pyqs"
         },
         {
             "source": "/database/pyq/",
-            "destination": "/database/view?category=pyqs"
+            "destination": "/api/dynamic-og?page=view&category=pyqs"
         },
         {
             "source": "/database/oneshot",
-            "destination": "/database/view?category=oneshot"
+            "destination": "/api/dynamic-og?page=view&category=oneshot"
         },
         {
             "source": "/database/oneshot/",
-            "destination": "/database/view?category=oneshot"
+            "destination": "/api/dynamic-og?page=view&category=oneshot"
         },
         {
             "source": "/database/professor",
-            "destination": "/database/view?category=professor"
+            "destination": "/api/dynamic-og?page=view&category=professor"
         },
         {
             "source": "/database/professor/",
-            "destination": "/database/view?category=professor"
+            "destination": "/api/dynamic-og?page=view&category=professor"
         },
         {
             "source": "/database/youtube",
-            "destination": "/database/view?category=youtube"
+            "destination": "/api/dynamic-og?page=view&category=youtube"
         },
         {
             "source": "/database/youtube/",
-            "destination": "/database/view?category=youtube"
+            "destination": "/api/dynamic-og?page=view&category=youtube"
         },
         {
             "source": "/database/youtube-browse",
@@ -304,11 +304,11 @@
         },
         {
             "source": "/database/elearning",
-            "destination": "/database/view?category=elearning"
+            "destination": "/api/dynamic-og?page=view&category=elearning"
         },
         {
             "source": "/database/elearning/",
-            "destination": "/database/view?category=elearning"
+            "destination": "/api/dynamic-og?page=view&category=elearning"
         },
         {
             "source": "/tools/resume",
