@@ -35,7 +35,7 @@ module.exports = (req, res) => {
         }
 
         if (rawTitle) {
-            // Append semester if it exists (e.g. "Management of Information Systems Notes (Sem 1)")
+            // Append semester if it exists
             if (semester && semester !== 'all' && semester !== 'null' && semester !== 'undefined') {
                 rawTitle = `${rawTitle} (Sem ${semester})`;
             }
@@ -43,8 +43,16 @@ module.exports = (req, res) => {
             const safeTitle = rawTitle.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const displayTitle = `${safeTitle} | SOLMATES`;
 
+            // Replace standard title tag
             html = html.replace(/<title>.*?<\/title>/i, `<title>${displayTitle}</title>`);
             
+            // Generate a dynamic placeholder image with the item's title written on it
+            // Using Solmates dark theme colors: bg #0f172a, text #facc15
+            let shortText = safeTitle;
+            if (shortText.length > 50) shortText = shortText.substring(0, 47) + '...';
+            const dynamicImageUrl = `https://placehold.co/1200x630/0f172a/facc15.png?text=${encodeURIComponent(shortText)}`;
+
+            // Replace OG Title
             const ogTitleRegex = /<meta\s+(?:property|name)="og:title"\s+content="[^"]*"\s*\/?>/i;
             if (ogTitleRegex.test(html)) {
                 html = html.replace(ogTitleRegex, `<meta property="og:title" content="${displayTitle}">`);
@@ -52,11 +60,28 @@ module.exports = (req, res) => {
                 html = html.replace('</head>', `\n<meta property="og:title" content="${displayTitle}">\n</head>`);
             }
 
+            // Replace OG Image
+            const ogImageRegex = /<meta\s+(?:property|name)="og:image"\s+content="[^"]*"\s*\/?>/i;
+            if (ogImageRegex.test(html)) {
+                html = html.replace(ogImageRegex, `<meta property="og:image" content="${dynamicImageUrl}">`);
+            } else {
+                html = html.replace('</head>', `\n<meta property="og:image" content="${dynamicImageUrl}">\n</head>`);
+            }
+
+            // Replace Twitter Title
             const twTitleRegex = /<meta\s+(?:property|name)="twitter:title"\s+content="[^"]*"\s*\/?>/i;
             if (twTitleRegex.test(html)) {
                 html = html.replace(twTitleRegex, `<meta name="twitter:title" content="${displayTitle}">`);
             } else {
                 html = html.replace('</head>', `\n<meta name="twitter:title" content="${displayTitle}">\n</head>`);
+            }
+
+            // Replace Twitter Image
+            const twImageRegex = /<meta\s+(?:property|name)="twitter:image"\s+content="[^"]*"\s*\/?>/i;
+            if (twImageRegex.test(html)) {
+                html = html.replace(twImageRegex, `<meta name="twitter:image" content="${dynamicImageUrl}">`);
+            } else {
+                html = html.replace('</head>', `\n<meta name="twitter:image" content="${dynamicImageUrl}">\n</head>`);
             }
         }
 
