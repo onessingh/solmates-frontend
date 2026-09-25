@@ -48,5 +48,5 @@ document.addEventListener('DOMContentLoaded', async () => {
       var _cid = document.getElementById('videoContainer') ? 'videoContainer' : 'contentContainer';
       await loadYouTubeVideos('2', _cid);
     }
-  }, 15000);
+  }, 300000);
 });

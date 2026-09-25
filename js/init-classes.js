@@ -40,5 +40,5 @@ document.addEventListener('DOMContentLoaded', async () => {
       var _p = new URLSearchParams(window.location.search);
       await loadContent('classes', _p.get('semester'), 'contentContainer');
     }
-  }, 15000);
+  }, 300000);
 });

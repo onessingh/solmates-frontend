@@ -51,5 +51,5 @@ document.addEventListener('DOMContentLoaded', async () => {
       var _p = new URLSearchParams(window.location.search);
       await loadContent('pyq', _p.get('semester'), 'contentContainer');
     }
-  }, 15000);
+  }, 300000);
 });

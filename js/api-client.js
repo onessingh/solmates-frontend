@@ -161,10 +161,8 @@ class SolmatesAPI {
       headers['Authorization'] = `Bearer ${this.adminToken}`;
     }
 
-    // Add cache busting query param only - no custom headers
+    // No custom cache-buster to allow CDN/Cloudflare to actually do its job
     let url = `${this.baseURL}${endpoint}`;
-    const separator = url.includes('?') ? '&' : '?';
-    url = `${url}${separator}_cb=${Date.now()}`;
 
     const config = {
       ...options,
