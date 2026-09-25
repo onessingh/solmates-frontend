@@ -1,11 +1,21 @@
 const fs = require('fs');
 const path = require('path');
 
+const CATEGORY_TITLES = {
+    'notes': 'Notes',
+    'pyqs': 'PYQs',
+    'oneshot': 'One Shot',
+    'professor': 'Professor Materials',
+    'youtube': 'YouTube Playlists',
+    'elearning': 'E-Books'
+};
+
 module.exports = (req, res) => {
-    const { page, title } = req.query;
+    // Vercel rewrites pass query params. 
+    // We check for 'title' (for items), 'name' (for folders), or 'category' (for views)
+    const { page, title, name, category } = req.query;
     
     let filePath = '';
-    // Use hardcoded path.join strings so Vercel's NFT (Node File Trace) includes them in the deployment!
     if (page === 'pdf-viewer') {
         filePath = path.join(process.cwd(), 'database', '_pdf-viewer.html');
     } else if (page === 'view') {
@@ -21,15 +31,18 @@ module.exports = (req, res) => {
     try {
         let html = fs.readFileSync(filePath, 'utf8');
 
-        if (title) {
-            // Clean up the title parameter to prevent XSS in meta tags
-            const safeTitle = title.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        // Determine what dynamic title to inject based on available params
+        let rawTitle = title || name;
+        if (!rawTitle && category && CATEGORY_TITLES[category.toLowerCase()]) {
+            rawTitle = CATEGORY_TITLES[category.toLowerCase()];
+        }
+
+        if (rawTitle) {
+            const safeTitle = rawTitle.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const displayTitle = `${safeTitle} | SOLMATES`;
 
-            // Replace standard title tag
             html = html.replace(/<title>.*?<\/title>/i, `<title>${displayTitle}</title>`);
             
-            // Replace OG title
             const ogTitleRegex = /<meta\s+(?:property|name)="og:title"\s+content="[^"]*"/i;
             if (ogTitleRegex.test(html)) {
                 html = html.replace(ogTitleRegex, `<meta property="og:title" content="${displayTitle}">`);
@@ -37,7 +50,6 @@ module.exports = (req, res) => {
                 html = html.replace('</head>', `\n<meta property="og:title" content="${displayTitle}">\n</head>`);
             }
 
-            // Replace Twitter title
             const twTitleRegex = /<meta\s+(?:property|name)="twitter:title"\s+content="[^"]*"/i;
             if (twTitleRegex.test(html)) {
                 html = html.replace(twTitleRegex, `<meta name="twitter:title" content="${displayTitle}">`);
@@ -47,7 +59,7 @@ module.exports = (req, res) => {
         }
 
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300'); // Cache on Edge for performance
+        res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
         res.send(html);
     } catch (e) {
         console.error('Error reading file:', e);
