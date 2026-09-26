@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=783">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=784">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=783"></script>
-<script src="/js/api-client.js?v=783" defer></script>
+<script src="/config.js?v=784"></script>
+<script src="/js/api-client.js?v=784" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -935,25 +935,27 @@ function formatWhatsAppText(text) {
 }
 
 // ===== PIN HELPERS =====
-var MAX_PINS = 3;
-function getPinned() { try { return JSON.parse(localStorage.getItem('awareness_pinned') || '[]'); } catch(e) { return []; } }
-function setPinned(arr) { localStorage.setItem('awareness_pinned', JSON.stringify(arr.slice(0, MAX_PINS))); }
 function togglePin(id) {
-  var pinned = getPinned();
-  var idx = pinned.indexOf(id);
-  if (idx !== -1) {
-    pinned.splice(idx, 1);
-    setPinned(pinned);
-    loadAlerts();
-  } else {
-    if (pinned.length >= MAX_PINS) {
-      alert('Maximum 3 alerts can be pinned. Unpin one first.');
-      return;
+  var btn = event.currentTarget;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  btn.disabled = true;
+  var token = localStorage.getItem('solmates_admin_token');
+  fetch(API_URL + '/sol/notifications/1/' + id + '/pin', {
+    method: 'PUT',
+    headers: { 'Authorization': 'Bearer ' + token }
+  }).then(function(res) {
+    if (res.ok) {
+      loadAlerts();
+    } else {
+      alert('Failed to pin/unpin item');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-thumbtack"></i> Toggle Pin';
     }
-    pinned.unshift(id);
-    setPinned(pinned);
-    loadAlerts();
-  }
+  }).catch(function(e) {
+    alert('Error: ' + e.message);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-thumbtack"></i> Toggle Pin';
+  });
 }
 
 // ===== LOAD ALERTS =====
@@ -1059,19 +1061,15 @@ async function loadAlerts() {
       return;
     }
 
-    var pinned = getPinned();
     var token = localStorage.getItem('solmates_admin_token');
       var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
       
       var pinnedItems = [];
       var normalItems = [];
-      for (var i = 0; i < pinned.length; i++) {
-          var found = alertsArray.find(function(a) { return (a.id || a._id || '') === pinned[i]; });
-          if (found) pinnedItems.push(found);
-      }
       for (var j = 0; j < alertsArray.length; j++) {
-          var id = alertsArray[j].id || alertsArray[j]._id || '';
-          if (pinned.indexOf(id) === -1) {
+          if (alertsArray[j].isPinned) {
+              pinnedItems.push(alertsArray[j]);
+          } else {
               normalItems.push(alertsArray[j]);
           }
       }
@@ -1079,7 +1077,7 @@ async function loadAlerts() {
 
       grid.innerHTML = sortedAlerts.map(function(alert) {
       var id = alert.id || alert._id || '';
-      var isPinned = pinned.indexOf(id) !== -1;
+      var isPinned = !!alert.isPinned;
       
       var rawTitle = alert.title || '?';
       var avatar = rawTitle.charAt(0).toUpperCase();
