@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=787">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=788">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=787"></script>
-<script src="/js/api-client.js?v=787" defer></script>
+<script src="/config.js?v=788"></script>
+<script src="/js/api-client.js?v=788" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -410,33 +410,33 @@
       </div>
     </div>
 
-  <div class="top-bar">
-    <div style="display:flex; gap:6px; align-items:center;">
-        <span class="alert-count" id="alertCount">Loading...</span>
-        <div class="custom-select-wrapper" id="filterDropdownWrapper">
-          <div class="custom-select" onclick="document.getElementById('filterDropdownWrapper').classList.toggle('open')">
-            <span id="filterSelectedText">All</span>
-            <i class="fas fa-chevron-down" style="font-size:10px; margin-left:6px; opacity:0.7;"></i>
+  <div class="top-bar" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+      <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+          <span class="alert-count" id="alertCount">Loading...</span>
+          <div class="custom-select-wrapper" id="filterDropdownWrapper">
+            <div class="custom-select" onclick="document.getElementById('filterDropdownWrapper').classList.toggle('open')">
+              <span id="filterSelectedText">All</span>
+              <i class="fas fa-chevron-down" style="font-size:10px; margin-left:6px; opacity:0.7;"></i>
+            </div>
+            <div class="custom-options">
+              <div class="custom-option selected" onclick="selectCustomFilter('all', 'All', this)">All</div>
+              <div class="custom-option" onclick="selectCustomFilter('1st Semester', 'Semester 1', this)">Semester 1</div>
+              <div class="custom-option" onclick="selectCustomFilter('2nd Semester', 'Semester 2', this)">Semester 2</div>
+              <div class="custom-option" onclick="selectCustomFilter('3rd Semester', 'Semester 3', this)">Semester 3</div>
+              <div class="custom-option" onclick="selectCustomFilter('4th Semester', 'Semester 4', this)">Semester 4</div>
+              <div class="custom-option" onclick="selectCustomFilter('Outside', 'Outsider / Fake', this)">Outsider / Fake</div>
+            </div>
           </div>
-          <div class="custom-options">
-            <div class="custom-option selected" onclick="selectCustomFilter('all', 'All', this)">All</div>
-            <div class="custom-option" onclick="selectCustomFilter('1st Semester', 'Semester 1', this)">Semester 1</div>
-            <div class="custom-option" onclick="selectCustomFilter('2nd Semester', 'Semester 2', this)">Semester 2</div>
-            <div class="custom-option" onclick="selectCustomFilter('3rd Semester', 'Semester 3', this)">Semester 3</div>
-            <div class="custom-option" onclick="selectCustomFilter('4th Semester', 'Semester 4', this)">Semester 4</div>
-            <div class="custom-option" onclick="selectCustomFilter('Outside', 'Outsider / Fake', this)">Outsider / Fake</div>
-          </div>
-        </div>
+          <button id="reportBtn" onclick="openReportModal()">
+            <i class="fas fa-bullhorn"></i> Report Incident
+          </button>
       </div>
-    <div class="top-bar-btns">
-      <button id="reportBtn" onclick="openReportModal()">
-        <i class="fas fa-bullhorn"></i> Report Incident
-      </button>
-      <button id="addAlertBtn" onclick="openAddModal()">
-        <i class="fas fa-plus"></i> Add Alert
-      </button>
+      <div class="top-bar-btns" style="width: 100%;">
+        <button id="addAlertBtn" onclick="openAddModal()" style="width: 100%; justify-content: center;">
+          <i class="fas fa-plus"></i> Add Alert
+        </button>
+      </div>
     </div>
-  </div>
 
   <div id="alertsGrid" class="alerts-grid">
     <div class="loading-state">
