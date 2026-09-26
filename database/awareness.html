@@ -1061,9 +1061,23 @@ async function loadAlerts() {
 
     var pinned = getPinned();
     var token = localStorage.getItem('solmates_admin_token');
-    var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
+      var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
+      
+      var pinnedItems = [];
+      var normalItems = [];
+      for (var i = 0; i < pinned.length; i++) {
+          var found = alertsArray.find(function(a) { return (a.id || a._id || '') === pinned[i]; });
+          if (found) pinnedItems.push(found);
+      }
+      for (var j = 0; j < alertsArray.length; j++) {
+          var id = alertsArray[j].id || alertsArray[j]._id || '';
+          if (pinned.indexOf(id) === -1) {
+              normalItems.push(alertsArray[j]);
+          }
+      }
+      var sortedAlerts = pinnedItems.concat(normalItems);
 
-    grid.innerHTML = alertsArray.map(function(alert) {
+      grid.innerHTML = sortedAlerts.map(function(alert) {
       var id = alert.id || alert._id || '';
       var isPinned = pinned.indexOf(id) !== -1;
       
