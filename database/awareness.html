@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=788">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=789">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=788"></script>
-<script src="/js/api-client.js?v=788" defer></script>
+<script src="/config.js?v=789"></script>
+<script src="/js/api-client.js?v=789" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -107,7 +107,7 @@
 
   
     /* Custom Dropdown */
-    .custom-select-wrapper { position: relative; user-select: none; width: 125px; flex-shrink: 0; }
+    .custom-select-wrapper { position: relative; user-select: none; width: 110px; flex-shrink: 0; }
     .custom-select {
       display: flex; justify-content: space-between; align-items: center;
       padding: 6px 12px; border-radius: 16px; border: 1px solid rgba(239,68,68,0.2);
@@ -411,7 +411,7 @@
     </div>
 
   <div class="top-bar" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
-      <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+      <div style="display:flex; gap:6px; align-items:center; flex-wrap:nowrap; width:100%; overflow-x:auto; padding-bottom:2px;">
           <span class="alert-count" id="alertCount">Loading...</span>
           <div class="custom-select-wrapper" id="filterDropdownWrapper">
             <div class="custom-select" onclick="document.getElementById('filterDropdownWrapper').classList.toggle('open')">
