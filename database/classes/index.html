@@ -27,7 +27,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=789">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=790">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -39,9 +39,9 @@
     <!-- Font Awesome: Non-blocking -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
-    <script src="/config.js?v=789" defer></script>
-    <script src="/js/sol-cache.js?v=789" defer></script>
-    <script src="/js/api-client.js?v=789" defer></script>
+    <script src="/config.js?v=790" defer></script>
+    <script src="/js/sol-cache.js?v=790" defer></script>
+    <script src="/js/api-client.js?v=790" defer></script>
     <!-- socket.io loaded dynamically -->
     <style>
 
@@ -1265,13 +1265,17 @@
 
             try {
                 const results = await Promise.all(['1', '2', '3', '4', '0'].map(sem => solmatesAPI.getSOLContent('live-classes', sem)));
-                const sessionMap = new Map(); // Key: displayTitle + displayDate
+                const sessionMap = new Map();
+                window.seenClassIds = new Set(); // Key: displayTitle + displayDate
                 const todayStr = new Date().toLocaleDateString('en-CA');
 
                 results.forEach((res, i) => {
                     const sourceSem = i < 4 ? String(i + 1) : "all";
                     if (res.success && res.data) {
                         res.data.forEach(item => {
+                            if (window.seenClassIds && window.seenClassIds.has(item.id)) return;
+                            if (!window.seenClassIds) window.seenClassIds = new Set();
+                            window.seenClassIds.add(item.id);
                             const sessionDate = item.scheduledAt || item.date || item.created_at;
                             const sessionDay = String(sessionDate).split('T')[0].split(' ')[0];
 
