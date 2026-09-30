@@ -1388,7 +1388,7 @@
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
           if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
@@ -1458,7 +1458,7 @@
 
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
@@ -2054,8 +2054,8 @@
       // Step 2: Fresh Render
       try {
         const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null),
-          window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null)
+          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
+          window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
         ]);
 
         const folders = (fRes && fRes.data) ? fRes.data : [];
@@ -2827,7 +2827,7 @@
       folderSelect.innerHTML = '<option value="">Semester Root (No Folder)</option>';
       
       try {
-        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true, true);
+        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, false, true);
         const folders = (res && res.data) ? res.data : [];
         
         function buildFolderTree(list, parentId = null, depth = 0) {
@@ -2913,7 +2913,7 @@
       // 2. Query folder metadata from database for absolute correctness
       if (FOLDER_ID) {
         try {
-          const res = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+          const res = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
           const allFolders = (res && res.data) ? res.data : [];
           const activeFolder = allFolders.find(f => f.id === FOLDER_ID);
           if (activeFolder && activeFolder.playlistUrl) {
@@ -3085,7 +3085,7 @@
 
     async function executeOrganizeMoveToParent() {
       try {
-        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
         const folders = (semRes && semRes.data) ? semRes.data : [];
         const currentFolder = folders.find(f => f.id === FOLDER_ID);
         

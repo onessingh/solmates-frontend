@@ -472,7 +472,7 @@
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
           if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
@@ -552,7 +552,7 @@
 
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
@@ -791,7 +791,7 @@
         
         // Deep-link Lock Protection
         if (folderId && !isAdmin) {
-          const allFoldersRes = await window.solmatesAPI.getSOLFolders(CATEGORY, semester, null, true, true);
+          const allFoldersRes = await window.solmatesAPI.getSOLFolders(CATEGORY, semester, null, false, true);
           const allFolders = allFoldersRes.data || [];
           let curr = folderId;
           let isLockedHierarchy = false;
@@ -809,17 +809,13 @@
         }
 
         const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, true),
-          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, true)
+          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
         ]);
         renderGrid(fRes.data || [], iRes.data || []);
       } catch (e) {
-        const msg = e.message || '';
-        if (msg.toLowerCase().includes('locked')) {
-          grid.innerHTML = '<div class="empty"><i class="fas fa-lock" style="font-size:2rem;color:#f59e0b;margin-bottom:10px;"></i><br><strong>This folder is locked by the Administrator.</strong></div>';
-        } else {
-          grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
-        }
+        console.error("loadContent error:", e);
+        grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
       }
     }
 
@@ -1043,7 +1039,7 @@
       const folderSelect = document.getElementById('moveFolder');
       folderSelect.innerHTML = '<option value="">Semester Root (No Folder)</option>';
       try {
-        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, true, true);
+        const res = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, false, true);
         const folders = (res && res.data) ? res.data : [];
         function buildFolderTree(list, parentId = null, depth = 0) {
           let optionsHtml = '';

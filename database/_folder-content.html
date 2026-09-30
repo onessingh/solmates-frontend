@@ -1100,7 +1100,7 @@
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
           if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
@@ -1169,7 +1169,7 @@
 
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
@@ -1414,7 +1414,7 @@
       // Fetch latest folder data to set FOLDER_NAME and check visibility tags
       if (FOLDER_ID) {
         try {
-          const fRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+          const fRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
           const folderList = (fRes && fRes.data) ? fRes.data : [];
           const currentFolder = folderList.find(f => f.id === FOLDER_ID);
           if (currentFolder) {
@@ -1556,10 +1556,10 @@
       try {
         // Step 2: Background Refresh (Silent)
         const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null),
+          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
           isEBook
-            ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', true).catch(() => null)
-            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null)
+            ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false).catch(() => null)
+            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
         ]);
 
         if (fRes?.data || iRes?.data) {
@@ -1872,7 +1872,7 @@
         try {
           const marker = ' [HIDE_OTHER]';
           const actualOldName = await (async () => {
-            const fRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+            const fRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
             const folderList = (fRes && fRes.data) ? fRes.data : [];
             const currentFolder = folderList.find(f => f.id === FOLDER_ID);
             return currentFolder ? currentFolder.name : FOLDER_NAME;

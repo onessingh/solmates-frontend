@@ -898,7 +898,7 @@
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
           if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
@@ -968,7 +968,7 @@
 
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
@@ -1231,8 +1231,8 @@
             try {
                 if (!window.solmatesAPI) throw new Error('API not available');
                 const [fRes, iRes] = await Promise.all([
-                    window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true),
-                    window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', true)
+                    window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false),
+                    window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false)
                 ]);
                 window.isRefreshing = false;
                 const freshFolders = fRes?.data || [];

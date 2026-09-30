@@ -1375,7 +1375,7 @@
       async function checkHcLockState() {
         if (!hcCard || !window.solmatesAPI) return;
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
           const folders = (res && res.data) ? res.data : [];
           const lockFolder = folders.find(f => (f.name || '').includes(HC_LOCK_FOLDER));
           hcIsLockedGlobal = !!lockFolder;
@@ -1409,7 +1409,7 @@
               toggleBtn.disabled = true;
               try {
                 if (hcIsLockedGlobal) {
-                  const res2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+                  const res2 = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
                   const folders2 = (res2 && res2.data) ? res2.data : [];
                   const lockF = folders2.find(f => (f.name || '').includes(HC_LOCK_FOLDER));
                   if (lockF) await window.solmatesAPI.deleteSOLFolder(lockF.id);
@@ -1523,7 +1523,7 @@
         // Non-admin: check and block locked sections
         let lockFolders = [];
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
           lockFolders = (res && res.data) ? res.data : [];
         } catch(e) { return; }
 
@@ -1571,7 +1571,7 @@
       // Admin: show lock toggle buttons
       let lockFolders = [];
       try {
-        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
         lockFolders = (res && res.data) ? res.data : [];
       } catch(e) { return; }
 
@@ -1614,7 +1614,7 @@
               btn.disabled = true;
               try {
                 if (isLocked) {
-                  const r2 = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+                  const r2 = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
                   const flds = (r2 && r2.data) ? r2.data : [];
                   const lf = flds.find(f => (f.name||'').includes(sec.lockKey));
                   if (lf) await window.solmatesAPI.deleteSOLFolder(lf.id);
