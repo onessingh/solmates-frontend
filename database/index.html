@@ -1878,17 +1878,13 @@ async function submitAw(e) {
   
   try {
     const file = document.getElementById('awFile').files[0];
-    const formData = new FormData();
-    formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
-      
-      const imgRes = await fetch('https://catbox.moe/user/api.php', {
-        method: 'POST',
-        body: formData
+    if (file.size > 5000000) throw new Error("Image too large (Max 5MB)");
+      const imageUrl = await new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Failed to read image"));
       });
-      if (!imgRes.ok) throw new Error("Image upload failed");
-      
-      const imageUrl = await imgRes.text();
     
     btn.innerText = 'Publishing...';
     

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -85,7 +85,7 @@
   <script src="/js/webview-fix.js?v=795" defer></script>
   <script src="/js/sol-cache.js?v=795" defer></script>
   <script>
-    // [v116.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
+    // [v116.6] NUCLEAR AUTO-UPDATE â€¢ ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
@@ -1646,7 +1646,7 @@
         <div style="background:#fff;border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
             <h3 style="margin:0;font-size:1rem;font-weight:700;color:#1a1a2e;line-height:1.4;flex:1;">${title}</h3>
-            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">×</button>
+            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">Ã—</button>
           </div>
           ${date ? `<p style="margin:0 0 12px;font-size:0.8rem;color:#888;"><b>Date:</b> ${date}</p>` : ''}
           <p style="margin:0;font-size:0.9rem;color:#444;line-height:1.6;">${description}</p>
@@ -2264,7 +2264,7 @@
             return rawStr;
           };
           const formattedDisplayDate = (displayDate && displayDate !== 'None') ? formatMobileDate(dateObj, displayDate) : '';
-          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">📅 ${formattedDisplayDate}</span>` : '';
+          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">ðŸ“… ${formattedDisplayDate}</span>` : '';
           const timeHtml = displayTime ? `<span class="no-select-meta"><b class="no-select-meta">Schedule:</b> ${displayTime}</span>` : '';
           
           let linkHtml = '';
@@ -3313,7 +3313,7 @@
         const swUrl = './sw.js?v=795';
         const registration = await navigator.serviceWorker.register(swUrl);
         
-        // [v116.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
+        // [v116.5] refreshed flag + pageOpenTime guard â€¢ prevents infinite reload loop
         const _pageOpenTime = Date.now();
         let _swRefreshed = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -3494,24 +3494,23 @@ document.addEventListener('DOMContentLoaded', function() {
       statusEl.style.display = 'block';
       statusEl.textContent = 'Uploading to ImgBB... Please wait.';
       
-      const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-        formData.append('fileToUpload', file);
+      if (file.size > 5000000) {
+          statusEl.textContent = 'Image too large (Max 5MB)';
+          statusEl.style.color = 'red';
+          return;
+        }
         
         try {
-          const res = await fetch('https://catbox.moe/user/api.php', {
-            method: 'POST',
-            body: formData
+          const url = await new Promise(function(resolve, reject) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error("Failed to read image"));
           });
-          if (res.ok) {
-            const url = await res.text();
-            document.getElementById('noticeImageUrl').value = url;
+          document.getElementById('noticeImageUrl').value = url;
           statusEl.textContent = 'Upload Successful!';
           statusEl.style.color = 'green';
-        } else {
-          statusEl.textContent = 'Upload Failed: ' + data.error.message;
-          statusEl.style.color = 'red';
-        }
+
       } catch (err) {
         statusEl.textContent = 'Upload Error: ' + err.message;
         statusEl.style.color = 'red';
@@ -3735,6 +3734,7 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
 <!-- ===== END ASK QUERY WIDGET ===== -->
 </body>
 </html>
+
 
 
 
