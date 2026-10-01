@@ -3501,12 +3501,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-          const url = await new Promise(function(resolve, reject) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error("Failed to read image"));
-          });
+          let url;
+          try {
+            const formData = new FormData();
+            formData.append('image', file);
+            const IMGBB_API_KEY = '40db24ee6e32a8be2abcf8c7d1915746';
+            const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, { method: 'POST', body: formData });
+            const data = await res.json();
+            if (!data.success) throw new Error('ImgBB failed');
+            url = data.data.url;
+          } catch (e) {
+            url = await new Promise(function(resolve, reject) {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = () => reject(new Error("Failed to read image"));
+            });
+          }
           document.getElementById('noticeImageUrl').value = url;
           statusEl.textContent = 'Upload Successful!';
           statusEl.style.color = 'green';
