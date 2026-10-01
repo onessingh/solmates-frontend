@@ -3495,18 +3495,17 @@ document.addEventListener('DOMContentLoaded', function() {
       statusEl.textContent = 'Uploading to ImgBB... Please wait.';
       
       const formData = new FormData();
-      formData.append('image', file);
-      
-      try {
-        const IMGBB_API_KEY = '40db24ee6e32a8be2abcf8c7d1915746'; 
-        const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGBB_API_KEY, {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
+      formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', file);
         
-        if (data.success) {
-          document.getElementById('noticeImageUrl').value = data.data.url;
+        try {
+          const res = await fetch('https://catbox.moe/user/api.php', {
+            method: 'POST',
+            body: formData
+          });
+          if (res.ok) {
+            const url = await res.text();
+            document.getElementById('noticeImageUrl').value = url;
           statusEl.textContent = 'Upload Successful!';
           statusEl.style.color = 'green';
         } else {
