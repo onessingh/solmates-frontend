@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=799">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=800">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=799"></script>
-<script src="/js/api-client.js?v=799" defer></script>
+<script src="/config.js?v=800"></script>
+<script src="/js/api-client.js?v=800" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -385,6 +385,18 @@
   }
   .preview-close-btn:hover { background: #dc2626; transform: scale(1.1); }
   
+  .video-preview-thumb-wrap {
+    width: 60px; height: 60px; border-radius: 8px; position: relative; display: inline-block;
+  }
+  .video-preview-thumb-wrap img {
+    width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #ef4444; display: block;
+  }
+  .video-preview-thumb-wrap .video-play-mini {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.45); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;
+    pointer-events: none;
+  }
+
   .audio-preview-card {
     display: flex; align-items: center; gap: 8px; background: var(--input-bg);
     border: 1px solid var(--border-color); padding: 8px; border-radius: 8px; margin-top: 8px;
@@ -542,8 +554,12 @@
     </div>
 
     <div class="form-field">
-      <label><i class="fab fa-youtube" style="color:#ef4444;"></i> YouTube Video Proof Link (Optional)</label>
-      <input type="url" id="awVideo" placeholder="e.g. https://youtu.be/... or https://youtube.com/watch?v=...">
+      <label><i class="fab fa-youtube" style="color:#ef4444;"></i> Video Proofs (YouTube - Multiple allowed)</label>
+      <div style="display:flex; gap:6px;">
+        <input type="url" id="awVideoInput" placeholder="Paste YouTube link & tap Add..." onkeydown="if(event.key==='Enter'){event.preventDefault();addVideoLink();}" style="flex:1;">
+        <button type="button" onclick="addVideoLink()" style="background:#ef4444; color:white; border:none; padding:0 14px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; white-space:nowrap;"><i class="fas fa-plus"></i> Add</button>
+      </div>
+      <div id="videoPreviewRow" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;"></div>
     </div>
     
     <button id="submitAlertBtn" onclick="submitAlert()">
@@ -680,8 +696,48 @@ function closeAddModal() { document.getElementById('addModalOverlay').classList.
 var selectedAlertFiles = [];
 var selectedAdminVoices = [];
 var existingAdminVoiceUrls = [];
+var selectedVideos = [];
 var editAlertId = null;
 var existingImageUrls = [];
+
+function renderVideoPreviews() {
+  var row = document.getElementById('videoPreviewRow');
+  if (!row) return;
+  row.innerHTML = '';
+  selectedVideos.forEach(function(url, idx) {
+    var ytId = getYouTubeId(url);
+    var thumbUrl = ytId ? 'https://img.youtube.com/vi/' + ytId + '/hqdefault.jpg' : '';
+    var wrap = document.createElement('div');
+    wrap.className = 'video-preview-thumb-wrap';
+    wrap.innerHTML = '<img src="' + thumbUrl + '" alt="Video ' + (idx+1) + '">' +
+      '<div class="video-play-mini"><i class="fas fa-play"></i></div>' +
+      '<button type="button" class="preview-close-btn" onclick="removeVideo(' + idx + ')">&times;</button>';
+    row.appendChild(wrap);
+  });
+}
+
+function addVideoLink() {
+  var input = document.getElementById('awVideoInput');
+  if (!input) return;
+  var url = (input.value || '').trim();
+  if (!url) return;
+  if (!getYouTubeId(url)) {
+    alert('Please enter a valid YouTube link (e.g. https://youtu.be/... or https://youtube.com/watch?v=...)');
+    return;
+  }
+  if (selectedVideos.indexOf(url) !== -1) {
+    alert('This video is already added.');
+    return;
+  }
+  selectedVideos.push(url);
+  input.value = '';
+  renderVideoPreviews();
+}
+
+function removeVideo(idx) {
+  selectedVideos.splice(idx, 1);
+  renderVideoPreviews();
+}
 
 function renderVoicePreviews() {
     var previewContainer = document.getElementById('awVoicePreview');
@@ -727,6 +783,7 @@ function openAddModal() {
   editAlertId = null;
   existingImageUrls = [];
   existingAdminVoiceUrls = [];
+  selectedVideos = [];
   document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-shield-alt"></i> Add Defaulter Alert';
   document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-paper-plane"></i> Publish Alert';
   document.getElementById('awName').value = '';
@@ -734,12 +791,13 @@ function openAddModal() {
   document.getElementById('awSemester').selectedIndex = 0;
   document.getElementById('awDesc').value = '';
   document.getElementById('awFile').value = '';
-  document.getElementById('awVideo').value = '';
+  if (document.getElementById('awVideoInput')) document.getElementById('awVideoInput').value = '';
   document.querySelector('input[name="awAvatar"][value="🤡"]').checked = true;
   selectedAlertFiles = [];
   renderPreviews();
   selectedAdminVoices = [];
   renderVoicePreviews();
+  renderVideoPreviews();
   document.getElementById('addModalOverlay').classList.add('open');
 }
 
@@ -791,35 +849,36 @@ function openEditModalById(id) {
   // Extract images vs audio vs video link
   existingImageUrls = [];
   existingAdminVoiceUrls = [];
-  var existingVideoUrl = '';
+  selectedVideos = [];
   if (alertData.link) {
     try {
       var parsed = JSON.parse(alertData.link);
       if (Array.isArray(parsed)) {
         parsed.forEach(function(u) {
-          if (getYouTubeId(u)) existingVideoUrl = u;
+          if (getYouTubeId(u)) selectedVideos.push(u);
           else if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrls.push(u);
           else existingImageUrls.push(u);
         });
       } else {
         var u = alertData.link;
-        if (getYouTubeId(u)) existingVideoUrl = u;
+        if (getYouTubeId(u)) selectedVideos.push(u);
         else if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrls.push(u);
         else existingImageUrls.push(u);
       }
     } catch(e) { 
       var u = alertData.link;
-      if (getYouTubeId(u)) existingVideoUrl = u;
+      if (getYouTubeId(u)) selectedVideos.push(u);
       else if (u.match(/\.(mp3|wav|ogg|m4a)$/i) || u.indexOf('catbox.moe') !== -1 || u.startsWith('data:audio/')) existingAdminVoiceUrls.push(u);
       else existingImageUrls = [u]; 
     }
   }
   
-  document.getElementById('awVideo').value = existingVideoUrl || '';
+  if (document.getElementById('awVideoInput')) document.getElementById('awVideoInput').value = '';
   selectedAlertFiles = [];
   renderPreviews();
   selectedAdminVoices = [];
   renderVoicePreviews();
+  renderVideoPreviews();
   
   document.getElementById('modalTitleText').innerHTML = '<i class="fas fa-edit"></i> Edit Alert';
   document.getElementById('submitAlertBtn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
@@ -1304,14 +1363,19 @@ async function submitAlert() {
   var sem = document.getElementById('awSemester').value;
   var desc = document.getElementById('awDesc').value.trim();
   var files = selectedAlertFiles;
-  var ytLink = document.getElementById('awVideo').value.trim();
+  
+  // Also check if user typed a link into the input but forgot to click '+ Add'
+  var pendingInput = document.getElementById('awVideoInput');
+  if (pendingInput && pendingInput.value.trim()) {
+    var pUrl = pendingInput.value.trim();
+    if (getYouTubeId(pUrl) && selectedVideos.indexOf(pUrl) === -1) {
+      selectedVideos.push(pUrl);
+      pendingInput.value = '';
+    }
+  }
 
   if (!name || !desc) { alert('Name and description are required.'); return; }
   if (!sem) { alert('Please select semester / affiliation.'); return; }
-  if (ytLink && !getYouTubeId(ytLink)) {
-    alert('Please enter a valid YouTube link (e.g. https://youtu.be/... or https://youtube.com/watch?v=...)');
-    return;
-  }
 
   var fullDesc = '[' + sem + ']\n' + desc;
   var fullTitle = avatar + '||' + name;
@@ -1367,7 +1431,7 @@ async function submitAlert() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (isEdit ? 'Updating...' : 'Publishing...');
 
     var finalLinks = [];
-    if (ytLink) finalLinks.push(ytLink);
+    finalLinks = finalLinks.concat(selectedVideos);
     finalLinks = finalLinks.concat(voiceUrls);
     finalLinks = finalLinks.concat(imageUrls);
 
