@@ -438,7 +438,7 @@ class SolmatesAPI {
   // â”€â”€ Cache helpers (30s TTL) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   getCache(key) {
     try {
-      const raw = sessionStorage.getItem('solcache_v2_' + key);
+      const raw = sessionStorage.getItem('solcache_v3_' + key);
       if (!raw) return null;
       const parsed = JSON.parse(raw);
       if (!parsed || !parsed.data) return null;
@@ -449,14 +449,14 @@ class SolmatesAPI {
   setCache(key, data) {
     if (!data) return;
     try { 
-      sessionStorage.setItem('solcache_v2_' + key, JSON.stringify({ ts: Date.now(), data })); 
+      sessionStorage.setItem('solcache_v3_' + key, JSON.stringify({ ts: Date.now(), data })); 
     } catch { }
   }
   _cacheClear(prefix) {
     try {
       // If no prefix, clear ALL solcache items
       // Otherwise clear items starting with the prefix (e.g. content_ or folders_)
-      const searchPrefix = prefix ? 'solcache_v2_' + prefix : 'solcache_v2_';
+      const searchPrefix = prefix ? 'solcache_v3_' + prefix : 'solcache_v3_';
       Object.keys(sessionStorage).forEach(k => {
         if (k.startsWith(searchPrefix)) sessionStorage.removeItem(k);
       });
