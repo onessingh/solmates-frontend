@@ -1,9 +1,9 @@
 /**
- * SOLMATES Service Worker (v809)
+ * SOLMATES Service Worker (v810)
  * Handles offline caching. HTML pages are network-first, assets are cache-first.
  */
 
-const CACHE_NAME = 'solmates-cache-v809';
+const CACHE_NAME = 'solmates-cache-v810';
 
 const STATIC_ASSETS = [
     '/notification.html',
