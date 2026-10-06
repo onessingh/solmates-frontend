@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=803">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=804">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=803"></script>
-<script src="/js/api-client.js?v=803" defer></script>
+<script src="/config.js?v=804"></script>
+<script src="/js/api-client.js?v=804" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -478,11 +478,7 @@
   <div id="proofImgWrap">
     <img id="proofImg" src="" alt="Proof Screenshot" onclick="toggleZoom(this)">
     <div id="proofVideoWrap" style="display:none; width:90vw; max-width:700px; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; position:relative;">
-      <iframe id="proofVideo" src="" style="width:100%; height:100%; border:none; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      <!-- Transparent Top Click Shield: Prevents clicking title, profile icon & channel name -->
-      <div onclick="event.stopPropagation(); event.preventDefault(); return false;" style="position:absolute; top:0; left:0; width:100%; height:75px; z-index:999; background:transparent; cursor:default; pointer-events:auto;"></div>
-      <!-- Transparent Bottom Right Click Shield: Prevents clicking YouTube logo & share links -->
-      <div onclick="event.stopPropagation(); event.preventDefault(); return false;" style="position:absolute; bottom:0; right:0; width:180px; height:60px; z-index:999; background:transparent; cursor:default; pointer-events:auto;"></div>
+      <iframe id="proofVideo" src="" style="width:100%; height:100%; border:none; display:block; transform:scale(1.16); transform-origin:center center;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
   <div class="proof-nav" id="proofNav" style="display:none;">
@@ -672,7 +668,7 @@ function showProofImg() {
     var ytId = getYouTubeId(url);
     img.style.display = 'none';
     videoWrap.style.display = 'block';
-    iframe.src = 'https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1';
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&playsinline=1';
     if (caption) caption.textContent = 'Playing Video Proof · Tap outside or ✕ to close';
   } else {
     iframe.src = '';

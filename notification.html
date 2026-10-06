@@ -78,14 +78,14 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=803">
-  <script src="/config.js?v=803" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=804">
+  <script src="/config.js?v=804" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=803" defer></script>
-  <script src="/js/webview-fix.js?v=803" defer></script>
-  <script src="/js/sol-cache.js?v=803" defer></script>
+  <script src="/js/api-client.js?v=804" defer></script>
+  <script src="/js/webview-fix.js?v=804" defer></script>
+  <script src="/js/sol-cache.js?v=804" defer></script>
   <script>
-    // [v803.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
+    // [v804.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
@@ -137,7 +137,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* [v803.9] GLOBAL TOUCH-FREE RESET */
+    /* [v804.9] GLOBAL TOUCH-FREE RESET */
     * { 
       -webkit-tap-highlight-color: transparent; 
       -webkit-touch-callout: none;
@@ -1849,7 +1849,7 @@
         if (!fetchAllPromise) {
           fetchAllPromise = (async () => {
             console.log('[NOTIFICATIONS] Fetching all notifications in bulk...');
-            // [v803.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
+            // [v804.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
             const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all?_t=${Date.now()}`, { signal: _fc.signal });
@@ -1941,7 +1941,7 @@
         if (!title) return { subject: "", date: "", time: "", expiryTime: 0 };
         let t = String(title).trim();
         
-        // [v803.3] ISO DATE STRIP: Remove (2026-04-20T...) patterns first
+        // [v804.3] ISO DATE STRIP: Remove (2026-04-20T...) patterns first
         t = t.replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '').trim();
 
         // 1. Extract Date from [DD-MM-YYYY]
@@ -1963,13 +1963,13 @@
            .replace(/^[:\s\-]+/, '')
            .trim();
         
-        // [v803.7] CONDITIONAL PREFIX: Only preserve for Live Classes as per user request
+        // [v804.7] CONDITIONAL PREFIX: Only preserve for Live Classes as per user request
         let displaySubject = subjectOnly;
         if (isLive && semester && semester !== "0") {
            displaySubject = `MBA SEM ${semester}: ${subjectOnly}`;
         }
         
-        // [v803.9.3] FUNCTIONAL SYNC: Prioritize scheduledAt for time data
+        // [v804.9.3] FUNCTIONAL SYNC: Prioritize scheduledAt for time data
         let finalTime = time;
         let expiryTime = 0;
 
@@ -2003,17 +2003,17 @@
         const t = (notice.title || "").toLowerCase();
         const isTimetable = t.includes('time table') || t.includes('timetable') || t.includes('pcp class') || t.includes('[timetable]');
 
-        // [v803.9.4] REAL-TIME AUTO-HIDE: Skip if expired based on precision timestamp
+        // [v804.9.4] REAL-TIME AUTO-HIDE: Skip if expired based on precision timestamp
         const { expiryTime } = extractTitleParts(notice.title, notice.semester, isLive, notice.scheduledAt);
         
         const nowVal = Date.now();
-        // [v803.9.8] PRECISE TODAY CHECK: Prioritize scheduledAt for today-detection
+        // [v804.9.8] PRECISE TODAY CHECK: Prioritize scheduledAt for today-detection
         const isToday = (notice.scheduledAt && new Date(notice.scheduledAt).setHours(0,0,0,0) === todayVal) || 
                        (itemTime && new Date(itemTime).setHours(0,0,0,0) === todayVal);
 
-        // [v803.9.5] PROTECTION: Only hide if "Expired" AND (either not today OR past-time confirmed)
+        // [v804.9.5] PROTECTION: Only hide if "Expired" AND (either not today OR past-time confirmed)
         if (isLive && expiryTime > 0 && nowVal > expiryTime) {
-           // [v803.9.6] FORCE-VISIBLE TODAY: If it's today, we keep it visible even if expiry calculation looks old,
+           // [v804.9.6] FORCE-VISIBLE TODAY: If it's today, we keep it visible even if expiry calculation looks old,
            // UNLESS the title explicitly shows a past range (handled by regex)
            const upcomingTime = String(notice.title).match(/\d{1,2}:\d{2}.*?\d{1,2}:\d{2}/);
            if (!isToday) {
@@ -2075,7 +2075,7 @@
       const futureLive = [];
       const regularNotices = [];
 
-      // [v803.6] PINNED COMMUNITY POSTS: Rich Posts (Admin "Add Community Post") always stay on top
+      // [v804.6] PINNED COMMUNITY POSTS: Rich Posts (Admin "Add Community Post") always stay on top
       const pinnedNotices = [];
       const communityPosts = [];
       const nonPinnedFiltered = [];
@@ -2279,7 +2279,7 @@
           const isNew = hasValidDate && (Date.now() - dateObj.getTime() < 24 * 60 * 60 * 1000) && (typeof seenIds !== 'undefined' ? !seenIds.includes(uniqueKey) : true);
           const newBadge = isNew ? `<span class="new-badge">NEW</span>` : '';
 
-          // [v803.9] SURGICAL SELECTION HARDENING: Prevent Touch-to-Search on prefix labels
+          // [v804.9] SURGICAL SELECTION HARDENING: Prevent Touch-to-Search on prefix labels
           let formattedSubject = displaySubject;
           if (displaySubject.includes(':')) {
              const parts = displaySubject.split(':');
@@ -2350,7 +2350,7 @@
         }).join('');
         updateAuthUI();
 
-        // v803.8: IMMEDIATELY mark as seen for Home Page badge sync
+        // v804.8: IMMEDIATELY mark as seen for Home Page badge sync
         finalNotices.forEach(notice => {
           const itemLink = (notice.link || '').trim();
           const uKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(notice.title)}`;
@@ -3310,10 +3310,10 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=803';
+        const swUrl = './sw.js?v=804';
         const registration = await navigator.serviceWorker.register(swUrl);
         
-        // [v803.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
+        // [v804.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
         const _pageOpenTime = Date.now();
         let _swRefreshed = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
