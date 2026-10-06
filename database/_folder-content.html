@@ -26,16 +26,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=801">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=802">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Folder - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=801"></script>
-  <script src="/js/uptime-helper.js?v=801"></script>
-  <script src="/js/api-client.js?v=801"></script>
-  <script src="/js/sol-cache.js?v=801"></script>
-  <script src="/js/prefetch-helper.js?v=801"></script>
+  <script src="/config.js?v=802"></script>
+  <script src="/js/uptime-helper.js?v=802"></script>
+  <script src="/js/api-client.js?v=802"></script>
+  <script src="/js/sol-cache.js?v=802"></script>
+  <script src="/js/prefetch-helper.js?v=802"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <style>
@@ -1978,7 +1978,7 @@
     window.openViewer = function (link, title) {
       if (!link) return;
       const l = link.toLowerCase();
-      // v801.0: Redirect to appropriate internal viewer
+      // v802.0: Redirect to appropriate internal viewer
       if (l.includes('drive.google.com') || l.includes('docs.google.com/presentation') || l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('youtube.com') || l.includes('youtu.be') || l.includes('photos.app.goo.gl')) {
         const viewer = (l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('docs.google.com/presentation') || (l.includes('drive.google.com') && !l.includes('VIDEO') && !l.includes('MP4'))) 
           ? 'pdf-viewer' 
