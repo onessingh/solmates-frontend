@@ -27,7 +27,7 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=805">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=806">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -39,9 +39,9 @@
     <!-- Font Awesome: Non-blocking -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
-    <script src="/config.js?v=805" defer></script>
-    <script src="/js/sol-cache.js?v=805" defer></script>
-    <script src="/js/api-client.js?v=805" defer></script>
+    <script src="/config.js?v=806" defer></script>
+    <script src="/js/sol-cache.js?v=806" defer></script>
+    <script src="/js/api-client.js?v=806" defer></script>
     <!-- socket.io loaded dynamically -->
     <style>
 
@@ -831,7 +831,7 @@
             }
         }
 
-        /* Skeleton Loading Styling (v805.7) */
+        /* Skeleton Loading Styling (v806.7) */
         .skeleton-card {
             pointer-events: none;
             background: var(--bg-body);
@@ -1028,7 +1028,7 @@
             <div class="live-class-container">
                 <h2><i class="fas fa-video"></i> Today's Live Sessions</h2>
                 <div class="live-sessions-grid" id="liveSessionsGrid">
-                    <!-- Skeleton loader cards (v805.7) -->
+                    <!-- Skeleton loader cards (v806.7) -->
                     <div class="live-session-card skeleton-card">
                         <div class="session-header">
                             <div class="session-icon skeleton-anim"></div>
@@ -1390,7 +1390,7 @@
             // 2. Remove Leading Branding
             clean = clean.replace(/^(?:MBA\s+)?(?:SEM(?:ESTER)?|YEAR|YR|PART|TERM)\s*(?:IV|III|II|I|[1-6])\s*[:\-]?\s*/i, '');
 
-            // 3. CLEAN SUBJECT - UNIVERSAL WORD FILTER (v805.7)
+            // 3. CLEAN SUBJECT - UNIVERSAL WORD FILTER (v806.7)
             const seenNorm = new Set();
             const words = clean.split(/\s+/);
             const finalWords = [];
@@ -1458,7 +1458,7 @@
                 for (const sem of targetSems) {
                     const payload = { title, link: url, description: platform, scheduledAt, date: dateStr };
                     await solmatesAPI.addSOLItem('live-classes', sem, payload);
-                    // [v805.6] Manual notification call removed. 
+                    // [v806.6] Manual notification call removed. 
                     // The Backend now handles Auto-Sync to Notifications with premium formatting.
                 }
                 showNotification('Success!', 'success');
@@ -1539,7 +1539,7 @@
 
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             
-            // v805.5: Smart Fallback Logic for App-to-Web transitions
+            // v806.5: Smart Fallback Logic for App-to-Web transitions
             if (isMobile && (url.includes('teams.microsoft.com') || url.includes('zoom.us'))) {
                 const deepLink = url.includes('teams.microsoft.com') 
                     ? url.replace(/^https?:\/\//, 'msteams://')
