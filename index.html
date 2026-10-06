@@ -54,11 +54,11 @@
 
   <script>
 
-  // ONE-TIME NUCLEAR CACHE CLEAR (v810) — runs once per user, then never again
+  // ONE-TIME NUCLEAR CACHE CLEAR (v811) — runs once per user, then never again
 
   (function() {
 
-    var NUKE_VERSION = 'sol-cache-nuke-v810';
+    var NUKE_VERSION = 'sol-cache-nuke-v811';
 
     if (localStorage.getItem(NUKE_VERSION)) return; // already ran
 
@@ -234,15 +234,15 @@
 
   <title>SOLMATES | DU SOL MBA Student Community, Study Material & Notes</title>
 
-  <script src="/config.js?v=810" defer></script>
+  <script src="/config.js?v=811" defer></script>
 
-  <script src="/js/sol-cache.js?v=810" defer></script>
+  <script src="/js/sol-cache.js?v=811" defer></script>
 
-  <script src="/js/api-client.js?v=810" defer></script>
+  <script src="/js/api-client.js?v=811" defer></script>
 
-  <script src="/js/webview-fix.js?v=810" defer></script>
+  <script src="/js/webview-fix.js?v=811" defer></script>
 
-  <script src="/js/prefetch-helper.js?v=810" defer></script>
+  <script src="/js/prefetch-helper.js?v=811" defer></script>
 
   <!-- socket.io loaded dynamically -->
 
@@ -260,11 +260,11 @@
 
   <meta name="robots" content="index, follow">
 
-  <!-- [v810.9] GOOGLE SUPPRESSION: Disables intrusive Touch-to-Search popups -->
+  <!-- [v811.9] GOOGLE SUPPRESSION: Disables intrusive Touch-to-Search popups -->
 
   <meta name="google" content="notranslate">
 
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=810">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=811">
 
   <!-- 🔥 Favicon (All sizes) -->
 
@@ -394,7 +394,7 @@
 
 
 
-    /* [v810.9] GLOBAL TOUCH-FREE NAVIGATION: Prevents accidental Google Search popups */
+    /* [v811.9] GLOBAL TOUCH-FREE NAVIGATION: Prevents accidental Google Search popups */
 
     header, nav, footer, button, .icon-box, .tab-btn, .nav-left, .logo-mark, .coming-soon-badge {
 
@@ -5712,7 +5712,7 @@
 
   <script>
 
-    // [v810.6] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // [v811.6] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
 
     // Bug: previous sync version fired reload(true) after 500ms without awaiting
 
@@ -5784,7 +5784,7 @@
 
   </script>
 
-  <script src="/js/uptime-helper.js?v=810" defer></script>
+  <script src="/js/uptime-helper.js?v=811" defer></script>
 
 
 
@@ -10158,7 +10158,7 @@
 
 
 
-        // [v810.5] 8s timeout so Render cold-start never freezes mobile tab
+        // [v811.5] 8s timeout so Render cold-start never freezes mobile tab
 
         const _nc = new AbortController();
 
@@ -10314,7 +10314,7 @@
 
       
 
-      // [v810.1] Instantly clear any "ghost" badges by marking all calculated unread items as seen
+      // [v811.1] Instantly clear any "ghost" badges by marking all calculated unread items as seen
 
       if (window._pendingUnreadKeys && window._pendingUnreadKeys.length > 0) {
 
@@ -10424,7 +10424,7 @@
 
       initMainOptionAnimations();
 
-      // [v810.5] Delay notification fetch by 3s so it never blocks first paint
+      // [v811.5] Delay notification fetch by 3s so it never blocks first paint
 
       // On slow mobile networks this was the #1 cause of the loading freeze
 
@@ -10440,7 +10440,7 @@
 
     /**
 
-     * [v810.7] Real-time Notification Sync
+     * [v811.7] Real-time Notification Sync
 
      */
 
@@ -10622,7 +10622,7 @@
 
 
 
-    // v810.5: Run initHomePush AFTER window fully loads + 5s idle delay
+    // v811.5: Run initHomePush AFTER window fully loads + 5s idle delay
 
     // Previously ran on DOMContentLoaded which blocked initial render on mobile
 
@@ -10642,7 +10642,7 @@
 
 
 
-        const swUrl = './sw.js?v=810';
+        const swUrl = './sw.js?v=811';
 
         
 
@@ -10660,7 +10660,7 @@
 
         
 
-        // [v810.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
+        // [v811.5] controllerchange guard — 'refreshed' flag prevents infinite reload loop
 
         // Bug: without this flag, if nuclear update + SW activation happen together on slow devices,
 
@@ -10730,7 +10730,7 @@
 
     }
 
-    // v810.5: Run after window load + 3s idle, NOT on DOMContentLoaded
+    // v811.5: Run after window load + 3s idle, NOT on DOMContentLoaded
 
       window.addEventListener('load', () => setTimeout(initHomePush, 3000));
 
@@ -10830,7 +10830,7 @@
 
 </script>
 
-  <script src="/js/install-banner.js?v=810" defer></script>
+  <script src="/js/install-banner.js?v=811" defer></script>
 
 
 
