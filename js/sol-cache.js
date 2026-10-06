@@ -80,21 +80,26 @@
                     if (data.success && data.categories && window.solmatesAPI && window.solmatesAPI.setCache) {
                         // 1. Sync Categories Data
                         for (const [cat, items] of Object.entries(data.categories)) {
-                            // Group items by semester
-                            const semGroups = {};
+                            // [BUG FIX] Group items by semester + folderId so folder items don't
+                            // bleed into the root cache and appear outside their folder.
+                            const groups = {}; // key: `sem_folderId`
                             items.forEach(item => {
                                 const sem = String(item.semester);
-                                if (!semGroups[sem]) semGroups[sem] = [];
-                                semGroups[sem].push(item);
+                                const fid = item.folderId || 'root';
+                                const gkey = `${sem}__${fid}`;
+                                if (!groups[gkey]) groups[gkey] = [];
+                                groups[gkey].push(item);
                             });
 
-                            // Synchronize with API Client's sessionStorage cache
-                            for (const [sem, semItems] of Object.entries(semGroups)) {
-                                const ckey = `content_${cat}_${sem}_root`;
-                                // Only set if not already present or if we want to refresh
+                            // Synchronize with API Client's sessionStorage cache per folder bucket
+                            for (const [gkey, bucket] of Object.entries(groups)) {
+                                const sepIdx = gkey.indexOf('__');
+                                const sem = gkey.substring(0, sepIdx);
+                                const fid = gkey.substring(sepIdx + 2);
+                                const ckey = `content_${cat}_${sem}_${fid}`;
                                 window.solmatesAPI.setCache(ckey, {
                                     success: true,
-                                    data: semItems,
+                                    data: bucket,
                                     _bulk: true // Marker for debugging
                                 });
                             }
