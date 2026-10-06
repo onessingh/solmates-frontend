@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=815">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=undefined">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=815"></script>
-<script src="/js/api-client.js?v=815" defer></script>
+<script src="/config.js?v=undefined"></script>
+<script src="/js/api-client.js?v=undefined" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -296,6 +296,13 @@
     overflow: hidden; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
   }
+  #proofVideoWrap { transition: all 0.3s ease; }
+  #proofVideoWrap.zoomed {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    height: 82vh !important;
+    max-height: 82vh !important;
+  }
   #proofImg {
     max-width: 100%; max-height: 85vh;
     border-radius: 12px; object-fit: contain;
@@ -479,9 +486,10 @@
     <img id="proofImg" src="" alt="Proof Screenshot" onclick="toggleZoom(this)">
     <div id="proofVideoWrap" style="display:none; width:92vw; max-width:700px; height:clamp(260px, 54vw, 393px); background:#000; border-radius:12px; overflow:hidden; position:relative;">
       <iframe id="proofVideo" src="" style="width:100%; height:100%; border:none; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      <!-- Solid Black Top Mask: Hides Title, Avatar & Channel Name on Laptop & Mobile -->
-      <div onclick="event.stopPropagation(); event.preventDefault(); return false;" style="position:absolute; top:0; left:0; width:100%; height:58px; background:#000; z-index:999; pointer-events:auto; display:flex; align-items:center; padding:0 14px;">
+      <!-- Solid Black Top Mask: Hides Title, Avatar & Channel Name on Laptop & Mobile + Zoom Toggle -->
+      <div onclick="event.stopPropagation(); event.preventDefault(); return false;" style="position:absolute; top:0; left:0; width:100%; height:58px; background:#000; z-index:999; pointer-events:auto; display:flex; align-items:center; justify-content:space-between; padding:0 14px;">
         <span style="color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; gap:6px;"><i class="fas fa-video" style="color:#ef4444;"></i> Video Proof</span>
+        <button type="button" onclick="toggleVideoZoom(event)" style="background:rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:4px 10px; font-size:11px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; transition:0.2s;"><i class="fas fa-expand"></i> <span id="videoZoomBtnText">Zoom</span></button>
       </div>
       <!-- Solid Black Bottom Mask: Hides YouTube Logo, Share Link & More Videos on Laptop & Mobile -->
       <div onclick="event.stopPropagation(); event.preventDefault(); return false;" style="position:absolute; bottom:0; left:0; width:100%; height:74px; background:#000; z-index:999; pointer-events:auto;"></div>
@@ -698,9 +706,22 @@ function showProofImg() {
 
 function prevProof() { currentImgIdx = (currentImgIdx - 1 + currentImages.length) % currentImages.length; showProofImg(); }
 function nextProof() { currentImgIdx = (currentImgIdx + 1) % currentImages.length; showProofImg(); }
+function toggleVideoZoom(e) {
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  var wrap = document.getElementById('proofVideoWrap');
+  if (!wrap) return;
+  wrap.classList.toggle('zoomed');
+  var isZoomed = wrap.classList.contains('zoomed');
+  var txt = document.getElementById('videoZoomBtnText');
+  if (txt) txt.textContent = isZoomed ? 'Shrink' : 'Zoom';
+}
 function closeProof() {
   var iframe = document.getElementById('proofVideo');
   if (iframe) iframe.src = '';
+  var wrap = document.getElementById('proofVideoWrap');
+  if (wrap) wrap.classList.remove('zoomed');
+  var txt = document.getElementById('videoZoomBtnText');
+  if (txt) txt.textContent = 'Zoom';
   document.getElementById('proofOverlay').classList.remove('open');
 }
 function handleOverlayClick(e) { if (e.target === document.getElementById('proofOverlay')) closeProof(); }
