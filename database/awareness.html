@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=800">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=801">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=800"></script>
-<script src="/js/api-client.js?v=800" defer></script>
+<script src="/config.js?v=801"></script>
+<script src="/js/api-client.js?v=801" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -477,8 +477,9 @@
   <button class="proof-close" onclick="closeProof()">&times;</button>
   <div id="proofImgWrap">
     <img id="proofImg" src="" alt="Proof Screenshot" onclick="toggleZoom(this)">
-    <div id="proofVideoWrap" style="display:none; width:90vw; max-width:700px; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden;">
-      <iframe id="proofVideo" src="" style="width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div id="proofVideoWrap" style="display:none; width:90vw; max-width:700px; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; position:relative;">
+      <!-- Zoom-cropped iframe hides YouTube title bar (top), share/branding (corners) automatically -->
+      <iframe id="proofVideo" src="" style="position:absolute; top:-11%; left:-8%; width:116%; height:122%; border:none; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
   <div class="proof-nav" id="proofNav" style="display:none;">
