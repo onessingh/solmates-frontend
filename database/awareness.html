@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=814">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=815">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=814"></script>
-<script src="/js/api-client.js?v=814" defer></script>
+<script src="/config.js?v=815"></script>
+<script src="/js/api-client.js?v=815" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -630,9 +630,18 @@ const API_URL = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onre
 // ===== YOUTUBE HELPER =====
 function getYouTubeId(url) {
   if (!url || typeof url !== 'string') return null;
-  var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  var match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
+  var cleaned = url.trim();
+  var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|live\/|watch\?v=|\&v=)([^#\&\?]*).*/i;
+  var match = cleaned.match(regExp);
+  if (match && match[2] && match[2].length === 11) {
+    return match[2];
+  }
+  try {
+    var uObj = new URL(cleaned);
+    var vParam = uObj.searchParams.get('v');
+    if (vParam && vParam.length === 11) return vParam;
+  } catch(e) {}
+  return null;
 }
 
 // ===== PROOF LIGHTBOX =====
