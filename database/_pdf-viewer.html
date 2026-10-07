@@ -568,12 +568,15 @@
       const loadingToast = showToast("Downloading PDF...", "downloading", 0);
 
       try {
-        const config = window.solmatesConfig || { BACKEND_URL: 'https://solmates-backend-w27e.onrender.com' };
-        let proxyDownloadUrl = `${config.BACKEND_URL}/api/media/download/pdf?url=${encodeURIComponent(rawUrl)}&title=${encodeURIComponent(title)}`;
+        let directUrl = rawUrl;
+        if (rawUrl.includes('drive.google.com')) {
+          const fileId = rawUrl.match(/[-\w]{25,}/);
+          if (fileId) directUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+        }
         
-        // Use Fetch to verify the stream and track completion
-        const response = await fetch(proxyDownloadUrl);
-        if (!response.ok) throw new Error("Server error");
+        // 100% CLIENT-SIDE: Try direct browser fetch & blob download (0 Render Backend Bandwidth)
+        const response = await fetch(directUrl);
+        if (!response.ok) throw new Error("Client fetch failed");
 
         const blob = await response.blob();
         const bUrl = window.URL.createObjectURL(blob);
@@ -583,10 +586,11 @@
         a.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
         document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(bUrl);
         
         loadingToast.remove();
         
-        // Finalized PDF view URL for "Open with Drive"
         const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
 
         showToast("PDF Downloaded!", "success", 6000, {
@@ -595,19 +599,25 @@
         });
 
       } catch (err) {
-        console.warn("Direct fetch failing, using fallback", err);
+        console.warn("Direct fetch restricted, triggering direct browser download link", err);
         loadingToast.remove();
         
-        // Absolute Fallback: Send user directly to raw URL if proxy fails
+        let downloadLink = rawUrl;
+        if (rawUrl.includes('drive.google.com')) {
+          const fileId = rawUrl.match(/[-\w]{25,}/);
+          if (fileId) downloadLink = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+        }
+
+        // Direct anchor download without opening blank tabs or touching backend
         const fallbackA = document.createElement('a');
-        fallbackA.href = rawUrl;
-        fallbackA.target = '_blank'; // For raw URLs, open in new tab to let native handlers take over
+        fallbackA.href = downloadLink;
+        fallbackA.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
         document.body.appendChild(fallbackA);
         fallbackA.click();
         document.body.removeChild(fallbackA);
         
         const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
-        showToast("Download Initialized!", "success", 6000, {
+        showToast("PDF Download Started!", "success", 6000, {
           text: "OPEN WITH DRIVE",
           url: driveUrl
         });
