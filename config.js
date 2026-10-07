@@ -203,39 +203,27 @@ window.addEventListener('afterprint', function() {
 // - Railway: 'https://solmates-backend.up.railway.app/api'
 
 // Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
-// Production backend URLs — Render Primary & Secondary (Automatic Failover)
-window.BACKEND_PRIMARY_URL = 'https://solmates-backend-w27e.onrender.com';
-window.BACKEND_SECONDARY_URL = 'https://solmates-backend-f9rl.onrender.com';
+// Production backend URLs — Render Primary (Fresh Account) & Secondary Backup
+window.BACKEND_PRIMARY_URL = 'https://solmates-backend-f9rl.onrender.com';
+window.BACKEND_SECONDARY_URL = 'https://solmates-backend-w27e.onrender.com';
 
-// Active Backend Selection
-let activeBackend = localStorage.getItem('solmates_active_backend') || window.BACKEND_PRIMARY_URL;
+// Active Backend Selection (Switched to 5GB Fresh Render Account f9rl)
+let activeBackend = window.BACKEND_PRIMARY_URL;
+try {
+  localStorage.setItem('solmates_active_backend', window.BACKEND_PRIMARY_URL);
+} catch(e) {}
 
 window.PRODUCTION_API_URL = activeBackend + '/api';
 window.RENDER_BACKEND_URL = activeBackend;
 
-// Smart Health Check Failover: Automatically switch to Secondary backend if Primary is limited/down
+// Smart Health Check Failover: Automatically switch to Backup backend if Active is down
 (function() {
-  const currentActive = localStorage.getItem('solmates_active_backend') || window.BACKEND_PRIMARY_URL;
-  if (currentActive === window.BACKEND_PRIMARY_URL) {
-    fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
-      .catch(() => {
-        console.warn('[BACKEND FAILOVER] Primary Render URL inactive/limited. Auto-switching to Secondary!');
-        localStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL);
-        window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
-        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
-      });
-  } else {
-    // Periodically verify if Primary is back online
-    fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
-      .then(res => {
-        if (res.ok) {
-          localStorage.setItem('solmates_active_backend', window.BACKEND_PRIMARY_URL);
-          window.PRODUCTION_API_URL = window.BACKEND_PRIMARY_URL + '/api';
-          window.RENDER_BACKEND_URL = window.BACKEND_PRIMARY_URL;
-        }
-      })
-      .catch(() => {});
-  }
+  fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
+    .catch(() => {
+      console.warn('[BACKEND FAILOVER] Primary Render URL inactive. Auto-switching to Secondary!');
+      window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
+      window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+    });
 })();
 
 // For local development, comment out the line above and api-client.js
