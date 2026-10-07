@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SOLMATES API Client - Complete Fixed Version
  * REMOVED: Custom cache-control headers causing CORS issues
  */
@@ -467,7 +467,7 @@ class SolmatesAPI {
   async getSOLContent(category, semester, folderId = null, skipCache = false) {
     const ckey = `content_${category}_${semester}_${folderId || 'root'}`;
     // SWR Logic: Only use blocking cache if NOT forced to skip
-    if (!skipCache && category !== 'live-classes' && category !== 'recorded-class') {
+    if (!skipCache && category !== 'live-classes') {
         const cached = this.getCache(ckey);
         if (cached) return cached;
     }
@@ -910,10 +910,10 @@ if (typeof module !== 'undefined' && module.exports) {
           // if (!pushSelected.includes('all')) pushSelected.push('all'); // Removed to respect user filters
         }
 
-        // Silent Resync bounded to once per 24h
+        // Silent Resync bounded to once per 7 days (604800000 ms)
         const lastSync = localStorage.getItem('sol_push_last_sync');
         const now = Date.now();
-        if (!lastSync || now - parseInt(lastSync) > 86400000) {
+        if (!lastSync || now - parseInt(lastSync) > 604800000) {
           if (window.solmatesAPI && window.solmatesAPI.subscribeToPush) {
              await window.solmatesAPI.subscribeToPush(pushSelected).catch(() => null);
              localStorage.setItem('sol_push_last_sync', now.toString());
