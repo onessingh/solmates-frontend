@@ -1,13 +1,14 @@
 /**
- * SOLMATES Service Worker (v817)
- * Handles offline caching. HTML pages are network-first, assets are cache-first.
+ * SOLMATES Service Worker (v822 - Strategy 2 API Cache Enabled)
+ * Handles offline caching & Stale-While-Revalidate API caching for zero-bandwidth.
  */
 
-const CACHE_NAME = 'solmates-cache-v822';
+const CACHE_NAME = 'solmates-cache-v823';
 
 const STATIC_ASSETS = [
     '/notification.html',
     '/js/api-client.js',
+    '/js/sol-cache.js',
     '/android-chrome-192x192.png',
     '/android-chrome-512x512.png',
     '/apple-touch-icon.png',
@@ -32,9 +33,36 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
     if (event.request.method !== "GET") return;
-    if (event.request.url.includes("/api/")) return;
 
     const url = new URL(event.request.url);
+
+    // =========================================================================
+    // STRATEGY 2: Stale-While-Revalidate for /api/sol/ GET requests
+    // Serves instant cached response from Cache Storage (0ms delay, 0MB user load),
+    // then revalidates in the background with HTTP 304 ETag checking.
+    // =========================================================================
+    if (url.pathname.includes("/api/sol/")) {
+        event.respondWith(
+            caches.open(CACHE_NAME).then(async cache => {
+                const cachedResponse = await cache.match(event.request);
+
+                const fetchPromise = fetch(event.request).then(networkResponse => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        cache.put(event.request, networkResponse.clone());
+                    }
+                    return networkResponse;
+                }).catch(() => cachedResponse);
+
+                // Return instant cached response if available, or wait for fetch
+                return cachedResponse || fetchPromise;
+            })
+        );
+        return;
+    }
+
+    // Skip non-SOL API calls
+    if (url.pathname.includes("/api/")) return;
+
     const isHTML = event.request.destination === "document"
         || url.pathname === "/"
         || url.pathname.endsWith("/index.html")
@@ -58,23 +86,22 @@ self.addEventListener("fetch", event => {
             if (cached) return cached;
             return fetch(event.request).then(res => {
                 if (!res || res.status !== 200 || res.type !== "basic") return res;
-                const responseToCache = res.clone(); caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+                const responseToCache = res.clone(); 
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
                 return res;
             }).catch(() => new Response("", { status: 404, statusText: "Not Found" }));
         })
     );
 });
 
-// ===== PUSH =====
+// ===== PUSH NOTIFICATIONS =====
 self.addEventListener("push", event => {
     let payload = {};
     try { payload = event.data ? event.data.json() : {}; } catch(e) {}
     
-    // Handle both FCM nested structure and flat structure
     const title = (payload.notification && payload.notification.title) ? payload.notification.title : (payload.title || 'SOLMATES');
     const body = (payload.notification && payload.notification.body) ? payload.notification.body : (payload.body || 'New update available!');
     
-    // Extract URL from various possible payload formats
     let targetUrl = '/notification';
     if (payload.data && payload.data.url) targetUrl = payload.data.url;
     else if (payload.data && payload.data.link) targetUrl = payload.data.link;
@@ -82,8 +109,6 @@ self.addEventListener("push", event => {
     else if (payload.link) targetUrl = payload.link;
     else if (payload.notification && payload.notification.click_action) targetUrl = payload.notification.click_action;
     
-    
-    // Smart Routing: Auto-detect the category from the notification title or body
     if (targetUrl === '/notification' || targetUrl === '/') {
         const textToSearch = (title + " " + body).toLowerCase();
         if (textToSearch.includes('pyq') || textToSearch.includes('previous year') || textToSearch.includes('question paper')) {
@@ -114,8 +139,6 @@ self.addEventListener("push", event => {
     event.waitUntil(self.registration.showNotification(title, options));
 });
 
-
-
 // ===== NOTIFICATIONCLICK =====
 self.addEventListener("notificationclick", event => {
     event.notification.close();
@@ -131,4 +154,3 @@ self.addEventListener("notificationclick", event => {
         })
     );
 });
-
