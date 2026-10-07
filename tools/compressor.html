@@ -833,36 +833,63 @@
           let compressedFile = null;
 
           if (currentFile.type === 'application/pdf') {
-            // PDF Compression Logic (Rasterize to Images, Compress, Rebuild PDF)
+            // SmallPDF-Grade Adaptive PDF Compression Engine
             const fileUrl = URL.createObjectURL(currentFile);
             const loadingTask = pdfjsLib.getDocument(fileUrl);
             const pdf = await loadingTask.promise;
             const { jsPDF } = window.jspdf;
 
-            const newDoc = new jsPDF({ unit: 'px' });
+            const totalPages = pdf.numPages;
+            const targetBytes = maxSizeMB * 1024 * 1024;
+            const targetBytesPerPage = targetBytes / totalPages;
+
+            // SmallPDF-Grade Adaptive Scale & Quality Tiers
+            let targetScale = 1.5;
+            let targetQuality = initialQuality;
+
+            if (maxSizeMB > 0 && maxSizeMB < 50) {
+              if (targetBytesPerPage < 80 * 1024) { // < 80KB / page
+                targetScale = 1.2;
+                targetQuality = Math.max(0.35, Math.min(initialQuality, 0.50));
+              } else if (targetBytesPerPage < 200 * 1024) { // < 200KB / page
+                targetScale = 1.5;
+                targetQuality = Math.max(0.45, Math.min(initialQuality, 0.68));
+              } else {
+                targetScale = 1.8;
+                targetQuality = Math.max(0.60, Math.min(initialQuality, 0.82));
+              }
+            }
+
+            const newDoc = new jsPDF({ unit: 'px', compress: true });
             newDoc.deletePage(1); // Remove default empty page
 
-            for (let i = 1; i <= pdf.numPages; i++) {
+            for (let i = 1; i <= totalPages; i++) {
+              compressBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Optimizing Page ${i}/${totalPages}...`;
               const page = await pdf.getPage(i);
-              const viewport = page.getViewport({ scale: 4.0 }); // Render at 4x for high text clarity even when compressed
+              const viewport = page.getViewport({ scale: targetScale });
 
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
-              canvas.height = viewport.height;
               canvas.width = viewport.width;
+              canvas.height = viewport.height;
+
+              // Fill clean white background (prevents black background artifacts)
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
 
               await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-              // Compress page to JPEG
-              const imgData = canvas.toDataURL('image/jpeg', initialQuality);
+              // Compress page to high-efficiency JPEG
+              const imgData = canvas.toDataURL('image/jpeg', targetQuality);
 
-              const orientation = canvas.width > canvas.height ? 'l' : 'p';
-              newDoc.addPage([canvas.width, canvas.height], orientation);
-              newDoc.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+              const orientation = viewport.width > viewport.height ? 'l' : 'p';
+              newDoc.addPage([viewport.width, viewport.height], orientation);
+              newDoc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height, undefined, 'FAST');
             }
 
             const pdfBlob = newDoc.output('blob');
             compressedFile = new File([pdfBlob], currentFile.name, { type: 'application/pdf', lastModified: Date.now() });
+            URL.revokeObjectURL(fileUrl);
 
           } else {
             // Standard Image Compression

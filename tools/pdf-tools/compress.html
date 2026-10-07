@@ -308,24 +308,46 @@
             let finalBlob;
 
             if (isPDF) {
-                // PDF Compression via Rasterization (High Fidelity)
+                // SmallPDF-Grade Adaptive PDF Compression Engine
                 const arrayBuffer = await selectedFile.arrayBuffer();
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 const { jsPDF } = window.jspdf;
+
+                // Adaptive scale & quality based on chosen preset level
+                let targetScale = 1.5;
+                let targetQuality = quality;
+
+                if (quality <= 0.5) { // Extreme Compression
+                  targetScale = 1.25;
+                  targetQuality = 0.45;
+                } else if (quality <= 0.7) { // Recommended (SmallPDF standard)
+                  targetScale = 1.5;
+                  targetQuality = 0.65;
+                } else { // Low Compression (High Detail)
+                  targetScale = 1.8;
+                  targetQuality = 0.82;
+                }
+
                 const outPdf = new jsPDF({ unit: 'px', compress: true });
                 outPdf.deletePage(1);
 
                 for (let i = 1; i <= pdf.numPages; i++) {
                     document.getElementById('loadingText').textContent = `Optimizing Page ${i}/${pdf.numPages}...`;
                     const page = await pdf.getPage(i);
-                    // Use a high baseline scale (2.0) to avoid blur, then compress the jpeg stream
-                    const viewport = page.getViewport({ scale: 2.0 });
+                    const viewport = page.getViewport({ scale: targetScale });
                     const canvas = document.createElement('canvas');
-                    canvas.width = viewport.width; canvas.height = viewport.height;
-                    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+                    canvas.width = viewport.width; 
+                    canvas.height = viewport.height;
                     
-                    const compressedData = canvas.toDataURL('image/jpeg', quality);
-                    outPdf.addPage([viewport.width, viewport.height], viewport.width > viewport.height ? 'l' : 'p');
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    await page.render({ canvasContext: ctx, viewport }).promise;
+                    
+                    const compressedData = canvas.toDataURL('image/jpeg', targetQuality);
+                    const orientation = viewport.width > viewport.height ? 'l' : 'p';
+                    outPdf.addPage([viewport.width, viewport.height], orientation);
                     outPdf.addImage(compressedData, 'JPEG', 0, 0, viewport.width, viewport.height, undefined, 'FAST');
                 }
                 finalBlob = outPdf.output('blob');
