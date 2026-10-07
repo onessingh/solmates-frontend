@@ -3,7 +3,7 @@
  * Handles offline caching & Stale-While-Revalidate API caching for zero-bandwidth.
  */
 
-const CACHE_NAME = 'solmates-cache-v823';
+const CACHE_NAME = 'solmates-cache-v824';
 
 const STATIC_ASSETS = [
     '/notification.html',

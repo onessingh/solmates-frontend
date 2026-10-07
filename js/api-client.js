@@ -119,7 +119,10 @@ class SolmatesAPI {
     this.adminToken = localStorage.getItem('solmates_admin_token');
 
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      console.log('âœ… API Client initialized:', this.baseURL);
+      console.log('✅ API Client initialized:', this.baseURL);
+    }
+    if (window.SOL_CACHE && typeof window.SOL_CACHE.applySnapshot === 'function') {
+      window.SOL_CACHE.applySnapshot();
     }
   }
 
@@ -460,6 +463,9 @@ class SolmatesAPI {
       Object.keys(sessionStorage).forEach(k => {
         if (k.startsWith(searchPrefix)) sessionStorage.removeItem(k);
       });
+      if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
+        window.SOL_CACHE.clear();
+      }
     } catch (e) { console.warn('Cache clear error:', e); }
   }
 

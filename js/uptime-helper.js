@@ -4,8 +4,8 @@
  * v116.4: First ping delayed 15s so it doesn't block/compete with page load on mobile.
  */
 (function () {
-  const BACKEND_URL = window.RENDER_BACKEND_URL || 'https://solmates-backend-w27e.onrender.com';
-  const PING_INTERVAL = 10 * 60 * 1000; // 10 minutes
+  const BACKEND_URL = window.BACKEND_PRIMARY_URL || (window.PRODUCTION_API_URL ? window.PRODUCTION_API_URL.replace(/\/api\/?$/, '') : 'https://solmates-backend-f9rl.onrender.com');
+  const PING_INTERVAL = 13 * 60 * 1000; // 13 minutes (Render sleeps after 15m)
   let pingTimer = null;
 
   async function wakeUpBackend() {
