@@ -2195,6 +2195,7 @@
       const isMeritList = (title) => {
         const t = (title || '').toLowerCase();
         if (t.includes('merit')) return true;
+        if (t.includes('discrepancy')) return true;
         if (t.includes('ur list')) return true;
         if (t.includes('pwbd')) return true;
         if (t.includes('ews')) return true;
