@@ -43,7 +43,7 @@
 <style>
     .header-bar {
       background: var(--surface, #ffffff);
-      padding: 20px;
+      padding: 12px 16px;
       text-align: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.04);
       position: sticky;
@@ -52,36 +52,66 @@
     }
     .header-bar h1 {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--primary, #0f2b46);
       display: flex !important;
       justify-content: center !important;
       align-items: center !important;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
     body { padding-top: 0 !important; }
 
+    .main-container {
+      padding: 16px 12px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .upload-card, .tool-card {
+      padding: 20px 16px;
+      border-radius: 1.2rem;
+    }
+
+    .upload-area {
+      padding: 28px 16px;
+      border: 2px dashed var(--border-color, #cbd5e1);
+      border-radius: 1rem;
+      text-align: center;
+    }
+
+    .upload-area h2 {
+      font-size: 1.15rem;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .upload-area p {
+      font-size: 0.88rem;
+      margin-bottom: 14px;
+      color: var(--text-muted, #64748b);
+    }
+
     .preview-table-container {
-      max-height: 350px;
+      max-height: 300px;
       overflow-y: auto;
       overflow-x: auto;
-      margin-top: 15px;
+      margin-top: 12px;
       border: 1px solid var(--border-color, #e2e8f0);
-      border-radius: 12px;
+      border-radius: 10px;
       background: var(--bg-card, #ffffff);
     }
 
     table.excel-preview {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: 12px;
       text-align: left;
     }
 
     table.excel-preview th, table.excel-preview td {
-      padding: 8px 12px;
+      padding: 6px 10px;
       border: 1px solid var(--border-color, #e2e8f0);
       white-space: nowrap;
     }
@@ -91,12 +121,106 @@
       font-weight: 600;
       color: var(--brand-primary, #0f2b46);
     }
+
+    /* Mobile Compact Layout Adjustments */
+    @media (max-width: 640px) {
+      .header-bar { padding: 10px 12px; }
+      .header-bar h1 { font-size: 1.1rem; gap: 8px; }
+      .main-container { padding: 10px 8px; }
+      .upload-card, .tool-card { padding: 14px 12px !important; border-radius: 0.9rem !important; }
+      .upload-area { padding: 18px 10px !important; }
+      .upload-icon { width: 44px !important; height: 44px !important; }
+      .upload-area h2 { font-size: 1.05rem !important; }
+      .upload-area p { font-size: 0.82rem !important; margin-bottom: 10px !important; }
+      .btn-primary { padding: 10px 18px !important; font-size: 0.92rem !important; }
+    }
 </style>
+
+<!-- Dark Mode Native OS & Home Page Theme Integration -->
+<style id="solmates-dark-style" media="not all">
+    :root {
+      --bg-body: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-lighter: #cbd5e1;
+      --bg-nav: rgba(15, 23, 42, 0.98);
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #334155;
+      --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+      --brand-primary: #f8fafc;
+      --brand-accent: #c0962d;
+      --bg-light: var(--bg-card-hover, #334155);
+    }
+
+    body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
+    .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
+    .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card { 
+        background: var(--bg-card, #1e293b) !important; 
+        border: 1px solid var(--border-color, #334155) !important; 
+    }
+    .preview-table-container { background: var(--bg-card, #1e293b) !important; border-color: var(--border-color, #334155) !important; }
+    table.excel-preview th { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #334155) !important; }
+    table.excel-preview td { border-color: var(--border-color, #334155) !important; color: var(--text-main, #f8fafc) !important; }
+
+    .upload-card:hover { background: var(--bg-card-hover, #334155) !important; border-color: var(--brand-accent, #c0962d) !important; }
+    .upload-card i, .upload-card h2 { color: var(--text-main, #f8fafc) !important; }
+    h1, h2, h3, h4 { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
+    p, label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
+    input, select, textarea { 
+        background: var(--bg-card-hover, #334155) !important; 
+        color: var(--text-main, #f8fafc) !important; 
+        border: 1px solid var(--border-color, #475569) !important; 
+    }
+    .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+</style>
+
+<script>
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        document.documentElement.style.colorScheme = savedTheme;
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        }
+      }
+    })();
+</script>
+<script id="color-scheme-sync">
+(function() {
+    function updateMetaColorScheme() {
+        var meta = document.querySelector('meta[name="color-scheme"]');
+        var darkStyle = document.getElementById('solmates-dark-style');
+        if (!meta) return;
+        var theme = localStorage.getItem('solmates_theme');
+        if (!theme) {
+            theme = 'light';
+            localStorage.setItem('solmates_theme', 'light');
+        }
+        if (theme === 'dark') {
+            meta.setAttribute('content', 'dark only');
+            document.documentElement.style.colorScheme = 'dark';
+            document.documentElement.classList.add('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
+        } else {
+            meta.setAttribute('content', 'only light');
+            document.documentElement.style.colorScheme = 'light';
+            document.documentElement.classList.remove('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'not all');
+        }
+    }
+    updateMetaColorScheme();
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'solmates_theme') updateMetaColorScheme();
+    });
+})();
+</script>
 </head>
 <body>
 
   <header class="header-bar">
-    <a href="/tools/pdf-tools/" class="back-button" style="position: absolute; left: 20px; text-decoration: none; color: inherit; font-size: 1.2rem;">← Back</a>
     <h1><i data-lucide="file-spreadsheet" style="color: #10b981;"></i> PDF to Excel Converter</h1>
   </header>
 
@@ -106,62 +230,62 @@
       <!-- Upload Section -->
       <div id="uploadSection" class="upload-card">
         <div class="upload-area" id="dropArea">
-          <i data-lucide="file-spreadsheet" class="upload-icon" style="color: #10b981; width: 64px; height: 64px;"></i>
-          <h2>Choose a PDF file to convert to Excel</h2>
+          <i data-lucide="file-spreadsheet" class="upload-icon" style="color: #10b981; width: 52px; height: 52px;"></i>
+          <h2>Convert PDF to Excel Spreadsheet</h2>
           <p>Drag & drop your PDF file here, or click to browse</p>
           <input type="file" id="fileInput" accept=".pdf" style="display: none;">
-          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="background: #10b981; border: none; padding: 12px 28px; border-radius: 12px; color: white; font-weight: 700; cursor: pointer;">Select PDF File</button>
-          <div style="margin-top: 15px; font-size: 0.85rem; color: #64748b;">
-            🔒 <strong>100% Client-Side Privacy:</strong> Your PDF never leaves your device.
+          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="background: #10b981; border: none; padding: 10px 24px; border-radius: 10px; color: white; font-weight: 700; cursor: pointer;">Select PDF File</button>
+          <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted, #64748b);">
+            🔒 <strong>100% Client-Side Privacy:</strong> Your PDF file never leaves your device.
           </div>
         </div>
       </div>
 
       <!-- Processing / Options Section -->
-      <div id="processSection" class="tool-card" style="display: none; padding: 25px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <div id="processSection" class="tool-card" style="display: none;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
           <div>
-            <h3 id="fileNameDisplay" style="margin: 0; font-size: 1.2rem;">Selected PDF File</h3>
-            <span id="fileSizeDisplay" style="font-size: 0.85rem; color: var(--text-muted, #64748b);">0 KB</span>
+            <h3 id="fileNameDisplay" style="margin: 0; font-size: 1.1rem;">Selected PDF File</h3>
+            <span id="fileSizeDisplay" style="font-size: 0.82rem; color: var(--text-muted, #64748b);">0 KB</span>
           </div>
-          <button class="btn btn-secondary" onclick="resetTool()" style="padding: 8px 16px; border-radius: 8px; cursor: pointer;">Change File</button>
+          <button class="btn btn-secondary" onclick="resetTool()" style="padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem;">Change File</button>
         </div>
 
-        <div style="margin-bottom: 20px;">
-          <label style="font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 8px;">Conversion Options:</label>
-          <select id="sheetMode" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color, #cbd5e1); font-size: 0.95rem;">
+        <div style="margin-bottom: 16px;">
+          <label style="font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 6px;">Conversion Options:</label>
+          <select id="sheetMode" style="width: 100%; padding: 8px; border-radius: 8px; font-size: 0.9rem;">
             <option value="single">Combine all pages into 1 Excel Sheet</option>
             <option value="multi">Create a separate Excel Sheet tab for each PDF page</option>
           </select>
         </div>
 
         <!-- Progress Bar -->
-        <div id="progressBox" style="display: none; margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px;">
+        <div id="progressBox" style="display: none; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
             <span id="statusText">Extracting tables...</span>
             <span id="progressPercent">0%</span>
           </div>
-          <div style="width: 100%; background: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden;">
+          <div style="width: 100%; background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
             <div id="progressBar" style="width: 0%; background: #10b981; height: 100%; transition: width 0.2s;"></div>
           </div>
         </div>
 
-        <button id="convertBtn" onclick="processPDFToExcel()" class="btn btn-primary" style="width: 100%; background: #10b981; border: none; padding: 14px; border-radius: 12px; color: white; font-weight: 700; font-size: 1.05rem; cursor: pointer;">
+        <button id="convertBtn" onclick="processPDFToExcel()" class="btn btn-primary" style="width: 100%; background: #10b981; border: none; padding: 12px; border-radius: 10px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer;">
           🚀 Convert PDF to Excel (.xlsx)
         </button>
 
         <!-- Preview & Download Container -->
-        <div id="resultBox" style="display: none; margin-top: 25px;">
-          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="color: #166534; font-weight: 600;">
+        <div id="resultBox" style="display: none; margin-top: 20px;">
+          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="color: #10b981; font-weight: 600; font-size: 0.9rem;">
               ✅ PDF successfully converted to Excel!
             </div>
-            <button id="downloadBtn" onclick="downloadExcel()" style="background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer;">
+            <button id="downloadBtn" onclick="downloadExcel()" style="background: #16a34a; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;">
               📥 Download .XLSX Excel File
             </button>
           </div>
 
-          <h4 style="margin-top: 20px; margin-bottom: 100px;">Table Data Preview:</h4>
+          <h4 style="margin-top: 15px; margin-bottom: 6px; font-size: 0.95rem;">Table Data Preview:</h4>
           <div class="preview-table-container">
             <table class="excel-preview" id="previewTable"></table>
           </div>
@@ -295,8 +419,6 @@
     function extractTableFromTextItems(items) {
       if (!items || items.length === 0) return [];
 
-      // Sort items primarily by Y descending (top to bottom), secondarily by X ascending (left to right)
-      // PDF Y-coordinates increase upwards, so higher Y is top of page.
       const rawItems = items.map(item => ({
         text: item.str,
         x: item.transform[4],
@@ -306,7 +428,6 @@
 
       if (rawItems.length === 0) return [];
 
-      // Group into lines/rows based on Y-tolerance threshold (~5pt)
       const ROW_TOLERANCE = 5;
       const rowsMap = [];
 
@@ -319,10 +440,8 @@
         }
       });
 
-      // Sort rows top-to-bottom
       rowsMap.sort((a, b) => b.y - a.y);
 
-      // Convert each row's items into columns sorted by X position
       const tableData = rowsMap.map(row => {
         row.items.sort((a, b) => a.x - b.x);
         return row.items.map(item => item.text.trim());
@@ -344,7 +463,6 @@
         return;
       }
 
-      // Render top 15 rows max for clean preview
       const previewRows = data.slice(0, 15);
       previewRows.forEach((row, idx) => {
         const tr = document.createElement('tr');
