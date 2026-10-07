@@ -20,10 +20,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Safety Alerts | SOLMATES</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="stylesheet" href="/css/global-lockdown.css?v=820">
+<link rel="stylesheet" href="/css/global-lockdown.css?v=821">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=820"></script>
-<script src="/js/api-client.js?v=820" defer></script>
+<script src="/config.js?v=821"></script>
+<script src="/js/api-client.js?v=821" defer></script>
 
 <style>
   /* ===== DARK MODE VARIABLES ===== */
@@ -1132,7 +1132,7 @@ async function loadAlerts() {
   var grid = document.getElementById('alertsGrid');
   var countEl = document.getElementById('alertCount');
   try {
-    var res = await fetch(API_URL + '/sol/notifications/all?_t=' + Date.now());
+    var res = await fetch(API_URL + '/sol/notifications/all');
     var data = await res.json();
     var alerts = [];
     if (Array.isArray(data)) {
