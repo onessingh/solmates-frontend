@@ -1,4 +1,4 @@
-﻿
+
 // [Fix] Bypass Web Push permission checks in Native App to force Native Firebase flow
 (function() {
   try {
@@ -203,12 +203,40 @@ window.addEventListener('afterprint', function() {
 // - Railway: 'https://solmates-backend.up.railway.app/api'
 
 // Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
-window.PRODUCTION_API_URL = 'https://solmates-backend-w27e.onrender.com/api';
+// Production backend URLs — Render Primary & Secondary (Automatic Failover)
+window.BACKEND_PRIMARY_URL = 'https://solmates-backend-w27e.onrender.com';
+window.BACKEND_SECONDARY_URL = 'https://solmates-backend-f9rl.onrender.com';
 
-// RENDER_BACKEND_URL: Used by Socket.io to connect directly to backend
-// Must be the base URL WITHOUT /api suffix
-// Required if PRODUCTION_API_URL is set to a relative path like '/api'
-window.RENDER_BACKEND_URL = 'https://solmates-backend-w27e.onrender.com';
+// Active Backend Selection
+let activeBackend = localStorage.getItem('solmates_active_backend') || window.BACKEND_PRIMARY_URL;
+
+window.PRODUCTION_API_URL = activeBackend + '/api';
+window.RENDER_BACKEND_URL = activeBackend;
+
+// Smart Health Check Failover: Automatically switch to Secondary backend if Primary is limited/down
+(function() {
+  const currentActive = localStorage.getItem('solmates_active_backend') || window.BACKEND_PRIMARY_URL;
+  if (currentActive === window.BACKEND_PRIMARY_URL) {
+    fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
+      .catch(() => {
+        console.warn('[BACKEND FAILOVER] Primary Render URL inactive/limited. Auto-switching to Secondary!');
+        localStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL);
+        window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
+        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+      });
+  } else {
+    // Periodically verify if Primary is back online
+    fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
+      .then(res => {
+        if (res.ok) {
+          localStorage.setItem('solmates_active_backend', window.BACKEND_PRIMARY_URL);
+          window.PRODUCTION_API_URL = window.BACKEND_PRIMARY_URL + '/api';
+          window.RENDER_BACKEND_URL = window.BACKEND_PRIMARY_URL;
+        }
+      })
+      .catch(() => {});
+  }
+})();
 
 // For local development, comment out the line above and api-client.js
 // will auto-detect localhost:3000 automatically.
