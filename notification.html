@@ -78,19 +78,19 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=821">
-  <script src="/config.js?v=821" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=822">
+  <script src="/config.js?v=822" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=821" defer></script>
-  <script src="/js/webview-fix.js?v=821" defer></script>
-  <script src="/js/sol-cache.js?v=821" defer></script>
+  <script src="/js/api-client.js?v=822" defer></script>
+  <script src="/js/webview-fix.js?v=822" defer></script>
+  <script src="/js/sol-cache.js?v=822" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '117.1';
+        window.SOL_APP_VERSION = '117.2';
         const currentVersion = '116.7';
         const savedVersion = _store.getItem('sol_app_version');
 
@@ -1852,7 +1852,7 @@
             // [v816.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
-            const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all?_t=${Date.now()}`, { signal: _fc.signal });
+            const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all`, { signal: _fc.signal });
             clearTimeout(_ft);
             if (response.status === 429) {
               throw new Error('Rate limited (429)');
@@ -3311,7 +3311,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=821';
+        const swUrl = './sw.js?v=822';
         const registration = await navigator.serviceWorker.register(swUrl);
         
         // [v816.5] refreshed flag + pageOpenTime guard • prevents infinite reload loop
