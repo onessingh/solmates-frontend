@@ -1,9 +1,9 @@
 /**
- * SOLMATES - Frontend Cache & Prefetcher
- * ──────────────────────────────────────
- * • Speeds up navigation by storing data in memory
- * • Prefetches all semesters in the background after page load
- * • Zero-risk to database (Frontend only)
+ * SOLMATES - Frontend Cache & Prefetcher (v116.7 - ETag & LocalStorage 0-Bandwidth Optimized)
+ * ──────────────────────────────────────────────────────────────────────────────────────
+ * • Speeds up navigation by storing data in memory and localStorage
+ * • Uses HTTP 304 (If-None-Match ETag) to reduce Render backend bandwidth to 0 bytes
+ * • Auto-warms session cache instantaneously on page load
  */
 
 (function (window) {
@@ -24,6 +24,70 @@
         folders: {},     // { category_semester: data }
         content: {}      // { category_semester: data }
     };
+
+    /**
+     * Helper to populate API client's cache from bulk payload
+     */
+    function populateMemoryCache(data) {
+        if (!data || !data.success || !window.solmatesAPI || !window.solmatesAPI.setCache) return;
+
+        // 1. Sync Categories Data
+        if (data.categories) {
+            for (const [cat, items] of Object.entries(data.categories)) {
+                const groups = {}; // key: `sem_folderId`
+                items.forEach(item => {
+                    const sem = String(item.semester);
+                    const fid = item.folderId || 'root';
+                    const gkey = `${sem}__${fid}`;
+                    if (!groups[gkey]) groups[gkey] = [];
+                    groups[gkey].push(item);
+                });
+
+                for (const [gkey, bucket] of Object.entries(groups)) {
+                    const sepIdx = gkey.indexOf('__');
+                    const sem = gkey.substring(0, sepIdx);
+                    const fid = gkey.substring(sepIdx + 2);
+                    const ckey = `content_${cat}_${sem}_${fid}`;
+                    window.solmatesAPI.setCache(ckey, {
+                        success: true,
+                        data: bucket,
+                        _bulk: true
+                    });
+                }
+            }
+        }
+
+        // 2. Sync Folders Data
+        if (data.folders && Array.isArray(data.folders)) {
+            const folderGroups = {}; // category_semester_parentId
+            data.folders.forEach(f => {
+                const key = `${f.category}_${f.semester}_${f.parentId || 'root'}`;
+                if (!folderGroups[key]) folderGroups[key] = [];
+                folderGroups[key].push(f);
+            });
+
+            for (const [key, fList] of Object.entries(folderGroups)) {
+                const ckey = `folders_${key}`;
+                window.solmatesAPI.setCache(ckey, {
+                    success: true,
+                    data: fList,
+                    _bulk: true
+                });
+            }
+        }
+    }
+
+    // Instant Warm Up from LocalStorage on Script Load
+    try {
+        const localCachedStr = localStorage.getItem('_sol_all_content_data');
+        if (localCachedStr) {
+            const parsed = JSON.parse(localCachedStr);
+            populateMemoryCache(parsed);
+        }
+    } catch (e) {
+        localStorage.removeItem('_sol_all_content_data');
+        localStorage.removeItem('_sol_all_content_etag');
+    }
 
     const SOL_CACHE = {
         /**
@@ -55,76 +119,47 @@
                 window[CACHE_NAME].folders = {};
                 window[CACHE_NAME].content = {};
             }
+            localStorage.removeItem('_sol_all_content_data');
+            localStorage.removeItem('_sol_all_content_etag');
         },
 
         /**
-         * Background Prefetcher
-         * Quietly loads other semesters so clicks feel instant
+         * Background Prefetcher with ETag (HTTP 304) Support
          */
         prefetch: async () => {
-            console.log('🚀 SOL Background Prefetcher starting (Bulk Sync)...');
+            console.log('🚀 SOL Background Prefetcher starting (ETag Enabled)...');
 
             try {
-                // Prioritize global PRODUCTION_API_URL
                 const apiBase = window.PRODUCTION_API_URL || 
                                 (window.SOL && window.SOL.getApiBase ? window.SOL.getApiBase() : 
                                 (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : '/api'));
 
-                // Use the bulk endpoint to get all data in one go
                 const startTime = Date.now();
-                const res = await fetch(`${apiBase}/sol/all-content`);
+                const headers = {};
+                const cachedEtag = localStorage.getItem('_sol_all_content_etag');
+                if (cachedEtag) {
+                    headers['If-None-Match'] = cachedEtag;
+                }
+
+                const res = await fetch(`${apiBase}/sol/all-content`, { headers });
+
+                if (res.status === 304) {
+                    console.log(`✅ SOL Content Not Modified (HTTP 304). 0 Bytes transferred! Cache valid.`);
+                    return;
+                }
 
                 if (res.ok) {
+                    const etag = res.headers.get('ETag');
+                    if (etag) localStorage.setItem('_sol_all_content_etag', etag);
+
                     const data = await res.json();
+                    if (data && data.success) {
+                        try {
+                            localStorage.setItem('_sol_all_content_data', JSON.stringify(data));
+                        } catch (e) { /* Storage full fallback */ }
 
-                    if (data.success && data.categories && window.solmatesAPI && window.solmatesAPI.setCache) {
-                        // 1. Sync Categories Data
-                        for (const [cat, items] of Object.entries(data.categories)) {
-                            // [BUG FIX] Group items by semester + folderId so folder items don't
-                            // bleed into the root cache and appear outside their folder.
-                            const groups = {}; // key: `sem_folderId`
-                            items.forEach(item => {
-                                const sem = String(item.semester);
-                                const fid = item.folderId || 'root';
-                                const gkey = `${sem}__${fid}`;
-                                if (!groups[gkey]) groups[gkey] = [];
-                                groups[gkey].push(item);
-                            });
-
-                            // Synchronize with API Client's sessionStorage cache per folder bucket
-                            for (const [gkey, bucket] of Object.entries(groups)) {
-                                const sepIdx = gkey.indexOf('__');
-                                const sem = gkey.substring(0, sepIdx);
-                                const fid = gkey.substring(sepIdx + 2);
-                                const ckey = `content_${cat}_${sem}_${fid}`;
-                                window.solmatesAPI.setCache(ckey, {
-                                    success: true,
-                                    data: bucket,
-                                    _bulk: true // Marker for debugging
-                                });
-                            }
-                        }
-
-                        // 2. Sync Folders Data
-                        if (data.folders && Array.isArray(data.folders)) {
-                            const folderGroups = {}; // category_semester_parentId
-                            data.folders.forEach(f => {
-                                const key = `${f.category}_${f.semester}_${f.parentId || 'root'}`;
-                                if (!folderGroups[key]) folderGroups[key] = [];
-                                folderGroups[key].push(f);
-                            });
-
-                            for (const [key, fList] of Object.entries(folderGroups)) {
-                                const ckey = `folders_${key}`;
-                                window.solmatesAPI.setCache(ckey, {
-                                    success: true,
-                                    data: fList,
-                                    _bulk: true
-                                });
-                            }
-                        }
-
-                        console.log(`✅ SOL Bulk Sync complete in ${Date.now() - startTime}ms. Sessions warmed up!`);
+                        populateMemoryCache(data);
+                        console.log(`✅ SOL Bulk Sync complete in ${Date.now() - startTime}ms. Data updated.`);
                     }
                 }
             } catch (e) {
@@ -135,11 +170,11 @@
 
     window.SOL_CACHE = SOL_CACHE;
 
-    // Auto-start prefetch after initial page load settles (5 second delay to avoid rate limits)
+    // Auto-start prefetch after initial page load settles (3 second delay)
     if (document.readyState === 'complete') {
-        setTimeout(SOL_CACHE.prefetch, 5000);
+        setTimeout(SOL_CACHE.prefetch, 3000);
     } else {
-        window.addEventListener('load', () => setTimeout(SOL_CACHE.prefetch, 5000));
+        window.addEventListener('load', () => setTimeout(SOL_CACHE.prefetch, 3000));
     }
 
 })(window);
