@@ -216,13 +216,34 @@ try {
 window.PRODUCTION_API_URL = activeBackend + '/api';
 window.RENDER_BACKEND_URL = activeBackend;
 
-// Smart Health Check Failover: Automatically switch to Backup backend if Active is down
+// Smart Health Check Failover (Throttled 10m to avoid Render API spam)
 (function() {
+  try {
+    const lastCheck = sessionStorage.getItem('solmates_live_check_time');
+    if (lastCheck && (Date.now() - parseInt(lastCheck, 10)) < 10 * 60 * 1000) {
+      if (sessionStorage.getItem('solmates_live_check_status') === 'secondary') {
+        window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
+        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+      }
+      return;
+    }
+  } catch(e) {}
+
   fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
+    .then(() => {
+      try {
+        sessionStorage.setItem('solmates_live_check_time', String(Date.now()));
+        sessionStorage.setItem('solmates_live_check_status', 'primary');
+      } catch(e) {}
+    })
     .catch(() => {
       console.warn('[BACKEND FAILOVER] Primary Render URL inactive. Auto-switching to Secondary!');
       window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
       window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+      try {
+        sessionStorage.setItem('solmates_live_check_time', String(Date.now()));
+        sessionStorage.setItem('solmates_live_check_status', 'secondary');
+      } catch(e) {}
     });
 })();
 

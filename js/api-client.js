@@ -117,6 +117,7 @@ class SolmatesAPI {
   constructor() {
     this.baseURL = API_BASE_URL;
     this.adminToken = localStorage.getItem('solmates_admin_token');
+    this.inFlightRequests = new Map();
 
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       console.log('✅ API Client initialized:', this.baseURL);
@@ -144,6 +145,25 @@ class SolmatesAPI {
 
   // ========== CORE REQUEST METHOD ==========
   async request(endpoint, options = {}, timeoutMs = REQUEST_TIMEOUT) {
+    const method = (options.method || 'GET').toUpperCase();
+    if (method === 'GET') {
+      const reqKey = `${endpoint}`;
+      if (this.inFlightRequests.has(reqKey)) {
+        return this.inFlightRequests.get(reqKey);
+      }
+
+      const reqPromise = this._executeRequest(endpoint, options, timeoutMs).finally(() => {
+        this.inFlightRequests.delete(reqKey);
+      });
+
+      this.inFlightRequests.set(reqKey, reqPromise);
+      return reqPromise;
+    }
+
+    return this._executeRequest(endpoint, options, timeoutMs);
+  }
+
+  async _executeRequest(endpoint, options = {}, timeoutMs = REQUEST_TIMEOUT) {
     if (this.baseURL === '__UNCONFIGURED__') {
       throw new Error('API not configured. Please check configuration.');
     }
