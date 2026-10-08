@@ -1497,8 +1497,9 @@
       subjectView.style.display = 'block';
       document.getElementById('subjectLabel').innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
 
-      // De-Dupe & Merge Templates
-      let subjects = [...folders];
+      // De-Dupe & Merge Templates — Filter root-level subject folders only
+      const rootFoldersOnly = folders.filter(f => !f.parentId || f.parentId === 'root');
+      let subjects = [...rootFoldersOnly];
       if (CATEGORY === 'youtube' && SEMESTER_SUBJECTS[sem]) {
         SEMESTER_SUBJECTS[sem].forEach(name => {
           if (!subjects.find(f => (f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim() === name.toUpperCase().trim())) {
