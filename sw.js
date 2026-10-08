@@ -1,9 +1,9 @@
 /**
- * SOLMATES Service Worker (v822 - Strategy 2 API Cache Enabled)
- * Handles offline caching & Stale-While-Revalidate API caching for zero-bandwidth.
+ * SOLMATES Service Worker (v826 - ETag Direct Validation Enabled)
+ * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v825';
+const CACHE_NAME = 'solmates-cache-v826';
 
 const STATIC_ASSETS = [
     '/notification.html',
@@ -36,31 +36,7 @@ self.addEventListener("fetch", event => {
 
     const url = new URL(event.request.url);
 
-    // =========================================================================
-    // STRATEGY 2: Stale-While-Revalidate for /api/sol/ GET requests
-    // Serves instant cached response from Cache Storage (0ms delay, 0MB user load),
-    // then revalidates in the background with HTTP 304 ETag checking.
-    // =========================================================================
-    if (url.pathname.includes("/api/sol/")) {
-        event.respondWith(
-            caches.open(CACHE_NAME).then(async cache => {
-                const cachedResponse = await cache.match(event.request);
-
-                const fetchPromise = fetch(event.request).then(networkResponse => {
-                    if (networkResponse && networkResponse.status === 200) {
-                        cache.put(event.request, networkResponse.clone());
-                    }
-                    return networkResponse;
-                }).catch(() => cachedResponse);
-
-                // Return instant cached response if available, or wait for fetch
-                return cachedResponse || fetchPromise;
-            })
-        );
-        return;
-    }
-
-    // Skip non-SOL API calls
+    // Bypass API calls — let browser HTTP ETag handle 304 / 200 validation natively
     if (url.pathname.includes("/api/")) return;
 
     const isHTML = event.request.destination === "document"

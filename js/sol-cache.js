@@ -132,17 +132,18 @@
             const localData = localStorage.getItem('_sol_all_content_data');
             const cachedEtag = localStorage.getItem('_sol_all_content_etag');
 
-            // ZERO NETWORK MODE: If local snapshot exists and is younger than 24 hours, skip network fetch completely!
-            if (!force && localData && cachedEtag && (now - lastFetch < 86400000)) {
+            // 60-Second Cooldown: If local snapshot exists and last ETag check was within 60s, use local snapshot
+            const CHECK_COOLDOWN_MS = 60000;
+            if (!force && localData && cachedEtag && (now - lastFetch < CHECK_COOLDOWN_MS)) {
                 try {
                     const parsed = JSON.parse(localData);
                     populateMemoryCache(parsed);
                 } catch (e) {}
-                console.log('⚡ [SNAPSHOT] Loaded from Local Snapshot (0 Backend Requests).');
+                console.log('⚡ [SNAPSHOT] Loaded from Local Snapshot (Cooldown Active).');
                 return;
             }
 
-            console.log('🚀 [SNAPSHOT] Refreshing database snapshot from backend...');
+            console.log('🚀 [SNAPSHOT] Checking database snapshot ETag with backend...');
 
             try {
                 const apiBase = window.PRODUCTION_API_URL || 
@@ -175,7 +176,8 @@
                         } catch (e) { /* Storage full fallback */ }
 
                         populateMemoryCache(data);
-                        console.log(`✅ [SNAPSHOT] Downloaded fresh snapshot in ${Date.now() - startTime}ms.`);
+                        window.dispatchEvent(new CustomEvent('sol:content-updated', { detail: data }));
+                        console.log(`✅ [SNAPSHOT] Database updated! Downloaded fresh snapshot in ${Date.now() - startTime}ms.`);
                     }
                 }
             } catch (e) {
