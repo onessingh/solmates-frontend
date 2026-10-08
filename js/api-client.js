@@ -473,7 +473,7 @@ class SolmatesAPI {
   async getSOLContent(category, semester, folderId = null, skipCache = false) {
     const ckey = `content_${category}_${semester}_${folderId || 'root'}`;
     // SWR Logic: Only use blocking cache if NOT forced to skip
-    if (!skipCache && category !== 'live-classes') {
+    if (!skipCache) {
         const cached = this.getCache(ckey);
         if (cached) return cached;
     }
@@ -481,7 +481,7 @@ class SolmatesAPI {
     if (folderId) params.append('folderId', folderId);
     const queryString = params.toString();
     const result = await this.request(`/sol/${category}/${semester}${queryString ? '?' + queryString : ''}`);
-    if (result && result.success && category !== 'live-classes') this.setCache(ckey, result);
+    if (result && result.success) this.setCache(ckey, result);
     return result;
   }
 
