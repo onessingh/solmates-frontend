@@ -54,15 +54,18 @@
 
   <script>
 
-  // ONE-TIME NUCLEAR CACHE CLEAR (v816) — runs once per user, then never again
+  // ONE-TIME NUCLEAR CACHE CLEAR (v826) — runs once per user, then never again
 
   (function() {
 
-    var NUKE_VERSION = 'sol-cache-nuke-v816';
+    var NUKE_VERSION = 'sol-cache-nuke-v826';
 
     if (localStorage.getItem(NUKE_VERSION)) return; // already ran
 
     localStorage.setItem(NUKE_VERSION, '1');
+    localStorage.removeItem('_sol_all_content_data');
+    localStorage.removeItem('_sol_all_content_etag');
+    localStorage.removeItem('_sol_last_fetch_timestamp');
 
     if ('serviceWorker' in navigator && 'caches' in window) {
 
@@ -90,6 +93,8 @@
 
       });
 
+    } else {
+      location.reload(true);
     }
 
   })();
