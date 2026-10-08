@@ -10,7 +10,12 @@
 
   async function wakeUpBackend() {
     try {
+      const lastPing = localStorage.getItem('solmates_uptime_ping_time');
+      if (lastPing && (Date.now() - parseInt(lastPing, 10)) < 15 * 60 * 1000) {
+        return; // Skip ping if sent within last 15 minutes across any tab
+      }
       await fetch(`${BACKEND_URL}/api/live`, { mode: 'no-cors', cache: 'no-cache' });
+      localStorage.setItem('solmates_uptime_ping_time', String(Date.now()));
     } catch (e) {
       // Ignore errors, we just want to hit the server
     }
@@ -18,8 +23,6 @@
 
   function startPinging() {
     if (pingTimer) return;
-    // [v116.4] First ping delayed 15s after startPinging called
-    // This ensures page rendering is fully done before hitting Render backend
     setTimeout(wakeUpBackend, 15000);
     pingTimer = setInterval(wakeUpBackend, PING_INTERVAL);
   }

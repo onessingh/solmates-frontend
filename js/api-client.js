@@ -825,12 +825,21 @@ class SolmatesAPI {
     return outputArray;
   }
 
-    async subscribeToPush(semesters = null) {
+  async subscribeToPush(semesters = null, force = false) {
     if (!semesters) {
         const savedSem = localStorage.getItem('solmates_active_semester');
         semesters = savedSem ? [savedSem] : ['all'];
     }
     
+    const semArr = Array.isArray(semesters) ? semesters : [semesters];
+    const payloadSig = JSON.stringify(semArr);
+    const lastSubTime = localStorage.getItem('solmates_push_sub_time');
+    const lastSubPayload = localStorage.getItem('solmates_push_sub_payload');
+
+    if (!force && lastSubPayload === payloadSig && lastSubTime && (Date.now() - parseInt(lastSubTime, 10)) < 24 * 60 * 60 * 1000) {
+      return { success: true, cached: true };
+    }
+
     const deviceId = this.getDeviceId();
     const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
     
@@ -838,13 +847,13 @@ class SolmatesAPI {
         throw new Error('FCM Token not found. Notifications require the Android App.');
     }
 
-    return await this.request('/notifications/subscribe', {
+    const res = await this.request('/notifications/subscribe', {
       method: 'POST',
       body: JSON.stringify({
         subscription: { endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) },
         fcmToken: fcmToken,
         deviceId,
-        semesters: Array.isArray(semesters) ? semesters : [semesters],
+        semesters: semArr,
         metadata: {
           isApp: true,
           platform: navigator.platform,
@@ -852,6 +861,13 @@ class SolmatesAPI {
         }
       })
     });
+
+    try {
+      localStorage.setItem('solmates_push_sub_time', String(Date.now()));
+      localStorage.setItem('solmates_push_sub_payload', payloadSig);
+    } catch(e) {}
+
+    return res;
   }
 
   async silentPushTokenRefresh() {
