@@ -216,12 +216,12 @@ try {
 window.PRODUCTION_API_URL = activeBackend + '/api';
 window.RENDER_BACKEND_URL = activeBackend;
 
-// Smart Health Check Failover (Throttled 10m to avoid Render API spam)
+// Smart Health Check Failover (Throttled 10m via localStorage across all tabs; Success-only caching)
 (function() {
   try {
-    const lastCheck = sessionStorage.getItem('solmates_live_check_time');
+    const lastCheck = localStorage.getItem('solmates_live_check_time');
     if (lastCheck && (Date.now() - parseInt(lastCheck, 10)) < 10 * 60 * 1000) {
-      if (sessionStorage.getItem('solmates_live_check_status') === 'secondary') {
+      if (localStorage.getItem('solmates_live_check_status') === 'secondary') {
         window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
         window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
       }
@@ -230,20 +230,21 @@ window.RENDER_BACKEND_URL = activeBackend;
   } catch(e) {}
 
   fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
-    .then(() => {
-      try {
-        sessionStorage.setItem('solmates_live_check_time', String(Date.now()));
-        sessionStorage.setItem('solmates_live_check_status', 'primary');
-      } catch(e) {}
+    .then(res => {
+      if (res.ok) {
+        try {
+          localStorage.setItem('solmates_live_check_time', String(Date.now()));
+          localStorage.setItem('solmates_live_check_status', 'primary');
+        } catch(e) {}
+      } else {
+        throw new Error('Primary live check returned non-200');
+      }
     })
     .catch(() => {
       console.warn('[BACKEND FAILOVER] Primary Render URL inactive. Auto-switching to Secondary!');
       window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
       window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
-      try {
-        sessionStorage.setItem('solmates_live_check_time', String(Date.now()));
-        sessionStorage.setItem('solmates_live_check_status', 'secondary');
-      } catch(e) {}
+      // Do NOT cache timestamp on failure so it can retry
     });
 })();
 

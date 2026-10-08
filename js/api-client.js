@@ -118,6 +118,7 @@ class SolmatesAPI {
     this.baseURL = API_BASE_URL;
     this.adminToken = localStorage.getItem('solmates_admin_token');
     this.inFlightRequests = new Map();
+    this.ttlCache = new Map(); // 30s Short Memory TTL Cache
 
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       console.log('✅ API Client initialized:', this.baseURL);
@@ -146,18 +147,36 @@ class SolmatesAPI {
   // ========== CORE REQUEST METHOD ==========
   async request(endpoint, options = {}, timeoutMs = REQUEST_TIMEOUT) {
     const method = (options.method || 'GET').toUpperCase();
-    if (method === 'GET') {
+    if (method === 'GET' && !options.force) {
       const reqKey = `${endpoint}`;
+      
+      // 1. Check 30s Short TTL Cache
+      const cached = this.ttlCache.get(reqKey);
+      if (cached && (Date.now() - cached.timestamp < 30000)) {
+        return Promise.resolve(cached.data);
+      }
+
+      // 2. Check In-Flight Request Deduplication
       if (this.inFlightRequests.has(reqKey)) {
         return this.inFlightRequests.get(reqKey);
       }
 
-      const reqPromise = this._executeRequest(endpoint, options, timeoutMs).finally(() => {
-        this.inFlightRequests.delete(reqKey);
-      });
+      const reqPromise = this._executeRequest(endpoint, options, timeoutMs)
+        .then(data => {
+          this.ttlCache.set(reqKey, { timestamp: Date.now(), data });
+          return data;
+        })
+        .finally(() => {
+          this.inFlightRequests.delete(reqKey);
+        });
 
       this.inFlightRequests.set(reqKey, reqPromise);
       return reqPromise;
+    }
+
+    // Mutations (POST/PUT/DELETE) clear short TTL cache
+    if (method !== 'GET') {
+      this.ttlCache.clear();
     }
 
     return this._executeRequest(endpoint, options, timeoutMs);

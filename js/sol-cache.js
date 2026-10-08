@@ -1,5 +1,5 @@
 /**
- * SOLMATES - Frontend Cache & Prefetcher (v841 - Static Local Snapshot & Zero Network Mode)
+ * SOLMATES - Frontend Cache & Prefetcher (v842 - Static Local Snapshot & Zero Network Mode)
  * ──────────────────────────────────────────────────────────────────────────────────────────
  * • Stores full database snapshot in localStorage
  * • Serves 100% of user pageviews & navigation directly from local snapshot (0ms latency, 0 Backend Requests)
@@ -9,7 +9,7 @@
 (function (window) {
     'use strict';
 
-    /* ========== TOTAL CONSOLE BLACKOUT (v841 - Production Only) ========== */
+    /* ========== TOTAL CONSOLE BLACKOUT (v842 - Production Only) ========== */
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && localStorage.getItem('solmates_debug') !== 'true') {
       const dummy = () => {};
       console.log = dummy;
@@ -88,8 +88,8 @@
         _applyBulkToAPIClient(data);
     }
 
-    // Automatic Purge of Old Cache Snapshots (v841)
-    const SNAPSHOT_CACHE_VER = 'v841_refresh_1';
+    // Automatic Purge of Old Cache Snapshots (v842)
+    const SNAPSHOT_CACHE_VER = 'v842_refresh_1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         localStorage.removeItem('_sol_all_content_data');
         localStorage.removeItem('_sol_all_content_etag');
