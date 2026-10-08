@@ -1877,12 +1877,12 @@
         }
       }
 
-      if (NO_CONTENT && !isAdmin) {
+      if (NO_CONTENT && !isAdmin && !FOLDER_ID) {
         showEmpty('No Videos Available', 'No videos have been uploaded for this subject yet. Check back later!');
         return;
       }
 
-      if (NO_CONTENT && isAdmin) {
+      if (NO_CONTENT && isAdmin && !FOLDER_ID) {
         showEmpty('Empty • Add Content', 'Use the buttons above to add playlist folders or video links.');
         return;
       }

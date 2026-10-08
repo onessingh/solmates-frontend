@@ -1470,7 +1470,7 @@
     `;
 
       // ? STEP 1: Cache Render
-      const cKey = `folders_${CATEGORY}_${sem}_root`;
+      const cKey = `folders_${CATEGORY}_${sem}_root_true`;
       const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(cKey) : null;
       if (cFolders && cFolders.data) {
         renderGridSafe(sem, cFolders.data, true);
@@ -1478,7 +1478,7 @@
 
       // ? STEP 2: Fresh Render
       try {
-        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, false);
+        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, false, true);
         const folders = (semRes && semRes.data) ? semRes.data : [];
         renderGridSafe(sem, folders, false);
       } catch (e) {
