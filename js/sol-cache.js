@@ -69,7 +69,6 @@
             for (const [key, fList] of Object.entries(folderGroups)) {
                 window.solmatesAPI.setCache(`folders_${key}`, { success: true, data: fList, _bulk: true });
                 window.solmatesAPI.setCache(`folders_${key}_false`, { success: true, data: fList, _bulk: true });
-                window.solmatesAPI.setCache(`folders_${key}_true`, { success: true, data: fList, _bulk: true });
             }
         }
     }
@@ -80,13 +79,18 @@
         _applyBulkToAPIClient(data);
     }
 
-    // Automatic Purge of Old Cache Snapshots (v828)
-    const SNAPSHOT_CACHE_VER = 'v828_refresh_1';
+    // Automatic Purge of Old Cache Snapshots (v830)
+    const SNAPSHOT_CACHE_VER = 'v830_refresh_1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         localStorage.removeItem('_sol_all_content_data');
         localStorage.removeItem('_sol_all_content_etag');
         localStorage.removeItem('_sol_last_fetch_timestamp');
         localStorage.removeItem('solcache_live_classes');
+        try {
+            Object.keys(sessionStorage).forEach(k => {
+                if (k.startsWith('solcache_')) sessionStorage.removeItem(k);
+            });
+        } catch(e) {}
         localStorage.setItem('_sol_snapshot_ver', SNAPSHOT_CACHE_VER);
     }
 
@@ -139,23 +143,24 @@
                 localStorage.removeItem(`cached_notices_sem${i}`);
                 localStorage.removeItem(`cached_notices_sem${i}_time`);
             }
+            try {
+                Object.keys(sessionStorage).forEach(k => {
+                    if (k.startsWith('solcache_')) sessionStorage.removeItem(k);
+                });
+            } catch(e) {}
         },
 
         prefetch: async (force = false) => {
             const now = Date.now();
-            const lastFetch = parseInt(localStorage.getItem('_sol_last_fetch_timestamp') || '0', 10);
             const localData = localStorage.getItem('_sol_all_content_data');
             const cachedEtag = localStorage.getItem('_sol_all_content_etag');
 
-            // 60-Second Cooldown: If local snapshot exists and last ETag check was within 60s, use local snapshot
-            const CHECK_COOLDOWN_MS = 60000;
-            if (!force && localData && cachedEtag && (now - lastFetch < CHECK_COOLDOWN_MS)) {
+            // Warm up memory cache immediately from local snapshot if available
+            if (localData) {
                 try {
                     const parsed = JSON.parse(localData);
                     populateMemoryCache(parsed);
                 } catch (e) {}
-                console.log('⚡ [SNAPSHOT] Loaded from Local Snapshot (Cooldown Active).');
-                return;
             }
 
             console.log('🚀 [SNAPSHOT] Checking database snapshot ETag with backend...');
@@ -167,7 +172,7 @@
 
                 const startTime = Date.now();
                 const headers = {};
-                if (cachedEtag) {
+                if (cachedEtag && !force) {
                     headers['If-None-Match'] = cachedEtag;
                 }
 
@@ -203,20 +208,28 @@
 
     window.SOL_CACHE = SOL_CACHE;
 
+    // Cross-tab admin mutation listener
+    window.addEventListener('storage', (e) => {
+        if (e.key === '_sol_admin_mutation') {
+            SOL_CACHE.clear();
+            SOL_CACHE.prefetch(true);
+        }
+    });
+
     // Retry applying snapshot when solmatesAPI loads asynchronously
     const checkApiReadyTimer = setInterval(() => {
         if (window.solmatesAPI && window._sol_bulk_cache_snapshot) {
             SOL_CACHE.applySnapshot();
             clearInterval(checkApiReadyTimer);
         }
-    }, 100);
-    setTimeout(() => clearInterval(checkApiReadyTimer), 10000);
+    }, 50);
+    setTimeout(() => clearInterval(checkApiReadyTimer), 5000);
 
-    // Auto-start prefetch after initial page load settles (3 second delay)
-    if (document.readyState === 'complete') {
-        setTimeout(() => SOL_CACHE.prefetch(false), 3000);
+    // Auto-start prefetch immediately when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => SOL_CACHE.prefetch(false));
     } else {
-        window.addEventListener('load', () => setTimeout(() => SOL_CACHE.prefetch(false), 3000));
+        SOL_CACHE.prefetch(false);
     }
 
 })(window);

@@ -213,6 +213,9 @@ class SolmatesAPI {
           window.SOL_CACHE.clear();
           window.SOL_CACHE.prefetch(true);
         }
+        try {
+          localStorage.setItem('_sol_admin_mutation', String(Date.now()));
+        } catch (e) {}
       }
 
       return data;
