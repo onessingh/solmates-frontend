@@ -80,8 +80,8 @@
         _applyBulkToAPIClient(data);
     }
 
-    // Automatic Purge of Old Cache Snapshots (v826)
-    const SNAPSHOT_CACHE_VER = 'v826_refresh_2';
+    // Automatic Purge of Old Cache Snapshots (v827)
+    const SNAPSHOT_CACHE_VER = 'v827_refresh_1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         localStorage.removeItem('_sol_all_content_data');
         localStorage.removeItem('_sol_all_content_etag');
