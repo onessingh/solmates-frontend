@@ -205,6 +205,9 @@ class SolmatesAPI {
           }
         }
 
+        throw error;
+      }
+
       if (options.method && options.method.toUpperCase() !== 'GET') {
         if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
           window.SOL_CACHE.clear();
