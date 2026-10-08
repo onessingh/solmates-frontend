@@ -80,6 +80,15 @@
         _applyBulkToAPIClient(data);
     }
 
+    // Automatic Purge of Old Cache Snapshots (v826)
+    const SNAPSHOT_CACHE_VER = 'v826_refresh_1';
+    if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
+        localStorage.removeItem('_sol_all_content_data');
+        localStorage.removeItem('_sol_all_content_etag');
+        localStorage.removeItem('_sol_last_fetch_timestamp');
+        localStorage.setItem('_sol_snapshot_ver', SNAPSHOT_CACHE_VER);
+    }
+
     // Instant Warm Up from LocalStorage on Script Load
     try {
         const localCachedStr = localStorage.getItem('_sol_all_content_data');
