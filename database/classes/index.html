@@ -1276,8 +1276,8 @@
                             const sessionDate = item.scheduledAt || item.date || item.created_at;
                             const sessionDay = String(sessionDate).split('T')[0].split(' ')[0];
 
-                            // Only show Today's classes
-                            if (sessionDay !== todayStr) return;
+                            // Only show Today's and Upcoming classes (skip past dates)
+                            if (sessionDay < todayStr) return;
 
                             const meta = cleanSubjectTitle(item.title, sourceSem === 'all' ? '0' : sourceSem, sessionDate);
                             
