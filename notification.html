@@ -3269,23 +3269,12 @@
             if (typeof window.syncNativePushTags === 'function') {
               window.syncNativePushTags(pushSelected);
             }
-            if (fcmToken && window.solmatesAPI) {
-              const deviceId = typeof window.solmatesAPI.getDeviceId === 'function' ? window.solmatesAPI.getDeviceId() : null;
-              window.solmatesAPI.request('/notifications/subscribe', {
-                method: 'POST',
-                body: JSON.stringify({
-                  subscription: { endpoint: 'https://fcm.googleapis.com/fcm/send/dummy-' + fcmToken.substring(0, 32) }, fcmToken, deviceId, semesters: pushSelected,
-                  metadata: { isApp: true, appSource: 'native', platform: navigator.platform, userAgent: navigator.userAgent }
-                })
-              }).catch(e => console.warn('[Native] FCM backend register error:', e));
+            if (window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+              await window.solmatesAPI.subscribeToPush(pushSelected);
             }
-          } else {
-            // Standard Web Push (TWA or Browser)
-            await window.solmatesAPI.subscribeToPush(pushSelected);
             if (typeof window.syncNativePushTags === 'function') {
               window.syncNativePushTags(pushSelected);
             }
-          }
 
         localStorage.setItem('sol_notif_enabled', 'true');
         localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
