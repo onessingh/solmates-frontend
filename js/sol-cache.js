@@ -53,6 +53,15 @@
                         data: bucket,
                         _bulk: true
                     });
+                    if (fid !== 'root') {
+                        for (let s = 0; s <= 4; s++) {
+                            window.solmatesAPI.setCache(`content_${cat}_${s}_${fid}`, {
+                                success: true,
+                                data: bucket,
+                                _bulk: true
+                            });
+                        }
+                    }
                 }
             }
         }
