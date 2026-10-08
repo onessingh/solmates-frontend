@@ -248,10 +248,13 @@
       if (cached) return cached;
     }
 
-    const res = await fetch(`${getApiBase()}/sol/${category}/${semester}`, {
-      cache: 'no-store', // Always ask server for latest if not in SOL_CACHE
-      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' }
-    });
+    if (window.solmatesAPI && typeof window.solmatesAPI.request === 'function') {
+      const data = await window.solmatesAPI.request(`/sol/${category}/${semester}`);
+      if (window.SOL_CACHE) window.SOL_CACHE.set('content', category, semester, data);
+      return data;
+    }
+
+    const res = await fetch(`${getApiBase()}/sol/${category}/${semester}`);
     if (!res.ok) throw new Error('API error: ' + res.status);
     const data = await res.json();
 
