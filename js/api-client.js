@@ -205,7 +205,11 @@ class SolmatesAPI {
           }
         }
 
-        throw error;
+      if (options.method && options.method.toUpperCase() !== 'GET') {
+        if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
+          window.SOL_CACHE.clear();
+          window.SOL_CACHE.prefetch(true);
+        }
       }
 
       return data;
@@ -247,6 +251,11 @@ class SolmatesAPI {
 
       if (!response.ok) {
         throw new Error(data.error || 'Upload failed');
+      }
+
+      if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
+        window.SOL_CACHE.clear();
+        window.SOL_CACHE.prefetch(true);
       }
 
       return data;

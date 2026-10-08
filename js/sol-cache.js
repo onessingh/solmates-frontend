@@ -134,6 +134,11 @@
             localStorage.removeItem('_sol_all_content_data');
             localStorage.removeItem('_sol_all_content_etag');
             localStorage.removeItem('_sol_last_fetch_timestamp');
+            localStorage.removeItem('solcache_live_classes');
+            for (let i = 0; i <= 4; i++) {
+                localStorage.removeItem(`cached_notices_sem${i}`);
+                localStorage.removeItem(`cached_notices_sem${i}_time`);
+            }
         },
 
         prefetch: async (force = false) => {
