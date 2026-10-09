@@ -248,13 +248,16 @@ class SolmatesAPI {
       }
 
       if (options.method && options.method.toUpperCase() !== 'GET') {
-        if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
-          window.SOL_CACHE.clear();
-          window.SOL_CACHE.prefetch(true);
+        const isSolMutation = endpoint && (endpoint.startsWith('/sol') || endpoint.includes('/recycle-bin/restore'));
+        if (isSolMutation) {
+          if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
+            window.SOL_CACHE.clear();
+            window.SOL_CACHE.prefetch(true);
+          }
+          try {
+            localStorage.setItem('_sol_admin_mutation', String(Date.now()));
+          } catch (e) {}
         }
-        try {
-          localStorage.setItem('_sol_admin_mutation', String(Date.now()));
-        } catch (e) {}
       }
 
       return data;

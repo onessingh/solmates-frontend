@@ -224,11 +224,17 @@
 
     window.SOL_CACHE = SOL_CACHE;
 
-    // Cross-tab admin mutation listener
+    // Cross-tab admin mutation listener (debounced)
+    let _storageMutationTimer = null;
     window.addEventListener('storage', (e) => {
         if (e.key === '_sol_admin_mutation') {
-            SOL_CACHE.clear();
-            SOL_CACHE.prefetch(true);
+            if (_storageMutationTimer) clearTimeout(_storageMutationTimer);
+            _storageMutationTimer = setTimeout(() => {
+                if (window.SOL_CACHE) {
+                    SOL_CACHE.clear();
+                    SOL_CACHE.prefetch(true);
+                }
+            }, 500);
         }
     });
 
