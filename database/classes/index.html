@@ -1529,11 +1529,22 @@
         }
 
         function setupRealtime() {
-            setInterval(loadDataFromAPI, 60000);
-            setInterval(updateCountdowns, 1000); // Update timers every second
-            if (typeof io === 'undefined') { const s=document.createElement('script'); s.src='https://cdn.socket.io/4.7.5/socket.io.min.js'; s.onload = () => { const socket=io(); socket.on('sol:updated', loadDataFromAPI); }; document.body.appendChild(s); } else {
+            setInterval(() => {
+                if (!document.hidden) {
+                    loadDataFromAPI();
+                }
+            }, 5 * 60 * 1000); // 5 minutes, active tab only
+
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    loadDataFromAPI();
+                }
+            });
+
+            setInterval(updateCountdowns, 1000); // Update countdowns every second
+            if (typeof io === 'undefined') { const s=document.createElement('script'); s.src='https://cdn.socket.io/4.7.5/socket.io.min.js'; s.onload = () => { const socket=io(); socket.on('sol:updated', () => { if (!document.hidden) loadDataFromAPI(); }); }; document.body.appendChild(s); } else {
                 const socket = io();
-                socket.on('sol:updated', loadDataFromAPI);
+                socket.on('sol:updated', () => { if (!document.hidden) loadDataFromAPI(); });
             }
         }
 
