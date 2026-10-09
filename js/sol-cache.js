@@ -161,6 +161,7 @@
 
         prefetch: async (force = false) => {
             const now = Date.now();
+            const lastFetch = localStorage.getItem('_sol_last_fetch_timestamp');
             const localData = localStorage.getItem('_sol_all_content_data');
             const cachedEtag = localStorage.getItem('_sol_all_content_etag');
 
@@ -170,6 +171,12 @@
                     const parsed = JSON.parse(localData);
                     populateMemoryCache(parsed);
                 } catch (e) {}
+            }
+
+            // ⏱️ 30-SECOND TTL SHIELD: Skip network revalidation if fetched within last 30 seconds unless forced
+            if (!force && lastFetch && (now - parseInt(lastFetch, 10)) < 30 * 1000) {
+                console.log(`⚡ [SNAPSHOT] Content served from local snapshot (${Math.round((now - parseInt(lastFetch, 10))/1000)}s ago < 30s TTL). Skipping network revalidation.`);
+                return;
             }
 
             console.log('🚀 [SNAPSHOT] Checking database snapshot ETag with backend...');
