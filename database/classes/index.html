@@ -1168,6 +1168,16 @@
         let currentActiveTab = 'all';
 
         document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const semParam = urlParams.get('semester');
+                if (semParam && ['1', '2', '3', '4', '0', 'all'].includes(semParam)) {
+                    currentActiveTab = semParam;
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.getAttribute('onclick') === `switchTab('${semParam}')`);
+                    });
+                }
+            } catch (e) { console.warn('URL semester param error:', e); }
             detectAdminLogin();
             initInputs();
             loadDataFromAPI();
