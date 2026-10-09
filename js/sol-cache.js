@@ -243,10 +243,21 @@
     setTimeout(() => clearInterval(checkApiReadyTimer), 5000);
 
     // Auto-start prefetch immediately when DOM is ready
+    function triggerInitialPrefetch() {
+        let isReload = false;
+        try {
+            const navEntries = performance.getEntriesByType('navigation');
+            if (navEntries && navEntries.length > 0) {
+                isReload = (navEntries[0].type === 'reload');
+            }
+        } catch(e){}
+        SOL_CACHE.prefetch(isReload);
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => SOL_CACHE.prefetch(false));
+        document.addEventListener('DOMContentLoaded', triggerInitialPrefetch);
     } else {
-        SOL_CACHE.prefetch(false);
+        triggerInitialPrefetch();
     }
 
 })(window);
