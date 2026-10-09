@@ -6258,6 +6258,36 @@
 
           <div class="greeting-text" id="dynamicGreeting">Welcome to SOLMATES! 🚀</div>
 
+          <script>
+
+            (function(){
+
+              try {
+
+                var h = new Date().getHours();
+
+                var m = ["Good Morning! Aaj kya crack karein? 🚀","Morning! Aaj ka goal kya hai? 🎯","Morning! Ready to dominate? 💪","Good morning boss! Phod dena hai. 🔥","Morning champ! Ready for hustle? ⚡"];
+
+                var a = ["Good Afternoon! Half day done, keep going! ☀️","Afternoon boost! Revision ka time? 📚","Afternoon champ! Focus mode ON! 🎯"];
+
+                var e = ["Good Evening! Chai aur revision? ☕","Evening buddy! Kuch naya seekhein? 💡","Evening vibes! Syllabus niptao. ✨","Good Evening! Ek ghanta aur? ⏳"];
+
+                var n = ["Night owl mode ON! 🦉","Late night study session? 🌙","Good Night buddy! Sona kab hai? 😴","Midnight motivation! You got this! 🚀"];
+
+                var l = (h >= 12 && h < 17) ? a : ((h >= 17 && h < 21) ? e : ((h >= 21 || h < 5) ? n : m));
+
+                var g = l[Math.floor(Math.random() * l.length)];
+
+                var el = document.getElementById('dynamicGreeting');
+
+                if(el) el.textContent = g;
+
+              } catch(err){}
+
+            })();
+
+          </script>
+
           <form class="search-container" id="heroSearchForm" onsubmit="event.preventDefault(); triggerHeroSearch();">
 
             <i class="fas fa-search search-icon" onclick="triggerHeroSearch()" title="Open Mate AI"
@@ -7845,13 +7875,37 @@
 
 
 
-      typeText(greeting, 'dynamicGreeting');
+      // Smooth fade transition for dynamic greeting
 
-      typeText(suggestion, 'heroSearchTrigger', true);
+      const greetingEl = document.getElementById('dynamicGreeting');
+
+      if (greetingEl) {
+
+        greetingEl.style.opacity = '0';
+
+        setTimeout(() => {
+
+          greetingEl.textContent = greeting;
+
+          greetingEl.style.opacity = '1';
+
+        }, 300);
+
+      }
 
 
 
-      // Change greeting every 12 seconds for a more relaxed feel
+      const searchEl = document.getElementById('heroSearchTrigger');
+
+      if (searchEl && document.activeElement !== searchEl) {
+
+        searchEl.placeholder = suggestion;
+
+      }
+
+
+
+      // Change greeting every 12 seconds with smooth fade
 
       clearTimeout(typewriterLoopTimeout);
 
@@ -7867,67 +7921,15 @@
 
       if (!el) return;
 
+      if (isPlaceholder) {
 
-
-      // Stop existing typing on this specific element if any
-
-      if (!isPlaceholder) {
-
-        clearTimeout(window._typewriterTimer);
+        el.placeholder = text;
 
       } else {
 
-        clearTimeout(window._placeholderTimer);
+        el.textContent = text;
 
       }
-
-
-
-      let i = 0;
-
-      if (!isPlaceholder) el.innerHTML = '';
-
-      else el.placeholder = '';
-
-
-
-      // If it's the search input, stop typing if focused
-
-      if (isPlaceholder) {
-
-        el.addEventListener('focus', () => { el.placeholder = text; i = text.length + 1; }, { once: true });
-
-      }
-
-
-
-      function type() {
-
-        if (i < text.length) {
-
-          const current = text.substring(0, i + 1);
-
-          if (isPlaceholder) {
-
-            el.placeholder = current;
-
-            window._placeholderTimer = setTimeout(type, 40);
-
-          } else {
-
-            el.textContent = current;
-
-            window._typewriterTimer = setTimeout(type, 40);
-
-          }
-
-          i++;
-
-        }
-
-      }
-
-      type();
 
     }
 
@@ -10423,15 +10425,19 @@
 
       updateAuthUI();
 
-      // Offload interactive initializations to background idle time (0ms first paint delay)
+      // Run SVG logo animation setup immediately so stroke dash offsets are pre-set before paint
+
+      initAnimations();
+
+
+
+      // Offload interactive search & grid animations to background idle time
 
       if ('requestIdleCallback' in window) {
 
         requestIdleCallback(() => {
 
           initPremiumSearch();
-
-          initAnimations();
 
           initMainOptionAnimations();
 
@@ -10442,8 +10448,6 @@
         setTimeout(() => {
 
           initPremiumSearch();
-
-          initAnimations();
 
           initMainOptionAnimations();
 
