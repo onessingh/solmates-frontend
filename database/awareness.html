@@ -1242,7 +1242,7 @@ async function loadAlerts() {
       var pinnedItems = [];
       var normalItems = [];
       for (var j = 0; j < alertsArray.length; j++) {
-          if (alertsArray[j].isPinned) {
+          if (alertsArray[j].isPinned || alertsArray[j].pinned) {
               pinnedItems.push(alertsArray[j]);
           } else {
               normalItems.push(alertsArray[j]);
@@ -1252,7 +1252,7 @@ async function loadAlerts() {
 
       grid.innerHTML = sortedAlerts.map(function(alert) {
       var id = alert.id || alert._id || '';
-      var isPinned = !!alert.isPinned;
+      var isPinned = !!(alert.isPinned || alert.pinned);
       
       var rawTitle = alert.title || '?';
       var avatar = rawTitle.charAt(0).toUpperCase();

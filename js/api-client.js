@@ -621,6 +621,13 @@ class SolmatesAPI {
     });
   }
 
+  async togglePinSOLItem(category, semester, id) {
+    this._cacheClear('');
+    return await this.request(`/sol/${category}/${semester}/${id}/pin`, {
+      method: 'PUT',
+    });
+  }
+
   async reorderBulkSOL(type, ids, semester = 'all') {
     // [v88.9.x] Aggressive Cache Invalidation: Clear ALL SOL-related data!
     this._cacheClear(''); // Pass empty string to clear all 'solcache_*' keys
