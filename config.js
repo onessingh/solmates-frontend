@@ -204,8 +204,8 @@ window.addEventListener('afterprint', function() {
 
 // Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
 // Production backend URLs — Render Primary (Fresh Account) & Secondary Backup
-window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
-window.BACKEND_SECONDARY_URL = 'https://api-backup.solmates.in';
+window.BACKEND_PRIMARY_URL = 'https://solmates-backend-f9rl.onrender.com';
+window.BACKEND_SECONDARY_URL = 'https://solmates-backend-w27e.onrender.com';
 
 // Active Backend Selection (Switched to 5GB Fresh Render Account f9rl)
 let activeBackend = window.BACKEND_PRIMARY_URL;
