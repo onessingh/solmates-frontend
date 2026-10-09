@@ -1314,8 +1314,17 @@
                             // Precise Expiry Check
                             if (Date.now() > meta.expiryTime) return;
 
-                            // Create a unique key for grouping (Title + Date)
-                            const groupKey = `${meta.subject}_${meta.date || sessionDay}`;
+                            // Normalize Date to YYYY-MM-DD for 100% strict deduplication
+                            const normDate = parseNormalizedDate(meta.date || sessionDate || item.date);
+                            
+                            // Canonical title key (removes branding & punctuation for bulletproof matching)
+                            const canonicalTitle = (meta.subject || item.title || "")
+                                .toLowerCase()
+                                .replace(/^(?:mba\s+)?(?:sem(?:ester)?|year|yr|part|term)\s*(?:iv|iii|ii|i|[1-6])\s*[:\-]?\s*/i, '')
+                                .replace(/[^a-z0-9]/g, '');
+
+                            // Create a unique key for grouping (Title + Normalized Date)
+                            const groupKey = `${canonicalTitle}_${normDate}`;
                             
                             // Standardize Time to 24h Range
                             let finalTime = meta.time;
@@ -1332,11 +1341,21 @@
                                 finalTime = convertTo24hRange(finalTime);
                             }
 
+                            // Standardized DD-MM-YYYY display date
+                            const formattedDisplayDate = (function(dStr) {
+                                if (!dStr) return '';
+                                const parts = dStr.split('-');
+                                if (parts.length === 3 && parts[0].length === 4) {
+                                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                                }
+                                return dStr;
+                            })(normDate);
+
                             const sessionObj = {
                                 id: item.id,
                                 title: item.title,
                                 displayTitle: meta.subject,
-                                displayDate: meta.date || new Date(sessionDate).toLocaleDateString('en-IN'),
+                                displayDate: formattedDisplayDate,
                                 displayTime: finalTime,
                                 url: item.link || item.url,
                                 platform: item.description || 'other',
