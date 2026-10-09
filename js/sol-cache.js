@@ -213,7 +213,6 @@
 
                         populateMemoryCache(data);
                         window.dispatchEvent(new CustomEvent('sol:content-updated', { detail: data }));
-                        window.dispatchEvent(new CustomEvent('sol:locks-invalidated', { detail: data }));
                         console.log(`✅ [SNAPSHOT] Database updated! Downloaded fresh snapshot in ${Date.now() - startTime}ms.`);
                     }
                 }

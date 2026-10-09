@@ -1541,7 +1541,12 @@
       }
     }
 
+    let _lastLocksInitTime = 0;
     async function initMbaSectionLocks() {
+      const now = Date.now();
+      if (now - _lastLocksInitTime < 2000) return;
+      _lastLocksInitTime = now;
+
       if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) {
         // Non-admin: check and block locked sections (fresh check skipCache=true)
         let lockFolders = [];
