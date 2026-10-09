@@ -3264,30 +3264,25 @@
           const fcmToken = localStorage.getItem('solmates_fcm_token') || localStorage.getItem('sol_fcm_token');
           const hasNativeCapacitor = (window.Capacitor && window.Capacitor.isNative) || (typeof window.isMedianApp === 'function' && window.isMedianApp());
           
-          if (hasNativeCapacitor || fcmToken) {
-            // Native bridge sync (Median/AppMachine/Capacitor)
-            if (typeof window.syncNativePushTags === 'function') {
-              window.syncNativePushTags(pushSelected);
-            }
-            if (window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
-              await window.solmatesAPI.subscribeToPush(pushSelected);
-            }
-            if (typeof window.syncNativePushTags === 'function') {
-              window.syncNativePushTags(pushSelected);
-            }
+          if ((hasNativeCapacitor || fcmToken) && typeof window.syncNativePushTags === 'function') {
+            window.syncNativePushTags(pushSelected);
+          }
+          if (window.solmatesAPI && typeof window.solmatesAPI.subscribeToPush === 'function') {
+            await window.solmatesAPI.subscribeToPush(pushSelected);
+          }
 
-        localStorage.setItem('sol_notif_enabled', 'true');
-        localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
-        closeSemSelectionModal();
-        updateNotifyUI();
-        alert('Notifications enabled! You will now receive instant alerts.');
-      } catch (err) {
-        console.error('Subscription error:', err);
-        alert('Subscription failed: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = 'Confirm Subscription';
-      }
+          localStorage.setItem('sol_notif_enabled', 'true');
+          localStorage.setItem('sol_subscribed_sems', JSON.stringify(uiSelected));
+          closeSemSelectionModal();
+          updateNotifyUI();
+          alert('Notifications enabled! You will now receive instant alerts.');
+        } catch (err) {
+          console.error('Subscription error:', err);
+          alert('Subscription failed: ' + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.innerText = 'Confirm Subscription';
+        }
     }
 
     window.addEventListener('focus', updateNotifyUI);
