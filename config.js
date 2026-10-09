@@ -203,13 +203,13 @@ window.addEventListener('afterprint', function() {
 // - Railway: 'https://solmates-backend.up.railway.app/api'
 
 // Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
-// Production backend URLs — Direct Render URLs (Prevents Cloudflare-to-Cloudflare Error 1000 loop)
-window.BACKEND_PRIMARY_URL = 'https://solmates-backend-f9rl.onrender.com';
-window.BACKEND_SECONDARY_URL = 'https://solmates-backend-w27e.onrender.com';
+// Production backend URLs — Cloudflare Verified Custom Domains
+window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
+window.BACKEND_SECONDARY_URL = 'https://api-backup.solmates.in';
 
-// Cloudflare Custom Domain CNAME Aliases (Enable once Cloudflare Proxy status is set to 'DNS Only' / Grey Cloud)
-window.CLOUDFLARE_PRIMARY_API = 'https://api.solmates.in';
-window.CLOUDFLARE_SECONDARY_API = 'https://api-backup.solmates.in';
+// Direct Render Fallbacks for Emergency Failover
+window.RENDER_PRIMARY_DIRECT = 'https://solmates-backend-f9rl.onrender.com';
+window.RENDER_SECONDARY_DIRECT = 'https://solmates-backend-w27e.onrender.com';
 
 // Active Backend Selection
 let activeBackend = window.BACKEND_PRIMARY_URL;
