@@ -11,3 +11,4 @@ jdWords.forEach(w=>{
 const score = Math.min(100, Math.round((match / (jdWords.length||1)) * 100))
 return score
 }
+

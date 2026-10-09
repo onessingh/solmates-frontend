@@ -160,3 +160,4 @@ class AdminPageManager {
 
 // Export for use in individual pages
 window.AdminPageManager = AdminPageManager;
+

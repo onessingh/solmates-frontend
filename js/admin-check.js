@@ -21,3 +21,4 @@ window._adminCheckResult = null;
 window.solmatesAdminActive = function() {
   return !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 };
+

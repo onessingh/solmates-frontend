@@ -5,3 +5,4 @@ let m;
 while ((m = regex.exec(code)) !== null) {
   console.log(m[1]);
 }
+

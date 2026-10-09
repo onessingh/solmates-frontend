@@ -20,3 +20,4 @@ else{
 document.getElementById("chatOutput").innerText = response
 
 }
+

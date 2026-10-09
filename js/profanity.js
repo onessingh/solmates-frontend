@@ -66,3 +66,4 @@ window.solmatesCheckProfanity = function(text) {
 window.solmatesHasInvalidChars = function(text) {
     return /[\*\#\$\!\^\%\~\@\?\&]/.test(text) || (text.match(/x/gi) || []).length >= 2;
 };
+

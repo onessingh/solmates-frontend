@@ -71,3 +71,4 @@
   if (document.head) injectHealthcareTheme();
   else document.addEventListener('DOMContentLoaded', injectHealthcareTheme);
 })();
+

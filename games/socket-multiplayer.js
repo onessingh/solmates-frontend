@@ -187,3 +187,4 @@ window.Peer = class Peer {
         this.destroyed = true;
     }
 };
+

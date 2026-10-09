@@ -93,3 +93,4 @@ class AIGameConnector {
 // Attach to window so all games can use it
 window.aiGameConnector = new AIGameConnector();
 
+

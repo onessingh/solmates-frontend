@@ -18,3 +18,4 @@ document.getElementById("bullets").innerText = bullets.join("\n")
 const matched = matchSkills(skills, jd)
 document.getElementById("matchedSkills").innerText = matched.join(", ")
 }
+

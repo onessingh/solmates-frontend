@@ -680,3 +680,4 @@ window.SolmatesHostStatus = {
     },
     hide: function() { let el = document.getElementById('sol-host-reconnect'); if (el) el.remove(); }
 };
+

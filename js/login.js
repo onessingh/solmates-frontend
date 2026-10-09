@@ -156,3 +156,4 @@ document.addEventListener('DOMContentLoaded', function() {
     var logoutBtn = document.getElementById('adminLogoutBtn');
     if (logoutBtn) logoutBtn.addEventListener('click', logoutAdminFromModal);
 });
+

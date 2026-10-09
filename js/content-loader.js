@@ -240,3 +240,4 @@ function hideLoading() {
     const overlay = document.getElementById('loading-overlay');
     if (overlay) overlay.remove();
 }
+

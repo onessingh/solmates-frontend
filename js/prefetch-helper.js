@@ -8,3 +8,4 @@ window.startGlobalPrefetch = function() {
   // No-op: sol-cache.js handles bulk prefetching silently
   console.log('[Prefetch] ℹ️ Using sol-cache.js bulk prefetch instead.');
 };
+
