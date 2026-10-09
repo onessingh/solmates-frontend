@@ -507,6 +507,11 @@
           } catch(e) {
               if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); console.warn('MBA lock check failed:', e.message); }
       })();
+
+      window.addEventListener('sol:locks-invalidated', () => {
+        try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
+        location.reload();
+      });
     </script>
     
     

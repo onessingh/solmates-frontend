@@ -973,6 +973,48 @@ window.addConnectionStatusDot = function (socket) {
   if (socket.connected) dot.style.background = '#10b981';
 };
 
+// Global Real-Time Socket.IO Invalidation Hub (v105)
+(function initGlobalSocketListener() {
+  function startSocket(ioLib) {
+    if (!ioLib) return;
+    try {
+      const socketUrl = window.getSocketBaseURL ? window.getSocketBaseURL() : (window.RENDER_BACKEND_URL || window.location.origin);
+      const socket = ioLib(socketUrl, {
+        transports: ['polling', 'websocket'],
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000
+      });
+      window._solGlobalSocket = socket;
+
+      function handleInvalidation(payload) {
+        if (window.solmatesAPI && typeof window.solmatesAPI._cacheClear === 'function') {
+          window.solmatesAPI._cacheClear('');
+        }
+        try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
+        window.dispatchEvent(new CustomEvent('sol:locks-invalidated', { detail: payload }));
+        window.dispatchEvent(new CustomEvent('sol:cache_invalidated', { detail: payload }));
+        window.dispatchEvent(new CustomEvent('sol:content-updated', { detail: payload }));
+      }
+
+      socket.on('sol:cache_invalidated', handleInvalidation);
+      socket.on('sol:locks-invalidated', handleInvalidation);
+      socket.on('content:updated', handleInvalidation);
+      socket.on('sol:updated', handleInvalidation);
+    } catch(e) {}
+  }
+
+  if (typeof window.io !== 'undefined') {
+    startSocket(window.io);
+  } else if (typeof document !== 'undefined' && document.head) {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js';
+    s.onload = () => { if (typeof window.io !== 'undefined') startSocket(window.io); };
+    document.head.appendChild(s);
+  }
+})();
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { SolmatesAPI };
 }

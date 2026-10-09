@@ -40,6 +40,7 @@
   
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://solmates.netlify.app/database">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   
   
   
@@ -1235,11 +1236,12 @@
                 if (card.matches(sec.sel) || href.includes(sec.cat)) {
                   if (cachedLocks[sec.lockKey]) {
                     card.classList.add('is-locked');
-                    const lockOv = document.createElement('div');
-                    lockOv.className = 'lock-overlay';
-                    lockOv.innerHTML = '<i class="fas fa-lock"></i>';
-                    card.appendChild(lockOv);
-                    card.onclick = function(e) { e.preventDefault(); e.stopPropagation(); }; // Instant block!
+                    if (!card.querySelector('.lock-overlay')) {
+                      const lockOv = document.createElement('div');
+                      lockOv.className = 'lock-overlay';
+                      lockOv.innerHTML = '<i class="fas fa-lock"></i>';
+                      card.appendChild(lockOv);
+                    }
                   }
                 }
               }
@@ -1524,6 +1526,21 @@
       { cat: 'live-classes',   lockKey: '__MBA_LIVE_LOCKED__',  sel: '[href*="live-classes"],[href*="/database/classes"]' },
     ];
 
+    function handleMbaLockedCardClick(e) {
+      if (this.classList.contains('is-locked')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isDark = document.documentElement.classList.contains('dark');
+        if (document.getElementById('mba-lock-modal')) return;
+        const overlay = document.createElement('div');
+        overlay.id = 'mba-lock-modal';
+        overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);`;
+        overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#fff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,0.15);font-family:-apple-system,sans-serif"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked. Content will be available soon!</p><button onclick="document.getElementById('mba-lock-modal').remove()" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Go Back</button></div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
+      }
+    }
+
     async function initMbaSectionLocks() {
       if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) {
         // Non-admin: check and block locked sections (fresh check skipCache=true)
@@ -1534,32 +1551,23 @@
         } catch(e) { return; }
 
         document.querySelectorAll('.category-card[href]').forEach(card => {
+          // Remove old listener if present to avoid duplication
+          card.removeEventListener('click', handleMbaLockedCardClick);
+          card.addEventListener('click', handleMbaLockedCardClick);
+
           const href = card.getAttribute('href') || '';
           for (const sec of MBA_SECTIONS) {
             if (!card.matches(sec.sel)) continue;
             const isLocked = lockFolders.some(f => (f.name||'').includes(sec.lockKey));
-              window._mbaLocksCache = window._mbaLocksCache || {};
-              window._mbaLocksCache[sec.lockKey] = isLocked;
-              localStorage.setItem('solmates_mba_locks_cache', JSON.stringify(window._mbaLocksCache));
-              if (!isLocked) {
-                card.classList.remove('is-locked');
-                const ov = card.querySelector('.lock-overlay');
-                if (ov) ov.remove();
-              card.onclick = null;
-              }
-            if (isLocked) {
-              card.addEventListener('click', (e) => {
-                e.preventDefault();
-                const isDark = document.documentElement.classList.contains('dark');
-                if (document.getElementById('mba-lock-modal')) return;
-                const overlay = document.createElement('div');
-                overlay.id = 'mba-lock-modal';
-                overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);`;
-                overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#fff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,0.15);font-family:-apple-system,sans-serif"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently locked. Content will be available soon!</p><button onclick="document.getElementById('mba-lock-modal').remove()" style="background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;border:none;cursor:pointer;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Go Back</button></div>`;
-                document.body.appendChild(overlay);
-                overlay.addEventListener('click', (ev) => { if (ev.target === overlay) overlay.remove(); });
-              });
-              // Add lock icon overlay on card
+            window._mbaLocksCache = window._mbaLocksCache || {};
+            window._mbaLocksCache[sec.lockKey] = isLocked;
+            localStorage.setItem('solmates_mba_locks_cache', JSON.stringify(window._mbaLocksCache));
+
+            if (!isLocked) {
+              card.classList.remove('is-locked');
+              const ov = card.querySelector('.lock-overlay');
+              if (ov) ov.remove();
+            } else {
               if (!card.querySelector('.lock-overlay')) {
                 const lockOv = document.createElement('div');
                 lockOv.className = 'lock-overlay';
