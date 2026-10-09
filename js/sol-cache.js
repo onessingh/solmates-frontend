@@ -173,9 +173,9 @@
                 } catch (e) {}
             }
 
-            // ⏱️ 30-SECOND TTL SHIELD: Skip network revalidation if fetched within last 30 seconds unless forced
-            if (!force && lastFetch && (now - parseInt(lastFetch, 10)) < 30 * 1000) {
-                console.log(`⚡ [SNAPSHOT] Content served from local snapshot (${Math.round((now - parseInt(lastFetch, 10))/1000)}s ago < 30s TTL). Skipping network revalidation.`);
+            // ⏱️ 5-SECOND TTL SHIELD: Skip network revalidation if fetched within last 5 seconds unless forced
+            if (!force && lastFetch && (now - parseInt(lastFetch, 10)) < 5 * 1000) {
+                console.log(`⚡ [SNAPSHOT] Content served from local snapshot (${Math.round((now - parseInt(lastFetch, 10))/1000)}s ago < 5s TTL). Skipping network revalidation.`);
                 return;
             }
 
@@ -213,6 +213,7 @@
 
                         populateMemoryCache(data);
                         window.dispatchEvent(new CustomEvent('sol:content-updated', { detail: data }));
+                        window.dispatchEvent(new CustomEvent('sol:locks-invalidated', { detail: data }));
                         console.log(`✅ [SNAPSHOT] Database updated! Downloaded fresh snapshot in ${Date.now() - startTime}ms.`);
                     }
                 }

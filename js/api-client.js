@@ -499,7 +499,11 @@ class SolmatesAPI {
       if (!raw) return null;
       const parsed = JSON.parse(raw);
       if (!parsed || !parsed.data) return null;
-      // SWR: Return data even if old, UI will revalidate in background
+      // 15-second strict TTL check
+      if (parsed.ts && (Date.now() - parsed.ts > 15000)) {
+        sessionStorage.removeItem('solcache_v3_' + key);
+        return null;
+      }
       return parsed.data;
     } catch { return null; }
   }
@@ -989,10 +993,18 @@ window.addConnectionStatusDot = function (socket) {
       window._solGlobalSocket = socket;
 
       function handleInvalidation(payload) {
+        if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
+          window.SOL_CACHE.clear();
+        }
         if (window.solmatesAPI && typeof window.solmatesAPI._cacheClear === 'function') {
           window.solmatesAPI._cacheClear('');
         }
-        try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
+        try {
+          localStorage.removeItem('solmates_mba_locks_cache');
+          localStorage.removeItem('_sol_all_content_data');
+          localStorage.removeItem('_sol_all_content_etag');
+          localStorage.removeItem('_sol_last_fetch_timestamp');
+        } catch(e){}
         window.dispatchEvent(new CustomEvent('sol:locks-invalidated', { detail: payload }));
         window.dispatchEvent(new CustomEvent('sol:cache_invalidated', { detail: payload }));
         window.dispatchEvent(new CustomEvent('sol:content-updated', { detail: payload }));
