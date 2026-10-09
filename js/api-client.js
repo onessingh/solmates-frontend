@@ -569,8 +569,8 @@ class SolmatesAPI {
   }
 
   async addSOLFolder(folderData) {
-    this._cacheClear('folders_' + folderData.category);
-    this._cacheClear('content_' + folderData.category);
+    this._cacheClear('');
+    try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
     return await this.request('/sol/folders', {
       method: 'POST',
       body: JSON.stringify(folderData),
@@ -578,8 +578,8 @@ class SolmatesAPI {
   }
 
   async updateSOLFolder(id, folderData) {
-    this._cacheClear('folders_');
-    this._cacheClear('content_');
+    this._cacheClear('');
+    try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
     return await this.request(`/sol/folders/${id}`, {
       method: 'PUT',
       body: JSON.stringify(folderData),
@@ -587,16 +587,16 @@ class SolmatesAPI {
   }
 
   async toggleSOLFolderLock(id) {
-    this._cacheClear('folders_');
-    this._cacheClear('content_');
+    this._cacheClear('');
+    try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
     return await this.request(`/sol/folders/${id}/lock`, {
       method: 'PUT'
     });
   }
 
   async deleteSOLFolder(id) {
-    this._cacheClear('folders_');
-    this._cacheClear('content_');
+    this._cacheClear('');
+    try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
     return await this.request(`/sol/folders/${id}`, {
       method: 'DELETE',
     });

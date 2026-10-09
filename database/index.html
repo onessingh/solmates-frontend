@@ -1526,10 +1526,10 @@
 
     async function initMbaSectionLocks() {
       if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) {
-        // Non-admin: check and block locked sections
+        // Non-admin: check and block locked sections (fresh check skipCache=true)
         let lockFolders = [];
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
           lockFolders = (res && res.data) ? res.data : [];
         } catch(e) { return; }
 
@@ -1574,10 +1574,10 @@
         return;
       }
 
-      // Admin: show lock toggle buttons
+      // Admin: show lock toggle buttons (fresh check skipCache=true)
       let lockFolders = [];
       try {
-        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
+        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
         lockFolders = (res && res.data) ? res.data : [];
       } catch(e) { return; }
 
@@ -1620,7 +1620,7 @@
               btn.disabled = true;
               try {
                 if (isLocked) {
-                  const r2 = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
+                  const r2 = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
                   const flds = (r2 && r2.data) ? r2.data : [];
                   const lf = flds.find(f => (f.name||'').includes(sec.lockKey));
                   if (lf) await window.solmatesAPI.deleteSOLFolder(lf.id);
@@ -1630,6 +1630,7 @@
                   isLocked = true;
                 }
                 if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+                try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(err){}
                 applyState();
               } catch(err) { alert('Error: ' + err.message); }
               finally { btn.disabled = false; }
@@ -1642,6 +1643,11 @@
     }
 
     initMbaSectionLocks();
+
+    window.addEventListener('sol:locks-invalidated', () => {
+      try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
+      initMbaSectionLocks();
+    });
     </script>
 
 <!-- ===== ASK QUERY WIDGET ===== -->
