@@ -10019,53 +10019,53 @@
 
       if (paths.length > 0) {
 
+        paths.forEach(path => {
+
+          const length = path.getTotalLength();
+
+          path.style.strokeDasharray = length;
+
+          path.style.strokeDashoffset = length;
+
+        });
+
+
+
+        fadeElements.forEach(el => {
+
+          el.style.opacity = "0";
+
+        });
+
+
+
         requestAnimationFrame(() => {
 
-          paths.forEach(path => {
+          requestAnimationFrame(() => {
 
-            const length = path.getTotalLength();
+            paths.forEach(path => {
 
-            path.style.strokeDasharray = length;
+              path.style.transition = "stroke-dashoffset 1.8s ease-in-out";
 
-            path.style.strokeDashoffset = length;
-
-            path.getBoundingClientRect();
-
-            path.style.transition = "stroke-dashoffset 1.8s ease-in-out";
-
-          });
-
-
-
-          fadeElements.forEach(el => {
-
-            el.style.opacity = "0";
-
-            el.style.transition = "opacity 1s ease-in-out";
-
-          });
-
-
-
-          setTimeout(() => {
-
-            requestAnimationFrame(() => {
-
-              paths.forEach(path => path.style.strokeDashoffset = "0");
-
-              setTimeout(() => {
-
-                requestAnimationFrame(() => {
-
-                  fadeElements.forEach(el => el.style.opacity = "1");
-
-                });
-
-              }, 800);
+              path.style.strokeDashoffset = "0";
 
             });
 
-          }, 200);
+
+
+            setTimeout(() => {
+
+              fadeElements.forEach(el => {
+
+                el.style.transition = "opacity 1s ease-in-out";
+
+                el.style.opacity = "1";
+
+              });
+
+            }, 400);
+
+          });
 
         });
 

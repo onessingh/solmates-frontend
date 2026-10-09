@@ -29,7 +29,8 @@
      * Helper to populate API client's cache from bulk payload
      */
     function _applyBulkToAPIClient(data) {
-        if (!data || !data.success || !window.solmatesAPI || !window.solmatesAPI.setCache) return;
+        if (!data || !data.success || !window.solmatesAPI || !window.solmatesAPI.setCache) return false;
+        if (window._sol_bulk_applied_data === data) return true; // Already applied
 
         // 1. Sync Categories Data
         if (data.categories) {
@@ -70,6 +71,9 @@
                 window.solmatesAPI.setCache(`folders_${key}`, { success: true, data: fList, _bulk: true });
             }
         }
+
+        window._sol_bulk_applied_data = data;
+        return true;
     }
 
     function populateMemoryCache(data) {
@@ -97,17 +101,26 @@
         localStorage.setItem('_sol_snapshot_ver', SNAPSHOT_CACHE_VER);
     }
 
-    // Instant Warm Up from LocalStorage on Script Load
-    try {
-        const localCachedStr = localStorage.getItem('_sol_all_content_data');
-        if (localCachedStr) {
-            const parsed = JSON.parse(localCachedStr);
-            populateMemoryCache(parsed);
+    // Instant Warm Up from LocalStorage (Async / Non-blocking)
+    function warmUpFromStorage() {
+        try {
+            if (window._sol_bulk_cache_snapshot) return;
+            const localCachedStr = localStorage.getItem('_sol_all_content_data');
+            if (localCachedStr) {
+                const parsed = JSON.parse(localCachedStr);
+                populateMemoryCache(parsed);
+            }
+        } catch (e) {
+            localStorage.removeItem('_sol_all_content_data');
+            localStorage.removeItem('_sol_all_content_etag');
+            localStorage.removeItem('_sol_last_fetch_timestamp');
         }
-    } catch (e) {
-        localStorage.removeItem('_sol_all_content_data');
-        localStorage.removeItem('_sol_all_content_etag');
-        localStorage.removeItem('_sol_last_fetch_timestamp');
+    }
+
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(warmUpFromStorage, { timeout: 500 });
+    } else {
+        setTimeout(warmUpFromStorage, 0);
     }
 
     const SOL_CACHE = {
@@ -138,6 +151,7 @@
                 window[CACHE_NAME].content = {};
             }
             window._sol_bulk_cache_snapshot = null;
+            window._sol_bulk_applied_data = null;
             localStorage.removeItem('_sol_all_content_data');
             localStorage.removeItem('_sol_all_content_etag');
             localStorage.removeItem('_sol_last_fetch_timestamp');
@@ -159,8 +173,8 @@
             const localData = localStorage.getItem('_sol_all_content_data');
             const cachedEtag = localStorage.getItem('_sol_all_content_etag');
 
-            // Warm up memory cache immediately from local snapshot if available
-            if (localData) {
+            // Warm up memory cache from local snapshot if not already loaded into memory
+            if (!window._sol_bulk_cache_snapshot && localData) {
                 try {
                     const parsed = JSON.parse(localData);
                     populateMemoryCache(parsed);
@@ -235,10 +249,11 @@
     // Retry applying snapshot when solmatesAPI loads asynchronously
     const checkApiReadyTimer = setInterval(() => {
         if (window.solmatesAPI && window._sol_bulk_cache_snapshot) {
-            SOL_CACHE.applySnapshot();
-            clearInterval(checkApiReadyTimer);
+            if (_applyBulkToAPIClient(window._sol_bulk_cache_snapshot)) {
+                clearInterval(checkApiReadyTimer);
+            }
         }
-    }, 50);
+    }, 100);
     setTimeout(() => clearInterval(checkApiReadyTimer), 5000);
 
     // Auto-start prefetch immediately when DOM is ready
