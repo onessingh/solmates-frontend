@@ -10423,15 +10423,35 @@
 
       updateAuthUI();
 
-      initPremiumSearch();
+      // Offload interactive initializations to background idle time (0ms first paint delay)
 
-      initAnimations();
+      if ('requestIdleCallback' in window) {
 
-      initMainOptionAnimations();
+        requestIdleCallback(() => {
+
+          initPremiumSearch();
+
+          initAnimations();
+
+          initMainOptionAnimations();
+
+        }, { timeout: 1000 });
+
+      } else {
+
+        setTimeout(() => {
+
+          initPremiumSearch();
+
+          initAnimations();
+
+          initMainOptionAnimations();
+
+        }, 100);
+
+      }
 
       // [v816.5] Delay notification fetch by 3s so it never blocks first paint
-
-      // On slow mobile networks this was the #1 cause of the loading freeze
 
       setTimeout(fetchNotificationCount, 3000);
 

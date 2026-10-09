@@ -256,7 +256,7 @@
     }, 100);
     setTimeout(() => clearInterval(checkApiReadyTimer), 5000);
 
-    // Auto-start prefetch immediately when DOM is ready
+    // Auto-start prefetch in background idle time after DOM render
     function triggerInitialPrefetch() {
         let isReload = false;
         try {
@@ -265,7 +265,11 @@
                 isReload = (navEntries[0].type === 'reload');
             }
         } catch(e){}
-        SOL_CACHE.prefetch(isReload);
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => SOL_CACHE.prefetch(isReload), { timeout: 1500 });
+        } else {
+            setTimeout(() => SOL_CACHE.prefetch(isReload), 300);
+        }
     }
 
     if (document.readyState === 'loading') {
