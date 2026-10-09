@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q6GVS9XX1M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q6GVS9XX1M');
+</script>
+
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
+
+  <meta name="color-scheme" content="only light">
+  <meta name="supported-color-schemes" content="only light">
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v846">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Favicon Icons -->
+  <link rel="icon" href="/favicon.ico?v=v846" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v846" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v846">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v846">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v846">
+  <title>Folder - SOLMATES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="/config.js?v=v846"></script>
+  <script src="/js/uptime-helper.js?v=v846"></script>
+  <script src="/js/api-client.js?v=v846"></script>
+  <script src="/js/sol-cache.js?v=v846"></script>
+  <script src="/js/prefetch-helper.js?v=v846"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-top: 75px;
+    }
+
+    /* Top Nav (Standard SOLMATES) */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: var(--bg-nav);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 1px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .database-btn {
+      background: #0f2b46;
+      color: white;
+      text-decoration: none;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .database-btn:hover {
+      background: #1a3c5e;
+      transform: translateY(-1px);
+    }
+
+    .database-btn i {
+      font-size: 14px;
+      color: #c0962d;
+    }
+
+    .admin-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #4CAF50;
+      display: none;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .admin-indicator.active {
+      display: block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 5px rgba(76, 175, 80, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+      }
+    }
+
+    /* Breadcrumbs */
+    .breadcrumb {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb span {
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .breadcrumb i {
+      font-size: 9px;
+      color: #ccc;
+    }
+
+    .breadcrumb .current {
+      color: var(--text-main);
+      cursor: default;
+      font-weight: 700;
+    }
+
+    /* Layout Wrapper */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* FIX 2: Admin Bar outside page-header, same as elearning-subjects */
+    .admin-bar {
+      display: none;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      padding: 16px;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .admin-bar.visible {
+      display: flex;
+    }
+
+    @media (min-width: 768px) {
+      .admin-bar {
+        justify-content: flex-end;
+        padding: 12px 24px;
+      }
+    }
+
+    .btn-create {
+      background: #0f2b46;
+      color: white;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 10px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      white-space: nowrap;
+    }
+
+    .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-create:active {
+      transform: translateY(0);
+    }
+
+    .btn-visibility {
+      background: #64748b !important;
+    }
+
+    .btn-subject {
+      background: #0d9488 !important;
+    }
+
+    .btn-folder {
+      background: #6366f1 !important;
+    }
+
+    .btn-item {
+      background: #3b82f6 !important;
+    }
+
+    .btn-arrange {
+      background: #f59e0b !important;
+    }
+
+    /* FIX 7: edit-btn & del-btn matching elearning-subjects style */
+    .btn-del-folder,
+    .edit-btn {
+      position: absolute;
+      top: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+    }
+
+    .btn-del-folder {
+      right: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      border: none !important;
+    }
+
+    .edit-btn {
+      left: 10px;
+      background: rgba(15, 43, 70, 0.9);
+      color: white;
+    }
+
+    .btn-del-folder:hover {
+      background: #ef4444;
+      transform: scale(1.1);
+    }
+
+    .edit-btn:hover {
+      background: #0f2b46;
+      transform: scale(1.1);
+    }
+
+    .subject-card:hover .btn-del-folder,
+    .subject-card:hover .edit-btn {
+      opacity: 1;
+    }
+
+    /* Mobile: always show */
+    @media (max-width: 768px) {
+
+      .btn-del-folder,
+      .edit-btn {
+        opacity: 1;
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    /* Cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    @media (min-width: 1024px) {
+      .grid {
+        gap: 30px;
+      }
+    }
+
+    .subject-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+      position: relative;
+      cursor: pointer;
+      justify-content: center;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      border-color: var(--brand-primary);
+    }
+
+    /* FIX 6: centered-folder full row width like elearning-subjects */
+    /* Folder card - Standard Grid Item (Matching view.html) */
+    .subject-card.centered-folder {
+      text-align: center;
+      min-height: 140px;
+    }
+
+    .subject-card.centered-folder .subject-name {
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+
+    .subject-card.centered-folder .subject-name i {
+      font-size: 40px;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+
+    .subject-card.centered-folder .subject-name h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: center;
+    }
+
+    .subject-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subject-name i {
+      font-size: 32px;
+      color: #3b82f6;
+      transition: 0.3s;
+    }
+
+    .subject-name h3 {
+      font-size: 15px;
+      color: var(--text-main);
+      margin: 0;
+      font-weight: 600;
+    }
+
+    /* Drag */
+    .sortable-ghost {
+      opacity: 0.4;
+      background: var(--border-color); !important;
+      border: 2px dashed #94a3b8 !important;
+    }
+
+    .sortable-drag {
+      opacity: 0.9;
+      cursor: grabbing !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .btn-del-folder,
+    .edit-btn {
+      position: absolute;
+      top: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-del-folder {
+      right: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      border: none !important;
+    }
+
+    .edit-btn {
+      left: 10px;
+      background: rgba(15, 43, 70, 0.9);
+      color: white;
+    }
+
+    .btn-del-folder:hover {
+      background: #ef4444;
+      transform: scale(1.1);
+    }
+
+    .edit-btn:hover {
+      background: #0f2b46;
+      transform: scale(1.1);
+    }
+
+    .subject-card:hover .btn-del-folder,
+    .subject-card:hover .edit-btn {
+      opacity: 1;
+    }
+
+    .subject-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid #eef2f6;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      position: relative;
+      height: 100%;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      border-color: #d1d5db;
+    }
+
+    .subject-card.centered-folder {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .reorder-mode-active #grid .subject-card .edit-btn,
+    .reorder-mode-active #grid .subject-card .btn-del-folder {
+      display: none !important;
+    }
+
+    #btnReorder {
+      transition: 0.3s;
+    }
+
+    #btnReorder.active {
+      background: #f59e0b !important;
+      color: white !important;
+      border-color: #f59e0b !important;
+      animation: pulse-yellow 2s infinite;
+    }
+
+    @keyframes pulse-yellow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+      }
+    }
+
+    /* Long Press */
+    .subject-card.pressing {
+      animation: long-press-scale 5s linear forwards;
+      background: var(--bg-card-hover); !important;
+      border-color: var(--accent) !important;
+    }
+
+    @keyframes long-press-scale {
+      from {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      to {
+        transform: scale(0.9);
+        opacity: 0.5;
+      }
+    }
+
+    .subject-card.navigating {
+      transform: scale(0.98);
+      opacity: 0.7;
+      pointer-events: none;
+      border-color: var(--accent);
+    }
+
+    .book-link-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      transition: all 0.3s;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .book-link-btn:hover {
+      background: #2563eb;
+    }
+
+    .book-link-btn.not-available {
+      background: #eee;
+      color: var(--text-muted);
+      cursor: default;
+    }
+
+    .book-link-btn.not-available:hover {
+      transform: none;
+      background: #eee;
+    }
+
+    /* Admin controls */
+    .admin-controls {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px dashed #eee;
+    }
+
+    .admin-controls.visible {
+      display: flex;
+    }
+
+    .admin-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .admin-input:focus {
+      border-color: var(--accent);
+    }
+
+    .admin-btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-save {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .btn-remove {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .btn-save:hover {
+      background: #0da271;
+    }
+
+    .btn-remove:hover {
+      background: #e55;
+    }
+
+    .folder-badge {
+      background: var(--bg-card-hover);
+      color: var(--text-lighter);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: none;
+      background: var(--bg-card);
+      padding: 6px;
+      border-radius: 16px;
+      margin: 10px auto 30px;
+      width: 94%;
+      max-width: 600px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f1f5f9;
+      gap: 6px;
+    }
+
+    .tabs.visible {
+      display: flex;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 16px 10px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-lighter);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 16px;
+      transition: 0.3s;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .tab-btn {
+        padding: 14px 5px;
+        font-size: 14px;
+      }
+    }
+
+    .tab-btn.active {
+        background: var(--tab-active-bg, #0f2b46);
+        color: white;
+        box-shadow: 0 4px 15px var(--tab-active-shadow, rgba(15,43,70,0.25));
+      }
+
+    .tab-btn.hidden {
+      display: none !important;
+    }
+
+    .empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 40px;
+      color: #94a3b8;
+      font-size: 14px;
+      width: 100%;
+      border: none;
+      background: transparent;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    /* Flickr Fix: Shimmer Pulse & Skeletons */
+    .status-shimmer {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer-sweep 1.5s infinite linear;
+      color: transparent;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      width: 100%;
+      text-align: center;
+      border: 1px solid #eef2f6;
+    }
+
+    .skeleton-card {
+      min-height: 140px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      border: 1px solid var(--border-color);
+    }
+
+    .skeleton-line {
+      height: 20px;
+      width: 80%;
+      margin: 0 auto;
+      background: linear-gradient(90deg, #f8fafc 25%, #f1f5f9 50%, #f8fafc 75%);
+      background-size: 200% 100%;
+      animation: shimmer-sweep 1.5s infinite linear;
+      border-radius: 4px;
+    }
+
+    .skeleton-circle {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      margin: 0 auto;
+      background: var(--bg-card-hover);
+      animation: shimmer-sweep 1.5s infinite linear;
+      background-size: 200% 100%;
+    }
+
+    @keyframes shimmer-sweep {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* Modals System */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 32px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .modal h2 {
+      font-size: 20px;
+      color: var(--primary);
+      margin-bottom: 22px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-lighter);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-cancel {
+      background: var(--bg-card-hover);
+      color: var(--text-muted);
+    }
+
+    /* Debug Console Overlay */
+    #debugConsole {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+    }
+
+    .debug-close {
+      position: fixed;
+      bottom: 185px;
+      right: 80px;
+      background: #3b82f6;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      display: none;
+      z-index: 10000;
+    }
+
+    #debugReport {
+      position: fixed;
+      bottom: 185px;
+      right: 10px;
+      background: #10b981;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      display: none;
+      z-index: 10000;
+    }
+    
+  
+
+    /* Dark Mode Native OS Integration */
+    :root {
+      --bg-body: #ffffff;
+      --text-main: #111111;
+      --text-muted: #555555;
+      --text-lighter: #666666;
+      --bg-nav: rgba(255, 255, 255, 0.98);
+      --bg-card: #ffffff;
+      --bg-card-hover: #f9f9fb;
+      --border-color: #eeeeee;
+      --hero-bg: linear-gradient(to bottom, #ffffff, #f5f5f7);
+      --brand-primary: #0f2b46;
+        --tab-active-bg: #0f2b46;
+        --tab-active-shadow: rgba(15, 43, 70, 0.25);
+      --brand-accent: #c0962d;
+      }
+
+    /* dark mode moved */
+    
+    .breadcrumb { display: none !important; margin: 0 !important; padding: 0 !important; height: 0 !important; border: none !important; overflow: hidden !important; }
+</style>
+
+
+
+<style id="solmates-dark-style" media="not all">
+
+      :root {
+        --bg-body: #0f172a;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-lighter: #cbd5e1;
+        --bg-nav: rgba(15, 23, 42, 0.98);
+        --bg-card: #1e293b;
+        --bg-card-hover: #334155;
+        --border-color: #334155;
+        --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
+        --brand-primary: #f8fafc;
+          --tab-active-bg: #334155;
+          --tab-active-shadow: rgba(0, 0, 0, 0.4);
+        --brand-accent: #c0962d;
+
+          --primary: #f8fafc;
+          --accent: #38bdf8;
+          --bg: #0f172a;
+          --bg2: #1e293b;
+          --card: #1e293b;
+          --card-hover: #334155;
+          --border: #334155;
+          --border-hover: #f8fafc;
+          --text: #f8fafc;
+          --sub: #94a3b8;
+          --card-bg: #1e293b;
+          --gray: #94a3b8;
+          --white: #1e293b;
+        }
+
+        /* Hardcoded class overrides for Dark Mode */
+        .status-shimmer { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%) !important; color: transparent !important; }
+        .skeleton-line { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%) !important; }
+        .skeleton-card { background: #0f172a !important; border-color: #334155 !important; }
+        .book-link-btn.not-available { background: #334155 !important; color: #94a3b8 !important; }
+        .admin-input { background: #1e293b !important; color: #f8fafc !important; border-color: #475569 !important; }
+        .subject-card { background: #1e293b !important; border-color: #334155 !important; }
+        .subject-card:hover { border-color: #38bdf8 !important; }
+        .tabs { background: #1e293b !important; border-color: #334155 !important; }
+        .tab-btn { color: #94a3b8 !important; }
+        .tab-btn.active { background: #334155 !important; color: #f8fafc !important; }
+        /* Modal dark mode */
+        .modal { background: #1e293b !important; border: 1px solid #334155 !important; }
+        .modal h2 { color: #f8fafc !important; }
+        .field label { color: #cbd5e1 !important; }
+        .field input { background: #0f172a !important; color: #f8fafc !important; border-color: #475569 !important; }
+        .btn-primary { background: #38bdf8 !important; color: #0f172a !important; }
+        .btn-primary.btn-cancel { background: #334155 !important; color: #f8fafc !important; }
+        .page-header h1 i { color: #facc15 !important; }
+
+      
+</style>
+<script>
+    (function() {
+      const savedTheme = localStorage.getItem('solmates_theme');
+      if (savedTheme) {
+        document.documentElement.style.colorScheme = savedTheme;
+        const darkStyle = document.getElementById('solmates-dark-style');
+        if (darkStyle) {
+          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
+          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
+        }
+      }
+    })();
+  </script>
+<script id="color-scheme-sync">
+(function() {
+    function updateMetaColorScheme() {
+        var meta = document.querySelector('meta[name="color-scheme"]');
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        var darkStyle = document.getElementById('solmates-dark-style');
+        if (!meta) return;
+        var theme = localStorage.getItem('solmates_theme');
+        if (!theme) {
+            theme = 'light';
+            localStorage.setItem('solmates_theme', 'light');
+        }
+        if (theme === 'dark') {
+            meta.setAttribute('content', 'dark only');
+            
+            document.documentElement.style.colorScheme = 'dark';
+            document.documentElement.classList.add('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'screen');
+        } else if (theme === 'light') {
+            meta.setAttribute('content', 'only light');
+            
+            document.documentElement.style.colorScheme = 'light';
+            document.documentElement.classList.remove('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'not all');
+        } else {
+            // Force light mode for new users to override OS dark mode in PWA status bar
+            meta.setAttribute('content', 'only light');
+            
+            document.documentElement.style.colorScheme = 'light';
+            document.documentElement.classList.remove('dark');
+            if (darkStyle) darkStyle.setAttribute('media', 'not all');
+        }
+    }
+    updateMetaColorScheme();
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'solmates_theme') updateMetaColorScheme();
+    });
+    var originalSetItem = localStorage.setItem;
+    localStorage.setItem = function(key, value) {
+        originalSetItem.apply(this, arguments);
+        if (key === 'solmates_theme') updateMetaColorScheme();
+    };
+})();
+</script>
+    <!-- [AUTO-SEO-START] -->
+    <meta name="description" content="Access the Folder - SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, Folder, SOLMATES">
+    <meta property="og:title" content="Folder - SOLMATES">
+    <meta property="og:description" content="Access the Folder - SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta property="og:image" content="https://solmates.in/preview.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Folder - SOLMATES">
+    <meta name="twitter:description" content="Access the Folder - SOLMATES and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
+    <meta name="twitter:image" content="/preview.png">
+    <link rel="manifest" href="/manifest.json">
+    <!-- [AUTO-SEO-END] -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+
+<script>
+// --- STRICT ANTI-SCRAPING MODULE ---
+(function() {
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) return false;
+    };
+    /* Aggressive devtools polling removed */
+})();
+</script>
+
+</head>
+
+<body>
+    <script>
+      // ===== MBA SECTION LOCK GUARD =====
+      (async function() {
+        const p = new URLSearchParams(window.location.search);
+        const cat = p.get('category') || '';
+        
+        // If it's a healthcare category, the HC guard handles it.
+        if (cat.startsWith('hc-')) return;
+        
+        const LOCK_MAP = {
+          'recorded-class': '__MBA_RC_LOCKED__',
+          'notes':          '__MBA_NOTES_LOCKED__',
+          'pyqs':           '__MBA_PYQS_LOCKED__',
+          'oneshot':        '__MBA_OS_LOCKED__',
+          'elearning':      '__MBA_EL_LOCKED__',
+          'youtube':        '__MBA_YT_LOCKED__',
+          'professor':      '__MBA_CM_LOCKED__',
+          'live-classes':   '__MBA_LIVE_LOCKED__'
+        };
+        const sectionLockKey = LOCK_MAP[cat];
+
+          
+        if (!sectionLockKey) return;
+
+          // Block rendering while checking lock state (MBA)
+          const __lockBlockerMba = document.createElement('div');
+          __lockBlockerMba.id = 'lock-blocker-mba';
+          __lockBlockerMba.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-body, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerMba.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
+          // document.documentElement.appendChild(__lockBlockerMba);
+
+
+          
+        
+        let tries = 0;
+        while (!window.solmatesAPI && tries < 20) {
+          await new Promise(r => setTimeout(r, 200));
+          tries++;
+        }
+        if (!window.solmatesAPI) { if (typeof __lockBlockerMba !== 'undefined' && __lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); if (typeof __lockBlockerHc !== 'undefined' && __lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); return; }
+        
+        // Admin notification bypass
+        const isAdmin = window.solmatesAPI.isAdminLoggedIn();
+        
+        try {
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, false);
+          const folders = (res && res.data) ? res.data : [];
+          const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
+          if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
+          
+          if (sectionLocked) {
+            if (isAdmin) {
+              // Just show a small toast for admin so they know it's locked but they bypassed it
+              const toast = document.createElement('div');
+              toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ef4444;color:white;padding:8px 16px;border-radius:20px;font-size:12px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+              toast.innerHTML = '🔒 Section Locked (Admin Bypass Active)';
+              document.body.appendChild(toast);
+              setTimeout(() => toast.remove(), 4000);
+              return;
+            }
+
+            const isDark = localStorage.getItem('solmates_theme') === 'dark' || document.documentElement.classList.contains('dark');
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:${isDark?'rgba(15,23,42,0.97)':'rgba(248,250,252,0.97)'};backdrop-filter:blur(8px);font-family:-apple-system,sans-serif;`;
+            overlay.innerHTML = `<div style="background:${isDark?'#1e293b':'#ffffff'};border:1px solid ${isDark?'#334155':'#e2e8f0'};border-radius:20px;padding:48px 40px;text-align:center;max-width:380px;width:90%;box-shadow:0 25px 60px ${isDark?'rgba(0,0,0,0.5)':'rgba(0,0,0,0.12)'}"><div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;box-shadow:0 8px 24px rgba(99,102,241,0.3)">🔒</div><h2 style="margin:0 0 10px;font-size:1.4rem;color:${isDark?'#f8fafc':'#0f172a'};font-weight:700">Section Locked</h2><p style="margin:0 0 28px;color:${isDark?'#94a3b8':'#64748b'};font-size:0.9rem;line-height:1.6">This section is currently being prepared.<br>It will be available soon!</p><a href="/database" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem;box-shadow:0 4px 15px rgba(99,102,241,0.3)">← Back to Database</a></div>`;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+          }
+        
+          
+          } catch(e) {
+              if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); console.warn('MBA lock check failed:', e.message); }
+      })();
+    </script>
+
+    <script>
+      // ===== HEALTHCARE SECTION LOCK GUARD v2 =====
+      (async function() {
+        const p = new URLSearchParams(window.location.search);
+        const cat = p.get('category') || '';
+        const isHC = window.location.href.includes('/healthcare') || cat.startsWith('hc-');
+        if (!isHC) return;
+        
+        const LOCK_MAP = {
+          'hc-recorded-class': '__HC_RC_LOCKED__',
+          'hc-notes':          '__HC_NOTES_LOCKED__',
+          'hc-pyqs':           '__HC_PYQS_LOCKED__',
+          'hc-oneshot':        '__HC_ONESHOT_LOCKED__',
+          'hc-elearning':      '__HC_EBOOKS_LOCKED__',
+          'hc-youtube':        '__HC_YT_LOCKED__',
+          'hc-professor':      '__HC_CM_LOCKED__',
+        };
+        const sectionLockKey = LOCK_MAP[cat];
+
+          // Block rendering while checking lock state (HC)
+          const __lockBlockerHc = document.createElement('div');
+          __lockBlockerHc.id = 'lock-blocker-hc';
+          __lockBlockerHc.style.cssText = 'position:fixed;inset:0;z-index:999999;background:var(--bg-body, #fff);display:flex;align-items:center;justify-content:center;';
+          __lockBlockerHc.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--accent, #3b82f6);"></i>';
+          // document.documentElement.appendChild(__lockBlockerHc);
+
+        
+        let tries = 0;
+        while (!window.solmatesAPI && tries < 20) {
+          await new Promise(r => setTimeout(r, 200));
+          tries++;
+        }
+        if (!window.solmatesAPI) { if (typeof __lockBlockerMba !== 'undefined' && __lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove(); if (typeof __lockBlockerHc !== 'undefined' && __lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); return; }
+        
+        const isAdmin = window.solmatesAPI.isAdminLoggedIn();
+
+        
+        try {
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, false);
+          const folders = (res && res.data) ? res.data : [];
+          const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
+          const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
+          
+          
+          
+            if (__lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove();
+              if (globalLocked || sectionLocked) {
+            if (isAdmin) {
+              const t = document.createElement('div');
+              t.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:white;padding:12px 16px;text-align:center;font-size:14px;font-weight:bold;z-index:999999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+              t.innerHTML = '⚠️ THIS SECTION IS LOCKED TO STUDENTS. You are viewing it via Admin Bypass.';
+              document.body.appendChild(t);
+              document.body.style.paddingTop = '45px';
+              return;
+            }
+            const isDark = localStorage.getItem('solmates_theme') === 'dark' || document.documentElement.classList.contains('dark');
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+              position: fixed; inset: 0; z-index: 99999;
+              display: flex; align-items: center; justify-content: center;
+              background: ${isDark ? 'rgba(15,23,42,0.97)' : 'rgba(248,250,252,0.97)'};
+              backdrop-filter: blur(8px);
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            `;
+            overlay.innerHTML = `
+              <div style="
+                background: ${isDark ? '#1e293b' : '#ffffff'}; 
+                border: 1px solid ${isDark ? '#334155' : '#e2e8f0'};
+                border-radius: 20px; 
+                padding: 48px 40px; 
+                text-align: center; 
+                max-width: 380px; 
+                width: 90%;
+                box-shadow: 0 25px 60px ${isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.12)'};
+              ">
+                <div style="
+                  width: 80px; height: 80px; border-radius: 50%;
+                  background: linear-gradient(135deg, #059669, #10b981);
+                  display: flex; align-items: center; justify-content: center;
+                  margin: 0 auto 24px; font-size: 2rem;
+                  box-shadow: 0 8px 24px rgba(5,150,105,0.3);
+                ">🔒</div>
+                <h2 style="margin: 0 0 10px; font-size: 1.4rem; color: ${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 700;">Content Locked</h2>
+                <p style="margin: 0 0 28px; color: ${isDark ? '#94a3b8' : '#64748b'}; font-size: 0.9rem; line-height: 1.6;">
+                  This section is currently being prepared.<br>It will be available soon!
+                </p>
+                <a href="/database/healthcare" style="
+                  display: inline-flex; align-items: center; gap: 8px;
+                  background: linear-gradient(135deg, #059669, #10b981); 
+                  color: white; padding: 12px 28px; border-radius: 50px; 
+                  text-decoration: none; font-weight: 600; font-size: 0.9rem;
+                  box-shadow: 0 4px 15px rgba(5,150,105,0.3);
+                ">← Back to Healthcare</a>
+              </div>
+            `;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+          }
+        } catch(e) {
+              if (__lockBlockerHc && __lockBlockerHc.parentNode) __lockBlockerHc.remove(); console.warn('HC lock check failed:', e.message); }
+      })();
+    </script>
+
+
+  <header class="top-nav">
+<script>
+// OS-based theme-color for TWA status bar
+(function(){
+  var m=document.getElementById('theme-color-meta');
+  if(!m){m=document.createElement('meta');m.name='theme-color';m.id='theme-color-meta';document.head.appendChild(m);}
+  function setOsColor(){m.setAttribute('content',window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'#0f172a':'#ffffff');}
+  setOsColor();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setOsColor);
+})();
+</script>
+    <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">SOLMATES</div>
+    <div class="nav-right">
+      <a href="/database" class="database-btn"><i class="fas fa-database"></i> Database</a>
+      <div class="admin-indicator" id="adminIndicator"></div>
+    </div>
+  </header>
+
+  <!-- Breadcrumb built by JS -->
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 id="pageTitle">Folder</h1>
+      <p id="pageSub"></p>
+    </div>
+
+    <!-- FIX 2: Admin bar is now OUTSIDE page-header, as a sibling (matches elearning-subjects) -->
+    <div id="adminBar" class="admin-bar">
+      <button class="btn-create btn-visibility" id="btnToggleOther" onclick="toggleOtherVisibility()"
+        style="display:none">
+        <i class="fas fa-eye-slash"></i> Hide Others
+      </button>
+      <button class="btn-create btn-subject" id="btnNewFolderSubject" onclick="openModal('folderModal', 'subject')"
+        style="display:none">
+        <i class="fas fa-book-medical"></i> New Subject
+      </button>
+      <button class="btn-create btn-folder" id="btnNewFolderGeneric" onclick="openModal('folderModal', 'folder')"
+        style="display:none">
+        <i class="fas fa-folder-plus"></i> New Folder
+      </button>
+      <!-- FIX 5: Renamed to btnNewFolderDefault • used for non-elearning categories -->
+      <button class="btn-create btn-folder" id="btnNewFolderDefault" onclick="openModal('folderModal', 'folder')"
+        style="display:none">
+        <i class="fas fa-folder-plus"></i> New Folder
+      </button>
+      <button class="btn-create btn-item" id="btnNewLink" onclick="openModal('linkModal')" style="display:none">
+        <i class="fas fa-plus-circle"></i> New Item
+      </button>
+      <button class="btn-create btn-arrange" id="btnReorder" onclick="toggleReorderMode()">
+        <i class="fas fa-arrows-alt"></i> Organize
+      </button>
+    </div>
+
+    <div id="elearningTabs" class="tabs">
+      <button class="tab-btn active" id="tabSol" onclick="switchTab('sol')">SOL Books</button>
+      <button class="tab-btn" id="tabOther" onclick="switchTab('other')">Other Books</button>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+    </div>
+  </div>
+
+  <!-- Folder Modal -->
+  <div class="overlay" id="folderModal">
+    <div class="modal">
+      <h2><i class="fas fa-folder-plus"></i> New Folder</h2>
+      <div class="field">
+        <label>Folder Name</label>
+        <input type="text" id="folderName" placeholder="e.g. Unit 1: Introduction">
+      </div>
+      <div class="modal-btns">
+        <button class="btn-primary" onclick="createFolder()">Create</button>
+        <button class="btn-primary btn-cancel" onclick="closeModal('folderModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Modal -->
+  <div class="overlay" id="linkModal">
+    <div class="modal">
+      <h2 id="linkModalTitle"><i class="fas fa-link"></i> Add Link</h2>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="linkTitle" placeholder="e.g. Playlist - Sem 1 Accounting">
+      </div>
+      <div class="field">
+        <label id="linkUrlLabel">Link / URL</label>
+        <input type="text" id="linkUrl" placeholder="https://youtube.com/playlist?list=...">
+      </div>
+      <div class="modal-btns">
+        <button class="btn-primary" onclick="addLink()">Add Link</button>
+        <button class="btn-primary btn-cancel" onclick="closeModal('linkModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -- URL Params ------------------------------------------------------------
+    const params = new URLSearchParams(window.location.search);
+
+    // Robust escaping for JS event handlers
+    const esc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+    function detectCategory() {
+      const fromParam = params.get('category');
+      if (fromParam) return fromParam;
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('/pyqs') || path.includes('/pyq')) return 'pyqs';
+      if (path.includes('/notes')) return 'notes';
+      if (path.includes('/oneshot')) return 'oneshot';
+      if (path.includes('/professor')) return 'professor';
+      if (path.includes('/youtube')) return 'youtube';
+      if (path.includes('/elearning') || path.includes('/ebooks')) return 'elearning';
+      if (path.includes('/classes')) return 'live-classes';
+      return 'notes';
+    }
+    const CATEGORY = detectCategory();
+    const isEBook = CATEGORY.includes('elearning') || CATEGORY.includes('ebooks');
+    const SEMESTER = parseInt(params.get('semester')) || 1;
+    const FOLDER_ID = params.get('folderId') || null;
+    let FOLDER_NAME = params.get('name') || 'Folder';
+    const PARENT_NAME = params.get('parentName') || null;
+    let isNavigating = false;
+    let isReorderMode = false;
+    let sortableInstance = null;
+    let currentTab = 'sol';
+    let otherVisible = true;
+
+    const ordinals = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th', 5: '5th', 6: '6th' };
+    const CAT_LABELS = {
+      'live-classes': 'Live Classes', 'notes': 'Study Notes',
+      'pyqs': 'Previous Year Papers', 'oneshot': 'One-Shot Revision',
+      'youtube': 'Video Lessons', 'elearning': 'E-Books', 'ebooks': 'E-Books',
+      'professor': 'Class Materials'
+    };
+
+    // -- Breadcrumb ------------------------------------------------------------
+    function buildBreadcrumb() {
+      const bc = document.getElementById('breadcrumb');
+      if (!bc) return;
+      const cat = CAT_LABELS[CATEGORY] || CATEGORY;
+      const catLink = CATEGORY === 'live-classes' ? `/database/classes` : `/database/view?category=${CATEGORY}`;
+      const semLink = `/database/view?category=${CATEGORY}&semester=${SEMESTER}`;
+      const esc = s => s ? s.replace(/"/g, '&quot;') : '';
+
+      bc.innerHTML = `
+      <span onclick="window.location='/database'">Database</span>
+      <i class="fas fa-chevron-right"></i>
+      <span onclick="window.location='${catLink}'">${cat}</span>
+      <i class="fas fa-chevron-right"></i>
+      <span onclick="window.location='${semLink}'">Semester ${SEMESTER}</span>
+      <i class="fas fa-chevron-right"></i>
+      ${PARENT_NAME ? `<span onclick="history.back()" title="${esc(PARENT_NAME)}">${PARENT_NAME}</span><i class="fas fa-chevron-right"></i>` : ''}
+      <span class="current" title="${esc(FOLDER_NAME)}">${FOLDER_NAME}</span>
+    `;
+    }
+
+    // -- Init ------------------------------------------------------------------
+    async function init() {
+      isNavigating = false;
+
+      if (!window.solmatesAPI) {
+        let retries = 10;
+        while (!window.solmatesAPI && retries-- > 0) {
+          await new Promise(r => setTimeout(r, 300));
+        }
+        if (!window.solmatesAPI) {
+          document.getElementById('grid').innerHTML =
+            '<div class="empty" style="color:#ef4444">?? API failed to load. Check your connection.</div>';
+          return;
+        }
+      }
+
+      // Fetch latest folder data to set FOLDER_NAME and check visibility tags
+      if (FOLDER_ID) {
+        try {
+          const fRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
+          const folderList = (fRes && fRes.data) ? fRes.data : [];
+          const currentFolder = folderList.find(f => f.id === FOLDER_ID);
+          if (currentFolder) {
+            const dbName = currentFolder.name || '';
+            const isFolderHiddenOther = dbName.includes('[HIDE_OTHER]');
+            FOLDER_NAME = dbName.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[OTHER\]/gi, '').replace(/\[HIDE_OTHER\]/gi, '').trim() || FOLDER_NAME;
+            if (isFolderHiddenOther) {
+              otherVisible = false;
+            } else {
+              otherVisible = localStorage.getItem(`elearning_other_visible_${FOLDER_ID}`) !== 'false';
+            }
+          }
+        } catch (e) {
+          console.warn('Failed to fetch folder details for initialization:', e);
+        }
+      }
+
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+
+      const titleEl = document.getElementById('pageTitle');
+      if (titleEl) {
+        if (isEBook || CATEGORY === 'youtube') {
+          const icon = isEBook ? 'fa-book' : 'fa-play-circle';
+          const label = isEBook ? (CATEGORY.startsWith('hc-') ? 'Healthcare E-Books' : 'E-Books') : 'Video Lessons';
+          let displayTitle = FOLDER_NAME;
+          if (CATEGORY.startsWith('hc-')) displayTitle = 'Healthcare ' + displayTitle;
+          titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${displayTitle}`;
+          document.getElementById('pageSub').innerText = `${label} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
+        } else {
+          let displayTitle = FOLDER_NAME;
+          if (CATEGORY.startsWith('hc-')) displayTitle = 'Healthcare ' + displayTitle;
+          titleEl.innerText = displayTitle;
+          let catLabel = CAT_LABELS[CATEGORY] || CATEGORY;
+          document.getElementById('pageSub').innerText = `${catLabel} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
+        }
+      }
+      buildBreadcrumb();
+
+      const noContent = params.get('noContent') === 'true';
+
+      if (isAdmin) {
+        document.getElementById('adminBar').classList.add('visible');
+        if (document.getElementById('adminIndicator')) document.getElementById('adminIndicator').classList.add('active');
+
+        if (isEBook || CATEGORY === 'youtube') {
+          document.getElementById('btnNewFolderSubject').style.display = 'inline-flex';
+          document.getElementById('btnNewFolderGeneric').style.display = 'inline-flex';
+          document.getElementById('btnNewFolderDefault').style.display = 'none';
+          document.getElementById('btnNewLink').style.display = 'none';
+          document.getElementById('btnToggleOther').style.display = 'inline-flex';
+
+          if (isEBook) {
+            const tabs = document.getElementById('elearningTabs');
+            if (tabs) tabs.classList.add('visible');
+            if (!otherVisible) {
+              otherVisible = false;
+            } else {
+              otherVisible = localStorage.getItem(`elearning_other_visible_${FOLDER_ID}`) !== 'false';
+            }
+            updateOtherUISettings();
+          }
+
+          if (CATEGORY === 'youtube') {
+            document.getElementById('btnNewFolderSubject').innerHTML = '<i class="fas fa-play-circle"></i> Add Subject';
+          }
+        } else {
+          // Non-elearning: show generic folder + link buttons
+          document.getElementById('btnNewFolderDefault').style.display = 'inline-flex';
+          document.getElementById('btnNewLink').style.display = 'inline-flex';
+          document.getElementById('btnNewFolderSubject').style.display = 'none';
+          document.getElementById('btnNewFolderGeneric').style.display = 'none';
+        }
+      } else {
+        if (isEBook || CATEGORY === 'youtube') {
+          const tabs = document.getElementById('elearningTabs');
+          if (tabs) tabs.classList.toggle('visible', isEBook);
+          if (isEBook) {
+            if (!otherVisible) {
+              otherVisible = false;
+            } else {
+              otherVisible = localStorage.getItem(`elearning_other_visible_${FOLDER_ID}`) !== 'false';
+            }
+            updateOtherUISettings();
+          }
+        }
+      }
+
+      if (noContent && !isAdmin) {
+        document.getElementById('grid').innerHTML = `
+        <div class="empty">
+          <i class="fas fa-folder-open"></i>
+          <strong>No Content Available</strong>
+          <br><small>Content for this subject has not been uploaded yet. Please check back later.</small>
+        </div>`;
+        return;
+      }
+
+      if (noContent && isAdmin) {
+        document.getElementById('grid').innerHTML = `
+        <div class="empty">
+          <i class="fas fa-folder-plus"></i>
+          <strong>Empty Subject</strong>
+          <br><small>Use the buttons above to create folders or add links in this subject.</small>
+        </div>`;
+        return;
+      }
+
+      const urlTab = params.get('tab');
+      if (urlTab === 'other' || urlTab === 'sol') {
+        currentTab = urlTab;
+        const tabSol = document.getElementById('tabSol');
+        const tabOther = document.getElementById('tabOther');
+        if (tabSol) tabSol.classList.toggle('active', currentTab === 'sol');
+        if (tabOther) tabOther.classList.toggle('active', currentTab === 'other');
+      }
+
+      loadContent();
+    }
+
+    async function loadContent() {
+      if (isReorderMode) return;
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+
+      // Use shared cache keys like elearning-subjects for instant switching
+      const fKey = `folders_${CATEGORY}_${SEMESTER}_${FOLDER_ID || 'root'}`;
+      const iKey = isEBook ? `content_${CATEGORY}_${SEMESTER}_all` : `content_${CATEGORY}_${SEMESTER}_${FOLDER_ID}`;
+
+      // Step 1: Instant Cache Render (Solid)
+      const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(fKey) : null;
+      const cItems = window.solmatesAPI ? window.solmatesAPI.getCache(iKey) : null;
+
+      if (cFolders || cItems) {
+        renderGridSafe(cFolders?.data || [], cItems?.data || [], isAdmin, true);
+      } else {
+        // Only show text if absolutely no cache exists
+        document.getElementById('grid').innerHTML = '<div class="empty">Loading...</div>';
+      }
+
+      try {
+        // Step 2: Background Refresh (Silent)
+        const [fRes, iRes] = await Promise.all([
+          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
+          isEBook
+            ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false).catch(() => null)
+            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
+        ]);
+
+        if (fRes?.data || iRes?.data) {
+          renderGridSafe(fRes?.data || [], iRes?.data || [], isAdmin);
+        }
+      } catch (err) {
+        console.warn('Refresh fail:', err);
+      } finally {
+        isNavigating = false;
+      }
+    }
+
+    function renderGridSafe(folders, allItems, isAdmin, isStale = false) {
+      const grid = document.getElementById('grid');
+      if (!grid) return;
+      const esc = s => (s && typeof s === 'string') ? s.replace(/"/g, '&quot;') : (s?.name || '');
+
+      // Universal Tab Filtering (Works for eBooks & Dataset)
+      const items = allItems.filter(x => {
+        if (x.bookType) return x.bookType === currentTab;
+        const name = (x.name || x.title || x.subject || '').toUpperCase();
+        const isOther = name.includes('[OTHER]');
+        return currentTab === 'other' ? isOther : !isOther;
+      });
+
+      const filteredFolders = folders.filter(f => {
+        const isOther = (f.name || '').includes('[OTHER]');
+        return currentTab === 'other' ? isOther : !isOther;
+      });
+
+      // CRITICAL: Hold previous tab state during switch to prevent 0.1s flicker
+      if (isStale && filteredFolders.length === 0 && items.length === 0) return;
+
+      const frag = document.createDocumentFragment();
+
+      if (filteredFolders.length === 0 && items.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty';
+        emptyDiv.innerText = 'No books added in this tab yet.';
+        frag.appendChild(emptyDiv);
+        grid.replaceChildren(frag);
+        return;
+      }
+
+      // Folders
+      filteredFolders.forEach(f => {
+        try {
+          const sName = f.name || '(unnamed)';
+          const isHidden = sName.includes('[HIDDEN]');
+          if (isHidden && !isAdmin) return;
+
+          const isGeneric = sName.includes('[FOLDER]');
+          const isSubject = !isGeneric && (isEBook || CATEGORY === 'youtube');
+          const displayName = sName.replace(/\[LOCKED\]/gi, '').replace(/\[FOLDER\]/gi, '').replace(/\[OTHER\]/gi, '').replace(/\[HIDE_OTHER\]/gi, '').replace(/\[HIDDEN\]/gi, '').trim() || '(unnamed)';
+          const upperDispName = displayName.toUpperCase();
+
+          const bookItem = isEBook ? items.find(i => {
+            if (String(i.folderId || '') === String(f.id)) return true;
+            return (i.subject || i.title || '').trim().toUpperCase() === upperDispName;
+          }) : null;
+
+          const bookLink = bookItem ? (bookItem.pdf || bookItem.link) : null;
+          const mainIconClass = isSubject ? (isEBook ? 'fa-book' : 'fa-play-circle') : 'fa-folder';
+
+          const card = document.createElement('div');
+          card.className = `subject-card ${!isSubject ? 'centered-folder' : ''}`;
+          card.setAttribute('data-id', f.id);
+          card.setAttribute('data-type', 'folder');
+
+          card.innerHTML = `
+            ${isAdmin ? `<div class="edit-btn" onclick="event.stopPropagation(); window.editFolderName('${f.id}', '${esc(f.name)}')"><i class="fas fa-pencil-alt"></i></div>` : ''}
+            ${isAdmin ? `<div class="btn-del-folder" onclick="event.stopPropagation(); window.deleteFolder('${f.id}', '${esc(f.name)}')"><i class="fas fa-trash"></i></div>` : ''}
+            ${isAdmin ? `<div class="edit-btn" style="left:58px; background:rgba(100,116,139,0.9);" onclick="event.stopPropagation(); window.toggleHide('folder', '${f.id}', '${esc(f.name)}')"><i class="fas ${isHidden ? 'fa-eye-slash' : 'fa-eye'}"></i></div>` : ''}
+            <div style="display:flex; align-items:center; width:100%; margin-bottom:12px; gap:8px">
+                ${isAdmin ? '<div class="drag-handle">??</div>' : ''}
+                <div class="subject-name" style="flex:1; ${isHidden ? 'opacity:0.5;' : ''}">
+                    <i class="fas ${mainIconClass}"></i>
+                    <h3 style="margin:0">${displayName}</h3>
+                </div>
+            </div>
+            ${isEBook && !isGeneric ? `
+              <a ${bookLink ? `href="javascript:void(0)" onclick="event.stopPropagation(); window.openViewer('${esc(bookLink)}', '${esc(displayName)}');"` : ''} class="book-link-btn ${!bookLink ? 'not-available' : ''}">
+                <i class="fas ${bookLink ? 'fa-file-pdf' : 'fa-times-circle'}"></i> ${bookLink ? 'Read Book' : 'Not Available'}</a>
+            ` : ''}
+            ${isAdmin && !isGeneric ? `
+              <div class="admin-controls visible">
+                <input type="text" class="admin-input" placeholder="Paste Book Link" value="${bookLink || ''}" onclick="event.stopPropagation()">
+                <button class="btn-save" data-subject="${esc(displayName)}" data-fid="${f.id}" onclick="event.stopPropagation(); window.saveSubjectLink(this)"><i class="fas fa-save"></i> Save</button>
+              </div>
+            ` : ''}
+        `;
+
+          card.onclick = (e) => {
+            if (isNavigating || isReorderMode || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('a')) return;
+            if (isSubject && bookLink) { window.openViewer(bookLink, displayName); return; }
+            isNavigating = true; card.classList.add('navigating');
+            setTimeout(() => {
+              window.location.href = `/database/folder-content.html?category=${CATEGORY}&semester=${SEMESTER}&folderId=${f.id}&name=${encodeURIComponent(f.name)}&parentName=${encodeURIComponent(FOLDER_NAME)}`;
+            }, 150);
+          };
+          frag.appendChild(card);
+        } catch (err) { }
+      });
+
+      // Items
+      items.forEach(item => {
+        if (CATEGORY.includes('elearning') && item.folderId) return;
+        try {
+          const rawTitle = item.title || item.subject || '(untitled)';
+          const isHidden = rawTitle.includes('[HIDDEN]');
+          if (isHidden && !isAdmin) return;
+          
+          const displayTitle = rawTitle.replace('[OTHER]', '').replace('[HIDDEN]', '').trim();
+          const itemLink = item.link || item.pdf || item.url || (item.attachments?.[0]?.url);
+
+          const card = document.createElement('div');
+          card.className = 'subject-card item';
+          if (isHidden) card.style.opacity = '0.5';
+          card.setAttribute('data-id', item.id);
+          card.setAttribute('data-type', 'item');
+          card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px; width:100%">
+            ${isAdmin ? '<div class="drag-handle">??</div>' : ''}
+            <i class="fas fa-file-alt" style="font-size:32px; color:#3b82f6"></i>
+            <h3 style="flex:1; margin:0">${displayTitle}</h3>
+          </div>
+          ${isAdmin ? `<div class="btn-del-folder" onclick="event.stopPropagation(); window.deleteItem('${item.id}', '${esc(displayTitle)}')"><i class="fas fa-trash"></i></div>` : ''}
+          ${isAdmin ? `<div class="edit-btn" style="background:rgba(100,116,139,0.9);" onclick="event.stopPropagation(); window.toggleHide('item', '${item.id}', '${esc(rawTitle)}')"><i class="fas ${isHidden ? 'fa-eye-slash' : 'fa-eye'}"></i></div>` : ''}
+        `;
+          card.onclick = () => { if (!isReorderMode && itemLink) window.openViewer(itemLink, displayTitle); };
+          frag.appendChild(card);
+        } catch (err) { }
+      });
+
+      grid.replaceChildren(frag);
+      if (isAdmin) initSortable();
+    }
+
+    function initSortable() {
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (!isAdmin || typeof Sortable === 'undefined') return;
+      const grid = document.getElementById('grid');
+      if (sortableInstance) sortableInstance.destroy();
+      sortableInstance = Sortable.create(grid, {
+        animation: 150,
+        handle: isReorderMode ? null : '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        forceFallback: true,
+        fallbackOnBody: true,
+        touchStartThreshold: 5,
+        onStart: function () { if (navigator.vibrate) navigator.vibrate(50); },
+        onEnd: async function () {
+          try {
+            const btn = document.getElementById('btnReorder');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            const grid = document.getElementById('grid');
+            const cards = Array.from(grid.querySelectorAll('.subject-card'));
+            const foldersOrder = [];
+            const itemsOrder = [];
+
+            cards.forEach((card, index) => {
+              const id = card.getAttribute('data-id');
+              const type = card.getAttribute('data-type');
+              if (type === 'folder') foldersOrder.push({ id, order: index });
+              else itemsOrder.push({ id, order: index });
+            });
+
+            if (foldersOrder.length > 0) await window.solmatesAPI.reorderBulkSOL('folder', foldersOrder, SEMESTER);
+            if (itemsOrder.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemsOrder, SEMESTER);
+
+            if (window.solmatesAPI && window.solmatesAPI._cacheClear) {
+              window.solmatesAPI._cacheClear('');
+            }
+            btn.innerHTML = originalText;
+          } catch (err) {
+            alert('Sort failed: ' + err.message);
+            init(); // Revert on failure
+          }
+        }
+      });
+    }
+
+    // FIX 4: toggleReorderMode now adds class to body (same as elearning-subjects)
+    function toggleReorderMode() {
+      isReorderMode = !isReorderMode;
+      const btn = document.getElementById('btnReorder');
+      const container = document.body;
+
+      if (isReorderMode) {
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fas fa-check"></i> Done';
+        container.classList.add('reorder-mode-active');
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize';
+        container.classList.remove('reorder-mode-active');
+      }
+
+      initSortable();
+    }
+
+    window.editFolderName = async function (id, oldName) {
+      const cleanOldName = oldName.replace(/\[FOLDER\]/gi, '').replace(/\[LOCKED\]/gi, '').replace(/\[OTHER\]/gi, '').replace(/\[HIDE_OTHER\]/gi, '').trim();
+      const newName = prompt('Enter new folder name:', cleanOldName);
+      if (!newName || newName.trim() === cleanOldName) return;
+      try {
+        let finalName = newName.trim();
+        if (oldName.includes('[FOLDER]')) finalName += ' [FOLDER]';
+        if (oldName.includes('[OTHER]')) finalName += ' [OTHER]';
+        if (oldName.includes('[LOCKED]')) finalName += ' [LOCKED]';
+        if (oldName.includes('[HIDE_OTHER]')) finalName += ' [HIDE_OTHER]';
+        await window.solmatesAPI.updateSOLFolder(id, { name: finalName });
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        await loadContent();
+      } catch (e) { alert('Error: ' + e.message); }
+    };
+
+    let activeModalType = 'subject';
+    function openModal(id, type = 'subject') {
+      activeModalType = type;
+      if (id === 'folderModal') {
+        document.querySelector('#folderModal h2').innerHTML = type === 'subject'
+          ? '<i class="fas fa-book-medical"></i> New Subject'
+          : '<i class="fas fa-folder-plus"></i> New Folder';
+      }
+      document.getElementById(id).classList.add('open');
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    async function createFolder() {
+      const name = document.getElementById('folderName').value.trim();
+      if (!name) return alert('Enter name.');
+      try {
+        let folderName = name;
+        if (activeModalType === 'folder' && !folderName.includes('[FOLDER]')) folderName += ' [FOLDER]';
+        if (CATEGORY.includes('elearning') && currentTab === 'other') folderName += ' [OTHER]';
+        await window.solmatesAPI.addSOLFolder({ name: folderName, category: CATEGORY, semester: SEMESTER, parentId: FOLDER_ID });
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        closeModal('folderModal');
+        document.getElementById('folderName').value = '';
+        window.location.reload();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function addLink() {
+      const titleVal = document.getElementById('linkTitle').value.trim();
+      const url = document.getElementById('linkUrl').value.trim();
+      if (!titleVal || !url) return alert('Fill all fields.');
+      let title = titleVal;
+      if (CATEGORY.includes('elearning') && currentTab === 'other') title += ' [OTHER]';
+      const today = new Date().toISOString().slice(0, 10);
+      let data = { folderId: FOLDER_ID, title, link: url, pdf: url, date: today, subject: title };
+      try {
+        await window.solmatesAPI.addSOLItem(CATEGORY, SEMESTER, data);
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        closeModal('linkModal');
+        document.getElementById('linkTitle').value = '';
+        document.getElementById('linkUrl').value = '';
+        window.location.reload();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    window.toggleHide = async function(type, id, oldName) {
+      const isHidden = oldName.includes('[HIDDEN]');
+      let newName = oldName;
+      if (isHidden) newName = newName.replace('[HIDDEN]', '').trim();
+      else newName = newName.trim() + ' [HIDDEN]';
+      try {
+        if (type === 'folder') await window.solmatesAPI.updateSOLFolder(id, { name: newName });
+        else await window.solmatesAPI.updateSOLItem(CATEGORY, SEMESTER, id, { title: newName, subject: newName });
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        window.location.reload();
+      } catch(e) { alert(e.message); }
+    };
+
+    window.deleteFolder = async function (id, name) {
+      if (!confirm(`Delete "${name}"?`)) return;
+      try {
+        await window.solmatesAPI.deleteSOLFolder(id);
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        await loadContent();
+      } catch (e) { alert('Error: ' + e.message); }
+    };
+
+    async function deleteItem(id, name = 'this item') {
+      if (!confirm(`Delete "${name}"?`)) return;
+      try {
+        await window.solmatesAPI.deleteSOLItem(CATEGORY, SEMESTER, id);
+        if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        await loadContent();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    function switchTab(tab) {
+      if (isNavigating) return;
+      currentTab = tab;
+      document.getElementById('tabSol').classList.toggle('active', tab === 'sol');
+      document.getElementById('tabOther').classList.toggle('active', tab === 'other');
+      loadContent();
+    }
+
+    async function toggleOtherVisibility() {
+      otherVisible = !otherVisible;
+      localStorage.setItem(`elearning_other_visible_${FOLDER_ID}`, otherVisible);
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (isAdmin && FOLDER_ID) {
+        try {
+          const marker = ' [HIDE_OTHER]';
+          const actualOldName = await (async () => {
+            const fRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
+            const folderList = (fRes && fRes.data) ? fRes.data : [];
+            const currentFolder = folderList.find(f => f.id === FOLDER_ID);
+            return currentFolder ? currentFolder.name : FOLDER_NAME;
+          })();
+          let newName = actualOldName.replace(/\[HIDE_OTHER\]/gi, '').replace(/\s+/g, ' ').trim();
+          if (!otherVisible) newName += marker;
+
+          // Update server
+          await window.solmatesAPI.updateSOLFolder(FOLDER_ID, { name: newName });
+          if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+
+          // Update local state and URL for consistency
+          FOLDER_NAME = newName;
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.set('name', newName);
+          window.history.pushState({}, '', newUrl);
+
+          // Update UI immediately
+          buildBreadcrumb();
+          const titleEl = document.getElementById('pageTitle');
+          if (titleEl) {
+            const icon = isEBook ? 'fa-book' : 'fa-play-circle';
+            const cleanName = FOLDER_NAME.replace('[HIDE_OTHER]', '').trim();
+            let displayTitle = cleanName;
+            if (CATEGORY.startsWith('hc-')) {
+              displayTitle = 'Healthcare ' + displayTitle;
+            }
+            titleEl.innerHTML = `<i class="fas ${icon}" style="color:var(--accent)"></i> ${displayTitle}`;
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Failed to update visibility: " + e.message);
+        }
+      }
+      updateOtherUISettings();
+      if (!otherVisible && currentTab === 'other') switchTab('sol');
+      else loadContent(); // Refresh to apply filters immediately
+    }
+
+    function updateOtherUISettings() {
+      const btn = document.getElementById('btnToggleOther');
+      const tab = document.getElementById('tabOther');
+      if (btn) btn.innerHTML = otherVisible ? '<i class="fas fa-eye-slash"></i> Hide Other Books' : '<i class="fas fa-eye"></i> Show Other Books';
+      if (tab) tab.classList.toggle('hidden', !otherVisible);
+    };
+
+    window.saveSubjectLink = async function (btn) {
+      const subjectName = btn.getAttribute('data-subject');
+      const folderId = btn.getAttribute('data-fid');
+      const input = btn.closest('.admin-controls').querySelector('.admin-input');
+      let link = input.value.trim();
+
+      if (!link) return alert('Pehle link paste karein.');
+
+      // Auto-fix protocol if missing (Prevents API validation errors)
+      if (link && !link.startsWith('http') && !link.startsWith('mailto:')) {
+        link = 'https://' + link;
+      }
+
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        if (window.solmatesAPI && window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+
+        const iRes = await window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, folderId || 'all');
+        const existing = (iRes?.data || []).filter(i =>
+          String(i.folderId) === String(folderId) ||
+          (i.subject || i.title || '').trim().toUpperCase() === subjectName.trim().toUpperCase()
+        );
+
+        for (const item of existing) { await window.solmatesAPI.deleteSOLItem(CATEGORY, SEMESTER, item.id); }
+
+        let finalTitle = subjectName;
+        if (currentTab === 'other') finalTitle += ' [OTHER]';
+
+        const payload = {
+          title: finalTitle,
+          subject: subjectName,
+          pdf: link,
+          link: link,
+          folderId: folderId,
+          bookType: currentTab
+        };
+
+        const result = await window.solmatesAPI.addSOLItem(CATEGORY, SEMESTER, payload);
+
+        if (!result || !result.success) {
+          throw new Error(result?.error || 'API returned failure');
+        }
+
+        if (window.solmatesAPI && window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+        await loadContent();
+      } catch (e) {
+        alert('Save nahi ho paya:\n' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    };
+
+    window.openViewer = function (link, title) {
+      if (!link) return;
+      const l = link.toLowerCase();
+      // vundefined.0: Redirect to appropriate internal viewer
+      if (l.includes('drive.google.com') || l.includes('docs.google.com/presentation') || l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('youtube.com') || l.includes('youtu.be') || l.includes('photos.app.goo.gl')) {
+        const viewer = (l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('docs.google.com/presentation') || (l.includes('drive.google.com') && !l.includes('VIDEO') && !l.includes('MP4'))) 
+          ? 'pdf-viewer' 
+          : 'video-viewer';
+        window.location.href = `/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&semester=`;
+      } else {
+        window.open(link, '_blank');
+      }
+    };
+
+    // -- Real-time (Socket.io) -------------------------------------------------
+    (function () {
+      if (typeof io === 'undefined') return;
+      try {
+        const base = window.getSocketBaseURL ? window.getSocketBaseURL() : (window.RENDER_BACKEND_URL || (window.PRODUCTION_API_URL || 'http://localhost:3000/api').replace(/\/api$/, ''));
+        const sock = io(base, { transports: ['polling', 'websocket'], reconnection: true, reconnectionDelay: 3000 });
+        if (window.addConnectionStatusDot) window.addConnectionStatusDot(sock);
+        sock.on('connect', () => {
+          sock.emit('sol:subscribe', { category: CATEGORY, semester: SEMESTER });
+          sock.emit('sol:subscribe', { category: 'folders', semester: SEMESTER });
+        });
+        sock.on('sol:updated', (d) => {
+          if (!d || d.category === CATEGORY || d.category === 'folders') {
+            if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+            loadContent();
+          }
+        });
+      } catch (e) { }
+    })();
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+    window.addEventListener('pageshow', () => {
+      isNavigating = false;
+      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating'));
+    });
+  </script>
+
+
+
+
+<!-- ===== ASK QUERY WIDGET ===== -->
+<style>
+#queryFloatBtn { position: fixed; bottom: 75px; right: 16px; z-index: 9999; background: linear-gradient(135deg, #0f2b46, #1a4a75); color: #fff; border: none; border-radius: 50px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(15,43,70,0.4); display: flex; align-items: center; gap: 6px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+#queryFloatBtn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 25px rgba(15,43,70,0.5); }
+#queryModalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 15px; }
+#queryModalOverlay.open { display: flex; animation: qFadeIn 0.3s ease; }
+@keyframes qFadeIn { from { opacity: 0; } to { opacity: 1; } }
+#queryModal { box-sizing: border-box; background: var(--qbg, rgba(255,255,255,0.98)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: var(--qtxt, #1e293b); border: 1px solid var(--qborder, rgba(0,0,0,0.08)); border-radius: 20px; padding: 24px 22px 30px; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#queryModalOverlay.open #queryModal { transform: scale(1); }
+#queryModal::-webkit-scrollbar { width: 14px; }
+#queryModal::-webkit-scrollbar-track { background: transparent; margin: 24px 0; }
+#queryModal::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; border: 4px solid transparent; background-clip: padding-box; }
+#queryModal::-webkit-scrollbar-thumb:hover { background-color: #64748b; border: 4px solid transparent; background-clip: padding-box; }
+#qHeader { text-align: center; margin-bottom: 20px; }
+#queryModal h2 { color: var(--qhead, #0f2b46); font-size: 20px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.5px; }
+#queryModal p.qsub { color: var(--qsub, #64748b); font-size: 13px; margin: 0; font-weight: 500; }
+.qfield { margin-bottom: 15px; text-align: left; }
+.qfield label { display: block; font-size: 13px; font-weight: 600; color: var(--qlabel, #334155); margin-bottom: 6px; margin-left: 4px; }
+.qfield input, .qfield select, .qfield textarea { box-sizing: border-box; width: 100%; padding: 12px 14px; border: 1.5px solid var(--qborder, #e2e8f0); border-radius: 12px; font-size: 14px; color: var(--qtxt, #0f172a); background: var(--qinput, #f8fafc); outline: none; transition: all 0.2s ease; font-family: inherit; }
+.qfield input:focus, .qfield select:focus, .qfield textarea:focus { border-color: var(--qfocus, #3b82f6); background: var(--qinput-focus, #ffffff); box-shadow: 0 0 0 3px var(--qring, rgba(59, 130, 246, 0.15)); }
+.qfield textarea { resize: vertical; min-height: 85px; line-height: 1.5; }
+.qchar { font-size: 11px; color: var(--qsub, #94a3b8); text-align: right; margin-top: 4px; margin-right: 4px; font-weight: 500; }
+#qSubmitBtn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--qbtn1, #0f2b46), var(--qbtn2, #1a4a75)); color: #ffffff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; margin-bottom: 20px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(15,43,70,0.2); display: flex; justify-content: center; align-items: center; gap: 8px; }
+#qSubmitBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,43,70,0.3); }
+#qSubmitBtn:active { transform: translateY(0); }
+#qSubmitBtn:disabled { background: var(--qborder, #cbd5e1); color: var(--qsub, #94a3b8); cursor: not-allowed; box-shadow: none; transform: none; }
+#qCloseBtn { position: absolute; top: 16px; right: 16px; background: var(--qinput, #f1f5f9); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; color: var(--qsub, #64748b); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 10; }
+#qCloseBtn:hover { background: var(--qborder, #e2e8f0); color: var(--qtxt, #0f172a); }
+#qSuccessMsg { display: none; text-align: center; padding: 30px 10px 40px; }
+#qSuccessMsg .qcheck { font-size: 54px; margin-bottom: 10px; animation: qPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes qPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+#qSuccessMsg h3 { color: var(--qhead, #0f2b46); margin: 0 0 8px; font-size: 22px; font-weight: 700; }
+#qSuccessMsg p { color: var(--qsub, #64748b); font-size: 14px; margin: 0; line-height: 1.5; }
+.qopt { color: var(--qsub, #94a3b8); font-size: 11px; font-weight: 500; }
+html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: rgba(15,23,42,0.95); --qtxt: #f8fafc; --qhead: #f8fafc; --qsub: #94a3b8; --qlabel: #e2e8f0; --qborder: rgba(255,255,255,0.1); --qinput: rgba(0,0,0,0.2); --qinput-focus: rgba(0,0,0,0.4); --qfocus: #3b82f6; --qring: rgba(59,130,246,0.25); --qbtn1: #3b82f6; --qbtn2: #2563eb; }
+</style>
+<button id="queryFloatBtn" onclick="openQueryModal()">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+  Ask Query
+</button>
+<div id="queryModalOverlay">
+  <div id="queryModal">
+    <button id="qCloseBtn" onclick="closeQueryModal()">&#x2715;</button>
+    <div id="qFormSection">
+      <div id="qHeader">
+        <h2>Need Help?</h2>
+        <p class="qsub">Ask us anything, we're here for you &#128591;</p>
+      </div>
+      <div class="qfield"><label>Full Name *</label><input type="text" id="qName" placeholder="S.Singh" maxlength="60"></div>
+      <div class="qfield"><label>Phone Number <span class="qopt">(or Email)</span></label><input type="tel" id="qPhone" placeholder="10-digit mobile number" maxlength="10"></div>
+      <div class="qfield"><label>Email Address <span class="qopt">(or Phone)</span></label><input type="email" id="qGmail" placeholder="singh@gmail.com"></div>
+      <div style="display:flex; gap:10px;">
+        <div class="qfield" style="flex:1;"><label>Semester *</label>
+          <select id="qSemester"><option value="">-- Select --</option><option value="1st Sem">1st Sem</option><option value="2nd Sem">2nd Sem</option><option value="3rd Sem">3rd Sem</option><option value="4th Sem">4th Sem</option></select>
+        </div>
+        <div class="qfield" style="flex:1.2;"><label>Topic *</label>
+          <select id="qType"><option value="">-- Select --</option><option value="Study Material">Study Material</option><option value="Exam Related">Exam Related</option><option value="Technical Issue">Technical Issue</option><option value="General">General</option></select>
+        </div>
+      </div>
+      <div class="qfield"><label>Your Query *</label>
+        <textarea id="qQuestion" placeholder="Please describe your query clearly in detail..." maxlength="500" oninput="document.getElementById('qCharCount').textContent=this.value.length+'/500'"></textarea>
+        <div class="qchar"><span id="qCharCount">0/500</span></div>
+      </div>
+      <button id="qSubmitBtn" onclick="submitQuery()">
+        Send Message 
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+    <div id="qSuccessMsg">
+      <div class="qcheck">&#10004;&#65039;</div>
+      <h3>Message Sent!</h3>
+      <p>Thank you for reaching out. Our team will contact you on your number shortly.</p>
+    </div>
+  </div>
+</div>
+<script src="/js/profanity.js"></script>
+<script>
+(function(){
+  var isViewer = window.location.pathname.includes("viewer");
+  if(isViewer) { document.getElementById("queryFloatBtn").style.bottom = "140px"; }
+  var isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+  if(isAdmin) { document.getElementById("queryFloatBtn").style.display = "none"; }
+  function qT(){var t=localStorage.getItem("solmates_theme")||"light";if(t==="dark")document.documentElement.setAttribute("data-solmates-theme","dark");else document.documentElement.removeAttribute("data-solmates-theme");}
+  qT();window.addEventListener("storage",function(e){if(e.key==="solmates_theme")qT();});
+  function qCtx(){try{var p=window.location.pathname,q=new URLSearchParams(window.location.search);if(p.includes("pdf-viewer"))return "PDF: "+(q.get("file")||q.get("name")||"PDF");if(p.includes("video-viewer"))return "Video: "+(q.get("title")||q.get("name")||"Video");return "Page: "+p.split("/").pop();}catch(e){return "Solmates";}}
+  function qRL(ph){try{var k="qrl_"+ph,d=JSON.parse(localStorage.getItem(k)||'{"count":0,"date":""}'),t=new Date().toDateString();if(d.date!==t)d={count:0,date:t};if(d.count>=3)return false;d.count++;localStorage.setItem(k,JSON.stringify(d));return true;}catch(e){return true;}}
+  window.openQueryModal=function(){document.getElementById("queryModalOverlay").classList.add("open");document.getElementById("qFormSection").style.display="block";document.getElementById("qSuccessMsg").style.display="none";document.getElementById("qSubmitBtn").disabled=false;qT();};
+  window.closeQueryModal=function(){document.getElementById("queryModalOverlay").classList.remove("open");};
+  document.getElementById("queryModalOverlay").addEventListener("click",function(e){if(e.target===this)closeQueryModal();});
+  window.submitQuery=async function(){
+    var n=(document.getElementById("qName").value||"").trim(),ph=(document.getElementById("qPhone").value||"").trim(),gm=(document.getElementById("qGmail").value||"").trim(),sm=document.getElementById("qSemester").value,qt=document.getElementById("qType").value,qq=(document.getElementById("qQuestion").value||"").trim();
+    if(!n){alert("Please enter your full name.");return;}
+    if(!ph && !gm){alert("Please provide either your Phone Number or Email Address.");return;}if(ph && !/^[0-9]{10}$/.test(ph)){alert("Please enter a valid 10-digit phone number.");return;}
+    if(!sm){alert("Please select your semester.");return;}
+    if(!qt){alert("Please select a topic.");return;}
+    if(!qq){alert("Please describe your query.");return;}
+    if(window.solmatesCheckProfanity && (window.solmatesCheckProfanity(n) || window.solmatesCheckProfanity(qq))){alert("Please keep your query respectful and appropriate.");return;}
+    if(!qRL(ph || gm)){alert("You have reached the limit of 3 queries per day. Please try again tomorrow.");return;}
+    var btn=document.getElementById("qSubmitBtn");btn.disabled=true;btn.innerHTML="Sending...";
+    var ctx=qCtx(),ts=new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    var url = window.location.href;
+    var msg="\u2753 Student Query\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udc64 "+n+"\n\ud83d\udcf1 "+(ph||"Not provided")+"\n\ud83d\udce7 "+(gm||"Not provided")+"\n\ud83c\udf93 "+sm+"\n\ud83d\udcc2 "+qt+"\n\ud83d\udccc Context: "+ctx+"\n\ud83d\udd17 Link: "+url+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"+qq+"\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u23f0 "+ts+" IST";
+    try{
+      var r=await fetch("https://api.telegram.org/bot8597525439:AAEV6WWYB3KXReoaNmbUoNWQqCyPvUe2laY/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:"1772865405",text:msg})});
+      if(!r.ok)throw new Error("err");
+      document.getElementById("qFormSection").style.display="none";document.getElementById("qSuccessMsg").style.display="block";
+    }catch(err){alert("Failed to send. Please try again.");btn.disabled=false;btn.innerHTML="Send Message <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='22' y1='2' x2='11' y2='13'></line><polygon points='22 2 15 22 11 13 2 9 22 2'></polygon></svg>";}
+  };
+})();
+</script>
+<!-- ===== END ASK QUERY WIDGET ===== -->
+</body>
+
+</html>
+
+
+
