@@ -53,15 +53,6 @@
                         data: bucket,
                         _bulk: true
                     });
-                    if (fid !== 'root') {
-                        for (let s = 0; s <= 4; s++) {
-                            window.solmatesAPI.setCache(`content_${cat}_${s}_${fid}`, {
-                                success: true,
-                                data: bucket,
-                                _bulk: true
-                            });
-                        }
-                    }
                 }
             }
         }
@@ -77,7 +68,6 @@
 
             for (const [key, fList] of Object.entries(folderGroups)) {
                 window.solmatesAPI.setCache(`folders_${key}`, { success: true, data: fList, _bulk: true });
-                window.solmatesAPI.setCache(`folders_${key}_false`, { success: true, data: fList, _bulk: true });
             }
         }
     }
@@ -85,7 +75,11 @@
     function populateMemoryCache(data) {
         if (!data || !data.success) return;
         window._sol_bulk_cache_snapshot = data;
-        _applyBulkToAPIClient(data);
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => _applyBulkToAPIClient(data), { timeout: 1000 });
+        } else {
+            setTimeout(() => _applyBulkToAPIClient(data), 100);
+        }
     }
 
     // Automatic Purge of Old Cache Snapshots (v847)
