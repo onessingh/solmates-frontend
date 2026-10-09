@@ -7875,37 +7875,13 @@
 
 
 
-      // Smooth fade transition for dynamic greeting
+      typeText(greeting, 'dynamicGreeting');
 
-      const greetingEl = document.getElementById('dynamicGreeting');
-
-      if (greetingEl) {
-
-        greetingEl.style.opacity = '0';
-
-        setTimeout(() => {
-
-          greetingEl.textContent = greeting;
-
-          greetingEl.style.opacity = '1';
-
-        }, 300);
-
-      }
+      typeText(suggestion, 'heroSearchTrigger', true);
 
 
 
-      const searchEl = document.getElementById('heroSearchTrigger');
-
-      if (searchEl && document.activeElement !== searchEl) {
-
-        searchEl.placeholder = suggestion;
-
-      }
-
-
-
-      // Change greeting every 12 seconds with smooth fade
+      // Change greeting every 12 seconds for a relaxed feel
 
       clearTimeout(typewriterLoopTimeout);
 
@@ -7915,19 +7891,97 @@
 
 
 
-    function typeText(text, targetId, isPlaceholder = false) {
+    function typeText(text, targetId, isPlaceholder = false, speed = 35) {
 
       const el = document.getElementById(targetId);
 
       if (!el) return;
 
-      if (isPlaceholder) {
 
-        el.placeholder = text;
+
+      if (!isPlaceholder) {
+
+        if (window._typewriterRaf) cancelAnimationFrame(window._typewriterRaf);
 
       } else {
 
-        el.textContent = text;
+        if (window._placeholderRaf) cancelAnimationFrame(window._placeholderRaf);
+
+      }
+
+
+
+      let i = 0;
+
+      let lastTime = 0;
+
+      if (!isPlaceholder) el.textContent = '';
+
+      else el.placeholder = '';
+
+
+
+      if (isPlaceholder) {
+
+        el.addEventListener('focus', () => { el.placeholder = text; i = text.length + 1; }, { once: true });
+
+      }
+
+
+
+      function step(timestamp) {
+
+        if (!lastTime) lastTime = timestamp;
+
+        if (timestamp - lastTime >= speed) {
+
+          lastTime = timestamp;
+
+          if (i < text.length) {
+
+            i++;
+
+            const current = text.substring(0, i);
+
+            if (isPlaceholder) {
+
+              el.placeholder = current;
+
+            } else {
+
+              el.textContent = current;
+
+            }
+
+          }
+
+        }
+
+        if (i < text.length) {
+
+          if (!isPlaceholder) {
+
+            window._typewriterRaf = requestAnimationFrame(step);
+
+          } else {
+
+            window._placeholderRaf = requestAnimationFrame(step);
+
+          }
+
+        }
+
+      }
+
+
+
+      if (!isPlaceholder) {
+
+        window._typewriterRaf = requestAnimationFrame(step);
+
+      } else {
+
+        window._placeholderRaf = requestAnimationFrame(step);
 
       }
 
@@ -10047,7 +10101,7 @@
 
             paths.forEach(path => {
 
-              path.style.transition = "stroke-dashoffset 1.8s ease-in-out";
+              path.style.transition = "stroke-dashoffset 1.8s cubic-bezier(0.4, 0, 0.2, 1)";
 
               path.style.strokeDashoffset = "0";
 
@@ -10059,13 +10113,13 @@
 
               fadeElements.forEach(el => {
 
-                el.style.transition = "opacity 1s ease-in-out";
+                el.style.transition = "opacity 0.8s ease-in-out";
 
                 el.style.opacity = "1";
 
               });
 
-            }, 400);
+            }, 300);
 
           });
 
