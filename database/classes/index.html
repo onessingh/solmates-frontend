@@ -1243,6 +1243,20 @@
             updateCountdowns();
         }
 
+        function parseNormalizedDate(dateStr) {
+            if (!dateStr) return null;
+            const str = String(dateStr).trim().split('T')[0].split(' ')[0];
+            const dmy = str.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);
+            if (dmy) {
+                return `${dmy[3]}-${dmy[2].padStart(2, '0')}-${dmy[1].padStart(2, '0')}`;
+            }
+            const ymd = str.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+            if (ymd) {
+                return `${ymd[1]}-${ymd[2].padStart(2, '0')}-${ymd[3].padStart(2, '0')}`;
+            }
+            return str;
+        }
+
         async function loadDataFromAPI(skipCache = false) {
             // SWR: Load from cache first if not skipping explicitly
             if (skipCache === false) {
@@ -1268,16 +1282,16 @@
 
                 results.forEach((res, i) => {
                     const sourceSem = i < 4 ? String(i + 1) : "all";
-                    if (res.success && res.data) {
+                    if (res && res.success && Array.isArray(res.data)) {
                         res.data.forEach(item => {
                             if (window.seenClassIds && window.seenClassIds.has(item.id)) return;
                             if (!window.seenClassIds) window.seenClassIds = new Set();
                             window.seenClassIds.add(item.id);
                             const sessionDate = item.scheduledAt || item.date || item.created_at;
-                            const sessionDay = String(sessionDate).split('T')[0].split(' ')[0];
+                            const sessionDay = parseNormalizedDate(sessionDate);
 
                             // Only show Today's classes
-                            if (sessionDay !== todayStr) return;
+                            if (sessionDay && sessionDay !== todayStr) return;
 
                             const meta = cleanSubjectTitle(item.title, sourceSem === 'all' ? '0' : sourceSem, sessionDate);
                             
@@ -1295,7 +1309,7 @@
                                 // Fallback: Create 2h range in 24h format
                                 const start = new Date(sessionDate);
                                 const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
-                                const f = (d) => d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+                                const f = (d) => isNaN(d.getTime()) ? 'TBA' : d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
                                 finalTime = `${f(start)} - ${f(end)}`;
                             } else {
                                 // Convert captured range to 24h if it's in 12h
@@ -1317,17 +1331,14 @@
                             };
 
                             // DE-DUPLICATION LOGIC:
-                            // If we already have this class, only replace if the new one has a better time range
                             if (!sessionMap.has(groupKey)) {
                                 sessionMap.set(groupKey, sessionObj);
                             } else {
                                 const existing = sessionMap.get(groupKey);
                                 if (!existing.hasRange && hasRange) {
-                                    // Merge semesters and use the better entry
                                     sessionObj.semesters = [...new Set([...sessionObj.semesters, ...existing.semesters])];
                                     sessionMap.set(groupKey, sessionObj);
                                 } else {
-                                    // Just merge semesters into existing
                                     existing.semesters = [...new Set([...existing.semesters, ...sessionObj.semesters])];
                                 }
                             }
@@ -1341,17 +1352,17 @@
                 
                 // Cache the fresh data
                 localStorage.setItem('solcache_live_classes', JSON.stringify(fresh));
-                
+            } catch (e) { 
+                console.error('Load failed:', e); 
+            } finally {
                 updateLiveSessionsDisplay(currentActiveTab);
-            } catch (e) { console.error('Load failed:', e); }
+            }
         }
 
         function convertTo24hRange(timeStr) {
             if (!timeStr) return "";
-            // If already looks like HH:MM - HH:MM, just clean it
             if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(timeStr)) return timeStr.replace(/\s+/g, ' ');
             
-            // Try to parse 12h format "07:00 PM - 09:00 PM" or "7:00pm"
             const parts = timeStr.split('-').map(p => p.trim());
             const format = (p) => {
                 try {
@@ -1363,7 +1374,6 @@
 
             if (parts.length === 2) return `${format(parts[0])} - ${format(parts[1])}`;
             if (parts.length === 1) {
-                // Single time -> 2h range
                 const start = format(parts[0]);
                 try {
                     const d = new Date(`2000-01-01 ${parts[0]}`);
@@ -1375,7 +1385,7 @@
         }
 
         function cleanSubjectTitle(title, semester, refDate) {
-            if (!title) return { subject: "", date: "", time: "", hasRange: false, expiryTime: Date.now() };
+            if (!title) return { subject: "", date: "", time: "", hasRange: false, expiryTime: Date.now() + 86400000 };
             let t = String(title).trim();
             const dMatch = t.match(/\[(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\]/);
             const tMatch = t.match(/\(([^)]*?)\)/); 
@@ -1387,7 +1397,7 @@
             // 2. Remove Leading Branding
             clean = clean.replace(/^(?:MBA\s+)?(?:SEM(?:ESTER)?|YEAR|YR|PART|TERM)\s*(?:IV|III|II|I|[1-6])\s*[:\-]?\s*/i, '');
 
-            // 3. CLEAN SUBJECT - UNIVERSAL WORD FILTER (vundefined.7)
+            // 3. CLEAN SUBJECT - UNIVERSAL WORD FILTER
             const seenNorm = new Set();
             const words = clean.split(/\s+/);
             const finalWords = [];
@@ -1395,18 +1405,15 @@
             
             for (let word of words) {
                 const norm = word.toUpperCase().replace(/[^A-Z]/g, '');
-                const isCamel = /[a-z]/.test(word); // Has lowercase
+                const isCamel = /[a-z]/.test(word);
                 
                 if (norm.length >= 2) {
-                    // Only skip if seen before AND (current is not camelCase OR previous was also camelCase)
-                    // This protects "Business Marketing" from being cut by "MARKETING:"
                     if (seenNorm.has(norm) && !isCamel) continue; 
                     seenNorm.add(norm);
                 }
                 finalWords.push(word);
             }
             
-            // Trailing Trash Cleaner
             while (finalWords.length > 0) {
                 const last = finalWords[finalWords.length - 1].toUpperCase().replace(/[^A-Z]/g, '');
                 if (stopwords.has(last) || last.length < 2) {
@@ -1419,14 +1426,16 @@
             let cleaned = finalWords.join(' ').trim();
             cleaned = cleaned.replace(/\s*[:\-]\s*$/, '').trim(); 
 
+            // Calculate Expiry: End of day (23:59:59) if date only, or start time + 4 hours
+            let refObj = new Date(refDate);
+            if (isNaN(refObj.getTime())) refObj = new Date();
+            let expiry = new Date(refObj.getFullYear(), refObj.getMonth(), refObj.getDate(), 23, 59, 59).getTime();
 
-            // Calculate Expiry
-            let expiry = new Date(refDate).getTime() + (2 * 60 * 60 * 1000); 
             if (rangeMatch && rangeMatch[1]) {
                 try {
                     const endPart = rangeMatch[1].trim();
-                    const endObj = new Date(new Date(refDate).toLocaleDateString('en-US') + ' ' + endPart);
-                    if (!isNaN(endObj.getTime())) expiry = endObj.getTime();
+                    const endObj = new Date(refObj.toLocaleDateString('en-US') + ' ' + endPart);
+                    if (!isNaN(endObj.getTime())) expiry = endObj.getTime() + (2 * 60 * 60 * 1000);
                 } catch (e) { }
             }
 
