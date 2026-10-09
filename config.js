@@ -220,14 +220,18 @@ try {
 window.PRODUCTION_API_URL = activeBackend + '/api';
 window.RENDER_BACKEND_URL = activeBackend;
 
-// Smart Health Check Failover (Throttled 10m via localStorage across all tabs; Success-only caching)
+// Smart Health Check Failover (3-Tier: Primary Custom -> Secondary Custom -> Direct Render)
 (function() {
   try {
     const lastCheck = localStorage.getItem('solmates_live_check_time');
+    const lastStatus = localStorage.getItem('solmates_live_check_status');
     if (lastCheck && (Date.now() - parseInt(lastCheck, 10)) < 10 * 60 * 1000) {
-      if (localStorage.getItem('solmates_live_check_status') === 'secondary') {
+      if (lastStatus === 'secondary') {
         window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
         window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+      } else if (lastStatus === 'direct') {
+        window.PRODUCTION_API_URL = window.RENDER_PRIMARY_DIRECT + '/api';
+        window.RENDER_BACKEND_URL = window.RENDER_PRIMARY_DIRECT;
       }
       return;
     }
@@ -241,13 +245,33 @@ window.RENDER_BACKEND_URL = activeBackend;
           localStorage.setItem('solmates_live_check_status', 'primary');
         } catch(e) {}
       } else {
-        throw new Error('Primary live check returned non-200');
+        throw new Error('Primary live check failed');
       }
     })
     .catch(() => {
-      console.warn('[BACKEND FAILOVER] Primary Render URL inactive. Auto-switching to Secondary!');
-      window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
-      window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+      fetch(window.BACKEND_SECONDARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3000) : undefined })
+        .then(res2 => {
+          if (res2.ok) {
+            console.warn('[BACKEND FAILOVER] Primary custom domain offline. Switched to Secondary Backup domain!');
+            window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
+            window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+            try {
+              localStorage.setItem('solmates_live_check_time', String(Date.now()));
+              localStorage.setItem('solmates_live_check_status', 'secondary');
+            } catch(e) {}
+          } else {
+            throw new Error('Secondary live check failed');
+          }
+        })
+        .catch(() => {
+          console.warn('[BACKEND FAILOVER] Both custom domains offline. Switched to Direct Render URL!');
+          window.PRODUCTION_API_URL = window.RENDER_PRIMARY_DIRECT + '/api';
+          window.RENDER_BACKEND_URL = window.RENDER_PRIMARY_DIRECT;
+          try {
+            localStorage.setItem('solmates_live_check_time', String(Date.now()));
+            localStorage.setItem('solmates_live_check_status', 'direct');
+          } catch(e) {}
+        });
     });
 })();
 
