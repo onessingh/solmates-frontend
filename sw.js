@@ -3,7 +3,7 @@
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v849';
+const CACHE_NAME = 'solmates-cache-v850';
 
 const STATIC_ASSETS = [
     '/notification.html',

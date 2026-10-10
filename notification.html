@@ -89,7 +89,7 @@
   <!-- socket.io loaded dynamically -->
   <script src="/js/api-client.js?v=v848" defer></script>
   <script src="/js/webview-fix.js?v=v848" defer></script>
-  <script src="/js/sol-cache.js?v=v849" defer></script>
+  <script src="/js/sol-cache.js?v=v850" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -2198,21 +2198,19 @@
       const nonMeritNotices = [];
       const meritNotices = [];
       
-      const isMeritList = (title) => {
-        const t = (title || '').toLowerCase();
-        if (t.includes('merit')) return true;
-        if (t.includes('discrepancy')) return true;
+      const isMeritList = (notice) => {
+        if (isLiveCheck(notice)) return false; // Live Classes are NEVER merit lists!
+        const t = (notice.title || '').toLowerCase();
+        if (t.includes('merit list') || t.includes('merit-list')) return true;
+        if (t.includes('discrepancy list')) return true;
         if (t.includes('ur list')) return true;
-        if (t.includes('pwbd')) return true;
-        if (t.includes('ews')) return true;
-        if (t.includes('ward')) return true;
-        if (t.includes('armed forces')) return true;
-        if (t.match(/\b(emp|obc|sc|st|cw|ur)\b/)) return true;
+        if (/\b(pwbd|ews|armed forces)\b/i.test(t)) return true;
+        if (/\bward of\b/i.test(t) || /\bward list\b/i.test(t) || /\bward\b/i.test(t)) return true;
         return false;
       };
 
       finalNoticesArray.forEach(n => {
-        if (isMeritList(n.title)) meritNotices.push(n);
+        if (isMeritList(n)) meritNotices.push(n);
         else nonMeritNotices.push(n);
       });
       const finalNotices = nonMeritNotices.concat(meritNotices);
