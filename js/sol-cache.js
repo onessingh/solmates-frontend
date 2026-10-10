@@ -86,8 +86,8 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v850)
-    const SNAPSHOT_CACHE_VER = 'v850_instant_update';
+    // Automatic Purge of Old Cache Snapshots (v851)
+    const SNAPSHOT_CACHE_VER = 'v851_nuclear_purge';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         localStorage.removeItem('_sol_all_content_data');
         localStorage.removeItem('_sol_all_content_etag');
