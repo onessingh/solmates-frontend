@@ -207,73 +207,14 @@ window.addEventListener('afterprint', function() {
 window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
 window.BACKEND_SECONDARY_URL = 'https://api-backup.solmates.in';
 
-// Direct Render Fallbacks for Emergency Failover
-window.RENDER_PRIMARY_DIRECT = 'https://solmates-backend-f9rl.onrender.com';
-window.RENDER_SECONDARY_DIRECT = 'https://solmates-backend-w27e.onrender.com';
+// Active Backend Selection — Always use Cloudflare Custom Domain for Edge Caching
+window.PRODUCTION_API_URL = window.BACKEND_PRIMARY_URL + '/api';
+window.RENDER_BACKEND_URL = window.BACKEND_PRIMARY_URL;
 
-// Active Backend Selection
-let activeBackend = window.BACKEND_PRIMARY_URL;
 try {
+  localStorage.removeItem('solmates_live_check_status');
   localStorage.setItem('solmates_active_backend', window.BACKEND_PRIMARY_URL);
 } catch(e) {}
-
-window.PRODUCTION_API_URL = activeBackend + '/api';
-window.RENDER_BACKEND_URL = activeBackend;
-
-// Smart Health Check Failover (3-Tier: Primary Custom -> Secondary Custom -> Direct Render)
-(function() {
-  try {
-    const lastCheck = localStorage.getItem('solmates_live_check_time');
-    const lastStatus = localStorage.getItem('solmates_live_check_status');
-    if (lastCheck && (Date.now() - parseInt(lastCheck, 10)) < 10 * 60 * 1000) {
-      if (lastStatus === 'secondary') {
-        window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
-        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
-      } else if (lastStatus === 'direct') {
-        window.PRODUCTION_API_URL = window.RENDER_PRIMARY_DIRECT + '/api';
-        window.RENDER_BACKEND_URL = window.RENDER_PRIMARY_DIRECT;
-      }
-      return;
-    }
-  } catch(e) {}
-
-  fetch(window.BACKEND_PRIMARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined })
-    .then(res => {
-      if (res.ok) {
-        try {
-          localStorage.setItem('solmates_live_check_time', String(Date.now()));
-          localStorage.setItem('solmates_live_check_status', 'primary');
-        } catch(e) {}
-      } else {
-        throw new Error('Primary live check failed');
-      }
-    })
-    .catch(() => {
-      fetch(window.BACKEND_SECONDARY_URL + '/api/live', { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(3000) : undefined })
-        .then(res2 => {
-          if (res2.ok) {
-            console.warn('[BACKEND FAILOVER] Primary custom domain offline. Switched to Secondary Backup domain!');
-            window.PRODUCTION_API_URL = window.BACKEND_SECONDARY_URL + '/api';
-            window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
-            try {
-              localStorage.setItem('solmates_live_check_time', String(Date.now()));
-              localStorage.setItem('solmates_live_check_status', 'secondary');
-            } catch(e) {}
-          } else {
-            throw new Error('Secondary live check failed');
-          }
-        })
-        .catch(() => {
-          console.warn('[BACKEND FAILOVER] Both custom domains offline. Switched to Direct Render URL!');
-          window.PRODUCTION_API_URL = window.RENDER_PRIMARY_DIRECT + '/api';
-          window.RENDER_BACKEND_URL = window.RENDER_PRIMARY_DIRECT;
-          try {
-            localStorage.setItem('solmates_live_check_time', String(Date.now()));
-            localStorage.setItem('solmates_live_check_status', 'direct');
-          } catch(e) {}
-        });
-    });
-})();
 
 // For local development, comment out the line above and api-client.js
 // will auto-detect localhost:3000 automatically.
