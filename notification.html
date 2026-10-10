@@ -96,8 +96,8 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '126.0';
-        const currentVersion = '126.0';
+        window.SOL_APP_VERSION = '128.0';
+        const currentVersion = '128.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -1593,37 +1593,37 @@
 
     <div id="sem0" class="notification-list">
       <div class="empty-state">
-        <i class="fas fa-bell-slash"></i>
-        <p>No general notifications found</p>
+        <i class="fas fa-spinner fa-spin" style="color: var(--brand-primary); font-size: 24px; margin-bottom: 8px;"></i>
+        <p>Loading notifications...</p>
       </div>
     </div>
 
     <div id="sem1" class="notification-list active">
       <!-- Cards will be dynamically inserted here -->
       <div class="empty-state">
-        <i class="fas fa-bell-slash"></i>
-        <p>No new notifications for Semester 1</p>
+        <i class="fas fa-spinner fa-spin" style="color: var(--brand-primary); font-size: 24px; margin-bottom: 8px;"></i>
+        <p>Loading notifications...</p>
       </div>
     </div>
 
     <div id="sem2" class="notification-list">
       <div class="empty-state">
-        <i class="fas fa-bell-slash"></i>
-        <p>No new notifications for Semester 2</p>
+        <i class="fas fa-spinner fa-spin" style="color: var(--brand-primary); font-size: 24px; margin-bottom: 8px;"></i>
+        <p>Loading notifications...</p>
       </div>
     </div>
 
     <div id="sem3" class="notification-list">
       <div class="empty-state">
-        <i class="fas fa-bell-slash"></i>
-        <p>No new notifications for Semester 3</p>
+        <i class="fas fa-spinner fa-spin" style="color: var(--brand-primary); font-size: 24px; margin-bottom: 8px;"></i>
+        <p>Loading notifications...</p>
       </div>
     </div>
 
     <div id="sem4" class="notification-list">
       <div class="empty-state">
-        <i class="fas fa-bell-slash"></i>
-        <p>No new notifications for Semester 4</p>
+        <i class="fas fa-spinner fa-spin" style="color: var(--brand-primary); font-size: 24px; margin-bottom: 8px;"></i>
+        <p>Loading notifications...</p>
       </div>
     </div>
   </div>
@@ -1868,9 +1868,9 @@
         }
       }
 
-      // Only show spinner if we have absolutely no data to show
-      if (!cached && list && list.children.length === 0) {
-        list.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading notifications...</p></div>';
+      // Show spinner if we have no cached data rendered or on forceRefresh
+      if ((!cached || forceRefresh) && list && !list.querySelector('.notification-card')) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin" style="color: var(--brand-primary); font-size: 24px; margin-bottom: 8px;"></i><p>Loading notifications...</p></div>';
       }
 
       try {
@@ -2406,7 +2406,8 @@
           setTimeout(() => badges.forEach(b => b.remove()), 500);
         }, 2000);
       } else {
-        list.innerHTML = `<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No new notifications found.</p></div>`;
+        const semLabel = semester === 0 ? 'General' : `Semester ${semester}`;
+        list.innerHTML = `<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No new notifications for ${semLabel}</p></div>`;
       }
     }
 
