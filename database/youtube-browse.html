@@ -28,8 +28,8 @@
     try {
       var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
       if (!_store) return;
-      window.SOL_APP_VERSION = '126.0';
-      const currentVersion = '126.0';
+      window.SOL_APP_VERSION = '127.0';
+      const currentVersion = '127.0';
       const savedVersion = _store.getItem('sol_app_version_yt');
 
       if (savedVersion !== currentVersion) {
@@ -1494,6 +1494,12 @@
 
     // -- Subject View ----------------------------------------------------------
     async function loadSubjects(sem, isPopState = false) {
+      const s = parseInt(sem);
+      if (isNaN(s) || s < 1 || s > 4) {
+        showSemesters(isPopState);
+        return;
+      }
+      sem = s;
       const now = Date.now();
       if (isNavigating && (now - lastNavTime < 2500)) return;
       isNavigating = true;
@@ -1759,8 +1765,9 @@
     // -- Browser Navigation ---------------------------------------------------
     window.onpopstate = function (event) {
       const state = event.state;
-      if (state && state.view === 'subjects') {
-        loadSubjects(state.semester, true);
+      const sem = state ? parseInt(state.semester) : NaN;
+      if (state && state.view === 'subjects' && !isNaN(sem) && sem >= 1 && sem <= 4) {
+        loadSubjects(sem, true);
       } else {
         showSemesters(true);
       }
@@ -1776,7 +1783,7 @@
 
     // -- Init ------------------------------------------------------------------
     async function init() {
-      // ?? WAIT for API status with safe checks
+      // WAIT for API status with safe checks
       try {
         let retry = 0;
         while (retry < 5) {
@@ -1791,17 +1798,24 @@
       await new Promise(r => setTimeout(r, 100)); // Final buffer
 
       const urlParams = new URLSearchParams(window.location.search);
-      const initSem = parseInt(urlParams.get('semester'));
+      const rawSem = urlParams.get('semester');
+      const initSem = parseInt(rawSem);
 
       // Check admin early for bar visibility
       if (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) {
-        document.getElementById('adminBar').classList.add('visible');
+        const adminBar = document.getElementById('adminBar');
+        if (adminBar) adminBar.classList.add('visible');
       }
 
-      if (initSem >= 1 && initSem <= 4) {
-        loadSubjects(initSem, true);
-      } else {
+      if (rawSem === 'undefined' || rawSem === 'null' || isNaN(initSem) || initSem < 1 || initSem > 4) {
+        if (rawSem !== null) {
+          const url = new URL(window.location);
+          url.searchParams.delete('semester');
+          window.history.replaceState({ view: 'semesters' }, '', url);
+        }
         showSemesters(true);
+      } else {
+        loadSubjects(initSem, true);
       }
     }
 
