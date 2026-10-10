@@ -795,8 +795,23 @@
       await loadContent();
     }
 
+    window.addEventListener('sol:cache_invalidated', () => {
+      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+      if (semester) { if (typeof loadContent === 'function') loadContent(); }
+      else { if (typeof renderSemesters === 'function') renderSemesters(true); }
+    });
+    window.addEventListener('sol:content-updated', () => {
+      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+      if (semester) { if (typeof loadContent === 'function') loadContent(); }
+      else { if (typeof renderSemesters === 'function') renderSemesters(true); }
+    });
+
     async function loadContent() {
       if (isReorderMode) return;
+      if (!semester) {
+        renderSemesters(true);
+        return;
+      }
       const grid = document.getElementById('grid');
       grid.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
       try {
@@ -832,15 +847,6 @@
       }
     }
     window.loadContent = loadContent;
-
-    window.addEventListener('sol:cache_invalidated', () => {
-      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-      if (typeof loadContent === 'function') loadContent();
-    });
-    window.addEventListener('sol:content-updated', () => {
-      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-      if (typeof loadContent === 'function') loadContent();
-    });
 
     function renderGrid(folders, items) {
       const isAdmin = window.solmatesAPI.isAdminLoggedIn();
