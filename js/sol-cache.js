@@ -86,8 +86,8 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v854)
-    const SNAPSHOT_CACHE_VER = 'v854_instant_fresh';
+    // Automatic Purge of Old Cache Snapshots (v856)
+    const SNAPSHOT_CACHE_VER = 'v856_purge_legacy_snapshots_now';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -250,6 +250,10 @@
     };
 
     window.SOL_CACHE = SOL_CACHE;
+
+    window.addEventListener('sol:cache_invalidated', () => {
+        if (window.SOL_CACHE) window.SOL_CACHE.clear();
+    });
 
     // Cross-tab admin mutation listener (debounced)
     let _storageMutationTimer = null;
