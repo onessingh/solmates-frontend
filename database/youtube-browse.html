@@ -1374,11 +1374,28 @@
       "MANAGEMENT OF INFORMATION SYSTEMS"
     ];
 
-    const SEMESTER_SUBJECTS = { 1: SEM1_SUBJECTS, 2: SEM2_SUBJECTS };
+    const SEM3_SUBJECTS = [
+      "BUSINESS ETHICS AND SUSTAINABILITY",
+      "STRATEGIC ANALYSIS",
+      "ENTREPRENEURSHIP CREATIVITY AND INNOVATION",
+      "MARKETING MANAGEMENT",
+      "FINANCIAL MANAGEMENT",
+      "HUMAN RESOURCE MANAGEMENT"
+    ];
+
+    const SEM4_SUBJECTS = [
+      "STRATEGIC MANAGEMENT",
+      "PROJECT MANAGEMENT",
+      "INTERNATIONAL BUSINESS",
+      "DIGITAL MARKETING AND E-COMMERCE"
+    ];
+
+    const SEMESTER_SUBJECTS = { 1: SEM1_SUBJECTS, 2: SEM2_SUBJECTS, 3: SEM3_SUBJECTS, 4: SEM4_SUBJECTS };
     const SEM_ORDINAL = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
     const SEM_ICONS = { 1: 'fas fa-graduation-cap', 2: 'fas fa-book-open', 3: 'fas fa-chart-line', 4: 'fas fa-trophy' };
     let currentSemester = null;
     let isNavigating = false;
+    let lastNavTime = 0;
     const urlParams = new URLSearchParams(window.location.search);
     const CATEGORY = urlParams.get('category') || 'youtube';
     // Update title for Healthcare
@@ -1390,11 +1407,9 @@
       document.title = 'Healthcare YouTube Videos - SOLMATES';
     }
 
-
-
     // Subject icons based on keywords
     function getSubjectIcon(name) {
-      const n = name.toUpperCase();
+      const n = (name || '').toUpperCase();
       if (n.includes('ACCOUNT') || n.includes('FINANCE') || n.includes('ECONOMIC')) return 'fas fa-coins';
       if (n.includes('MARKETING') || n.includes('SALES')) return 'fas fa-bullhorn';
       if (n.includes('HR') || n.includes('HUMAN RESOURCE') || n.includes('ORGANISATION')) return 'fas fa-users';
@@ -1410,16 +1425,16 @@
 
     // -- Semester View ---------------------------------------------------------
     async function showSemesters(isPopState = false) {
-      if (isNavigating) return;
+      isNavigating = false;
       currentSemester = null;
 
       const semView = document.getElementById('semView');
       const subjectView = document.getElementById('subjectView');
       const loadingState = document.getElementById('loadingState');
 
-      semView.style.display = 'block';
-      subjectView.style.display = 'none';
-      loadingState.style.display = 'none';
+      if (semView) semView.style.display = 'block';
+      if (subjectView) subjectView.style.display = 'none';
+      if (loadingState) loadingState.style.display = 'none';
 
       // Update Header Text
       const backBtn = document.getElementById('headerBackBtn');
@@ -1432,32 +1447,34 @@
         window.history.pushState({ view: 'semesters' }, '', url);
       }
 
-      document.getElementById('breadcrumb').innerHTML = `
-      <span onclick="window.location='/database'">Database</span>
-      <i class="fas fa-chevron-right"></i>
-      <span class="current">YouTube Videos</span>
-    `;
-
-      const grid = document.getElementById('semGrid');
-      // We now use static HTML cards for semesters for maximum stability.
-      // Logic below just ensures the view state is correct.
+      const bc = document.getElementById('breadcrumb');
+      if (bc) {
+        bc.innerHTML = `
+        <span onclick="window.location='/database'">Database</span>
+        <i class="fas fa-chevron-right"></i>
+        <span class="current">YouTube Videos</span>
+      `;
+      }
     }
 
 
     // -- Subject View ----------------------------------------------------------
     async function loadSubjects(sem, isPopState = false) {
-      if (isNavigating) return;
+      const now = Date.now();
+      if (isNavigating && (now - lastNavTime < 2500)) return;
       isNavigating = true;
+      lastNavTime = now;
       currentSemester = sem;
 
       const loadingState = document.getElementById('loadingState');
       const semView = document.getElementById('semView');
       const subjectView = document.getElementById('subjectView');
       const subjectGrid = document.getElementById('subjectGrid');
-        subjectGrid.innerHTML = '';
-        semView.style.display = 'none';
-        subjectView.style.display = 'none';
-        loadingState.style.display = 'block';
+      
+      if (subjectGrid) subjectGrid.innerHTML = '';
+      if (semView) semView.style.display = 'none';
+      if (subjectView) subjectView.style.display = 'none';
+      if (loadingState) loadingState.style.display = 'block';
 
       // Update History only if not from popstate
       if (!isPopState) {
@@ -1467,30 +1484,36 @@
       }
 
       // Breadcrumbs
-      document.getElementById('breadcrumb').innerHTML = `
-      <a href="/database" class="bc-item home"><i class="fas fa-home"></i> Database</a>
-      <i class="fas fa-chevron-right bc-sep"></i>
-      <a href="javascript:void(0)" onclick="showSemesters()" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
-      <i class="fas fa-chevron-right bc-sep"></i>
-      <span class="bc-item current"><i class="fas fa-layer-group"></i> Semester ${sem}</span>
-    `;
-
-      // ? STEP 1: Cache Render
-      const cKey = `folders_${CATEGORY}_${sem}_root_true`;
-      const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(cKey) : null;
-      if (cFolders && cFolders.data) {
-        renderGridSafe(sem, cFolders.data, true);
+      const bc = document.getElementById('breadcrumb');
+      if (bc) {
+        bc.innerHTML = `
+        <a href="/database" class="bc-item home"><i class="fas fa-home"></i> Database</a>
+        <i class="fas fa-chevron-right bc-sep"></i>
+        <a href="javascript:void(0)" onclick="showSemesters()" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
+        <i class="fas fa-chevron-right bc-sep"></i>
+        <span class="bc-item current"><i class="fas fa-layer-group"></i> Semester ${sem}</span>
+      `;
       }
 
-      // ? STEP 2: Fresh Render
       try {
-        const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, false, true);
-        const folders = (semRes && semRes.data) ? semRes.data : [];
+        // STEP 1: Cache Render
+        const cKey = `folders_${CATEGORY}_${sem}_root_true`;
+        const cFolders = (window.solmatesAPI && typeof window.solmatesAPI.getCache === 'function') ? window.solmatesAPI.getCache(cKey) : null;
+        if (cFolders && cFolders.data) {
+          renderGridSafe(sem, cFolders.data, true);
+        }
+
+        // STEP 2: Fresh Render
+        let folders = [];
+        if (window.solmatesAPI && typeof window.solmatesAPI.getSOLFolders === 'function') {
+          const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, sem, null, false, true);
+          folders = (semRes && semRes.data) ? semRes.data : [];
+        }
         renderGridSafe(sem, folders, false);
       } catch (e) {
         console.warn('Refresh failed:', e.message);
       } finally {
-        loadingState.style.display = 'none';
+        if (loadingState) loadingState.style.display = 'none';
         isNavigating = false;
       }
     }
@@ -1500,20 +1523,22 @@
       const loadingState = document.getElementById('loadingState');
       const subjectView = document.getElementById('subjectView');
       
-      subjectView.style.display = 'block';
-      document.getElementById('subjectLabel').innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
+      if (subjectView) subjectView.style.display = 'block';
+      const subjectLabel = document.getElementById('subjectLabel');
+      if (subjectLabel) subjectLabel.innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
 
-      // De-Dupe & Merge Templates — Filter root-level subject folders only
-      const rootFoldersOnly = folders.filter(f => !f.parentId || f.parentId === 'root');
+      const safeFolders = Array.isArray(folders) ? folders : [];
+      const rootFoldersOnly = safeFolders.filter(f => f && (!f.parentId || f.parentId === 'root'));
       let subjects = [...rootFoldersOnly];
-      if (CATEGORY === 'youtube' && SEMESTER_SUBJECTS[sem]) {
+
+      if (SEMESTER_SUBJECTS[sem]) {
         SEMESTER_SUBJECTS[sem].forEach(name => {
-          if (!subjects.find(f => (f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim() === name.toUpperCase().trim())) {
+          if (!subjects.find(f => (f && f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim() === name.toUpperCase().trim())) {
             subjects.push({ id: null, name, _virtual: true });
           }
         });
       }
-      subjects.sort((a, b) => a.name.localeCompare(b.name));
+      subjects.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
       if (isAdmin) document.getElementById('adminBar').classList.add('visible');
