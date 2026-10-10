@@ -529,8 +529,8 @@ class SolmatesAPI {
   }
   _cacheClear(prefix) {
     try {
-      // If no prefix, clear ALL solcache items
-      // Otherwise clear items starting with the prefix (e.g. content_ or folders_)
+      if (this.ttlCache) this.ttlCache.clear();
+      if (this.inFlightRequests) this.inFlightRequests.clear();
       const searchPrefix = prefix ? 'solcache_v3_' + prefix : 'solcache_v3_';
       Object.keys(sessionStorage).forEach(k => {
         if (k.startsWith(searchPrefix)) sessionStorage.removeItem(k);
