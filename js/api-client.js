@@ -513,7 +513,7 @@ class SolmatesAPI {
       const raw = sessionStorage.getItem('solcache_v3_' + key);
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      if (!parsed || !parsed.data) return null;
+      if (!parsed || !parsed.data || parsed.data._bulk) return null;
       // 15-second strict TTL check
       if (parsed.ts && (Date.now() - parsed.ts > 15000)) {
         sessionStorage.removeItem('solcache_v3_' + key);

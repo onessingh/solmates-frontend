@@ -29,51 +29,8 @@
      * Helper to populate API client's cache from bulk payload
      */
     function _applyBulkToAPIClient(data) {
-        if (!data || !data.success || !window.solmatesAPI || !window.solmatesAPI.setCache) return false;
-        if (window._sol_bulk_applied_data === data) return true; // Already applied
-
-        // 1. Sync Categories Data
-        if (data.categories) {
-            for (const [cat, items] of Object.entries(data.categories)) {
-                const groups = {}; // key: `sem_folderId`
-                items.forEach(item => {
-                    const sem = String(item.semester);
-                    const fid = item.folderId || 'root';
-                    const gkey = `${sem}__${fid}`;
-                    if (!groups[gkey]) groups[gkey] = [];
-                    groups[gkey].push(item);
-                });
-
-                for (const [gkey, bucket] of Object.entries(groups)) {
-                    const sepIdx = gkey.indexOf('__');
-                    const sem = gkey.substring(0, sepIdx);
-                    const fid = gkey.substring(sepIdx + 2);
-                    const ckey = `content_${cat}_${sem}_${fid}`;
-                    window.solmatesAPI.setCache(ckey, {
-                        success: true,
-                        data: bucket,
-                        _bulk: true
-                    });
-                }
-            }
-        }
-
-        // 2. Sync Folders Data
-        if (data.folders && Array.isArray(data.folders)) {
-            const folderGroups = {}; // category_semester_parentId
-            data.folders.forEach(f => {
-                const key = `${f.category}_${f.semester}_${f.parentId || 'root'}`;
-                if (!folderGroups[key]) folderGroups[key] = [];
-                folderGroups[key].push(f);
-            });
-
-            for (const [key, fList] of Object.entries(folderGroups)) {
-                window.solmatesAPI.setCache(`folders_${key}`, { success: true, data: fList, _bulk: true });
-            }
-        }
-
-        window._sol_bulk_applied_data = data;
-        return true;
+        // v856: Disabled bulk snapshot poisoning so API client always fetches fresh live database content
+        return false;
     }
 
     function populateMemoryCache(data) {
