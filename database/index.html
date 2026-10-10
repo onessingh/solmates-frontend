@@ -1871,6 +1871,19 @@ async function loadAwareness() {
     if (isAdmin) list.innerHTML = '<p style="color:#ef4444;font-size:13px;padding:10px 0;">Error: ' + err.message + '</p>';
   }
 }
+window.loadAwareness = loadAwareness;
+window.addEventListener('sol:cache_invalidated', () => {
+  if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+  if (typeof loadAwareness === 'function') loadAwareness();
+  if (typeof checkHcLockState === 'function') checkHcLockState();
+  if (typeof initMbaSectionLocks === 'function') initMbaSectionLocks();
+});
+window.addEventListener('sol:content-updated', () => {
+  if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+  if (typeof loadAwareness === 'function') loadAwareness();
+  if (typeof checkHcLockState === 'function') checkHcLockState();
+  if (typeof initMbaSectionLocks === 'function') initMbaSectionLocks();
+});
 
 async function deleteAw(id, btnElem) {
   if(!confirm("Remove this alert?")) return;

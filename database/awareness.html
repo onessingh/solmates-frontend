@@ -1188,6 +1188,15 @@ async function loadAlerts() {
     countEl.textContent = 'Error';
   }
 }
+window.loadAlerts = loadAlerts;
+window.addEventListener('sol:cache_invalidated', () => {
+  if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+  if (typeof loadAlerts === 'function') loadAlerts();
+});
+window.addEventListener('sol:content-updated', () => {
+  if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+  if (typeof loadAlerts === 'function') loadAlerts();
+});
 
   window.currentFilterValue = 'all';
 

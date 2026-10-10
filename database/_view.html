@@ -824,6 +824,16 @@
         grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
       }
     }
+    window.loadContent = loadContent;
+
+    window.addEventListener('sol:cache_invalidated', () => {
+      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+      if (typeof loadContent === 'function') loadContent();
+    });
+    window.addEventListener('sol:content-updated', () => {
+      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+      if (typeof loadContent === 'function') loadContent();
+    });
 
     function renderGrid(folders, items) {
       const isAdmin = window.solmatesAPI.isAdminLoggedIn();

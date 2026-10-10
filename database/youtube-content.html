@@ -2671,6 +2671,14 @@
             resetAndLoad();
           }
         });
+        window.addEventListener('sol:cache_invalidated', () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          resetAndLoad();
+        });
+        window.addEventListener('sol:content-updated', () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          resetAndLoad();
+        });
         
         // Progress Listener for Admins
         sock.on('sol:import_progress', (data) => {

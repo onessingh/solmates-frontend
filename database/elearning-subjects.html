@@ -1472,6 +1472,16 @@
             document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating'));
         });
 
+        window.loadSubjects = init;
+        window.addEventListener('sol:cache_invalidated', () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          init();
+        });
+        window.addEventListener('sol:content-updated', () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          init();
+        });
+
         init();
     </script>
 

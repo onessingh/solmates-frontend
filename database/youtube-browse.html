@@ -1752,6 +1752,18 @@
       init();
     }
 
+    window.loadSubjects = () => { if (currentSemester) loadSubjects(currentSemester); else showSemesters(true); };
+    window.addEventListener('sol:cache_invalidated', () => {
+      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+      if (currentSemester) loadSubjects(currentSemester);
+      else showSemesters(true);
+    });
+    window.addEventListener('sol:content-updated', () => {
+      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+      if (currentSemester) loadSubjects(currentSemester);
+      else showSemesters(true);
+    });
+
     // Reset flag when page is shown (handles Back button / Bfcache)
     window.addEventListener('pageshow', (event) => {
       isNavigating = false;

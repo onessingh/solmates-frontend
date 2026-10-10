@@ -2513,9 +2513,22 @@
 
         socket.on('content:updated', (data) => {
           if (data.type === 'notifications' || data.type === 'classes') {
+            if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
             fetchNotifications(currentSemester);
           }
         });
+
+        socket.on('sol:cache_invalidated', (data) => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          fetchNotifications(currentSemester);
+        });
+
+        window.loadNotifications = () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          fetchNotifications(currentSemester);
+        };
+        window.addEventListener('sol:cache_invalidated', window.loadNotifications);
+        window.addEventListener('sol:content-updated', window.loadNotifications);
 
         socket.on('connect', () => console.log('[REALTIME] Connected to status stream'));
 

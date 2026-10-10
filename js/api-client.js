@@ -1034,6 +1034,22 @@ window.addConnectionStatusDot = function (socket) {
     } catch(e) {}
   }
 
+  // --- Universal Real-Time Live Re-Render Listener for ALL Database Pages ---
+  const triggerPageRefresh = () => {
+    try {
+      if (typeof window.loadContent === 'function') window.loadContent();
+      if (typeof window.loadData === 'function') window.loadData();
+      if (typeof window.loadNotifications === 'function') window.loadNotifications();
+      if (typeof window.loadSubjects === 'function') window.loadSubjects();
+      if (typeof window.loadDataFromAPI === 'function') window.loadDataFromAPI();
+      if (typeof window.loadAlerts === 'function') window.loadAlerts();
+      if (typeof window.loadAwareness === 'function') window.loadAwareness();
+    } catch (e) {}
+  };
+
+  window.addEventListener('sol:cache_invalidated', triggerPageRefresh);
+  window.addEventListener('sol:content-updated', triggerPageRefresh);
+
   if (typeof window.io !== 'undefined') {
     startSocket(window.io);
   } else if (typeof document !== 'undefined' && document.head) {
