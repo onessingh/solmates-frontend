@@ -175,9 +175,15 @@ class SolmatesAPI {
       return reqPromise;
     }
 
-    // Mutations (POST/PUT/DELETE) clear short TTL cache
+    // Mutations (POST/PUT/DELETE) clear short TTL cache and in-flight requests AFTER mutation completes
     if (method !== 'GET') {
+      const result = await this._executeRequest(endpoint, options, timeoutMs);
       this.ttlCache.clear();
+      this.inFlightRequests.clear();
+      if (typeof this._cacheClear === 'function') {
+        this._cacheClear('');
+      }
+      return result;
     }
 
     return this._executeRequest(endpoint, options, timeoutMs);
@@ -204,15 +210,19 @@ class SolmatesAPI {
       headers['Authorization'] = `Bearer ${this.adminToken}`;
     }
 
-    // No custom cache-buster to allow CDN/Cloudflare to actually do its job
     let url = `${this.baseURL}${endpoint}`;
 
     const config = {
       ...options,
       headers,
       signal: controller.signal,
-      // Don't set cache-control headers - let browser handle it
     };
+
+    const isGet = !options.method || options.method.toUpperCase() === 'GET';
+    if (isGet && this.adminToken && !options.skipAuth) {
+      config.cache = 'no-store'; // browser HTTP cache bypass
+      url += (url.includes('?') ? '&' : '?') + '_a=' + Date.now(); // edge cache bypass for admin
+    }
 
     try {
       const response = await fetch(url, config);
