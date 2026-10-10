@@ -119,6 +119,7 @@ class SolmatesAPI {
     this.adminToken = localStorage.getItem('solmates_admin_token');
     this.inFlightRequests = new Map();
     this.ttlCache = new Map(); // 30s Short Memory TTL Cache
+    this._cacheClear(''); // Wipe old sessionStorage/local cache on client init
 
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       console.log('✅ API Client initialized:', this.baseURL);
