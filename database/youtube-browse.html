@@ -23,6 +23,40 @@
 })();
 </script>
 
+<script>
+  (async function() {
+    try {
+      var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
+      if (!_store) return;
+      window.SOL_APP_VERSION = '126.0';
+      const currentVersion = '126.0';
+      const savedVersion = _store.getItem('sol_app_version_yt');
+
+      if (savedVersion !== currentVersion) {
+        if (sessionStorage.getItem('sol_yt_update_in_progress')) return;
+        sessionStorage.setItem('sol_yt_update_in_progress', '1');
+
+        _store.setItem('sol_app_version_yt', currentVersion);
+        try {
+          Object.keys(localStorage).forEach(k => {
+            if (k.startsWith('folders_youtube') || k.startsWith('solcache_') || k.startsWith('_sol_')) {
+              localStorage.removeItem(k);
+            }
+          });
+        } catch(e) {}
+        if ('caches' in window) {
+          const names = await caches.keys();
+          await Promise.all(names.map(function(n) { return caches.delete(n); }));
+        }
+        location.reload();
+      } else {
+        try { localStorage.setItem('sol_app_version_yt', currentVersion); } catch(e) {}
+        sessionStorage.removeItem('sol_yt_update_in_progress');
+      }
+    } catch(e) {}
+  })();
+</script>
+
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
@@ -1777,7 +1811,8 @@
       init();
     }
 
-    window.loadSubjects = () => { if (currentSemester) loadSubjects(currentSemester); else showSemesters(true); };
+    window.loadSubjects = loadSubjects;
+    window.refreshSubjects = () => { if (currentSemester) loadSubjects(currentSemester); else showSemesters(true); };
     window.addEventListener('sol:cache_invalidated', () => {
       if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
       if (currentSemester) loadSubjects(currentSemester);
