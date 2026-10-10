@@ -96,8 +96,8 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '124.0';
-        const currentVersion = '124.0';
+        window.SOL_APP_VERSION = '126.0';
+        const currentVersion = '126.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -1835,15 +1835,31 @@
     let lastAllFetchTime = 0;
     const ALL_FETCH_COOLDOWN = 5000; // 5 seconds
 
-    async function fetchNotifications(semester) {
+    function purgeNotificationCaches() {
+      for (let i = 0; i <= 4; i++) {
+        localStorage.removeItem(`cached_notices_sem${i}`);
+        localStorage.removeItem(`cached_notices_sem${i}_time`);
+      }
+      fetchAllPromise = null;
+      lastAllFetchTime = 0;
+      if (window.solmatesAPI && typeof window.solmatesAPI._cacheClear === 'function') {
+        window.solmatesAPI._cacheClear('');
+      }
+    }
+
+    async function fetchNotifications(semester, forceRefresh = false) {
       const cacheKey = `cached_notices_sem${semester}`;
       const list = document.getElementById(`sem${semester}`);
+
+      if (forceRefresh) {
+        purgeNotificationCaches();
+      }
+
       const cached = safeJSONParse(localStorage.getItem(cacheKey), null);
-
       const now = Date.now();
-      const needsFetch = (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
+      const needsFetch = forceRefresh || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
 
-      if (cached) {
+      if (cached && !forceRefresh) {
         console.log(`[NOTIFICATIONS] Sem ${semester}: Loading from cache...`);
         renderNotices(cached, semester);
         if (!needsFetch) {
@@ -1853,18 +1869,27 @@
       }
 
       // Only show spinner if we have absolutely no data to show
-      if (!cached && list.children.length === 0) {
+      if (!cached && list && list.children.length === 0) {
         list.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading notifications...</p></div>';
       }
 
       try {
-        if (!fetchAllPromise) {
+        if (!fetchAllPromise || forceRefresh) {
           fetchAllPromise = (async () => {
             console.log('[NOTIFICATIONS] Fetching all notifications in bulk...');
             // [v816.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
-            const response = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all`, { signal: _fc.signal });
+            const _v = Math.floor(Date.now() / 5000);
+            const baseUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+            const response = await fetch(`${baseUrl}/sol/notifications/all?_v=${_v}`, { 
+              signal: _fc.signal,
+              cache: 'no-store',
+              headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+              }
+            });
             clearTimeout(_ft);
             if (response.status === 429) {
               throw new Error('Rate limited (429)');
@@ -1902,8 +1927,8 @@
 
       } catch (error) {
         console.error('Fetch bulk notifications error:', error);
-        if (cached && cached.length > 0) {
-          console.log(`[NOTIFICATIONS] ??? Preservation Guard active (API Error): Keeping ${cached.length} cached items.`);
+        if (cached && cached.length > 0 && !forceRefresh) {
+          console.log(`[NOTIFICATIONS] Preservation Guard active (API Error): Keeping ${cached.length} cached items.`);
           renderNotices(cached, semester);
         } else {
           renderNotices([], semester);
@@ -2512,20 +2537,29 @@
         });
 
         socket.on('content:updated', (data) => {
-          if (data.type === 'notifications' || data.type === 'classes') {
-            if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-            fetchNotifications(currentSemester);
+          if (!data || data.type === 'notifications' || data.type === 'classes') {
+            purgeNotificationCaches();
+            fetchNotifications(currentSemester, true);
           }
         });
 
+        socket.on('sol:content_deleted', (data) => {
+          purgeNotificationCaches();
+          if (data && data.id) {
+            const card = document.getElementById(`notice-${data.id}`) || document.querySelector(`.notification-card[data-id="${data.id}"]`);
+            if (card) card.remove();
+          }
+          fetchNotifications(currentSemester, true);
+        });
+
         socket.on('sol:cache_invalidated', (data) => {
-          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-          fetchNotifications(currentSemester);
+          purgeNotificationCaches();
+          fetchNotifications(currentSemester, true);
         });
 
         window.loadNotifications = () => {
-          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-          fetchNotifications(currentSemester);
+          purgeNotificationCaches();
+          fetchNotifications(currentSemester, true);
         };
         window.addEventListener('sol:cache_invalidated', window.loadNotifications);
         window.addEventListener('sol:content-updated', window.loadNotifications);
@@ -3049,11 +3083,12 @@
       if (!confirm('Bhai, pakka delete karna hai?')) return;
       try {
         const res = await solmatesAPI.deleteSOLItem('notifications', semester, id);
-        if (res.success) {
-          // v74.7: Clear local cache for this semester to ensure the deleted item vanishes
-          localStorage.removeItem(`cached_notices_sem${semester}`);
+        if (res && res.success !== false) {
+          purgeNotificationCaches();
+          const card = document.getElementById(`notice-${id}`) || document.querySelector(`.notification-card[data-id="${id}"]`);
+          if (card) card.remove();
           alert('Notification deleted!');
-          location.reload();
+          fetchNotifications(semester, true);
         }
       } catch (err) {
         alert('Error deleting: ' + err.message);
@@ -3107,6 +3142,8 @@
              successCount++;
              btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${successCount}/${total} Deleted`;
              window.selectedNoticeIds.delete(noticeId);
+             const card = document.getElementById(`notice-${noticeId}`) || document.querySelector(`.notification-card[data-id="${noticeId}"]`);
+             if (card) card.remove();
           }
         } catch (e) {
           console.error(`[Bulk Delete Failed] ID: ${noticeId}`, e);
@@ -3118,9 +3155,7 @@
       // v83.23.1: Clear selection from session storage after deletion
       sessionStorage.setItem('sol_selected_notices', JSON.stringify(Array.from(window.selectedNoticeIds)));
       
-      const semMatches = document.querySelector('.tab-btn.active').getAttribute('onclick').match(/\d+/);
-      const sem = semMatches ? parseInt(semMatches[0]) : window.currentSemester;
-      localStorage.removeItem(`cached_notices_sem${sem}`);
+      purgeNotificationCaches();
       
       setTimeout(() => {
         btn.innerHTML = originalText;
@@ -3128,10 +3163,8 @@
         btn.style.opacity = '1';
         
         // Force fetch from server
-        activeRequests.delete(sem);
-        lastFetchTime[sem] = 0;
-        showTab(sem);
-      }, 2000);
+        fetchNotifications(window.currentSemester || 0, true);
+      }, 1000);
     }
 
           /* ========== NOTIFICATION TOGGLE UI LOGIC (v85.5) ========== */
