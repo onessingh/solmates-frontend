@@ -544,18 +544,11 @@ class SolmatesAPI {
   }
 
   // ========== SOL METHODS ==========
-  async getSOLContent(category, semester, folderId = null, skipCache = false) {
-    const ckey = `content_${category}_${semester}_${folderId || 'root'}`;
-    // SWR Logic: Only use blocking cache if NOT forced to skip
-    if (!skipCache) {
-        const cached = this.getCache(ckey);
-        if (cached) return cached;
-    }
+  async getSOLContent(category, semester, folderId = null, skipCache = true) {
     const params = new URLSearchParams();
     if (folderId) params.append('folderId', folderId);
     const queryString = params.toString();
     const result = await this.request(`/sol/${category}/${semester}${queryString ? '?' + queryString : ''}`);
-    if (result && result.success) this.setCache(ckey, result);
     return result;
   }
 
@@ -573,18 +566,12 @@ class SolmatesAPI {
   }
 
   // ========== FOLDER METHODS ==========
-  async getSOLFolders(category, semester, parentId = null, skipCache = false, all = false) {
-    const ckey = `folders_${category}_${semester}_${parentId || 'root'}_${all}`;
-    if (!skipCache) {
-      const cached = this.getCache(ckey);
-      if (cached) return cached;
-    }
+  async getSOLFolders(category, semester, parentId = null, skipCache = true, all = false) {
     const params = new URLSearchParams();
     if (parentId) params.append('parentId', parentId);
     if (all) params.append('all', 'true');
     const queryString = params.toString();
     const result = await this.request(`/sol/folders/${category}/${semester}${queryString ? '?' + queryString : ''}`);
-    if (result && result.success) this.setCache(ckey, result);
     return result;
   }
 
