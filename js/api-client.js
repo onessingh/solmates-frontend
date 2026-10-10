@@ -150,9 +150,10 @@ class SolmatesAPI {
     if (method === 'GET' && !options.force) {
       const reqKey = `${endpoint}`;
       
-      // 1. Check 30s Short TTL Cache
+      // 1. Check Short TTL Cache (3s for normal users, 0s for Admins)
+      const isLoggedAdmin = !!(this.adminToken || localStorage.getItem('solmates_admin_token'));
       const cached = this.ttlCache.get(reqKey);
-      if (cached && (Date.now() - cached.timestamp < 30000)) {
+      if (!isLoggedAdmin && cached && (Date.now() - cached.timestamp < 3000)) {
         return Promise.resolve(cached.data);
       }
 

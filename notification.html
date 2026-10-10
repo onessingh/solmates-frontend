@@ -63,11 +63,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v853" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v853" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v853">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v853">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v853">
+  <link rel="icon" href="/favicon.ico?v=v854" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v854" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v854">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v854">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v854">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -84,20 +84,20 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v853">
-  <script src="/config.js?v=v853" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v854">
+  <script src="/config.js?v=v854" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v853" defer></script>
-  <script src="/js/webview-fix.js?v=v853" defer></script>
-  <script src="/js/sol-cache.js?v=v853" defer></script>
+  <script src="/js/api-client.js?v=v854" defer></script>
+  <script src="/js/webview-fix.js?v=v854" defer></script>
+  <script src="/js/sol-cache.js?v=v854" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '123.0';
-        const currentVersion = '123.0';
+        window.SOL_APP_VERSION = '124.0';
+        const currentVersion = '124.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -3305,7 +3305,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=v853';
+        const swUrl = './sw.js?v=v854';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
@@ -3737,6 +3737,7 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
 <!-- ===== END ASK QUERY WIDGET ===== -->
 </body>
 </html>
+
 
 
 
