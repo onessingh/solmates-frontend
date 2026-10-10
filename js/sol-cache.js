@@ -86,16 +86,19 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v852)
-    const SNAPSHOT_CACHE_VER = 'v852_auto_update';
+    // Automatic Purge of Old Cache Snapshots (v853)
+    const SNAPSHOT_CACHE_VER = 'v853_nuclear_wipe';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
-        localStorage.removeItem('_sol_all_content_data');
-        localStorage.removeItem('_sol_all_content_etag');
-        localStorage.removeItem('_sol_last_fetch_timestamp');
-        localStorage.removeItem('solcache_live_classes');
         try {
+            Object.keys(localStorage).forEach(k => {
+                if (k.startsWith('cached_notices_') || k.startsWith('solcache_') || k.startsWith('_sol_')) {
+                    localStorage.removeItem(k);
+                }
+            });
             Object.keys(sessionStorage).forEach(k => {
-                if (k.startsWith('solcache_')) sessionStorage.removeItem(k);
+                if (k.startsWith('solcache_') || k.startsWith('cached_notices_')) {
+                    sessionStorage.removeItem(k);
+                }
             });
         } catch(e) {}
         localStorage.setItem('_sol_snapshot_ver', SNAPSHOT_CACHE_VER);
