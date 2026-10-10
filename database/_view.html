@@ -822,8 +822,8 @@
         }
 
         const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
-          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
+          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, true),
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, true)
         ]);
         renderGrid(fRes.data || [], iRes.data || []);
       } catch (e) {

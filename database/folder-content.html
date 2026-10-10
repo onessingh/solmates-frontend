@@ -1582,10 +1582,10 @@
       try {
         // Step 2: Background Refresh (Silent)
         const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
+          window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null),
           isEBook
-            ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false).catch(() => null)
-            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
+            ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', true).catch(() => null)
+            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, true).catch(() => null)
         ]);
 
         if (fRes?.data || iRes?.data) {
