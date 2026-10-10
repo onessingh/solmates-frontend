@@ -86,8 +86,8 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v851)
-    const SNAPSHOT_CACHE_VER = 'v851_nuclear_purge';
+    // Automatic Purge of Old Cache Snapshots (v852)
+    const SNAPSHOT_CACHE_VER = 'v852_auto_update';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         localStorage.removeItem('_sol_all_content_data');
         localStorage.removeItem('_sol_all_content_etag');
@@ -99,6 +99,22 @@
             });
         } catch(e) {}
         localStorage.setItem('_sol_snapshot_ver', SNAPSHOT_CACHE_VER);
+    }
+
+    // Auto Service Worker Revalidator & Instant Cache Update for all devices
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(reg => {
+                reg.update();
+            });
+        }).catch(() => {});
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                refreshing = true;
+                window.location.reload();
+            }
+        });
     }
 
     // Instant Warm Up from LocalStorage (Async / Non-blocking)
