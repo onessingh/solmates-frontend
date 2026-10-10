@@ -1,9 +1,9 @@
 /**
- * SOLMATES Service Worker (v843 - ETag Direct Validation Enabled)
+ * SOLMATES Service Worker (v855 - ETag Direct Validation Enabled)
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v854';
+const CACHE_NAME = 'solmates-cache-v855';
 
 const STATIC_ASSETS = [
     '/notification.html',
