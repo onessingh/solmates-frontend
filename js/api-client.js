@@ -1009,6 +1009,9 @@ window.addConnectionStatusDot = function (socket) {
       function handleInvalidation(payload) {
         if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
           window.SOL_CACHE.clear();
+          if (typeof window.SOL_CACHE.prefetch === 'function') {
+            window.SOL_CACHE.prefetch(true);
+          }
         }
         if (window.solmatesAPI && typeof window.solmatesAPI._cacheClear === 'function') {
           window.solmatesAPI._cacheClear('');

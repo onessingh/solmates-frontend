@@ -2012,6 +2012,14 @@
             loadContent();
           }
         });
+        window.addEventListener('sol:cache_invalidated', () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          loadContent();
+        });
+        window.addEventListener('sol:content-updated', () => {
+          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
+          loadContent();
+        });
       } catch (e) { }
     })();
 
