@@ -96,31 +96,25 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '131.0';
-        const currentVersion = '131.0';
+        window.SOL_APP_VERSION = '132.0';
+        const currentVersion = '132.0';
         const savedVersion = _store.getItem('sol_app_version');
 
-        if (savedVersion && savedVersion !== currentVersion) {
-          if (sessionStorage.getItem('sol_update_in_progress')) return;
-          sessionStorage.setItem('sol_update_in_progress', '1');
-
+        // Always purge cached notices on startup if version updated or if cache was empty
+        if (savedVersion !== currentVersion) {
           _store.setItem('sol_app_version', currentVersion);
-          try {
-            Object.keys(localStorage).forEach(k => {
-              if (k.startsWith('cached_notices_') || k.startsWith('solcache_') || k.startsWith('_sol_')) {
-                localStorage.removeItem(k);
-              }
-            });
-          } catch(e) {}
-          if ('caches' in window) {
-            const names = await caches.keys();
-            await Promise.all(names.map(function(n) { return caches.delete(n); }));
+          for (let i = 0; i <= 4; i++) {
+            _store.removeItem(`cached_notices_sem${i}`);
+            _store.removeItem(`cached_notices_sem${i}_time`);
           }
-          if ("serviceWorker" in navigator) { console.log("Updating SW caches..."); }
-          location.reload();
-        } else {
-          try { localStorage.setItem('sol_app_version', currentVersion); } catch(e) {}
-          sessionStorage.removeItem('sol_update_in_progress');
+          if ('caches' in window) {
+            caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+          }
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(regs => {
+              regs.forEach(r => r.update());
+            });
+          }
         }
       } catch(e) {}
     })();
@@ -1878,9 +1872,9 @@
         if (!fetchAllPromise || forceRefresh) {
           fetchAllPromise = (async () => {
             console.log('[NOTIFICATIONS] Fetching all notifications in bulk...');
-            // [v816.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
+            // 25s timeout for mobile networks
             const _fc = new AbortController();
-            const _ft = setTimeout(() => _fc.abort(), 8000);
+            const _ft = setTimeout(() => _fc.abort(), 25000);
             const baseUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
             const response = await fetch(`${baseUrl}/sol/notifications/all`, { 
               signal: _fc.signal
@@ -1926,7 +1920,9 @@
           console.log(`[NOTIFICATIONS] Preservation Guard active (API Error): Keeping ${cached.length} cached items.`);
           renderNotices(cached, semester);
         } else {
-          renderNotices([], semester);
+          if (list) {
+            list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle" style="color: #ff9500; font-size: 24px; margin-bottom: 8px;"></i><p>Failed to sync notifications</p><button onclick="fetchNotifications(${semester}, true)" style="margin-top: 10px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--brand-primary); background: transparent; color: var(--brand-primary); cursor: pointer;">Tap to retry</button></div>`;
+          }
         }
       } finally {
         fetchAllPromise = null;
