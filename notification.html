@@ -1881,13 +1881,9 @@
             // [v816.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
-            const baseUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+            const baseUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
             const response = await fetch(`${baseUrl}/sol/notifications/all`, { 
-              signal: _fc.signal,
-              headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-              }
+              signal: _fc.signal
             });
             clearTimeout(_ft);
             if (response.status === 429) {
