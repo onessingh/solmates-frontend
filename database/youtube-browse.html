@@ -1255,6 +1255,17 @@
   </div>
 
   <div class="container" id="mainContainer">
+    <script>
+      (function(){
+        try {
+          var p = new URLSearchParams(window.location.search);
+          var s = parseInt(p.get('semester'));
+          if (!isNaN(s) && s >= 1 && s <= 4) {
+            document.write('<style>#semView{display:none !important;} #subjectView{display:block !important;}</style>');
+          }
+        } catch(e){}
+      })();
+    </script>
 
     <!-- Semester view -->
     <div id="semView">
@@ -1502,7 +1513,7 @@
       }
       sem = s;
       const now = Date.now();
-      if (isNavigating && (now - lastNavTime < 2500)) return;
+      if (!isPopState && isNavigating && (now - lastNavTime < 2500)) return;
       isNavigating = true;
       lastNavTime = now;
       currentSemester = sem;
