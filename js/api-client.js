@@ -1026,10 +1026,11 @@ window.addConnectionStatusDot = function (socket) {
   // --- Universal Real-Time Live Re-Render Listener for ALL Database Pages ---
   const triggerPageRefresh = () => {
     try {
+      if (typeof window.refreshSubjects === 'function') window.refreshSubjects();
+      else if (typeof window.loadSubjects === 'function') window.loadSubjects();
       if (typeof window.loadContent === 'function') window.loadContent();
       if (typeof window.loadData === 'function') window.loadData();
       if (typeof window.loadNotifications === 'function') window.loadNotifications();
-      if (typeof window.loadSubjects === 'function') window.loadSubjects();
       if (typeof window.loadDataFromAPI === 'function') window.loadDataFromAPI();
       if (typeof window.loadAlerts === 'function') window.loadAlerts();
       if (typeof window.loadAwareness === 'function') window.loadAwareness();

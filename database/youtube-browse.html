@@ -1508,8 +1508,10 @@
       if (!isPopState) {
         sessionStorage.removeItem('sol_yt_active_sem');
         const url = new URL(window.location);
-        url.searchParams.delete('semester');
-        window.history.pushState({ view: 'semesters' }, '', url);
+        if (url.searchParams.has('semester')) {
+          url.searchParams.delete('semester');
+          window.history.pushState({ view: 'semesters' }, '', url);
+        }
       }
 
       const bc = document.getElementById('breadcrumb');
@@ -1525,6 +1527,16 @@
 
     // -- Subject View ----------------------------------------------------------
     async function loadSubjects(sem, isPopState = false) {
+      if (sem === undefined || sem === null) {
+        sem = currentSemester;
+        if (!sem) {
+          const p = new URLSearchParams(window.location.search);
+          sem = parseInt(p.get('semester'));
+        }
+        if (isNaN(sem)) {
+          try { sem = parseInt(sessionStorage.getItem('sol_yt_active_sem')); } catch(e){}
+        }
+      }
       const s = parseInt(sem);
       if (isNaN(s) || s < 1 || s > 4) {
         showSemesters(isPopState);
@@ -1550,12 +1562,15 @@
 
       // Update History and sessionStorage
       try { sessionStorage.setItem('sol_yt_active_sem', String(sem)); } catch(e){}
-      const url = new URL(window.location);
-      url.searchParams.set('semester', sem);
-      if (!isPopState) {
-        window.history.pushState({ view: 'subjects', semester: sem }, '', url);
-      } else {
-        window.history.replaceState({ view: 'subjects', semester: sem }, '', url);
+      const currentParamSem = parseInt(new URLSearchParams(window.location.search).get('semester'));
+      if (currentParamSem !== sem) {
+        const url = new URL(window.location);
+        url.searchParams.set('semester', sem);
+        if (!isPopState) {
+          window.history.pushState({ view: 'subjects', semester: sem }, '', url);
+        } else {
+          window.history.replaceState({ view: 'subjects', semester: sem }, '', url);
+        }
       }
 
       // Breadcrumbs
@@ -1884,15 +1899,15 @@
     }
 
     window.loadSubjects = loadSubjects;
-    window.refreshSubjects = () => { if (currentSemester) loadSubjects(currentSemester); else showSemesters(true); };
+    window.refreshSubjects = () => { if (currentSemester) loadSubjects(currentSemester, true); else showSemesters(true); };
     window.addEventListener('sol:cache_invalidated', () => {
       if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-      if (currentSemester) loadSubjects(currentSemester);
+      if (currentSemester) loadSubjects(currentSemester, true);
       else showSemesters(true);
     });
     window.addEventListener('sol:content-updated', () => {
       if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-      if (currentSemester) loadSubjects(currentSemester);
+      if (currentSemester) loadSubjects(currentSemester, true);
       else showSemesters(true);
     });
 
