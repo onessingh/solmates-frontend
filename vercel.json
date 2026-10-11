@@ -271,14 +271,6 @@
             "destination": "/api/dynamic-og?page=view&category=youtube"
         },
         {
-            "source": "/database/youtube-browse",
-            "destination": "/database/youtube-browse"
-        },
-        {
-            "source": "/database/youtube-browse/",
-            "destination": "/database/youtube-browse"
-        },
-        {
             "source": "/database/classes",
             "destination": "/database/classes"
         },
