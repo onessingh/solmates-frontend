@@ -1883,14 +1883,31 @@
         }
       }
 
-      if (NO_CONTENT && !isAdmin && !FOLDER_ID) {
-        showEmpty('No Videos Available', 'No videos have been uploaded for this subject yet. Check back later!');
-        return;
-      }
-
-      if (NO_CONTENT && isAdmin && !FOLDER_ID) {
-        showEmpty('Empty • Add Content', 'Use the buttons above to add playlist folders or video links.');
-        return;
+      if (NO_CONTENT && !FOLDER_ID) {
+        // Double check backend before showing empty state (handles nested Sem 3/4 subjects)
+        try {
+          const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+          const existing = (semRes && semRes.data) ? semRes.data : [];
+          const cleanTarget = FOLDER_NAME.replace(/\[.*?\]/g, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+          const match = existing.find(f => {
+            const cleanF = (f.name || '').replace(/\[.*?\]/g, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            return cleanF === cleanTarget || cleanF.includes(cleanTarget) || cleanTarget.includes(cleanF);
+          });
+          if (match) {
+            FOLDER_ID = match.id;
+            NO_CONTENT = false;
+            // Proceed to load content with the resolved folderId
+          } else {
+            showEmpty(
+              isAdmin ? 'Empty • Add Content' : 'No Videos Available',
+              isAdmin ? 'Use buttons above to add playlist folders or video links.' : 'No videos have been uploaded for this subject yet. Check back later!'
+            );
+            return;
+          }
+        } catch(e) {
+          showEmpty('No Videos Available', 'No videos have been uploaded for this subject yet. Check back later!');
+          return;
+        }
       }
 
       // Setup Search Listeners
