@@ -220,10 +220,9 @@ class SolmatesAPI {
     };
 
     const isGet = !options.method || options.method.toUpperCase() === 'GET';
-    if (isGet) {
+    if (isGet && this.adminToken && !options.skipAuth) {
       config.cache = 'no-cache';
-      const cacheBuster = (this.adminToken && !options.skipAuth) ? ('_a=' + Date.now()) : ('_v=' + Math.floor(Date.now() / 5000));
-      url += (url.includes('?') ? '&' : '?') + cacheBuster;
+      url += (url.includes('?') ? '&' : '?') + '_a=' + Date.now();
     }
 
     try {
