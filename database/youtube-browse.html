@@ -1476,6 +1476,7 @@
 
       // Update History only if not from popstate
       if (!isPopState) {
+        sessionStorage.removeItem('sol_yt_active_sem');
         const url = new URL(window.location);
         url.searchParams.delete('semester');
         window.history.pushState({ view: 'semesters' }, '', url);
@@ -1516,7 +1517,8 @@
       if (subjectView) subjectView.style.display = 'none';
       if (loadingState) loadingState.style.display = 'block';
 
-      // Update History only if not from popstate
+      // Update History and sessionStorage
+      try { sessionStorage.setItem('sol_yt_active_sem', String(sem)); } catch(e){}
       if (!isPopState) {
         const url = new URL(window.location);
         url.searchParams.set('semester', sem);
@@ -1568,14 +1570,14 @@
       if (subjectLabel) subjectLabel.innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
 
       const safeFolders = Array.isArray(folders) ? folders : [];
-      const rootFoldersOnly = safeFolders.filter(f => f && (!f.parentId || f.parentId === 'root'));
+      // Only show actual root folders (exclude inner topic folders and playlists)
+      const rootFoldersOnly = safeFolders.filter(f => f && (!f.parentId || f.parentId === 'root') && !String(f.name).includes('[TOPIC_FOLDER]'));
       let subjects = [...rootFoldersOnly];
 
-      if (SEMESTER_SUBJECTS[sem]) {
+      // Only inject hardcoded fallback syllabus subjects if NO folders exist in database for this semester
+      if (subjects.length === 0 && SEMESTER_SUBJECTS[sem]) {
         SEMESTER_SUBJECTS[sem].forEach(name => {
-          if (!subjects.find(f => (f && f.name || '').replace(/\[HIDDEN\]/gi, '').replace(/\[LOCKED\]/gi, '').toUpperCase().trim() === name.toUpperCase().trim())) {
-            subjects.push({ id: null, name, _virtual: true });
-          }
+          subjects.push({ id: null, name, _virtual: true });
         });
       }
       subjects.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
@@ -1803,7 +1805,10 @@
       await new Promise(r => setTimeout(r, 100)); // Final buffer
 
       const urlParams = new URLSearchParams(window.location.search);
-      const rawSem = urlParams.get('semester');
+      let rawSem = urlParams.get('semester');
+      if (!rawSem) {
+        try { rawSem = sessionStorage.getItem('sol_yt_active_sem'); } catch(e){}
+      }
       const initSem = parseInt(rawSem);
 
       // Check admin early for bar visibility
@@ -1813,7 +1818,7 @@
       }
 
       if (rawSem === 'undefined' || rawSem === 'null' || isNaN(initSem) || initSem < 1 || initSem > 4) {
-        if (rawSem !== null) {
+        if (urlParams.get('semester') !== null) {
           const url = new URL(window.location);
           url.searchParams.delete('semester');
           window.history.replaceState({ view: 'semesters' }, '', url);
