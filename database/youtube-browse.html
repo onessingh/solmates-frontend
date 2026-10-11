@@ -1519,10 +1519,12 @@
 
       // Update History and sessionStorage
       try { sessionStorage.setItem('sol_yt_active_sem', String(sem)); } catch(e){}
+      const url = new URL(window.location);
+      url.searchParams.set('semester', sem);
       if (!isPopState) {
-        const url = new URL(window.location);
-        url.searchParams.set('semester', sem);
         window.history.pushState({ view: 'subjects', semester: sem }, '', url);
+      } else {
+        window.history.replaceState({ view: 'subjects', semester: sem }, '', url);
       }
 
       // Breadcrumbs
@@ -1772,8 +1774,12 @@
     // -- Browser Navigation ---------------------------------------------------
     window.onpopstate = function (event) {
       const state = event.state;
-      const sem = state ? parseInt(state.semester) : NaN;
-      if (state && state.view === 'subjects' && !isNaN(sem) && sem >= 1 && sem <= 4) {
+      let sem = state ? parseInt(state.semester) : NaN;
+      if (isNaN(sem)) {
+        const urlParams = new URLSearchParams(window.location.search);
+        sem = parseInt(urlParams.get('semester'));
+      }
+      if (!isNaN(sem) && sem >= 1 && sem <= 4) {
         loadSubjects(sem, true);
       } else {
         showSemesters(true);
