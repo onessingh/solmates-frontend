@@ -1859,12 +1859,19 @@
       }
 
       if (!isNaN(sem) && sem >= 1 && sem <= 4) {
-        // Pehle history mein semester-grid entry daalo (replaceState),
-        // phir subjects ko pushState se daalo — taaki Back button semester grid pe le jaaye
-        const gridUrl = new URL(window.location);
+        // SYNCHRONOUSLY dono history entries daalo — async gap se pehle
+        // Entry 1: semester grid (replaceState current page ko replace karta hai)
+        const gridUrl = new URL(window.location.href);
         gridUrl.searchParams.delete('semester');
-        window.history.replaceState({ view: 'semesters' }, '', gridUrl);
-        loadSubjects(sem, false); // false = pushState → subjects entry history mein aayegi
+        window.history.replaceState({ view: 'semesters' }, '', gridUrl.toString());
+
+        // Entry 2: subjects page (pushState se nayi entry)
+        const subUrl = new URL(window.location.href);
+        subUrl.searchParams.set('semester', sem);
+        window.history.pushState({ view: 'subjects', semester: sem }, '', subUrl.toString());
+
+        // Ab UI load karo — isPopState=true so ye history dobara nahi chhedega
+        loadSubjects(sem, true);
       } else {
         showSemesters(true);
       }
