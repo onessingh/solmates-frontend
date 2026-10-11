@@ -96,8 +96,8 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '129.0';
-        const currentVersion = '129.0';
+        window.SOL_APP_VERSION = '130.0';
+        const currentVersion = '130.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
@@ -1881,13 +1881,11 @@
             // [v816.5] 8s timeout to prevent 3-4min mobile freeze on Render cold start
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 8000);
-            const _v = Math.floor(Date.now() / 5000);
             const baseUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
-            const response = await fetch(`${baseUrl}/sol/notifications/all?_v=${_v}`, { 
+            const response = await fetch(`${baseUrl}/sol/notifications/all`, { 
               signal: _fc.signal,
-              cache: 'no-store',
               headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Cache-Control': 'no-cache',
                 'Pragma': 'no-cache'
               }
             });
@@ -2572,8 +2570,18 @@
         console.warn('Socket.io init failed:', e);
       }
 
-      // Polling fallback: refresh every 1 minute
-      setInterval(() => { fetchNotifications(currentSemester); }, 60000);
+      // Smart polling fallback: refresh every 5 minutes only when tab is visible and socket stream is disconnected
+      setInterval(() => {
+        if (document.hidden) return; // Pause polling when tab is inactive/hidden
+        if (socket && socket.connected) return; // Skip polling if real-time Socket.io stream is active
+        fetchNotifications(currentSemester);
+      }, 300000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && (!socket || !socket.connected)) {
+          fetchNotifications(currentSemester);
+        }
+      });
     }
 
     // ========== SUNDAR TOAST SYSTEM ==========
