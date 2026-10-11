@@ -1810,12 +1810,14 @@
 
       await new Promise(r => setTimeout(r, 100)); // Final buffer
 
-      const urlParams = new URLSearchParams(window.location.search);
-      let rawSem = urlParams.get('semester');
-      if (!rawSem) {
-        try { rawSem = sessionStorage.getItem('sol_yt_active_sem'); } catch(e){}
+      const p = new URLSearchParams(window.location.search);
+      let sem = parseInt(p.get('semester'));
+      if (isNaN(sem) || sem < 1 || sem > 4) {
+        try {
+          const saved = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
+          if (!isNaN(saved) && saved >= 1 && saved <= 4) sem = saved;
+        } catch(e){}
       }
-      const initSem = parseInt(rawSem);
 
       // Check admin early for bar visibility
       if (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) {
@@ -1823,15 +1825,10 @@
         if (adminBar) adminBar.classList.add('visible');
       }
 
-      if (rawSem === 'undefined' || rawSem === 'null' || isNaN(initSem) || initSem < 1 || initSem > 4) {
-        if (urlParams.get('semester') !== null) {
-          const url = new URL(window.location);
-          url.searchParams.delete('semester');
-          window.history.replaceState({ view: 'semesters' }, '', url);
-        }
-        showSemesters(true);
+      if (!isNaN(sem) && sem >= 1 && sem <= 4) {
+        loadSubjects(sem, true);
       } else {
-        loadSubjects(initSem, true);
+        showSemesters(true);
       }
     }
 
