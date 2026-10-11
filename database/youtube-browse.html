@@ -1458,9 +1458,6 @@
     }
 
     function goToSemester(sem) {
-      // Full page reload nahi karte: server redirect ?semester strip kar sakta hai.
-      // In-page switch + history.pushState se URL hamesha sahi rehta hai.
-      try { sessionStorage.setItem('sol_yt_active_sem', String(sem)); } catch (e) {}
       loadSubjects(sem);
     }
 
@@ -1483,7 +1480,6 @@
 
       // Update History only if not from popstate
       if (!isPopState) {
-        sessionStorage.removeItem('sol_yt_active_sem');
         const url = new URL(window.location);
         if (url.searchParams.has('semester')) {
           url.searchParams.delete('semester');
@@ -1510,9 +1506,6 @@
           const p = new URLSearchParams(window.location.search);
           sem = parseInt(p.get('semester'));
         }
-        if (isNaN(sem)) {
-          try { sem = parseInt(sessionStorage.getItem('sol_yt_active_sem')); } catch(e){}
-        }
       }
       const s = parseInt(sem);
       if (isNaN(s) || s < 1 || s > 4) {
@@ -1536,8 +1529,7 @@
       if (subjectView) subjectView.style.display = 'none';
       if (loadingState) loadingState.style.display = 'block';
 
-      // Update History and sessionStorage
-      try { sessionStorage.setItem('sol_yt_active_sem', String(sem)); } catch(e){}
+      // Update History only if semester param changed
       const currentParamSem = parseInt(new URLSearchParams(window.location.search).get('semester'));
       if (currentParamSem !== sem) {
         const url = new URL(window.location);
@@ -1833,13 +1825,7 @@
       await new Promise(r => setTimeout(r, 100)); // Final buffer
 
       const p = new URLSearchParams(window.location.search);
-      let sem = parseInt(p.get('semester'));
-      if (isNaN(sem)) {
-        try {
-          const nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
-          if (nav.type === 'reload') sem = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
-        } catch(e){}
-      }
+      const sem = parseInt(p.get('semester'));
 
       // Check admin early for bar visibility
       if (window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn()) {
