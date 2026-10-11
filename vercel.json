@@ -272,11 +272,11 @@
         },
         {
             "source": "/database/youtube-browse",
-            "destination": "/database/youtube-browse.html"
+            "destination": "/database/youtube-browse"
         },
         {
             "source": "/database/youtube-browse/",
-            "destination": "/database/youtube-browse.html"
+            "destination": "/database/youtube-browse"
         },
         {
             "source": "/database/classes",

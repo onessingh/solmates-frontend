@@ -1260,18 +1260,12 @@
         try {
           var p = new URLSearchParams(window.location.search);
           var s = parseInt(p.get('semester'));
-          var isReload = false;
-          try {
-            var nav = performance.getEntriesByType('navigation');
-            if (nav && nav.length > 0) isReload = (nav[0].type === 'reload');
-            else if (performance.navigation) isReload = (performance.navigation.type === 1);
-          } catch(e){}
-          if ((isNaN(s) || s < 1 || s > 4) && isReload) {
-            var saved = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
-            if (!isNaN(saved) && saved >= 1 && saved <= 4) s = saved;
+          if (isNaN(s)) {
+            var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+            if (nav.type === 'reload') s = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
           }
           if (!isNaN(s) && s >= 1 && s <= 4) {
-            document.write('<style id="antiFlickerStyle">#semView{display:none;} #subjectView{display:block;}</style>');
+            document.write('<style>#semView{display:none !important;} #subjectView{display:block !important;}</style>');
           }
         } catch(e){}
       })();
@@ -1483,25 +1477,10 @@
       window.location.href = `/database/youtube-browse?semester=${sem}`;
     }
 
-    function isPageReload() {
-      try {
-        const navEntries = performance.getEntriesByType('navigation');
-        if (navEntries && navEntries.length > 0) {
-          return navEntries[0].type === 'reload';
-        }
-        return performance.navigation && performance.navigation.type === 1;
-      } catch (e) {
-        return false;
-      }
-    }
-
     // -- Semester View ---------------------------------------------------------
     async function showSemesters(isPopState = false) {
       isNavigating = false;
       currentSemester = null;
-
-      const af = document.getElementById('antiFlickerStyle');
-      if (af) af.remove();
 
       const semView = document.getElementById('semView');
       const subjectView = document.getElementById('subjectView');
@@ -1555,9 +1534,7 @@
       
       if (subjectGrid) subjectGrid.innerHTML = '';
       if (semView) semView.style.display = 'none';
-      if (subjectView) subjectView.style.display = 'block';
-      const subjectLabel = document.getElementById('subjectLabel');
-      if (subjectLabel) subjectLabel.innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
+      if (subjectView) subjectView.style.display = 'none';
       if (loadingState) loadingState.style.display = 'block';
 
       // Update History and sessionStorage
@@ -1855,20 +1832,10 @@
 
       const p = new URLSearchParams(window.location.search);
       let sem = parseInt(p.get('semester'));
-
-      // If no semester in URL and page was reloaded, restore from sessionStorage
-      if (isNaN(sem) || sem < 1 || sem > 4) {
-        if (isPageReload()) {
-          try {
-            const saved = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
-            if (!isNaN(saved) && saved >= 1 && saved <= 4) {
-              sem = saved;
-              const url = new URL(window.location);
-              url.searchParams.set('semester', sem);
-              window.history.replaceState({ view: 'subjects', semester: sem }, '', url);
-            }
-          } catch(e){}
-        }
+      if (isNaN(sem)) {
+        // URL se ?semester gayab ho gaya (server redirect etc.) -> reload par sessionStorage se restore
+        const nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+        if (nav.type === 'reload') sem = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
       }
 
       // Check admin early for bar visibility
@@ -1880,8 +1847,6 @@
       if (!isNaN(sem) && sem >= 1 && sem <= 4) {
         loadSubjects(sem, true);
       } else {
-        const af = document.getElementById('antiFlickerStyle');
-        if (af) af.remove();
         showSemesters(true);
       }
     }
