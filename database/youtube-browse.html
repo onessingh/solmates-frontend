@@ -1859,7 +1859,12 @@
       }
 
       if (!isNaN(sem) && sem >= 1 && sem <= 4) {
-        loadSubjects(sem, true);
+        // Pehle semester grid ka history entry daalo (isPopState=false se pushState hoga),
+        // phir subjects load karo taaki Back button hamesha semester grid dikhaye.
+        const semUrl = new URL(window.location);
+        semUrl.searchParams.delete('semester');
+        window.history.replaceState({ view: 'semesters' }, '', semUrl);
+        loadSubjects(sem, false);
       } else {
         showSemesters(true);
       }
