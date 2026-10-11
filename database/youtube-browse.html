@@ -1260,8 +1260,18 @@
         try {
           var p = new URLSearchParams(window.location.search);
           var s = parseInt(p.get('semester'));
+          var isReload = false;
+          try {
+            var nav = performance.getEntriesByType('navigation');
+            if (nav && nav.length > 0) isReload = (nav[0].type === 'reload');
+            else if (performance.navigation) isReload = (performance.navigation.type === 1);
+          } catch(e){}
+          if ((isNaN(s) || s < 1 || s > 4) && isReload) {
+            var saved = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
+            if (!isNaN(saved) && saved >= 1 && saved <= 4) s = saved;
+          }
           if (!isNaN(s) && s >= 1 && s <= 4) {
-            document.write('<style>#semView{display:none !important;} #subjectView{display:block !important;}</style>');
+            document.write('<style id="antiFlickerStyle">#semView{display:none;} #subjectView{display:block;}</style>');
           }
         } catch(e){}
       })();
@@ -1275,7 +1285,7 @@
       </div>
       <div class="sem-grid" id="semGrid">
         <!-- Semester 1 -->
-        <div class="sem-card" onclick="loadSubjects(1)">
+        <div class="sem-card" onclick="goToSemester(1)">
           <div class="sem-thumb sem-1">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">1</div>
@@ -1288,7 +1298,7 @@
           </div>
         </div>
         <!-- Semester 2 -->
-        <div class="sem-card" onclick="loadSubjects(2)">
+        <div class="sem-card" onclick="goToSemester(2)">
           <div class="sem-thumb sem-2">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">2</div>
@@ -1301,7 +1311,7 @@
           </div>
         </div>
         <!-- Semester 3 -->
-        <div class="sem-card" onclick="loadSubjects(3)">
+        <div class="sem-card" onclick="goToSemester(3)">
           <div class="sem-thumb sem-3">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">3</div>
@@ -1314,7 +1324,7 @@
           </div>
         </div>
         <!-- Semester 4 -->
-        <div class="sem-card" onclick="loadSubjects(4)">
+        <div class="sem-card" onclick="goToSemester(4)">
           <div class="sem-thumb sem-4">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">4</div>
@@ -1468,10 +1478,30 @@
       return 'fas fa-play';
     }
 
+    function goToSemester(sem) {
+      sessionStorage.setItem('sol_yt_active_sem', String(sem));
+      window.location.href = `/database/youtube-browse?semester=${sem}`;
+    }
+
+    function isPageReload() {
+      try {
+        const navEntries = performance.getEntriesByType('navigation');
+        if (navEntries && navEntries.length > 0) {
+          return navEntries[0].type === 'reload';
+        }
+        return performance.navigation && performance.navigation.type === 1;
+      } catch (e) {
+        return false;
+      }
+    }
+
     // -- Semester View ---------------------------------------------------------
     async function showSemesters(isPopState = false) {
       isNavigating = false;
       currentSemester = null;
+
+      const af = document.getElementById('antiFlickerStyle');
+      if (af) af.remove();
 
       const semView = document.getElementById('semView');
       const subjectView = document.getElementById('subjectView');
@@ -1525,7 +1555,9 @@
       
       if (subjectGrid) subjectGrid.innerHTML = '';
       if (semView) semView.style.display = 'none';
-      if (subjectView) subjectView.style.display = 'none';
+      if (subjectView) subjectView.style.display = 'block';
+      const subjectLabel = document.getElementById('subjectLabel');
+      if (subjectLabel) subjectLabel.innerHTML = `<i class="fab fa-youtube"></i> Semester ${sem} - Subjects`;
       if (loadingState) loadingState.style.display = 'block';
 
       // Update History and sessionStorage
@@ -1544,7 +1576,7 @@
         bc.innerHTML = `
         <a href="/database" class="bc-item home"><i class="fas fa-home"></i> Database</a>
         <i class="fas fa-chevron-right bc-sep"></i>
-        <a href="javascript:void(0)" onclick="showSemesters()" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="/database/youtube-browse" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
         <i class="fas fa-chevron-right bc-sep"></i>
         <span class="bc-item current"><i class="fas fa-layer-group"></i> Semester ${sem}</span>
       `;
@@ -1823,11 +1855,20 @@
 
       const p = new URLSearchParams(window.location.search);
       let sem = parseInt(p.get('semester'));
+
+      // If no semester in URL and page was reloaded, restore from sessionStorage
       if (isNaN(sem) || sem < 1 || sem > 4) {
-        try {
-          const saved = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
-          if (!isNaN(saved) && saved >= 1 && saved <= 4) sem = saved;
-        } catch(e){}
+        if (isPageReload()) {
+          try {
+            const saved = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
+            if (!isNaN(saved) && saved >= 1 && saved <= 4) {
+              sem = saved;
+              const url = new URL(window.location);
+              url.searchParams.set('semester', sem);
+              window.history.replaceState({ view: 'subjects', semester: sem }, '', url);
+            }
+          } catch(e){}
+        }
       }
 
       // Check admin early for bar visibility
@@ -1839,6 +1880,8 @@
       if (!isNaN(sem) && sem >= 1 && sem <= 4) {
         loadSubjects(sem, true);
       } else {
+        const af = document.getElementById('antiFlickerStyle');
+        if (af) af.remove();
         showSemesters(true);
       }
     }
