@@ -96,8 +96,8 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '130.0';
-        const currentVersion = '130.0';
+        window.SOL_APP_VERSION = '131.0';
+        const currentVersion = '131.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         if (savedVersion && savedVersion !== currentVersion) {
