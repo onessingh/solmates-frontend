@@ -1473,8 +1473,10 @@
     }
 
     function goToSemester(sem) {
-      sessionStorage.setItem('sol_yt_active_sem', String(sem));
-      window.location.href = `/database/youtube-browse?semester=${sem}`;
+      // Full page reload nahi karte: server redirect ?semester strip kar sakta hai.
+      // In-page switch + history.pushState se URL hamesha sahi rehta hai.
+      try { sessionStorage.setItem('sol_yt_active_sem', String(sem)); } catch (e) {}
+      loadSubjects(sem);
     }
 
     // -- Semester View ---------------------------------------------------------
