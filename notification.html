@@ -1883,6 +1883,9 @@
             if (response.status === 429) {
               throw new Error('Rate limited (429)');
             }
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
             const result = await response.json();
             if (!result || !result.success) {
               throw new Error(result.error || 'Failed to fetch bulk notifications');
@@ -1921,7 +1924,8 @@
           renderNotices(cached, semester);
         } else {
           if (list) {
-            list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle" style="color: #ff9500; font-size: 24px; margin-bottom: 8px;"></i><p>Failed to sync notifications</p><button onclick="fetchNotifications(${semester}, true)" style="margin-top: 10px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--brand-primary); background: transparent; color: var(--brand-primary); cursor: pointer;">Tap to retry</button></div>`;
+            const errDetail = error && error.message ? error.message : String(error);
+            list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle" style="color: #ff9500; font-size: 24px; margin-bottom: 8px;"></i><p>Failed to sync notifications</p><p style="font-size: 11px; color: #888; margin-top: 4px; word-break: break-all;">[Error: ${errDetail}]</p><button onclick="fetchNotifications(${semester}, true)" style="margin-top: 10px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--brand-primary); background: transparent; color: var(--brand-primary); cursor: pointer;">Tap to retry</button></div>`;
           }
         }
       } finally {
