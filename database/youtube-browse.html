@@ -1264,7 +1264,7 @@
       </div>
       <div class="sem-grid" id="semGrid">
         <!-- Semester 1 -->
-        <div class="sem-card" onclick="goToSemester(1)">
+        <div class="sem-card" onclick="loadSubjects(1)">
           <div class="sem-thumb sem-1">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">1</div>
@@ -1277,7 +1277,7 @@
           </div>
         </div>
         <!-- Semester 2 -->
-        <div class="sem-card" onclick="goToSemester(2)">
+        <div class="sem-card" onclick="loadSubjects(2)">
           <div class="sem-thumb sem-2">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">2</div>
@@ -1290,7 +1290,7 @@
           </div>
         </div>
         <!-- Semester 3 -->
-        <div class="sem-card" onclick="goToSemester(3)">
+        <div class="sem-card" onclick="loadSubjects(3)">
           <div class="sem-thumb sem-3">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">3</div>
@@ -1303,7 +1303,7 @@
           </div>
         </div>
         <!-- Semester 4 -->
-        <div class="sem-card" onclick="goToSemester(4)">
+        <div class="sem-card" onclick="loadSubjects(4)">
           <div class="sem-thumb sem-4">
             <div class="sem-icon-wrap">
               <div class="sem-number-badge">4</div>
@@ -1555,7 +1555,7 @@
         bc.innerHTML = `
         <a href="/database" class="bc-item home"><i class="fas fa-home"></i> Database</a>
         <i class="fas fa-chevron-right bc-sep"></i>
-        <a href="/database/youtube-browse" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
+        <a href="javascript:void(0)" onclick="showSemesters()" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
         <i class="fas fa-chevron-right bc-sep"></i>
         <span class="bc-item current"><i class="fas fa-layer-group"></i> Semester ${sem}</span>
       `;
@@ -1848,18 +1848,6 @@
       }
 
       if (!isNaN(sem) && sem >= 1 && sem <= 4) {
-        // SYNCHRONOUSLY dono history entries daalo — async gap se pehle
-        // Entry 1: semester grid (replaceState current page ko replace karta hai)
-        const gridUrl = new URL(window.location.href);
-        gridUrl.searchParams.delete('semester');
-        window.history.replaceState({ view: 'semesters' }, '', gridUrl.toString());
-
-        // Entry 2: subjects page (pushState se nayi entry)
-        const subUrl = new URL(window.location.href);
-        subUrl.searchParams.set('semester', sem);
-        window.history.pushState({ view: 'subjects', semester: sem }, '', subUrl.toString());
-
-        // Ab UI load karo — isPopState=true so ye history dobara nahi chhedega
         loadSubjects(sem, true);
       } else {
         showSemesters(true);
