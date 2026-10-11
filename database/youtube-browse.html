@@ -1265,7 +1265,9 @@
             if (nav.type === 'reload') s = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
           }
           if (!isNaN(s) && s >= 1 && s <= 4) {
-            document.write('<style>#semView{display:none !important;} #subjectView{display:block !important;}</style>');
+            // Page load ke time ka semester yaad rakho, URL baad me badle to bhi
+            window.__solInitSem = s;
+            document.write('<style id="semHackStyle">#semView{display:none !important;} #subjectView{display:block !important;}</style>');
           }
         } catch(e){}
       })();
@@ -1480,7 +1482,13 @@
     }
 
     // -- Semester View ---------------------------------------------------------
+    function removeSemHack() {
+      var hs = document.getElementById('semHackStyle');
+      if (hs) hs.remove();
+    }
+
     async function showSemesters(isPopState = false) {
+      removeSemHack();
       isNavigating = false;
       currentSemester = null;
 
@@ -1523,6 +1531,7 @@
         return;
       }
       sem = s;
+      removeSemHack();
       const now = Date.now();
       if (!isPopState && isNavigating && (now - lastNavTime < 2500)) return;
       isNavigating = true;
@@ -1834,8 +1843,11 @@
 
       const p = new URLSearchParams(window.location.search);
       let sem = parseInt(p.get('semester'));
+      if (isNaN(sem) && window.__solInitSem) {
+        // Page load par semester tha, par kisi ne URL se hata diya -> wahi use karo
+        sem = window.__solInitSem;
+      }
       if (isNaN(sem)) {
-        // URL se ?semester gayab ho gaya (server redirect etc.) -> reload par sessionStorage se restore
         const nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
         if (nav.type === 'reload') sem = parseInt(sessionStorage.getItem('sol_yt_active_sem'));
       }
