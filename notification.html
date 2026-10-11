@@ -1875,10 +1875,17 @@
             // 25s timeout for mobile networks
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 25000);
-            const baseUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
-            const response = await fetch(`${baseUrl}/sol/notifications/all`, { 
-              signal: _fc.signal
-            });
+            const primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
+            let response;
+            try {
+              response = await fetch(`${primaryUrl}/sol/notifications/all`, { signal: _fc.signal });
+              if (response && response.status === 503) {
+                throw new Error('HTTP 503');
+              }
+            } catch (err) {
+              console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via direct Render origin...', err);
+              response = await fetch('https://solmates-backend-w27e.onrender.com/api/sol/notifications/all', { signal: _fc.signal });
+            }
             clearTimeout(_ft);
             if (response.status === 429) {
               throw new Error('Rate limited (429)');
