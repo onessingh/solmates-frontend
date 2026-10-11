@@ -111,7 +111,7 @@ const getAPIBaseURL = () => {
 
 const API_BASE_URL = getAPIBaseURL();
 // [v116.4] Reduced from 60s to 10s â€” 60s caused 3-4 min mobile freeze on Render cold starts
-const REQUEST_TIMEOUT = 10000;
+const REQUEST_TIMEOUT = 25000;
 
 class SolmatesAPI {
   constructor() {

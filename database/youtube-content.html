@@ -2059,26 +2059,53 @@
 
       // Step 2: Fresh Render
       try {
-        const [fRes, iRes] = await Promise.all([
+        let [fRes, iRes] = await Promise.all([
           window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
           window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
         ]);
 
+        // If either failed, try a secondary direct fetch
+        if (!fRes || !fRes.success || !iRes || !iRes.success) {
+          console.warn('[YOUTUBE] Initial fetch incomplete, retrying...');
+          const [retryF, retryI] = await Promise.all([
+            (!fRes || !fRes.success) ? fetch(`https://solmates-backend-w27e.onrender.com/api/sol/folders/${CATEGORY}/${SEMESTER}${FOLDER_ID ? '?parentId=' + FOLDER_ID : ''}`).then(r => r.json()).catch(() => null) : Promise.resolve(fRes),
+            (!iRes || !iRes.success) ? fetch(`https://solmates-backend-w27e.onrender.com/api/sol/${CATEGORY}/${SEMESTER}${FOLDER_ID ? '?folderId=' + FOLDER_ID : ''}`).then(r => r.json()).catch(() => null) : Promise.resolve(iRes)
+          ]);
+          if (retryF) fRes = retryF;
+          if (retryI) iRes = retryI;
+        }
+
         const folders = (fRes && fRes.data) ? fRes.data : [];
         const items = (iRes && iRes.data) ? iRes.data : [];
 
-        // ? PROTECTION: If both are empty and request failed, keep stale.
-        // But if request succeeded and it is genuinely empty, proceed to show empty state!
         const fSuccess = fRes && fRes.success;
         const iSuccess = iRes && iRes.success;
-        if (folders.length === 0 && items.length === 0) {
-          if (!fSuccess || !iSuccess) {
-            const subjectsGrid = document.getElementById('subjectsGrid');
-            const foldersGrid = document.getElementById('foldersGrid');
-            const videosGrid = document.getElementById('videosGrid');
-            const hasStale = (subjectsGrid && subjectsGrid.children.length > 0) || (foldersGrid && foldersGrid.children.length > 0) || (videosGrid && videosGrid.children.length > 0);
-            if (hasStale) return; // Keep stale if fresh is empty/fail
+
+        // If request failed completely and returned nothing
+        if (folders.length === 0 && items.length === 0 && (!fSuccess || !iSuccess)) {
+          const subjectsGrid = document.getElementById('subjectsGrid');
+          const foldersGrid = document.getElementById('foldersGrid');
+          const videosGrid = document.getElementById('videosGrid');
+          const hasStale = (subjectsGrid && subjectsGrid.children.length > 0) || (foldersGrid && foldersGrid.children.length > 0) || (videosGrid && videosGrid.children.length > 0);
+          if (hasStale) {
+            console.warn('[YOUTUBE] Fetch failed, preserving stale UI');
+            return;
           }
+          // Show error state with retry, NOT "No Videos Available"
+          showEmpty(
+            'Failed to Load Videos',
+            'Connection timed out while loading videos. Tap below to retry.'
+          );
+          const emptyState = document.getElementById('emptyState');
+          if (emptyState && !emptyState.querySelector('.yt-retry-btn')) {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-yt yt-retry-btn';
+            btn.style.marginTop = '15px';
+            btn.innerText = 'Tap to Retry';
+            btn.onclick = () => loadContent();
+            emptyState.appendChild(btn);
+          }
+          return;
         }
 
         renderContentSafe(folders, items, isAdmin, false);

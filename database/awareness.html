@@ -1138,16 +1138,28 @@ async function loadAlerts() {
   var grid = document.getElementById('alertsGrid');
   var countEl = document.getElementById('alertCount');
   try {
-    var res = await fetch(API_URL + '/sol/notifications/all');
-    var data = await res.json();
-    var alerts = [];
-    if (Array.isArray(data)) {
-      alerts = data.filter(function(n){ return n.folderId === 'AWARENESS'; });
-    } else {
-      Object.values(data).forEach(function(sem){
-        if (Array.isArray(sem)) sem.forEach(function(n){ if (n.folderId === 'AWARENESS') alerts.push(n); });
+    var primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
+    var res;
+    try {
+      res = await fetch(primaryUrl + '/sol/notifications/all');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+    } catch(fetchErr) {
+      console.warn('[AWARENESS] Primary fetch failed, trying direct Render fallback...', fetchErr);
+      res = await fetch('https://solmates-backend-w27e.onrender.com/api/sol/notifications/all');
+    }
+    
+    var json = await res.json();
+    var rawList = Array.isArray(json) ? json : (json && Array.isArray(json.data) ? json.data : []);
+    
+    // If not found in json.data, fallback to object values
+    if (rawList.length === 0 && json && typeof json === 'object') {
+      Object.values(json).forEach(function(val) {
+        if (Array.isArray(val)) rawList = rawList.concat(val);
       });
     }
+
+    var alerts = rawList.filter(function(n) { return n && n.folderId === 'AWARENESS'; });
+
     // Sort chronologically by ID (newest first)
     alerts.sort(function(a, b) {
       var idA = a.id || a._id || '';
@@ -1157,34 +1169,36 @@ async function loadAlerts() {
 
     var token = localStorage.getItem('solmates_admin_token');
     var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
-    if (isAdmin) document.getElementById('addAlertBtn').style.display = 'flex';
+    if (isAdmin) {
+      var addBtn = document.getElementById('addAlertBtn');
+      if (addBtn) addBtn.style.display = 'flex';
+    }
 
     countEl.textContent = alerts.length + ' Active Alert' + (alerts.length !== 1 ? 's' : '');
-      setTimeout(function() {
-        var params = new URLSearchParams(window.location.search);
-        var targetId = params.get('id');
-        if (targetId) {
-          var targetEl = document.getElementById('alert-' + targetId);
-          if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            targetEl.style.transition = 'all 0.5s ease';
-            targetEl.style.boxShadow = '0 0 0 4px #10b981, 0 8px 30px rgba(16,185,129,0.3)';
-            targetEl.style.transform = 'scale(1.02)';
-            setTimeout(function() {
-              targetEl.style.boxShadow = '';
-              targetEl.style.transform = '';
-            }, 3000);
-          }
+    setTimeout(function() {
+      var params = new URLSearchParams(window.location.search);
+      var targetId = params.get('id');
+      if (targetId) {
+        var targetEl = document.getElementById('alert-' + targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetEl.style.transition = 'all 0.5s ease';
+          targetEl.style.boxShadow = '0 0 0 4px #10b981, 0 8px 30px rgba(16,185,129,0.3)';
+          targetEl.style.transform = 'scale(1.02)';
+          setTimeout(function() {
+            targetEl.style.boxShadow = '';
+            targetEl.style.transform = '';
+          }, 3000);
         }
-      }, 500);
+      }
+    }, 500);
 
-    
     window.allAwarenessAlerts = alerts;
     renderAlertsGrid(alerts, false);
 
-
   } catch(err) {
-    grid.innerHTML = '<div class="loading-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle" style="font-size:28px;"></i><br><br>Failed to load. Please refresh.</div>';
+    console.error('[AWARENESS] Load error:', err);
+    grid.innerHTML = '<div class="loading-state" style="color:#ef4444;"><i class="fas fa-exclamation-triangle" style="font-size:28px;"></i><br><br>Failed to load. Please refresh.<br><button onclick="loadAlerts()" style="margin-top:12px; padding:6px 16px; border-radius:20px; border:1px solid #ef4444; background:transparent; color:#ef4444; cursor:pointer;">Tap to retry</button></div>';
     countEl.textContent = 'Error';
   }
 }
