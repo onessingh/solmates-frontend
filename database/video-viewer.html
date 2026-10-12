@@ -249,7 +249,7 @@
             }
         }
 
-        /* 2. Bottom blocker: full-width 48px black bar to cover YouTube logo */
+        /* 2. Bottom blocker: 96px tall — overlaps 48px into iframe bottom where YT controls/logo live */
         :fullscreen #ytBottomBarBlocker,
         :-webkit-full-screen #ytBottomBarBlocker,
         #videoContainer.is-fullscreen #ytBottomBarBlocker {
@@ -257,7 +257,7 @@
             right: 0 !important;
             bottom: 0 !important;
             width: 100% !important;
-            height: 48px !important;
+            height: 96px !important;
             background: #000000 !important;
             z-index: 2147483647 !important;
             border-radius: 0 !important;
@@ -269,7 +269,7 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 100% !important;
-                height: 48px !important;
+                height: 96px !important;
                 background: #000000 !important;
                 z-index: 2147483647 !important;
             }
@@ -278,11 +278,11 @@
             }
         }
 
-        /* 3. Custom fullscreen button sits in the 48px bar */
+        /* 3. Custom fullscreen button: sits in upper half of the 96px bar */
         :fullscreen #customFsBtn,
         :-webkit-full-screen #customFsBtn,
         #videoContainer.is-fullscreen #customFsBtn {
-            bottom: 4px !important;
+            bottom: 52px !important;
             right: 12px !important;
             width: 40px !important;
             height: 40px !important;
@@ -291,7 +291,7 @@
 
         @media (orientation: landscape) and (max-height: 550px) {
             #customFsBtn {
-                bottom: 4px !important;
+                bottom: 52px !important;
                 right: 12px !important;
                 width: 40px !important;
                 height: 40px !important;
