@@ -1217,9 +1217,10 @@
             const grid = document.getElementById('liveSessionsGrid');
             const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-            let sessions = appData.liveSessions;
+            const now = Date.now();
+            let sessions = appData.liveSessions.filter(s => !s.expiryTime || now < s.expiryTime);
             if (filter !== 'all') {
-                sessions = appData.liveSessions.filter(s => s.semesters.includes(filter) || s.semesters.includes('all'));
+                sessions = sessions.filter(s => s.semesters.includes(filter) || s.semesters.includes('all'));
             }
 
             if (sessions.length === 0) {
@@ -1281,7 +1282,8 @@
                     if (cached) {
                         const parsed = JSON.parse(cached);
                         if (parsed && Array.isArray(parsed)) {
-                            appData.liveSessions = parsed;
+                            const now = Date.now();
+                            appData.liveSessions = parsed.filter(s => !s.expiryTime || now < s.expiryTime);
                             updateLiveSessionsDisplay(currentActiveTab);
                         }
                     }
@@ -1311,21 +1313,6 @@
 
                             const meta = cleanSubjectTitle(item.title, sourceSem === 'all' ? '0' : sourceSem, sessionDate);
                             
-                            // Precise Expiry Check
-                            if (Date.now() > meta.expiryTime) return;
-
-                            // Normalize Date to YYYY-MM-DD for 100% strict deduplication
-                            const normDate = parseNormalizedDate(meta.date || sessionDate || item.date);
-                            
-                            // Canonical title key (removes branding & punctuation for bulletproof matching)
-                            const canonicalTitle = (meta.subject || item.title || "")
-                                .toLowerCase()
-                                .replace(/^(?:mba\s+)?(?:sem(?:ester)?|year|yr|part|term)\s*(?:iv|iii|ii|i|[1-6])\s*[:\-]?\s*/i, '')
-                                .replace(/[^a-z0-9]/g, '');
-
-                            // Create a unique key for grouping (Title + Normalized Date)
-                            const groupKey = `${canonicalTitle}_${normDate}`;
-                            
                             // Standardize Time to 24h Range
                             let finalTime = meta.time;
                             let hasRange = meta.hasRange;
@@ -1340,6 +1327,49 @@
                                 // Convert captured range to 24h if it's in 12h
                                 finalTime = convertTo24hRange(finalTime);
                             }
+
+                            // Precise Expiry: Determine exact end time of class (hide as soon as time ends)
+                            const classExpiryTime = (function() {
+                                let baseDate = new Date(sessionDate);
+                                if (isNaN(baseDate.getTime())) baseDate = new Date();
+                                const y = baseDate.getFullYear();
+                                const m = baseDate.getMonth();
+                                const d = baseDate.getDate();
+
+                                const combined = `${finalTime || ''} ${item.class_time || ''} ${meta.time || ''} ${item.title || ''}`;
+                                const rMatch = combined.match(/[-–—]\s*(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)/);
+                                if (rMatch && rMatch[1]) {
+                                    const endPart = rMatch[1].trim();
+                                    const tMatch = endPart.match(/(\d{1,2}):(\d{2})\s*([APap][Mm])?/);
+                                    if (tMatch) {
+                                        let hours = parseInt(tMatch[1], 10);
+                                        const minutes = parseInt(tMatch[2], 10);
+                                        const meridian = tMatch[3] ? tMatch[3].toUpperCase() : null;
+                                        if (meridian === 'PM' && hours < 12) hours += 12;
+                                        if (meridian === 'AM' && hours === 12) hours = 0;
+                                        return new Date(y, m, d, hours, minutes, 0).getTime();
+                                    }
+                                }
+                                if (!isNaN(baseDate.getTime())) {
+                                    return baseDate.getTime() + (2 * 60 * 60 * 1000);
+                                }
+                                return meta.expiryTime || new Date(y, m, d, 23, 59, 59).getTime();
+                            })();
+
+                            // Precise Expiry Check: Hide class immediately once end time is reached
+                            if (Date.now() >= classExpiryTime) return;
+
+                            // Normalize Date to YYYY-MM-DD for 100% strict deduplication
+                            const normDate = parseNormalizedDate(meta.date || sessionDate || item.date);
+                            
+                            // Canonical title key (removes branding & punctuation for bulletproof matching)
+                            const canonicalTitle = (meta.subject || item.title || "")
+                                .toLowerCase()
+                                .replace(/^(?:mba\s+)?(?:sem(?:ester)?|year|yr|part|term)\s*(?:iv|iii|ii|i|[1-6])\s*[:\-]?\s*/i, '')
+                                .replace(/[^a-z0-9]/g, '');
+
+                            // Create a unique key for grouping (Title + Normalized Date)
+                            const groupKey = `${canonicalTitle}_${normDate}`;
 
                             // Standardized DD-MM-YYYY display date
                             const formattedDisplayDate = (function(dStr) {
@@ -1362,7 +1392,7 @@
                                 semesters: sourceSem === 'all' ? ['1', '2', '3', '4', 'all'] : [sourceSem],
                                 scheduledAt: sessionDate,
                                 hasRange: hasRange,
-                                expiryTime: meta.expiryTime
+                                expiryTime: classExpiryTime
                             };
 
                             // DE-DUPLICATION LOGIC:
@@ -1461,7 +1491,7 @@
             let cleaned = finalWords.join(' ').trim();
             cleaned = cleaned.replace(/\s*[:\-]\s*$/, '').trim(); 
 
-            // Calculate Expiry: End of day (23:59:59) if date only, or start time + 4 hours
+            // Calculate Expiry
             let refObj = new Date(refDate);
             if (isNaN(refObj.getTime())) refObj = new Date();
             let expiry = new Date(refObj.getFullYear(), refObj.getMonth(), refObj.getDate(), 23, 59, 59).getTime();
@@ -1470,8 +1500,10 @@
                 try {
                     const endPart = rangeMatch[1].trim();
                     const endObj = new Date(refObj.toLocaleDateString('en-US') + ' ' + endPart);
-                    if (!isNaN(endObj.getTime())) expiry = endObj.getTime() + (2 * 60 * 60 * 1000);
+                    if (!isNaN(endObj.getTime())) expiry = endObj.getTime();
                 } catch (e) { }
+            } else if (!isNaN(refObj.getTime())) {
+                expiry = refObj.getTime() + (2 * 60 * 60 * 1000);
             }
 
             const rawTime = tMatch ? tMatch[1] : "";
@@ -1532,21 +1564,30 @@
         }
 
         function updateCountdowns() {
+            const now = Date.now();
             appData.liveSessions.forEach(s => {
                 const el = document.getElementById(`status-${s.id}`);
                 if (!el) return;
-                const now = new Date();
-                const start = new Date(s.scheduledAt);
-                const expiry = new Date(s.expiryTime);
+                const start = new Date(s.scheduledAt).getTime();
+                const expiry = s.expiryTime || (start + 2 * 3600000);
                 const diff = start - now;
-                const isExpired = now > expiry;
+                const isExpired = now >= expiry;
 
                 if (isExpired) {
-                    // Hide the card instantly if it's expired
-                    const card = document.getElementById(`status-${s.id}`).closest('.live-session-card');
+                    // Hide and remove the card instantly as soon as class ends
+                    const card = el.closest('.live-session-card');
                     if (card) {
+                        card.style.transition = 'all 0.4s ease';
                         card.style.opacity = '0';
-                        setTimeout(() => card.style.display = 'none', 500);
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            card.remove();
+                            const remaining = document.querySelectorAll('.live-sessions-grid .live-session-card');
+                            if (remaining.length === 0) {
+                                const grid = document.getElementById('liveSessionsGrid');
+                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
+                            }
+                        }, 400);
                     }
                     return;
                 }
