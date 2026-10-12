@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en">
 
@@ -54,7 +54,7 @@
 
   <script>
 
-  // ONE-TIME NUCLEAR CACHE CLEAR (v827) — runs once per user, then never again
+  // ONE-TIME NUCLEAR CACHE CLEAR (v827) â€” runs once per user, then never again
 
   (function() {
 
@@ -89,7 +89,7 @@
 
       ]).then(function() {
 
-        location.reload(true); // hard reload — get fresh HTML from server
+        location.reload(true); // hard reload â€” get fresh HTML from server
 
       });
 
@@ -239,7 +239,7 @@
 
   <title>SOLMATES Platform Guide | Exhaustive Features & Tools list</title>
 
-  <script src="/config.js?v=v856" defer></script>
+  <script src="/config.js?v=v858" defer></script>
 
   <script src="/js/sol-cache.js?v=v856" defer></script>
 
@@ -271,7 +271,7 @@
 
   <link rel="stylesheet" href="/css/global-lockdown.css?v=v856">
 
-  <!-- 🔥 Favicon (All sizes) -->
+  <!-- ðŸ”¥ Favicon (All sizes) -->
 
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -311,7 +311,7 @@
 
 
 
-  <!-- 🔥 OG (Link Preview) -->
+  <!-- ðŸ”¥ OG (Link Preview) -->
 
   
 
@@ -2525,7 +2525,7 @@
 
 
 
-      /* LOGO DESKTOP पर और बड़ा */
+      /* LOGO DESKTOP à¤ªà¤° à¤”à¤° à¤¬à¤¡à¤¼à¤¾ */
 
       .logo-mark {
 
@@ -2777,7 +2777,7 @@
 
 
 
-      /* Phone view में logo थोड़ा छोटा */
+      /* Phone view à¤®à¥‡à¤‚ logo à¤¥à¥‹à¤¡à¤¼à¤¾ à¤›à¥‹à¤Ÿà¤¾ */
 
       .logo-mark {
 
@@ -2853,7 +2853,7 @@
 
 
 
-      /* WhatsApp dropdown mobile के लिए optimize */
+      /* WhatsApp dropdown mobile à¤•à¥‡ à¤²à¤¿à¤ optimize */
 
       .whatsapp-dropdown {
 
@@ -5772,11 +5772,11 @@
 
   <script>
 
-    // [v816.6] NUCLEAR AUTO-UPDATE SYSTEM — ASYNC + LOOP-GUARD FIX
+    // [v816.6] NUCLEAR AUTO-UPDATE SYSTEM â€” ASYNC + LOOP-GUARD FIX
 
     // Bug: previous sync version fired reload(true) after 500ms without awaiting
 
-    // cache.delete() and sw.unregister() — on slow devices these weren't done yet
+    // cache.delete() and sw.unregister() â€” on slow devices these weren't done yet
 
     // causing an infinite reload loop (version still mismatched after reload).
 
@@ -5798,7 +5798,7 @@
 
           // Loop-guard: sessionStorage is cleared on hard reload, not on soft navigation
 
-          // If this flag is set, a reload is already in progress — don't trigger another
+          // If this flag is set, a reload is already in progress â€” don't trigger another
 
           if (sessionStorage.getItem('sol_update_in_progress')) return;
 

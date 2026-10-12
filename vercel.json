@@ -56,7 +56,7 @@
         },
         {
             "source": "/api/:path*",
-            "destination": "https://solmates-backend-w27e.onrender.com/api/:path*"
+            "destination": "https://api.solmates.in/api/:path*"
         },
         {
             "source": "/database/database.html",
