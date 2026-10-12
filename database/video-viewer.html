@@ -190,6 +190,16 @@
             width: 100%;
             height: 100%;
             border: none;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Mobile View: Video sits cleanly inside screen so bottom bar/logo blocker doesn't clip content */
+        @media (max-width: 768px), (max-height: 500px) {
+            iframe.yt-mode {
+                transform: scale(0.92);
+                transform-origin: center center;
+                border-radius: 12px;
+            }
         }
 
         /* Dynamic Flash Blockers: Functionally ALWAYS blocking, Visually only solid on interaction */
