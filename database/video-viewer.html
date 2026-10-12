@@ -221,6 +221,59 @@
             #ytShareShield { right: 100px !important; width: 60px !important; height: 80px !important; }
         }
 
+        /* Fullscreen & Landscape Enhancements: Prevent bottom video clipping while keeping YouTube logo 100% hidden */
+        :fullscreen #videoContainer,
+        :-webkit-full-screen #videoContainer,
+        #videoContainer.is-fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            background: #000 !important;
+        }
+
+        :fullscreen #ytTopShield,
+        :-webkit-full-screen #ytTopShield,
+        #videoContainer.is-fullscreen #ytTopShield,
+        @media (orientation: landscape) and (max-height: 550px) {
+            #ytTopShield {
+                height: 48px !important;
+            }
+            #ytShareShield {
+                height: 48px !important;
+                width: 60px !important;
+            }
+        }
+
+        /* In Fullscreen & Landscape: Block ONLY the bottom-right corner YouTube logo/watermark so the lecture blackboard is NOT cut off */
+        :fullscreen #ytBottomBarBlocker,
+        :-webkit-full-screen #ytBottomBarBlocker,
+        #videoContainer.is-fullscreen #ytBottomBarBlocker,
+        @media (orientation: landscape) and (max-height: 550px) {
+            #ytBottomBarBlocker {
+                left: auto !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 140px !important;
+                height: 48px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+                border-top-left-radius: 8px !important;
+            }
+            #customFsBtn {
+                bottom: 4px !important;
+                right: 12px !important;
+                width: 40px !important;
+                height: 40px !important;
+                z-index: 2147483648 !important;
+            }
+            #queryFloatBtn {
+                display: none !important;
+            }
+        }
+
+        body.is-fullscreen #queryFloatBtn {
+            display: none !important;
+        }
+
         /* Loading & Error States */
         .overlay {
             position: absolute;
@@ -899,9 +952,19 @@
         document.addEventListener('webkitfullscreenchange', updateFsIcon);
 
         function updateFsIcon() {
+            const container = document.getElementById('videoContainer');
             const icon = document.querySelector('#customFsBtn i');
+            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+            if (container) {
+                container.classList.toggle('is-fullscreen', isFs);
+            }
+            if (document.body) {
+                document.body.classList.toggle('is-fullscreen', isFs);
+            }
+
             if (icon) {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (!isFs) {
                     icon.className = 'fas fa-expand';
                 } else {
                     icon.className = 'fas fa-compress';
