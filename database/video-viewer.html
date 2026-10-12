@@ -222,13 +222,18 @@
         }
 
         /* ============================================================
-           Fullscreen & Landscape: Prevent bottom content clipping
-           Strategy: shrink iframe by 48px so YouTube letterboxes the
-           video (no crop), full-width 48px black bar at bottom hides
-           the YouTube logo/watermark completely.
+           Fullscreen & Landscape: Show full video, hide YT controls
+           
+           Strategy:
+           - iframe height = calc(100% - 48px) → YouTube pillarboxes
+             (no video crop), full content visible
+           - clip-path: inset(0 0 40px 0) → surgically clips the
+             YouTube controls bar (bottom 40px of iframe) transparently.
+             The clipped area shows the container's black background.
+           - Result: video 100% visible, YouTube logo/link invisible
            ============================================================ */
 
-        /* 1. iframe shrinks by 48px — YouTube will letterbox, not crop */
+        /* 1. iframe: shrink + clip bottom controls */
         :fullscreen iframe.yt-mode,
         :-webkit-full-screen iframe.yt-mode,
         #videoContainer.is-fullscreen iframe.yt-mode {
@@ -237,6 +242,8 @@
             left: 0 !important;
             width: 100% !important;
             height: calc(100% - 48px) !important;
+            clip-path: inset(0 0 40px 0) !important;
+            -webkit-clip-path: inset(0 0 40px 0) !important;
         }
 
         @media (orientation: landscape) and (max-height: 550px) {
@@ -246,6 +253,8 @@
                 left: 0 !important;
                 width: 100% !important;
                 height: calc(100% - 48px) !important;
+                clip-path: inset(0 0 40px 0) !important;
+                -webkit-clip-path: inset(0 0 40px 0) !important;
             }
         }
 
