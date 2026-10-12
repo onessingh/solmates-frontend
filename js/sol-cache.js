@@ -208,7 +208,17 @@
 
     window.SOL_CACHE = SOL_CACHE;
 
-    window.addEventListener('sol:cache_invalidated', () => {
+    window.addEventListener('sol:cache_invalidated', (e) => {
+        const ver = (e && e.detail && e.detail.version) ? e.detail.version : Date.now();
+        window._SOL_CONTENT_VERSION = ver;
+        try { localStorage.setItem('_sol_content_version', String(ver)); } catch(_) {}
+        if (window.SOL_CACHE) window.SOL_CACHE.clear();
+    });
+
+    window.addEventListener('content:updated', (e) => {
+        const ver = Date.now();
+        window._SOL_CONTENT_VERSION = ver;
+        try { localStorage.setItem('_sol_content_version', String(ver)); } catch(_) {}
         if (window.SOL_CACHE) window.SOL_CACHE.clear();
     });
 
