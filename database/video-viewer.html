@@ -249,7 +249,11 @@
             }
         }
 
-        /* 2. Bottom blocker: 96px tall — overlaps 48px into iframe bottom where YT controls/logo live */
+        /* 2. Bottom blocker: 88px = 48px(gap below iframe) + 40px(YT controls bar inside iframe)
+              Video content: iframe top → ~302px
+              YT controls:   302px → 342px (iframe bottom)
+              Gap:           342px → 390px (below iframe)
+              Blocker covers 302–390px → controls hidden, video safe ✅ */
         :fullscreen #ytBottomBarBlocker,
         :-webkit-full-screen #ytBottomBarBlocker,
         #videoContainer.is-fullscreen #ytBottomBarBlocker {
@@ -257,7 +261,7 @@
             right: 0 !important;
             bottom: 0 !important;
             width: 100% !important;
-            height: 96px !important;
+            height: 88px !important;
             background: #000000 !important;
             z-index: 2147483647 !important;
             border-radius: 0 !important;
@@ -269,7 +273,7 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 100% !important;
-                height: 96px !important;
+                height: 88px !important;
                 background: #000000 !important;
                 z-index: 2147483647 !important;
             }
@@ -278,11 +282,11 @@
             }
         }
 
-        /* 3. Custom fullscreen button: sits in upper half of the 96px bar */
+        /* 3. Fullscreen button: placed in the lower 48px gap (below iframe), not in video area */
         :fullscreen #customFsBtn,
         :-webkit-full-screen #customFsBtn,
         #videoContainer.is-fullscreen #customFsBtn {
-            bottom: 52px !important;
+            bottom: 4px !important;
             right: 12px !important;
             width: 40px !important;
             height: 40px !important;
@@ -291,7 +295,7 @@
 
         @media (orientation: landscape) and (max-height: 550px) {
             #customFsBtn {
-                bottom: 52px !important;
+                bottom: 4px !important;
                 right: 12px !important;
                 width: 40px !important;
                 height: 40px !important;
