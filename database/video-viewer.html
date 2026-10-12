@@ -25,16 +25,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v863">
-  <script src="/config.js?v=v863"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v864">
+  <script src="/config.js?v=v864"></script>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v863" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v863" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v863">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v863">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v863">
+  <link rel="icon" href="/favicon.ico?v=v864" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v864" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v864">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v864">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v864">
     <title>Video Viewer - SOLMATES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -219,6 +219,17 @@
             background-color: #000000 !important;
         }
 
+        /* Base / Laptop: 55px solid black bar across bottom to cover YouTube logo and link */
+        #ytBottomBarBlocker {
+            display: block !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 55px !important;
+            z-index: 2147483647 !important;
+        }
+
         /* Mobile Portrait: Corner shields cover YouTube logo and link; middle is OPEN for seek bar */
         @media (max-width: 600px) {
             #ytBottomLeftShield {
@@ -373,8 +384,8 @@
         #customFsBtn {
             display: flex !important;
             position: absolute !important;
-            bottom: 24px !important;
-            right: 24px !important;
+            bottom: 65px !important;
+            right: 20px !important;
             width: 44px !important;
             height: 44px !important;
             z-index: 2147483648 !important; /* ALWAYS above all shields! */
