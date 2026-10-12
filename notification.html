@@ -1877,14 +1877,15 @@
             const _ft = setTimeout(() => _fc.abort(), 25000);
             const primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
             let response;
+            const _vParam = `_v=${window._SOL_CONTENT_VERSION || Date.now()}`;
             try {
-              response = await fetch(`${primaryUrl}/sol/notifications/all`, { signal: _fc.signal });
+              response = await fetch(`${primaryUrl}/sol/notifications/all?${_vParam}`, { signal: _fc.signal });
               if (response && response.status === 503) {
                 throw new Error('HTTP 503');
               }
             } catch (err) {
               console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via direct Render origin...', err);
-              response = await fetch('https://solmates-backend-w27e.onrender.com/api/sol/notifications/all', { signal: _fc.signal });
+              response = await fetch(`https://solmates-backend-w27e.onrender.com/api/sol/notifications/all?${_vParam}`, { signal: _fc.signal });
             }
             clearTimeout(_ft);
             if (response.status === 429) {
@@ -2581,9 +2582,12 @@
       }, 300000);
 
       document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && (!socket || !socket.connected)) {
-          fetchNotifications(currentSemester);
+        if (!document.hidden) {
+          fetchNotifications(currentSemester, false);
         }
+      });
+      window.addEventListener('focus', () => {
+        fetchNotifications(currentSemester, false);
       });
     }
 
