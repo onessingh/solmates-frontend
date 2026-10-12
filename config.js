@@ -204,8 +204,8 @@ window.addEventListener('afterprint', function() {
 
 // Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
 // Production backend URLs — Cloudflare Verified Custom Domains
-window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
-window.BACKEND_SECONDARY_URL = 'https://api-backup.solmates.in';
+window.BACKEND_PRIMARY_URL = 'https://solmates.in';
+window.BACKEND_SECONDARY_URL = 'https://solmates.in';
 
 // Active Backend Selection — Always use Cloudflare Proxied Domain for Edge Caching (HIT)
 window.PRODUCTION_API_URL = window.BACKEND_PRIMARY_URL + '/api';
