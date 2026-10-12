@@ -222,28 +222,114 @@
         }
 
         /* ============================================================
-           Fullscreen & Landscape (phone): "Letterbox Strip" layout
-
-           Pehle problem: YouTube ke controls + logo iframe ke ANDAR
-           video ke upar hi aate hain. Unhe chhupane ke liye jo black
-           shields lagaye the, wo video ki neeche ki lines bhi dhak
-           dete the.
-
-           Ab: iframe ko video se STRIP px lamba rakha hai aur upar se
-           STRIP px bahar nikaal ke clip kar diya. Isse:
-             - video screen ke upar wale hisse mein POORA dikhta hai
-             - controls/logo neeche wali black strip mein aa jaate hain
-             - ytBottomBarBlocker us strip ko black karke dhak deta hai
-           Geometry layoutYouTubeFrame() (JS) set karta hai.
+           Fullscreen & Landscape: Two-Tier Shield Architecture
+           
+           1. iframe has height: calc(100% - 50px) so YouTube letterboxes
+              and all whiteboard lecture notes are 100% visible.
+           2. Center area is completely OPEN (only 50px blocker at screen bottom,
+              below the iframe) so notes like "MP > EP option" are never cut.
+           3. Bottom-Left shield covers the link icon 🔗 (inside iframe).
+           4. Bottom-Right shield covers the ▶ YouTube logo (inside iframe).
            ============================================================ */
-        #ytBottomBarBlocker {
-            height: var(--yt-bar-h, 55px);
+        /* 1. iframe in fullscreen/landscape: leaves 50px bottom gap */
+        :fullscreen iframe.yt-mode,
+        :-webkit-full-screen iframe.yt-mode,
+        #videoContainer.is-fullscreen iframe.yt-mode {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100% - 50px) !important;
+            transform: none !important;
         }
 
-        /* Corner shields ab zaroorat nahi (strip sab kuch dhak leti hai) */
-        #ytBottomLeftShield,
-        #ytBottomRightShield {
-            display: none !important;
+        @media (orientation: landscape) {
+            iframe.yt-mode {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: calc(100% - 50px) !important;
+                transform: none !important;
+            }
+        }
+
+        /* 2. Bottom gap blocker: 50px solid black bar below iframe */
+        :fullscreen #ytBottomBarBlocker,
+        :-webkit-full-screen #ytBottomBarBlocker,
+        #videoContainer.is-fullscreen #ytBottomBarBlocker {
+            display: block !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 50px !important;
+            background: #000000 !important;
+            z-index: 2147483647 !important;
+            border-radius: 0 !important;
+        }
+
+        @media (orientation: landscape) {
+            #ytBottomBarBlocker {
+                display: block !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 50px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+            }
+        }
+
+        /* 3. Bottom-Left Shield: Covers link icon 🔗 */
+        :fullscreen #ytBottomLeftShield,
+        :-webkit-full-screen #ytBottomLeftShield,
+        #videoContainer.is-fullscreen #ytBottomLeftShield {
+            display: block !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 130px !important;
+            height: 95px !important;
+            background: #000000 !important;
+            z-index: 2147483647 !important;
+        }
+
+        @media (orientation: landscape) {
+            #ytBottomLeftShield {
+                display: block !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: 130px !important;
+                height: 95px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+            }
+        }
+
+        /* 4. Bottom-Right Shield: Covers ▶ YouTube logo */
+        :fullscreen #ytBottomRightShield,
+        :-webkit-full-screen #ytBottomRightShield,
+        #videoContainer.is-fullscreen #ytBottomRightShield {
+            display: block !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 170px !important;
+            height: 95px !important;
+            background: #000000 !important;
+            z-index: 2147483647 !important;
+        }
+
+        @media (orientation: landscape) {
+            #ytBottomRightShield {
+                display: block !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 170px !important;
+                height: 95px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+            }
         }
 
         @media (orientation: landscape) and (max-height: 550px) {
@@ -984,50 +1070,9 @@
 
         }
 
-        // --- Fullscreen / Landscape: video poora dikhao, controls+logo neeche strip mein chhupao ---
-        const YT_STRIP = 64; // px. Logo abhi bhi dikhe to badhao (72/80); video chhota lage to ghatao (56)
-        function layoutYouTubeFrame() {
-            const frame = document.getElementById('videoFrame');
-            const box = document.getElementById('videoContainer');
-            if (!frame || !box || !frame.classList.contains('yt-mode')) return;
 
-            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-            const isShortLandscape = window.matchMedia('(orientation: landscape) and (max-height: 550px)').matches;
-            const props = ['position', 'top', 'left', 'width', 'height', 'transform'];
 
-            // Normal portrait mode: default layout (neeche pehle se kaafi black jagah hoti hai)
-            if (!isFs && !isShortLandscape) {
-                props.forEach(p => frame.style.removeProperty(p));
-                box.style.removeProperty('--yt-bar-h');
-                return;
-            }
 
-            const W = box.clientWidth, H = box.clientHeight;
-            if (!W || !H) return;
-
-            const videoH = H - YT_STRIP;                          // video ke liye bachi height
-            const frameW = Math.min(W, Math.round(videoH * 16 / 9)); // 16:9 video exactly fit
-            const set = (p, v) => frame.style.setProperty(p, v, 'important');
-            set('position', 'absolute');
-            set('top', (-YT_STRIP) + 'px');                       // upar ka gap screen ke bahar
-            set('left', Math.round((W - frameW) / 2) + 'px');
-            set('width', frameW + 'px');
-            set('height', (H + YT_STRIP) + 'px');                 // neeche ka gap = controls ki jagah
-            set('transform', 'none');
-            box.style.setProperty('--yt-bar-h', YT_STRIP + 'px'); // black cover utni hi height ka
-        }
-
-        function scheduleLayout() {
-            layoutYouTubeFrame();
-            requestAnimationFrame(layoutYouTubeFrame);
-            setTimeout(layoutYouTubeFrame, 150);
-            setTimeout(layoutYouTubeFrame, 500);
-        }
-        document.addEventListener('fullscreenchange', scheduleLayout);
-        document.addEventListener('webkitfullscreenchange', scheduleLayout);
-        window.addEventListener('resize', scheduleLayout);
-        window.addEventListener('orientationchange', scheduleLayout);
-        layoutYouTubeFrame();
 
         // --- Interaction Flash Shield Logic ---
         let flashTimer;
