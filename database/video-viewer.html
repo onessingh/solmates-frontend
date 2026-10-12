@@ -222,43 +222,23 @@
         }
 
         /* ============================================================
-           Fullscreen & Landscape: aspect-ratio forces 16:9 iframe
-           
-           height: 100%  →  fill the screen height
-           width: auto + aspect-ratio: 16/9  →  browser calculates width
-           YouTube renders in 16:9 container → NO internal crop
-           Black pillarbox bars appear on left/right (acceptable)
-           55px blocker covers YouTube controls at bottom
+           Fullscreen & Landscape layout
+           JS (adjustYTIframeLayout) handles iframe 16:9 dimensions.
+           CSS handles blocker + button positions only.
            ============================================================ */
 
-        /* 1. iframe: force 16:9 via aspect-ratio */
+        /* 1. iframe base in fullscreen — JS overrides width/left/height */
         :fullscreen iframe.yt-mode,
         :-webkit-full-screen iframe.yt-mode,
         #videoContainer.is-fullscreen iframe.yt-mode {
             position: absolute !important;
             top: 0 !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            height: 100% !important;
-            width: auto !important;
-            aspect-ratio: 16 / 9 !important;
-            max-width: 100% !important;
-            clip-path: none !important;
-            -webkit-clip-path: none !important;
         }
 
-        @media (orientation: landscape) and (max-height: 550px) {
+        @media (orientation: landscape) and (max-height: 600px) {
             iframe.yt-mode {
                 position: absolute !important;
                 top: 0 !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                height: 100% !important;
-                width: auto !important;
-                aspect-ratio: 16 / 9 !important;
-                max-width: 100% !important;
-                clip-path: none !important;
-                -webkit-clip-path: none !important;
             }
         }
 
@@ -1012,7 +992,68 @@
                     icon.className = 'fas fa-compress';
                 }
             }
+
+            // Adjust iframe to 16:9 so YouTube doesn't crop video
+            setTimeout(adjustYTIframeLayout, 50);
         }
+
+        /**
+         * Sets iframe to exact 16:9 dimensions in fullscreen/landscape.
+         * CSS aspect-ratio is unreliable on position:absolute iframes,
+         * so we set pixel values directly via JS.
+         *
+         * Logic:
+         *   - Container fills the screen (W x H)
+         *   - 16:9 width = H * 16/9
+         *   - If 16:9 width < W → pillarbox (black bars on sides)
+         *   - YouTube renders full video, NO internal cropping
+         *   - 55px blocker at bottom covers YouTube controls
+         */
+        function adjustYTIframeLayout() {
+            const iframe = document.getElementById('videoFrame');
+            const container = document.getElementById('videoContainer');
+            if (!iframe || !container) return;
+
+            const isYT = iframe.classList.contains('yt-mode');
+            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight < 600;
+
+            if (isYT && (isFs || isLandscape)) {
+                const W = container.offsetWidth;
+                const H = container.offsetHeight;
+                const targetW = Math.floor(H * 16 / 9);
+
+                if (targetW < W) {
+                    // Pillarbox: iframe narrower than screen → YouTube won't crop
+                    const leftPx = Math.floor((W - targetW) / 2);
+                    iframe.style.setProperty('position', 'absolute', 'important');
+                    iframe.style.setProperty('top', '0px', 'important');
+                    iframe.style.setProperty('left', leftPx + 'px', 'important');
+                    iframe.style.setProperty('width', targetW + 'px', 'important');
+                    iframe.style.setProperty('height', H + 'px', 'important');
+                    iframe.style.setProperty('transform', 'none', 'important');
+                } else {
+                    // Screen narrower than 16:9 — pillarbox not needed, use full width
+                    iframe.style.setProperty('position', 'absolute', 'important');
+                    iframe.style.setProperty('top', '0px', 'important');
+                    iframe.style.setProperty('left', '0px', 'important');
+                    iframe.style.setProperty('width', '100%', 'important');
+                    iframe.style.setProperty('height', H + 'px', 'important');
+                    iframe.style.setProperty('transform', 'none', 'important');
+                }
+            } else if (!isFs && !isLandscape) {
+                // Portrait/normal: reset to CSS defaults
+                iframe.style.removeProperty('width');
+                iframe.style.removeProperty('height');
+                iframe.style.removeProperty('left');
+                iframe.style.removeProperty('top');
+                iframe.style.removeProperty('transform');
+            }
+        }
+
+        // Also adjust on orientation/resize (handles auto-rotate)
+        window.addEventListener('resize', () => setTimeout(adjustYTIframeLayout, 100));
+        window.addEventListener('orientationchange', () => setTimeout(adjustYTIframeLayout, 300));
 
         // --- Interaction Flash Shield Logic ---
         let flashTimer;
