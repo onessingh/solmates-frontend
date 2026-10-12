@@ -7,7 +7,7 @@
 # This prevents exposing backend URLs in client JavaScript
 # Change this URL based on your deployment environment
 # ============================================================================
-/api/*  https://solmates-backend-f9rl.onrender.com/api/:splat  200
+/api/*  https://api.solmates.in/api/:splat  200
 
 # For staging environment, use:
 # /api/*  https://solmates-backend-staging.onrender.com/api/:splat  200

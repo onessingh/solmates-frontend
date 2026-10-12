@@ -168,7 +168,7 @@
             try {
                 const apiBase = window.PRODUCTION_API_URL || 
                                 (window.SOL && window.SOL.getApiBase ? window.SOL.getApiBase() : 
-                                (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : '/api'));
+                                (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api'));
 
                 const startTime = Date.now();
                 const headers = {};
