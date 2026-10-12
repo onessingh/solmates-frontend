@@ -222,27 +222,40 @@
         }
 
         /* ============================================================
-           Fullscreen & Landscape layout
-           JS (adjustYTIframeLayout) handles iframe 16:9 dimensions.
-           CSS handles blocker + button positions only.
+           Fullscreen & Landscape: Two-Tier Shield Architecture
+           
+           1. iframe has height: calc(100% - 46px) so YouTube letterboxes
+              and all whiteboard lecture notes are 100% visible.
+           2. Center area is completely OPEN (only 46px blocker at screen bottom,
+              below the iframe) so notes like "MP > EP option" are never cut.
+           3. Bottom-Left shield covers the link icon 🔗 (inside iframe).
+           4. Bottom-Right shield covers the ▶ YouTube logo (inside iframe).
            ============================================================ */
 
-        /* 1. iframe base in fullscreen — JS overrides width/left/height */
+        /* 1. iframe in fullscreen/landscape: height leaves 46px for bottom gap */
         :fullscreen iframe.yt-mode,
         :-webkit-full-screen iframe.yt-mode,
         #videoContainer.is-fullscreen iframe.yt-mode {
             position: absolute !important;
             top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100% - 46px) !important;
+            transform: none !important;
         }
 
-        @media (orientation: landscape) and (max-height: 600px) {
+        @media (orientation: landscape) and (max-height: 550px) {
             iframe.yt-mode {
                 position: absolute !important;
                 top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: calc(100% - 46px) !important;
+                transform: none !important;
             }
         }
 
-        /* 2. Bottom blocker: standard 55px — covers YT controls at iframe bottom */
+        /* 2. Bottom gap blocker: 46px solid black bar below iframe */
         :fullscreen #ytBottomBarBlocker,
         :-webkit-full-screen #ytBottomBarBlocker,
         #videoContainer.is-fullscreen #ytBottomBarBlocker {
@@ -250,7 +263,7 @@
             right: 0 !important;
             bottom: 0 !important;
             width: 100% !important;
-            height: 55px !important;
+            height: 46px !important;
             background: #000000 !important;
             z-index: 2147483647 !important;
             border-radius: 0 !important;
@@ -262,7 +275,7 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 100% !important;
-                height: 55px !important;
+                height: 46px !important;
                 background: #000000 !important;
                 z-index: 2147483647 !important;
             }
@@ -271,23 +284,73 @@
             }
         }
 
-        /* 3. Fullscreen button: at bottom of the 55px bar */
+        /* 3. Bottom-Left Shield: Covers link icon 🔗 */
+        :fullscreen #ytBottomLeftShield,
+        :-webkit-full-screen #ytBottomLeftShield,
+        #videoContainer.is-fullscreen #ytBottomLeftShield {
+            display: block !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 120px !important;
+            height: 90px !important;
+            background: #000000 !important;
+            z-index: 2147483647 !important;
+        }
+
+        @media (orientation: landscape) and (max-height: 550px) {
+            #ytBottomLeftShield {
+                display: block !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: 120px !important;
+                height: 90px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+            }
+        }
+
+        /* 4. Bottom-Right Shield: Covers ▶ YouTube logo */
+        :fullscreen #ytBottomRightShield,
+        :-webkit-full-screen #ytBottomRightShield,
+        #videoContainer.is-fullscreen #ytBottomRightShield {
+            display: block !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 160px !important;
+            height: 90px !important;
+            background: #000000 !important;
+            z-index: 2147483647 !important;
+        }
+
+        @media (orientation: landscape) and (max-height: 550px) {
+            #ytBottomRightShield {
+                display: block !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 160px !important;
+                height: 90px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+            }
+        }
+
+        /* 5. Custom Fullscreen Button: bottom-right corner inside the black bar */
         :fullscreen #customFsBtn,
         :-webkit-full-screen #customFsBtn,
         #videoContainer.is-fullscreen #customFsBtn {
-            bottom: 8px !important;
+            bottom: 4px !important;
             right: 12px !important;
-            width: 40px !important;
-            height: 40px !important;
+            width: 38px !important;
+            height: 38px !important;
             z-index: 2147483648 !important;
         }
 
         @media (orientation: landscape) and (max-height: 550px) {
             #customFsBtn {
-                bottom: 8px !important;
+                bottom: 4px !important;
                 right: 12px !important;
-                width: 40px !important;
-                height: 40px !important;
+                width: 38px !important;
+                height: 38px !important;
                 z-index: 2147483648 !important;
             }
         }
@@ -594,6 +657,16 @@
                 <div id="ytBottomBarBlocker" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; bottom: 0; left: 0; width: 100%; height: 55px; background: #000; z-index: 2147483647; pointer-events: auto; touch-action: pinch-zoom;"></div>
+
+                <!-- 4. Bottom-Left Link Shield (Covers link icon in fullscreen) -->
+                <div id="ytBottomLeftShield" class="yt-blocker" 
+                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
+                    style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
+
+                <!-- 5. Bottom-Right YouTube Logo Shield (Covers YT logo in fullscreen) -->
+                <div id="ytBottomRightShield" class="yt-blocker" 
+                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
+                    style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
 
                 <!-- Custom Fullscreen Button (Replaces Native) -->
                 <button id="customFsBtn" onclick="toggleCustomFullscreen()" style="position: absolute; bottom: 65px; right: 16px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; font-size: 18px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
@@ -993,67 +1066,7 @@
                 }
             }
 
-            // Adjust iframe to 16:9 so YouTube doesn't crop video
-            setTimeout(adjustYTIframeLayout, 50);
         }
-
-        /**
-         * Sets iframe to exact 16:9 dimensions in fullscreen/landscape.
-         * CSS aspect-ratio is unreliable on position:absolute iframes,
-         * so we set pixel values directly via JS.
-         *
-         * Logic:
-         *   - Container fills the screen (W x H)
-         *   - 16:9 width = H * 16/9
-         *   - If 16:9 width < W → pillarbox (black bars on sides)
-         *   - YouTube renders full video, NO internal cropping
-         *   - 55px blocker at bottom covers YouTube controls
-         */
-        function adjustYTIframeLayout() {
-            const iframe = document.getElementById('videoFrame');
-            const container = document.getElementById('videoContainer');
-            if (!iframe || !container) return;
-
-            const isYT = iframe.classList.contains('yt-mode');
-            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-            const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight < 600;
-
-            if (isYT && (isFs || isLandscape)) {
-                const W = container.offsetWidth;
-                const H = container.offsetHeight;
-                const targetW = Math.floor(H * 16 / 9);
-
-                if (targetW < W) {
-                    // Pillarbox: iframe narrower than screen → YouTube won't crop
-                    const leftPx = Math.floor((W - targetW) / 2);
-                    iframe.style.setProperty('position', 'absolute', 'important');
-                    iframe.style.setProperty('top', '0px', 'important');
-                    iframe.style.setProperty('left', leftPx + 'px', 'important');
-                    iframe.style.setProperty('width', targetW + 'px', 'important');
-                    iframe.style.setProperty('height', H + 'px', 'important');
-                    iframe.style.setProperty('transform', 'none', 'important');
-                } else {
-                    // Screen narrower than 16:9 — pillarbox not needed, use full width
-                    iframe.style.setProperty('position', 'absolute', 'important');
-                    iframe.style.setProperty('top', '0px', 'important');
-                    iframe.style.setProperty('left', '0px', 'important');
-                    iframe.style.setProperty('width', '100%', 'important');
-                    iframe.style.setProperty('height', H + 'px', 'important');
-                    iframe.style.setProperty('transform', 'none', 'important');
-                }
-            } else if (!isFs && !isLandscape) {
-                // Portrait/normal: reset to CSS defaults
-                iframe.style.removeProperty('width');
-                iframe.style.removeProperty('height');
-                iframe.style.removeProperty('left');
-                iframe.style.removeProperty('top');
-                iframe.style.removeProperty('transform');
-            }
-        }
-
-        // Also adjust on orientation/resize (handles auto-rotate)
-        window.addEventListener('resize', () => setTimeout(adjustYTIframeLayout, 100));
-        window.addEventListener('orientationchange', () => setTimeout(adjustYTIframeLayout, 300));
 
         // --- Interaction Flash Shield Logic ---
         let flashTimer;
