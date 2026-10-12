@@ -222,47 +222,50 @@
         }
 
         /* ============================================================
-           Fullscreen & Landscape: Show full video, hide YT controls
+           Fullscreen & Landscape: Correct strategy
            
-           Strategy:
-           - iframe height = calc(100% - 48px) → YouTube pillarboxes
-             (no video crop), full content visible
-           - clip-path: inset(0 0 40px 0) → surgically clips the
-             YouTube controls bar (bottom 40px of iframe) transparently.
-             The clipped area shows the container's black background.
-           - Result: video 100% visible, YouTube logo/link invisible
+           Problem was: shrinking HEIGHT made YouTube crop MORE, not less.
+           Phone in landscape (800×390) → 16:9 needs 450px tall.
+           With 390px iframe YouTube crops 30px from bottom.
+           With 342px iframe YouTube crops 54px from bottom (WORSE).
+           
+           REAL FIX: Constrain WIDTH to 16:9 ratio (based on screen height).
+           iframe becomes 693×390 → perfect 16:9 → YouTube shows full
+           video with NO internal cropping. Pillarbox (black side bars)
+           appears on left/right, but all whiteboard content is visible.
+           Standard 55px blocker covers YouTube controls at the bottom.
            ============================================================ */
 
-        /* 1. iframe: shrink + clip bottom controls */
+        /* 1. iframe: 16:9 width — YouTube shows full video, no crop */
         :fullscreen iframe.yt-mode,
         :-webkit-full-screen iframe.yt-mode,
         #videoContainer.is-fullscreen iframe.yt-mode {
             position: absolute !important;
             top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: calc(100% - 48px) !important;
-            clip-path: inset(0 0 40px 0) !important;
-            -webkit-clip-path: inset(0 0 40px 0) !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: calc(100svh * 16 / 9) !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            clip-path: none !important;
+            -webkit-clip-path: none !important;
         }
 
         @media (orientation: landscape) and (max-height: 550px) {
             iframe.yt-mode {
                 position: absolute !important;
                 top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: calc(100% - 48px) !important;
-                clip-path: inset(0 0 40px 0) !important;
-                -webkit-clip-path: inset(0 0 40px 0) !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                width: calc(100svh * 16 / 9) !important;
+                max-width: 100% !important;
+                height: 100% !important;
+                clip-path: none !important;
+                -webkit-clip-path: none !important;
             }
         }
 
-        /* 2. Bottom blocker: 88px = 48px(gap below iframe) + 40px(YT controls bar inside iframe)
-              Video content: iframe top → ~302px
-              YT controls:   302px → 342px (iframe bottom)
-              Gap:           342px → 390px (below iframe)
-              Blocker covers 302–390px → controls hidden, video safe ✅ */
+        /* 2. Bottom blocker: standard 55px — covers YT controls at iframe bottom */
         :fullscreen #ytBottomBarBlocker,
         :-webkit-full-screen #ytBottomBarBlocker,
         #videoContainer.is-fullscreen #ytBottomBarBlocker {
@@ -270,7 +273,7 @@
             right: 0 !important;
             bottom: 0 !important;
             width: 100% !important;
-            height: 88px !important;
+            height: 55px !important;
             background: #000000 !important;
             z-index: 2147483647 !important;
             border-radius: 0 !important;
@@ -282,7 +285,7 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 100% !important;
-                height: 88px !important;
+                height: 55px !important;
                 background: #000000 !important;
                 z-index: 2147483647 !important;
             }
@@ -291,11 +294,11 @@
             }
         }
 
-        /* 3. Fullscreen button: placed in the lower 48px gap (below iframe), not in video area */
+        /* 3. Fullscreen button: at bottom of the 55px bar */
         :fullscreen #customFsBtn,
         :-webkit-full-screen #customFsBtn,
         #videoContainer.is-fullscreen #customFsBtn {
-            bottom: 4px !important;
+            bottom: 8px !important;
             right: 12px !important;
             width: 40px !important;
             height: 40px !important;
@@ -304,7 +307,7 @@
 
         @media (orientation: landscape) and (max-height: 550px) {
             #customFsBtn {
-                bottom: 4px !important;
+                bottom: 8px !important;
                 right: 12px !important;
                 width: 40px !important;
                 height: 40px !important;
