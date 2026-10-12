@@ -222,21 +222,16 @@
         }
 
         /* ============================================================
-           Fullscreen & Landscape: Correct strategy
+           Fullscreen & Landscape: aspect-ratio forces 16:9 iframe
            
-           Problem was: shrinking HEIGHT made YouTube crop MORE, not less.
-           Phone in landscape (800×390) → 16:9 needs 450px tall.
-           With 390px iframe YouTube crops 30px from bottom.
-           With 342px iframe YouTube crops 54px from bottom (WORSE).
-           
-           REAL FIX: Constrain WIDTH to 16:9 ratio (based on screen height).
-           iframe becomes 693×390 → perfect 16:9 → YouTube shows full
-           video with NO internal cropping. Pillarbox (black side bars)
-           appears on left/right, but all whiteboard content is visible.
-           Standard 55px blocker covers YouTube controls at the bottom.
+           height: 100%  →  fill the screen height
+           width: auto + aspect-ratio: 16/9  →  browser calculates width
+           YouTube renders in 16:9 container → NO internal crop
+           Black pillarbox bars appear on left/right (acceptable)
+           55px blocker covers YouTube controls at bottom
            ============================================================ */
 
-        /* 1. iframe: 16:9 width — YouTube shows full video, no crop */
+        /* 1. iframe: force 16:9 via aspect-ratio */
         :fullscreen iframe.yt-mode,
         :-webkit-full-screen iframe.yt-mode,
         #videoContainer.is-fullscreen iframe.yt-mode {
@@ -244,9 +239,10 @@
             top: 0 !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
-            width: calc(100svh * 16 / 9) !important;
-            max-width: 100% !important;
             height: 100% !important;
+            width: auto !important;
+            aspect-ratio: 16 / 9 !important;
+            max-width: 100% !important;
             clip-path: none !important;
             -webkit-clip-path: none !important;
         }
@@ -257,9 +253,10 @@
                 top: 0 !important;
                 left: 50% !important;
                 transform: translateX(-50%) !important;
-                width: calc(100svh * 16 / 9) !important;
-                max-width: 100% !important;
                 height: 100% !important;
+                width: auto !important;
+                aspect-ratio: 16 / 9 !important;
+                max-width: 100% !important;
                 clip-path: none !important;
                 -webkit-clip-path: none !important;
             }
