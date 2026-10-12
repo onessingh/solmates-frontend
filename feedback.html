@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -951,10 +951,10 @@
           });
       };
 
-      const hasInvalidChars = (text) => /[*#Â¥â‚¬Â¢%Ã—@â‚¹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
+      const hasInvalidChars = (text) => /[*#¥€¢%×@₹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
 
       if (hasInvalidChars(formData.get('name')) || hasInvalidChars(formData.get('message'))) {
-          alert('Special characters like * # Â¥ â‚¬ Â¢ % Ã— @ â‚¹ & are not allowed in the form.');
+          alert('Special characters like * # ¥ € ¢ % × @ ₹ & are not allowed in the form.');
           return;
       }
 
@@ -966,15 +966,15 @@
       btn.classList.add('loading');
       btn.disabled = true;
 
-      const starsDisplay = "â­".repeat(parseInt(rating));
+      const starsDisplay = "⭐".repeat(parseInt(rating));
 
       try {
-      const text = `ðŸ“ *New Website Feedback*\n\n` +
-                   `â­ *Rating:* ${rating}/5 ${starsDisplay}\n` +
-                   `ðŸ“‚ *Type:* ${formData.get('feedbackType')}\n` +
-                   `ðŸ“ *Page:* ${formData.get('pageUrl')}\n` +
-                   `ðŸ‘¤ *User:* ${formData.get('userName') || 'Anonymous'}\n\n` +
-                   `ðŸ’¬ *Message:*\n${formData.get('message')}`;
+      const text = `📝 *New Website Feedback*\n\n` +
+                   `⭐ *Rating:* ${rating}/5 ${starsDisplay}\n` +
+                   `📂 *Type:* ${formData.get('feedbackType')}\n` +
+                   `📍 *Page:* ${formData.get('pageUrl')}\n` +
+                   `👤 *User:* ${formData.get('userName') || 'Anonymous'}\n\n` +
+                   `💬 *Message:*\n${formData.get('message')}`;
 
       // 1. Send text message
       const textResponse = await fetch(`https://api.telegram.org/bot${FEEDBACK_BOT_TOKEN}/sendMessage`, {
@@ -1011,7 +1011,7 @@
 
       } catch (error) {
         console.error(error);
-        alert('âŒ Error sending feedback. Please try again later.');
+        alert('❌ Error sending feedback. Please try again later.');
       } finally {
         btn.classList.remove('loading');
         btn.disabled = false;

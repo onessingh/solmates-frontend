@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <script>
@@ -28,7 +28,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="/css/global-lockdown.css?v=v856">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="/config.js?v=v858"></script>
+<script src="/config.js?v=v856"></script>
 <script src="/js/api-client.js?v=v857" defer></script>
 
 <style>
@@ -442,8 +442,8 @@
   <div class="disclaimer">
       <i class="fas fa-info-circle"></i>
       <div>
-        <p style="margin: 0; padding-bottom: 8px;"><strong>Transparency Notice:</strong> Every incident logged here is backed by solid, verified evidence. This board is strictly for community awareness to prevent future harmâ€”not out of personal grudgesâ€”and only after offenders have ignored multiple warnings.</p>
-        <p style="margin: 0; padding-bottom: 8px;">Sometimes, individuals may attempt to spread misinformation about this board or our platform. We encourage you to always demand undeniable proof from <strong>anyone</strong> making claimsâ€”even from us.</p>
+        <p style="margin: 0; padding-bottom: 8px;"><strong>Transparency Notice:</strong> Every incident logged here is backed by solid, verified evidence. This board is strictly for community awareness to prevent future harm—not out of personal grudges—and only after offenders have ignored multiple warnings.</p>
+        <p style="margin: 0; padding-bottom: 8px;">Sometimes, individuals may attempt to spread misinformation about this board or our platform. We encourage you to always demand undeniable proof from <strong>anyone</strong> making claims—even from us.</p>
         <p style="margin: 0;">If you feel an alert is unjustified, or if you need to see more extensive evidence beyond what is provided here, please contact the Admin directly.</p>
       </div>
     </div>
@@ -506,7 +506,7 @@
     <span id="proofCounter" style="color:rgba(255,255,255,0.7);font-size:13px;align-self:center;"></span>
     <button onclick="nextProof()">Next <i class="fas fa-chevron-right"></i></button>
   </div>
-  <p class="proof-caption">Tap image to zoom Â· Tap outside to close</p>
+  <p class="proof-caption">Tap image to zoom · Tap outside to close</p>
 </div>
 
 <!-- Add Alert Modal -->
@@ -521,13 +521,13 @@
     <div class="form-field">
       <label>Select Avatar</label>
       <div class="avatar-selector">
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ¤¡" checked> <span>ðŸ¤¡</span></label>
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ‘¹"> <span>ðŸ‘¹</span></label>
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ’€"> <span>ðŸ’€</span></label>
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ’©"> <span>ðŸ’©</span></label>
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ"> <span>ðŸ</span></label>
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ·"> <span>ðŸ·</span></label>
-          <label class="avatar-opt"><input type="radio" name="awAvatar" value="ðŸ€"> <span>ðŸ€</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="🤡" checked> <span>🤡</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="👹"> <span>👹</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="💀"> <span>💀</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="💩"> <span>💩</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="🐍"> <span>🐍</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="🐷"> <span>🐷</span></label>
+          <label class="avatar-opt"><input type="radio" name="awAvatar" value="🐀"> <span>🐀</span></label>
         </div>
     </div>
     
@@ -698,13 +698,13 @@ function showProofImg() {
     img.style.display = 'none';
     videoWrap.style.display = 'block';
     iframe.src = 'https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&playsinline=1';
-    if (caption) caption.textContent = 'Playing Video Proof Â· Tap outside or âœ• to close';
+    if (caption) caption.textContent = 'Playing Video Proof · Tap outside or ✕ to close';
   } else {
     iframe.src = '';
     videoWrap.style.display = 'none';
     img.style.display = 'block';
     img.src = url;
-    if (caption) caption.textContent = 'Tap image to zoom Â· Tap outside to close';
+    if (caption) caption.textContent = 'Tap image to zoom · Tap outside to close';
   }
 
   document.getElementById('proofCounter').textContent = (currentImgIdx+1) + ' / ' + currentImages.length;
@@ -835,7 +835,7 @@ function openAddModal() {
   document.getElementById('awDesc').value = '';
   document.getElementById('awFile').value = '';
   if (document.getElementById('awVideoInput')) document.getElementById('awVideoInput').value = '';
-  document.querySelector('input[name="awAvatar"][value="ðŸ¤¡"]').checked = true;
+  document.querySelector('input[name="awAvatar"][value="🤡"]').checked = true;
   selectedAlertFiles = [];
   renderPreviews();
   selectedAdminVoices = [];
@@ -853,7 +853,7 @@ function openEditModalById(id) {
   editAlertId = alertData.id || alertData._id;
   
   var rawTitle = alertData.title || '?';
-  var avatar = 'ðŸ‘¤';
+  var avatar = '👤';
   var name = rawTitle;
   if (rawTitle.indexOf('||') !== -1) {
     var parts = rawTitle.split('||');
@@ -1011,10 +1011,10 @@ async function submitReport() {
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending to Admin...';
 
   try {
-    var textMsg = "ðŸš¨ *NEW INCIDENT REPORT* ðŸš¨\n\n" +
-                  "ðŸ‘¤ *Reported Offender:* " + offender + "\n" +
-                  "ðŸ—£ï¸ *Reporter:* " + user + "\n\n" +
-                  "ðŸ“ *Description:*\n" + desc;
+    var textMsg = "🚨 *NEW INCIDENT REPORT* 🚨\n\n" +
+                  "👤 *Reported Offender:* " + offender + "\n" +
+                  "🗣️ *Reporter:* " + user + "\n\n" +
+                  "📝 *Description:*\n" + desc;
                   
     await fetch('https://api.telegram.org/bot' + TG_BOT_TOKEN + '/sendMessage', {
       method: 'POST',
@@ -1423,7 +1423,7 @@ async function removeAlert(id, btn) {
 // ===== SUBMIT ALERT (Multi-image + EDIT) =====
 async function submitAlert() {
   var avatarInput = document.querySelector('input[name="awAvatar"]:checked');
-    var avatar = avatarInput ? avatarInput.value : 'ðŸ¤¡';
+    var avatar = avatarInput ? avatarInput.value : '🤡';
   var name = document.getElementById('awName').value.trim();
   var phone = document.getElementById('awPhone').value.trim();
   var sem = document.getElementById('awSemester').value;
