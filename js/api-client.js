@@ -224,12 +224,6 @@ class SolmatesAPI {
       if (this.adminToken && !options.skipAuth) {
         config.cache = 'no-cache';
         url += (url.includes('?') ? '&' : '?') + '_a=' + Date.now();
-      } else {
-        // Dynamic content versioning: ensures Cloudflare serves fresh version immediately when content changes
-        const activeVer = window._SOL_CONTENT_VERSION || localStorage.getItem('_sol_content_version');
-        if (activeVer) {
-          url += (url.includes('?') ? '&' : '?') + '_v=' + activeVer;
-        }
       }
     }
 
