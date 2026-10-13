@@ -7,7 +7,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-Q6GVS9XX1M');
 </script>
 
@@ -26,27 +25,28 @@
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=v856">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
   <link rel="icon" href="/favicon.ico?v=v856" type="image/x-icon">
   <link rel="shortcut icon" href="/favicon.ico?v=v856" type="image/x-icon">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v856">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v856">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v856">
-    <title>PDF to PowerPoint - Smart PDF Solutions</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-    <link rel="stylesheet" href="/tools/pdf-tools/common.css">
+  <title>PDF to PowerPoint - Smart PDF Solutions | Solmates</title>
+  <meta name="description" content="Convert PDF documents and lecture notes into PowerPoint (.pptx) slides 100% client-side with full visual fidelity and editable notes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Client-Side Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+  <link rel="stylesheet" href="/tools/pdf-tools/common.css">
   <script src="/js/webview-fix.js?v=v856"></script>
   <script src="/js/sol-cache.js?v=v862"></script>
 
 <style>
-
     .header-bar {
       background: var(--surface, #ffffff);
       padding: 20px;
@@ -68,14 +68,109 @@
       width: 100%;
     }
     body { padding-top: 0 !important; }
-    
 
+    .main-container {
+      padding: 24px 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-    /* Dark Mode Native OS Integration */
-    
-    </style>
+    .upload-card {
+      padding: 36px 20px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 1.25rem;
+      text-align: center;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .upload-card:hover {
+      border-color: #ea580c;
+      background: #fffaf0;
+    }
 
+    .upload-icon {
+      width: 56px;
+      height: 56px;
+      color: #ea580c;
+      margin: 0 auto 14px auto;
+    }
 
+    .slide-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+      max-height: 460px;
+      overflow-y: auto;
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .slide-card {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+    }
+
+    .slide-card-header {
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #475569;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .slide-card-img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: #ffffff;
+    }
+
+    .progress-box {
+      margin: 20px 0;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      display: none;
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: #ea580c;
+      transition: width 0.2s ease;
+    }
+
+    @media (max-width: 640px) {
+      .header-bar { padding: 12px 14px; }
+      .header-bar h1 { font-size: 1.15rem; gap: 8px; }
+      .main-container { padding: 12px 10px; }
+      .upload-card { padding: 24px 14px; }
+      .upload-icon { width: 44px; height: 44px; }
+    }
+</style>
+
+<!-- Dark Mode Native OS Integration -->
 <style id="solmates-dark-style" media="not all">
     :root {
       --bg-body: #0f172a;
@@ -94,71 +189,29 @@
 
     body { background: var(--bg-body, #0f172a) !important; color: var(--text-main, #f8fafc) !important; }
     .top-nav, .header-bar, header { background: var(--bg-nav, rgba(15,23,42,0.95)) !important; border-bottom: 1px solid var(--border-color, #334155) !important; }
-    .card, .form-card, .result-box, .result-area, .white-box, .container, .main-content, .card-body, .feature-item, .info-box, .upload-area, .upload-card, .tool-card { 
+    .card, .form-card, .result-box, .result-area, .white-box, .container, .main-container, .main-content, .card-body, .feature-item, .info-box, .upload-card, .tool-card { 
         background: var(--bg-card, #1e293b) !important; 
         border: 1px solid var(--border-color, #334155) !important; 
     }
     #resultArea, #result-section, #workspace { background: var(--bg-card, #1e293b) !important; border-color: var(--border-color, #334155) !important; }
-    
     .upload-card:hover { background: var(--bg-card-hover, #334155) !important; border-color: var(--brand-accent, #c0962d) !important; }
     .upload-card i, .upload-card h2 { color: var(--text-main, #f8fafc) !important; }
     h1, h2, h3, h4, .nav-logo { color: var(--text-main, #f8fafc) !important; background: none !important; -webkit-text-fill-color: var(--text-main, #f8fafc) !important; }
     h1 i, h2 i, h3 i, .icon { -webkit-text-fill-color: var(--brand-accent, #c0962d) !important; color: var(--brand-accent, #c0962d) !important; }
-    .apple-sub, p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
-    input, select, textarea, .dropdown, .input-field { 
-        background: var(--bg-card-hover, #334155) !important; 
-        color: var(--text-main, #f8fafc) !important; 
-        border: 1px solid var(--border-color, #475569) !important; 
-    }
-    input::placeholder, textarea::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
-    .back-link, .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
-    .btn-primary { background: #0071e3 !important; color: #ffffff !important; border: none !important; }
-    .btn-primary:hover { background: #005bb5 !important; }
-    .btn-primary:disabled { background: #334155 !important; color: #94a3b8 !important; }
-
-    /* Fix loading overlay blinding white & position (changed to 100% to avoid mobile scroll issues) */
-    .loading-overlay { background: rgba(15, 23, 42, 0.95) !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100% !important; height: 100% !important; z-index: 99999 !important; display: none; flex-direction: column; justify-content: center; align-items: center; }
-    .loading-overlay p, #loadingText { color: var(--text-main, #f8fafc) !important; }
-    .spinner { border-color: #334155 !important; border-top-color: #0071e3 !important; }
-
-    /* Fix success message boxes */
-    .result-area > div[style*="background: #ecfdf5"], div[style*="background: #ecfdf5"] { background: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; border: 1px solid rgba(16, 185, 129, 0.2) !important; }
-    div[style*="background: #ecfdf5"] p strong { color: #10b981 !important; }
-    div[style*="color: #065f46"] { color: #10b981 !important; }
-    div[style*="background: #f8fafc"] { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-left-color: var(--brand-accent, #c0962d) !important; }
-
-    /* Fix tailwind buttons & text in Add/Delete/Favicon pages */
-    button.bg-slate-100, button.bg-white, .btn-outline { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; border-color: var(--border-color, #475569) !important; }
-    button.bg-slate-100.selected { border-color: var(--brand-accent, #c0962d) !important; }
-    .bg-blue-50 { background: rgba(0, 113, 227, 0.1) !important; color: #60a5fa !important; border: 1px solid rgba(0, 113, 227, 0.2) !important; }
-    .shutter-btn { border-color: #334155 !important; background: #cbd5e1 !important; }
-    .bg-slate-50, .hover\:bg-slate-50:hover, .hover\:bg-slate-50:active, .dark\:bg-slate-800, .dark\:bg-slate-900 { background: var(--bg-card-hover, #334155) !important; color: var(--text-main, #f8fafc) !important; }
-    .text-slate-500, .text-slate-400, .hover\:text-slate-700, .dark\:text-slate-400, .text-slate-700, .dark\:text-slate-50 { color: var(--text-main, #f8fafc) !important; }
-    #summaryText, #summaryText * { color: var(--text-main, #f8fafc) !important; }
-    a[download] { color: var(--text-main, #f8fafc) !important; }
-    label[for="insert-upload"]:hover, label[for="insert-upload"]:active, label[for="insert-upload"]:focus { background: var(--bg-card-hover, #334155) !important; }
-
-    /* Fix translate pdf container */
-    #contentHolder, #contentHolder * { color: var(--text-main, #f8fafc) !important; background: var(--bg-card-hover, #334155) !important; border-color: var(--border-color, #334155) !important; }
+    p, label, .form-label, .text-muted { color: var(--text-muted, #94a3b8) !important; }
+    .slide-preview-grid { background: #0b1120 !important; border-color: var(--border-color, #334155) !important; }
+    .slide-card { background: var(--bg-card, #1e293b) !important; border-color: var(--border-color, #334155) !important; }
+    .slide-card-header { background: var(--bg-card-hover, #334155) !important; color: #cbd5e1 !important; border-color: #475569 !important; }
+    .progress-box { background: var(--bg-card, #1e293b) !important; border: 1px solid #334155 !important; }
+    .btn-secondary { color: var(--brand-accent, #c0962d) !important; background: rgba(192, 150, 45, 0.1) !important; }
+    .btn-primary { background: #ea580c !important; color: #ffffff !important; border: none !important; }
+    .btn-primary:hover { background: #c2410c !important; }
 </style>
-<script>
-    (function() {
-      const savedTheme = localStorage.getItem('solmates_theme');
-      if (savedTheme) {
-        document.documentElement.style.colorScheme = savedTheme;
-        const darkStyle = document.getElementById('solmates-dark-style');
-        if (darkStyle) {
-          if (savedTheme === 'dark') { darkStyle.media = 'all'; darkStyle.disabled = false; }
-          else if (savedTheme === 'light') { darkStyle.media = 'not all'; darkStyle.disabled = true; }
-        }
-      }
-    })();
-  </script>
+
 <script id="color-scheme-sync">
 (function() {
     function updateMetaColorScheme() {
         var meta = document.querySelector('meta[name="color-scheme"]');
-        var themeMeta = document.querySelector('meta[name="theme-color"]');
         var darkStyle = document.getElementById('solmates-dark-style');
         if (!meta) return;
         var theme = localStorage.getItem('solmates_theme');
@@ -168,20 +221,11 @@
         }
         if (theme === 'dark') {
             meta.setAttribute('content', 'dark only');
-            
             document.documentElement.style.colorScheme = 'dark';
             document.documentElement.classList.add('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'screen');
-        } else if (theme === 'light') {
-            meta.setAttribute('content', 'only light');
-            
-            document.documentElement.style.colorScheme = 'light';
-            document.documentElement.classList.remove('dark');
-            if (darkStyle) darkStyle.setAttribute('media', 'not all');
         } else {
-            // Force light mode for new users to override OS dark mode in PWA status bar
             meta.setAttribute('content', 'only light');
-            
             document.documentElement.style.colorScheme = 'light';
             document.documentElement.classList.remove('dark');
             if (darkStyle) darkStyle.setAttribute('media', 'not all');
@@ -191,195 +235,293 @@
     window.addEventListener('storage', function(e) {
         if (e.key === 'solmates_theme') updateMetaColorScheme();
     });
-    var originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-        originalSetItem.apply(this, arguments);
-        if (key === 'solmates_theme') updateMetaColorScheme();
-    };
 })();
 </script>
-    <!-- [AUTO-SEO-START] -->
-    <meta name="description" content="PDF to PowerPoint converter for DU SOL MBA students. Convert PDF lecture slides and presentations to editable PPT format.">
-    <meta name="keywords" content="Solmates, MBA, student tools, career database, productivity, PowerPoint, Smart, Solutions">
-    <meta property="og:title" content="PDF to PowerPoint - Smart PDF Solutions | Solmates">
-    <meta property="og:description" content="Access the PDF to PowerPoint - Smart PDF Solutions and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta property="og:image" content="https://solmates.in/preview.png">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="PDF to PowerPoint - Smart PDF Solutions | Solmates">
-    <meta name="twitter:description" content="Access the PDF to PowerPoint - Smart PDF Solutions and other professional tools, databases, and resources on Solmates. Built for students and professionals.">
-    <meta name="twitter:image" content="/preview.png">
-    <link rel="manifest" href="/manifest.json">
-    <!-- [AUTO-SEO-END] -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
 
 <script>
-// --- STRICT ANTI-SCRAPING MODULE ---
+// Anti-scraping protection
 (function() {
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
         if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) return false;
     };
-    /* Aggressive devtools polling removed */
 })();
 </script>
-
 </head>
 <body>
 
-    <div class="header-bar">
-        <h1><i data-lucide="monitor"></i> PDF to PowerPoint</h1>
+  <header class="header-bar">
+    <h1><i data-lucide="presentation" style="color: #ea580c;"></i> PDF to PowerPoint</h1>
+  </header>
+
+  <main class="main-container">
+    <!-- Upload Section -->
+    <div id="dropZone" class="upload-card">
+      <i data-lucide="file-text" class="upload-icon"></i>
+      <h2 style="margin: 0 0 6px 0; font-size: 1.25rem; font-weight: 700;">Select PDF file</h2>
+      <p style="margin: 0 0 16px 0; font-size: 0.9rem;">Choose a PDF presentation or document to convert to PowerPoint (.pptx)</p>
+      <input type="file" id="fileInput" accept=".pdf" hidden>
+      <button type="button" class="btn-primary" style="background: #ea580c; border: none; padding: 12px 28px; border-radius: 10px; color: white; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+        <i data-lucide="folder-open"></i> Choose PDF File
+      </button>
+      <p id="fileName" style="margin-top: 14px; font-weight: 600; color: #ea580c;"></p>
+      <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted, #64748b);">
+        🔒 <strong>100% Client-Side Privacy:</strong> Slides are generated directly in your browser.
+      </div>
     </div>
-    
 
-
-
-<div class="container">
-    
-
-    <div class="upload-card" id="dropZone">
-        <i data-lucide="presentation"></i>
-        <h2>Select PDF file</h2>
-        <input type="file" id="fileInput" accept=".pdf" hidden>
-        <p id="fileName" style="margin-top: 1rem; font-weight: 600;"></p>
+    <!-- Progress Box -->
+    <div id="progressBox" class="progress-box">
+      <p id="progressText" style="margin: 0; font-weight: 600; font-size: 0.95rem; color: var(--text-main, #1e293b);">Analyzing PDF...</p>
+      <div class="progress-bar-wrap">
+        <div id="progressBar" class="progress-bar-fill"></div>
+      </div>
     </div>
 
-    <div style="text-align: center; margin-top: 2rem;">
-        <button id="convertBtn" class="btn-primary" disabled>
-            <i data-lucide="play"></i> Convert to PPTX
+    <!-- Slide Preview Section (shown after parsing) -->
+    <div id="previewSection" style="display: none; margin-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700;"><span id="slideCount">0</span> Slides Ready</h3>
+        <span style="font-size: 0.85rem; color: #ea580c; font-weight: 600;">✓ Ready to Convert</span>
+      </div>
+      <div id="slidePreviewGrid" class="slide-preview-grid"></div>
+
+      <div style="text-align: center; margin: 24px 0;">
+        <button id="convertBtn" class="btn-primary" style="background: #ea580c; border: none; padding: 14px 36px; border-radius: 12px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 14px rgba(234,88,12,0.3);">
+          <i data-lucide="presentation"></i> Generate PowerPoint (.pptx)
         </button>
+      </div>
     </div>
 
-    <div class="result-area" id="resultArea" style="text-align: center;">
-        <div style="background: #ecfdf5; color: #065f46; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
-            <p><strong>Success!</strong> Real PowerPoint slides have been generated.</p>
-        </div>
-        <button id="downloadBtn" class="btn-primary">
-            <i data-lucide="download"></i> Download PowerPoint (.pptx)
+    <!-- Result / Download Area -->
+    <div id="resultArea" style="display: none; text-align: center; margin-top: 24px; padding: 24px; border-radius: 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25);">
+      <div style="color: #10b981; margin-bottom: 16px;">
+        <i data-lucide="check-circle-2" style="width: 48px; height: 48px; margin: 0 auto;"></i>
+        <h3 style="margin: 8px 0 4px 0; font-weight: 700; font-size: 1.25rem;">PowerPoint Generated Successfully!</h3>
+        <p style="margin: 0; font-size: 0.9rem;">Your editable PowerPoint presentation (.pptx) with full slide layout is ready.</p>
+      </div>
+      <button id="downloadBtn" class="btn-primary" style="background: #10b981; border: none; padding: 14px 32px; border-radius: 12px; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;">
+        <i data-lucide="download"></i> Download PowerPoint (.pptx)
+      </button>
+      <div style="margin-top: 14px;">
+        <button type="button" onclick="location.reload()" style="background: none; border: none; color: #64748b; font-size: 0.85rem; cursor: pointer; text-decoration: underline;">
+          Convert another PDF
         </button>
+      </div>
     </div>
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <p id="loadingText" style="color: var(--primary); font-weight: 600;">Generating Slides...</p>
-    </div>
-</div>
+  </main>
 
 <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    lucide.createIcons();
-    
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-    const convertBtn = document.getElementById('convertBtn');
-    const resultArea = document.getElementById('resultArea');
-    const downloadBtn = document.getElementById('downloadBtn');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  lucide.createIcons();
 
-    let selectedFile = null;
-    let pptxData = null;
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileName = document.getElementById('fileName');
+  const progressBox = document.getElementById('progressBox');
+  const progressText = document.getElementById('progressText');
+  const progressBar = document.getElementById('progressBar');
+  const previewSection = document.getElementById('previewSection');
+  const slideCount = document.getElementById('slideCount');
+  const slidePreviewGrid = document.getElementById('slidePreviewGrid');
+  const convertBtn = document.getElementById('convertBtn');
+  const resultArea = document.getElementById('resultArea');
+  const downloadBtn = document.getElementById('downloadBtn');
 
-    dropZone.onclick = () => fileInput.click();
-    fileInput.onchange = (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); };
-    
-    function handleFile(file) {
-        if (file.type !== 'application/pdf') return;
-        selectedFile = file;
-        fileName.textContent = file.name;
-        convertBtn.disabled = false;
+  let selectedFile = null;
+  let loadedPdf = null;
+  let pageThumbnails = [];
+  let pptxBlob = null;
+
+  dropZone.onclick = (e) => {
+    if (e.target !== fileInput) fileInput.click();
+  };
+
+  fileInput.onchange = (e) => {
+    if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+  };
+
+  dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = '#ea580c'; };
+  dropZone.ondragleave = () => { dropZone.style.borderColor = '#cbd5e1'; };
+  dropZone.ondrop = (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#cbd5e1';
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  };
+
+  async function handleFile(file) {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Please select a valid PDF file.');
+      return;
     }
+    selectedFile = file;
+    fileName.textContent = file.name;
+    progressBox.style.display = 'block';
+    progressText.textContent = 'Loading PDF document...';
+    progressBar.style.width = '20%';
 
-    convertBtn.onclick = async () => {
-        convertBtn.disabled = true;
-        convertBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> Generating .pptx...';
-        lucide.createIcons();
-
-        try {
-            const arrayBuffer = await selectedFile.arrayBuffer();
-            let pdf;
-            try {
-                pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            } catch (e) {
-                if (e.name === 'PasswordException') {
-                    const password = prompt(`The file "${selectedFile.name}" is password protected. Password:`);
-                    if (password === null) throw new Error('User cancelled password entry');
-                    pdf = await pdfjsLib.getDocument({ data: arrayBuffer, password }).promise;
-                } else {
-                    throw e;
-                }
-            }
-            
-            let pres = new PptxGenJS();
-
-            for (let i = 1; i <= Math.min(pdf.numPages, 30); i++) {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                
-                // Group text by Y coordinate for structural slide layout
-                const rows = {};
-                textContent.items.forEach(item => {
-                    const y = Math.round(item.transform[5]);
-                    if (!rows[y]) rows[y] = [];
-                    rows[y].push({ x: item.transform[4], str: item.str });
-                });
-
-                const sortedY = Object.keys(rows).sort((a, b) => b - a);
-                let slide = pres.addSlide();
-                
-                // Header Background
-                slide.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: '100%', h: 1.0, fill: { color: 'F8FAFC' } });
-                slide.addText(`Slide ${i}`, { x: 0.5, y: 0.3, fontSize: 24, color: "0F2B46", bold: true });
-
-                let currentY = 1.2;
-                sortedY.forEach(y => {
-                    const lineText = rows[y].sort((a, b) => a.x - b.x).map(item => item.str).join(" ");
-                    if (lineText.trim() && currentY < 5.0) {
-                        slide.addText(lineText, { x: 0.5, y: currentY, fontSize: 13, color: "334155", w: '90%' });
-                        currentY += 0.4;
-                    }
-                });
-            }
-
-            const buffer = await pres.write({ outputType: 'arraybuffer' });
-            pptxData = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
-            
-            resultArea.style.display = 'block';
-            convertBtn.innerHTML = '<i data-lucide="check"></i> Done!';
-            lucide.createIcons();
-        } catch (err) {
-            console.error(err);
-            alert('Error generating slides');
-            convertBtn.disabled = false;
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      try {
+        loadedPdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      } catch (err) {
+        if (err.name === 'PasswordException') {
+          const pass = prompt(`The file "${file.name}" is password protected. Please enter password:`);
+          if (!pass) throw new Error('Password entry cancelled');
+          loadedPdf = await pdfjsLib.getDocument({ data: arrayBuffer, password: pass }).promise;
+        } else {
+          throw err;
         }
-    };
+      }
 
-    downloadBtn.onclick = () => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(pptxData);
-        link.download = `${selectedFile.name.replace(/\.pdf$/i, '')}.pptx`;
-        link.click();
-    };
+      slideCount.textContent = loadedPdf.numPages;
+      slidePreviewGrid.innerHTML = '';
+      pageThumbnails = [];
+
+      // Render thumbnail previews
+      const totalPages = loadedPdf.numPages;
+      const previewLimit = Math.min(totalPages, 24); // Show up to 24 previews for responsiveness
+
+      for (let p = 1; p <= previewLimit; p++) {
+        progressText.textContent = `Preparing preview for page ${p} of ${totalPages}...`;
+        progressBar.style.width = `${20 + Math.round((p / previewLimit) * 70)}%`;
+
+        const page = await loadedPdf.getPage(p);
+        const viewport = page.getViewport({ scale: 0.6 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        const thumbUrl = canvas.toDataURL('image/jpeg', 0.8);
+        renderSlideThumb(p, thumbUrl);
+      }
+
+      if (totalPages > previewLimit) {
+        const extraCard = document.createElement('div');
+        extraCard.className = 'slide-card';
+        extraCard.style.display = 'flex';
+        extraCard.style.alignItems = 'center';
+        extraCard.style.justifyContent = 'center';
+        extraCard.style.padding = '20px';
+        extraCard.style.color = '#64748b';
+        extraCard.style.fontSize = '12px';
+        extraCard.style.fontWeight = '600';
+        extraCard.textContent = `+ ${totalPages - previewLimit} more slides`;
+        slidePreviewGrid.appendChild(extraCard);
+      }
+
+      progressBar.style.width = '100%';
+      progressBox.style.display = 'none';
+      previewSection.style.display = 'block';
+      lucide.createIcons();
+
+    } catch (err) {
+      console.error(err);
+      alert('Error loading PDF: ' + err.message);
+      progressBox.style.display = 'none';
+    }
+  }
+
+  function renderSlideThumb(pageNumber, imgUrl) {
+    const card = document.createElement('div');
+    card.className = 'slide-card';
+
+    const header = document.createElement('div');
+    header.className = 'slide-card-header';
+    header.innerHTML = `<span>Slide ${pageNumber}</span> <span>PDF</span>`;
+
+    const img = document.createElement('img');
+    img.className = 'slide-card-img';
+    img.src = imgUrl;
+
+    card.appendChild(header);
+    card.appendChild(img);
+    slidePreviewGrid.appendChild(card);
+  }
+
+  // --- High-Fidelity PPTX Generation ---
+  convertBtn.onclick = async () => {
+    if (!loadedPdf) return;
+
+    convertBtn.disabled = true;
+    convertBtn.innerHTML = '<i data-lucide="loader" class="spin"></i> Generating Slides...';
+    lucide.createIcons();
+    progressBox.style.display = 'block';
+
+    try {
+      const pres = new PptxGenJS();
+      const totalPages = loadedPdf.numPages;
+
+      // Determine aspect ratio from page 1
+      const firstPage = await loadedPdf.getPage(1);
+      const firstVp = firstPage.getViewport({ scale: 1 });
+      const isLandscape = firstVp.width >= firstVp.height;
+      pres.layout = isLandscape ? 'LAYOUT_16x9' : 'LAYOUT_WIDE';
+
+      for (let p = 1; p <= totalPages; p++) {
+        progressText.textContent = `Converting page ${p} of ${totalPages} to PowerPoint slide...`;
+        progressBar.style.width = `${Math.round((p / totalPages) * 100)}%`;
+
+        const page = await loadedPdf.getPage(p);
+        // Render at crisp 2x resolution
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+        // Extract text for slide notes
+        const textContent = await page.getTextContent();
+        const extractedText = textContent.items.map(item => item.str).join(' ');
+
+        // Add Slide
+        const slide = pres.addSlide();
+        slide.addImage({ data: imgData, x: 0, y: 0, w: '100%', h: '100%' });
+
+        if (extractedText.trim()) {
+          slide.addNotes(extractedText);
+        }
+
+        // Memory cleanup
+        canvas.width = 1;
+        canvas.height = 1;
+      }
+
+      progressText.textContent = 'Packaging presentation (.pptx)...';
+      const buffer = await pres.write({ outputType: 'arraybuffer' });
+      pptxBlob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+
+      progressBox.style.display = 'none';
+      previewSection.style.display = 'none';
+      resultArea.style.display = 'block';
+      lucide.createIcons();
+
+    } catch (err) {
+      console.error(err);
+      alert('Error creating PowerPoint presentation: ' + err.message);
+      convertBtn.disabled = false;
+      convertBtn.innerHTML = '<i data-lucide="presentation"></i> Generate PowerPoint (.pptx)';
+      lucide.createIcons();
+    }
+  };
+
+  downloadBtn.onclick = () => {
+    if (!pptxBlob) return;
+    const url = URL.createObjectURL(pptxBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = selectedFile ? selectedFile.name.replace(/\.pdf$/i, '.pptx') : 'presentation.pptx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 </script>
-
-<style>
-    .spin { animation: rotate 2s linear infinite; }
-    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    
-
-
-    /* Dark Mode Native OS Integration */
-    
-    </style>
-
-
-
 
 </body>
 </html>
-
-
-
-
-
-
-
-
