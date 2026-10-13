@@ -43,8 +43,8 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v856)
-    const SNAPSHOT_CACHE_VER = 'v856_purge_legacy_snapshots_now';
+    // Automatic Purge of Old Cache Snapshots (v863)
+    const SNAPSHOT_CACHE_VER = 'v863_purge_legacy_snapshots';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
