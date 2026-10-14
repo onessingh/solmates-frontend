@@ -1,12 +1,11 @@
 /**
- * SOLMATES Service Worker (v856 - ETag Direct Validation Enabled)
+ * SOLMATES Service Worker (v865 - Instant Notification Sync & Zero Stale HTML)
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v864';
+const CACHE_NAME = 'solmates-cache-v865';
 
 const STATIC_ASSETS = [
-    '/notification.html',
     '/js/api-client.js',
     '/js/sol-cache.js',
     '/android-chrome-192x192.png',
@@ -49,6 +48,7 @@ self.addEventListener("fetch", event => {
         || event.request.mode === "navigate"
         || url.pathname === "/"
         || url.pathname === "/notification"
+        || url.pathname.endsWith("/notification")
         || !url.pathname.includes(".")
         || url.pathname.endsWith("/index.html")
         || url.pathname.endsWith(".html")
@@ -56,7 +56,7 @@ self.addEventListener("fetch", event => {
 
     if (isHTML) {
         event.respondWith(
-            fetch(event.request)
+            fetch(event.request, { cache: 'no-cache' })
                 .then(networkResponse => {
                     if (networkResponse && networkResponse.status === 200) {
                         const responseToCache = networkResponse.clone();
