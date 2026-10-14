@@ -46,7 +46,10 @@ self.addEventListener("fetch", event => {
     if (url.pathname.includes("/api/")) return;
 
     const isHTML = event.request.destination === "document"
+        || event.request.mode === "navigate"
         || url.pathname === "/"
+        || url.pathname === "/notification"
+        || !url.pathname.includes(".")
         || url.pathname.endsWith("/index.html")
         || url.pathname.endsWith(".html")
         || url.pathname.endsWith("/");

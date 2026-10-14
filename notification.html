@@ -88,7 +88,7 @@
   <script src="/config.js?v=v856" defer></script>
   <!-- socket.io loaded dynamically -->
   <script src="/js/api-client.js?v=v864" defer></script>
-  <script src="/js/webview-fix.js?v=v856" defer></script>
+  <script src="/js/webview-fix.js?v=v864" defer></script>
   <script src="/js/sol-cache.js?v=v864" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
@@ -96,8 +96,8 @@
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '132.0';
-        const currentVersion = '132.0';
+        window.SOL_APP_VERSION = '133.0';
+        const currentVersion = '133.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         // Always purge cached notices on startup if version updated or if cache was empty
@@ -1852,7 +1852,8 @@
       const cached = safeJSONParse(localStorage.getItem(cacheKey), null);
       const hasCachedItems = Array.isArray(cached) && cached.length > 0;
       const now = Date.now();
-      const needsFetch = forceRefresh || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
+      const isApp = (window.isWebView && window.isWebView()) || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+      const needsFetch = forceRefresh || isApp || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
 
       if (hasCachedItems && !forceRefresh) {
         console.log(`[NOTIFICATIONS] Sem ${semester}: Loading ${cached.length} items from cache...`);
@@ -3368,7 +3369,7 @@
       }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
       try {
-        const swUrl = './sw.js?v=v856';
+        const swUrl = './sw.js?v=v864';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
