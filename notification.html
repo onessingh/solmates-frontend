@@ -2520,7 +2520,8 @@
               // Capture existing IDs to detect what is actually "New" after refresh
               const prevIds = new Set(Array.from(document.querySelectorAll('.notification-card')).map(el => el.id.replace('notice-', '')));
               
-              fetchNotifications(currentSemester).then(() => {
+              purgeNotificationCaches();
+              fetchNotifications(currentSemester, true).then(() => {
                   // After rendering, check for items that have .new-badge and weren't in prevIds
                   setTimeout(() => {
                       const cards = document.querySelectorAll(`.notification-list#sem${currentSemester} .notification-card`);
