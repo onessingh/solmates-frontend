@@ -1886,7 +1886,7 @@
       if (NO_CONTENT && !FOLDER_ID) {
         // Double check backend before showing empty state (handles nested Sem 3/4 subjects)
         try {
-          const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, true, true);
+          const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false, true);
           const existing = (semRes && semRes.data) ? semRes.data : [];
           const cleanTarget = FOLDER_NAME.replace(/\[.*?\]/g, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
           const match = existing.find(f => {
@@ -2081,12 +2081,12 @@
           window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
         ]);
 
-        // If either failed, try a secondary direct fetch
+        // If either failed, try a secondary fetch via API client
         if (!fRes || !fRes.success || !iRes || !iRes.success) {
-          console.warn('[YOUTUBE] Initial fetch incomplete, retrying...');
+          console.warn('[YOUTUBE] Initial fetch incomplete, retrying via API...');
           const [retryF, retryI] = await Promise.all([
-            (!fRes || !fRes.success) ? fetch(`https://solmates-backend-w27e.onrender.com/api/sol/folders/${CATEGORY}/${SEMESTER}${FOLDER_ID ? '?parentId=' + FOLDER_ID : ''}`).then(r => r.json()).catch(() => null) : Promise.resolve(fRes),
-            (!iRes || !iRes.success) ? fetch(`https://solmates-backend-w27e.onrender.com/api/sol/${CATEGORY}/${SEMESTER}${FOLDER_ID ? '?folderId=' + FOLDER_ID : ''}`).then(r => r.json()).catch(() => null) : Promise.resolve(iRes)
+            (!fRes || !fRes.success) ? window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null) : Promise.resolve(fRes),
+            (!iRes || !iRes.success) ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null) : Promise.resolve(iRes)
           ]);
           if (retryF) fRes = retryF;
           if (retryI) iRes = retryI;

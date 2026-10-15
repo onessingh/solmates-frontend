@@ -1144,8 +1144,9 @@ async function loadAlerts() {
       res = await fetch(primaryUrl + '/sol/notifications/all');
       if (!res.ok) throw new Error('HTTP ' + res.status);
     } catch(fetchErr) {
-      console.warn('[AWARENESS] Primary fetch failed, trying direct Render fallback...', fetchErr);
-      res = await fetch('https://solmates-backend-w27e.onrender.com/api/sol/notifications/all');
+      console.warn('[AWARENESS] Primary fetch failed, trying secondary...', fetchErr);
+      const secondary = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
+      res = await fetch(secondary + '/sol/notifications/all');
     }
     
     var json = await res.json();

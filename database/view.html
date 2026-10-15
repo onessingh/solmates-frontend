@@ -485,7 +485,7 @@
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, isAdmin);
           const folders = (res && res.data) ? res.data : [];
           const sectionLocked = folders.some(f => (f.name||'').includes(sectionLockKey));
           if (__lockBlockerMba && __lockBlockerMba.parentNode) __lockBlockerMba.remove();
@@ -570,7 +570,7 @@
 
         
         try {
-          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+          const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, isAdmin);
           const folders = (res && res.data) ? res.data : [];
           const globalLocked = folders.some(f => (f.name||'').includes('__HC_LOCKED__'));
           const sectionLocked = sectionLockKey && folders.some(f => (f.name||'').includes(sectionLockKey));
@@ -842,8 +842,8 @@
         }
 
         const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, true),
-          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, true)
+          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
         ]);
         renderGrid(fRes.data || [], iRes.data || []);
       } catch (e) {

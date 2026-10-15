@@ -1880,19 +1880,16 @@
             let response;
             try {
               response = await fetch(`${primaryUrl}/sol/notifications/all`, { 
-                signal: _fc.signal,
-                cache: 'no-cache',
-                headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                signal: _fc.signal
               });
               if (response && response.status === 503) {
                 throw new Error('HTTP 503');
               }
             } catch (err) {
-              console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via direct Render origin...', err);
-              response = await fetch(`https://solmates-backend-w27e.onrender.com/api/sol/notifications/all`, { 
-                signal: _fc.signal,
-                cache: 'no-cache',
-                headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+              console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via secondary endpoint...', err);
+              const secondaryUrl = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
+              response = await fetch(`${secondaryUrl}/sol/notifications/all`, { 
+                signal: _fc.signal
               });
             }
             clearTimeout(_ft);

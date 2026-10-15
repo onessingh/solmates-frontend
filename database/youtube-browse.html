@@ -1748,7 +1748,7 @@
       if (isVirtual) {
         try {
           // Search across all folders (including nested under CORE COURSES, GROUP A, etc.)
-          const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, currentSemester, null, true, true);
+          const semRes = await window.solmatesAPI.getSOLFolders(CATEGORY, currentSemester, null, false, true);
           const existing = (semRes && semRes.data) ? semRes.data : [];
           const cleanTarget = name.replace(/\[.*?\]/g, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
           const match = existing.find(f => {

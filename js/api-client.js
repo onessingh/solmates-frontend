@@ -207,7 +207,11 @@ class SolmatesAPI {
       this.adminToken = localStorage.getItem('solmates_admin_token') || null;
     }
 
-    if (this.adminToken && !options.skipAuth) {
+    const isGet = !options.method || options.method.toUpperCase() === 'GET';
+    const isMutation = !isGet;
+    const isInsideAdmin = typeof window !== 'undefined' && window.location.pathname.includes('/admin');
+
+    if (this.adminToken && !options.skipAuth && (isMutation || isInsideAdmin || options.includeAuth)) {
       headers['Authorization'] = `Bearer ${this.adminToken}`;
     }
 
@@ -219,10 +223,11 @@ class SolmatesAPI {
       signal: controller.signal,
     };
 
-    const isGet = !options.method || options.method.toUpperCase() === 'GET';
     if (isGet) {
-      if (this.adminToken && !options.skipAuth) {
+      if (options.force || (this.adminToken && isInsideAdmin && !options.skipAuth)) {
         config.cache = 'no-cache';
+        headers['Cache-Control'] = 'no-cache';
+        headers['Pragma'] = 'no-cache';
         url += (url.includes('?') ? '&' : '?') + '_a=' + Date.now();
       }
     }
