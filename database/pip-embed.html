@@ -96,6 +96,49 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        .action-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .action-btn:hover {
+            background: #38bdf8;
+            border-color: #38bdf8;
+            color: #0f172a;
+            transform: translateY(-1px);
+        }
+
+        .fs-btn {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .fs-btn:hover {
+            color: #38bdf8;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .ctrl-btn {
             background: none;
             border: none;
@@ -148,6 +191,18 @@
         <div class="solmates-top-shield">
             <span class="solmates-badge">🎓 Solmates</span>
             <span id="pipTitle" class="lecture-title">Class Lecture</span>
+            
+            <div style="margin-left:auto; display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                <button id="fullPlayerBtn" onclick="returnToFullPlayer()" class="action-btn" title="Return to Full Player Page">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <polyline points="9 21 3 21 3 15"></polyline>
+                        <line x1="21" y1="3" x2="14" y2="10"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                    <span>Full Player</span>
+                </button>
+            </div>
         </div>
 
         <!-- YouTube Embed with Native Solmates Origin Context -->
@@ -166,6 +221,11 @@
             </button>
             <button id="pipForwardBtn" class="ctrl-btn" title="Forward 10 seconds">
                 10s ⏩
+            </button>
+            <button id="fsBtn" onclick="toggleFullscreen()" class="fs-btn" title="Fullscreen">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
             </button>
         </div>
     </div>
@@ -256,6 +316,49 @@
         setInterval(() => {
             sendYtCommand('listening');
         }, 1000);
+
+        function returnToFullPlayer() {
+            try {
+                if (window.opener && !window.opener.closed) {
+                    window.opener.postMessage({
+                        event: 'restoreMainPlayer',
+                        time: currentTime,
+                        videoId: videoId
+                    }, '*');
+                    window.opener.focus();
+                    window.close();
+                    return;
+                }
+            } catch (e) {}
+
+            // Fallback if opener is closed: navigate this window to the full player
+            const mainUrl = `/database/video-viewer?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}`;
+            window.location.href = mainUrl;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        // Auto-save and sync when user closes window using Windows 'X' button
+        window.addEventListener('beforeunload', () => {
+            if (videoId && currentTime > 0) {
+                localStorage.setItem('yt_pos_' + videoId, currentTime);
+            }
+            try {
+                if (window.opener && !window.opener.closed) {
+                    window.opener.postMessage({
+                        event: 'restoreMainPlayer',
+                        time: currentTime,
+                        videoId: videoId
+                    }, '*');
+                }
+            } catch (e) {}
+        });
     </script>
 </body>
 </html>

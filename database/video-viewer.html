@@ -1119,8 +1119,33 @@
         let currentVideoId = null;
         let currentPlaylistId = null;
 
-        // Listen for message events from YouTube iframe
+        // Listen for message events from YouTube iframe and Floating Popout
         window.addEventListener('message', (event) => {
+            // 1. Handle return from Floating Popout Player
+            if (event.data && event.data.event === 'restoreMainPlayer') {
+                const time = event.data.time || 0;
+                const targetVid = event.data.videoId;
+                if (targetVid && time > 0) {
+                    localStorage.setItem('yt_pos_' + targetVid, time);
+                }
+                const mainFrame = document.getElementById('videoFrame');
+                if (mainFrame && mainFrame.contentWindow) {
+                    if (time > 0) {
+                        mainFrame.contentWindow.postMessage(JSON.stringify({
+                            event: 'command',
+                            func: 'seekTo',
+                            args: [time, true]
+                        }), '*');
+                    }
+                    mainFrame.contentWindow.postMessage(JSON.stringify({
+                        event: 'command',
+                        func: 'playVideo',
+                        args: ''
+                    }), '*');
+                }
+                return;
+            }
+
             if (!event.origin.includes('youtube.com')) return;
             
             try {
