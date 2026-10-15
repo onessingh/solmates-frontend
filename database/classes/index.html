@@ -43,8 +43,8 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <script>
-      // [v126.3] Nuclear Auto-Update
-      const APP_VERSION = '126.3';
+      // [v126.4] Nuclear Auto-Update
+      const APP_VERSION = '126.4';
       const lastVersion = localStorage.getItem('app_version_classes');
       if (lastVersion !== APP_VERSION) {
         localStorage.setItem('app_version_classes', APP_VERSION);
@@ -54,9 +54,9 @@
         }
       }
     </script>
-    <script src="/config.js?v=v869" defer></script>
-    <script src="/js/sol-cache.js?v=v869" defer></script>
-    <script src="/js/api-client.js?v=v869" defer></script>
+    <script src="/config.js?v=v870" defer></script>
+    <script src="/js/sol-cache.js?v=v870" defer></script>
+    <script src="/js/api-client.js?v=v870" defer></script>
     <!-- socket.io loaded dynamically -->
     <style>
 
@@ -1041,7 +1041,7 @@
         <!-- LIVE SESSIONS -->
         <section class="live-class-section">
             <div class="live-class-container">
-                <h2><i class="fas fa-video"></i> Live & Upcoming Sessions</h2>
+                <h2><i class="fas fa-video"></i> Today's Live Sessions</h2>
                 <div class="live-sessions-grid" id="liveSessionsGrid">
                     <!-- Skeleton loader cards (vundefined.7) -->
                     <div class="live-session-card skeleton-card">
@@ -1236,7 +1236,7 @@
             }
 
             if (sessions.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No upcoming live classes scheduled.</div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
                 return;
             }
 
@@ -1320,8 +1320,8 @@
                             const sessionDate = item.scheduledAt || item.date || item.created_at;
                             const sessionDay = parseNormalizedDate(sessionDate);
 
-                            // Show Today's and Upcoming classes (skip past dates that have ended)
-                            if (sessionDay && sessionDay < todayStr) return;
+                            // Only show Today's classes
+                            if (sessionDay && sessionDay !== todayStr) return;
 
                             const meta = cleanSubjectTitle(item.title, sourceSem === 'all' ? '0' : sourceSem, sessionDate);
                             
@@ -1597,7 +1597,7 @@
                             const remaining = document.querySelectorAll('.live-sessions-grid .live-session-card');
                             if (remaining.length === 0) {
                                 const grid = document.getElementById('liveSessionsGrid');
-                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No upcoming live classes scheduled.</div>`;
+                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
                             }
                         }, 400);
                     }
@@ -1607,14 +1607,10 @@
                 if (diff <= 0) {
                     el.innerHTML = `<div class="status-badge live"><i class="fas fa-circle"></i> LIVE NOW</div>`;
                 } else {
-                    const days = Math.floor(diff / (24 * 3600000));
-                    const h = Math.floor((diff % (24 * 3600000)) / 3600000);
+                    const h = Math.floor(diff / 3600000);
                     const m = Math.floor((diff % 3600000) / 60000);
                     const s_sec = Math.floor((diff % 60000) / 1000);
-                    let timeStr = '';
-                    if (days > 0) timeStr += `${days}d `;
-                    if (h > 0 || days > 0) timeStr += `${h}h `;
-                    timeStr += `${m}m ${s_sec}s`;
+                    const timeStr = `${h > 0 ? h + 'h ' : ''}${m}m ${s_sec}s`;
                     el.innerHTML = `<div class="status-badge upcoming"><i class="fas fa-clock"></i> Starts in ${timeStr}</div>`;
                 }
             });
