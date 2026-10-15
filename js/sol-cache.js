@@ -43,8 +43,8 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v866)
-    const SNAPSHOT_CACHE_VER = 'v866_purge_legacy_snapshots_r3';
+    // Automatic Purge of Old Cache Snapshots (v867)
+    const SNAPSHOT_CACHE_VER = 'v867_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k.includes('api') || k.includes('v865') || k.includes('v864')) caches.delete(k);
+                        if (k !== 'solmates-cache-v867') caches.delete(k);
                     });
                 }).catch(() => {});
             }

@@ -3,11 +3,9 @@
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v865';
+const CACHE_NAME = 'solmates-cache-v867';
 
 const STATIC_ASSETS = [
-    '/js/api-client.js',
-    '/js/sol-cache.js',
     '/android-chrome-192x192.png',
     '/android-chrome-512x512.png',
     '/apple-touch-icon.png',
@@ -68,7 +66,23 @@ self.addEventListener("fetch", event => {
         return;
     }
 
-    // Stale-While-Revalidate for JS, CSS, images: instant load + background update
+    // Critical JS & Logic Files: Network-First (always fresh, fallback to cache if offline)
+    if (url.pathname.includes('/js/') || url.pathname.endsWith('.js')) {
+        event.respondWith(
+            fetch(event.request, { cache: 'no-cache' })
+                .then(res => {
+                    if (res && res.status === 200) {
+                        const responseToCache = res.clone();
+                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
+                    }
+                    return res;
+                })
+                .catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // Stale-While-Revalidate for CSS, fonts, images: instant load + background update
     event.respondWith(
         caches.match(event.request).then(cached => {
             const fetchPromise = fetch(event.request).then(res => {
