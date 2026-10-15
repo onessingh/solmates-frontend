@@ -27,6 +27,14 @@
 
 
 <script>
+// Save native PiP capability flag if launched from new app APK
+(function(){
+  try {
+    if (new URLSearchParams(window.location.search).get('app_pip') === '1') {
+      localStorage.setItem('solmates_native_pip', 'true');
+    }
+  } catch(e){}
+})();
 
 // OS-based theme-color for TWA status bar
 
