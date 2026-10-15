@@ -940,8 +940,20 @@
             const targetId = currentVideoId || videoId;
             const title = document.getElementById('fileTitle')?.innerText || 'Class Lecture';
 
-            // 1. Desktop: Open dedicated Always-Visible Solmates Popout Window (Floats across tabs & apps!)
             const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                                 window.navigator.standalone || 
+                                 (window.Capacitor && window.Capacitor.isNative);
+            const isNativePipSupported = localStorage.getItem('solmates_native_pip') === 'true' || 
+                                         new URLSearchParams(window.location.search).get('app_pip') === '1';
+
+            // 1. Solmates Native App: Trigger Android OS Native PiP Activity
+            if (isStandalone && isNativePipSupported && targetId) {
+                window.location.href = `solmates://pip?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}`;
+                return;
+            }
+
+            // 2. Desktop Browser: Open dedicated Always-Visible Solmates Popout Window (Floats across tabs & apps!)
             if (!isMobile && targetId) {
                 if (activePopupPlayer && !activePopupPlayer.closed) {
                     activePopupPlayer.focus();
@@ -984,14 +996,7 @@
                 }
             }
 
-            // 2. Android App Native PiP
-            const isAndroid = /Android/i.test(navigator.userAgent);
-            if (isAndroid && targetId) {
-                window.location.href = `solmates://pip?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}`;
-                return;
-            }
-
-            // 3. Fallback: In-Page Floating Mini Player
+            // 3. Mobile Browser (Android Chrome, iOS Safari) & Fallback: In-Page Floating Mini Player
             const container = document.getElementById('videoContainer');
             if (!container) return;
             const willBeMini = typeof forceState === 'boolean' ? forceState : !container.classList.contains('is-mini-player');
