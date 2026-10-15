@@ -691,7 +691,10 @@
         <div class="header-center">
             <span class="file-title" id="fileTitle">Loading Video...</span>
         </div>
-        <div class="header-right">
+        <div class="header-right" style="display: flex; align-items: center; gap: 8px;">
+            <button id="pipBtn" class="pip-btn" onclick="openFloatingPlayer()" title="Floating Window (PiP)" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #38bdf8; font-size: 13px; padding: 6px 10px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 600;">
+                <i class="fas fa-external-link-alt" style="font-size: 11px;"></i> <span>PiP</span>
+            </button>
             <button class="info-btn" onclick="document.getElementById('soundModal').style.display='flex'" style="background: none; border: none; color: var(--text-main); font-size: 20px; padding: 10px; cursor: pointer;"><i class="fas fa-info-circle"></i></button>
         </div>
     </header>
@@ -700,7 +703,7 @@
         <div id="zoomWrapper" style="width: 100%; height: 100%;">
             <!-- YouTube / Drive Mode -->
             <div id="videoContainer" class="iframe-wrapper hidden" style="position: relative;">
-                <iframe id="videoFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+                <iframe id="videoFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
                 
                 <!-- Surgical YouTube Blockers (Optimized for Gestures) -->
                 <!-- 1. Global Top Shield -->
@@ -781,6 +784,29 @@
         function goBack() {
             if (window.history.length > 1) window.history.back();
             else window.location.href = '/database/youtube-content';
+        }
+
+        function openFloatingPlayer() {
+            const { videoId } = extractYouTubeId(FILE_URL || window.location.href);
+            const targetId = currentVideoId || videoId;
+            if (!targetId) {
+                alert("Floating PiP player is available for recorded lecture classes.");
+                return;
+            }
+            const title = document.getElementById('fileTitle')?.innerText || 'Class Lecture';
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // Launch native PiP activity in Solmates Android App
+                window.location.href = `solmates://pip?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}`;
+            } else {
+                // Desktop popup window (PiP style)
+                const width = 640;
+                const height = 360;
+                const left = (screen.width - width) - 24;
+                const top = 60;
+                window.open(`https://www.youtube.com/embed/${targetId}?autoplay=1`, 'SolmatesPiP', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=no,status=no`);
+            }
         }
 
         function extractYouTubeId(url) {
