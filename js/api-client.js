@@ -235,8 +235,7 @@ class SolmatesAPI {
       headers['Pragma'] = 'no-cache';
 
       if (options.force || (this.adminToken && !options.skipAuth)) {
-        headers['X-Admin-Force'] = 'true';
-        url += (url.includes('?') ? '&' : '?') + '_a=' + Date.now();
+        url += (url.includes('?') ? '&' : '?') + 'admin_force=true&_a=' + Date.now();
       }
     }
 
