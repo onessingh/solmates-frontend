@@ -933,28 +933,24 @@
             else window.location.href = '/database/youtube-content';
         }
 
-        let activePipWindow = null;
+        let activePopupPlayer = null;
 
-        async function toggleFloatingPlayer(forceState) {
+        function toggleFloatingPlayer(forceState) {
             const { videoId } = extractYouTubeId(FILE_URL || window.location.href);
             const targetId = currentVideoId || videoId;
             const title = document.getElementById('fileTitle')?.innerText || 'Class Lecture';
 
-            // 1. Desktop Chrome / Edge: Real Always-On-Top PiP Window (Floats across tabs & apps!)
-            if ('documentPictureInPicture' in window) {
-                if (activePipWindow) {
-                    try { activePipWindow.close(); } catch(e){}
-                    activePipWindow = null;
+            // 1. Desktop: Open dedicated Always-Visible Solmates Popout Window (Floats across tabs & apps!)
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (!isMobile && targetId) {
+                if (activePopupPlayer && !activePopupPlayer.closed) {
+                    activePopupPlayer.focus();
                     return;
                 }
 
                 try {
-                    const currentPos = (targetId && parseInt(localStorage.getItem('yt_pos_' + targetId))) || 0;
-
-                    activePipWindow = await window.documentPictureInPicture.requestWindow({
-                        width: 480,
-                        height: 270
-                    });
+                    const currentPos = parseInt(localStorage.getItem('yt_pos_' + targetId)) || 0;
+                    const pipUrl = `/database/pip-embed.html?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}&start=${currentPos}`;
 
                     // Pause main window video playback to prevent double audio
                     const mainFrame = document.getElementById('videoFrame');
@@ -968,28 +964,23 @@
                         } catch(e){}
                     }
 
-                    activePipWindow.document.title = title + " - Solmates";
-                    activePipWindow.document.body.style.margin = '0';
-                    activePipWindow.document.body.style.padding = '0';
-                    activePipWindow.document.body.style.background = '#000';
-                    activePipWindow.document.body.style.overflow = 'hidden';
+                    const width = 520;
+                    const height = 310;
+                    const left = Math.max(0, (window.screen.availWidth || window.screen.width) - width - 24);
+                    const top = Math.max(0, (window.screen.availHeight || window.screen.height) - height - 48);
 
-                    const pipUrl = `${window.location.origin}/database/pip-embed.html?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}&start=${currentPos}`;
+                    activePopupPlayer = window.open(
+                        pipUrl,
+                        'SolmatesFloatingPlayer',
+                        `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=no`
+                    );
 
-                    activePipWindow.document.body.innerHTML = `
-                        <iframe id="solmatesPipFrame" 
-                                src="${pipUrl}" 
-                                style="width:100vw; height:100vh; border:none; display:block;" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                    `;
-
-                    activePipWindow.addEventListener('pagehide', () => {
-                        activePipWindow = null;
-                    });
-                    return;
-                } catch (e) {
-                    console.warn("Document PiP request failed, falling back", e);
+                    if (activePopupPlayer) {
+                        activePopupPlayer.focus();
+                        return;
+                    }
+                } catch(e) {
+                    console.warn("Popup window failed, falling back to in-page mini player", e);
                 }
             }
 
