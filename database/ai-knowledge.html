@@ -36,8 +36,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v856">
     <title>AI Knowledge Base Management - SOLMATES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="/config.js?v=v856"></script>
-    <script src="/js/api-client.js?v=v864"></script>
+    <script src="/config.js?v=v867"></script>
+    <script src="/js/uptime-helper.js?v=v867"></script>
+    <script src="/js/api-client.js?v=v867"></script>
     <style>
 
         :root {
@@ -483,7 +484,8 @@
     // Load items on start
     document.addEventListener('DOMContentLoaded', () => {
         // Authenticate as admin first
-        if (!solmatesAPI.isAdminLoggedIn()) {
+        const token = localStorage.getItem('solmates_admin_token');
+        if (!token && (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn())) {
             alert('Admin login required to access this page.');
             window.location.href = '/database';
             return;

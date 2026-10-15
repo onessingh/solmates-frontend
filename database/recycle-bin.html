@@ -36,8 +36,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v856">
   <title>Admin Recycle Bin - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v856"></script>
-  <script src="/js/api-client.js?v=v864"></script>
+  <script src="/config.js?v=v867"></script>
+  <script src="/js/api-client.js?v=v867"></script>
+  <script src="/js/uptime-helper.js?v=v867"></script>
   <style>
 
     :root {
@@ -521,8 +522,9 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       // Ensure admin is logged in
-      if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) {
-        alert('Access Denied');
+      const token = localStorage.getItem('solmates_admin_token');
+      if (!token && (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn())) {
+        alert('Access Denied: Admin login required.');
         window.location.href = '/database';
         return;
       }

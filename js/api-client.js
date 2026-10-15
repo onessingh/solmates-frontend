@@ -368,12 +368,12 @@ class SolmatesAPI {
 
       return data;
     } catch (error) {
-      if (error.status === 401 || error.status === 403) {
+      if (error.status === 401) {
         this.adminToken = null;
         localStorage.removeItem('solmates_admin_token');
         return { valid: false };
       }
-      console.warn('Backend unreachable during token verify - keeping token');
+      console.warn('Backend unreachable or temporarily blocked during token verify - keeping token');
       return { valid: true, networkError: true };
     }
   }
