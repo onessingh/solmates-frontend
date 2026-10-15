@@ -85,19 +85,19 @@
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
   <link rel="stylesheet" href="/css/global-lockdown.css?v=v856">
-  <script src="/config.js?v=v856" defer></script>
+  <script src="/config.js?v=v870" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v864" defer></script>
-  <script src="/js/webview-fix.js?v=v864" defer></script>
-  <script src="/js/sol-cache.js?v=v864" defer></script>
+  <script src="/js/api-client.js?v=v870" defer></script>
+  <script src="/js/webview-fix.js?v=v870" defer></script>
+  <script src="/js/sol-cache.js?v=v870" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '133.0';
-        const currentVersion = '133.0';
+        window.SOL_APP_VERSION = '133.1';
+        const currentVersion = '133.1';
         const savedVersion = _store.getItem('sol_app_version');
 
         // Always purge cached notices on startup if version updated or if cache was empty
@@ -2052,34 +2052,26 @@
         const { expiryTime } = extractTitleParts(notice.title, notice.semester, isLive, notice.scheduledAt);
         
         const nowVal = Date.now();
-        // [v816.9.8] PRECISE TODAY CHECK: Prioritize scheduledAt for today-detection
-        const isToday = (notice.scheduledAt && new Date(notice.scheduledAt).setHours(0,0,0,0) === todayVal) || 
-                       (itemTime && new Date(itemTime).setHours(0,0,0,0) === todayVal);
-
-        // [v816.9.5] PROTECTION: Only hide if "Expired" AND (either not today OR past-time confirmed)
-        if (isLive && expiryTime > 0 && nowVal > expiryTime) {
-           // [v816.9.6] FORCE-VISIBLE TODAY: If it's today, we keep it visible even if expiry calculation looks old,
-           // UNLESS the title explicitly shows a past range (handled by regex)
-           const upcomingTime = String(notice.title).match(/\d{1,2}:\d{2}.*?\d{1,2}:\d{2}/);
-           if (!isToday) {
-              console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Precise expiry at ${new Date(expiryTime).toLocaleTimeString()}`);
-              return false;
-           }
+        if (isLive && expiryTime > 0 && nowVal > expiryTime && !isTimetable) {
+           console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Precise expiry at ${new Date(expiryTime).toLocaleTimeString()}`);
+           return false;
         }
 
         if (isLive && !isNaN(itemTime)) {
           const itemDay = new Date(itemTime).setHours(0, 0, 0, 0);
+          const combinedTimeStr = `${notice.title || ''} ${notice.class_time || ''}`;
           
-          const m = String(notice.title).match(/(?:-|to)\s*(\d{1,2}:\d{2})\s*(AM|PM)?/i);
+          const m = combinedTimeStr.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
           if (m) {
             let [_, time, period] = m;
-            let [hh, mm] = time.split(':').map(Number);
+            let parts = time.split(':');
+            let hh = parseInt(parts[0], 10);
+            let mm = parts[1] ? parseInt(parts[1], 10) : 0;
             if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
             if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
             if (!period && hh >= 1 && hh <= 7) hh += 12;
  
-            // Default 2h buffer for classes without range (v89.0 sync)
-            let classEnd = new Date(itemTime + (2 * 60 * 60 * 1000));
+            let classEnd = new Date(itemTime);
             classEnd.setHours(hh, mm, 0, 0);
             
             if (now > classEnd && !isTimetable) {
