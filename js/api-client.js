@@ -203,9 +203,15 @@ class SolmatesAPI {
       ...options.headers,
     };
 
-    if (!this.adminToken) {
-      this.adminToken = localStorage.getItem('solmates_admin_token') || null;
+    let storedToken = localStorage.getItem('solmates_admin_token') || this.adminToken || '';
+    if (storedToken) {
+      storedToken = storedToken.trim();
+      if ((storedToken.startsWith('"') && storedToken.endsWith('"')) || (storedToken.startsWith("'") && storedToken.endsWith("'"))) {
+        storedToken = storedToken.slice(1, -1).trim();
+      }
+      storedToken = storedToken.replace(/^Bearer\s+/i, '').trim();
     }
+    this.adminToken = (storedToken && storedToken !== 'null' && storedToken !== 'undefined') ? storedToken : null;
 
     const isGet = !options.method || options.method.toUpperCase() === 'GET';
     const isMutation = !isGet;
@@ -391,11 +397,16 @@ class SolmatesAPI {
   }
 
   isAdminLoggedIn() {
-    const freshToken = localStorage.getItem('solmates_admin_token');
-    if (freshToken && freshToken !== 'null' && freshToken !== 'undefined' && !this.adminToken) {
-      this.adminToken = freshToken;
+    let freshToken = localStorage.getItem('solmates_admin_token') || this.adminToken || '';
+    if (freshToken) {
+      freshToken = freshToken.trim();
+      if ((freshToken.startsWith('"') && freshToken.endsWith('"')) || (freshToken.startsWith("'") && freshToken.endsWith("'"))) {
+        freshToken = freshToken.slice(1, -1).trim();
+      }
+      freshToken = freshToken.replace(/^Bearer\s+/i, '').trim();
     }
-    return !!(this.adminToken && this.adminToken !== 'null' && this.adminToken !== 'undefined');
+    this.adminToken = (freshToken && freshToken !== 'null' && freshToken !== 'undefined') ? freshToken : null;
+    return !!this.adminToken;
   }
 
   clearAdminSession() {
@@ -405,8 +416,10 @@ class SolmatesAPI {
   }
 
   getAdminAuthHeader() {
-    const token = this.adminToken || localStorage.getItem('solmates_admin_token');
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
+    if (this.isAdminLoggedIn() && this.adminToken) {
+      return { 'Authorization': `Bearer ${this.adminToken}` };
+    }
+    return {};
   }
 
   // ========== NOTIFICATION BROADCAST ==========

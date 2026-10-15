@@ -36,9 +36,25 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v856">
   <title>Admin Recycle Bin - SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v867"></script>
-  <script src="/js/api-client.js?v=v867"></script>
-  <script src="/js/uptime-helper.js?v=v867"></script>
+  <script>
+    // [v126.2] NUCLEAR AUTO-UPDATE SYSTEM FOR RECYCLE BIN
+    const APP_VERSION = '126.2';
+    const lastVersion = localStorage.getItem('app_version_recycle');
+    if (lastVersion !== APP_VERSION) {
+      localStorage.setItem('app_version_recycle', APP_VERSION);
+      if ('caches' in window) {
+        caches.keys().then(names => names.forEach(name => caches.delete(name)));
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          regs.forEach(reg => reg.update());
+        });
+      }
+    }
+  </script>
+  <script src="/config.js?v=v868"></script>
+  <script src="/js/api-client.js?v=v868"></script>
+  <script src="/js/uptime-helper.js?v=v868"></script>
   <style>
 
     :root {
@@ -514,11 +530,41 @@
       <h3>Your bin is empty</h3>
       <p>Items deleted in the last 7 days will appear here.</p>
     </div>
+
+    <div id="binError" class="empty-state" style="display: none;">
+      <i class="fas fa-exclamation-triangle" style="font-size: 50px; color: #ef4444; margin-bottom: 15px;"></i>
+      <h3 id="binErrorTitle" style="color: #ef4444; font-size: 20px;">Unable to fetch Recycle Bin</h3>
+      <p id="binErrorMsg" style="color: #64748b; margin-top: 8px; max-width: 500px; margin-left: auto; margin-right: auto;"></p>
+      <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button onclick="refreshRecycleBin()" class="back-btn btn-sm">
+          <i class="fas fa-sync-alt"></i> Try Again
+        </button>
+        <button id="binLoginBtn" onclick="reloginAdmin()" class="back-btn btn-sm" style="display:none; background: #4f46e5;">
+          <i class="fas fa-sign-in-alt"></i> Re-login as Admin
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
     let selectedIds = new Set();
     let allVisibleIds = [];
+
+    function reloginAdmin() {
+      localStorage.removeItem('solmates_admin_token');
+      localStorage.removeItem('solmates_admin_logged_in');
+      window.location.href = '/database';
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       // Ensure admin is logged in
@@ -535,6 +581,10 @@
       const grid = document.getElementById('binGrid');
       const loader = document.getElementById('binLoading');
       const empty = document.getElementById('binEmpty');
+      const errBox = document.getElementById('binError');
+      const errTitle = document.getElementById('binErrorTitle');
+      const errMsg = document.getElementById('binErrorMsg');
+      const loginBtn = document.getElementById('binLoginBtn');
       
       // Reset selection state
       selectedIds.clear();
@@ -545,6 +595,7 @@
       grid.innerHTML = '';
       loader.style.display = 'block';
       empty.style.display = 'none';
+      if (errBox) errBox.style.display = 'none';
 
       try {
         const res = await window.solmatesAPI.getRecycleBin();
@@ -566,8 +617,26 @@
         });
       } catch (err) {
         loader.style.display = 'none';
-        empty.style.display = 'block';
         console.error('Bin fetch failed:', err);
+        if (errBox) {
+          errBox.style.display = 'block';
+          const isAuth = err.status === 401 || err.status === 403 || 
+                         (err.message && (err.message.toLowerCase().includes('token') || 
+                                         err.message.toLowerCase().includes('auth') || 
+                                         err.message.toLowerCase().includes('session') ||
+                                         err.message.toLowerCase().includes('denied')));
+          if (isAuth) {
+            errTitle.innerText = 'Admin Session Expired';
+            errMsg.innerText = 'Your admin login session has expired or is invalid. Please re-login to view deleted items.';
+            if (loginBtn) loginBtn.style.display = 'inline-flex';
+          } else {
+            errTitle.innerText = 'Unable to Load Deleted Items';
+            errMsg.innerText = err.message || 'Please check network connection and try again.';
+            if (loginBtn) loginBtn.style.display = 'none';
+          }
+        } else {
+          empty.style.display = 'block';
+        }
       }
     }
 
@@ -578,10 +647,13 @@
       
       const isFolder = item.type === 'folder';
       const d = (item.data && typeof item.data === 'object') ? item.data : item;
-      const title = d.title || d.name || d.subject || item.title || item.name || 'Untitled Item';
+      const rawTitle = d.title || d.name || d.subject || item.title || item.name || 'Untitled Item';
+      const title = escapeHTML(rawTitle);
       const sem = item.semester || d.semester;
-      const semester = (!sem || sem === 'all' || sem === '0') ? 'All Semesters' : `Semester ${sem}`;
+      const semester = (!sem || sem === 'all' || sem === '0') ? 'All Semesters' : `Semester ${escapeHTML(sem)}`;
       const deletedStr = item.deletedAt ? getTimeAgo(item.deletedAt) : 'Recently';
+      const safeId = escapeHTML(item.id);
+      const safeCategory = escapeHTML(item.category || 'Item');
 
       card.innerHTML = `
         <div class="item-checkbox-wrap">
