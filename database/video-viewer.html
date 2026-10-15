@@ -25,16 +25,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v867">
-  <script src="/config.js?v=v867"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v864">
+  <script src="/config.js?v=v864"></script>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v867" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v867" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v867">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v867">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v867">
+  <link rel="icon" href="/favicon.ico?v=v864" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v864" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v864">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v864">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v864">
     <title>Video Viewer - SOLMATES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -76,9 +76,9 @@
             backdrop-filter: blur(25px) saturate(200%);
             -webkit-backdrop-filter: blur(25px) saturate(200%);
             display: grid;
-            grid-template-columns: 48px 1fr auto;
+            grid-template-columns: 60px 1fr 60px;
             align-items: center;
-            padding: 0 14px;
+            padding: 0 16px;
             z-index: 1000;
             border-bottom: 1px solid rgba(255,255,255,0.08);
             position: relative;
@@ -136,94 +136,6 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 8px;
-        }
-
-        .header-icon-btn {
-            background: rgba(255,255,255,0.08);
-            color: #f8fafc;
-            border: 1px solid rgba(255,255,255,0.12);
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            font-size: 15px;
-            position: relative;
-        }
-
-        .header-icon-btn:hover {
-            background: rgba(255,255,255,0.18);
-            transform: scale(1.05);
-            color: #38bdf8;
-        }
-
-        .header-icon-btn.active {
-            background: rgba(56, 189, 248, 0.2);
-            border-color: #38bdf8;
-            color: #38bdf8;
-        }
-
-        .bg-active-dot {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 8px #22c55e;
-            display: none;
-            animation: pulse-green 1.8s infinite;
-        }
-
-        .bg-active-dot.visible {
-            display: block;
-        }
-
-        @keyframes pulse-green {
-            0% { transform: scale(0.9); opacity: 0.8; }
-            50% { transform: scale(1.3); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.8; }
-        }
-
-        /* Background Play Toast Notification */
-        .bg-play-toast {
-            position: fixed;
-            top: 76px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            color: #f8fafc;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 99999;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 92%;
-            white-space: nowrap;
-        }
-        .bg-play-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
-        }
-        .bg-play-toast i {
-            color: #38bdf8;
-            font-size: 16px;
         }
 
         .action-btn {
@@ -647,58 +559,31 @@
       
 </style>
 
-    <!-- Playback, Background & Sound Instructions Modal -->
-    <div id="soundModal" class="sound-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
-        <div class="sound-modal-content" style="background: var(--bg-card, #fff); color: var(--text-main, #333); padding: 26px; border-radius: 24px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
-            <button onclick="document.getElementById('soundModal').style.display='none'" style="position: absolute; top: 18px; right: 18px; background: rgba(0,0,0,0.06); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; color: var(--text-muted, #666); cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
+    <!-- Sound Instructions Modal -->
+    <div id="soundModal" class="sound-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+        <div class="sound-modal-content" style="background: var(--bg-card, #fff); padding: 30px; border-radius: 24px; max-width: 400px; width: 100%; position: relative; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <button onclick="document.getElementById('soundModal').style.display='none'" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; color: var(--text-muted, #666); cursor: pointer;"><i class="fas fa-times"></i></button>
             
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                <div style="width: 44px; height: 44px; background: rgba(56, 189, 248, 0.15); color: #0284c7; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                    <i class="fas fa-sliders-h"></i>
-                </div>
-                <div>
-                    <h2 style="font-weight: 800; font-size: 19px; margin: 0;">Playback Features</h2>
-                    <p style="color: var(--text-muted, #666); font-size: 12px; margin: 0;">Background Audio, Floating PiP & Sound</p>
-                </div>
-            </div>
-
-            <!-- Feature 1: Pocket Mode -->
-            <div style="background: var(--bg-nav, #f8f9fa); padding: 14px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border-color, #e2e8f0);">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <i class="fas fa-moon" style="color: #38bdf8; font-size: 15px;"></i>
-                    <strong style="font-size: 14px;">🌙 Pocket Audio Mode (Black Screen & Zero Battery)</strong>
-                </div>
-                <p style="font-size: 12.5px; color: var(--text-muted, #555); margin: 0 0 6px 0; line-height: 1.5;">
-                    Phone ko pocket me rakh kar lecture sunna ho to <strong>Pocket Mode</strong> <i class="fas fa-moon"></i> dabayein.
-                </p>
-                <div style="font-size: 12px; color: var(--text-muted, #666); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 8px 10px; border-radius: 8px;">
-                    💡 Screen pure black ho jayegi, touch lock ho jayega aur lecture bina ruke non-stop chalega. Wapas aane ke liye screen par <strong>Double-Tap</strong> karein!
-                </div>
-            </div>
-
-            <!-- Feature 2: Floating Mini Player -->
-            <div style="background: var(--bg-nav, #f8f9fa); padding: 14px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border-color, #e2e8f0);">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <i class="fas fa-clone" style="color: #6366f1; font-size: 15px;"></i>
-                    <strong style="font-size: 14px;">📺 Floating Mini-Player (Laptop / PC)</strong>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted, #555); margin: 0; line-height: 1.6;">
-                    Laptop/Desktop par PiP <i class="fas fa-clone"></i> icon dabane se floating mini window alag ho jati hai jisse aap Word/Excel me notes banate hue padh sakte hain.
-                </p>
-            </div>
-
-            <!-- Feature 3: No Sound -->
-            <div style="background: var(--bg-nav, #f8f9fa); padding: 14px; border-radius: 14px; margin-bottom: 16px; border: 1px solid var(--border-color, #e2e8f0);">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <i class="fas fa-volume-up" style="color: #ef4444; font-size: 15px;"></i>
-                    <strong style="font-size: 14px;">🔊 Awaaz (Sound) nahi aa rahi?</strong>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted, #666); margin: 0; line-height: 1.5;">
-                    Browser Settings &#8594; Site Settings &#8594; Sound &#8594; <strong>Allow</strong> karein aur refresh karein.
-                </p>
+            <div style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px;">
+                <i class="fas fa-volume-mute"></i>
             </div>
             
-            <button onclick="document.getElementById('soundModal').style.display='none'" style="width: 100%; background: #0f2b46; color: white; padding: 12px; border: none; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer;">Got it, thanks!</button>
+            <h2 style="margin-bottom: 15px; font-weight: 800; color: var(--text-main, #333); font-size: 22px;">No Sound in Video?</h2>
+            <p style="color: var(--text-muted, #666); font-size: 15px; margin-bottom: 20px; line-height: 1.5;">If the video is playing but you can't hear anything, your browser has muted this site.</p>
+            
+            <div style="background: var(--bg-nav, #f8f9fa); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color, #eee);">
+                <p style="font-weight: 700; margin-bottom: 10px; font-size: 15px; color: var(--text-main, #333);"><i class="fas fa-tools"></i> How to fix it:</p>
+                <ol style="margin-left: 20px; font-size: 14px; color: var(--text-muted, #666); line-height: 1.8;">
+                    <li>Tap the <strong>&#8942; Three Dots</strong> menu in your browser's top corner.</li>
+                    <li>Tap on <strong><i class="fas fa-cog"></i> Settings</strong>.</li>
+                    <li>Scroll down and select <strong>Site Settings</strong>.</li>
+                    <li>Tap on <strong>Sound</strong>.</li>
+                    <li>Turn on the switch to <strong>Allow sites to play sound</strong>.</li>
+                    <li>Refresh this page.</li>
+                </ol>
+            </div>
+            
+            <button onclick="document.getElementById('soundModal').style.display='none'" style="width: 100%; background: #0f2b46; color: white; padding: 14px; border: none; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer;">Got it</button>
         </div>
     </div>
     
@@ -807,18 +692,7 @@
             <span class="file-title" id="fileTitle">Loading Video...</span>
         </div>
         <div class="header-right">
-            <!-- Pocket Audio Mode (Black Screen & Zero Battery for continuous listening) -->
-            <button id="pocketModeBtn" class="header-icon-btn active" onclick="enterPocketMode()" title="Pocket Audio Mode (Black Screen / Lock)">
-                <i class="fas fa-moon"></i>
-            </button>
-            <!-- Picture-in-Picture Floating Player (Only Desktop Chrome/Edge) -->
-            <button id="headerPipBtn" class="header-icon-btn" onclick="triggerPiP()" title="Floating Mini Player (PiP)" style="display: none;">
-                <i class="fas fa-clone"></i>
-            </button>
-            <!-- Help & Sound Modal -->
-            <button id="headerInfoBtn" class="header-icon-btn" onclick="document.getElementById('soundModal').style.display='flex'" title="Playback & Sound Help">
-                <i class="fas fa-info-circle"></i>
-            </button>
+            <button class="info-btn" onclick="document.getElementById('soundModal').style.display='flex'" style="background: none; border: none; color: var(--text-main); font-size: 20px; padding: 10px; cursor: pointer;"><i class="fas fa-info-circle"></i></button>
         </div>
     </header>
 
@@ -826,7 +700,7 @@
         <div id="zoomWrapper" style="width: 100%; height: 100%;">
             <!-- YouTube / Drive Mode -->
             <div id="videoContainer" class="iframe-wrapper hidden" style="position: relative;">
-                <iframe id="videoFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; accelerometer; clipboard-write; gyroscope" allowfullscreen></iframe>
+                <iframe id="videoFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
                 
                 <!-- Surgical YouTube Blockers (Optimized for Gestures) -->
                 <!-- 1. Global Top Shield -->
@@ -853,16 +727,6 @@
                 <div id="ytBottomRightShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
-
-                <!-- Pocket Mode Button on Video Player (Mobile friendly) -->
-                <button id="playerPocketBtn" onclick="enterPocketMode()" style="position: absolute; bottom: 55px; right: 68px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; font-size: 16px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);" title="Pocket Mode (Black Screen & Audio)">
-                    <i class="fas fa-moon"></i>
-                </button>
-
-                <!-- Custom PiP Button (Only displayed on Desktop with DocPiP support) -->
-                <button id="customPipBtn" onclick="triggerPiP()" style="position: absolute; bottom: 55px; right: 120px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: none; font-size: 16px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);" title="Floating Mini Player (PiP)">
-                    <i class="fas fa-clone"></i>
-                </button>
 
                 <!-- Custom Fullscreen Button (Replaces Native) -->
                 <button id="customFsBtn" onclick="toggleCustomFullscreen()" style="position: absolute; bottom: 55px; right: 16px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; font-size: 18px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
@@ -906,25 +770,6 @@
             <h3>Oops! Link Broken</h3>
             <p style="color: #94a3b8; margin-top: 8px;">The video link is missing or invalid.</p>
             <button class="launch-btn" style="width: auto; margin-top: 20px;" onclick="goBack()">Go Back</button>
-        </div>
-
-        <!-- Pocket Audio Mode Overlay (Pitch black screen, touch lock, battery saver) -->
-        <div id="pocketOverlay" onclick="handlePocketTap(event)" style="display: none; position: fixed; inset: 0; background: #000000; z-index: 2147483647; flex-direction: column; align-items: center; justify-content: center; user-select: none; -webkit-user-select: none; touch-action: manipulation; cursor: pointer; text-align: center; padding: 24px;">
-            <div id="pocketPrompt" style="display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 1; transition: opacity 0.5s ease; pointer-events: none;">
-                <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(56, 189, 248, 0.15); border: 2px solid #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #38bdf8;">
-                    <i class="fas fa-moon"></i>
-                </div>
-                <div style="color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: -0.3px;" id="pocketTitle">Lecture Playing</div>
-                <div style="background: rgba(255,255,255,0.08); padding: 8px 16px; border-radius: 20px; font-size: 13px; color: #38bdf8; font-weight: 600;">
-                    <i class="fas fa-lock"></i> Pocket Mode Active &bull; Touch Locked
-                </div>
-                <p style="color: #94a3b8; font-size: 13px; max-width: 290px; line-height: 1.5; margin: 0;">
-                    Audio is playing. Screen is blacked out for zero battery drain in your pocket.
-                </p>
-                <div style="margin-top: 10px; color: #64748b; font-size: 12px; border: 1px dashed rgba(255,255,255,0.25); padding: 7px 16px; border-radius: 12px;">
-                    👆 Double-tap anywhere to unlock
-                </div>
-            </div>
         </div>
     </main>
 
@@ -990,210 +835,6 @@
         let currentVideoId = null;
         let currentPlaylistId = null;
 
-        // --- Background Audio & MediaSession State ---
-        let isBackgroundPlayEnabled = localStorage.getItem('sol_bg_playback') !== 'false'; // default ON
-        let isCurrentlyPlaying = false;
-        let wasPlayingBeforeHidden = false;
-        let lastReportedCurrentTime = 0;
-        let lastReportedDuration = 0;
-        let silentAudioEl = null;
-
-        // 1-second silent WAV loop for Android/iOS audio focus retention
-        const SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-
-        function getSilentAudio() {
-            if (!silentAudioEl) {
-                silentAudioEl = new Audio(SILENT_WAV);
-                silentAudioEl.loop = true;
-                silentAudioEl.volume = 0.01;
-            }
-            return silentAudioEl;
-        }
-
-        function showBgToast(msg) {
-            let toast = document.getElementById('bgPlayToast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'bgPlayToast';
-                toast.className = 'bg-play-toast';
-                document.body.appendChild(toast);
-            }
-            toast.innerHTML = `<i class="fas fa-headphones"></i> <span>${msg}</span>`;
-            toast.classList.add('show');
-            clearTimeout(window.__bgToastTimer);
-            window.__bgToastTimer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3500);
-        }
-
-        function checkPiPSupport() {
-            if ('documentPictureInPicture' in window) {
-                const headerPip = document.getElementById('headerPipBtn');
-                const customPip = document.getElementById('customPipBtn');
-                if (headerPip) headerPip.style.display = 'flex';
-                if (customPip) customPip.style.display = 'flex';
-            }
-        }
-
-        // --- Pocket Mode (Black Screen & Touch Lock for Continuous Lecture Listening) ---
-        let pocketWakeLock = null;
-        let pocketDimTimer = null;
-        let lastPocketTap = 0;
-
-        async function enterPocketMode() {
-            const overlay = document.getElementById('pocketOverlay');
-            if (!overlay) return;
-
-            // Ensure video starts or continues playing
-            sendYTCommand('playVideo');
-
-            overlay.style.display = 'flex';
-            const titleEl = document.getElementById('pocketTitle');
-            if (titleEl) titleEl.innerText = FILE_TITLE || 'Recorded Class';
-
-            // Request WakeLock to prevent the phone from timing out / sleeping
-            if ('wakeLock' in navigator) {
-                try {
-                    pocketWakeLock = await navigator.wakeLock.request('screen');
-                } catch (e) {
-                    console.warn('WakeLock not granted:', e);
-                }
-            }
-
-            const prompt = document.getElementById('pocketPrompt');
-            if (prompt) prompt.style.opacity = '1';
-
-            clearTimeout(pocketDimTimer);
-            pocketDimTimer = setTimeout(() => {
-                if (prompt) prompt.style.opacity = '0.06'; // OLED true black
-            }, 3500);
-
-            showBgToast('🌙 Pocket Mode: Screen locked, audio playing!');
-        }
-
-        function exitPocketMode() {
-            const overlay = document.getElementById('pocketOverlay');
-            if (!overlay) return;
-            overlay.style.display = 'none';
-
-            if (pocketWakeLock) {
-                try {
-                    pocketWakeLock.release();
-                } catch (e) {}
-                pocketWakeLock = null;
-            }
-            clearTimeout(pocketDimTimer);
-            showBgToast('🔓 Screen Unlocked');
-        }
-
-        function handlePocketTap(e) {
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            const now = Date.now();
-            const prompt = document.getElementById('pocketPrompt');
-            if (prompt) prompt.style.opacity = '1';
-
-            clearTimeout(pocketDimTimer);
-            pocketDimTimer = setTimeout(() => {
-                if (prompt) prompt.style.opacity = '0.06';
-            }, 3500);
-
-            // Double tap to unlock (tap within 380ms)
-            if (now - lastPocketTap < 380) {
-                exitPocketMode();
-            }
-            lastPocketTap = now;
-        }
-
-        function sendYTCommand(func, args) {
-            const iframe = document.getElementById('videoFrame');
-            if (iframe && iframe.contentWindow) {
-                try {
-                    iframe.contentWindow.postMessage(JSON.stringify({
-                        event: 'command',
-                        func: func,
-                        args: args || []
-                    }), '*');
-                } catch (e) {}
-            }
-        }
-
-        function setupMediaSession() {
-            if (!('mediaSession' in navigator)) return;
-            try {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: FILE_TITLE || 'Recorded Class',
-                    artist: 'SOLMATES',
-                    album: 'Recorded Classes & Lectures',
-                    artwork: [
-                        { src: '/favicon.ico', sizes: '96x96', type: 'image/x-icon' },
-                        { src: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-                        { src: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }
-                    ]
-                });
-
-                navigator.mediaSession.setActionHandler('play', () => {
-                    isCurrentlyPlaying = true;
-                    wasPlayingBeforeHidden = true;
-                    sendYTCommand('playVideo');
-                    if (isBackgroundPlayEnabled) {
-                        getSilentAudio().play().catch(() => {});
-                    }
-                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
-                });
-
-                navigator.mediaSession.setActionHandler('pause', () => {
-                    isCurrentlyPlaying = false;
-                    wasPlayingBeforeHidden = false;
-                    sendYTCommand('pauseVideo');
-                    if (silentAudioEl) silentAudioEl.pause();
-                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
-                });
-
-                navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-                    const offset = (details && details.seekOffset) || 10;
-                    const target = Math.max(0, lastReportedCurrentTime - offset);
-                    sendYTCommand('seekTo', [target, true]);
-                });
-
-                navigator.mediaSession.setActionHandler('seekforward', (details) => {
-                    const offset = (details && details.seekOffset) || 10;
-                    const target = lastReportedCurrentTime + offset;
-                    sendYTCommand('seekTo', [target, true]);
-                });
-
-                navigator.mediaSession.setActionHandler('seekto', (details) => {
-                    if (details && typeof details.seekTime !== 'undefined') {
-                        sendYTCommand('seekTo', [details.seekTime, true]);
-                    }
-                });
-
-                try {
-                    navigator.mediaSession.setActionHandler('previoustrack', () => {
-                        sendYTCommand('previousVideo');
-                    });
-                    navigator.mediaSession.setActionHandler('nexttrack', () => {
-                        sendYTCommand('nextVideo');
-                    });
-                } catch (e) {}
-            } catch (err) {
-                console.warn('MediaSession setup error:', err);
-            }
-        }
-
-        // Prime audio focus on user's first interaction
-        const primeMedia = () => {
-            getSilentAudio().play().then(() => {
-                if (!isCurrentlyPlaying) getSilentAudio().pause();
-            }).catch(() => {});
-            setupMediaSession();
-        };
-        document.addEventListener('touchstart', primeMedia, { once: true });
-        document.addEventListener('click', primeMedia, { once: true });
-
         // Listen for message events from YouTube iframe
         window.addEventListener('message', (event) => {
             if (!event.origin.includes('youtube.com')) return;
@@ -1211,7 +852,6 @@
                             channel: 'widget'
                         }), '*');
                     }
-                    setupMediaSession();
                 }
                 
                 if (data.event === 'infoDelivery' && data.info) {
@@ -1221,44 +861,12 @@
                     if (info.videoData && info.videoData.video_id) {
                         currentVideoId = info.videoData.video_id;
                     }
-
-                    // Background Audio / MediaSession State Management
-                    if (typeof info.playerState !== 'undefined') {
-                        if (info.playerState === 1) { // PLAYING
-                            isCurrentlyPlaying = true;
-                            wasPlayingBeforeHidden = true;
-                            if (isBackgroundPlayEnabled) {
-                                getSilentAudio().play().catch(() => {});
-                            }
-                            if ('mediaSession' in navigator) {
-                                navigator.mediaSession.playbackState = 'playing';
-                            }
-                        } else if (info.playerState === 2) { // PAUSED
-                            if (document.hidden && isBackgroundPlayEnabled && wasPlayingBeforeHidden) {
-                                // Background tab / screen off triggered pause - re-issue play!
-                                setTimeout(() => {
-                                    if (isBackgroundPlayEnabled && wasPlayingBeforeHidden) {
-                                        sendYTCommand('playVideo');
-                                    }
-                                }, 120);
-                            } else {
-                                isCurrentlyPlaying = false;
-                                if (silentAudioEl) silentAudioEl.pause();
-                                if ('mediaSession' in navigator) {
-                                    navigator.mediaSession.playbackState = 'paused';
-                                }
-                            }
-                        } else if (info.playerState === 0) { // ENDED
-                            isCurrentlyPlaying = false;
-                            wasPlayingBeforeHidden = false;
-                            if (silentAudioEl) silentAudioEl.pause();
-                            if ('mediaSession' in navigator) {
-                                navigator.mediaSession.playbackState = 'none';
-                            }
-                            if (currentVideoId) {
-                                localStorage.removeItem('yt_pos_' + currentVideoId);
-                                localStorage.removeItem('yt_pos_' + currentVideoId + '_dur');
-                            }
+                    
+                    // Reset if ended
+                    if (info.playerState === 0) {
+                        if (currentVideoId) {
+                            localStorage.removeItem('yt_pos_' + currentVideoId);
+                            localStorage.removeItem('yt_pos_' + currentVideoId + '_dur');
                         }
                     }
                     
@@ -1266,18 +874,6 @@
                     if (typeof info.currentTime !== 'undefined' && info.currentTime > 0) {
                         const currentTime = Math.floor(info.currentTime);
                         const duration = typeof info.duration !== 'undefined' && info.duration > 0 ? Math.floor(info.duration) : 0;
-                        lastReportedCurrentTime = currentTime;
-                        if (duration > 0) lastReportedDuration = duration;
-
-                        if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession && duration > 0) {
-                            try {
-                                navigator.mediaSession.setPositionState({
-                                    duration: duration,
-                                    playbackRate: info.playbackRate || 1,
-                                    position: Math.min(currentTime, duration)
-                                });
-                            } catch (e) {}
-                        }
                         
                         // 1. Save to current video's key
                         if (currentVideoId) {
@@ -1305,29 +901,6 @@
             }
         });
 
-        // Visibility change handler for seamless background playback
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                if (isCurrentlyPlaying) {
-                    wasPlayingBeforeHidden = true;
-                    if (isBackgroundPlayEnabled) {
-                        getSilentAudio().play().catch(() => {});
-                        [100, 300, 700].forEach(delay => {
-                            setTimeout(() => {
-                                if (isBackgroundPlayEnabled && wasPlayingBeforeHidden) {
-                                    sendYTCommand('playVideo');
-                                }
-                            }, delay);
-                        });
-                    }
-                }
-            } else {
-                if (wasPlayingBeforeHidden && isBackgroundPlayEnabled) {
-                    sendYTCommand('playVideo');
-                }
-            }
-        });
-
         // Periodic subscription heartbeat to ensure the YouTube iframe posts playback data
         setInterval(() => {
             const iframe = document.getElementById('videoFrame');
@@ -1350,8 +923,6 @@
             document.getElementById('fileTitle').innerText = FILE_TITLE;
             document.getElementById('fileTitle').title = FILE_TITLE; // Add native tooltip
             document.getElementById('fileTitle').style.maxWidth = (window.innerWidth - 150) + "px"; // Dynamic max width
-            checkPiPSupport();
-            setupMediaSession();
 
             if (!FILE_URL) {
                 loading.classList.add('hidden');
@@ -1395,8 +966,6 @@
                         videoFrame.src = embedUrl;
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
                         document.getElementById('customFsBtn').style.display = 'flex';
-                        document.getElementById('playerPocketBtn').style.display = 'flex';
-                        checkPiPSupport();
                     };
 
                     document.getElementById('hubWatchBtn').onclick = () => {
@@ -1425,8 +994,6 @@
                         videoContainer.classList.remove('hidden');
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
                         document.getElementById('customFsBtn').style.display = 'flex';
-                        document.getElementById('playerPocketBtn').style.display = 'flex';
-                        checkPiPSupport();
                         loading.classList.add('hidden');
                     };
 
@@ -1561,67 +1128,11 @@
 
         }
 
-        // Floating Mini-Player (Picture-in-Picture) Handler
-        async function triggerPiP() {
-            // 1. Desktop Chrome/Edge Document Picture-in-Picture API
-            if ('documentPictureInPicture' in window) {
-                try {
-                    if (window.documentPictureInPicture.window) {
-                        window.documentPictureInPicture.window.close();
-                        return;
-                    }
-                    const pipWindow = await window.documentPictureInPicture.requestWindow({
-                        width: 640,
-                        height: 360
-                    });
 
-                    // Transfer stylesheets so iframe and UI are properly styled
-                    [...document.styleSheets].forEach((styleSheet) => {
-                        try {
-                            const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
-                            const style = document.createElement('style');
-                            style.textContent = cssRules;
-                            pipWindow.document.head.appendChild(style);
-                        } catch (e) {
-                            if (styleSheet.href) {
-                                const link = document.createElement('link');
-                                link.rel = 'stylesheet';
-                                link.type = styleSheet.type || 'text/css';
-                                link.href = styleSheet.href;
-                                pipWindow.document.head.appendChild(link);
-                            }
-                        }
-                    });
 
-                    const container = document.getElementById('videoContainer');
-                    const parent = container.parentNode;
-                    const placeholder = document.createElement('div');
-                    placeholder.id = 'pipPlaceholder';
-                    placeholder.style.cssText = 'display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#94a3b8; gap:12px; text-align:center; padding:20px;';
-                    placeholder.innerHTML = '<i class="fas fa-tv" style="font-size:42px; color:#38bdf8;"></i><p style="font-size:15px; font-weight:600; color:#fff; margin:0;">Lecture is playing in Floating Mini-Player</p><button class="launch-btn" style="width:auto; padding:8px 20px; background:var(--accent); color:var(--primary); font-weight:700;" onclick="closePipWindow()">Return to Page</button>';
 
-                    parent.insertBefore(placeholder, container);
-                    pipWindow.document.body.style.margin = '0';
-                    pipWindow.document.body.style.background = '#000';
-                    pipWindow.document.body.style.overflow = 'hidden';
-                    pipWindow.document.body.appendChild(container);
 
-                    window.closePipWindow = () => pipWindow.close();
-
-                    pipWindow.addEventListener('pagehide', () => {
-                        parent.insertBefore(container, placeholder);
-                        placeholder.remove();
-                    });
-                    showBgToast('📺 Floating Mini-Player active!');
-                    return;
-                } catch (e) {
-                    console.warn('DocPiP failed:', e);
-                }
-            } else {
-                showBgToast('Floating PiP is supported on Laptop/PC Chrome. Use Pocket Mode for mobile!');
-                document.getElementById('soundModal').style.display = 'flex';
-            }
-        }
+        // --- Interaction Flash Shield Logic ---
         let flashTimer;
         function interactionFlash() {
             // Only top shields flash on interaction; bottom shields are always solid black
