@@ -550,18 +550,23 @@
         const res = await window.solmatesAPI.getRecycleBin();
         loader.style.display = 'none';
 
-        if (!res.success || !res.data || res.data.length === 0) {
+        if (!res || !res.success || !res.data || res.data.length === 0) {
           empty.style.display = 'block';
           return;
         }
 
         res.data.forEach(item => {
-          allVisibleIds.push(item.id);
-          const card = createBinCard(item);
-          grid.appendChild(card);
+          try {
+            allVisibleIds.push(item.id);
+            const card = createBinCard(item);
+            grid.appendChild(card);
+          } catch(cardErr) {
+            console.error('Error creating card for bin item:', cardErr, item);
+          }
         });
       } catch (err) {
         loader.style.display = 'none';
+        empty.style.display = 'block';
         console.error('Bin fetch failed:', err);
       }
     }
@@ -572,8 +577,11 @@
       card.id = `card-${item.id}`;
       
       const isFolder = item.type === 'folder';
-      const title = item.data.title || item.data.name || 'Untitled Item';
-      const semester = item.semester === 'all' ? 'All Semesters' : `Semester ${item.semester}`;
+      const d = (item.data && typeof item.data === 'object') ? item.data : item;
+      const title = d.title || d.name || d.subject || item.title || item.name || 'Untitled Item';
+      const sem = item.semester || d.semester;
+      const semester = (!sem || sem === 'all' || sem === '0') ? 'All Semesters' : `Semester ${sem}`;
+      const deletedStr = item.deletedAt ? getTimeAgo(item.deletedAt) : 'Recently';
 
       card.innerHTML = `
         <div class="item-checkbox-wrap">
@@ -581,7 +589,7 @@
         </div>
         <div class="bin-item-meta">
           <span class="bin-badge ${isFolder ? 'badge-folder' : 'badge-item'}">${isFolder ? 'Folder' : (item.category || 'Item')}</span>
-          <span>Deleted ${getTimeAgo(item.deletedAt)}</span>
+          <span>Deleted ${deletedStr}</span>
         </div>
         <div class="bin-item-title">${title}</div>
         <div class="bin-item-details">
