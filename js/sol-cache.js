@@ -43,12 +43,12 @@
         }
     }
 
-    // Automatic Purge of Old Cache Snapshots (v865)
-    const SNAPSHOT_CACHE_VER = 'v865_purge_legacy_snapshots';
+    // Automatic Purge of Old Cache Snapshots (v866)
+    const SNAPSHOT_CACHE_VER = 'v866_purge_legacy_snapshots_r3';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
-                if (k.startsWith('cached_notices_') || k.startsWith('solcache_') || k.startsWith('_sol_')) {
+                if (k.startsWith('cached_notices_') || k.startsWith('solcache_') || k.startsWith('_sol_') || k === 'solmates_mba_locks_cache') {
                     localStorage.removeItem(k);
                 }
             });
@@ -57,6 +57,13 @@
                     sessionStorage.removeItem(k);
                 }
             });
+            if ('caches' in window) {
+                caches.keys().then(keys => {
+                    keys.forEach(k => {
+                        if (k.includes('api') || k.includes('v865') || k.includes('v864')) caches.delete(k);
+                    });
+                }).catch(() => {});
+            }
         } catch(e) {}
         localStorage.setItem('_sol_snapshot_ver', SNAPSHOT_CACHE_VER);
     }

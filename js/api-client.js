@@ -209,9 +209,8 @@ class SolmatesAPI {
 
     const isGet = !options.method || options.method.toUpperCase() === 'GET';
     const isMutation = !isGet;
-    const isInsideAdmin = typeof window !== 'undefined' && window.location.pathname.includes('/admin');
 
-    if (this.adminToken && !options.skipAuth && (isMutation || isInsideAdmin || options.includeAuth)) {
+    if (this.adminToken && !options.skipAuth) {
       headers['Authorization'] = `Bearer ${this.adminToken}`;
     }
 
@@ -224,10 +223,13 @@ class SolmatesAPI {
     };
 
     if (isGet) {
-      if (options.force || (this.adminToken && isInsideAdmin && !options.skipAuth)) {
-        config.cache = 'no-cache';
-        headers['Cache-Control'] = 'no-cache';
-        headers['Pragma'] = 'no-cache';
+      // Force all browser requests to revalidate with Cloudflare Edge instead of caching on device disk
+      config.cache = 'no-cache';
+      headers['Cache-Control'] = 'no-cache';
+      headers['Pragma'] = 'no-cache';
+
+      if (options.force || (this.adminToken && !options.skipAuth)) {
+        headers['X-Admin-Force'] = 'true';
         url += (url.includes('?') ? '&' : '?') + '_a=' + Date.now();
       }
     }
