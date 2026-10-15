@@ -949,7 +949,7 @@
                 }
 
                 try {
-                    const currentPos = (targetId && localStorage.getItem('yt_pos_' + targetId)) || 0;
+                    const currentPos = (targetId && parseInt(localStorage.getItem('yt_pos_' + targetId))) || 0;
                     const startParam = currentPos > 0 ? `&start=${currentPos}` : '';
 
                     activePipWindow = await window.documentPictureInPicture.requestWindow({
@@ -957,32 +957,151 @@
                         height: 270
                     });
 
+                    // Pause main window video playback to prevent double audio
+                    const mainFrame = document.getElementById('videoFrame');
+                    if (mainFrame && mainFrame.contentWindow) {
+                        try {
+                            mainFrame.contentWindow.postMessage(JSON.stringify({
+                                event: 'command',
+                                func: 'pauseVideo',
+                                args: ''
+                            }), '*');
+                        } catch(e){}
+                    }
+
                     activePipWindow.document.title = title + " - Solmates";
+                    
+                    // Crucial: Set referrer policy and base URL so YouTube embed does not throw Error 153
+                    const metaRef = activePipWindow.document.createElement('meta');
+                    metaRef.name = "referrer";
+                    metaRef.content = "strict-origin-when-cross-origin";
+                    activePipWindow.document.head.appendChild(metaRef);
+
+                    const baseTag = activePipWindow.document.createElement('base');
+                    baseTag.href = window.location.origin + "/";
+                    activePipWindow.document.head.appendChild(baseTag);
+
                     activePipWindow.document.body.style.margin = '0';
                     activePipWindow.document.body.style.padding = '0';
                     activePipWindow.document.body.style.background = '#000';
                     activePipWindow.document.body.style.overflow = 'hidden';
 
+                    const safeOrigin = encodeURIComponent(window.location.origin || 'https://solmates.in');
+                    const safeHref = encodeURIComponent(window.location.href);
+
                     activePipWindow.document.body.innerHTML = `
-                        <div style="position:relative; width:100vw; height:100vh; background:#000; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                        <div style="position:relative; width:100vw; height:100vh; background:#000; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; user-select:none;">
                             <!-- Solmates Top Shield: 100% BLOCKS channel avatar, name, and subscribers -->
-                            <div style="position:absolute; top:0; left:0; width:100%; height:62px; background:#000000; z-index:2147483647; pointer-events:auto; display:flex; align-items:center; padding:0 12px; gap:8px;">
-                                <span style="background:rgba(15,23,42,0.92); color:#38bdf8; font-size:12px; font-weight:700; padding:4px 10px; border-radius:6px; border:1px solid rgba(56,189,248,0.4); text-shadow:0 1px 2px #000;">🎓 Solmates</span>
-                                <span style="color:#ffffff; font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:calc(100% - 120px);">${title}</span>
+                            <div style="position:absolute; top:0; left:0; width:100%; height:64px; background:#000000; z-index:2147483647; pointer-events:auto; display:flex; align-items:center; padding:0 12px; gap:8px; box-sizing:border-box;">
+                                <span style="background:rgba(15,23,42,0.95); color:#38bdf8; font-size:12px; font-weight:700; padding:4px 10px; border-radius:6px; border:1px solid rgba(56,189,248,0.4); text-shadow:0 1px 2px #000; flex-shrink:0;">🎓 Solmates</span>
+                                <span style="color:#ffffff; font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</span>
                             </div>
 
-                            <!-- YouTube Embed -->
-                            <iframe src="https://www.youtube-nocookie.com/embed/${targetId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&fs=1${startParam}" 
+                            <!-- YouTube Embed (origin & referrer configured to prevent Error 153) -->
+                            <iframe id="pipFrame" 
+                                    src="https://www.youtube.com/embed/${targetId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&fs=0${startParam}&origin=${safeOrigin}&widget_referrer=${safeHref}" 
                                     style="width:100%; height:100%; border:none; display:block;" 
-                                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen" 
-                                    allowfullscreen></iframe>
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
-                            <!-- Solmates Bottom Shield: 100% BLOCKS YouTube logo and link -->
-                            <div style="position:absolute; bottom:0; left:0; width:100%; height:48px; background:#000000; z-index:2147483647; pointer-events:auto;"></div>
+                            <!-- Solmates Bottom Shield & Controls: 100% BLOCKS YouTube logo & link icon -->
+                            <div style="position:absolute; bottom:0; left:0; width:100%; height:48px; background:#000000; z-index:2147483647; pointer-events:auto; display:flex; align-items:center; justify-content:center; gap:20px; box-sizing:border-box;">
+                                <button id="pipRewindBtn" style="background:none; border:none; color:#cbd5e1; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; padding:4px 8px; border-radius:4px;" title="Rewind 10s">
+                                    ⏪ 10s
+                                </button>
+                                <button id="pipPlayPauseBtn" style="background:#38bdf8; border:none; color:#0f172a; font-size:14px; font-weight:bold; cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;" title="Play/Pause">
+                                    ⏸
+                                </button>
+                                <button id="pipForwardBtn" style="background:none; border:none; color:#cbd5e1; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; padding:4px 8px; border-radius:4px;" title="Forward 10s">
+                                    10s ⏩
+                                </button>
+                            </div>
                         </div>
                     `;
 
+                    // Handle controls & playback inside PiP
+                    const pipFrame = activePipWindow.document.getElementById('pipFrame');
+                    const playPauseBtn = activePipWindow.document.getElementById('pipPlayPauseBtn');
+                    const rewindBtn = activePipWindow.document.getElementById('pipRewindBtn');
+                    const fwdBtn = activePipWindow.document.getElementById('pipForwardBtn');
+
+                    let isPlaying = true;
+                    let pipTime = currentPos;
+
+                    const sendPipCmd = (func, args = []) => {
+                        if (pipFrame && pipFrame.contentWindow) {
+                            pipFrame.contentWindow.postMessage(JSON.stringify({
+                                event: 'command',
+                                func: func,
+                                args: args
+                            }), '*');
+                        }
+                    };
+
+                    if (playPauseBtn) {
+                        playPauseBtn.onclick = () => {
+                            if (isPlaying) {
+                                sendPipCmd('pauseVideo');
+                                isPlaying = false;
+                                playPauseBtn.innerText = '▶';
+                            } else {
+                                sendPipCmd('playVideo');
+                                isPlaying = true;
+                                playPauseBtn.innerText = '⏸';
+                            }
+                        };
+                    }
+
+                    if (rewindBtn) {
+                        rewindBtn.onclick = () => {
+                            pipTime = Math.max(0, pipTime - 10);
+                            sendPipCmd('seekTo', [pipTime, true]);
+                        };
+                    }
+
+                    if (fwdBtn) {
+                        fwdBtn.onclick = () => {
+                            pipTime = pipTime + 10;
+                            sendPipCmd('seekTo', [pipTime, true]);
+                        };
+                    }
+
+                    // Progress and State sync
+                    activePipWindow.addEventListener('message', (event) => {
+                        if (!event.origin.includes('youtube.com')) return;
+                        try {
+                            const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                            if (data.event === 'infoDelivery' && data.info) {
+                                if (typeof data.info.currentTime !== 'undefined') {
+                                    pipTime = Math.floor(data.info.currentTime);
+                                    if (pipTime > 0 && targetId) {
+                                        localStorage.setItem('yt_pos_' + targetId, pipTime);
+                                    }
+                                }
+                                if (typeof data.info.playerState !== 'undefined') {
+                                    if (data.info.playerState === 1) {
+                                        isPlaying = true;
+                                        if (playPauseBtn) playPauseBtn.innerText = '⏸';
+                                    } else if (data.info.playerState === 2) {
+                                        isPlaying = false;
+                                        if (playPauseBtn) playPauseBtn.innerText = '▶';
+                                    }
+                                }
+                            }
+                        } catch(e){}
+                    });
+
+                    // Heartbeat to listen to YouTube iframe inside PiP
+                    const pipHeartbeat = setInterval(() => {
+                        if (!activePipWindow || activePipWindow.closed) {
+                            clearInterval(pipHeartbeat);
+                            return;
+                        }
+                        sendPipCmd('listening');
+                    }, 1000);
+
                     activePipWindow.addEventListener('pagehide', () => {
+                        clearInterval(pipHeartbeat);
                         activePipWindow = null;
                     });
                     return;
