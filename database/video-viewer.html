@@ -25,16 +25,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v865">
-  <script src="/config.js?v=v865"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v866">
+  <script src="/config.js?v=v866"></script>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v865" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v865" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v865">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v865">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v865">
+  <link rel="icon" href="/favicon.ico?v=v866" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v866" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v866">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v866">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v866">
     <title>Video Viewer - SOLMATES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -662,17 +662,17 @@
                 </div>
             </div>
 
-            <!-- Feature 1: Background Audio -->
+            <!-- Feature 1: Pocket Mode -->
             <div style="background: var(--bg-nav, #f8f9fa); padding: 14px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border-color, #e2e8f0);">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                    <i class="fas fa-headphones" style="color: #38bdf8; font-size: 15px;"></i>
-                    <strong style="font-size: 14px;">🎧 Background Audio (Screen Off / Multitask)</strong>
+                    <i class="fas fa-moon" style="color: #38bdf8; font-size: 15px;"></i>
+                    <strong style="font-size: 14px;">🌙 Pocket Audio Mode (Black Screen & Zero Battery)</strong>
                 </div>
                 <p style="font-size: 12.5px; color: var(--text-muted, #555); margin: 0 0 6px 0; line-height: 1.5;">
-                    Screen lock karne ya WhatsApp/Notes par jaane par audio chalta rehta hai.
+                    Phone ko pocket me rakh kar lecture sunna ho to <strong>Pocket Mode</strong> <i class="fas fa-moon"></i> dabayein.
                 </p>
                 <div style="font-size: 12px; color: var(--text-muted, #666); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 8px 10px; border-radius: 8px;">
-                    💡 <strong>Tip:</strong> Phone ke Lock Screen ya Notification Bar me lecture ka title aur Play/Pause button dikhega.
+                    💡 Screen pure black ho jayegi, touch lock ho jayega aur lecture bina ruke non-stop chalega. Wapas aane ke liye screen par <strong>Double-Tap</strong> karein!
                 </div>
             </div>
 
@@ -680,12 +680,11 @@
             <div style="background: var(--bg-nav, #f8f9fa); padding: 14px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border-color, #e2e8f0);">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
                     <i class="fas fa-clone" style="color: #6366f1; font-size: 15px;"></i>
-                    <strong style="font-size: 14px;">📺 Floating Mini-Player (Picture-in-Picture)</strong>
+                    <strong style="font-size: 14px;">📺 Floating Mini-Player (Laptop / PC)</strong>
                 </div>
-                <ul style="font-size: 12px; color: var(--text-muted, #555); margin: 0; padding-left: 18px; line-height: 1.6;">
-                    <li><strong>Phone par:</strong> Fullscreen <i class="fas fa-expand"></i> dabayein aur Home button dabayein ya swipe-up karein — floating window open ho jayegi!</li>
-                    <li><strong>Laptop/PC:</strong> Upar ya bottom corner me PiP <i class="fas fa-clone"></i> icon click karein.</li>
-                </ul>
+                <p style="font-size: 12px; color: var(--text-muted, #555); margin: 0; line-height: 1.6;">
+                    Laptop/Desktop par PiP <i class="fas fa-clone"></i> icon dabane se floating mini window alag ho jati hai jisse aap Word/Excel me notes banate hue padh sakte hain.
+                </p>
             </div>
 
             <!-- Feature 3: No Sound -->
@@ -808,13 +807,12 @@
             <span class="file-title" id="fileTitle">Loading Video...</span>
         </div>
         <div class="header-right">
-            <!-- Background Audio Toggle -->
-            <button id="bgAudioBtn" class="header-icon-btn active" onclick="toggleBackgroundAudio()" title="Background Audio / Lock Screen Play">
-                <i class="fas fa-headphones"></i>
-                <span id="bgAudioDot" class="bg-active-dot visible"></span>
+            <!-- Pocket Audio Mode (Black Screen & Zero Battery for continuous listening) -->
+            <button id="pocketModeBtn" class="header-icon-btn active" onclick="enterPocketMode()" title="Pocket Audio Mode (Black Screen / Lock)">
+                <i class="fas fa-moon"></i>
             </button>
-            <!-- Picture-in-Picture Floating Player -->
-            <button id="headerPipBtn" class="header-icon-btn" onclick="triggerPiP()" title="Floating Mini Player (Picture-in-Picture)">
+            <!-- Picture-in-Picture Floating Player (Only Desktop Chrome/Edge) -->
+            <button id="headerPipBtn" class="header-icon-btn" onclick="triggerPiP()" title="Floating Mini Player (PiP)" style="display: none;">
                 <i class="fas fa-clone"></i>
             </button>
             <!-- Help & Sound Modal -->
@@ -856,8 +854,13 @@
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
 
-                <!-- Custom PiP Button (Replaces Native) -->
-                <button id="customPipBtn" onclick="triggerPiP()" style="position: absolute; bottom: 55px; right: 68px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; font-size: 16px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);" title="Floating Mini Player (PiP)">
+                <!-- Pocket Mode Button on Video Player (Mobile friendly) -->
+                <button id="playerPocketBtn" onclick="enterPocketMode()" style="position: absolute; bottom: 55px; right: 68px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; font-size: 16px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);" title="Pocket Mode (Black Screen & Audio)">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                <!-- Custom PiP Button (Only displayed on Desktop with DocPiP support) -->
+                <button id="customPipBtn" onclick="triggerPiP()" style="position: absolute; bottom: 55px; right: 120px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: none; font-size: 16px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);" title="Floating Mini Player (PiP)">
                     <i class="fas fa-clone"></i>
                 </button>
 
@@ -903,6 +906,25 @@
             <h3>Oops! Link Broken</h3>
             <p style="color: #94a3b8; margin-top: 8px;">The video link is missing or invalid.</p>
             <button class="launch-btn" style="width: auto; margin-top: 20px;" onclick="goBack()">Go Back</button>
+        </div>
+
+        <!-- Pocket Audio Mode Overlay (Pitch black screen, touch lock, battery saver) -->
+        <div id="pocketOverlay" onclick="handlePocketTap(event)" style="display: none; position: fixed; inset: 0; background: #000000; z-index: 2147483647; flex-direction: column; align-items: center; justify-content: center; user-select: none; -webkit-user-select: none; touch-action: manipulation; cursor: pointer; text-align: center; padding: 24px;">
+            <div id="pocketPrompt" style="display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 1; transition: opacity 0.5s ease; pointer-events: none;">
+                <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(56, 189, 248, 0.15); border: 2px solid #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #38bdf8;">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div style="color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: -0.3px;" id="pocketTitle">Lecture Playing</div>
+                <div style="background: rgba(255,255,255,0.08); padding: 8px 16px; border-radius: 20px; font-size: 13px; color: #38bdf8; font-weight: 600;">
+                    <i class="fas fa-lock"></i> Pocket Mode Active &bull; Touch Locked
+                </div>
+                <p style="color: #94a3b8; font-size: 13px; max-width: 290px; line-height: 1.5; margin: 0;">
+                    Audio is playing. Screen is blacked out for zero battery drain in your pocket.
+                </p>
+                <div style="margin-top: 10px; color: #64748b; font-size: 12px; border: 1px dashed rgba(255,255,255,0.25); padding: 7px 16px; border-radius: 12px;">
+                    👆 Double-tap anywhere to unlock
+                </div>
+            </div>
         </div>
     </main>
 
@@ -1004,26 +1026,86 @@
             }, 3500);
         }
 
-        function updateBgAudioUI() {
-            const btn = document.getElementById('bgAudioBtn');
-            const dot = document.getElementById('bgAudioDot');
-            if (btn) btn.classList.toggle('active', isBackgroundPlayEnabled);
-            if (dot) dot.classList.toggle('visible', isBackgroundPlayEnabled);
+        function checkPiPSupport() {
+            if ('documentPictureInPicture' in window) {
+                const headerPip = document.getElementById('headerPipBtn');
+                const customPip = document.getElementById('customPipBtn');
+                if (headerPip) headerPip.style.display = 'flex';
+                if (customPip) customPip.style.display = 'flex';
+            }
         }
 
-        function toggleBackgroundAudio() {
-            isBackgroundPlayEnabled = !isBackgroundPlayEnabled;
-            localStorage.setItem('sol_bg_playback', isBackgroundPlayEnabled ? 'true' : 'false');
-            updateBgAudioUI();
-            if (isBackgroundPlayEnabled) {
-                showBgToast('🎧 Background Audio ON (Screen lock / multitask active)');
-                if (isCurrentlyPlaying) {
-                    getSilentAudio().play().catch(() => {});
+        // --- Pocket Mode (Black Screen & Touch Lock for Continuous Lecture Listening) ---
+        let pocketWakeLock = null;
+        let pocketDimTimer = null;
+        let lastPocketTap = 0;
+
+        async function enterPocketMode() {
+            const overlay = document.getElementById('pocketOverlay');
+            if (!overlay) return;
+
+            // Ensure video starts or continues playing
+            sendYTCommand('playVideo');
+
+            overlay.style.display = 'flex';
+            const titleEl = document.getElementById('pocketTitle');
+            if (titleEl) titleEl.innerText = FILE_TITLE || 'Recorded Class';
+
+            // Request WakeLock to prevent the phone from timing out / sleeping
+            if ('wakeLock' in navigator) {
+                try {
+                    pocketWakeLock = await navigator.wakeLock.request('screen');
+                } catch (e) {
+                    console.warn('WakeLock not granted:', e);
                 }
-            } else {
-                showBgToast('Background Audio OFF');
-                if (silentAudioEl) silentAudioEl.pause();
             }
+
+            const prompt = document.getElementById('pocketPrompt');
+            if (prompt) prompt.style.opacity = '1';
+
+            clearTimeout(pocketDimTimer);
+            pocketDimTimer = setTimeout(() => {
+                if (prompt) prompt.style.opacity = '0.06'; // OLED true black
+            }, 3500);
+
+            showBgToast('🌙 Pocket Mode: Screen locked, audio playing!');
+        }
+
+        function exitPocketMode() {
+            const overlay = document.getElementById('pocketOverlay');
+            if (!overlay) return;
+            overlay.style.display = 'none';
+
+            if (pocketWakeLock) {
+                try {
+                    pocketWakeLock.release();
+                } catch (e) {}
+                pocketWakeLock = null;
+            }
+            clearTimeout(pocketDimTimer);
+            showBgToast('🔓 Screen Unlocked');
+        }
+
+        function handlePocketTap(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            const now = Date.now();
+            const prompt = document.getElementById('pocketPrompt');
+            if (prompt) prompt.style.opacity = '1';
+
+            clearTimeout(pocketDimTimer);
+            pocketDimTimer = setTimeout(() => {
+                if (prompt) prompt.style.opacity = '0.06';
+            }, 3500);
+
+            // Double tap to unlock (tap within 380ms)
+            if (now - lastPocketTap < 380) {
+                exitPocketMode();
+            }
+            lastPocketTap = now;
         }
 
         function sendYTCommand(func, args) {
@@ -1268,7 +1350,7 @@
             document.getElementById('fileTitle').innerText = FILE_TITLE;
             document.getElementById('fileTitle').title = FILE_TITLE; // Add native tooltip
             document.getElementById('fileTitle').style.maxWidth = (window.innerWidth - 150) + "px"; // Dynamic max width
-            updateBgAudioUI();
+            checkPiPSupport();
             setupMediaSession();
 
             if (!FILE_URL) {
@@ -1313,8 +1395,8 @@
                         videoFrame.src = embedUrl;
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
                         document.getElementById('customFsBtn').style.display = 'flex';
-                        document.getElementById('customPipBtn').style.display = 'flex';
-                        updateBgAudioUI();
+                        document.getElementById('playerPocketBtn').style.display = 'flex';
+                        checkPiPSupport();
                     };
 
                     document.getElementById('hubWatchBtn').onclick = () => {
@@ -1343,8 +1425,8 @@
                         videoContainer.classList.remove('hidden');
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
                         document.getElementById('customFsBtn').style.display = 'flex';
-                        document.getElementById('customPipBtn').style.display = 'flex';
-                        updateBgAudioUI();
+                        document.getElementById('playerPocketBtn').style.display = 'flex';
+                        checkPiPSupport();
                         loading.classList.add('hidden');
                     };
 
@@ -1537,17 +1619,9 @@
                 }
             }
 
-            // 2. Mobile / Fallback: Fullscreen trigger with guidance
-            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            if (isMobile) {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    await toggleCustomFullscreen();
-                    showBgToast('💡 Tip: Swipe up ya Home dabane se floating PiP chalega!');
-                } else {
-                    document.getElementById('soundModal').style.display = 'flex';
-                }
             } else {
-                toggleCustomFullscreen();
+                showBgToast('Floating PiP is supported on Laptop/PC Chrome. Use Pocket Mode for mobile!');
+                document.getElementById('soundModal').style.display = 'flex';
             }
         }
         let flashTimer;
