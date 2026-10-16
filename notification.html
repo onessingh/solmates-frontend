@@ -2059,7 +2059,8 @@
 
         if (isLive && !isNaN(itemTime)) {
           const itemDay = new Date(itemTime).setHours(0, 0, 0, 0);
-          const combinedTimeStr = `${notice.title || ''} ${notice.class_time || ''}`;
+          const cleanTitleNoDate = (notice.title || '').replace(/\[.*?\]/g, '');
+          const combinedTimeStr = `${cleanTitleNoDate} ${notice.class_time || ''}`;
           
           const m = combinedTimeStr.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
           if (m) {
@@ -2070,7 +2071,7 @@
             if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
             if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
             if (!period && hh >= 1 && hh <= 7) hh += 12;
- 
+
             let classEnd = new Date(itemTime);
             classEnd.setHours(hh, mm, 0, 0);
             
