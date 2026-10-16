@@ -338,11 +338,17 @@
             align-items: center;
             justify-content: flex-end;
             min-width: 140px;
+            position: relative !important;
+            z-index: 2147483647 !important;
+            pointer-events: auto !important;
         }
 
         .solmates-patti-fs {
             padding: 6px 12px;
             font-size: 13px;
+            position: relative !important;
+            z-index: 2147483647 !important;
+            pointer-events: auto !important;
         }
 
         @media (max-width: 650px) {
@@ -700,53 +706,22 @@
             display: flex !important;
         }
 
-        /* 3. Bottom-Left Shield: Level with Solmates Patti, stays strictly BELOW the seek bar */
+        /* 3. Bottom shields are completely disabled in fullscreen and landscape because Solmates Patti spans 100% width */
         :fullscreen #ytBottomLeftShield,
         :-webkit-full-screen #ytBottomLeftShield,
-        #videoContainer.is-fullscreen #ytBottomLeftShield {
-            display: block !important;
-            left: 0 !important;
-            bottom: 0 !important;
-            width: 100px !important;
-            height: 52px !important;
-            background: #000000 !important;
-            z-index: 2147483646 !important;
-        }
-
-        @media (orientation: landscape) and (max-height: 550px) {
-            #ytBottomLeftShield {
-                display: block !important;
-                left: 0 !important;
-                bottom: 0 !important;
-                width: 60px !important;
-                height: 38px !important;
-                background: #000000 !important;
-                z-index: 2147483646 !important;
-            }
-        }
-
-        /* 4. Bottom-Right Shield: Level with Solmates Patti, stays strictly BELOW the seek bar */
+        #videoContainer.is-fullscreen #ytBottomLeftShield,
         :fullscreen #ytBottomRightShield,
         :-webkit-full-screen #ytBottomRightShield,
         #videoContainer.is-fullscreen #ytBottomRightShield {
-            display: block !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 110px !important;
-            height: 52px !important;
-            background: #000000 !important;
-            z-index: 2147483646 !important;
+            display: none !important;
+            pointer-events: none !important;
         }
 
-        @media (orientation: landscape) and (max-height: 550px) {
+        @media (orientation: landscape) {
+            #ytBottomLeftShield,
             #ytBottomRightShield {
-                display: block !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                width: 80px !important;
-                height: 38px !important;
-                background: #000000 !important;
-                z-index: 2147483646 !important;
+                display: none !important;
+                pointer-events: none !important;
             }
         }
 
@@ -1101,8 +1076,18 @@
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; top: 0; right: 42px; width: 44px; height: 48px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
 
+                <!-- 4. Bottom-Left Link Shield (Portrait Only) -->
+                <div id="ytBottomLeftShield" class="yt-blocker" 
+                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
+                    style="position: absolute; display: none; pointer-events: none; touch-action: none;"></div>
+
+                <!-- 5. Bottom-Right YouTube Logo Shield (Portrait Only) -->
+                <div id="ytBottomRightShield" class="yt-blocker" 
+                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
+                    style="position: absolute; display: none; pointer-events: none; touch-action: none;"></div>
+
                 <!-- 3. Universal Bottom Mask & Solmates Patti Controls -->
-                <div id="ytBottomBarBlocker" class="yt-blocker solmates-patti-bar" onclick="event.stopPropagation();">
+                <div id="ytBottomBarBlocker" class="yt-blocker solmates-patti-bar" onclick="event.stopPropagation();" style="z-index: 2147483647 !important; pointer-events: auto !important;">
                     <!-- Left: Solmates Branding & Progress Timer -->
                     <div class="solmates-patti-left">
                         <span class="solmates-patti-badge"><i class="fas fa-graduation-cap"></i> Solmates</span>
@@ -1123,25 +1108,15 @@
                     </div>
 
                     <!-- Right: Fullscreen Toggle & Hide Button -->
-                    <div class="solmates-patti-right" style="display: flex; align-items: center; gap: 8px;">
-                        <button type="button" class="solmates-patti-btn" onclick="hidePattiControls(event)" title="Hide Controls">
+                    <div class="solmates-patti-right" style="display: flex; align-items: center; gap: 8px; position: relative !important; z-index: 2147483647 !important; pointer-events: auto !important;">
+                        <button type="button" class="solmates-patti-btn" id="pattiHideBtn" onclick="hidePattiControls(event)" title="Hide Controls" style="cursor: pointer; pointer-events: auto !important;">
                             <i class="fas fa-chevron-down"></i>
                         </button>
-                        <button type="button" class="solmates-patti-btn solmates-patti-fs" id="pattiFsBtn" onclick="toggleCustomFullscreen()" title="Fullscreen">
+                        <button type="button" class="solmates-patti-btn solmates-patti-fs" id="pattiFsBtn" onclick="toggleCustomFullscreen(event)" title="Fullscreen" style="cursor: pointer; pointer-events: auto !important;">
                             <i class="fas fa-expand"></i>
                         </button>
                     </div>
                 </div>
-
-                <!-- 4. Bottom-Left Link Shield (Level with Solmates Patti) -->
-                <div id="ytBottomLeftShield" class="yt-blocker" 
-                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
-                    style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
-
-                <!-- 5. Bottom-Right YouTube Logo Shield (Level with Solmates Patti) -->
-                <div id="ytBottomRightShield" class="yt-blocker" 
-                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
-                    style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
 
                 <!-- Floating Reveal Button: Appears when patti is hidden so user can easily open controls -->
                 <button id="pattiRevealBtn" type="button" onclick="showPattiControls(event)" title="Show Controls">
@@ -1771,7 +1746,11 @@
         checkActions();
 
         // Custom Fullscreen Handler
-        async function toggleCustomFullscreen() {
+        async function toggleCustomFullscreen(e) {
+            if (e) {
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+            }
             const container = document.getElementById('videoContainer');
             const fsBtn = document.getElementById('customFsBtn');
             const icon = fsBtn ? fsBtn.querySelector('i') : null;
@@ -1787,9 +1766,9 @@
                     document.body.classList.add('is-fullscreen');
                 }
                 if (container && container.requestFullscreen) {
-                    try { await container.requestFullscreen(); } catch (e) {}
+                    try { await container.requestFullscreen(); } catch (err) {}
                 } else if (container && container.webkitRequestFullscreen) {
-                    try { await container.webkitRequestFullscreen(); } catch (e) {}
+                    try { await container.webkitRequestFullscreen(); } catch (err) {}
                 }
                 if (icon) icon.className = 'fas fa-compress';
                 if (pattiFsIcon) pattiFsIcon.className = 'fas fa-compress';
@@ -1798,7 +1777,7 @@
                     if (screen.orientation && screen.orientation.lock) {
                         await screen.orientation.lock('landscape');
                     }
-                } catch (e) { console.warn('Orientation lock failed', e); }
+                } catch (err) {}
 
                 // Auto-hide patti 3s after entering fullscreen so lecture notes are unobstructed
                 clearTimeout(pattiAutoHideTimer);
@@ -1813,9 +1792,9 @@
                 showPattiControls();
 
                 if (document.exitFullscreen) {
-                    try { await document.exitFullscreen(); } catch (e) {}
+                    try { await document.exitFullscreen(); } catch (err) {}
                 } else if (document.webkitExitFullscreen) {
-                    try { await document.webkitExitFullscreen(); } catch (e) {}
+                    try { await document.webkitExitFullscreen(); } catch (err) {}
                 }
                 if (icon) icon.className = 'fas fa-expand';
                 if (pattiFsIcon) pattiFsIcon.className = 'fas fa-expand';
@@ -1824,7 +1803,12 @@
                     if (screen.orientation && screen.orientation.unlock) {
                         screen.orientation.unlock();
                     }
-                } catch (e) { console.warn('Orientation unlock failed', e); }
+                } catch (err) {}
+                try {
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('portrait');
+                    }
+                } catch (err) {}
             }
         }
 
@@ -1862,27 +1846,35 @@
 
         function hidePattiControls(e) {
             if (e) {
-                e.stopPropagation();
-                e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.preventDefault === 'function') e.preventDefault();
             }
             clearTimeout(pattiAutoHideTimer);
             const container = document.getElementById('videoContainer');
+            const patti = document.getElementById('ytBottomBarBlocker');
             if (container) {
                 container.classList.add('patti-hidden');
                 container.classList.add('controls-hidden');
+            }
+            if (patti) {
+                patti.style.setProperty('display', 'none', 'important');
             }
         }
 
         function showPattiControls(e) {
             if (e) {
-                e.stopPropagation();
-                e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.preventDefault === 'function') e.preventDefault();
             }
             clearTimeout(pattiAutoHideTimer);
             const container = document.getElementById('videoContainer');
+            const patti = document.getElementById('ytBottomBarBlocker');
             if (container) {
                 container.classList.remove('patti-hidden');
                 container.classList.remove('controls-hidden');
+            }
+            if (patti) {
+                patti.style.removeProperty('display');
             }
             // In landscape or fullscreen, auto-hide again after 3.5s
             if (isFsOrLandscape()) {
@@ -1899,9 +1891,13 @@
                 pattiAutoHideTimer = setTimeout(hidePattiControls, 3000);
             } else {
                 const container = document.getElementById('videoContainer');
+                const patti = document.getElementById('ytBottomBarBlocker');
                 if (container) {
                     container.classList.remove('patti-hidden');
                     container.classList.remove('controls-hidden');
+                }
+                if (patti) {
+                    patti.style.removeProperty('display');
                 }
             }
         }
@@ -1916,6 +1912,25 @@
             updateFsIcon();
             checkLandscapeAutoHide();
         });
+
+        function bindPattiTouchControls() {
+            const hideBtn = document.getElementById('pattiHideBtn');
+            if (hideBtn) {
+                hideBtn.onclick = hidePattiControls;
+                hideBtn.ontouchend = (e) => { e.preventDefault(); hidePattiControls(e); };
+            }
+            const fsBtn = document.getElementById('pattiFsBtn');
+            if (fsBtn) {
+                fsBtn.onclick = toggleCustomFullscreen;
+                fsBtn.ontouchend = (e) => { e.preventDefault(); toggleCustomFullscreen(e); };
+            }
+            const revealBtn = document.getElementById('pattiRevealBtn');
+            if (revealBtn) {
+                revealBtn.onclick = showPattiControls;
+                revealBtn.ontouchend = (e) => { e.preventDefault(); showPattiControls(e); };
+            }
+        }
+        setTimeout(bindPattiTouchControls, 400);
 
         // Trigger auto-hide check once video container becomes visible
         setTimeout(checkLandscapeAutoHide, 2500);
