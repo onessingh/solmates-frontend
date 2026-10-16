@@ -595,15 +595,58 @@
             }
         }
 
-        /* 3. Bottom-Left Shield: Covers link icon 🔗 (behind the patti controls) */
+        /* Top Shield Header in Fullscreen */
+        .solmates-top-patti {
+            display: none !important;
+        }
+
+        :fullscreen .solmates-top-patti,
+        :-webkit-full-screen .solmates-top-patti,
+        #videoContainer.is-fullscreen .solmates-top-patti,
+        @media (orientation: landscape) and (max-height: 550px) {
+            .solmates-top-patti {
+                display: flex !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 50px !important;
+                background: #000000 !important;
+                z-index: 2147483647 !important;
+                align-items: center !important;
+                padding: 0 16px !important;
+                box-sizing: border-box !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                user-select: none !important;
+                -webkit-user-select: none !important;
+            }
+        }
+
+        .solmates-top-badge {
+            color: #f1f5f9;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .solmates-top-badge i {
+            color: #38bdf8;
+        }
+
+        /* 3. Bottom-Left Shield: Covers channel avatar / link icon 🔗 (behind the patti controls) */
         :fullscreen #ytBottomLeftShield,
         :-webkit-full-screen #ytBottomLeftShield,
         #videoContainer.is-fullscreen #ytBottomLeftShield {
             display: block !important;
             left: 0 !important;
             bottom: 0 !important;
-            width: 130px !important;
-            height: 95px !important;
+            width: 155px !important;
+            height: 130px !important;
             background: #000000 !important;
             z-index: 2147483646 !important;
         }
@@ -613,22 +656,22 @@
                 display: block !important;
                 left: 0 !important;
                 bottom: 0 !important;
-                width: 130px !important;
-                height: 95px !important;
+                width: 155px !important;
+                height: 130px !important;
                 background: #000000 !important;
                 z-index: 2147483646 !important;
             }
         }
 
-        /* 4. Bottom-Right Shield: Covers ▶ YouTube logo (behind the patti controls) */
+        /* 4. Bottom-Right Shield: Covers ▶ YouTube logo and 4-arrow icon (behind the patti controls) */
         :fullscreen #ytBottomRightShield,
         :-webkit-full-screen #ytBottomRightShield,
         #videoContainer.is-fullscreen #ytBottomRightShield {
             display: block !important;
             right: 0 !important;
             bottom: 0 !important;
-            width: 170px !important;
-            height: 95px !important;
+            width: 180px !important;
+            height: 130px !important;
             background: #000000 !important;
             z-index: 2147483646 !important;
         }
@@ -638,8 +681,8 @@
                 display: block !important;
                 right: 0 !important;
                 bottom: 0 !important;
-                width: 170px !important;
-                height: 95px !important;
+                width: 180px !important;
+                height: 130px !important;
                 background: #000000 !important;
                 z-index: 2147483646 !important;
             }
@@ -986,10 +1029,12 @@
                 <iframe id="videoFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
                 
                 <!-- Surgical YouTube Blockers (Optimized for Gestures) -->
-                <!-- 1. Global Top Shield -->
-                <div id="ytTopShield" class="yt-blocker" 
-                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
-                    style="position: absolute; top:0; left:0; width: calc(100% - 150px); height: 110px; pointer-events: auto; touch-action: pinch-zoom;"></div>
+                <!-- 1. Global Top Shield & Fullscreen Header -->
+                <div id="ytTopShield" class="yt-blocker solmates-top-patti" onclick="event.stopPropagation();">
+                    <div class="solmates-top-badge">
+                        <i class="fas fa-graduation-cap"></i> <span id="pattiHeaderTitle">Solmates Lecture</span>
+                    </div>
+                </div>
                 
                 <!-- 2. Share/Link Shield -->
                 <div id="ytShareShield" class="yt-blocker" 
@@ -1425,7 +1470,7 @@
             }
         });
 
-        // Periodic subscription heartbeat to ensure the YouTube iframe posts playback data
+        // Periodic subscription heartbeat to ensure the YouTube iframe posts playback data and captions stay off
         setInterval(() => {
             const iframe = document.getElementById('videoFrame');
             if (iframe && iframe.contentWindow) {
@@ -1433,6 +1478,16 @@
                     event: 'listening',
                     id: 1,
                     channel: 'widget'
+                }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'unloadModule',
+                    args: ['captions']
+                }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'unloadModule',
+                    args: ['cc']
                 }), '*');
             }
         }, 1000);
@@ -1481,6 +1536,8 @@
             document.getElementById('fileTitle').innerText = FILE_TITLE;
             document.getElementById('fileTitle').title = FILE_TITLE; // Add native tooltip
             document.getElementById('fileTitle').style.maxWidth = (window.innerWidth - 150) + "px"; // Dynamic max width
+            const pHeader = document.getElementById('pattiHeaderTitle');
+            if (pHeader) pHeader.innerText = FILE_TITLE;
 
             if (!FILE_URL) {
                 loading.classList.add('hidden');
@@ -1514,7 +1571,7 @@
                         videoContainer.classList.remove('hidden');
                         const startParam = startTime > 5 ? `&start=${startTime}` : '';
                         const origin = encodeURIComponent(window.location.origin);
-                        const params = `&autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&fs=0${startParam}&enablejsapi=1&origin=${origin}&t=${Date.now()}`;
+                        const params = `&autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&cc_load_policy=0&hl=en&fs=0${startParam}&enablejsapi=1&origin=${origin}&t=${Date.now()}`;
                         
                         const targetVideoId = activeVideoId || videoId;
                         let embedUrl = targetVideoId 
@@ -1547,7 +1604,7 @@
                         videoFrame.className = 'yt-mode';
                         const startParam = startTime > 5 ? `&start=${startTime}` : '';
                         const origin = encodeURIComponent(window.location.origin);
-                        const params = `?autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&fs=0${startParam}&enablejsapi=1&origin=${origin}&t=${Date.now()}`;
+                        const params = `?autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&cc_load_policy=0&hl=en&fs=0${startParam}&enablejsapi=1&origin=${origin}&t=${Date.now()}`;
                         videoFrame.src = `https://www.youtube.com/embed/${videoId}${params}`;
                         videoContainer.classList.remove('hidden');
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
