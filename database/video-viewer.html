@@ -400,8 +400,8 @@
 
         /* Responsive Shield Adjustments */
         @media (max-width: 600px) {
-            #ytTopShield { width: calc(100% - 150px) !important; height: 60px !important; }
-            #ytCcBlocker { width: 150px !important; height: 60px !important; }
+            #ytTopShield { width: calc(100% - 95px) !important; height: 48px !important; }
+            #ytCcBlocker { right: 40px !important; width: 44px !important; height: 48px !important; }
         }
 
         /* ============================================================
@@ -589,25 +589,83 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 100% !important;
-                height: 52px !important;
+                height: 38px !important;
                 background: #000000 !important;
                 z-index: 2147483647 !important;
+                padding: 0 10px !important;
+            }
+            #ytBottomLeftShield,
+            #ytBottomRightShield {
+                height: 38px !important;
+            }
+            .solmates-patti-left {
+                gap: 6px !important;
+                min-width: auto !important;
+            }
+            .solmates-patti-badge {
+                font-size: 10px !important;
+                padding: 2px 6px !important;
+            }
+            .solmates-patti-timer {
+                font-size: 11px !important;
+            }
+            .solmates-patti-center {
+                gap: 8px !important;
+            }
+            .solmates-patti-btn {
+                height: 28px !important;
+                padding: 0 8px !important;
+                font-size: 11px !important;
+            }
+            .solmates-patti-play {
+                width: 30px !important;
+                height: 30px !important;
+                font-size: 12px !important;
+            }
+            .solmates-patti-fs {
+                width: 28px !important;
+                height: 28px !important;
             }
         }
 
-        /* Top-Right Click Blocker: Intercepts clicks on Captions [CC] & Settings without obstructing lecture notes */
+        /* Top-Right Click Blocker: Intercepts clicks ONLY on Captions [CC], leaving Settings Gear ⚙️ completely open */
         #ytCcBlocker {
             display: block !important;
             position: absolute !important;
             top: 0 !important;
-            right: 0 !important;
-            width: 150px !important;
-            height: 60px !important;
+            right: 42px !important;
+            width: 44px !important;
+            height: 48px !important;
             background: transparent !important;
             z-index: 2147483647 !important;
             pointer-events: auto !important;
             touch-action: none !important;
             cursor: default !important;
+        }
+
+        /* Auto-Hide in Fullscreen: smoothly hides Solmates Patti & shields so 0% of video / bottom lines are cut off */
+        #videoContainer.is-fullscreen.controls-hidden #ytBottomBarBlocker {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translateY(100%) !important;
+        }
+
+        #videoContainer.is-fullscreen.controls-hidden #ytBottomLeftShield,
+        #videoContainer.is-fullscreen.controls-hidden #ytBottomRightShield,
+        #videoContainer.is-fullscreen.controls-hidden #ytTopShield,
+        #videoContainer.is-fullscreen.controls-hidden #ytCcBlocker {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        #ytBottomBarBlocker {
+            transition: opacity 0.3s ease, transform 0.3s ease !important;
+        }
+        #ytBottomLeftShield,
+        #ytBottomRightShield,
+        #ytTopShield,
+        #ytCcBlocker {
+            transition: opacity 0.3s ease !important;
         }
 
         /* 3. Bottom-Left Shield: Level with Solmates Patti, stays strictly BELOW the seek bar */
@@ -629,7 +687,7 @@
                 left: 0 !important;
                 bottom: 0 !important;
                 width: 60px !important;
-                height: 52px !important;
+                height: 38px !important;
                 background: #000000 !important;
                 z-index: 2147483646 !important;
             }
@@ -654,7 +712,7 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 80px !important;
-                height: 52px !important;
+                height: 38px !important;
                 background: #000000 !important;
                 z-index: 2147483646 !important;
             }
@@ -1004,12 +1062,12 @@
                 <!-- 1. Global Top-Left Channel Click Blocker (transparent, never covers notes) -->
                 <div id="ytTopShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
-                    style="position: absolute; top: 0; left: 0; width: 260px; height: 60px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
+                    style="position: absolute; top: 0; left: 0; width: 220px; height: 48px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
                 
-                <!-- 2. Top-Right Captions [CC] & Settings Click Blocker (transparent, completely blocks CC taps) -->
+                <!-- 2. Top-Right Captions [CC] Click Blocker (leaves Settings Gear ⚙️ completely open) -->
                 <div id="ytCcBlocker" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
-                    style="position: absolute; top: 0; right: 0; width: 150px; height: 60px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
+                    style="position: absolute; top: 0; right: 42px; width: 44px; height: 48px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
 
                 <!-- 3. Universal Bottom Mask & Solmates Patti Controls -->
                 <div id="ytBottomBarBlocker" class="yt-blocker solmates-patti-bar" onclick="event.stopPropagation();">
@@ -1297,10 +1355,14 @@
                 sendYtCommand('pauseVideo');
                 pattiIsPlaying = false;
                 if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
+                if (typeof fsControlsTimer !== 'undefined') clearTimeout(fsControlsTimer);
+                const container = document.getElementById('videoContainer');
+                if (container) container.classList.remove('controls-hidden');
             } else {
                 sendYtCommand('playVideo');
                 pattiIsPlaying = true;
                 if (btn) btn.innerHTML = '<i class="fas fa-pause"></i>';
+                if (typeof resetFsControlsTimer === 'function') resetFsControlsTimer();
             }
         }
 
@@ -1308,6 +1370,7 @@
             pattiCurrentTime = Math.max(0, pattiCurrentTime + deltaSeconds);
             sendYtCommand('seekTo', [pattiCurrentTime, true]);
             updatePattiTimer();
+            if (typeof resetFsControlsTimer === 'function') resetFsControlsTimer();
         }
 
         function formatTime(seconds) {
@@ -1395,9 +1458,13 @@
                         if (info.playerState === 1) { // Playing
                             pattiIsPlaying = true;
                             if (playBtn) playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                            if (typeof resetFsControlsTimer === 'function') resetFsControlsTimer();
                         } else if (info.playerState === 2) { // Paused
                             pattiIsPlaying = false;
                             if (playBtn) playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                            if (typeof fsControlsTimer !== 'undefined') clearTimeout(fsControlsTimer);
+                            const container = document.getElementById('videoContainer');
+                            if (container) container.classList.remove('controls-hidden');
                         }
                     }
                     
@@ -1718,6 +1785,12 @@
 
             if (container) {
                 container.classList.toggle('is-fullscreen', isFs);
+                if (!isFs) {
+                    container.classList.remove('controls-hidden');
+                    if (typeof fsControlsTimer !== 'undefined') clearTimeout(fsControlsTimer);
+                } else {
+                    resetFsControlsTimer();
+                }
             }
             if (document.body) {
                 document.body.classList.toggle('is-fullscreen', isFs);
@@ -1731,32 +1804,62 @@
             }
         }
 
+        // --- Fullscreen Controls Auto-Hide & Reveal Logic ---
+        let fsControlsTimer = null;
 
-
-
-
-        // --- Interaction Flash Shield Logic ---
-        let flashTimer;
-        function interactionFlash() {
-            // Only top shields flash on interaction; bottom shields are always solid black
-            const topBlockers = document.querySelectorAll('#ytTopShield, #ytShareShield');
-            topBlockers.forEach(b => b.classList.add('active'));
+        function resetFsControlsTimer() {
+            const container = document.getElementById('videoContainer');
+            if (!container) return;
             
-            clearTimeout(flashTimer);
-            flashTimer = setTimeout(() => {
-                topBlockers.forEach(b => b.classList.remove('active'));
-            }, 2000);
+            // Show controls immediately
+            container.classList.remove('controls-hidden');
+            clearTimeout(fsControlsTimer);
+            
+            const isFs = container.classList.contains('is-fullscreen') || !!(document.fullscreenElement || document.webkitFullscreenElement);
+            // In fullscreen mode, if video is playing, auto-hide after 3.5 seconds
+            if (isFs && pattiIsPlaying) {
+                fsControlsTimer = setTimeout(() => {
+                    if (pattiIsPlaying) {
+                        container.classList.add('controls-hidden');
+                    }
+                }, 3500);
+            }
         }
 
-        // Trigger flash on interactions
-        document.addEventListener('touchstart', interactionFlash);
-        document.addEventListener('mousedown', interactionFlash);
+        // Tap/click on video container toggles controls in fullscreen
+        function handleVideoContainerTap(e) {
+            const container = document.getElementById('videoContainer');
+            if (!container) return;
+            const isFs = container.classList.contains('is-fullscreen') || !!(document.fullscreenElement || document.webkitFullscreenElement);
+            if (!isFs) return;
 
-        // Detect tap inside iframe (window blur) to trigger flash
+            // If tapped on the Solmates Patti bar or top shields directly, let their own click handlers run and just keep controls visible
+            if (e.target.closest('#ytBottomBarBlocker') || e.target.closest('#ytCcBlocker') || e.target.closest('#ytTopShield')) {
+                resetFsControlsTimer();
+                return;
+            }
+
+            if (container.classList.contains('controls-hidden')) {
+                resetFsControlsTimer();
+            } else {
+                clearTimeout(fsControlsTimer);
+                container.classList.add('controls-hidden');
+            }
+        }
+
+        // Listen for user interactions on the video container
+        const vc = document.getElementById('videoContainer');
+        if (vc) {
+            vc.addEventListener('click', handleVideoContainerTap);
+            vc.addEventListener('mousemove', resetFsControlsTimer, { passive: true });
+            vc.addEventListener('touchstart', resetFsControlsTimer, { passive: true });
+        }
+
+        // Detect tap inside iframe (window blur) to also reset controls timer
         window.addEventListener('blur', () => {
             setTimeout(() => {
                 if (document.activeElement === document.getElementById('videoFrame')) {
-                    interactionFlash();
+                    resetFsControlsTimer();
                 }
             }, 100);
         });
