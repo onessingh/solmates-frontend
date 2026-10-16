@@ -1997,6 +1997,8 @@
         const tMatch = t.match(/\((\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}(?:\s*(?:AM|PM))?)\)/i);
         const time = tMatch ? tMatch[1].replace(/\s*:\s*/g, ':') : ""; // Normalize 19: 00 -> 19:00
         
+        const isHealthcare = /mbaexh|health\s*care|\bhca\b/i.test(t);
+
         // 3. SURGICAL STRIP: Remove metadata and reconstruct subject (VISUAL ONLY)
         let subjectOnly = t
            .replace(/\[.*?\]/g, '') // Remove [date]
@@ -2004,6 +2006,8 @@
            .replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '') // Remove single time blocks
            .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '') // Remove ISO
            .replace(/MBA\s*SEM\s*\d+:?/gi, '') // Remove MBA SEM prefixes
+           .replace(/MBAEXH[\s\-]*\d+/gi, '') // Remove MBAEXH-107 / MBAEXH code
+           .replace(/\b\d{8,10}\b/g, '') // Remove 8-10 digit subject code like 429801108
            .replace(/\s+/g, ' ')
            .replace(/^[:\s\-]+/, '')
            .trim();
@@ -2011,7 +2015,7 @@
         // [v816.7] CONDITIONAL PREFIX: Only preserve for Live Classes as per user request
         let displaySubject = subjectOnly;
         if (isLive && semester && semester !== "0") {
-           displaySubject = `MBA SEM ${semester}: ${subjectOnly}`;
+           displaySubject = isHealthcare ? `MBA (Healthcare) Sem ${semester}: ${subjectOnly}` : `MBA Sem ${semester}: ${subjectOnly}`;
         }
         
         // [v816.9.3] FUNCTIONAL SYNC: Prioritize scheduledAt for time data
@@ -2260,14 +2264,30 @@
               finalImageUrl = noticeLink.substring('#richpost:'.length);
           }
           const isLiveClass = isLiveCheck(notice);
+          const isHealthcare = /mbaexh|health\s*care|\bhca\b/i.test(`${notice.title || ''} ${notice.description || ''}`);
 
           const isTimetable = String(notice.title).includes('[Timetable]');
           const btnText = isLiveClass ? 'Join Class <i class="fas fa-video"></i>' :
             (isTimetable ? 'View Timetable <i class="fas fa-file-pdf"></i>' : 'View Details <i class="fas fa-arrow-right"></i>');
           const btnClass = isLiveClass ? 'view-btn join-btn' : 'view-btn';
-          const iconClass = isLiveClass ? 'fas fa-video' : (isTimetable ? 'fas fa-file-pdf' : 'fas fa-file-alt');
-          const iconBg = isLiveClass ? 'rgba(40, 199, 111, 0.1)' : 'rgba(0, 113, 227, 0.05)';
-          const iconColor = isLiveClass ? '#28C76F' : '#0071e3';
+          
+          let iconClass = 'fas fa-file-alt';
+          let iconBg = 'rgba(0, 113, 227, 0.05)';
+          let iconColor = '#0071e3';
+
+          if (isLiveClass) {
+              if (isHealthcare) {
+                  iconClass = 'fas fa-heartbeat';
+                  iconBg = 'rgba(16, 185, 129, 0.12)';
+                  iconColor = '#10b981';
+              } else {
+                  iconClass = 'fas fa-graduation-cap';
+                  iconBg = 'rgba(37, 99, 235, 0.12)';
+                  iconColor = '#2563eb';
+              }
+          } else if (isTimetable) {
+              iconClass = 'fas fa-file-pdf';
+          }
 
           // v74.0: Use Link or Normalized Title as a deterministic unique key
           // This prevents re-badging even if the Mongo ID or Title-Date changes.
@@ -2324,14 +2344,14 @@
           }
 
           return `
-            <div class="notification-card ${isLiveClass ? 'live-class' : ''}" id="notice-${uniqueKey}" onclick="${clickHandler}">
+            <div class="notification-card ${isLiveClass ? 'live-class' : ''} ${isHealthcare ? 'healthcare-card' : ''}" id="notice-${uniqueKey}" onclick="${clickHandler}">
               <div class="icon-box" style="background: ${iconBg}; color: ${iconColor};">
                 <i class="${iconClass}"></i>
                 ${newBadge}
               </div>
               <div class="content-box" style="overflow: hidden; max-width: 100%;">
                 ${notice.isPinned ? `<div class="live-indicator" style="background: rgba(255,152,0,0.1); color: #ff9800; border-color: rgba(255,152,0,0.2); margin-bottom: 6px;"><i class="fas fa-thumbtack" style="font-size: 10px; margin-right: 4px;"></i> PINNED</div>` : ''}
-                  ${isLiveClass ? `<div class="live-indicator"><span class="pulse-dot"></span> LIVE CLASS</div>` : ''}
+                  ${isLiveClass ? `<div class="live-indicator" style="${isHealthcare ? 'background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.3);' : ''}"><span class="pulse-dot" style="${isHealthcare ? 'background: #10b981;' : ''}"></span> LIVE CLASS ${isHealthcare ? '• HEALTHCARE' : '• GENERAL MBA'}</div>` : ''}
                 <h3 class="subject-text" translate="no" style="word-break: break-word;">${formattedSubject}</h3>
                 
                 ${(!isLiveClass && (notice.description || finalImageUrl)) ? `

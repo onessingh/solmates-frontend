@@ -333,6 +333,14 @@
             border-color: var(--border-color);
         }
 
+        .live-session-card.healthcare-card {
+            border-left: 4px solid #10b981;
+        }
+
+        .live-session-card.general-card {
+            border-left: 4px solid #2563eb;
+        }
+
         .session-header {
             display: flex;
             align-items: center;
@@ -1242,14 +1250,20 @@
 
             grid.innerHTML = sessions.map(s => {
                 const isPending = !s.url || s.url === '#' || s.url === '#pending';
+                const sessionIcon = s.isHealthcare ? 'fas fa-heartbeat' : 'fas fa-graduation-cap';
+                const iconColorStyle = s.isHealthcare ? 'color: #10b981; background: rgba(16, 185, 129, 0.12);' : 'color: #2563eb; background: rgba(37, 99, 235, 0.12);';
+                const badgeHtml = s.isHealthcare
+                    ? `<span class="semester-badge" style="background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 600;"><i class="fas fa-heartbeat"></i> MBA Healthcare • ${s.semesters.includes('all') ? 'All Sems' : 'Sem ' + s.semesters.join(', ')}</span>`
+                    : `<span class="semester-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-weight: 600;"><i class="fas fa-graduation-cap"></i> MBA • ${s.semesters.includes('all') ? 'All Sems' : 'Sem ' + s.semesters.join(', ')}</span>`;
+
                 return `
-                <div class="live-session-card" onclick="${!isPending ? `joinSession('${s.url.replace(/'/g, "\\'").replace(/"/g, '\\"')}')` : ''}">
+                <div class="live-session-card ${s.isHealthcare ? 'healthcare-card' : 'general-card'}" onclick="${!isPending ? `joinSession('${s.url.replace(/'/g, "\\'").replace(/"/g, '\\"')}')` : ''}">
                     <div id="status-${s.id}"></div>
                     <div class="session-header">
-                        <div class="session-icon"><i class="${getPlatformIcon(s.platform)}"></i></div>
+                        <div class="session-icon" style="${iconColorStyle}"><i class="${sessionIcon}"></i></div>
                         <div class="session-title">
                             <h4>${escapeHtml(s.displayTitle)}</h4>
-                            <span class="semester-badge">${s.semesters.includes('all') ? 'All Semesters' : 'Sem ' + s.semesters.join(', ')}</span>
+                            ${badgeHtml}
                         </div>
                     </div>
                     <div class="session-details">
@@ -1404,7 +1418,8 @@
                                 semesters: sourceSem === 'all' ? ['1', '2', '3', '4', 'all'] : [sourceSem],
                                 scheduledAt: sessionDate,
                                 hasRange: hasRange,
-                                expiryTime: classExpiryTime
+                                expiryTime: classExpiryTime,
+                                isHealthcare: !!meta.isHealthcare
                             };
 
                             // DE-DUPLICATION LOGIC:
@@ -1462,17 +1477,26 @@
         }
 
         function cleanSubjectTitle(title, semester, refDate) {
-            if (!title) return { subject: "", date: "", time: "", hasRange: false, expiryTime: Date.now() + 86400000 };
+            if (!title) return { subject: "", date: "", time: "", hasRange: false, expiryTime: Date.now() + 86400000, isHealthcare: false };
             let t = String(title).trim();
             const dMatch = t.match(/\[(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\]/);
             const tMatch = t.match(/\(([^)]*?)\)/); 
             const rangeMatch = t.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?\s*[-]\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
 
+            const isHealthcare = /mbaexh|health\s*care|\bhca\b/i.test(t);
+
             // 1. Initial Strip
             let clean = t.replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(.*\)/g, '').trim();
             
-            // 2. Remove Leading Branding
-            clean = clean.replace(/^(?:MBA\s+)?(?:SEM(?:ESTER)?|YEAR|YR|PART|TERM)\s*(?:IV|III|II|I|[1-6])\s*[:\-]?\s*/i, '');
+            // 2. Remove Leading Branding and Subject Codes (MBAEXH, 8-10 digit numbers)
+            clean = clean
+                .replace(/^(?:MBA\s+)?(?:SEM(?:ESTER)?|YEAR|YR|PART|TERM)\s*(?:IV|III|II|I|[1-6])\s*[:\-]?\s*/gi, '')
+                .replace(/MBA\s*SEM\s*\d+:?/gi, '')
+                .replace(/MBAEXH[\s\-]*\d+/gi, '')
+                .replace(/\b\d{8,10}\b/g, '')
+                .replace(/^[:\s\-]+/, '')
+                .replace(/\s+/g, ' ')
+                .trim();
 
             // 3. CLEAN SUBJECT - UNIVERSAL WORD FILTER
             const seenNorm = new Set();
@@ -1520,12 +1544,17 @@
 
             const rawTime = tMatch ? tMatch[1] : "";
 
+            const displaySubject = (semester && semester !== "0" && semester !== "all") 
+                ? (isHealthcare ? `MBA (Healthcare) Sem ${semester}: ${cleaned}` : `MBA Sem ${semester}: ${cleaned}`)
+                : cleaned;
+
             return {
-                subject: (semester && semester !== "0" && semester !== "all") ? `MBA SEM ${semester}: ${cleaned}` : cleaned,
+                subject: displaySubject,
                 date: dMatch ? dMatch[1] : "",
                 time: rawTime,
                 hasRange: rawTime.includes('-') || !!rangeMatch,
-                expiryTime: expiry
+                expiryTime: expiry,
+                isHealthcare: isHealthcare
             };
         }
 
