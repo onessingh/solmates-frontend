@@ -400,8 +400,8 @@
 
         /* Responsive Shield Adjustments */
         @media (max-width: 600px) {
-            #ytTopShield { width: calc(100% - 130px) !important; height: 100px !important; }
-            #ytShareShield { right: 100px !important; width: 60px !important; height: 80px !important; }
+            #ytTopShield { width: calc(100% - 150px) !important; height: 60px !important; }
+            #ytCcBlocker { width: 150px !important; height: 60px !important; }
         }
 
         /* ============================================================
@@ -552,7 +552,7 @@
             top: 0 !important;
             left: 0 !important;
             width: 100% !important;
-            height: calc(100% - 50px) !important;
+            height: 100% !important;
             transform: none !important;
         }
 
@@ -562,12 +562,12 @@
                 top: 0 !important;
                 left: 0 !important;
                 width: 100% !important;
-                height: calc(100% - 50px) !important;
+                height: 100% !important;
                 transform: none !important;
             }
         }
 
-        /* 2. Bottom gap blocker: 52px solid black bar below iframe with Solmates Patti Controls */
+        /* 2. Bottom Solmates Patti Controls Bar (52px solid black across bottom) */
         :fullscreen #ytBottomBarBlocker,
         :-webkit-full-screen #ytBottomBarBlocker,
         #videoContainer.is-fullscreen #ytBottomBarBlocker {
@@ -595,58 +595,30 @@
             }
         }
 
-        /* Top Shield Header in Fullscreen */
-        .solmates-top-patti {
-            display: none !important;
+        /* Top-Right Click Blocker: Intercepts clicks on Captions [CC] & Settings without obstructing lecture notes */
+        #ytCcBlocker {
+            display: block !important;
+            position: absolute !important;
+            top: 0 !important;
+            right: 0 !important;
+            width: 150px !important;
+            height: 60px !important;
+            background: transparent !important;
+            z-index: 2147483647 !important;
+            pointer-events: auto !important;
+            touch-action: none !important;
+            cursor: default !important;
         }
 
-        :fullscreen .solmates-top-patti,
-        :-webkit-full-screen .solmates-top-patti,
-        #videoContainer.is-fullscreen .solmates-top-patti,
-        @media (orientation: landscape) and (max-height: 550px) {
-            .solmates-top-patti {
-                display: flex !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 50px !important;
-                background: #000000 !important;
-                z-index: 2147483647 !important;
-                align-items: center !important;
-                padding: 0 16px !important;
-                box-sizing: border-box !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-                user-select: none !important;
-                -webkit-user-select: none !important;
-            }
-        }
-
-        .solmates-top-badge {
-            color: #f1f5f9;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .solmates-top-badge i {
-            color: #38bdf8;
-        }
-
-        /* 3. Bottom-Left Shield: Covers channel avatar / link icon 🔗 (behind the patti controls) */
+        /* 3. Bottom-Left Shield: Level with Solmates Patti, stays strictly BELOW the seek bar */
         :fullscreen #ytBottomLeftShield,
         :-webkit-full-screen #ytBottomLeftShield,
         #videoContainer.is-fullscreen #ytBottomLeftShield {
             display: block !important;
             left: 0 !important;
             bottom: 0 !important;
-            width: 155px !important;
-            height: 130px !important;
+            width: 100px !important;
+            height: 52px !important;
             background: #000000 !important;
             z-index: 2147483646 !important;
         }
@@ -656,22 +628,22 @@
                 display: block !important;
                 left: 0 !important;
                 bottom: 0 !important;
-                width: 155px !important;
-                height: 130px !important;
+                width: 60px !important;
+                height: 52px !important;
                 background: #000000 !important;
                 z-index: 2147483646 !important;
             }
         }
 
-        /* 4. Bottom-Right Shield: Covers ▶ YouTube logo and 4-arrow icon (behind the patti controls) */
+        /* 4. Bottom-Right Shield: Level with Solmates Patti, stays strictly BELOW the seek bar */
         :fullscreen #ytBottomRightShield,
         :-webkit-full-screen #ytBottomRightShield,
         #videoContainer.is-fullscreen #ytBottomRightShield {
             display: block !important;
             right: 0 !important;
             bottom: 0 !important;
-            width: 180px !important;
-            height: 130px !important;
+            width: 110px !important;
+            height: 52px !important;
             background: #000000 !important;
             z-index: 2147483646 !important;
         }
@@ -681,8 +653,8 @@
                 display: block !important;
                 right: 0 !important;
                 bottom: 0 !important;
-                width: 180px !important;
-                height: 130px !important;
+                width: 80px !important;
+                height: 52px !important;
                 background: #000000 !important;
                 z-index: 2147483646 !important;
             }
@@ -692,31 +664,31 @@
             #queryFloatBtn { display: none !important; }
         }
 
-        /* Custom Fullscreen Button: Base styles (Laptop / Desktop) */
+        /* Custom Fullscreen Button: HIDDEN on Laptop / Desktop (both normal & fullscreen) */
         #customFsBtn {
-            display: flex !important;
-            position: absolute !important;
-            bottom: 65px !important;
-            right: 20px !important;
-            width: 44px !important;
-            height: 44px !important;
-            z-index: 2147483648 !important;
+            display: none !important;
         }
 
-        /* Mobile Portrait position */
+        /* Phone: SHOW ONLY on normal portrait screen so user can enter fullscreen */
         @media (max-width: 600px) and (orientation: portrait) {
-            #customFsBtn {
+            #videoContainer:not(.is-fullscreen) #customFsBtn {
+                display: flex !important;
+                position: absolute !important;
                 bottom: 55px !important;
                 right: 16px !important;
                 width: 44px !important;
                 height: 44px !important;
+                z-index: 2147483648 !important;
             }
         }
 
-        /* In Fullscreen and Mobile Landscape: hide customFsBtn since #pattiFsBtn is in the patti bar */
+        /* Fullscreen on all devices: HIDE #customFsBtn (Solmates Patti already has fullscreen button) */
         :fullscreen #customFsBtn,
         :-webkit-full-screen #customFsBtn,
-        #videoContainer.is-fullscreen #customFsBtn,
+        #videoContainer.is-fullscreen #customFsBtn {
+            display: none !important;
+        }
+
         @media (orientation: landscape) and (max-height: 550px) {
             #customFsBtn {
                 display: none !important;
@@ -1029,17 +1001,15 @@
                 <iframe id="videoFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
                 
                 <!-- Surgical YouTube Blockers (Optimized for Gestures) -->
-                <!-- 1. Global Top Shield & Fullscreen Header -->
-                <div id="ytTopShield" class="yt-blocker solmates-top-patti" onclick="event.stopPropagation();">
-                    <div class="solmates-top-badge">
-                        <i class="fas fa-graduation-cap"></i> <span id="pattiHeaderTitle">Solmates Lecture</span>
-                    </div>
-                </div>
-                
-                <!-- 2. Share/Link Shield -->
-                <div id="ytShareShield" class="yt-blocker" 
+                <!-- 1. Global Top-Left Channel Click Blocker (transparent, never covers notes) -->
+                <div id="ytTopShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
-                    style="position: absolute; top:0; right:110px; width: 80px; height: 80px; pointer-events: auto; touch-action: pinch-zoom;"></div>
+                    style="position: absolute; top: 0; left: 0; width: 260px; height: 60px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
+                
+                <!-- 2. Top-Right Captions [CC] & Settings Click Blocker (transparent, completely blocks CC taps) -->
+                <div id="ytCcBlocker" class="yt-blocker" 
+                    onclick="event.stopPropagation(); event.preventDefault(); return false;" 
+                    style="position: absolute; top: 0; right: 0; width: 150px; height: 60px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; cursor: default;"></div>
 
                 <!-- 3. Universal Bottom Mask & Solmates Patti Controls -->
                 <div id="ytBottomBarBlocker" class="yt-blocker solmates-patti-bar" onclick="event.stopPropagation();">
@@ -1070,18 +1040,18 @@
                     </div>
                 </div>
 
-                <!-- 4. Bottom-Left Link Shield (Covers link icon in fullscreen) -->
+                <!-- 4. Bottom-Left Link Shield (Level with Solmates Patti) -->
                 <div id="ytBottomLeftShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
 
-                <!-- 5. Bottom-Right YouTube Logo Shield (Covers YT logo in fullscreen) -->
+                <!-- 5. Bottom-Right YouTube Logo Shield (Level with Solmates Patti) -->
                 <div id="ytBottomRightShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
 
-                <!-- Custom Fullscreen Button (Replaces Native) -->
-                <button id="customFsBtn" onclick="toggleCustomFullscreen()" style="position: absolute; bottom: 55px; right: 16px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; font-size: 18px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                <!-- Custom Fullscreen Button (Replaces Native, active ONLY on mobile portrait) -->
+                <button id="customFsBtn" onclick="toggleCustomFullscreen()" style="position: absolute; bottom: 55px; right: 16px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: none; font-size: 18px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
                     <i class="fas fa-expand"></i>
                 </button>
             </div>
@@ -1481,6 +1451,16 @@
                 }), '*');
                 iframe.contentWindow.postMessage(JSON.stringify({
                     event: 'command',
+                    func: 'setOption',
+                    args: ['captions', 'track', {}]
+                }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'setOption',
+                    args: ['cc', 'track', {}]
+                }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
                     func: 'unloadModule',
                     args: ['captions']
                 }), '*');
@@ -1491,6 +1471,14 @@
                 }), '*');
             }
         }, 1000);
+
+        // Intercept and stop touches/clicks on top blockers (CC & Title)
+        ['touchstart', 'touchend', 'click', 'pointerdown', 'pointerup', 'mousedown', 'mouseup'].forEach(evt => {
+            const cc = document.getElementById('ytCcBlocker');
+            const top = document.getElementById('ytTopShield');
+            if (cc) cc.addEventListener(evt, e => { e.stopPropagation(); e.preventDefault(); }, { passive: false, capture: true });
+            if (top) top.addEventListener(evt, e => { e.stopPropagation(); e.preventDefault(); }, { passive: false, capture: true });
+        });
 
         function checkPipVisibility() {
             try {
@@ -1580,7 +1568,6 @@
                         videoFrame.className = 'yt-mode';
                         videoFrame.src = embedUrl;
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
-                        document.getElementById('customFsBtn').style.display = 'flex';
                     };
 
                     document.getElementById('hubWatchBtn').onclick = () => {
@@ -1608,7 +1595,6 @@
                         videoFrame.src = `https://www.youtube.com/embed/${videoId}${params}`;
                         videoContainer.classList.remove('hidden');
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
-                        document.getElementById('customFsBtn').style.display = 'flex';
                         loading.classList.add('hidden');
                     };
 
