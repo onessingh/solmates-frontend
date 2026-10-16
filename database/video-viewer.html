@@ -313,14 +313,14 @@
             z-index: 2147483647 !important;
         }
 
-        /* Top Shield: Solid black 65px to completely hide channel avatar, name, and subscribers */
+        /* Top Shield: exactly covers only the mini player header bar (38px), preserving full whiteboard lecture notes */
         #videoContainer.is-mini-player #ytTopShield {
             display: block !important;
             position: absolute !important;
             top: 0 !important;
             left: 0 !important;
             width: 100% !important;
-            height: 65px !important;
+            height: 38px !important;
             background: #000000 !important;
             background-color: #000000 !important;
             z-index: 2147483647 !important;
@@ -328,9 +328,7 @@
         }
 
         #videoContainer.is-mini-player #ytShareShield {
-            display: block !important;
-            background: #000000 !important;
-            z-index: 2147483647 !important;
+            display: none !important;
         }
 
         #videoContainer.is-mini-player #customFsBtn {
@@ -953,27 +951,28 @@
                 return;
             }
 
-            // 2. Desktop Browser: Open dedicated Always-Visible Solmates Popout Window (Floats across tabs & apps!)
-            if (!isMobile && targetId) {
-                if (activePopupPlayer && !activePopupPlayer.closed) {
-                    activePopupPlayer.focus();
-                    return;
+            // 2. Open dedicated Solmates Popout Player
+            if (targetId) {
+                const currentPos = parseInt(localStorage.getItem('yt_pos_' + targetId)) || 0;
+                const pipUrl = `/database/pip-embed.html?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}&start=${currentPos}`;
+
+                // Pause main window video playback to prevent double audio
+                const mainFrame = document.getElementById('videoFrame');
+                if (mainFrame && mainFrame.contentWindow) {
+                    try {
+                        mainFrame.contentWindow.postMessage(JSON.stringify({
+                            event: 'command',
+                            func: 'pauseVideo',
+                            args: ''
+                        }), '*');
+                    } catch(e){}
                 }
 
-                try {
-                    const currentPos = parseInt(localStorage.getItem('yt_pos_' + targetId)) || 0;
-                    const pipUrl = `/database/pip-embed.html?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}&start=${currentPos}`;
-
-                    // Pause main window video playback to prevent double audio
-                    const mainFrame = document.getElementById('videoFrame');
-                    if (mainFrame && mainFrame.contentWindow) {
-                        try {
-                            mainFrame.contentWindow.postMessage(JSON.stringify({
-                                event: 'command',
-                                func: 'pauseVideo',
-                                args: ''
-                            }), '*');
-                        } catch(e){}
+                if (!isMobile) {
+                    // Desktop / Laptop
+                    if (activePopupPlayer && !activePopupPlayer.closed) {
+                        activePopupPlayer.focus();
+                        return;
                     }
 
                     const width = 520;
@@ -991,12 +990,14 @@
                         activePopupPlayer.focus();
                         return;
                     }
-                } catch(e) {
-                    console.warn("Popup window failed, falling back to in-page mini player", e);
+                } else {
+                    // Mobile Browser (Chrome/Safari): Open dedicated clean player tab
+                    const mobilePop = window.open(pipUrl, '_blank');
+                    if (mobilePop) return;
                 }
             }
 
-            // 3. Mobile Browser (Android Chrome, iOS Safari) & Fallback: In-Page Floating Mini Player
+            // 3. Fallback: In-Page Floating Mini Player (now fully cleaned, no black box!)
             const container = document.getElementById('videoContainer');
             if (!container) return;
             const willBeMini = typeof forceState === 'boolean' ? forceState : !container.classList.contains('is-mini-player');
