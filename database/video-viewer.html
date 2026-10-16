@@ -643,29 +643,61 @@
             cursor: default !important;
         }
 
-        /* Auto-Hide in Fullscreen: smoothly hides Solmates Patti & shields so 0% of video / bottom lines are cut off */
-        #videoContainer.is-fullscreen.controls-hidden #ytBottomBarBlocker {
-            opacity: 0 !important;
-            pointer-events: none !important;
-            transform: translateY(100%) !important;
-        }
-
-        #videoContainer.is-fullscreen.controls-hidden #ytBottomLeftShield,
-        #videoContainer.is-fullscreen.controls-hidden #ytBottomRightShield,
-        #videoContainer.is-fullscreen.controls-hidden #ytTopShield,
-        #videoContainer.is-fullscreen.controls-hidden #ytCcBlocker {
+        /* Auto-Hide / Manual-Hide Patti rules */
+        #videoContainer.patti-hidden #ytBottomBarBlocker,
+        #videoContainer.controls-hidden #ytBottomBarBlocker,
+        .patti-hidden #ytBottomBarBlocker,
+        .controls-hidden #ytBottomBarBlocker {
+            display: none !important;
+            visibility: hidden !important;
             opacity: 0 !important;
             pointer-events: none !important;
         }
 
-        #ytBottomBarBlocker {
-            transition: opacity 0.3s ease, transform 0.3s ease !important;
+        #videoContainer.patti-hidden #ytBottomLeftShield,
+        #videoContainer.patti-hidden #ytBottomRightShield,
+        #videoContainer.controls-hidden #ytBottomLeftShield,
+        #videoContainer.controls-hidden #ytBottomRightShield,
+        .patti-hidden #ytBottomLeftShield,
+        .patti-hidden #ytBottomRightShield,
+        .controls-hidden #ytBottomLeftShield,
+        .controls-hidden #ytBottomRightShield {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
-        #ytBottomLeftShield,
-        #ytBottomRightShield,
-        #ytTopShield,
-        #ytCcBlocker {
-            transition: opacity 0.3s ease !important;
+
+        /* Floating Reveal Button: Appears when patti is hidden so user can easily open controls */
+        #pattiRevealBtn {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            z-index: 2147483648;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #38bdf8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            -webkit-user-select: none;
+            pointer-events: auto !important;
+        }
+
+        #videoContainer.patti-hidden #pattiRevealBtn,
+        #videoContainer.controls-hidden #pattiRevealBtn,
+        .patti-hidden #pattiRevealBtn,
+        .controls-hidden #pattiRevealBtn {
+            display: flex !important;
         }
 
         /* 3. Bottom-Left Shield: Level with Solmates Patti, stays strictly BELOW the seek bar */
@@ -1090,8 +1122,11 @@
                         </button>
                     </div>
 
-                    <!-- Right: Fullscreen Toggle -->
-                    <div class="solmates-patti-right">
+                    <!-- Right: Fullscreen Toggle & Hide Button -->
+                    <div class="solmates-patti-right" style="display: flex; align-items: center; gap: 8px;">
+                        <button type="button" class="solmates-patti-btn" onclick="hidePattiControls(event)" title="Hide Controls">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
                         <button type="button" class="solmates-patti-btn solmates-patti-fs" id="pattiFsBtn" onclick="toggleCustomFullscreen()" title="Fullscreen">
                             <i class="fas fa-expand"></i>
                         </button>
@@ -1107,6 +1142,11 @@
                 <div id="ytBottomRightShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;" 
                     style="position: absolute; display: none; pointer-events: auto; touch-action: pinch-zoom;"></div>
+
+                <!-- Floating Reveal Button: Appears when patti is hidden so user can easily open controls -->
+                <button id="pattiRevealBtn" type="button" onclick="showPattiControls(event)" title="Show Controls">
+                    <i class="fas fa-sliders-h"></i> <span>Controls</span>
+                </button>
 
                 <!-- Custom Fullscreen Button (Replaces Native, active ONLY on mobile portrait) -->
                 <button id="customFsBtn" onclick="toggleCustomFullscreen()" style="position: absolute; bottom: 55px; right: 16px; z-index: 9999; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: none; font-size: 18px; align-items: center; justify-content: center; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
@@ -1355,14 +1395,12 @@
                 sendYtCommand('pauseVideo');
                 pattiIsPlaying = false;
                 if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
-                if (typeof fsControlsTimer !== 'undefined') clearTimeout(fsControlsTimer);
-                const container = document.getElementById('videoContainer');
-                if (container) container.classList.remove('controls-hidden');
+                if (typeof showPattiControls === 'function') showPattiControls();
             } else {
                 sendYtCommand('playVideo');
                 pattiIsPlaying = true;
                 if (btn) btn.innerHTML = '<i class="fas fa-pause"></i>';
-                if (typeof resetFsControlsTimer === 'function') resetFsControlsTimer();
+                if (typeof showPattiControls === 'function') showPattiControls();
             }
         }
 
@@ -1370,7 +1408,7 @@
             pattiCurrentTime = Math.max(0, pattiCurrentTime + deltaSeconds);
             sendYtCommand('seekTo', [pattiCurrentTime, true]);
             updatePattiTimer();
-            if (typeof resetFsControlsTimer === 'function') resetFsControlsTimer();
+            if (typeof showPattiControls === 'function') showPattiControls();
         }
 
         function formatTime(seconds) {
@@ -1458,13 +1496,10 @@
                         if (info.playerState === 1) { // Playing
                             pattiIsPlaying = true;
                             if (playBtn) playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                            if (typeof resetFsControlsTimer === 'function') resetFsControlsTimer();
                         } else if (info.playerState === 2) { // Paused
                             pattiIsPlaying = false;
                             if (playBtn) playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                            if (typeof fsControlsTimer !== 'undefined') clearTimeout(fsControlsTimer);
-                            const container = document.getElementById('videoContainer');
-                            if (container) container.classList.remove('controls-hidden');
+                            if (typeof showPattiControls === 'function') showPattiControls();
                         }
                     }
                     
@@ -1742,11 +1777,19 @@
             const icon = fsBtn ? fsBtn.querySelector('i') : null;
             const pattiFsIcon = document.querySelector('#pattiFsBtn i');
 
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (container.requestFullscreen) {
-                    await container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) {
-                    await container.webkitRequestFullscreen();
+            const isCurrentlyFs = !!(document.fullscreenElement || document.webkitFullscreenElement) || (container && container.classList.contains('is-fullscreen'));
+
+            if (!isCurrentlyFs) {
+                if (container) {
+                    container.classList.add('is-fullscreen');
+                }
+                if (document.body) {
+                    document.body.classList.add('is-fullscreen');
+                }
+                if (container && container.requestFullscreen) {
+                    try { await container.requestFullscreen(); } catch (e) {}
+                } else if (container && container.webkitRequestFullscreen) {
+                    try { await container.webkitRequestFullscreen(); } catch (e) {}
                 }
                 if (icon) icon.className = 'fas fa-compress';
                 if (pattiFsIcon) pattiFsIcon.className = 'fas fa-compress';
@@ -1756,11 +1799,23 @@
                         await screen.orientation.lock('landscape');
                     }
                 } catch (e) { console.warn('Orientation lock failed', e); }
+
+                // Auto-hide patti 3s after entering fullscreen so lecture notes are unobstructed
+                clearTimeout(pattiAutoHideTimer);
+                pattiAutoHideTimer = setTimeout(hidePattiControls, 3000);
             } else {
+                if (container) {
+                    container.classList.remove('is-fullscreen');
+                }
+                if (document.body) {
+                    document.body.classList.remove('is-fullscreen');
+                }
+                showPattiControls();
+
                 if (document.exitFullscreen) {
-                    await document.exitFullscreen();
+                    try { await document.exitFullscreen(); } catch (e) {}
                 } else if (document.webkitExitFullscreen) {
-                    await document.webkitExitFullscreen();
+                    try { await document.webkitExitFullscreen(); } catch (e) {}
                 }
                 if (icon) icon.className = 'fas fa-expand';
                 if (pattiFsIcon) pattiFsIcon.className = 'fas fa-expand';
@@ -1773,24 +1828,14 @@
             }
         }
 
-        // Listen for native escape to reset icon
-        document.addEventListener('fullscreenchange', updateFsIcon);
-        document.addEventListener('webkitfullscreenchange', updateFsIcon);
-
         function updateFsIcon() {
             const container = document.getElementById('videoContainer');
             const icon = document.querySelector('#customFsBtn i');
             const pattiFsIcon = document.querySelector('#pattiFsBtn i');
-            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement) || (container && container.classList.contains('is-fullscreen'));
 
             if (container) {
                 container.classList.toggle('is-fullscreen', isFs);
-                if (!isFs) {
-                    container.classList.remove('controls-hidden');
-                    if (typeof fsControlsTimer !== 'undefined') clearTimeout(fsControlsTimer);
-                } else {
-                    resetFsControlsTimer();
-                }
             }
             if (document.body) {
                 document.body.classList.toggle('is-fullscreen', isFs);
@@ -1804,65 +1849,76 @@
             }
         }
 
-        // --- Fullscreen Controls Auto-Hide & Reveal Logic ---
-        let fsControlsTimer = null;
+        // --- Solmates Patti Auto-Hide & Reveal System (Phone Landscape & Fullscreen) ---
+        let pattiAutoHideTimer = null;
 
-        function resetFsControlsTimer() {
+        function isFsOrLandscape() {
+            const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
             const container = document.getElementById('videoContainer');
-            if (!container) return;
-            
-            // Show controls immediately
-            container.classList.remove('controls-hidden');
-            clearTimeout(fsControlsTimer);
-            
-            const isFs = container.classList.contains('is-fullscreen') || !!(document.fullscreenElement || document.webkitFullscreenElement);
-            // In fullscreen mode, if video is playing, auto-hide after 3.5 seconds
-            if (isFs && pattiIsPlaying) {
-                fsControlsTimer = setTimeout(() => {
-                    if (pattiIsPlaying) {
-                        container.classList.add('controls-hidden');
-                    }
-                }, 3500);
-            }
+            const hasFsClass = container && container.classList.contains('is-fullscreen');
+            const isLandscape = window.matchMedia('(orientation: landscape)').matches && (window.innerHeight < 600 || window.innerWidth < 1000);
+            return isNativeFs || hasFsClass || isLandscape;
         }
 
-        // Tap/click on video container toggles controls in fullscreen
-        function handleVideoContainerTap(e) {
-            const container = document.getElementById('videoContainer');
-            if (!container) return;
-            const isFs = container.classList.contains('is-fullscreen') || !!(document.fullscreenElement || document.webkitFullscreenElement);
-            if (!isFs) return;
-
-            // If tapped on the Solmates Patti bar or top shields directly, let their own click handlers run and just keep controls visible
-            if (e.target.closest('#ytBottomBarBlocker') || e.target.closest('#ytCcBlocker') || e.target.closest('#ytTopShield')) {
-                resetFsControlsTimer();
-                return;
+        function hidePattiControls(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
             }
-
-            if (container.classList.contains('controls-hidden')) {
-                resetFsControlsTimer();
-            } else {
-                clearTimeout(fsControlsTimer);
+            clearTimeout(pattiAutoHideTimer);
+            const container = document.getElementById('videoContainer');
+            if (container) {
+                container.classList.add('patti-hidden');
                 container.classList.add('controls-hidden');
             }
         }
 
-        // Listen for user interactions on the video container
-        const vc = document.getElementById('videoContainer');
-        if (vc) {
-            vc.addEventListener('click', handleVideoContainerTap);
-            vc.addEventListener('mousemove', resetFsControlsTimer, { passive: true });
-            vc.addEventListener('touchstart', resetFsControlsTimer, { passive: true });
+        function showPattiControls(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            clearTimeout(pattiAutoHideTimer);
+            const container = document.getElementById('videoContainer');
+            if (container) {
+                container.classList.remove('patti-hidden');
+                container.classList.remove('controls-hidden');
+            }
+            // In landscape or fullscreen, auto-hide again after 3.5s
+            if (isFsOrLandscape()) {
+                pattiAutoHideTimer = setTimeout(() => {
+                    hidePattiControls();
+                }, 3500);
+            }
         }
 
-        // Detect tap inside iframe (window blur) to also reset controls timer
-        window.addEventListener('blur', () => {
-            setTimeout(() => {
-                if (document.activeElement === document.getElementById('videoFrame')) {
-                    resetFsControlsTimer();
+        // Auto-hide when loading or rotating to landscape
+        function checkLandscapeAutoHide() {
+            if (isFsOrLandscape()) {
+                clearTimeout(pattiAutoHideTimer);
+                pattiAutoHideTimer = setTimeout(hidePattiControls, 3000);
+            } else {
+                const container = document.getElementById('videoContainer');
+                if (container) {
+                    container.classList.remove('patti-hidden');
+                    container.classList.remove('controls-hidden');
                 }
-            }, 100);
+            }
+        }
+
+        window.addEventListener('resize', checkLandscapeAutoHide);
+        window.addEventListener('orientationchange', checkLandscapeAutoHide);
+        document.addEventListener('fullscreenchange', () => {
+            updateFsIcon();
+            checkLandscapeAutoHide();
         });
+        document.addEventListener('webkitfullscreenchange', () => {
+            updateFsIcon();
+            checkLandscapeAutoHide();
+        });
+
+        // Trigger auto-hide check once video container becomes visible
+        setTimeout(checkLandscapeAutoHide, 2500);
     </script>
 
 
