@@ -718,7 +718,7 @@
                 display: none !important;
             }
 
-            /* Right Pod: Solid Black, Covers YouTube Logo */
+            /* Right Pod: Solid Black, Covers YouTube Logo AND More videos pill */
             .solmates-patti-right,
             :fullscreen .solmates-patti-right,
             :-webkit-full-screen .solmates-patti-right,
@@ -726,13 +726,13 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: flex-end !important;
-                gap: 6px !important;
+                gap: 8px !important;
                 background: #000000 !important;
                 border: 1px solid rgba(255, 255, 255, 0.25) !important;
                 border-radius: 12px !important;
-                padding: 4px 8px !important;
+                padding: 4px 10px !important;
                 height: 42px !important;
-                min-width: 135px !important; /* Fully shields bottom-right YouTube logo */
+                min-width: clamp(280px, 42vw, 420px) !important; /* Fully shields bottom-right YouTube logo and More videos button */
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9) !important;
                 pointer-events: auto !important;
                 touch-action: manipulation !important;
@@ -821,13 +821,13 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: flex-end !important;
-                gap: 6px !important;
+                gap: 8px !important;
                 background: #000000 !important;
                 border: 1px solid rgba(255, 255, 255, 0.25) !important;
                 border-radius: 12px !important;
-                padding: 4px 8px !important;
+                padding: 4px 10px !important;
                 height: 42px !important;
-                min-width: 135px !important;
+                min-width: clamp(280px, 42vw, 420px) !important;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9) !important;
                 pointer-events: auto !important;
                 touch-action: manipulation !important;
@@ -1279,8 +1279,14 @@
                         </button>
                     </div>
 
-                    <!-- Right: Fullscreen Toggle (Desktop) OR Play/Pause + Normal Screen (Mobile Fullscreen - Covers YouTube Logo) -->
-                    <div class="solmates-patti-right">
+                    <!-- Right: Fullscreen Toggle (Desktop) OR Play/Pause + Normal Screen + Timer (Mobile Fullscreen - Covers YouTube Logo & More Videos) -->
+                    <div class="solmates-patti-right" onclick="event.stopPropagation();">
+                        <!-- Mobile Fullscreen: Solmates Branding & Lecture Timer -->
+                        <span class="solmates-patti-badge mobile-fs-only" style="font-size: 11px; font-weight: 700; color: #38bdf8; display: inline-flex; align-items: center; gap: 4px; margin-right: 4px; pointer-events: none;">
+                            <i class="fas fa-graduation-cap"></i> Solmates
+                        </span>
+                        <span id="pattiTimerMobile" class="solmates-patti-timer mobile-fs-only" style="font-size: 11px; color: #94a3b8; margin-right: 6px; font-variant-numeric: tabular-nums; pointer-events: none;">00:00 / 00:00</span>
+
                         <!-- Mobile Fullscreen: Play/Pause -->
                         <button type="button" class="solmates-patti-play mobile-fs-only" id="pattiPlayPauseBtnMobile" onclick="pattiTogglePlay()" title="Play / Pause">
                             <i class="fas fa-pause"></i>
@@ -1568,10 +1574,11 @@
         }
 
         function updatePattiTimer() {
+            const timeStr = `${formatTime(pattiCurrentTime)} / ${formatTime(pattiDuration)}`;
             const timer = document.getElementById('pattiTimer');
-            if (timer) {
-                timer.innerText = `${formatTime(pattiCurrentTime)} / ${formatTime(pattiDuration)}`;
-            }
+            const timerMob = document.getElementById('pattiTimerMobile');
+            if (timer) timer.innerText = timeStr;
+            if (timerMob) timerMob.innerText = timeStr;
         }
 
         // Listen for message events from YouTube iframe and Floating Popout
@@ -1839,7 +1846,7 @@
                         videoFrame.className = 'yt-mode';
                         const startParam = startTime > 5 ? `&start=${startTime}` : '';
                         const origin = encodeURIComponent(window.location.origin);
-                        const params = `?autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&cc_load_policy=0&hl=en&fs=0${startParam}&enablejsapi=1&origin=${origin}&t=${Date.now()}`;
+                        const params = `?autoplay=1&playlist=${videoId}&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&cc_load_policy=0&hl=en&fs=0${startParam}&enablejsapi=1&origin=${origin}&t=${Date.now()}`;
                         videoFrame.src = `https://www.youtube.com/embed/${videoId}${params}`;
                         videoContainer.classList.remove('hidden');
                         document.querySelectorAll('.yt-blocker').forEach(b => b.style.display = 'block');
