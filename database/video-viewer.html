@@ -941,19 +941,11 @@
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                                  window.navigator.standalone || 
                                  (window.Capacitor && window.Capacitor.isNative);
-            const isNativePipSupported = localStorage.getItem('solmates_native_pip') === 'true' || 
-                                         new URLSearchParams(window.location.search).get('app_pip') === '1';
             const isMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-            // 1. Solmates Native App: Trigger Android OS Native PiP Activity (Floats over WhatsApp/Home screen!)
-            if (isStandalone && isNativePipSupported && targetId) {
-                window.location.href = `solmates://pip?videoId=${encodeURIComponent(targetId)}&title=${encodeURIComponent(title)}`;
-                return;
-            }
-
-            // Mobile phone browsers (Android Chrome, iOS Safari, etc.): Disabled as requested
-            if (isMobile && !isStandalone) {
+            // Disabled on all mobile phones & apps (screens are too small for custom PiP without obscuring lecture)
+            if (isMobile || isStandalone) {
                 return;
             }
 
@@ -1233,21 +1225,11 @@
                                  window.navigator.standalone || 
                                  (window.Capacitor && window.Capacitor.isNative);
 
-            const isNativePipSupported = localStorage.getItem('solmates_native_pip') === 'true' || 
-                                         new URLSearchParams(window.location.search).get('app_pip') === '1';
-
             const isMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-            if (isStandalone) {
-                // Inside Android App: ONLY show if updated APK with native OS PiP support
-                if (isNativePipSupported) {
-                    pipBtn.style.display = 'inline-flex';
-                } else {
-                    pipBtn.style.display = 'none';
-                }
-            } else if (isMobile) {
-                // Phone / tablet web browsers (Android Chrome, iOS Safari, etc.): DISABLE / HIDE completely!
+            // On all mobile devices (Phone browsers & TWA App): HIDE completely
+            if (isMobile || isStandalone) {
                 pipBtn.style.display = 'none';
             } else {
                 // Desktop / Laptop browsers: SHOW (clean floating popout player)
