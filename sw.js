@@ -3,7 +3,7 @@
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v869';
+const CACHE_NAME = 'solmates-cache-v870';
 
 const STATIC_ASSETS = [
     '/android-chrome-192x192.png',
@@ -149,12 +149,30 @@ self.addEventListener("notificationclick", event => {
     const targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/notification';
     const fullUrl = new URL(targetUrl, self.location.origin).href;
     event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async windowClients => {
+            // 1. If an exact matching window is already open, focus it
             for (const client of windowClients) {
-                if (client.url === fullUrl && 'focus' in client) return client.focus();
+                if (client.url === fullUrl && 'focus' in client) {
+                    return client.focus();
+                }
             }
-            if (windowClients.length > 0 && 'navigate' in windowClients[0]) return windowClients[0].focus().then(c => c.navigate(fullUrl));
-            if (clients.openWindow) return clients.openWindow(fullUrl);
+            // 2. If any client window is open, navigate it to target URL and focus
+            if (windowClients.length > 0) {
+                const client = windowClients[0];
+                try {
+                    if ('navigate' in client) {
+                        const navigated = await client.navigate(fullUrl);
+                        if (navigated && 'focus' in navigated) return navigated.focus();
+                    }
+                    if ('focus' in client) return client.focus();
+                } catch (e) {
+                    // Fallback to openWindow if navigate failed
+                }
+            }
+            // 3. Fallback: Open new window
+            if (clients.openWindow) {
+                return clients.openWindow(fullUrl);
+            }
         })
     );
 });
