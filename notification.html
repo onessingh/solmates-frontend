@@ -2045,9 +2045,10 @@
         if (!isNaN(itemTime) && itemTime < thirtyDaysAgo) return false;
 
         // v89.1: Hardened Live Detection (Includes [LIVE] prefix and descriptive keywords)
-        const isLive = (notice.description && (notice.description.includes('MBA Live Class') || notice.description.toLowerCase().includes('live class on'))) ||
+        const isPostItem = notice.isRichPost === true || notice.isRichPost === 'true' || (notice.link && notice.link.startsWith('#richpost')) || !!notice.imageUrl;
+        const isLive = !isPostItem && ((notice.description && (notice.description.includes('MBA Live Class') || notice.description.toLowerCase().includes('live class on'))) ||
           (notice.title && (/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/.test(notice.title) || notice.title.toLowerCase().includes('[live]'))) ||
-          (notice.link && (notice.link.includes('teams.microsoft') || notice.link.includes('vcs.php') || notice.link.includes('zoom.us') || notice.link.includes('meet.google')));
+          (notice.link && (notice.link.includes('teams.microsoft') || notice.link.includes('vcs.php') || notice.link.includes('zoom.us') || notice.link.includes('meet.google'))));
 
         const t = (notice.title || "").toLowerCase();
         const isTimetable = t.includes('time table') || t.includes('timetable') || t.includes('pcp class') || t.includes('[timetable]');
@@ -2107,10 +2108,15 @@
       // v83.56: Multi-Bucket Sorting (Today Live -> Regular -> Future Live)
       const today = new Date().setHours(0, 0, 0, 0);
       const isLiveCheck = (n) => {
+        const isPost = n.isRichPost === true || n.isRichPost === 'true' || (n.link && n.link.startsWith('#richpost')) || !!n.imageUrl;
+        if (isPost) return false;
+
         const type = (n.category || n.type || '').toLowerCase();
         const lowDesc = (n.description || '').toLowerCase();
         const lowTitle = (n.title || '').toLowerCase();
         
+        if (lowTitle.includes('time table') || lowTitle.includes('timetable') || lowTitle.includes('[timetable]')) return false;
+
         const hasClassDesc = lowDesc.includes('mba live class') || lowDesc.includes('live class on') || type === 'live-classes';
         const hasClassTitle = /\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/.test(lowTitle) || lowTitle.includes('[live]');
         const hasClassLink = n.link && (n.link.includes('teams.microsoft') || n.link.includes('vcs.php') || n.link.includes('zoom.us') || n.link.includes('meet.google'));
@@ -2129,8 +2135,9 @@
       
       filtered.forEach(n => {
         const linkTrim = (n.link || '').trim();
+        const isPost = n.isRichPost === true || n.isRichPost === 'true' || linkTrim.startsWith('#richpost') || !!n.imageUrl;
         if (n.isPinned) pinnedNotices.push(n);
-        else if (n.isRichPost || linkTrim === '#richpost') communityPosts.push(n);
+        else if (isPost) communityPosts.push(n);
         else nonPinnedFiltered.push(n);
       });
 
@@ -2831,10 +2838,10 @@
 
       if (!notice) return alert('Bhai, notice nahi mila!');
 
-      const isPost = notice.isRichPost === true || notice.isRichPost === 'true' || (notice.link && notice.link.startsWith('#richpost'));
-      const isLiveClass = (!isPost && notice.description && notice.description.includes('MBA Live Class'));
+      const isPost = notice.isRichPost === true || notice.isRichPost === 'true' || (notice.link && notice.link.startsWith('#richpost')) || !!notice.imageUrl;
+      const isLiveClass = (!isPost && notice.description && (notice.description.includes('MBA Live Class') || notice.description.toLowerCase().includes('live class on')));
       setModalType(isPost ? 'post' : (isLiveClass ? 'class' : 'notice'));
-      document.getElementById('modalTypePicker').style.display = 'none'; // Lock type during edit
+      document.getElementById('modalTypePicker').style.display = 'flex'; // Allow admin to see & switch type if needed
 
       document.getElementById('noticeSem').value = semester;
       document.getElementById('noticeLink').value = notice.link || '';
@@ -2854,7 +2861,6 @@
         document.getElementById('existingImagePreview').style.display = 'none';
       }
 
-
       if (isLiveClass) {
         // Try to parse components from title/desc
         // Title format: [17-03-2026] MBA Sem 1: Marketing Management (2:00 PM - 3:00 PM)
@@ -2863,9 +2869,8 @@
           document.getElementById('classSubject').value = titleMatch[1];
           document.getElementById('classTime').value = titleMatch[2];
         }
-      } else {
-        document.getElementById('noticeTitle').value = notice.title;
       }
+      document.getElementById('noticeTitle').value = notice.title || '';
 
       document.getElementById('addNoticeModal').style.display = 'flex';
       document.getElementById('addNoticeBtn').textContent = 'Update Notification';
