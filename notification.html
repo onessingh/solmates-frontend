@@ -2063,10 +2063,21 @@
 
         if (isLive && !isNaN(itemTime)) {
           const itemDay = new Date(itemTime).setHours(0, 0, 0, 0);
-          const cleanTitleNoDate = (notice.title || '').replace(/\[.*?\]/g, '');
-          const combinedTimeStr = `${cleanTitleNoDate} ${notice.class_time || ''}`;
+
+          // If the entire day has passed (not today), hide the live class
+          if (itemDay < todayVal && !isTimetable) {
+            console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Date ${new Date(itemDay).toLocaleDateString()} has passed.`);
+            return false;
+          }
+
+          // If it's today's class, extract end time strictly from class_time or sanitized title
+          // MUST strip ISO timestamps like (2026-10-19T19:00:00) so date dashes aren't mistaken for time ranges!
+          const cleanTitleNoDate = (notice.title || '')
+            .replace(/\[.*?\]/g, '')
+            .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '');
           
-          const m = combinedTimeStr.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
+          const timeSource = (notice.class_time || '').trim() || cleanTitleNoDate;
+          const m = timeSource.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
           if (m) {
             let [_, time, period] = m;
             let parts = time.split(':');
@@ -2081,12 +2092,6 @@
             
             if (now > classEnd && !isTimetable) {
               console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Class ended at ${classEnd.toLocaleTimeString()}`);
-              return false;
-            }
-          } else {
-            // No end-time found: ONLY hide if the date has fully passed (not today)
-            if (itemDay < todayVal && !isTimetable) {
-              console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Date ${new Date(itemDay).toLocaleDateString()} has passed.`);
               return false;
             }
           }
