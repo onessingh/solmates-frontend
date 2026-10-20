@@ -1075,6 +1075,16 @@
       --brand-accent: #c0962d;
       }
 
+    /* Floating player button: Strictly desktop-only. Hidden on all phones, tablets, and mobile devices! */
+      #pipBtn, .pip-btn {
+          display: none !important;
+      }
+      @media (min-width: 1025px) and (pointer: fine) and (hover: hover) {
+          #pipBtn.is-desktop-eligible {
+              display: inline-flex !important;
+          }
+      }
+
     /* dark mode moved */
     </style>
 
@@ -1403,7 +1413,24 @@
 
         let activePopupPlayer = null;
 
+        function isPhoneOrMobile() {
+            const ua = (navigator.userAgent || "") + " " + (navigator.vendor || "");
+            const isMobileUA = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini|Silk/i.test(ua) ||
+                               (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+            const isSmallScreen = (window.innerWidth && window.innerWidth <= 1024) || 
+                                  (window.screen && window.screen.width <= 1024);
+            const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints > 0);
+            const isStandalone = window.matchMedia("(display-mode: standalone)").matches || 
+                                 window.navigator.standalone || 
+                                 (window.Capacitor && window.Capacitor.isNative);
+            return isMobileUA || isSmallScreen || isTouch || isStandalone;
+        }
+
         function toggleFloatingPlayer(forceState) {
+            // Disabled on all mobile phones & apps (screens are too small for custom PiP without obscuring lecture)
+            if (isPhoneOrMobile()) {
+                return;
+            }
             const { videoId } = extractYouTubeId(FILE_URL || window.location.href);
             const targetId = currentVideoId || videoId;
             const title = document.getElementById('fileTitle')?.innerText || 'Class Lecture';
@@ -1781,36 +1808,25 @@
         });
 
         function checkPipVisibility() {
-            try {
-                if (new URLSearchParams(window.location.search).get('app_pip') === '1') {
-                    localStorage.setItem('solmates_native_pip', 'true');
-                }
-            } catch(e){}
-
-            const { videoId, playlistId } = extractYouTubeId(FILE_URL || window.location.href);
-            const pipBtn = document.getElementById('pipBtn');
+            const pipBtn = document.getElementById("pipBtn");
             if (!pipBtn) return;
 
-            // Only relevant for YouTube videos
-            if (!videoId && !playlistId) {
-                pipBtn.style.display = 'none';
+            // Completely off & hidden for all phones & mobile devices!
+            if (isPhoneOrMobile()) {
+                pipBtn.classList.remove("is-desktop-eligible");
+                pipBtn.style.display = "none";
                 return;
             }
 
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                                 window.navigator.standalone || 
-                                 (window.Capacitor && window.Capacitor.isNative);
-
-            const isMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-            // On all mobile devices (Phone browsers & TWA App): HIDE completely
-            if (isMobile || isStandalone) {
-                pipBtn.style.display = 'none';
-            } else {
-                // Desktop / Laptop browsers: SHOW (clean floating popout player)
-                pipBtn.style.display = 'inline-flex';
+            const { videoId, playlistId } = extractYouTubeId(FILE_URL || window.location.href);
+            if (!videoId && !playlistId) {
+                pipBtn.classList.remove("is-desktop-eligible");
+                pipBtn.style.display = "none";
+                return;
             }
+
+            // Desktop / Laptop browsers with mouse only: SHOW
+            pipBtn.classList.add("is-desktop-eligible");
         }
 
         function initViewer() {

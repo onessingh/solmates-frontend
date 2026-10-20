@@ -236,6 +236,16 @@
         const title = params.get('title') || 'Class Lecture';
         const start = parseInt(params.get('start')) || 0;
 
+        // Auto-detect mobile phone/touch: Always play in full browser video-viewer, NEVER popout/twa!
+        const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini|Silk/i.test(navigator.userAgent || '') ||
+                               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+                               (window.innerWidth <= 1024) ||
+                               ('ontouchstart' in window);
+        if (isMobileDevice && videoId) {
+            const mainUrl = `/database/video-viewer?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}` + (start > 0 ? `&start=${start}` : '');
+            window.location.replace(mainUrl);
+        }
+
         document.getElementById('pipTitle').innerText = title;
         document.title = title + " - Solmates";
 
