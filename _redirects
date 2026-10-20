@@ -16,6 +16,7 @@
 # Clean URL routing for SPA behavior
 # ============================================================================
 /database           /database/index.html            200
+/database/player    /database/player.html           200
 /journey            /journey/index.html             200
 /skills             /skills/index.html              200
 /tools              /tools/index.html               200
@@ -57,6 +58,7 @@
 /database/elearning-subjects  /database/elearning-subjects.html 200
 /database/elearning         /database/view.html?category=elearning 200
 /database/folder-content    /database/folder-content.html       200
+/database/player            /database/player.html               200
 
 # Legacy compatibility for classes and planner html
 /database/classes/classes.html  /database/classes/index.html  200

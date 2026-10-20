@@ -36,6 +36,19 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v864">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v864">
     <title>Video Viewer - SOLMATES</title>
+    <script>
+      // Immediately prevent Android OS App Link interception on phones with installed APK
+      (function() {
+        var isMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '') || 
+                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+                       (window.innerWidth <= 1024);
+        if (isMobile) {
+          var s = window.location.search || '';
+          var h = window.location.hash || '';
+          window.location.replace('/database/player' + s + h);
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
 

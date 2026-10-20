@@ -31,7 +31,7 @@
 (function(){
   try {
     if (new URLSearchParams(window.location.search).get('app_pip') === '1') {
-      localStorage.setItem('solmates_native_pip', 'true');
+      localStorage.removeItem('solmates_native_pip');
     }
   } catch(e){}
 })();

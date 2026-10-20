@@ -242,7 +242,7 @@
                                (window.innerWidth <= 1024) ||
                                ('ontouchstart' in window);
         if (isMobileDevice && videoId) {
-            const mainUrl = `/database/video-viewer?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}` + (start > 0 ? `&start=${start}` : '');
+            const mainUrl = `/database/player?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}` + (start > 0 ? `&start=${start}` : '');
             window.location.replace(mainUrl);
         }
 
@@ -342,7 +342,7 @@
             } catch (e) {}
 
             // Fallback if opener is closed: navigate this window to the full player
-            const mainUrl = `/database/video-viewer?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}`;
+            const mainUrl = `/database/player?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}`;
             window.location.href = mainUrl;
         }
 

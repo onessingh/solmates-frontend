@@ -4,7 +4,7 @@
   let notes = [];
   let activeNoteId = null;
   let autoSaveTimeout = null;
-  const isViewerPage = window.location.pathname.includes('pdf-viewer') || window.location.pathname.includes('video-viewer');
+  const isViewerPage = window.location.pathname.includes('pdf-viewer') || window.location.pathname.includes('video-viewer') || window.location.pathname.includes('player');
 
   // DOM Elements references
   let notepadEl = null;
