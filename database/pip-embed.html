@@ -236,12 +236,13 @@
         const title = params.get('title') || 'Class Lecture';
         const start = parseInt(params.get('start')) || 0;
 
-        // Auto-detect mobile phone/touch: Always play in full browser video-viewer, NEVER popout/twa!
-        const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini|Silk/i.test(navigator.userAgent || '') ||
-                               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
-                               (window.innerWidth <= 1024) ||
-                               ('ontouchstart' in window);
-        if (isMobileDevice && videoId) {
+        // Auto-detect mobile phone: Only redirect back to full player if opened directly on a mobile phone / TWA
+        const ua = navigator.userAgent || "";
+        const isDesktop = /Windows NT|Macintosh|CrOS/i.test(ua) || (/Linux/i.test(ua) && !/Android/i.test(ua));
+        const isMobilePhone = !isDesktop && (/Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
+                              window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone);
+
+        if (isMobilePhone && videoId) {
             const mainUrl = `/database/player?file=${encodeURIComponent('https://www.youtube.com/watch?v=' + videoId)}&title=${encodeURIComponent(title)}` + (start > 0 ? `&start=${start}` : '');
             window.location.replace(mainUrl);
         }
