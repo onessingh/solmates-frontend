@@ -96,6 +96,34 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        #ytBottomLeftShield {
+            display: block !important;
+            position: absolute !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 220px !important;
+            height: 75px !important;
+            background: transparent !important;
+            z-index: 2147483646 !important;
+            pointer-events: auto !important;
+            touch-action: none !important;
+            cursor: default !important;
+        }
+
+        #ytBottomRightShield {
+            display: block !important;
+            position: absolute !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 140px !important;
+            height: 75px !important;
+            background: transparent !important;
+            z-index: 2147483646 !important;
+            pointer-events: auto !important;
+            touch-action: none !important;
+            cursor: default !important;
+        }
+
         .action-btn {
             background: rgba(255, 255, 255, 0.12);
             border: 1px solid rgba(255, 255, 255, 0.22);
@@ -211,6 +239,10 @@
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
+        <!-- Active Click Shields (100% block bottom-left link and bottom-right logo in floating player) -->
+        <div id="ytBottomLeftShield"></div>
+        <div id="ytBottomRightShield"></div>
+
         <!-- Bottom Shield with Solmates Controls -->
         <div class="solmates-bottom-shield">
             <button id="pipRewindBtn" class="ctrl-btn" title="Rewind 10 seconds">
@@ -231,6 +263,37 @@
     </div>
 
     <script>
+        // Intercept and trap all clicks on shields and bottom bar so YouTube link never opens
+        ['touchstart', 'touchend', 'click', 'pointerdown', 'pointerup', 'mousedown', 'mouseup'].forEach(evt => {
+            ['ytBottomLeftShield', 'ytBottomRightShield'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener(evt, e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }, { passive: false, capture: true });
+            });
+
+            const bottomShield = document.querySelector('.solmates-bottom-shield');
+            if (bottomShield) {
+                bottomShield.addEventListener(evt, e => {
+                    if (!e.target.closest('button')) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }, { passive: false, capture: true });
+            }
+
+            const topShield = document.querySelector('.solmates-top-shield');
+            if (topShield) {
+                topShield.addEventListener(evt, e => {
+                    if (!e.target.closest('button')) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                }, { passive: false, capture: true });
+            }
+        });
+
         const params = new URLSearchParams(window.location.search);
         const videoId = params.get('videoId');
         const title = params.get('title') || 'Class Lecture';
@@ -273,7 +336,7 @@
             const startParam = start > 0 ? `&start=${start}` : '';
             const origin = encodeURIComponent(window.location.origin);
             const ref = encodeURIComponent(window.location.href);
-            pipFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&fs=0${startParam}&origin=${origin}&widget_referrer=${ref}`;
+            pipFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&cc_load_policy=0&hl=en&enablejsapi=1&fs=0${startParam}&origin=${origin}&widget_referrer=${ref}`;
         }
 
         playPauseBtn.onclick = () => {
