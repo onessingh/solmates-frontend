@@ -22,6 +22,23 @@
 })();
 </script>
 
+<script>
+// Synchronous device & environment detection (runs before first paint)
+(function(){
+  try {
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                       window.navigator.standalone || 
+                       (window.Capacitor && window.Capacitor.isNative);
+    var isMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '') ||
+                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isStandalone) {
+      document.documentElement.classList.add('is-twa-app');
+    } else if (isMobile) {
+      document.documentElement.classList.add('is-phone-browser');
+    }
+  } catch(e){}
+})();
+</script>
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
@@ -459,6 +476,17 @@
                 pointer-events: auto !important;
                 touch-action: none !important;
                 cursor: default !important;
+            }
+        
+            /* Phone Browser ONLY (Normal Portrait Screen): Lift video container slightly up so seekbar is easy to control */
+            html.is-phone-browser:not(.is-fullscreen) #videoContainer:not(.is-fullscreen):not(.is-mini-player) {
+                height: calc(100% - 30px) !important;
+                top: 0 !important;
+            }
+
+            /* TWA App / Desktop: Strictly preserve 100% full height */
+            html.is-twa-app #videoContainer:not(.is-mini-player) {
+                height: 100% !important;
             }
         }
 
