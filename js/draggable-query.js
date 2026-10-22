@@ -36,6 +36,19 @@
           transition: none !important;
           z-index: 10001 !important;
         }
+        @media (max-width: 768px) {
+          #queryFloatBtn {
+            padding: 7px 12px !important;
+            font-size: 12px !important;
+            border-radius: 30px !important;
+            gap: 5px !important;
+            box-shadow: 0 3px 12px rgba(15,43,70,0.35) !important;
+          }
+          #queryFloatBtn svg {
+            width: 14px !important;
+            height: 14px !important;
+          }
+        }
       `;
       document.head.appendChild(style);
     }
