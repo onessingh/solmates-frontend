@@ -922,7 +922,15 @@ render: (resume) => {
             ? `<p class="pe-job-desc">${linkify(escapeHtml(item.description))}</p>`
             : "";
 
-          const teamText = (!bullets.length && item.description) ? item.description : "";
+          let teamText = "";
+          let extraDesc = "";
+          if (item.description) {
+            if (item.description.length <= 80) {
+              teamText = item.description;
+            } else {
+              extraDesc = item.description;
+            }
+          }
           const locText = item.location || "";
 
           return `
@@ -938,7 +946,7 @@ render: (resume) => {
                   <span class="pe-job-loc">${escapeHtml(locText)}</span>
                 </div>
               ` : ""}
-              ${descHtml}
+              ${extraDesc ? `<p class="pe-job-desc">${linkify(escapeHtml(extraDesc))}</p>` : ""}
               ${bulletsHtml}
             </div>
           `;
@@ -2372,8 +2380,10 @@ render: (resume) => {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="${cssUrl}" />
     <style>
-      /* Full-bleed templates (sidebars/splits) get 0 page margin so layout isn't cut */
-      ${['modernSidebar','monochromeSplit','centerArch'].includes(state.selectedTemplate)
+      /* Page margins: pragmatic uses 12mm 14mm, full-bleed uses 0, standard uses 15mm */
+      ${state.selectedTemplate === 'pragmatic'
+        ? '@page { size: A4; margin: 12mm 14mm !important; }'
+        : ['modernSidebar','monochromeSplit','centerArch'].includes(state.selectedTemplate)
         ? '@page { size: A4; margin: 0 !important; }'
         : '@page { size: A4; margin: 15mm !important; }'
       }
@@ -2503,6 +2513,13 @@ render: (resume) => {
         .template-monochromeSplit .resume-main,
         .template-navyOverlap .resume-main {
             background: transparent !important;
+        }
+        
+        .template-pragmatic {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
     
       }
