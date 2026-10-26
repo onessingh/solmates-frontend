@@ -3635,233 +3635,264 @@ html.is-desktop .wizard-nav {
 
 /* =====================================================
    Template: The Tech Resume Inside Out (Pragmatic Engineer)
-   Inspired by Gergely Orosz's gold-standard tech resume
+   Inspired by Gergely Orosz's gold-standard tech resume (100% exact match)
 ===================================================== */
 .template-pragmatic {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-  color: #1f2937 !important;
+  color: #000000 !important;
   background: #ffffff !important;
-  padding: 36px 40px !important;
+  padding: 34px 44px !important;
   box-sizing: border-box !important;
-  line-height: 1.45 !important;
+  line-height: 1.4 !important;
   font-size: 13px !important;
 }
 
+/* Hide photo completely - ATS tech resumes do not have photos */
+.template-pragmatic .resume-photo,
+.template-pragmatic .pe-header .resume-photo,
+.template-pragmatic img {
+  display: none !important;
+}
+
+/* 1. Header: 3-column table/flex */
 .template-pragmatic .pe-header {
   display: flex !important;
   justify-content: space-between !important;
   align-items: flex-start !important;
-  border-bottom: 2px solid #0f172a !important;
-  padding-bottom: 12px !important;
-  margin-bottom: 14px !important;
-  gap: 12px !important;
+  border-bottom: none !important;
+  padding-bottom: 2px !important;
+  margin-bottom: 12px !important;
+  gap: 8px !important;
 }
 
 .template-pragmatic .pe-header-left {
-  flex: 1 1 30% !important;
+  width: 32% !important;
   text-align: left !important;
   font-size: 11.5px !important;
-  line-height: 1.5 !important;
-  color: #4b5563 !important;
+  line-height: 1.45 !important;
+  color: #000000 !important;
 }
 
 .template-pragmatic .pe-header-center {
-  flex: 1 1 40% !important;
+  width: 36% !important;
   text-align: center !important;
 }
 
 .template-pragmatic .pe-header-right {
-  flex: 1 1 30% !important;
+  width: 32% !important;
   text-align: right !important;
   font-size: 11.5px !important;
-  line-height: 1.5 !important;
-  color: #4b5563 !important;
+  line-height: 1.45 !important;
+  color: #000000 !important;
 }
 
 .template-pragmatic .pe-name {
-  font-size: 24px !important;
+  font-size: 22px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
-  letter-spacing: -0.02em !important;
+  color: #000000 !important;
   margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.15 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
 }
 
 .template-pragmatic .pe-headline {
   font-size: 12px !important;
   font-weight: 600 !important;
-  color: #1a56db !important;
-  margin-top: 3px !important;
-  letter-spacing: 0.01em !important;
-}
-
-.template-pragmatic .pe-contact-row {
-  display: flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  margin-bottom: 2px !important;
-  word-break: break-word !important;
-}
-
-.template-pragmatic .pe-header-right .pe-contact-row {
-  justify-content: flex-end !important;
-}
-
-.template-pragmatic .pe-contact-row i {
-  color: #1a56db !important;
-  width: 13px !important;
-  text-align: center !important;
-  font-size: 11px !important;
-  flex-shrink: 0 !important;
+  color: #1155cc !important;
+  margin-top: 2px !important;
 }
 
 .template-pragmatic .pe-header a {
-  color: #1a56db !important;
-  text-decoration: none !important;
-}
-
-.template-pragmatic .pe-header a:hover {
+  color: #1155cc !important;
   text-decoration: underline !important;
 }
 
+/* 2. Summary */
+.template-pragmatic .pe-section-summary {
+  margin-bottom: 10px !important;
+}
+
+.template-pragmatic .pe-summary-text {
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
+  color: #000000 !important;
+  margin: 0 0 10px 0 !important;
+}
+
+/* 3. Section Titles: Exact Google Docs Tech Blue #1155cc with 1px bottom border */
 .template-pragmatic .pe-section {
   margin-bottom: 12px !important;
 }
 
 .template-pragmatic .pe-section-title {
-  color: #1a56db !important;
+  color: #1155cc !important;
   font-size: 14px !important;
   font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-  border-bottom: 1px solid #1a56db !important;
+  border-bottom: 1px solid #1155cc !important;
   padding-bottom: 2px !important;
-  margin: 12px 0 6px 0 !important;
+  margin: 14px 0 8px 0 !important;
   text-transform: none !important;
+  letter-spacing: normal !important;
 }
 
-.template-pragmatic .pe-summary-text {
-  font-size: 12.5px !important;
-  line-height: 1.5 !important;
-  color: #374151 !important;
-  margin: 0 0 10px 0 !important;
-}
-
-.template-pragmatic .pe-item {
+/* 4. Work Experience (3-Column Line 1, 2-Column Line 2, Bullets) */
+.template-pragmatic .pe-job-entry {
   margin-bottom: 10px !important;
 }
 
-.template-pragmatic .pe-line-1 {
+.template-pragmatic .pe-job-row1 {
   display: flex !important;
   justify-content: space-between !important;
   align-items: baseline !important;
+  font-size: 13px !important;
   margin-bottom: 1px !important;
 }
 
-.template-pragmatic .pe-job-title,
-.template-pragmatic .pe-degree-title,
-.template-pragmatic .pe-proj-title {
+.template-pragmatic .pe-job-title {
   font-weight: 700 !important;
-  color: #111827 !important;
-  font-size: 13px !important;
+  color: #000000 !important;
+  width: 42% !important;
+  text-align: left !important;
 }
 
-.template-pragmatic .pe-comp-name,
-.template-pragmatic .pe-inst-name {
-  font-weight: 600 !important;
-  color: #374151 !important;
-  margin-left: 14px !important;
+.template-pragmatic .pe-job-company {
+  font-weight: 700 !important;
+  color: #000000 !important;
+  width: 28% !important;
+  text-align: left !important;
 }
 
-.template-pragmatic .pe-date {
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: #4b5563 !important;
+.template-pragmatic .pe-job-date {
+  font-weight: 700 !important;
+  color: #000000 !important;
+  width: 30% !important;
   text-align: right !important;
   white-space: nowrap !important;
-  flex-shrink: 0 !important;
 }
 
-.template-pragmatic .pe-line-2 {
+.template-pragmatic .pe-job-row2 {
   display: flex !important;
   justify-content: space-between !important;
   align-items: baseline !important;
   font-size: 12px !important;
-  color: #6b7280 !important;
+  color: #333333 !important;
   margin-bottom: 3px !important;
 }
 
-.template-pragmatic .pe-loc {
-  font-size: 12px !important;
-  color: #6b7280 !important;
-  font-style: italic !important;
+.template-pragmatic .pe-job-team {
+  width: 50% !important;
+  text-align: left !important;
 }
 
-.template-pragmatic .pe-desc {
+.template-pragmatic .pe-job-loc {
+  width: 50% !important;
+  text-align: right !important;
+}
+
+.template-pragmatic .pe-job-desc {
   font-size: 12.5px !important;
-  color: #374151 !important;
+  color: #000000 !important;
   margin: 2px 0 4px 0 !important;
-  line-height: 1.45 !important;
+  line-height: 1.4 !important;
 }
 
-.template-pragmatic .pe-outcome {
-  font-size: 12px !important;
-  color: #1f2937 !important;
-  margin: 2px 0 4px 0 !important;
-}
-
-.template-pragmatic .pe-proj-tools {
-  font-weight: 400 !important;
-  color: #4b5563 !important;
-  font-size: 12px !important;
-  margin-left: 6px !important;
-}
-
-.template-pragmatic .pe-bullets,
-.template-pragmatic .pe-bullets-wrap ul {
-  margin: 3px 0 6px 18px !important;
+.template-pragmatic .pe-bullets {
+  margin: 2px 0 4px 18px !important;
   padding: 0 !important;
   list-style-type: disc !important;
 }
 
-.template-pragmatic .pe-bullets li,
-.template-pragmatic .pe-bullets-wrap li {
+.template-pragmatic .pe-bullets li {
   margin-bottom: 2px !important;
   font-size: 12.5px !important;
-  line-height: 1.45 !important;
-  color: #374151 !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
 }
 
-.template-pragmatic .pe-skills-block {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 3px !important;
-  margin-top: 4px !important;
+/* 5. Education (Bullet items with right-aligned dates) */
+.template-pragmatic .pe-edu-list {
+  margin: 2px 0 6px 18px !important;
+  padding: 0 !important;
+  list-style-type: disc !important;
 }
 
-.template-pragmatic .pe-skills-row {
-  display: flex !important;
-  align-items: baseline !important;
-  gap: 8px !important;
+.template-pragmatic .pe-edu-item {
+  margin-bottom: 3px !important;
   font-size: 12.5px !important;
-  line-height: 1.45 !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
 }
 
-.template-pragmatic .pe-skills-label {
-  font-weight: 700 !important;
-  color: #111827 !important;
-  min-width: 125px !important;
-  flex-shrink: 0 !important;
+.template-pragmatic .pe-edu-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
 }
 
-.template-pragmatic .pe-skills-val {
-  color: #374151 !important;
+.template-pragmatic .pe-edu-text {
   flex: 1 !important;
+  color: #000000 !important;
+}
+
+.template-pragmatic .pe-edu-date {
+  font-weight: 700 !important;
+  color: #000000 !important;
+  white-space: nowrap !important;
+  margin-left: 14px !important;
+  text-align: right !important;
+}
+
+.template-pragmatic .pe-edu-desc {
+  font-size: 12px !important;
+  color: #444444 !important;
+  margin: 1px 0 3px 0 !important;
+}
+
+/* 6. Technologies and Languages */
+.template-pragmatic .pe-skills-list {
+  margin: 2px 0 6px 18px !important;
+  padding: 0 !important;
+  list-style-type: disc !important;
+}
+
+.template-pragmatic .pe-skill-item {
+  margin-bottom: 3px !important;
+  font-size: 12.5px !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
+}
+
+.template-pragmatic .pe-skill-item strong {
+  font-weight: 700 !important;
+  color: #000000 !important;
+  display: inline-block !important;
+  min-width: 110px !important;
+}
+
+/* 7. Projects & Other lists */
+.template-pragmatic .pe-projects-list,
+.template-pragmatic .pe-other-list {
+  margin: 2px 0 6px 18px !important;
+  padding: 0 !important;
+  list-style-type: disc !important;
+}
+
+.template-pragmatic .pe-project-item,
+.template-pragmatic .pe-other-list li {
+  margin-bottom: 3px !important;
+  font-size: 12.5px !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
+}
+
+.template-pragmatic a {
+  color: #1155cc !important;
+  text-decoration: underline !important;
 }
 
 @media print {
   .template-pragmatic {
-    padding: 25px 30px !important;
+    padding: 25px 35px !important;
     background: transparent !important;
   }
 }
