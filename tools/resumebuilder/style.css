@@ -3767,10 +3767,12 @@ html.is-desktop .wizard-nav {
 .template-pragmatic .pe-job-row1 {
   display: flex !important;
   justify-content: space-between !important;
-  align-items: baseline !important;
+  align-items: flex-end !important;
   font-size: 13px !important;
-  margin-bottom: 1px !important;
+  line-height: 1.5 !important;
+  margin-bottom: 3px !important;
   color: #000000 !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-job-title {
@@ -3778,6 +3780,7 @@ html.is-desktop .wizard-nav {
   color: #000000 !important;
   flex: 1 1 auto !important;
   text-align: left !important;
+  line-height: 1.5 !important;
 }
 
 .template-pragmatic .pe-job-company {
@@ -3786,6 +3789,7 @@ html.is-desktop .wizard-nav {
   flex: 0 0 auto !important;
   text-align: left !important;
   padding: 0 10px !important;
+  line-height: 1.5 !important;
 }
 
 .template-pragmatic .pe-job-date {
@@ -3794,28 +3798,43 @@ html.is-desktop .wizard-nav {
   flex: 0 0 auto !important;
   text-align: right !important;
   white-space: nowrap !important;
+  line-height: 1.5 !important;
 }
 
 .template-pragmatic .pe-job-row2 {
   display: flex !important;
   justify-content: space-between !important;
-  align-items: baseline !important;
+  align-items: flex-start !important;
   font-size: 12px !important;
+  line-height: 1.5 !important;
   color: #111827 !important;
   font-style: italic !important;
   font-weight: 500 !important;
-  margin-bottom: 3px !important;
+  margin-top: 1px !important;
+  margin-bottom: 4px !important;
+  overflow: visible !important;
+}
+
+.template-pragmatic .pe-job-row2.pe-job-row2-loc-only {
+  justify-content: flex-end !important;
 }
 
 .template-pragmatic .pe-job-team {
   flex: 1 1 auto !important;
   text-align: left !important;
+  line-height: 1.5 !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-job-loc {
   flex: 0 0 auto !important;
   text-align: right !important;
   margin-left: auto !important;
+  white-space: nowrap !important;
+  line-height: 1.5 !important;
+  overflow: visible !important;
+  padding-left: 4px !important;
+  padding-right: 2px !important;
 }
 
 .template-pragmatic .pe-job-desc {
@@ -3855,7 +3874,9 @@ html.is-desktop .wizard-nav {
 .template-pragmatic .pe-edu-row {
   display: flex !important;
   justify-content: space-between !important;
-  align-items: baseline !important;
+  align-items: flex-start !important;
+  line-height: 1.5 !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-edu-text {

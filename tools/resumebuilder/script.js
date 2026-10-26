@@ -941,9 +941,9 @@ render: (resume) => {
                 <span class="pe-job-date">${escapeHtml(range)}</span>
               </div>
               ${(teamText || locText) ? `
-                <div class="pe-job-row2">
-                  <span class="pe-job-team">${escapeHtml(teamText)}</span>
-                  <span class="pe-job-loc">${escapeHtml(locText)}</span>
+                <div class="pe-job-row2${!teamText ? " pe-job-row2-loc-only" : ""}">
+                  ${teamText ? `<span class="pe-job-team">${escapeHtml(teamText)}</span>` : ""}
+                  ${locText ? `<span class="pe-job-loc">${escapeHtml(locText)}</span>` : ""}
                 </div>
               ` : ""}
               ${extraDesc ? `<p class="pe-job-desc">${linkify(escapeHtml(extraDesc))}</p>` : ""}
