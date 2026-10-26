@@ -3665,41 +3665,57 @@ html.is-desktop .wizard-nav {
   justify-content: space-between !important;
   align-items: flex-start !important;
   border-bottom: none !important;
+  padding-top: 6px !important;
   padding-bottom: 2px !important;
-  margin-bottom: 12px !important;
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
   gap: 12px !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-header-left {
   flex: 1 1 0% !important;
   text-align: left !important;
   font-size: 11px !important;
-  line-height: 1.45 !important;
+  line-height: 1.55 !important;
   color: #000000 !important;
+  padding-top: 3px !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-header-left div {
   margin-bottom: 2px !important;
   white-space: nowrap !important;
+  line-height: 1.55 !important;
+  overflow: visible !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
 }
 
 .template-pragmatic .pe-header-center {
   flex: 0 0 auto !important;
   text-align: center !important;
   padding: 0 8px !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-header-right {
   flex: 1 1 0% !important;
   text-align: right !important;
   font-size: 11px !important;
-  line-height: 1.45 !important;
+  line-height: 1.55 !important;
   color: #000000 !important;
+  padding-top: 3px !important;
+  overflow: visible !important;
 }
 
 .template-pragmatic .pe-header-right div {
   margin-bottom: 2px !important;
   white-space: nowrap !important;
+  line-height: 1.55 !important;
+  overflow: visible !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
 }
 
 .template-pragmatic .pe-name {
@@ -3967,11 +3983,12 @@ html.is-desktop .wizard-nav {
 /* Print & PDF Export styles: Zero padding, exact margins via @page, crisp high contrast */
 @media print {
   .template-pragmatic {
-    padding: 0 !important;
+    padding: 6px 0 0 0 !important;
     margin: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     background: #ffffff !important;
+    overflow: visible !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }

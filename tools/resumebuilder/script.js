@@ -2516,10 +2516,11 @@ render: (resume) => {
         }
         
         .template-pragmatic {
-            padding: 0 !important;
+            padding: 6px 0 0 0 !important;
             margin: 0 !important;
             width: 100% !important;
             max-width: 100% !important;
+            overflow: visible !important;
         }
     
       }
