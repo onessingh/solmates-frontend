@@ -7,6 +7,7 @@
 
   const TEMPLATE_CATALOG = [
     { key: "ats", name: "ATS Optimized", category: "Standard", atsSafe: true },
+    { key: "pragmatic", name: "The Tech Resume (Pragmatic)", category: "Tech", atsSafe: true },
     { key: "software", name: "Software Engineer", category: "Tech", atsSafe: true },
     { key: "marketing", name: "Marketing & Sales", category: "Creative", atsSafe: true },
     { key: "finance", name: "Banking & Finance", category: "Traditional", atsSafe: true },
@@ -862,6 +863,293 @@ render: (resume) => {
     const photoHtml = personal.photoDataUrl
       ? `<div class="resume-photo"><img src="${escapeHtml(personal.photoDataUrl)}" alt="Profile photo" /></div>`
       : "";
+
+        // The Tech Resume Inside Out (Pragmatic Engineer / Gergely Orosz) Template
+    if (templateKey === "pragmatic") {
+      const cleanUrl = (url) => {
+        if (!url) return "";
+        return escapeHtml(url.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/$/, ""));
+      };
+      const toHref = (url) => {
+        if (!url) return "#";
+        return escapeHtml(/^https?:\/\//i.test(url) ? url : "https://" + url);
+      };
+
+      // Header contact items
+      const loc = formatLocation(personal.location);
+      const locHtml = loc ? `<div class="pe-contact-row"><i class="fas fa-map-marker-alt"></i> <span>${makeLocationLink(personal.location)}</span></div>` : "";
+      const emailHtml = personal.email ? `<div class="pe-contact-row"><i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(personal.email)}">${escapeHtml(personal.email)}</a></div>` : "";
+      const phoneHtml = personal.phone ? `<div class="pe-contact-row"><i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(personal.phone)}">${escapeHtml(personal.phone)}</a></div>` : "";
+
+      const linkedinHtml = personal.linkedin ? `<div class="pe-contact-row"><i class="fab fa-linkedin"></i> <a href="${toHref(personal.linkedin)}" target="_blank" rel="noopener">${cleanUrl(personal.linkedin)}</a></div>` : "";
+      const portfolioHtml = personal.portfolio ? `<div class="pe-contact-row"><i class="${personal.portfolio.toLowerCase().includes('github') ? 'fab fa-github' : 'fas fa-globe'}"></i> <a href="${toHref(personal.portfolio)}" target="_blank" rel="noopener">${cleanUrl(personal.portfolio)}</a></div>` : "";
+
+      // Section: Work Experience
+      const renderPeExperience = () => {
+        const items = (resume.experience || []).map((item) => {
+          const range = formatRange(item.startDate, item.endDate);
+          const bulletsHtml = (item.bullets && item.bullets.length > 0)
+            ? `<ul class="pe-bullets">${item.bullets.map(b => b ? `<li>${linkify(escapeHtml(b))}</li>` : "").filter(Boolean).join("")}</ul>`
+            : "";
+          const descHtml = item.description ? `<p class="pe-desc">${linkify(escapeHtml(item.description))}</p>` : "";
+
+          return `
+            <article class="pe-item pe-exp-item">
+              <div class="pe-line-1">
+                <span class="pe-role-comp">
+                  <strong class="pe-job-title">${escapeHtml(item.jobTitle || "")}</strong>
+                  ${item.company ? `<span class="pe-comp-name">${escapeHtml(item.company)}</span>` : ""}
+                </span>
+                <span class="pe-date">${escapeHtml(range)}</span>
+              </div>
+              ${item.location ? `
+                <div class="pe-line-2">
+                  <span class="pe-sub-team"></span>
+                  <span class="pe-loc">${escapeHtml(item.location)}</span>
+                </div>
+              ` : ""}
+              ${descHtml}
+              ${bulletsHtml}
+            </article>
+          `;
+        }).join("");
+        if (!items) return "";
+        return `
+          <section class="pe-section pe-section-experience" data-section="experience">
+            <h2 class="pe-section-title">Work Experience</h2>
+            <div class="pe-section-content">${items}</div>
+          </section>
+        `;
+      };
+
+      // Section: Education
+      const renderPeEducation = () => {
+        const items = (resume.education || []).map((item) => {
+          const range = formatRange(item.startYear, item.endYear);
+          const metaParts = [
+            item.specialization ? `Specialization: ${item.specialization}` : "",
+            item.marks ? `CGPA/Marks: ${item.marks}` : ""
+          ].filter(Boolean).join(" · ");
+          const descHtml = item.description ? `<p class="pe-desc">${linkify(escapeHtml(item.description))}</p>` : "";
+
+          return `
+            <article class="pe-item pe-edu-item">
+              <div class="pe-line-1">
+                <span class="pe-role-comp">
+                  <strong class="pe-degree-title">${escapeHtml(item.degree || "")}</strong>${item.institution ? `, <span class="pe-inst-name">${escapeHtml(item.institution)}</span>` : ""}${item.location ? `, <span class="pe-loc">${escapeHtml(item.location)}</span>` : ""}
+                </span>
+                <span class="pe-date">${escapeHtml(range)}</span>
+              </div>
+              ${metaParts ? `<div class="pe-line-2"><span class="pe-meta-text">${escapeHtml(metaParts)}</span></div>` : ""}
+              ${descHtml}
+            </article>
+          `;
+        }).join("");
+        if (!items) return "";
+        return `
+          <section class="pe-section pe-section-education" data-section="education">
+            <h2 class="pe-section-title">Education and Certifications</h2>
+            <div class="pe-section-content">${items}</div>
+          </section>
+        `;
+      };
+
+      // Section: Technologies and Languages
+      const renderPeSkills = () => {
+        const rows = [];
+        const langItems = [
+          ...(resume.technicalStack?.languages || []),
+          ...(resume.languages?.map(l => l.language) || [])
+        ].filter(Boolean);
+        if (langItems.length > 0) {
+          rows.push({ label: "Languages:", val: Array.from(new Set(langItems)).join(", ") });
+        }
+
+        const techItems = [
+          ...(resume.technicalStack?.tools || []),
+          ...(resume.skills?.tools || [])
+        ].filter(Boolean);
+        if (techItems.length > 0) {
+          rows.push({ label: "Technologies:", val: Array.from(new Set(techItems)).join(", ") });
+        }
+
+        const frameworkItems = [
+          ...(resume.technicalStack?.frameworks || [])
+        ].filter(Boolean);
+        if (frameworkItems.length > 0) {
+          rows.push({ label: "Frameworks:", val: Array.from(new Set(frameworkItems)).join(", ") });
+        }
+
+        const otherItems = [
+          ...(resume.skills?.hard || []),
+          ...(resume.skills?.domain || []),
+          ...(resume.coreCompetencies || [])
+        ].filter(Boolean);
+        if (otherItems.length > 0) {
+          rows.push({ label: "Other:", val: Array.from(new Set(otherItems)).join(", ") });
+        }
+
+        if (rows.length === 0) return "";
+
+        const rowsHtml = rows.map(r => `
+          <div class="pe-skills-row">
+            <strong class="pe-skills-label">${escapeHtml(r.label)}</strong>
+            <span class="pe-skills-val">${escapeHtml(r.val)}</span>
+          </div>
+        `).join("");
+
+        return `
+          <section class="pe-section pe-section-skills" data-section="skills">
+            <h2 class="pe-section-title">Technologies and Languages</h2>
+            <div class="pe-skills-block">${rowsHtml}</div>
+          </section>
+        `;
+      };
+
+      // Section: Projects
+      const renderPeProjects = () => {
+        const items = (resume.projects || []).map((item) => {
+          const descHtml = item.description ? `<p class="pe-desc">${linkify(escapeHtml(item.description))}</p>` : "";
+          const outcomeHtml = item.outcome ? `<p class="pe-outcome"><strong>Outcome:</strong> ${linkify(escapeHtml(item.outcome))}</p>` : "";
+          return `
+            <article class="pe-item pe-proj-item">
+              <div class="pe-line-1">
+                <span class="pe-role-comp">
+                  <strong class="pe-proj-title">${escapeHtml(item.title || "")}</strong>
+                  ${item.tools ? `<span class="pe-proj-tools">&ndash; ${escapeHtml(item.tools)}</span>` : ""}
+                </span>
+              </div>
+              ${descHtml}
+              ${outcomeHtml}
+            </article>
+          `;
+        }).join("");
+        if (!items) return "";
+        return `
+          <section class="pe-section pe-section-projects" data-section="projects">
+            <h2 class="pe-section-title">Projects</h2>
+            <div class="pe-section-content">${items}</div>
+          </section>
+        `;
+      };
+
+      // Section: Summary
+      const renderPeSummary = () => {
+        const text = resume.summary || resume.objective;
+        if (!text) return "";
+        return `
+          <section class="pe-section pe-section-summary" data-section="summary">
+            <p class="pe-summary-text">${linkify(escapeHtml(text))}</p>
+          </section>
+        `;
+      };
+
+      const peSectionMap = {
+        summary: renderPeSummary,
+        objective: () => resume.summary ? "" : renderPeSummary(),
+        experience: renderPeExperience,
+        education: renderPeEducation,
+        skills: renderPeSkills,
+        technicalStack: () => "",
+        projects: renderPeProjects,
+        awards: () => {
+          const list = renderList(resume.awards || []);
+          return list ? `<section class="pe-section" data-section="awards"><h2 class="pe-section-title">Awards & Achievements</h2><div class="pe-bullets-wrap">${list}</div></section>` : "";
+        },
+        certifications: () => {
+          const items = (resume.certifications || []).map(c => `
+            <div class="pe-line-1" style="margin-bottom:4px;">
+              <span class="pe-role-comp"><strong class="pe-job-title">${escapeHtml(c.name || "")}</strong>${c.authority ? ` &ndash; ${escapeHtml(c.authority)}` : ""}</span>
+              ${c.year ? `<span class="pe-date">${escapeHtml(c.year)}</span>` : ""}
+            </div>
+          `).join("");
+          return items ? `<section class="pe-section" data-section="certifications"><h2 class="pe-section-title">Certifications</h2>${items}</section>` : "";
+        },
+        internships: () => {
+          const items = (resume.internships || []).map(item => `
+            <article class="pe-item">
+              <div class="pe-line-1">
+                <span class="pe-role-comp"><strong class="pe-job-title">${escapeHtml(item.role || "")}</strong>${item.organization ? ` &ndash; ${escapeHtml(item.organization)}` : ""}</span>
+                ${item.duration ? `<span class="pe-date">${escapeHtml(item.duration)}</span>` : ""}
+              </div>
+              ${renderList(item.learnings)}
+            </article>
+          `).join("");
+          return items ? `<section class="pe-section" data-section="internships"><h2 class="pe-section-title">Internships & Training</h2>${items}</section>` : "";
+        },
+        volunteer: () => {
+          const items = (resume.volunteer || []).map(item => `
+            <article class="pe-item">
+              <div class="pe-line-1">
+                <span class="pe-role-comp"><strong class="pe-job-title">${escapeHtml(item.role || "")}</strong>${item.organization ? ` &ndash; ${escapeHtml(item.organization)}` : ""}</span>
+              </div>
+              ${item.impact ? `<p class="pe-desc">${escapeHtml(item.impact)}</p>` : ""}
+            </article>
+          `).join("");
+          return items ? `<section class="pe-section" data-section="volunteer"><h2 class="pe-section-title">Volunteer Experience</h2>${items}</section>` : "";
+        },
+        leadership: () => {
+          const items = (resume.leadership || []).map(item => `
+            <article class="pe-item">
+              <div class="pe-line-1">
+                <span class="pe-role-comp"><strong class="pe-job-title">${escapeHtml(item.role || "")}</strong>${item.organization ? ` &ndash; ${escapeHtml(item.organization)}` : ""}</span>
+              </div>
+              ${item.responsibilities ? `<p class="pe-desc">${escapeHtml(item.responsibilities)}</p>` : ""}
+            </article>
+          `).join("");
+          return items ? `<section class="pe-section" data-section="leadership"><h2 class="pe-section-title">Leadership Experience</h2>${items}</section>` : "";
+        },
+        personalDetails: () => {
+          const details = resume.personalDetails || {};
+          const items = [
+            details.fatherName ? `Father's Name: ${details.fatherName}` : "",
+            details.dob ? `Date of Birth: ${details.dob}` : "",
+            details.gender ? `Gender: ${details.gender}` : "",
+            details.maritalStatus ? `Marital Status: ${details.maritalStatus}` : "",
+            details.hobbies ? `Interests: ${details.hobbies}` : ""
+          ].filter(Boolean);
+          if (!items.length) return "";
+          return `<section class="pe-section" data-section="personalDetails"><h2 class="pe-section-title">Interests & Details</h2><p class="pe-desc">${escapeHtml(items.join(" · "))}</p></section>`;
+        },
+        references: () => {
+          const items = (resume.references || []).map(r => `
+            <div style="margin-bottom:6px;">
+              <strong>${escapeHtml(r.name || "")}</strong>${r.role ? ` &ndash; ${escapeHtml(r.role)}` : ""}
+              ${[r.email ? `Email: ${r.email}` : "", r.phone ? `Phone: ${r.phone}` : ""].filter(Boolean).join(" · ")}
+            </div>
+          `).join("");
+          return items ? `<section class="pe-section" data-section="references"><h2 class="pe-section-title">References</h2>${items}</section>` : "";
+        }
+      };
+
+      const peSectionsHtml = (state.sectionOrder || []).map(key => {
+        if (!state.sectionEnabled[key] || key === "headline") return "";
+        const fn = peSectionMap[key];
+        return fn ? fn() : "";
+      }).filter(Boolean).join("");
+
+      return `
+        <article class="resume template-pragmatic">
+          <header class="pe-header">
+            <div class="pe-header-left">
+              ${locHtml}
+              ${emailHtml}
+              ${phoneHtml}
+            </div>
+            <div class="pe-header-center">
+              <h1 class="pe-name">${escapeHtml(personal.fullName || "Your Name")}</h1>
+              ${personal.headline && showHeadline ? `<div class="pe-headline">${escapeHtml(personal.headline)}</div>` : ""}
+            </div>
+            <div class="pe-header-right">
+              ${linkedinHtml}
+              ${portfolioHtml}
+            </div>
+          </header>
+          ${peSectionsHtml}
+        </article>
+      `.trim();
+    }
+
 
     // Teacher template: contact on individual lines, label format, headline last
     if (templateKey === "social") {

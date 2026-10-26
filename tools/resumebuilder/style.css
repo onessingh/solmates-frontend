@@ -3631,3 +3631,237 @@ html.is-desktop .wizard-nav {
         border-radius: 0 0 var(--radius-lg) var(--radius-lg) !important;
     }
 }
+
+
+/* =====================================================
+   Template: The Tech Resume Inside Out (Pragmatic Engineer)
+   Inspired by Gergely Orosz's gold-standard tech resume
+===================================================== */
+.template-pragmatic {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  color: #1f2937 !important;
+  background: #ffffff !important;
+  padding: 36px 40px !important;
+  box-sizing: border-box !important;
+  line-height: 1.45 !important;
+  font-size: 13px !important;
+}
+
+.template-pragmatic .pe-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  border-bottom: 2px solid #0f172a !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 14px !important;
+  gap: 12px !important;
+}
+
+.template-pragmatic .pe-header-left {
+  flex: 1 1 30% !important;
+  text-align: left !important;
+  font-size: 11.5px !important;
+  line-height: 1.5 !important;
+  color: #4b5563 !important;
+}
+
+.template-pragmatic .pe-header-center {
+  flex: 1 1 40% !important;
+  text-align: center !important;
+}
+
+.template-pragmatic .pe-header-right {
+  flex: 1 1 30% !important;
+  text-align: right !important;
+  font-size: 11.5px !important;
+  line-height: 1.5 !important;
+  color: #4b5563 !important;
+}
+
+.template-pragmatic .pe-name {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.15 !important;
+}
+
+.template-pragmatic .pe-headline {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #1a56db !important;
+  margin-top: 3px !important;
+  letter-spacing: 0.01em !important;
+}
+
+.template-pragmatic .pe-contact-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  margin-bottom: 2px !important;
+  word-break: break-word !important;
+}
+
+.template-pragmatic .pe-header-right .pe-contact-row {
+  justify-content: flex-end !important;
+}
+
+.template-pragmatic .pe-contact-row i {
+  color: #1a56db !important;
+  width: 13px !important;
+  text-align: center !important;
+  font-size: 11px !important;
+  flex-shrink: 0 !important;
+}
+
+.template-pragmatic .pe-header a {
+  color: #1a56db !important;
+  text-decoration: none !important;
+}
+
+.template-pragmatic .pe-header a:hover {
+  text-decoration: underline !important;
+}
+
+.template-pragmatic .pe-section {
+  margin-bottom: 12px !important;
+}
+
+.template-pragmatic .pe-section-title {
+  color: #1a56db !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  border-bottom: 1px solid #1a56db !important;
+  padding-bottom: 2px !important;
+  margin: 12px 0 6px 0 !important;
+  text-transform: none !important;
+}
+
+.template-pragmatic .pe-summary-text {
+  font-size: 12.5px !important;
+  line-height: 1.5 !important;
+  color: #374151 !important;
+  margin: 0 0 10px 0 !important;
+}
+
+.template-pragmatic .pe-item {
+  margin-bottom: 10px !important;
+}
+
+.template-pragmatic .pe-line-1 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  margin-bottom: 1px !important;
+}
+
+.template-pragmatic .pe-job-title,
+.template-pragmatic .pe-degree-title,
+.template-pragmatic .pe-proj-title {
+  font-weight: 700 !important;
+  color: #111827 !important;
+  font-size: 13px !important;
+}
+
+.template-pragmatic .pe-comp-name,
+.template-pragmatic .pe-inst-name {
+  font-weight: 600 !important;
+  color: #374151 !important;
+  margin-left: 14px !important;
+}
+
+.template-pragmatic .pe-date {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #4b5563 !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.template-pragmatic .pe-line-2 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  font-size: 12px !important;
+  color: #6b7280 !important;
+  margin-bottom: 3px !important;
+}
+
+.template-pragmatic .pe-loc {
+  font-size: 12px !important;
+  color: #6b7280 !important;
+  font-style: italic !important;
+}
+
+.template-pragmatic .pe-desc {
+  font-size: 12.5px !important;
+  color: #374151 !important;
+  margin: 2px 0 4px 0 !important;
+  line-height: 1.45 !important;
+}
+
+.template-pragmatic .pe-outcome {
+  font-size: 12px !important;
+  color: #1f2937 !important;
+  margin: 2px 0 4px 0 !important;
+}
+
+.template-pragmatic .pe-proj-tools {
+  font-weight: 400 !important;
+  color: #4b5563 !important;
+  font-size: 12px !important;
+  margin-left: 6px !important;
+}
+
+.template-pragmatic .pe-bullets,
+.template-pragmatic .pe-bullets-wrap ul {
+  margin: 3px 0 6px 18px !important;
+  padding: 0 !important;
+  list-style-type: disc !important;
+}
+
+.template-pragmatic .pe-bullets li,
+.template-pragmatic .pe-bullets-wrap li {
+  margin-bottom: 2px !important;
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
+  color: #374151 !important;
+}
+
+.template-pragmatic .pe-skills-block {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  margin-top: 4px !important;
+}
+
+.template-pragmatic .pe-skills-row {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
+}
+
+.template-pragmatic .pe-skills-label {
+  font-weight: 700 !important;
+  color: #111827 !important;
+  min-width: 125px !important;
+  flex-shrink: 0 !important;
+}
+
+.template-pragmatic .pe-skills-val {
+  color: #374151 !important;
+  flex: 1 !important;
+}
+
+@media print {
+  .template-pragmatic {
+    padding: 25px 30px !important;
+    background: transparent !important;
+  }
+}
