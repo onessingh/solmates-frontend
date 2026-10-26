@@ -42,6 +42,9 @@ self.addEventListener("fetch", event => {
     // Bypass API calls — let browser HTTP ETag & Cloudflare handle 304 / 200 validation natively
     if (url.pathname.includes("/api/")) return;
 
+    // Bypass ads.txt and robots.txt – always direct network fetch for web crawlers & ad verification bots
+    if (url.pathname === "/ads.txt" || url.pathname.endsWith("/ads.txt") || url.pathname === "/robots.txt") return;
+
     const isHTML = event.request.destination === "document"
         || event.request.mode === "navigate"
         || url.pathname === "/"
