@@ -444,6 +444,136 @@
             border: 1px solid #e0f2fe;
         }
 
+        .status-badge.ended {
+            background: rgba(100, 116, 139, 0.12);
+            color: #64748b;
+            border: 1px solid rgba(100, 116, 139, 0.25);
+        }
+
+        /* Timetables Section */
+        .timetables-container {
+            margin-bottom: 45px;
+            text-align: left;
+        }
+
+        .timetables-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .timetables-header h2 {
+            font-size: 24px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+        }
+
+        .active-badge {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timetables-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .timetables-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .timetable-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 22px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #8b5cf6;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .timetable-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .timetable-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .timetable-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.12);
+            color: #8b5cf6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .timetable-info {
+            flex: 1;
+        }
+
+        .timetable-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 0 0 6px 0;
+            line-height: 1.4;
+        }
+
+        .timetable-btn {
+            background: #8b5cf6;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+            margin-top: 14px;
+            width: 100%;
+        }
+
+        .timetable-btn:hover {
+            background: #7c3aed;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
         @keyframes blink {
 
             0%,
@@ -1049,6 +1179,17 @@
         <!-- LIVE SESSIONS -->
         <section class="live-class-section">
             <div class="live-class-container">
+                <!-- ACTIVE TIMETABLES SECTION -->
+                <div class="timetables-container" id="timetablesContainer">
+                    <div class="timetables-header">
+                        <h2><i class="fas fa-calendar-alt" style="color: #8b5cf6;"></i> Active Class Timetables</h2>
+                        <span class="active-badge"><i class="fas fa-check-circle"></i> Weekly Schedule Active</span>
+                    </div>
+                    <div class="timetables-grid" id="timetablesGrid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
                 <h2><i class="fas fa-video"></i> Today's Live Sessions</h2>
                 <div class="live-sessions-grid" id="liveSessionsGrid">
                     <!-- Skeleton loader cards (vundefined.7) -->
@@ -1184,7 +1325,7 @@
     </footer>
 
     <script>
-        const appData = { liveSessions: [] };
+        const appData = { liveSessions: [], timetables: [] };
         let currentActiveTab = 'all';
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1230,15 +1371,49 @@
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('onclick') === `switchTab('${sem}')`);
             });
+            updateTimetablesDisplay(sem);
             updateLiveSessionsDisplay(sem);
+        }
+
+        function updateTimetablesDisplay(filter = 'all') {
+            const container = document.getElementById('timetablesContainer');
+            const grid = document.getElementById('timetablesGrid');
+            if (!container || !grid) return;
+
+            let list = appData.timetables || [];
+            if (filter !== 'all') {
+                list = list.filter(t => t.semesters.includes(filter) || t.semesters.includes('all'));
+            }
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; padding: 25px; text-align: center; color: var(--text-lighter); background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border-color); font-size: 14px;"><i class="fas fa-info-circle"></i> No specific timetable document found for Semester ${escapeHtml(filter)}. Please check 'All Classes' tab or Notifications.</div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map(t => `
+                <div class="timetable-card">
+                    <div class="timetable-card-header">
+                        <div class="timetable-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="timetable-info">
+                            <span class="semester-badge" style="background: rgba(139, 92, 246, 0.12); color: #8b5cf6; font-weight: 600; font-size: 11px; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px;">
+                                <i class="fas fa-calendar-check"></i> ${escapeHtml(t.badge || 'MBA Timetable')}
+                            </span>
+                            <h4>${escapeHtml(t.title)}</h4>
+                            <div class="info-row" style="margin-top: 6px;"><i class="far fa-clock"></i><span>${escapeHtml(t.validity)}</span></div>
+                        </div>
+                    </div>
+                    <a href="${t.url}" target="_blank" rel="noopener noreferrer" class="timetable-btn">
+                        <i class="fas fa-external-link-alt"></i> View Timetable (PDF)
+                    </a>
+                </div>
+            `).join('');
         }
 
         function updateLiveSessionsDisplay(filter = 'all') {
             const grid = document.getElementById('liveSessionsGrid');
             const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-            const now = Date.now();
-            let sessions = appData.liveSessions.filter(s => !s.expiryTime || now < s.expiryTime);
+            let sessions = appData.liveSessions;
             if (filter !== 'all') {
                 sessions = sessions.filter(s => s.semesters.includes(filter) || s.semesters.includes('all'));
             }
@@ -1382,8 +1557,7 @@
                                 return meta.expiryTime || new Date(y, m, d, 23, 59, 59).getTime();
                             })();
 
-                            // Precise Expiry Check: Hide class immediately once end time is reached
-                            if (Date.now() >= classExpiryTime) return;
+                            // Keep classes scheduled for today visible all day (countdown badges will show 'Class Ended')
 
                             // Normalize Date to YYYY-MM-DD for 100% strict deduplication
                             const normDate = parseNormalizedDate(meta.date || sessionDate || item.date);
@@ -1444,9 +1618,66 @@
                 
                 // Cache the fresh data
                 localStorage.setItem('solcache_live_classes', JSON.stringify(fresh));
+                // Fetch Active Timetables
+                try {
+                    const notifResults = await Promise.all(['1', '2', '3', '4', '0'].map(sem => solmatesAPI.getSOLContent('notifications', sem)));
+                    const ttMap = new Map();
+
+                    // Official Default Timetables
+                    const defaultTT = [
+                        {
+                            id: 'tt_sem1_26_31_oct',
+                            title: 'Online timetable of MBA Sem I for 26th to 31st Oct, 2026',
+                            semesters: ['1', 'all'],
+                            validity: '26 Oct - 31 Oct, 2026',
+                            url: 'https://oldc-sol-projects.s3.amazonaws.com/sol/WebsiteContent/30102026_20261026110330.pdf',
+                            badge: 'MBA Sem 1'
+                        },
+                        {
+                            id: 'tt_sem3_pg_official',
+                            title: 'DU SOL Official All PG Class Time Table (Sem 3 & 5)',
+                            semesters: ['3', 'all'],
+                            validity: 'Current Semester Session 2026',
+                            url: 'https://web.sol.du.ac.in/info/all-pg-class-time-table-sem-3-and-5',
+                            badge: 'MBA Sem 3'
+                        }
+                    ];
+                    defaultTT.forEach(tt => ttMap.set(tt.url, tt));
+
+                    // Dynamic timetables from notifications
+                    notifResults.forEach((res, i) => {
+                        const sSem = i < 4 ? String(i + 1) : 'all';
+                        if (res && res.success && Array.isArray(res.data)) {
+                            res.data.forEach(item => {
+                                const title = item.title || '';
+                                if (/time\\s*table|schedule|timetable/i.test(title)) {
+                                    const link = item.link || item.url;
+                                    if (link && link !== '#' && link !== '#pending') {
+                                        if (!ttMap.has(link)) {
+                                            ttMap.set(link, {
+                                                id: item.id || link,
+                                                title: title,
+                                                semesters: sSem === 'all' ? ['1', '2', '3', '4', 'all'] : [sSem, 'all'],
+                                                validity: item.date ? `Updated: ${item.date}` : 'Active Schedule',
+                                                url: link,
+                                                badge: sSem === 'all' ? 'All Semesters' : `MBA Sem ${sSem}`
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    appData.timetables = Array.from(ttMap.values());
+                    updateTimetablesDisplay(currentActiveTab);
+                } catch (ttErr) {
+                    console.warn('Failed to load timetables dynamically:', ttErr);
+                }
             } catch (e) { 
                 console.error('Load failed:', e); 
             } finally {
+                updateTimetablesDisplay(currentActiveTab);
                 updateLiveSessionsDisplay(currentActiveTab);
             }
         }
@@ -1615,20 +1846,15 @@
                 const isExpired = now >= expiry;
 
                 if (isExpired) {
-                    // Hide and remove the card instantly as soon as class ends
+                    el.innerHTML = `<div class="status-badge ended"><i class="fas fa-check-circle"></i> Class Ended</div>`;
                     const card = el.closest('.live-session-card');
                     if (card) {
-                        card.style.transition = 'all 0.4s ease';
-                        card.style.opacity = '0';
-                        card.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            card.remove();
-                            const remaining = document.querySelectorAll('.live-sessions-grid .live-session-card');
-                            if (remaining.length === 0) {
-                                const grid = document.getElementById('liveSessionsGrid');
-                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
-                            }
-                        }, 400);
+                        const btn = card.querySelector('.join-btn');
+                        if (btn && !btn.classList.contains('ended-btn')) {
+                            btn.classList.add('ended-btn');
+                            btn.innerHTML = `<i class="fas fa-check"></i> Session Completed`;
+                            btn.style.opacity = '0.7';
+                        }
                     }
                     return;
                 }
