@@ -25,16 +25,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v886" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v886" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v886">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v886">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v886">
+  <link rel="icon" href="/favicon.ico?v=v887" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v887" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v887">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v887">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v887">
   <title>Exam Prep AI - Solmates</title>
-  <script src="/config.js?v=v886"></script>
-  <script src="/js/api-client.js?v=v886"></script>
-  <script src="/js/exam-data.js?v=v886"></script>
-  <script src="/js/exam-context.js?v=v886"></script>
+  <script src="/config.js?v=v887"></script>
+  <script src="/js/api-client.js?v=v887"></script>
+  <script src="/js/exam-data.js?v=v887"></script>
+  <script src="/js/exam-context.js?v=v887"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/global-lockdown.css">
   <style>
@@ -219,87 +219,16 @@
   </div>
 
   <!-- Clean Non-Intrusive Bottom Ad Banner -->
-    <div class="sol-ad-banner sol-ad-bottom google-anno-skip">
-      <span class="sol-ad-label">Advertisement</span>
-      <ins class="adsbygoogle"
-           data-ad-client="ca-pub-8498686057506423"
-           data-ad-format="horizontal"
-           data-full-width-responsive="false"></ins>
-      <script>
-        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
-      </script>
-    </div>
-
-  <script>
-    let allExams = [];
-    
-    const categories = [
-        { id: 'sol-mba', name: 'DU SOL MBA', icon: 'fa-user-graduate' },
-        { id: 'government', name: 'Government / Civil Services', icon: 'fa-landmark' },
-        { id: 'ssc', name: 'SSC', icon: 'fa-users-cog' },
-        { id: 'banking', name: 'Banking', icon: 'fa-piggy-bank' },
-        { id: 'railways', name: 'Railways', icon: 'fa-train' },
-        { id: 'defence', name: 'Defence', icon: 'fa-shield-alt' },
-        { id: 'medical', name: 'Medical', icon: 'fa-stethoscope' },
-        { id: 'engineering', name: 'Engineering', icon: 'fa-cogs' },
-        { id: 'teaching', name: 'Teaching / Research', icon: 'fa-chalkboard-teacher' },
-        { id: 'management', name: 'Management', icon: 'fa-briefcase' },
-        { id: 'law', name: 'Law', icon: 'fa-balance-scale' },
-        { id: "university", name: "University Entrance", icon: "fa-university" },
-    ];
-
-    async function loadExams() {
-      renderCategories();
-      
-      try {
-        const res = await fetch('/api/exams');
-        let fetchedExams = [];
-        if (res.ok) {
-            fetchedExams = await res.json();
-        }
-        
-        
-        let localExams = [];
-        if (window.MOCK_EXAM_DATA) {
-            localExams = Object.keys(window.MOCK_EXAM_DATA).map(k => {
-                const e = window.MOCK_EXAM_DATA[k];
-                return {
-                    id: k,
-                    name: e.name,
-                    slug: k,
-                    category_id: e.category_id,
-                    short_description: e.short_description || "",
-                    status: "active"
-                };
-            });
-        }
-        
-        if (fetchedExams && fetchedExams.length > 0) {
-            // Merge, prioritizing fetched
-            const fetchedIds = fetchedExams.map(e => e.id);
-            allExams = [...fetchedExams, ...localExams.filter(e => !fetchedIds.includes(e.id))];
-        } else {
-            // Use localExams as fallback
-            allExams = localExams;
-        }
-        
-        // Auto-select first category that has exams, or just default to teaching
-        if (window.innerWidth >= 768) { selectCategory('teaching', 'Teaching / Research'); }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function renderCategories() {
-        const container = document.getElementById('category-grid');
-        container.innerHTML = categories.map(cat => `
-            <div class="category-wrapper" style="margin-bottom: 10px;">
-                <div class="category-card" id="cat-btn-${cat.id}" onclick="selectCategory('${cat.id}', '${cat.name}')">
-                    <i class="fas ${cat.icon}"></i>
-                    <span>${cat.name}</span>
-                </div>
-                <div class="mobile-exams-container exam-grid" id="mobile-exams-${cat.id}" style="display: none; padding: 15px 0;"></div>
-            </div>
+  <div class="sol-ad-banner sol-ad-bottom google-anno-skip">
+    <span class="sol-ad-label">Advertisement</span>
+    <ins class="adsbygoogle"
+         data-ad-client="ca-pub-8498686057506423"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+    </script>
+  </div>
         `).join('');
     }
 

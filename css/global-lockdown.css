@@ -189,7 +189,7 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
 .sol-ad-banner {
   display: block !important;
   width: 100%;
-  max-width: 728px;
+  max-width: 970px;
   margin: 0 auto;
   padding: 0;
   background: transparent;
@@ -210,22 +210,22 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
 .sol-ad-banner.ad-loaded,
 .sol-ad-banner:has(ins[data-ad-status="filled"]),
 .sol-ad-banner:has(iframe:not([style*="display: none"])) {
-  margin: 20px auto 15px auto;
-  padding: 8px 12px;
+  margin: 24px auto 18px auto;
+  padding: 10px 14px;
   background: var(--bg-card, #ffffff);
   border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .sol-ad-banner.ad-loaded .sol-ad-label,
 .sol-ad-banner:has(ins[data-ad-status="filled"]) .sol-ad-label,
 .sol-ad-banner:has(iframe:not([style*="display: none"])) .sol-ad-label {
   display: block !important;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 1.5px;
   color: var(--text-lighter, #94a3b8);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-transform: uppercase;
   font-weight: 700;
   user-select: none;
@@ -240,33 +240,33 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
 }
 
 .sol-ad-banner.sol-ad-top {
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .sol-ad-banner.sol-ad-bottom {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
-/* Strict height boundary for sleek ads: Desktop max 90-100px, Mobile max 60-90px */
+/* Responsive display sizing: Desktop 90-250px, Mobile 60-120px */
 .sol-ad-banner ins.adsbygoogle {
   display: block !important;
   visibility: visible !important;
   width: 100% !important;
-  min-height: 50px !important;
-  max-height: 90px !important;
+  min-height: 90px !important;
+  max-height: 250px !important;
   margin: 0 auto !important;
   overflow: hidden !important;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    margin: 14px auto;
-    padding: 6px 8px;
+    margin: 16px auto;
+    padding: 8px 10px;
     border-radius: 10px;
-    max-width: calc(100% - 24px);
+    max-width: calc(100% - 20px);
   }
   .sol-ad-banner ins.adsbygoogle {
-    min-height: 50px !important;
-    max-height: 75px !important;
+    min-height: 60px !important;
+    max-height: 120px !important;
   }
 }
