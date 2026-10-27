@@ -178,8 +178,8 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
 /* ==========================================================================
    RESPONSIVE SOLMATES AD BANNERS (TOP / BOTTOM)
    - Clean, lightweight rounded card container with "Advertisement" label
-   - Fluid responsive width: automatically fills mobile screen & desktop container
-   - Natural height: allows Google AdSense to auto-fill its natural ad dimensions
+   - Strict container containment: overflow: hidden prevents ANY ad from spilling out
+   - Full responsive mobile width with auto centering
    ========================================================================== */
 .sol-ad-banner {
   display: block !important;
@@ -192,9 +192,9 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
   border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08)) !important;
   border-radius: 12px !important;
   text-align: center !important;
-  overflow: visible !important;
   box-sizing: border-box !important;
   clear: both !important;
+  overflow: hidden !important; /* CRITICAL: NEVER ALLOW ADS TO SPILL OUTSIDE BOX */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
 }
 
@@ -219,23 +219,44 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
   margin-bottom: 20px !important;
 }
 
-/* Responsive display sizing: Desktop 90-250px, Mobile 60-250px */
+/* Force all AdSense containers, hosts & iframes to strictly respect card width */
 .sol-ad-banner ins.adsbygoogle {
   display: block !important;
-  visibility: visible !important;
   width: 100% !important;
-  min-height: 90px !important;
+  max-width: 100% !important;
   margin: 0 auto !important;
+  overflow: hidden !important;
+}
+
+.sol-ad-banner iframe,
+.sol-ad-banner div[id^="aswift_"],
+.sol-ad-banner ins.adsbygoogle iframe {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    margin: 15px auto 15px auto !important;
-    padding: 8px 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 15px auto !important;
+    padding: 8px 0 !important; /* Zero horizontal padding so ads have maximum room */
     border-radius: 10px !important;
-    max-width: calc(100% - 24px) !important;
+    overflow: hidden !important; /* ABSOLUTE CONTAINMENT */
+    box-sizing: border-box !important;
   }
+
+  body > .sol-ad-banner {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100% - 20px) !important;
+  }
+
   .sol-ad-banner ins.adsbygoogle {
-    min-height: 60px !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
   }
 }
