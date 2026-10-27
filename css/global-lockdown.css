@@ -1,4 +1,4 @@
-﻿/**
+/**
  * [v111.9] SOLMATES GLOBAL LOCKDOWN CSS
  * Final Suppression of Android 'Touch to Search' (Google Bar)
  */
@@ -154,56 +154,104 @@ iframe[id^="aswift_"] {
 }
 
 
-/* ========== RESPONSIVE NON-INTRUSIVE SOLMATES AD BANNERS ========== */
+/* ==========================================================================
+   STRICT AD SUPPRESSION FOR FLOATING ANCHOR & OVERLAY ADS
+   Ensures ads NEVER float over bottom navigation, headers, or buttons
+   ========================================================================== */
+ins.adsbygoogle[data-anchor-status],
+ins.adsbygoogle[data-anchor-shown],
+div[id^="aswift_"][id$="_host"],
+iframe[name^="aswift_"][style*="position: fixed"],
+iframe[id^="aswift_"][style*="position: fixed"],
+div[style*="position: fixed"][style*="bottom: 0px"]:has(ins.adsbygoogle),
+div[style*="position: fixed"][style*="bottom: 0px"]:has(iframe[id^="aswift_"]),
+div[style*="position: fixed"][style*="top: 0px"]:has(ins.adsbygoogle),
+div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
+.google-auto-placed[style*="position: fixed"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  z-index: -9999 !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE NON-INTRUSIVE SOLMATES AD BANNERS (TOP / BOTTOM)
+   - STRICT DEFAULT: Hidden when empty or unfilled (never shows blank box)
+   - Shows ONLY when ad is actually filled with live content
+   - Standard banner proportions: max-height capped (never giant boxes)
+   ========================================================================== */
 .sol-ad-banner {
-  max-width: 960px;
-  margin: 35px auto 25px auto;
-  padding: 12px 14px;
+  display: none !important; /* Strict default: completely invisible */
+  width: 100%;
+  max-width: 728px;
+  margin: 20px auto;
+  padding: 8px 12px;
   background: var(--bg-card, #ffffff);
   border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   border-radius: 12px;
   text-align: center;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
   box-sizing: border-box;
+  clear: both;
+}
+
+/* Only display if ad is loaded/filled */
+.sol-ad-banner.ad-loaded,
+.sol-ad-banner:has(ins[data-ad-status="filled"]),
+.sol-ad-banner:has(iframe:not([style*="display: none"])) {
+  display: block !important;
+}
+
+/* Explicitly force hidden if unfilled */
+.sol-ad-banner:has(ins[data-ad-status="unfilled"]) {
+  display: none !important;
 }
 
 .sol-ad-banner.sol-ad-top {
-  margin: 20px auto 30px auto;
+  margin: 15px auto 20px auto;
 }
 
 .sol-ad-banner.sol-ad-bottom {
-  margin: 40px auto 25px auto;
+  margin: 25px auto 15px auto;
 }
 
 .sol-ad-label {
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 1.5px;
   color: var(--text-lighter, #94a3b8);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   text-transform: uppercase;
   font-weight: 700;
   display: block;
+  user-select: none;
 }
 
+/* Strict height boundary for sleek ads: Desktop max 90-100px, Mobile max 60-90px */
 .sol-ad-banner ins.adsbygoogle {
   display: block !important;
   visibility: visible !important;
   width: 100% !important;
-  min-height: 60px !important;
-  max-height: 100px !important;
-  height: auto !important;
+  min-height: 50px !important;
+  max-height: 90px !important;
   margin: 0 auto !important;
+  overflow: hidden !important;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    margin: 25px 12px 20px 12px;
-    padding: 10px;
+    margin: 14px auto;
+    padding: 6px 8px;
     border-radius: 10px;
+    max-width: calc(100% - 24px);
   }
   .sol-ad-banner ins.adsbygoogle {
     min-height: 50px !important;
-    max-height: 100px !important;
+    max-height: 75px !important;
   }
 }

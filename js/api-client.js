@@ -1229,3 +1229,40 @@ window.solmatesPromptNickname = function() {
 
 
 
+
+
+/* ========== SOLMATES AD VISIBILITY WATCHER ========== */
+(function() {
+    function evaluateAdBanners() {
+        const banners = document.querySelectorAll('.sol-ad-banner');
+        banners.forEach(banner => {
+            const ins = banner.querySelector('ins.adsbygoogle');
+            if (!ins) return;
+            const status = ins.getAttribute('data-ad-status');
+            const iframe = ins.querySelector('iframe');
+            if (status === 'filled' || (iframe && iframe.offsetHeight > 10)) {
+                banner.classList.add('ad-loaded');
+                banner.style.setProperty('display', 'block', 'important');
+            } else if (status === 'unfilled') {
+                banner.classList.remove('ad-loaded');
+                banner.style.setProperty('display', 'none', 'important');
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', evaluateAdBanners);
+    } else {
+        evaluateAdBanners();
+    }
+    [800, 2000, 4500, 8000].forEach(delay => setTimeout(evaluateAdBanners, delay));
+
+    if (window.MutationObserver) {
+        const observer = new MutationObserver(evaluateAdBanners);
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.sol-ad-banner').forEach(banner => {
+                observer.observe(banner, { attributes: true, subtree: true, attributeFilter: ['data-ad-status', 'style'] });
+            });
+        });
+    }
+})();

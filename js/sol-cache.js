@@ -275,5 +275,42 @@
         triggerInitialPrefetch();
     }
 
+    /* ========== SOLMATES AD VISIBILITY WATCHER ========== */
+    // Ensures ad banner containers remain completely hidden until Google AdSense fills an ad
+    function initAdBannerWatcher() {
+        function evaluateBanners() {
+            const banners = document.querySelectorAll('.sol-ad-banner');
+            banners.forEach(banner => {
+                const ins = banner.querySelector('ins.adsbygoogle');
+                if (!ins) return;
+                const status = ins.getAttribute('data-ad-status');
+                const iframe = ins.querySelector('iframe');
+                if (status === 'filled' || (iframe && iframe.offsetHeight > 10)) {
+                    banner.classList.add('ad-loaded');
+                    banner.style.setProperty('display', 'block', 'important');
+                } else if (status === 'unfilled') {
+                    banner.classList.remove('ad-loaded');
+                    banner.style.setProperty('display', 'none', 'important');
+                }
+            });
+        }
+
+        evaluateBanners();
+        [800, 2000, 4500, 8000].forEach(delay => setTimeout(evaluateBanners, delay));
+
+        if (window.MutationObserver) {
+            const observer = new MutationObserver(evaluateBanners);
+            document.querySelectorAll('.sol-ad-banner').forEach(banner => {
+                observer.observe(banner, { attributes: true, subtree: true, attributeFilter: ['data-ad-status', 'style'] });
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAdBannerWatcher);
+    } else {
+        initAdBannerWatcher();
+    }
+
 })(window);
 
