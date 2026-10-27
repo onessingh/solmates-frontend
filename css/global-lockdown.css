@@ -116,3 +116,39 @@ a, button, .btn, .back-btn {
     box-sizing: border-box !important;
   }
 }
+
+/* ========== ADSENSE PROTECTION: PREVENT AUTO ADS FROM BREAKING CARDS & OVERLAYS ========== */
+/* 1. Never allow Auto Ads inside main cards, tools, grids, or buttons */
+.main-option-card ins.adsbygoogle,
+.tools-grid ins.adsbygoogle,
+.options-grid ins.adsbygoogle,
+.notification-card ins.adsbygoogle,
+.live-session-card ins.adsbygoogle,
+.timetable-card ins.adsbygoogle,
+.card ins.adsbygoogle,
+button ins.adsbygoogle,
+.google-anno-skip ins.adsbygoogle {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 2. Prevent floating anchor ads from ever covering cards or buttons */
+ins.adsbygoogle[data-anchor-status="displayed"],
+ins.adsbygoogle[data-ad-status="filled"][data-anchor-status],
+div[id^="aswift_"][id$="_host"],
+iframe[id^="aswift_"] {
+  max-height: 80px !important;
+  bottom: 0 !important;
+}
+
+/* 3. Add safe bottom margin across pages so floating ads never block buttons */
+.page-content,
+.main-content,
+.container,
+.notification-container,
+.live-class-container {
+  padding-bottom: 100px !important;
+}
