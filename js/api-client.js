@@ -1240,12 +1240,8 @@ window.solmatesPromptNickname = function() {
             if (!ins) return;
             const status = ins.getAttribute('data-ad-status');
             const iframe = ins.querySelector('iframe');
-            if (status === 'filled' || (iframe && iframe.offsetHeight > 10)) {
+            if (status === 'filled' || (iframe && (iframe.offsetHeight > 10 || iframe.offsetWidth > 10))) {
                 banner.classList.add('ad-loaded');
-                banner.style.setProperty('display', 'block', 'important');
-            } else if (status === 'unfilled') {
-                banner.classList.remove('ad-loaded');
-                banner.style.setProperty('display', 'none', 'important');
             }
         });
     }
@@ -1256,13 +1252,4 @@ window.solmatesPromptNickname = function() {
         evaluateAdBanners();
     }
     [800, 2000, 4500, 8000].forEach(delay => setTimeout(evaluateAdBanners, delay));
-
-    if (window.MutationObserver) {
-        const observer = new MutationObserver(evaluateAdBanners);
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.sol-ad-banner').forEach(banner => {
-                observer.observe(banner, { attributes: true, subtree: true, attributeFilter: ['data-ad-status', 'style'] });
-            });
-        });
-    }
 })();

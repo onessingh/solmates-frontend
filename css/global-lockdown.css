@@ -181,46 +181,27 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
 
 /* ==========================================================================
    RESPONSIVE NON-INTRUSIVE SOLMATES AD BANNERS (TOP / BOTTOM)
-   - Zero visual footprint when waiting (no border, no blank box, no label)
-   - width > 0 so AdSense never throws No slot size for availableWidth=0
-   - Shows clean bordered card ONLY when ad is actually filled with live content
-   - Standard banner proportions: max-height capped (never giant boxes)
+   - Stably positioned at bottom of pages
+   - Clean, lightweight rounded container with "Advertisement" label
+   - Stays stable and never disappears abruptly
    ========================================================================== */
 .sol-ad-banner {
   display: block !important;
-  width: 100%;
-  max-width: 970px;
-  margin: 0 auto;
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  text-align: center;
-  overflow: hidden;
-  box-sizing: border-box;
-  clear: both;
+  width: 100% !important;
+  max-width: 970px !important;
+  margin: 30px auto 25px auto !important;
+  padding: 12px 16px !important;
+  background: var(--bg-card, #ffffff) !important;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08)) !important;
+  border-radius: 14px !important;
+  text-align: center !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04) !important;
+  box-sizing: border-box !important;
+  clear: both !important;
 }
 
-/* Hide label until ad is filled */
 .sol-ad-banner .sol-ad-label {
-  display: none !important;
-}
-
-/* Add stylish container and reveal label ONLY when ad is filled or loaded */
-.sol-ad-banner.ad-loaded,
-.sol-ad-banner:has(ins[data-ad-status="filled"]),
-.sol-ad-banner:has(iframe:not([style*="display: none"])) {
-  margin: 24px auto 18px auto;
-  padding: 10px 14px;
-  background: var(--bg-card, #ffffff);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-}
-
-.sol-ad-banner.ad-loaded .sol-ad-label,
-.sol-ad-banner:has(ins[data-ad-status="filled"]) .sol-ad-label,
-.sol-ad-banner:has(iframe:not([style*="display: none"])) .sol-ad-label {
   display: block !important;
   font-size: 10px;
   letter-spacing: 1.5px;
@@ -231,19 +212,13 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
   user-select: none;
 }
 
-/* Explicitly force hidden if unfilled */
-.sol-ad-banner:has(ins[data-ad-status="unfilled"]) {
-  display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
 .sol-ad-banner.sol-ad-top {
   margin-top: 15px;
+  margin-bottom: 25px;
 }
 
 .sol-ad-banner.sol-ad-bottom {
+  margin-top: 30px;
   margin-bottom: 25px;
 }
 
@@ -255,15 +230,14 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
   min-height: 90px !important;
   max-height: 250px !important;
   margin: 0 auto !important;
-  overflow: hidden !important;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    margin: 16px auto;
+    margin: 20px auto 20px auto;
     padding: 8px 10px;
     border-radius: 10px;
-    max-width: calc(100% - 20px);
+    max-width: calc(100% - 24px);
   }
   .sol-ad-banner ins.adsbygoogle {
     min-height: 60px !important;

@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v888_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v889_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k !== 'solmates-cache-v888') caches.delete(k);
+                        if (k !== 'solmates-cache-v889') caches.delete(k);
                     });
                 }).catch(() => {});
             }
@@ -276,7 +276,6 @@
     }
 
     /* ========== SOLMATES AD VISIBILITY WATCHER ========== */
-    // Ensures ad banner containers remain completely hidden until Google AdSense fills an ad
     function initAdBannerWatcher() {
         function evaluateBanners() {
             const banners = document.querySelectorAll('.sol-ad-banner');
@@ -285,25 +284,14 @@
                 if (!ins) return;
                 const status = ins.getAttribute('data-ad-status');
                 const iframe = ins.querySelector('iframe');
-                if (status === 'filled' || (iframe && iframe.offsetHeight > 10)) {
+                if (status === 'filled' || (iframe && (iframe.offsetHeight > 10 || iframe.offsetWidth > 10))) {
                     banner.classList.add('ad-loaded');
-                    banner.style.setProperty('display', 'block', 'important');
-                } else if (status === 'unfilled') {
-                    banner.classList.remove('ad-loaded');
-                    banner.style.setProperty('display', 'none', 'important');
                 }
             });
         }
 
         evaluateBanners();
         [800, 2000, 4500, 8000].forEach(delay => setTimeout(evaluateBanners, delay));
-
-        if (window.MutationObserver) {
-            const observer = new MutationObserver(evaluateBanners);
-            document.querySelectorAll('.sol-ad-banner').forEach(banner => {
-                observer.observe(banner, { attributes: true, subtree: true, attributeFilter: ['data-ad-status', 'style'] });
-            });
-        }
     }
 
     if (document.readyState === 'loading') {
