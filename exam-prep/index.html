@@ -232,6 +232,64 @@
       try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
     </script>
   </div>
+
+  <script>
+    let allExams = [];
+    
+    const categories = [
+        { id: 'government', name: 'Government / Civil Services', icon: 'fa-landmark' },
+        { id: 'ssc', name: 'SSC', icon: 'fa-users-cog' },
+        { id: 'banking', name: 'Banking', icon: 'fa-piggy-bank' },
+        { id: 'railways', name: 'Railways', icon: 'fa-train' },
+        { id: 'defence', name: 'Defence', icon: 'fa-shield-alt' },
+        { id: 'medical', name: 'Medical', icon: 'fa-stethoscope' },
+        { id: 'engineering', name: 'Engineering', icon: 'fa-cogs' },
+        { id: 'teaching', name: 'Teaching / Research', icon: 'fa-chalkboard-teacher' },
+        { id: 'management', name: 'Management', icon: 'fa-briefcase' },
+        { id: 'law', name: 'Law', icon: 'fa-balance-scale' },
+        { id: 'university', name: 'University Entrance', icon: 'fa-university' }
+    ];
+
+    async function loadExams() {
+      renderCategories();
+      
+      try {
+        const res = await fetch('/api/exams');
+        if (res.ok) {
+            allExams = await res.json();
+        } else {
+            allExams = [
+                { name: 'UGC NET (Management)', slug: 'ugc-net-management', category_id: 'teaching', short_description: 'University Grants Commission National Eligibility Test for Assistant Professor and JRF in Management.' },
+                { name: 'CAT', slug: 'cat', category_id: 'management', short_description: 'Common Admission Test for admission into top Indian Institutes of Management (IIMs).' },
+                { name: 'UPSC Civil Services', slug: 'upsc-cse', category_id: 'government', short_description: 'Premier civil service examination for recruitment to IAS, IPS, and IFS.' },
+                { name: 'SSC CGL', slug: 'ssc-cgl', category_id: 'ssc', short_description: 'Staff Selection Commission Combined Graduate Level Examination.' },
+                { name: 'IBPS PO', slug: 'ibps-po', category_id: 'banking', short_description: 'Institute of Banking Personnel Selection Probationary Officer exam.' }
+            ];
+        }
+        
+        // Auto-select first category that has exams, or just default to teaching
+        selectCategory('teaching', 'Teaching / Research');
+      } catch (err) {
+        console.error(err);
+        allExams = [
+          { name: 'UGC NET (Management)', slug: 'ugc-net-management', category_id: 'teaching', short_description: 'University Grants Commission National Eligibility Test for Assistant Professor and JRF in Management.' },
+          { name: 'CAT', slug: 'cat', category_id: 'management', short_description: 'Common Admission Test for admission into top Indian Institutes of Management (IIMs).' },
+          { name: 'UPSC Civil Services', slug: 'upsc-cse', category_id: 'government', short_description: 'Premier civil service examination for recruitment to IAS, IPS, and IFS.' },
+          { name: 'SSC CGL', slug: 'ssc-cgl', category_id: 'ssc', short_description: 'Staff Selection Commission Combined Graduate Level Examination.' },
+          { name: 'IBPS PO', slug: 'ibps-po', category_id: 'banking', short_description: 'Institute of Banking Personnel Selection Probationary Officer exam.' }
+        ];
+        selectCategory('teaching', 'Teaching / Research');
+      }
+    }
+
+    function renderCategories() {
+        const container = document.getElementById('category-grid');
+        container.innerHTML = categories.map(cat => `
+            <div class="category-card" id="cat-btn-${cat.id}" onclick="selectCategory('${cat.id}', '${cat.name}')">
+                <i class="fas ${cat.icon}"></i>
+                <span>${cat.name}</span>
+            </div>
+            <div class="mobile-exams-container" id="mobile-exams-${cat.id}" style="display: none;"></div>
         `).join('');
     }
 
