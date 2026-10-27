@@ -189,6 +189,7 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
   display: block !important;
   width: 100% !important;
   max-width: 970px !important;
+  min-height: 120px !important;
   margin: 30px auto 25px auto !important;
   padding: 12px 16px !important;
   background: var(--bg-card, #ffffff) !important;
@@ -234,10 +235,11 @@ div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    margin: 20px auto 20px auto;
-    padding: 8px 10px;
-    border-radius: 10px;
-    max-width: calc(100% - 24px);
+    min-height: 80px !important;
+    margin: 20px auto 20px auto !important;
+    padding: 8px 10px !important;
+    border-radius: 10px !important;
+    max-width: calc(100% - 24px) !important;
   }
   .sol-ad-banner ins.adsbygoogle {
     min-height: 60px !important;
