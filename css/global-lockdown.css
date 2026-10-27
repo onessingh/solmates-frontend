@@ -219,23 +219,23 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
   margin-bottom: 20px !important;
 }
 
-/* Natural responsive ad sizing: let AdSense fill 100% width and choose natural height */
+/* Responsive display sizing: Desktop 90-250px, Mobile 60-250px */
 .sol-ad-banner ins.adsbygoogle {
   display: block !important;
+  visibility: visible !important;
   width: 100% !important;
+  min-height: 90px !important;
   margin: 0 auto !important;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
     margin: 15px auto 15px auto !important;
-    padding: 8px 8px !important;
-    max-width: calc(100% - 20px) !important;
+    padding: 8px 10px !important;
     border-radius: 10px !important;
+    max-width: calc(100% - 24px) !important;
   }
   .sol-ad-banner ins.adsbygoogle {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 auto !important;
+    min-height: 60px !important;
   }
 }

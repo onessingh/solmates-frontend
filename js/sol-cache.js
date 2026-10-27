@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v895_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v896_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k !== 'solmates-cache-v895') caches.delete(k);
+                        if (k !== 'solmates-cache-v896') caches.delete(k);
                     });
                 }).catch(() => {});
             }
@@ -304,10 +304,11 @@
         initAdBannerLifecycle();
     }
 
-    [500, 1500, 3000].forEach(delay => setTimeout(initAdBannerLifecycle, delay));
-
-    window.addEventListener('pageshow', function() {
-        setTimeout(initAdBannerLifecycle, 300);
+    // Restore ads if page is restored from bfcache on browser Back/Forward
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            initAdBannerLifecycle();
+        }
     });
 
 })(window);

@@ -1261,4 +1261,11 @@ window.solmatesPromptNickname = function() {
     } else {
         initSolAdBanner();
     }
+
+    // Restore ads if page is restored from bfcache on browser Back/Forward
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            initSolAdBanner();
+        }
+    });
 })();
