@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v891_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v892_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k !== 'solmates-cache-v891') caches.delete(k);
+                        if (k !== 'solmates-cache-v892') caches.delete(k);
                     });
                 }).catch(() => {});
             }
@@ -275,29 +275,68 @@
         triggerInitialPrefetch();
     }
 
-    /* ========== SOLMATES AD VISIBILITY WATCHER ========== */
-    function initAdBannerWatcher() {
-        function evaluateBanners() {
+    /* ========== SOLMATES UNIVERSAL AD LIFECYCLE & BFCACHE MANAGER ========== */
+    function initAdBannerLifecycle() {
+        function checkAndRenderAds() {
             const banners = document.querySelectorAll('.sol-ad-banner');
             banners.forEach(banner => {
                 const ins = banner.querySelector('ins.adsbygoogle');
                 if (!ins) return;
-                const status = ins.getAttribute('data-ad-status');
+
                 const iframe = ins.querySelector('iframe');
-                if (status === 'filled' || (iframe && (iframe.offsetHeight > 10 || iframe.offsetWidth > 10))) {
+                const status = ins.getAttribute('data-ad-status');
+                const done = ins.getAttribute('data-adsbygoogle-status');
+
+                // If filled, mark loaded
+                if (status === 'filled' || (iframe && iframe.offsetHeight > 10)) {
                     banner.classList.add('ad-loaded');
+                    return;
+                }
+
+                // If not processed yet by adsbygoogle script, trigger push
+                if (!done) {
+                    try {
+                        (window.adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch(e) {}
+                    return;
+                }
+
+                // If marked done but iframe is missing or frozen (bfcache restore on Back navigation)
+                if (done === 'done' && (!iframe || iframe.offsetHeight === 0)) {
+                    try {
+                        const newIns = document.createElement('ins');
+                        newIns.className = 'adsbygoogle';
+                        newIns.style.display = 'block';
+                        newIns.setAttribute('data-ad-client', ins.getAttribute('data-ad-client') || 'ca-pub-8498686057506423');
+                        newIns.setAttribute('data-ad-slot', ins.getAttribute('data-ad-slot') || '8194517845');
+                        newIns.setAttribute('data-ad-format', 'auto');
+                        newIns.setAttribute('data-full-width-responsive', 'true');
+                        ins.replaceWith(newIns);
+                        (window.adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch(e) {}
                 }
             });
         }
 
-        evaluateBanners();
-        [800, 2000, 4500, 8000].forEach(delay => setTimeout(evaluateBanners, delay));
+        checkAndRenderAds();
+        [600, 1500, 3500, 6000].forEach(delay => setTimeout(checkAndRenderAds, delay));
+
+        // Re-trigger immediately when returning via browser Back/Forward (bfcache)
+        window.addEventListener('pageshow', function() {
+            setTimeout(checkAndRenderAds, 300);
+            setTimeout(checkAndRenderAds, 1200);
+        });
+
+        // Re-trigger on history state change
+        window.addEventListener('popstate', function() {
+            setTimeout(checkAndRenderAds, 400);
+        });
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAdBannerWatcher);
+        document.addEventListener('DOMContentLoaded', initAdBannerLifecycle);
     } else {
-        initAdBannerWatcher();
+        initAdBannerLifecycle();
     }
 
 })(window);

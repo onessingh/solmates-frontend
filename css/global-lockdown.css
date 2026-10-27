@@ -151,6 +151,21 @@ div[id^="aswift_"] {
   pointer-events: auto !important;
 }
 
+/* 4. Kill random in-page Auto-Ads gaps between sections (Preserves Vignette and manual bottom banners) */
+div.google-auto-placed:not([style*="position: fixed"]):not(#google-vignette):not([data-google-vignette]),
+.hero + .google-auto-placed,
+.hero-section + .google-auto-placed,
+ins.adsbygoogle[data-ad-format="autorelaxed"] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
 /* Safe bottom margin across pages so floating elements never block content */
 .page-content,
 .main-content,
