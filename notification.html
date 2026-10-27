@@ -56,11 +56,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v903" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v903" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v903">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v903">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v903">
+  <link rel="icon" href="/favicon.ico?v=v904" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v904" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v904">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v904">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v904">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -77,12 +77,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v903">
-  <script src="/config.js?v=v903" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v904">
+  <script src="/config.js?v=v904" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v903" defer></script>
-  <script src="/js/webview-fix.js?v=v903" defer></script>
-  <script src="/js/sol-cache.js?v=v903" defer></script>
+  <script src="/js/api-client.js?v=v904" defer></script>
+  <script src="/js/webview-fix.js?v=v904" defer></script>
+  <script src="/js/sol-cache.js?v=v904" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -1848,7 +1848,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v903';
+    const NOTIF_APP_CACHE_VER = 'v904';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -2244,27 +2244,39 @@
         }
       });
 
-      // v83.60: Deep Time Sort for Live Classes
-      const getStartTimeVal = (title) => {
-        if (!title) return 0;
-        const m = title.match(/\((\d{1,2}):(\d{2})\s*(AM|PM)?/i);
-        if (!m) return 0;
+      // v83.60: Deep Time Sort for Live Classes (Prioritizes 15:00/3 PM before 19:00/7 PM)
+      const getStartTimeVal = (notice) => {
+        if (!notice) return 9999;
+        if (typeof notice === 'string') {
+          notice = { title: notice };
+        }
+        if (notice.scheduledAt) {
+          const s = String(notice.scheduledAt);
+          const tMatch = s.match(/T(\d{1,2}):(\d{2})/);
+          if (tMatch) {
+            const h = parseInt(tMatch[1], 10);
+            const m = parseInt(tMatch[2], 10);
+            if (h !== 0 || m !== 0) return h * 60 + m;
+          }
+        }
+        const text = `${notice.class_time || ''} ${notice.time || ''} ${notice.schedule || ''} ${notice.title || ''} ${notice.description || ''}`;
+        const m = text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+        if (!m) return 9999;
         let [_, hh, mm, period] = m;
-        hh = parseInt(hh);
-        mm = parseInt(mm);
+        hh = parseInt(hh, 10);
+        mm = parseInt(mm, 10);
         if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
         if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
-        // Military time fallback (15:00 -> 3:00 PM)
-        if (!period && hh >= 1 && hh <= 11 && title.toLowerCase().includes('pm')) hh += 12; 
+        if (!period && hh >= 1 && hh <= 7) hh += 12;
         return hh * 60 + mm;
       };
 
-      // 1. Today's Live (Earliest first)
+      // 1. Today's Live (Earliest first: 3 PM before 7 PM)
       todayLive.sort((a, b) => {
         const dateA = parseNoticeDate(a.date, a.title).getTime();
         const dateB = parseNoticeDate(b.date, b.title).getTime();
         if (dateA !== dateB) return dateA - dateB;
-        return getStartTimeVal(a.title) - getStartTimeVal(b.title);
+        return getStartTimeVal(a) - getStartTimeVal(b);
       });
       
       // 2. Regular Notices (Latest first)
@@ -2279,7 +2291,7 @@
         const dateA = parseNoticeDate(a.date, a.title).getTime();
         const dateB = parseNoticeDate(b.date, b.title).getTime();
         if (dateA !== dateB) return dateA - dateB;
-        return getStartTimeVal(a.title) - getStartTimeVal(b.title);
+        return getStartTimeVal(a) - getStartTimeVal(b);
       });
 
       const finalNoticesRaw = pinnedNotices.concat(communityPosts, todayLive, regularNotices, futureLive);
@@ -3488,7 +3500,7 @@
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v903';
+        const swUrl = '/sw.js?v=v904';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
