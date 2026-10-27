@@ -152,3 +152,58 @@ iframe[id^="aswift_"] {
 .live-class-container {
   padding-bottom: 100px !important;
 }
+
+
+/* ========== RESPONSIVE NON-INTRUSIVE SOLMATES AD BANNERS ========== */
+.sol-ad-banner {
+  max-width: 960px;
+  margin: 35px auto 25px auto;
+  padding: 12px 14px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.sol-ad-banner.sol-ad-top {
+  margin: 20px auto 30px auto;
+}
+
+.sol-ad-banner.sol-ad-bottom {
+  margin: 40px auto 25px auto;
+}
+
+.sol-ad-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-lighter, #94a3b8);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: block;
+}
+
+.sol-ad-banner ins.adsbygoogle {
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  min-height: 60px !important;
+  max-height: 100px !important;
+  height: auto !important;
+  margin: 0 auto !important;
+}
+
+@media (max-width: 768px) {
+  .sol-ad-banner {
+    margin: 25px 12px 20px 12px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .sol-ad-banner ins.adsbygoogle {
+    min-height: 50px !important;
+    max-height: 100px !important;
+  }
+}
