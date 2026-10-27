@@ -1231,59 +1231,59 @@ window.solmatesPromptNickname = function() {
 
 
 
-/* ========== SOLMATES UNIVERSAL AD LIFECYCLE & BFCACHE MANAGER ========== */
+/* ========== SOLMATES UNIVERSAL AD LIFECYCLE ========== */
 (function() {
-    function checkAndRenderAds() {
+    function initSolAdBanner() {
         const banners = document.querySelectorAll('.sol-ad-banner');
+        if (!banners.length) return;
+
         banners.forEach(banner => {
             const ins = banner.querySelector('ins.adsbygoogle');
             if (!ins) return;
 
-            const iframe = ins.querySelector('iframe');
-            const status = ins.getAttribute('data-ad-status');
-            const done = ins.getAttribute('data-adsbygoogle-status');
-
-            if (status === 'filled' || (iframe && iframe.offsetHeight > 10)) {
-                banner.classList.add('ad-loaded');
-                return;
+            function updateAdState() {
+                const status = ins.getAttribute('data-ad-status');
+                const iframe = ins.querySelector('iframe');
+                if (status === 'filled' || (iframe && (iframe.offsetHeight > 10 || iframe.offsetWidth > 10))) {
+                    banner.classList.add('ad-loaded');
+                    banner.classList.remove('ad-unfilled');
+                    banner.style.display = 'block';
+                } else if (status === 'unfilled') {
+                    banner.classList.remove('ad-loaded');
+                    banner.classList.add('ad-unfilled');
+                    banner.style.display = 'none';
+                }
             }
 
-            if (!done) {
+            // Observe status changes from AdSense
+            if (!banner.__adObserver && window.MutationObserver) {
+                const obs = new MutationObserver(updateAdState);
+                obs.observe(ins, { attributes: true, attributeFilter: ['data-ad-status', 'data-adsbygoogle-status', 'style'] });
+                banner.__adObserver = obs;
+            }
+
+            // Push to adsbygoogle once if not yet initialized
+            if (!ins.getAttribute('data-adsbygoogle-status') && !ins.__adPushed) {
+                ins.__adPushed = true;
                 try {
                     (window.adsbygoogle = window.adsbygoogle || []).push({});
                 } catch(e) {}
-                return;
             }
 
-            if (done === 'done' && (!iframe || iframe.offsetHeight === 0)) {
-                try {
-                    const newIns = document.createElement('ins');
-                    newIns.className = 'adsbygoogle';
-                    newIns.style.display = 'block';
-                    newIns.setAttribute('data-ad-client', ins.getAttribute('data-ad-client') || 'ca-pub-8498686057506423');
-                    newIns.setAttribute('data-ad-slot', ins.getAttribute('data-ad-slot') || '8194517845');
-                    newIns.setAttribute('data-ad-format', 'auto');
-                    newIns.setAttribute('data-full-width-responsive', 'true');
-                    ins.replaceWith(newIns);
-                    (window.adsbygoogle = window.adsbygoogle || []).push({});
-                } catch(e) {}
-            }
+            updateAdState();
         });
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', checkAndRenderAds);
+        document.addEventListener('DOMContentLoaded', initSolAdBanner);
     } else {
-        checkAndRenderAds();
+        initSolAdBanner();
     }
-    [600, 1500, 3500, 6000].forEach(delay => setTimeout(checkAndRenderAds, delay));
 
+    [500, 1500, 3000].forEach(delay => setTimeout(initSolAdBanner, delay));
+
+    // Handle bfcache restore on Back / Forward browser navigation
     window.addEventListener('pageshow', function() {
-        setTimeout(checkAndRenderAds, 300);
-        setTimeout(checkAndRenderAds, 1200);
-    });
-
-    window.addEventListener('popstate', function() {
-        setTimeout(checkAndRenderAds, 400);
+        setTimeout(initSolAdBanner, 300);
     });
 })();

@@ -177,29 +177,29 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
 
 /* ==========================================================================
    RESPONSIVE NON-INTRUSIVE SOLMATES AD BANNERS (TOP / BOTTOM)
-   - Stably positioned at bottom of pages
-   - Clean, lightweight rounded container with "Advertisement" label
-   - Stays stable and never disappears abruptly
+   - Responsive, non-intrusive container framing dedicated AdSense ad unit
+   - Only shows border, background, and "ADVERTISEMENT" label when ad is loaded
+   - Completely collapses when unfilled to prevent blank empty boxes
    ========================================================================== */
 .sol-ad-banner {
-  display: block !important;
-  width: 100% !important;
-  max-width: 970px !important;
-  min-height: 120px !important;
-  margin: 30px auto 25px auto !important;
-  padding: 12px 16px !important;
-  background: var(--bg-card, #ffffff) !important;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08)) !important;
-  border-radius: 14px !important;
-  text-align: center !important;
-  overflow: hidden !important;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04) !important;
-  box-sizing: border-box !important;
-  clear: both !important;
+  display: block;
+  width: 100%;
+  max-width: 970px;
+  min-height: auto;
+  margin: 25px auto 20px auto;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  clear: both;
+  transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
 }
 
 .sol-ad-banner .sol-ad-label {
-  display: block !important;
+  display: none;
   font-size: 10px;
   letter-spacing: 1.5px;
   color: var(--text-lighter, #94a3b8);
@@ -209,36 +209,55 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
   user-select: none;
 }
 
+/* Gracefully reveal card frame and label only when ad is confirmed filled/rendered */
+.sol-ad-banner.ad-loaded {
+  padding: 10px 14px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+}
+
+.sol-ad-banner.ad-loaded .sol-ad-label {
+  display: block;
+}
+
+/* If unfilled by AdSense, completely collapse with 0 space */
+.sol-ad-banner.ad-unfilled,
+.sol-ad-banner:has(ins[data-ad-status="unfilled"]) {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
 .sol-ad-banner.sol-ad-top {
   margin-top: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .sol-ad-banner.sol-ad-bottom {
-  margin-top: 30px;
-  margin-bottom: 25px;
+  margin-top: 25px;
+  margin-bottom: 20px;
 }
 
-/* Responsive display sizing: Desktop 90-250px, Mobile 60-120px */
 .sol-ad-banner ins.adsbygoogle {
   display: block !important;
-  visibility: visible !important;
   width: 100% !important;
-  min-height: 90px !important;
-  max-height: 250px !important;
+  min-height: 50px;
   margin: 0 auto !important;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    min-height: 80px !important;
-    margin: 20px auto 20px auto !important;
-    padding: 8px 10px !important;
-    border-radius: 10px !important;
-    max-width: calc(100% - 24px) !important;
+    margin: 15px auto 15px auto;
+    max-width: calc(100% - 24px);
+    border-radius: 10px;
+  }
+  .sol-ad-banner.ad-loaded {
+    padding: 8px 10px;
   }
   .sol-ad-banner ins.adsbygoogle {
-    min-height: 60px !important;
-    max-height: 120px !important;
+    min-height: 50px;
   }
 }
