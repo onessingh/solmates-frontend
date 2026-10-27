@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v893_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v894_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k !== 'solmates-cache-v893') caches.delete(k);
+                        if (k !== 'solmates-cache-v894') caches.delete(k);
                     });
                 }).catch(() => {});
             }
@@ -284,36 +284,17 @@
             const ins = banner.querySelector('ins.adsbygoogle');
             if (!ins) return;
 
-            function updateAdState() {
-                const status = ins.getAttribute('data-ad-status');
-                const iframe = ins.querySelector('iframe');
-                if (status === 'filled' || (iframe && (iframe.offsetHeight > 10 || iframe.offsetWidth > 10))) {
-                    banner.classList.add('ad-loaded');
-                    banner.classList.remove('ad-unfilled');
-                    banner.style.display = 'block';
-                } else if (status === 'unfilled') {
-                    banner.classList.remove('ad-loaded');
-                    banner.classList.add('ad-unfilled');
-                    banner.style.display = 'none';
+            // Only push if no inline script has already pushed and not yet processed
+            if (!ins.getAttribute('data-adsbygoogle-status') && !ins.__adPushed) {
+                const nextScript = ins.nextElementSibling;
+                const hasInlineScript = nextScript && nextScript.tagName === 'SCRIPT' && nextScript.textContent.includes('adsbygoogle');
+                if (!hasInlineScript) {
+                    ins.__adPushed = true;
+                    try {
+                        (window.adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch(e) {}
                 }
             }
-
-            // Observe status changes from AdSense
-            if (!banner.__adObserver && window.MutationObserver) {
-                const obs = new MutationObserver(updateAdState);
-                obs.observe(ins, { attributes: true, attributeFilter: ['data-ad-status', 'data-adsbygoogle-status', 'style'] });
-                banner.__adObserver = obs;
-            }
-
-            // Push to adsbygoogle once if not yet initialized
-            if (!ins.getAttribute('data-adsbygoogle-status') && !ins.__adPushed) {
-                ins.__adPushed = true;
-                try {
-                    (window.adsbygoogle = window.adsbygoogle || []).push({});
-                } catch(e) {}
-            }
-
-            updateAdState();
         });
     }
 

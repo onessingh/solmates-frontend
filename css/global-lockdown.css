@@ -176,86 +176,63 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
 }
 
 /* ==========================================================================
-   RESPONSIVE NON-INTRUSIVE SOLMATES AD BANNERS (TOP / BOTTOM)
-   - Responsive, non-intrusive container framing dedicated AdSense ad unit
-   - Only shows border, background, and "ADVERTISEMENT" label when ad is loaded
-   - Completely collapses when unfilled to prevent blank empty boxes
+   RESPONSIVE SOLMATES AD BANNERS (TOP / BOTTOM)
+   - Clean, lightweight rounded card container with "Advertisement" label
+   - Fluid responsive width: automatically fills mobile screen & desktop container
+   - Natural height: allows Google AdSense to auto-fill its natural ad dimensions
    ========================================================================== */
 .sol-ad-banner {
-  display: block;
-  width: 100%;
-  max-width: 970px;
-  min-height: auto;
-  margin: 25px auto 20px auto;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 14px;
-  text-align: center;
-  overflow: hidden;
-  box-sizing: border-box;
-  clear: both;
-  transition: background 0.25s ease, border-color 0.25s ease, padding 0.25s ease;
+  display: block !important;
+  width: 100% !important;
+  max-width: 970px !important;
+  min-height: auto !important;
+  margin: 25px auto 20px auto !important;
+  padding: 10px 14px !important;
+  background: var(--bg-card, #ffffff) !important;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08)) !important;
+  border-radius: 12px !important;
+  text-align: center !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
 }
 
 .sol-ad-banner .sol-ad-label {
-  display: none;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  color: var(--text-lighter, #94a3b8);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  font-weight: 700;
-  user-select: none;
-}
-
-/* Gracefully reveal card frame and label only when ad is confirmed filled/rendered */
-.sol-ad-banner.ad-loaded {
-  padding: 10px 14px;
-  background: var(--bg-card, #ffffff);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
-}
-
-.sol-ad-banner.ad-loaded .sol-ad-label {
-  display: block;
-}
-
-/* If unfilled by AdSense, completely collapse with 0 space */
-.sol-ad-banner.ad-unfilled,
-.sol-ad-banner:has(ins[data-ad-status="unfilled"]) {
-  display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
+  display: block !important;
+  font-size: 10px !important;
+  letter-spacing: 1.5px !important;
+  color: var(--text-lighter, #94a3b8) !important;
+  margin-bottom: 6px !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  user-select: none !important;
 }
 
 .sol-ad-banner.sol-ad-top {
-  margin-top: 15px;
-  margin-bottom: 20px;
+  margin-top: 15px !important;
+  margin-bottom: 20px !important;
 }
 
 .sol-ad-banner.sol-ad-bottom {
-  margin-top: 25px;
-  margin-bottom: 20px;
+  margin-top: 25px !important;
+  margin-bottom: 20px !important;
 }
 
+/* Natural responsive ad sizing: let AdSense fill 100% width and choose natural height */
 .sol-ad-banner ins.adsbygoogle {
   display: block !important;
   width: 100% !important;
-  min-height: 50px;
   margin: 0 auto !important;
+  min-height: 50px;
 }
 
 @media (max-width: 768px) {
   .sol-ad-banner {
-    margin: 15px auto 15px auto;
-    max-width: calc(100% - 24px);
-    border-radius: 10px;
-  }
-  .sol-ad-banner.ad-loaded {
-    padding: 8px 10px;
+    margin: 15px auto 15px auto !important;
+    padding: 8px 8px !important;
+    max-width: calc(100% - 20px) !important;
+    border-radius: 10px !important;
   }
   .sol-ad-banner ins.adsbygoogle {
     min-height: 50px;
