@@ -56,11 +56,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v900" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v900" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v900">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v900">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v900">
+  <link rel="icon" href="/favicon.ico?v=v901" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v901" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v901">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v901">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v901">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -77,12 +77,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v900">
-  <script src="/config.js?v=v900" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v901">
+  <script src="/config.js?v=v901" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v900" defer></script>
-  <script src="/js/webview-fix.js?v=v900" defer></script>
-  <script src="/js/sol-cache.js?v=v900" defer></script>
+  <script src="/js/api-client.js?v=v901" defer></script>
+  <script src="/js/webview-fix.js?v=v901" defer></script>
+  <script src="/js/sol-cache.js?v=v901" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -1848,6 +1848,12 @@
       }
     }
 
+    const NOTIF_APP_CACHE_VER = 'v901';
+    if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
+      purgeNotificationCaches();
+      localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
+    }
+
     async function fetchNotifications(semester, forceRefresh = false) {
       const cacheKey = `cached_notices_sem${semester}`;
       const list = document.getElementById(`sem${semester}`);
@@ -1989,7 +1995,7 @@
       const todayVal = new Date().setHours(0, 0, 0, 0);
       const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-      function extractTitleParts(title, semester, isLive = false, scheduledAt = null) {
+      function extractTitleParts(title, semester, isLive = false, scheduledAt = null, noticeDate = null) {
         if (!title) return { subject: "", date: "", time: "", expiryTime: 0 };
         let t = String(title).trim();
         
@@ -2067,12 +2073,24 @@
                 if (period === 'PM' && hh < 12) hh += 12;
                 if (period === 'AM' && hh === 12) hh = 0;
                 if (!period && hh >= 1 && hh <= 7) hh += 12;
-                const baseDate = new Date();
+
+                let baseDate = null;
+                if (noticeDate) {
+                    const parsed = (noticeDate instanceof Date) ? noticeDate : parseNoticeDate(noticeDate, title);
+                    if (parsed instanceof Date && !isNaN(parsed.getTime())) baseDate = new Date(parsed);
+                }
+                if (!baseDate && date) {
+                    const parsed = parseNoticeDate(date, title);
+                    if (parsed instanceof Date && !isNaN(parsed.getTime())) baseDate = new Date(parsed);
+                }
+                if (!baseDate) baseDate = new Date();
+
                 expiryTime = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hh, mm, 0).getTime();
             }
         }
 
-        return { subject: displaySubject, date: date || (scheduledAt ? new Date(scheduledAt).toLocaleDateString('en-IN') : ""), time: finalTime, expiryTime };
+        const resolvedDate = date || (noticeDate && typeof noticeDate === 'string' ? noticeDate : (scheduledAt ? new Date(scheduledAt).toLocaleDateString('en-IN') : ""));
+        return { subject: displaySubject, date: resolvedDate, time: finalTime, expiryTime };
       }
 
       const filtered = data.filter(notice => {
@@ -2091,8 +2109,8 @@
         const t = (notice.title || "").toLowerCase();
         const isTimetable = t.includes('time table') || t.includes('timetable') || t.includes('pcp class') || t.includes('[timetable]');
 
-        // [v816.9.4] REAL-TIME AUTO-HIDE: Skip if expired based on precision timestamp
-        const { expiryTime } = extractTitleParts(notice.title, notice.semester, isLive, notice.scheduledAt);
+        // [v816.9.4] REAL-TIME AUTO-HIDE: Skip if expired based on precision timestamp (using class's scheduled date)
+        const { expiryTime } = extractTitleParts(notice.title, notice.semester, isLive, notice.scheduledAt, notice.date || dateObj);
         
         const nowVal = Date.now();
         if (isLive && expiryTime > 0 && nowVal > expiryTime && !isTimetable) {
@@ -2103,35 +2121,36 @@
         if (isLive && !isNaN(itemTime)) {
           const itemDay = new Date(itemTime).setHours(0, 0, 0, 0);
 
-          // If the entire day has passed (not today), hide the live class
+          // If the entire day has passed (not today, not future), hide the live class
           if (itemDay < todayVal && !isTimetable) {
             console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Date ${new Date(itemDay).toLocaleDateString()} has passed.`);
             return false;
           }
 
           // If it's today's class, extract end time strictly from class_time or sanitized title
-          // MUST strip ISO timestamps like (2026-10-19T19:00:00) so date dashes aren't mistaken for time ranges!
-          const cleanTitleNoDate = (notice.title || '')
-            .replace(/\[.*?\]/g, '')
-            .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '');
-          
-          const timeSource = (notice.class_time || '').trim() || cleanTitleNoDate;
-          const m = timeSource.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
-          if (m) {
-            let [_, time, period] = m;
-            let parts = time.split(':');
-            let hh = parseInt(parts[0], 10);
-            let mm = parts[1] ? parseInt(parts[1], 10) : 0;
-            if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
-            if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
-            if (!period && hh >= 1 && hh <= 7) hh += 12;
-
-            let classEnd = new Date(itemTime);
-            classEnd.setHours(hh, mm, 0, 0);
+          if (itemDay === todayVal && !isTimetable) {
+            const cleanTitleNoDate = (notice.title || '')
+              .replace(/\[.*?\]/g, '')
+              .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '');
             
-            if (now > classEnd && !isTimetable) {
-              console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Class ended at ${classEnd.toLocaleTimeString()}`);
-              return false;
+            const timeSource = (notice.class_time || '').trim() || cleanTitleNoDate;
+            const m = timeSource.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
+            if (m) {
+              let [_, time, period] = m;
+              let parts = time.split(':');
+              let hh = parseInt(parts[0], 10);
+              let mm = parts[1] ? parseInt(parts[1], 10) : 0;
+              if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
+              if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
+              if (!period && hh >= 1 && hh <= 7) hh += 12;
+
+              let classEnd = new Date(itemTime);
+              classEnd.setHours(hh, mm, 0, 0);
+              
+              if (now > classEnd) {
+                console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Class ended at ${classEnd.toLocaleTimeString()}`);
+                return false;
+              }
             }
           }
         }
@@ -2356,7 +2375,7 @@
             const descMatch = notice.description.match(/at\s+(\d{1,2}:\d{2}\s*(?:AM|PM)\s*[-–—]\s*\d{1,2}:\d{2}\s*(?:AM|PM))/i);
             if (descMatch) displayTime = descMatch[1];
           }
-          const info = extractTitleParts(notice.title, notice.semester, isLiveClass, notice.scheduledAt);
+          const info = extractTitleParts(notice.title, notice.semester, isLiveClass, notice.scheduledAt, notice.date);
           if (!displayTime) {
             displayTime = info.time || '';
           }
@@ -3434,7 +3453,7 @@
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v900';
+        const swUrl = '/sw.js?v=v901';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
