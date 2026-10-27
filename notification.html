@@ -1993,9 +1993,25 @@
         const dMatch = t.match(/\[(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\]/);
         const date = dMatch ? dMatch[1] : "";
         
-        // 2. Extract Time from (19:00 - 21:00) - Handle spaces like (19: 00)
+        // 2. Extract Time from (19:00 - 21:00) or (03:00 PM - 05:00 PM) or (15:00)
+        let time = "";
         const tMatch = t.match(/\((\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}(?:\s*(?:AM|PM))?)\)/i);
-        const time = tMatch ? tMatch[1].replace(/\s*:\s*/g, ':') : ""; // Normalize 19: 00 -> 19:00
+        if (tMatch) {
+            time = tMatch[1].replace(/\s*:\s*/g, ':');
+        } else {
+            const singleMatch = t.match(/\((\d{1,2}\s*:\s*\d{2}(?:\s*(?:AM|PM))?)\)/i);
+            if (singleMatch) {
+                const sTime = singleMatch[1].replace(/\s*:\s*/g, ':').trim();
+                const sm = sTime.match(/^(\d{1,2}):(\d{2})$/);
+                if (sm) {
+                    const h = parseInt(sm[1], 10);
+                    const endH = (h + 2) % 24;
+                    time = `${String(h).padStart(2, '0')}:${sm[2]} - ${String(endH).padStart(2, '0')}:${sm[2]}`;
+                } else {
+                    time = sTime;
+                }
+            }
+        }
         
         const isHealthcare = /mbaexh|health\s*care|\bhca\b/i.test(t);
 
@@ -2032,6 +2048,21 @@
                 finalTime = f(start) + " - " + f(end);
             }
             expiryTime = end.getTime();
+        }
+
+        if (isLive && !expiryTime && finalTime) {
+            const m = finalTime.match(/[-–—]\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
+            if (m) {
+                let parts = m[1].split(':');
+                let hh = parseInt(parts[0], 10);
+                let mm = parts[1] ? parseInt(parts[1], 10) : 0;
+                let period = m[2] ? m[2].toUpperCase() : null;
+                if (period === 'PM' && hh < 12) hh += 12;
+                if (period === 'AM' && hh === 12) hh = 0;
+                if (!period && hh >= 1 && hh <= 7) hh += 12;
+                const baseDate = new Date();
+                expiryTime = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hh, mm, 0).getTime();
+            }
         }
 
         return { subject: displaySubject, date: date || (scheduledAt ? new Date(scheduledAt).toLocaleDateString('en-IN') : ""), time: finalTime, expiryTime };
@@ -2313,12 +2344,15 @@
           // v72.9: Mark individual ID as seen when clicked
           const clickHandler = `markAsRead('${uniqueKey}')`;
           
-          let displayTime = notice.class_time || '';
-          if (!displayTime) {
-            const info = extractTitleParts(notice.title, notice.semester, isLiveClass, notice.scheduledAt);
-            displayTime = info.time || notice.class_time;
+          let displayTime = (notice.class_time || '').trim();
+          if (!displayTime && notice.description) {
+            const descMatch = notice.description.match(/at\s+(\d{1,2}:\d{2}\s*(?:AM|PM)\s*[-–—]\s*\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+            if (descMatch) displayTime = descMatch[1];
           }
-          const info = extractTitleParts(notice.title, notice.semester, isLiveClass);
+          const info = extractTitleParts(notice.title, notice.semester, isLiveClass, notice.scheduledAt);
+          if (!displayTime) {
+            displayTime = info.time || '';
+          }
           
           const displaySubject = info.subject;
           const displayDate = info.date || notice.date;

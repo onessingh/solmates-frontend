@@ -1413,7 +1413,8 @@
             const grid = document.getElementById('liveSessionsGrid');
             const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-            let sessions = appData.liveSessions;
+            const now = Date.now();
+            let sessions = appData.liveSessions.filter(s => !s.expiryTime || now < s.expiryTime);
             if (filter !== 'all') {
                 sessions = sessions.filter(s => s.semesters.includes(filter) || s.semesters.includes('all'));
             }
@@ -1557,7 +1558,8 @@
                                 return meta.expiryTime || new Date(y, m, d, 23, 59, 59).getTime();
                             })();
 
-                            // Keep classes scheduled for today visible all day (countdown badges will show 'Class Ended')
+                            // Precise Expiry Check: Hide class immediately once end time is reached
+                            if (Date.now() >= classExpiryTime) return;
 
                             // Normalize Date to YYYY-MM-DD for 100% strict deduplication
                             const normDate = parseNormalizedDate(meta.date || sessionDate || item.date);
@@ -1846,15 +1848,20 @@
                 const isExpired = now >= expiry;
 
                 if (isExpired) {
-                    el.innerHTML = `<div class="status-badge ended"><i class="fas fa-check-circle"></i> Class Ended</div>`;
+                    // Hide and remove the card instantly as soon as class ends
                     const card = el.closest('.live-session-card');
                     if (card) {
-                        const btn = card.querySelector('.join-btn');
-                        if (btn && !btn.classList.contains('ended-btn')) {
-                            btn.classList.add('ended-btn');
-                            btn.innerHTML = `<i class="fas fa-check"></i> Session Completed`;
-                            btn.style.opacity = '0.7';
-                        }
+                        card.style.transition = 'all 0.4s ease';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            card.remove();
+                            const remaining = document.querySelectorAll('.live-sessions-grid .live-session-card');
+                            if (remaining.length === 0) {
+                                const grid = document.getElementById('liveSessionsGrid');
+                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
+                            }
+                        }, 400);
                     }
                     return;
                 }
