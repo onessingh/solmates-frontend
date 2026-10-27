@@ -3,7 +3,7 @@
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v887';
+const CACHE_NAME = 'solmates-cache-v888';
 
 const STATIC_ASSETS = [
     '/android-chrome-192x192.png',
