@@ -224,7 +224,6 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
   display: block !important;
   width: 100% !important;
   margin: 0 auto !important;
-  min-height: 50px;
 }
 
 @media (max-width: 768px) {
@@ -235,6 +234,8 @@ ins.adsbygoogle[data-ad-format="autorelaxed"] {
     border-radius: 10px !important;
   }
   .sol-ad-banner ins.adsbygoogle {
-    min-height: 50px;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 auto !important;
   }
 }
