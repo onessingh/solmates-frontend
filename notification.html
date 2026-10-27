@@ -56,11 +56,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v901" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v901" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v901">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v901">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v901">
+  <link rel="icon" href="/favicon.ico?v=v902" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v902" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v902">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v902">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v902">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -77,12 +77,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v901">
-  <script src="/config.js?v=v901" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v902">
+  <script src="/config.js?v=v902" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v901" defer></script>
-  <script src="/js/webview-fix.js?v=v901" defer></script>
-  <script src="/js/sol-cache.js?v=v901" defer></script>
+  <script src="/js/api-client.js?v=v902" defer></script>
+  <script src="/js/webview-fix.js?v=v902" defer></script>
+  <script src="/js/sol-cache.js?v=v902" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -1848,7 +1848,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v901';
+    const NOTIF_APP_CACHE_VER = 'v902';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -2047,20 +2047,21 @@
            displaySubject = isHealthcare ? `MBA (Healthcare) Sem ${semester}: ${subjectOnly}` : `MBA Sem ${semester}: ${subjectOnly}`;
         }
         
-        // [v816.9.3] FUNCTIONAL SYNC: Prioritize scheduledAt for time data
+        // [v816.9.5] FUNCTIONAL SYNC: Prioritize scheduledAt with real time component or title time range
         let finalTime = time;
         let expiryTime = 0;
 
         if (isLive && scheduledAt) {
+            const hasExplicitTime = !String(scheduledAt).includes('T00:00:00') && !String(scheduledAt).endsWith('T00:00');
             const start = new Date(scheduledAt);
-            const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2h
-            const f = (d) => d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
-            
-            // If title has no time range but we have scheduledAt, use scheduledAt
-            if (!time) {
-                finalTime = f(start) + " - " + f(end);
+            if (hasExplicitTime && !isNaN(start.getTime()) && (start.getHours() !== 0 || start.getMinutes() !== 0)) {
+                const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // Default 2h
+                const f = (d) => d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+                if (!time) {
+                    finalTime = f(start) + " - " + f(end);
+                }
+                expiryTime = end.getTime();
             }
-            expiryTime = end.getTime();
         }
 
         if (isLive && !expiryTime && finalTime) {
@@ -2085,7 +2086,24 @@
                 }
                 if (!baseDate) baseDate = new Date();
 
-                expiryTime = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hh, mm, 0).getTime();
+                // Add 15 min buffer to class end time before expiring
+                expiryTime = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hh, mm + 15, 0).getTime();
+            }
+        }
+
+        // Fallback for live classes with no explicit time range: keep active until end of class day (23:59:59)
+        if (isLive && !expiryTime) {
+            let baseDate = null;
+            if (noticeDate) {
+                const parsed = (noticeDate instanceof Date) ? noticeDate : parseNoticeDate(noticeDate, title);
+                if (parsed instanceof Date && !isNaN(parsed.getTime())) baseDate = new Date(parsed);
+            }
+            if (!baseDate && date) {
+                const parsed = parseNoticeDate(date, title);
+                if (parsed instanceof Date && !isNaN(parsed.getTime())) baseDate = new Date(parsed);
+            }
+            if (baseDate) {
+                expiryTime = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), 23, 59, 59).getTime();
             }
         }
 
@@ -3453,7 +3471,7 @@
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v901';
+        const swUrl = '/sw.js?v=v902';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
