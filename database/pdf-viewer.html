@@ -27,16 +27,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v899">
-  <script src="/config.js?v=v899"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v900">
+  <script src="/config.js?v=v900"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v899" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v899" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v899">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v899">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v899">
+  <link rel="icon" href="/favicon.ico?v=v900" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v900" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v900">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v900">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v900">
   <title>PDF Viewer | SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -510,11 +510,25 @@
       }
     }
 
-    async function handleDownload() {
+    let dlTimerInterval = null;
+    let dlModalCloseTimeout = null;
+
+    function closeDownloadModal() {
+      if (dlTimerInterval) clearInterval(dlTimerInterval);
+      if (dlModalCloseTimeout) clearTimeout(dlModalCloseTimeout);
+      const overlay = document.getElementById('downloadModalOverlay');
+      if (overlay) overlay.classList.remove('open');
+      const btn = document.getElementById('dlBtn');
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-download" style="font-size: 14px;"></i> <span>Download</span>';
+        btn.style.pointerEvents = 'auto';
+      }
+    }
+
+    function handleDownload() {
       const params = new URLSearchParams(window.location.search);
       const rawUrl = params.get('file');
       const title = params.get('title') || 'Document';
-      
       if (!rawUrl) return;
 
       const btn = document.getElementById('dlBtn');
@@ -523,125 +537,105 @@
         btn.style.pointerEvents = 'none';
       }
 
-      // Open dedicated AdSense Download Gate (Vignette ad on navigation + 5s timer ad on download page)
-      window.location.href = `/database/download.html?file=${encodeURIComponent(rawUrl)}&title=${encodeURIComponent(title)}`;
-      return;
+      const modalTitle = document.getElementById('dlModalTitle');
+      if (modalTitle) modalTitle.textContent = title;
+
+      const iconEl = document.getElementById('dlModalIcon');
+      const lowerUrl = rawUrl.toLowerCase();
+      const lowerTitle = title.toLowerCase();
+      if (iconEl) {
+        if (lowerUrl.includes('.ppt') || lowerTitle.includes('.ppt') || lowerUrl.includes('presentation')) {
+          iconEl.innerHTML = '<i class="fas fa-file-powerpoint" style="color:#f97316;"></i>';
+        } else {
+          iconEl.innerHTML = '<i class="fas fa-file-pdf" style="color:#38bdf8;"></i>';
+        }
+      }
+
+      const statusEl = document.getElementById('dlModalStatus');
+      if (statusEl) {
+        statusEl.innerHTML = '<span>Your download will start in</span><span class="dl-modal-timer" id="dlModalTimer">5</span>';
+      }
+
+      const overlay = document.getElementById('downloadModalOverlay');
+      if (overlay) overlay.classList.add('open');
+
+      const adIns = document.getElementById('dlPopupAd');
+      if (adIns && !adIns.getAttribute('data-adsbygoogle-status') && !adIns.__adPushed) {
+        adIns.__adPushed = true;
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {}
+      }
+
+      let timeLeft = 5;
+      if (dlTimerInterval) clearInterval(dlTimerInterval);
+      dlTimerInterval = setInterval(() => {
+        timeLeft--;
+        const tEl = document.getElementById('dlModalTimer');
+        if (tEl) tEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(dlTimerInterval);
+          const sEl = document.getElementById('dlModalStatus');
+          if (sEl) {
+            sEl.innerHTML = '<div style="color:#22c55e; font-weight:700; font-size:15px; margin:4px 0;"><i class="fas fa-check-circle"></i> Download Started!</div>';
+          }
+          
+          executeDownload(rawUrl, title);
+
+          // Auto-close modal after 1.5 seconds so user smoothly returns to reading
+          dlModalCloseTimeout = setTimeout(() => {
+            closeDownloadModal();
+          }, 1500);
+        }
+      }, 1000);
     }
 
-    async function old_handleDownload() {
-      // Detect extension based on rawUrl and title
-      let isSlides = false;
-      let extension = 'pdf';
-      let downloadUrl = '';
-
+    function executeDownload(rawUrl, title) {
       const lowerUrl = rawUrl.toLowerCase();
       const lowerTitle = title.toLowerCase();
 
+      let isSlides = false;
+      let downloadUrl = rawUrl;
+
       if (lowerUrl.includes('docs.google.com/presentation/d/')) {
         isSlides = true;
-        extension = 'pptx';
         const pptMatch = rawUrl.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
         if (pptMatch && pptMatch[1]) {
           downloadUrl = `https://docs.google.com/presentation/d/${pptMatch[1]}/export/pptx`;
         }
       } else if (lowerUrl.includes('drive.google.com') && (lowerUrl.includes('.ppt') || lowerUrl.includes('.pptx') || lowerTitle.includes('.ppt') || lowerTitle.includes('.pptx'))) {
         isSlides = true;
-        extension = lowerUrl.includes('.ppt') ? 'ppt' : 'pptx';
-        if (lowerTitle.includes('.pptx')) extension = 'pptx';
-        else if (lowerTitle.includes('.ppt')) extension = 'ppt';
-
         const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (driveMatch && driveMatch[1]) {
           downloadUrl = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
         }
-      } else if (lowerUrl.endsWith('.ppt') || lowerUrl.endsWith('.pptx')) {
-        isSlides = true;
-        extension = lowerUrl.endsWith('.ppt') ? 'ppt' : 'pptx';
-        downloadUrl = rawUrl;
+      } else if (lowerUrl.includes('drive.google.com')) {
+        const fileId = rawUrl.match(/[-\w]{25,}/);
+        if (fileId) {
+          downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+        }
       }
 
-      if (isSlides) {
-        const loadingToast = showToast("Downloading PowerPoint...", "downloading", 0);
-        
-        // Direct anchor download for PowerPoint to bypass CORS limitations gracefully
+      // Use hidden iframe to trigger download cleanly without navigating page away
+      try {
+        let dlIframe = document.getElementById('hiddenDownloadIframe');
+        if (!dlIframe) {
+          dlIframe = document.createElement('iframe');
+          dlIframe.id = 'hiddenDownloadIframe';
+          dlIframe.style.display = 'none';
+          document.body.appendChild(dlIframe);
+        }
+        dlIframe.src = downloadUrl;
+      } catch (e) {
         const a = document.createElement('a');
         a.href = downloadUrl;
-        // Removed target='_blank' to prevent the screen from flashing black on mobile during download
+        a.target = '_blank';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        
-        setTimeout(() => {
-          btn.innerHTML = original;
-          btn.style.pointerEvents = 'auto';
-          loadingToast.remove();
-          showToast("PowerPoint Downloaded!", "success", 6000);
-        }, 1500);
-        return;
       }
 
-      const loadingToast = showToast("Downloading PDF...", "downloading", 0);
-
-      try {
-        let directUrl = rawUrl;
-        if (rawUrl.includes('drive.google.com')) {
-          const fileId = rawUrl.match(/[-\w]{25,}/);
-          if (fileId) directUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
-        }
-        
-        // 100% CLIENT-SIDE: Try direct browser fetch & blob download (0 Render Backend Bandwidth)
-        const response = await fetch(directUrl);
-        if (!response.ok) throw new Error("Client fetch failed");
-
-        const blob = await response.blob();
-        const bUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = bUrl;
-        a.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(bUrl);
-        
-        loadingToast.remove();
-        
-        const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
-
-        showToast("PDF Downloaded!", "success", 6000, {
-          text: "OPEN WITH DRIVE",
-          url: driveUrl
-        });
-
-      } catch (err) {
-        console.warn("Direct fetch restricted, triggering direct browser download link", err);
-        loadingToast.remove();
-        
-        let downloadLink = rawUrl;
-        if (rawUrl.includes('drive.google.com')) {
-          const fileId = rawUrl.match(/[-\w]{25,}/);
-          if (fileId) downloadLink = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
-        }
-
-        // Direct anchor download without opening blank tabs or touching backend
-        const fallbackA = document.createElement('a');
-        fallbackA.href = downloadLink;
-        fallbackA.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
-        document.body.appendChild(fallbackA);
-        fallbackA.click();
-        document.body.removeChild(fallbackA);
-        
-        const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
-        showToast("PDF Download Started!", "success", 6000, {
-          text: "OPEN WITH DRIVE",
-          url: driveUrl
-        });
-      } finally {
-        setTimeout(() => {
-          btn.innerHTML = original;
-          btn.style.pointerEvents = 'auto';
-        }, 3000);
-      }
+      showToast(isSlides ? "PowerPoint Download Started!" : "PDF Download Started!", "success", 5000);
     }
 
     function init() {
@@ -845,6 +839,129 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
 
     
 
+
+<!-- ===== DOWNLOAD POPUP MODAL ===== -->
+<style>
+#downloadModalOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10002;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+#downloadModalOverlay.open {
+  display: flex;
+  animation: dlFadeIn 0.25s ease;
+}
+@keyframes dlFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+#downloadModal {
+  box-sizing: border-box;
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 24px 16px 20px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#downloadModalOverlay.open #downloadModal {
+  transform: scale(1);
+}
+#dlCloseBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+#dlCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+.dl-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.dl-modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 8px;
+  padding: 0 10px;
+  color: #f8fafc;
+  word-break: break-word;
+}
+.dl-modal-status {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0 14px 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+.dl-modal-timer {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+  display: block;
+  margin-top: 2px;
+}
+</style>
+
+<div id="downloadModalOverlay">
+  <div id="downloadModal">
+    <button id="dlCloseBtn" onclick="closeDownloadModal()">&#x2715;</button>
+    <div class="dl-modal-icon" id="dlModalIcon">
+      <i class="fas fa-file-pdf"></i>
+    </div>
+    <div class="dl-modal-title" id="dlModalTitle">Document</div>
+    <div class="dl-modal-status" id="dlModalStatus">
+      <span>Your download will start in</span>
+      <span class="dl-modal-timer" id="dlModalTimer">5</span>
+    </div>
+
+    <!-- Clean In-Popup Ad Container -->
+    <div class="sol-ad-banner" style="margin: 10px 0 4px 0; padding: 6px 0 !important; background: #0b1120 !important; border-radius: 12px; overflow: hidden !important;">
+      <div class="ad-label" style="font-size: 10px; color: #64748b; margin-bottom: 4px;">ADVERTISEMENT</div>
+      <ins class="adsbygoogle"
+           id="dlPopupAd"
+           style="display:block"
+           data-ad-client="ca-pub-8498686057506423"
+           data-ad-slot="8194517845"
+           data-ad-format="auto"
+           data-full-width-responsive="false"></ins>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 
