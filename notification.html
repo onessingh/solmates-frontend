@@ -56,11 +56,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v902" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v902" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v902">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v902">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v902">
+  <link rel="icon" href="/favicon.ico?v=v903" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v903" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v903">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v903">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v903">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -77,12 +77,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v902">
-  <script src="/config.js?v=v902" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v903">
+  <script src="/config.js?v=v903" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v902" defer></script>
-  <script src="/js/webview-fix.js?v=v902" defer></script>
-  <script src="/js/sol-cache.js?v=v902" defer></script>
+  <script src="/js/api-client.js?v=v903" defer></script>
+  <script src="/js/webview-fix.js?v=v903" defer></script>
+  <script src="/js/sol-cache.js?v=v903" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -1848,7 +1848,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v902';
+    const NOTIF_APP_CACHE_VER = 'v903';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -2284,29 +2284,46 @@
 
       const finalNoticesRaw = pinnedNotices.concat(communityPosts, todayLive, regularNotices, futureLive);
       
-      // v89.0: SMART DEDUPLICATION (Keep linked version over pending version)
+      // v90.0: SURGICAL LIVE CLASS DEDUPLICATION (Merges variant titles & preserves real Teams links)
       const dedupeMap = new Map();
       const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\s+/g, ' ').trim();
+      
+      const normalizeLiveKey = (t) => {
+        return String(t || '')
+          .replace(/\[.*?\]/g, '')
+          .replace(/\(.*?\)/g, '')
+          .replace(/MBA\s*SEM\s*\d+/gi, '')
+          .replace(/MBA\s*\(Healthcare\)\s*SEM\s*\d+/gi, '')
+          .replace(/MBAEXH[\s\-]*\d+/gi, '')
+          .replace(/[^a-z0-9]/gi, '')
+          .toLowerCase()
+          .trim();
+      };
       
       finalNoticesRaw.forEach(n => {
         const isLive = isLiveCheck(n);
         if (!isLive) {
-          // Regular notices use a mix of ID or title as key
-          const key = n.title ? `reg_${semester}_${normalize(n.title)}` : (n.id || n._id);
-          dedupeMap.set(key, n);
+          // Regular notices use a normalized alphanumeric key
+          const normTitle = String(normalize(n.title)).toLowerCase().replace(/[^a-z0-9]/g, '');
+          const key = normTitle ? `reg_${semester}_${normTitle}` : (n.id || n._id);
+          if (!dedupeMap.has(key)) {
+            dedupeMap.set(key, n);
+          }
           return;
         }
 
-        // Live Class Key: Semester + Normalized Title + Day
+        // Live Class Key: Semester + Normalized Subject + Day
         const dateObj = parseNoticeDate(n.date, n.title);
         const dayKey = isNaN(dateObj.getTime()) ? 'no-date' : dateObj.setHours(0,0,0,0);
-        const key = `live_${semester}_${normalize(n.title)}_${dayKey}`;
+        const liveSubjectKey = normalizeLiveKey(n.title) || normalize(n.title);
+        const key = `live_${semester}_${liveSubjectKey}_${dayKey}`;
         
         const existing = dedupeMap.get(key);
-        const hasLink = n.link && n.link !== "#pending" && n.link !== "#";
+        const hasLink = n.link && n.link !== "#pending" && n.link !== "#" && n.link.length > 5;
+        const existingHasLink = existing && existing.link && existing.link !== "#pending" && existing.link !== "#" && existing.link.length > 5;
         
-        // Priority: If new item has a link, or if no item exists for this key yet
-        if (!existing || hasLink) {
+        // Priority: If new item has real link, or if no item exists yet
+        if (!existing || (!existingHasLink && hasLink)) {
           dedupeMap.set(key, n);
         }
       });
@@ -3471,7 +3488,7 @@
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v902';
+        const swUrl = '/sw.js?v=v903';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
