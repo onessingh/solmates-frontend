@@ -48,13 +48,6 @@
           window.history.replaceState({}, document.title, newUrl);
         }
       })();
-
-      window.onerror = function(message, source, lineno, colno, error) {
-      alert("GLOBAL ERROR: " + message + " at line " + lineno);
-    };
-    window.addEventListener("unhandledrejection", function(event) {
-      alert("PROMISE ERROR: " + (event.reason ? event.reason.message : "Unknown"));
-    });
   </script>
 
 
@@ -1622,14 +1615,14 @@
     </div>
 
     <!-- Clean Non-Intrusive Bottom Ad Banner -->
-    <div class="sol-ad-banner sol-ad-bottom google-anno-skip" style="display: none;">
+    <div class="sol-ad-banner sol-ad-bottom google-anno-skip">
       <span class="sol-ad-label">Advertisement</span>
       <ins class="adsbygoogle"
            data-ad-client="ca-pub-8498686057506423"
            data-ad-format="horizontal"
            data-full-width-responsive="false"></ins>
       <script>
-           (adsbygoogle = window.adsbygoogle || []).push({});
+        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
       </script>
     </div>
 
