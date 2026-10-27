@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v890_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v891_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k !== 'solmates-cache-v890') caches.delete(k);
+                        if (k !== 'solmates-cache-v891') caches.delete(k);
                     });
                 }).catch(() => {});
             }

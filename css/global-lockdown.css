@@ -122,12 +122,12 @@ a, button, .btn, .back-btn {
 .main-option-card ins.adsbygoogle,
 .tools-grid ins.adsbygoogle,
 .options-grid ins.adsbygoogle,
+/* Content elements where Auto-Ads should NOT inject inside */
 .notification-card ins.adsbygoogle,
 .live-session-card ins.adsbygoogle,
 .timetable-card ins.adsbygoogle,
 .card ins.adsbygoogle,
-button ins.adsbygoogle,
-.google-anno-skip ins.adsbygoogle {
+button ins.adsbygoogle {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;
@@ -135,48 +135,29 @@ button ins.adsbygoogle,
   pointer-events: none !important;
 }
 
-/* 2. Prevent floating anchor ads from ever covering cards or buttons */
-ins.adsbygoogle[data-anchor-status="displayed"],
-ins.adsbygoogle[data-ad-status="filled"][data-anchor-status],
-div[id^="aswift_"][id$="_host"],
-iframe[id^="aswift_"] {
-  max-height: 80px !important;
-  bottom: 0 !important;
+/* 2. Suppress ONLY bottom sticky anchor overlay ads if any leak */
+ins.adsbygoogle[data-anchor-status],
+ins.adsbygoogle[data-anchor-shown] {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  visibility: hidden !important;
 }
 
-/* 3. Add safe bottom margin across pages so floating ads never block buttons */
+/* 3. CRITICAL: Google Vignette (Interstitial / Screen-to-Screen) Ads MUST BE 100% Clickable */
+iframe[name^="aswift_"],
+iframe[id^="aswift_"],
+div[id^="aswift_"] {
+  pointer-events: auto !important;
+}
+
+/* Safe bottom margin across pages so floating elements never block content */
 .page-content,
 .main-content,
 .container,
 .notification-container,
 .live-class-container {
-  padding-bottom: 100px !important;
-}
-
-
-/* ==========================================================================
-   STRICT AD SUPPRESSION FOR FLOATING ANCHOR & OVERLAY ADS
-   Ensures ads NEVER float over bottom navigation, headers, or buttons
-   ========================================================================== */
-ins.adsbygoogle[data-anchor-status],
-ins.adsbygoogle[data-anchor-shown],
-div[id^="aswift_"][id$="_host"],
-iframe[name^="aswift_"][style*="position: fixed"],
-iframe[id^="aswift_"][style*="position: fixed"],
-div[style*="position: fixed"][style*="bottom: 0px"]:has(ins.adsbygoogle),
-div[style*="position: fixed"][style*="bottom: 0px"]:has(iframe[id^="aswift_"]),
-div[style*="position: fixed"][style*="top: 0px"]:has(ins.adsbygoogle),
-div[style*="position: fixed"][style*="top: 0px"]:has(iframe[id^="aswift_"]),
-.google-auto-placed[style*="position: fixed"] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  height: 0 !important;
-  width: 0 !important;
-  max-height: 0 !important;
-  overflow: hidden !important;
-  z-index: -9999 !important;
+  padding-bottom: 60px !important;
 }
 
 /* ==========================================================================
