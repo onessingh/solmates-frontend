@@ -1923,15 +1923,44 @@
         const allData = await fetchAllPromise;
         lastAllFetchTime = Date.now();
 
-        // Group notifications by semester (0, 1, 2, 3, 4)
+        // Group notifications by semester (0, 1, 2, 3, 4) with multi-semester detection
         const grouped = { 0: [], 1: [], 2: [], 3: [], 4: [] };
         allData.forEach(item => {
-          const sem = String(item.semester || '0');
-          if (grouped[sem] !== undefined) {
-            grouped[sem].push(item);
-          } else {
-            grouped[0].push(item);
+          const rawSem = String(item.semester || '0').trim();
+          const titleLower = (item.title || '').toLowerCase();
+          
+          let targetSems = [];
+          if (['0', '1', '2', '3', '4'].includes(rawSem)) {
+            targetSems.push(rawSem);
           }
+
+          // If title mentions Sem I / Sem 1, ensure it appears in Sem 1 tab
+          if (/(?:sem\s*(?:i|1)\b|sem-?\s*i\b|mba\s*sem\s*1\b)/i.test(titleLower)) {
+            if (!targetSems.includes('1')) targetSems.push('1');
+          }
+          // If title mentions Sem II / Sem 2, ensure it appears in Sem 2 tab
+          if (/(?:sem\s*(?:ii|2)\b|sem-?\s*ii\b|mba\s*sem\s*2\b)/i.test(titleLower)) {
+            if (!targetSems.includes('2')) targetSems.push('2');
+          }
+          // If title mentions Sem III / Sem 3, ensure it appears in Sem 3 tab
+          if (/(?:sem\s*(?:iii|3)\b|sem-?\s*iii\b|mba\s*sem\s*3\b)/i.test(titleLower)) {
+            if (!targetSems.includes('3')) targetSems.push('3');
+          }
+          // If title mentions Sem IV / Sem 4, ensure it appears in Sem 4 tab
+          if (/(?:sem\s*(?:iv|4)\b|sem-?\s*iv\b|mba\s*sem\s*4\b)/i.test(titleLower)) {
+            if (!targetSems.includes('4')) targetSems.push('4');
+          }
+
+          if (rawSem.toLowerCase().includes('all')) {
+            if (!targetSems.includes('0')) targetSems.push('0');
+            if (targetSems.length === 1) targetSems.push('1', '2', '3', '4');
+          }
+
+          if (targetSems.length === 0) targetSems.push('0');
+
+          targetSems.forEach(s => {
+            if (grouped[s]) grouped[s].push(item);
+          });
         });
 
         // Save to cache for all semesters
