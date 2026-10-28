@@ -2127,49 +2127,14 @@
         const t = (notice.title || "").toLowerCase();
         const isTimetable = t.includes('time table') || t.includes('timetable') || t.includes('pcp class') || t.includes('[timetable]');
 
-        // [v816.9.4] REAL-TIME AUTO-HIDE: Skip if expired based on precision timestamp (using class's scheduled date)
-        const { expiryTime } = extractTitleParts(notice.title, notice.semester, isLive, notice.scheduledAt, notice.date || dateObj);
-        
-        const nowVal = Date.now();
-        if (isLive && expiryTime > 0 && nowVal > expiryTime && !isTimetable) {
-           console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Precise expiry at ${new Date(expiryTime).toLocaleTimeString()}`);
-           return false;
-        }
-
         if (isLive && !isNaN(itemTime)) {
           const itemDay = new Date(itemTime).setHours(0, 0, 0, 0);
 
-          // If the entire day has passed (not today, not future), hide the live class
+          // Only hide if the entire day has passed (past dates: yesterday or older)
+          // Today's classes (itemDay === todayVal) and future classes (itemDay > todayVal) remain visible all day!
           if (itemDay < todayVal && !isTimetable) {
             console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Date ${new Date(itemDay).toLocaleDateString()} has passed.`);
             return false;
-          }
-
-          // If it's today's class, extract end time strictly from class_time or sanitized title
-          if (itemDay === todayVal && !isTimetable) {
-            const cleanTitleNoDate = (notice.title || '')
-              .replace(/\[.*?\]/g, '')
-              .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '');
-            
-            const timeSource = (notice.class_time || '').trim() || cleanTitleNoDate;
-            const m = timeSource.match(/(?:-|to)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
-            if (m) {
-              let [_, time, period] = m;
-              let parts = time.split(':');
-              let hh = parseInt(parts[0], 10);
-              let mm = parts[1] ? parseInt(parts[1], 10) : 0;
-              if (period && period.toLowerCase() === 'pm' && hh < 12) hh += 12;
-              if (period && period.toLowerCase() === 'am' && hh === 12) hh = 0;
-              if (!period && hh >= 1 && hh <= 7) hh += 12;
-
-              let classEnd = new Date(itemTime);
-              classEnd.setHours(hh, mm, 0, 0);
-              
-              if (now > classEnd) {
-                console.warn(`[DEBUG-HIDE] ${notice.title} | Reason: Class ended at ${classEnd.toLocaleTimeString()}`);
-                return false;
-              }
-            }
           }
         }
 
