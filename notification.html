@@ -2121,7 +2121,16 @@
             let spec = specMatch[1].toUpperCase();
             if (spec === 'OB-HRM') spec = 'OB/HRM';
             let rest = specMatch[2].replace(/^[:\s\-]+/, '').trim();
-            formattedSubjectOnly = `${spec}: ${toTitleCase(rest)}`;
+            let titleRest = toTitleCase(rest);
+            if (spec === 'MARKETING') {
+                if (/^service(?:s)?$/i.test(rest) || t.includes('429802308')) titleRest = 'Service Marketing';
+                if (/^digital$/i.test(rest) || t.includes('429802310')) titleRest = 'Digital Marketing';
+            }
+            formattedSubjectOnly = `${spec}: ${titleRest}`;
+        } else if (t.includes('429802308') || /marketing\s+service/i.test(t)) {
+            formattedSubjectOnly = 'MARKETING: Service Marketing';
+        } else if (t.includes('429802310') || /marketing\s+digital/i.test(t)) {
+            formattedSubjectOnly = 'MARKETING: Digital Marketing';
         } else {
             formattedSubjectOnly = toTitleCase(subjectOnly);
         }

@@ -1627,8 +1627,14 @@
                 .trim();
 
             // 3. CLEAN SUBJECT - UNIVERSAL WORD FILTER
+            // First, detect specialization prefix so we can protect subject words that match it
+            const specPrefixMatch = clean.match(/^(?:MBA\s+)?\b(FINANCE|MARKETING|OB\/HRM|OB-HRM|HRM|OPERATIONS|IT|CORE)\b\s*[:\-]?\s*/i);
+            const specPrefixWord = specPrefixMatch ? specPrefixMatch[1].toUpperCase().replace(/[^A-Z]/g, '') : null;
+            // Remove the specialization prefix from clean before dedup, so subject words are preserved
+            const cleanForDedup = specPrefixMatch ? clean.substring(specPrefixMatch[0].length) : clean;
+
             const seenNorm = new Set();
-            const words = clean.split(/\s+/);
+            const words = cleanForDedup.split(/\s+/);
             const finalWords = [];
             const stopwords = new Set(['AND', 'IN', 'OF', 'FOR', 'WITH', 'THE', 'BY', 'TO']);
             
@@ -1652,7 +1658,7 @@
                 }
             }
 
-            let cleaned = finalWords.join(' ').trim();
+            let cleaned = (specPrefixMatch ? specPrefixMatch[0] : '') + finalWords.join(' ').trim();
             cleaned = cleaned.replace(/\s*[:\-]\s*$/, '').trim(); 
 
             // Specialization formatting (e.g. FINANCE: ..., OB/HRM: ..., MARKETING: ...)
@@ -1663,7 +1669,16 @@
                 let spec = specMatch[1].toUpperCase();
                 if (spec === 'OB-HRM') spec = 'OB/HRM';
                 let rest = specMatch[2].replace(/^[:\s\-]+/, '').trim();
-                formattedSubject = `${spec}: ${toTitleCase(rest)}`;
+                let titleRest = toTitleCase(rest);
+                if (spec === 'MARKETING') {
+                    if (/^service(?:s)?$/i.test(rest) || t.includes('429802308')) titleRest = 'Service Marketing';
+                    if (/^digital$/i.test(rest) || t.includes('429802310')) titleRest = 'Digital Marketing';
+                }
+                formattedSubject = `${spec}: ${titleRest}`;
+            } else if (t.includes('429802308') || /marketing\s+service/i.test(t)) {
+                formattedSubject = 'MARKETING: Service Marketing';
+            } else if (t.includes('429802310') || /marketing\s+digital/i.test(t)) {
+                formattedSubject = 'MARKETING: Digital Marketing';
             } else {
                 formattedSubject = toTitleCase(cleaned);
             }
