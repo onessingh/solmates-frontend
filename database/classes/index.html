@@ -44,7 +44,7 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <script>
       // [v127.2] Nuclear Auto-Update
-      const APP_VERSION = '127.2';
+      const APP_VERSION = '127.4';
       const lastVersion = localStorage.getItem('app_version_classes');
       if (lastVersion !== APP_VERSION) {
         localStorage.setItem('app_version_classes', APP_VERSION);
@@ -1307,8 +1307,7 @@
             const grid = document.getElementById('liveSessionsGrid');
             const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-            const now = Date.now();
-            let sessions = appData.liveSessions.filter(s => !s.expiryTime || now < s.expiryTime);
+            let sessions = appData.liveSessions || [];
             if (filter !== 'all') {
                 sessions = sessions.filter(s => s.semesters.includes(filter) || s.semesters.includes('all'));
             }
@@ -1375,6 +1374,23 @@
             return str;
         }
 
+        let isFetchingClasses = false;
+
+        async function fetchSemClasses(sem) {
+            try {
+                // Cache-buster parameter (_t) ensures Cloudflare Edge Cache never serves stale data
+                const res = await solmatesAPI.request(`/sol/live-classes/${sem}?_t=${Date.now()}`);
+                if (res && res.success && Array.isArray(res.data)) return res;
+            } catch (e) {
+                console.warn(`Retry fetching sem ${sem} after error:`, e);
+            }
+            try {
+                const retryRes = await solmatesAPI.getSOLContent('live-classes', sem);
+                if (retryRes && retryRes.success && Array.isArray(retryRes.data)) return retryRes;
+            } catch (_) {}
+            return null;
+        }
+
         async function loadDataFromAPI(skipCache = false) {
             // SWR: Load from cache first if not skipping explicitly
             if (skipCache === false) {
@@ -1382,9 +1398,8 @@
                     const cached = localStorage.getItem('solcache_live_classes');
                     if (cached) {
                         const parsed = JSON.parse(cached);
-                        if (parsed && Array.isArray(parsed)) {
-                            const now = Date.now();
-                            appData.liveSessions = parsed.filter(s => !s.expiryTime || now < s.expiryTime);
+                        if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+                            appData.liveSessions = parsed;
                             updateLiveSessionsDisplay(currentActiveTab);
                         }
                     }
@@ -1393,26 +1408,38 @@
                 }
             }
 
+            if (isFetchingClasses) return;
+            isFetchingClasses = true;
+
             try {
                 const sems = ['1', '2', '3', '4', '0'];
-                const settled = await Promise.allSettled(sems.map(sem => solmatesAPI.getSOLContent('live-classes', sem)));
+                const settled = await Promise.allSettled(sems.map(fetchSemClasses));
                 const results = settled.map(r => r.status === 'fulfilled' ? r.value : null);
                 const sessionMap = new Map();
-                window.seenClassIds = new Set(); // Key: displayTitle + displayDate
-                const todayStr = new Date().toLocaleDateString('en-CA');
+                const seenClassIds = new Set();
+                
+                // Safe Indian Standard Time (IST) date string (YYYY-MM-DD)
+                const todayStr = (function() {
+                    try {
+                        return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
+                    } catch (e) {
+                        return new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0];
+                    }
+                })();
+                const todayDDMM = todayStr.split('-').reverse().join('-');
 
                 results.forEach((res, i) => {
                     const sourceSem = i < 4 ? String(i + 1) : "all";
                     if (res && res.success && Array.isArray(res.data)) {
                         res.data.forEach(item => {
-                            if (window.seenClassIds && window.seenClassIds.has(item.id)) return;
-                            if (!window.seenClassIds) window.seenClassIds = new Set();
-                            window.seenClassIds.add(item.id);
+                            if (seenClassIds.has(item.id)) return;
+                            seenClassIds.add(item.id);
                             const sessionDate = item.scheduledAt || item.date || item.created_at;
                             const sessionDay = parseNormalizedDate(sessionDate);
 
-                            // Only show Today's classes
-                            if (sessionDay && sessionDay !== todayStr) return;
+                            // Only show Today's classes (support both ISO and DD-MM-YYYY in titles)
+                            const isToday = (sessionDay === todayStr) || (item.title && (item.title.includes(todayDDMM) || item.title.includes(todayStr)));
+                            if (!isToday && sessionDay) return;
 
                             const meta = cleanSubjectTitle(item.title, sourceSem === 'all' ? '0' : sourceSem, sessionDate);
                             
@@ -1421,17 +1448,15 @@
                             let hasRange = meta.hasRange;
 
                             if (!hasRange) {
-                                // Fallback: Create 2h range in 24h format
                                 const start = new Date(sessionDate);
                                 const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
                                 const f = (d) => isNaN(d.getTime()) ? 'TBA' : d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
                                 finalTime = `${f(start)} - ${f(end)}`;
                             } else {
-                                // Convert captured range to 24h if it's in 12h
                                 finalTime = convertTo24hRange(finalTime);
                             }
 
-                            // Precise Expiry: Determine exact end time of class (hide as soon as time ends)
+                            // Precise Expiry: Determine exact end time of class (used for ENDED status badge)
                             const classExpiryTime = (function() {
                                 let baseDate = new Date(sessionDate);
                                 if (isNaN(baseDate.getTime())) baseDate = new Date();
@@ -1459,11 +1484,8 @@
                                 return meta.expiryTime || new Date(y, m, d, 23, 59, 59).getTime();
                             })();
 
-                            // Precise Expiry Check: Hide class immediately once end time is reached
-                            if (Date.now() >= classExpiryTime) return;
-
                             // Normalize Date to YYYY-MM-DD for 100% strict deduplication
-                            const normDate = parseNormalizedDate(meta.date || sessionDate || item.date);
+                            const normDate = parseNormalizedDate(meta.date || sessionDate || item.date) || todayStr;
                             
                             // Canonical title key (removes branding & punctuation for bulletproof matching)
                             const canonicalTitle = (meta.subject || item.title || "")
@@ -1521,15 +1543,36 @@
                     }
                 });
 
+                // Fail-safe: If a semester fetch dropped due to network issues, preserve existing sessions for that semester
+                const failedSems = sems.filter((_, idx) => !results[idx] || !results[idx].success);
+                if (failedSems.length > 0 && Array.isArray(appData.liveSessions)) {
+                    appData.liveSessions.forEach(prevSession => {
+                        const semOverlap = prevSession.semesters && prevSession.semesters.some(s => failedSems.includes(s));
+                        if (semOverlap) {
+                            const canonicalTitle = (prevSession.displayTitle || prevSession.title || '')
+                                .toLowerCase()
+                                .replace(/^(?:mba\s+)?(?:sem(?:ester)?|year|yr|part|term)\s*(?:iv|iii|ii|i|[1-6])\s*[:\-]?\s*/i, '')
+                                .replace(/[^a-z0-9]/g, '');
+                            const groupKey = `${canonicalTitle}_${prevSession.displayDate}`;
+                            if (!sessionMap.has(groupKey)) {
+                                sessionMap.set(groupKey, prevSession);
+                            }
+                        }
+                    });
+                }
+
                 const fresh = Array.from(sessionMap.values());
                 fresh.sort((a, b) => new Date(a.scheduledAt) - new Date(b.scheduledAt));
                 appData.liveSessions = fresh;
                 
-                // Cache the fresh data
-                localStorage.setItem('solcache_live_classes', JSON.stringify(fresh));
+                // Cache the fresh data only if valid
+                if (fresh.length > 0) {
+                    localStorage.setItem('solcache_live_classes', JSON.stringify(fresh));
+                }
             } catch (e) { 
                 console.error('Load failed:', e); 
             } finally {
+                isFetchingClasses = false;
                 updateLiveSessionsDisplay(currentActiveTab);
             }
         }
@@ -1712,21 +1755,7 @@
                 const isExpired = now >= expiry;
 
                 if (isExpired) {
-                    // Hide and remove the card instantly as soon as class ends
-                    const card = el.closest('.live-session-card');
-                    if (card) {
-                        card.style.transition = 'all 0.4s ease';
-                        card.style.opacity = '0';
-                        card.style.transform = 'scale(0.95)';
-                        setTimeout(() => {
-                            card.remove();
-                            const remaining = document.querySelectorAll('.live-sessions-grid .live-session-card');
-                            if (remaining.length === 0) {
-                                const grid = document.getElementById('liveSessionsGrid');
-                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
-                            }
-                        }, 400);
-                    }
+                    el.innerHTML = `<div class="status-badge ended" style="background: rgba(107, 114, 128, 0.15); color: #6b7280; border: 1px solid rgba(107, 114, 128, 0.3); font-weight: 600;"><i class="fas fa-check-circle"></i> ENDED</div>`;
                     return;
                 }
 
@@ -1776,8 +1805,7 @@
         function getPlatformIcon(p) { return { 'google-meet': 'fab fa-google', 'zoom': 'fas fa-video', 'microsoft-teams': 'fab fa-microsoft' }[p] || 'fas fa-video'; }
 
         function updateTabCounts() {
-            const now = Date.now();
-            const active = (appData.liveSessions || []).filter(s => !s.expiryTime || now < s.expiryTime);
+            const active = appData.liveSessions || [];
             const countAll = active.length;
             const count1 = active.filter(s => s.semesters && (s.semesters.includes('1') || s.semesters.includes('all'))).length;
             const count2 = active.filter(s => s.semesters && (s.semesters.includes('2') || s.semesters.includes('all'))).length;
