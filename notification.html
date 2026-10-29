@@ -2055,7 +2055,7 @@
             }
         }
         
-        const isHealthcare = /mbaexh|health\s*care|\bhca\b/i.test(t);
+        const isHealthcare = /mbaexh|health\s*(?:care|sector)|\bhca\b/i.test(t);
 
         // 3. SURGICAL STRIP: Remove metadata and reconstruct subject (VISUAL ONLY)
         let subjectOnly = t
@@ -2063,6 +2063,7 @@
            .replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '') // Remove time blocks from title
            .replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '') // Remove single time blocks
            .replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '') // Remove ISO
+           .replace(/\b\d{4}-\d{2}-\d{2}(?:T\d{1,2}(?::\d{2})?)?\b/gi, '') // Remove standalone ISO
            .replace(/MBA\s*SEM\s*\d+:?/gi, '') // Remove MBA SEM prefixes
            .replace(/MBAEXH[\s\-]*\d+/gi, '') // Remove MBAEXH-107 / MBAEXH code
            .replace(/\b\d{8,10}\b/g, '') // Remove 8-10 digit subject code like 429801108
@@ -2333,6 +2334,7 @@
         return String(t || '')
           .replace(/\[.*?\]/g, '')
           .replace(/\(.*?\)/g, '')
+          .replace(/\b\d{4}-\d{2}-\d{2}(?:T\d{1,2}(?::\d{2})?)?\b/gi, '')
           .replace(/MBA\s*SEM\s*\d+/gi, '')
           .replace(/MBA\s*\(Healthcare\)\s*SEM\s*\d+/gi, '')
           .replace(/MBAEXH[\s\-]*\d+/gi, '')
@@ -2409,7 +2411,7 @@
               finalImageUrl = noticeLink.substring('#richpost:'.length);
           }
           const isLiveClass = isLiveCheck(notice);
-          const isHealthcare = /mbaexh|health\s*care|\bhca\b/i.test(`${notice.title || ''} ${notice.description || ''}`);
+          const isHealthcare = /mbaexh|health\s*(?:care|sector)|\bhca\b/i.test(`${notice.title || ''} ${notice.description || ''}`);
 
           const isTimetable = String(notice.title).includes('[Timetable]');
           const btnText = isLiveClass ? 'Join Class <i class="fas fa-video"></i>' :
