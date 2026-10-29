@@ -141,6 +141,7 @@
     }
 
     .content-item {
+      position: relative;
       background: var(--bg-card);
       border-radius: 12px;
       padding: 20px;
@@ -697,6 +698,11 @@
           div.dataset.scheduledAt = item.scheduledAt || '';
           div.dataset.folderId = item.folderId || '';
           div.innerHTML = `
+            ${(item.url && item.url.startsWith('http') && !item.url.includes('pending')) ? `
+              <button type="button" class="btn-copy-link" title="Copy Meeting Link" onclick="event.stopPropagation(); window.copyClassLink('${escapeHtml(item.url)}', this);" style="position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0071e3; font-size: 13.5px; transition: all 0.2s;">
+                <i class="far fa-copy"></i>
+              </button>
+            ` : ''}
             <div class="item-header">
               <div>
                 <div class="item-title">${escapeHtml(item.title)}</div>
@@ -825,6 +831,45 @@
     }
 
     // ========== UTILITY ==========
+    
+    // ── COPY CLASS LINK TO CLIPBOARD ──
+    window.copyClassLink = function(link, btn) {
+      if (!link) return;
+      const showSuccess = () => {
+        if (!btn) return;
+        const oldHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check" style="color: #ffffff;"></i>';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = oldHtml;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(showSuccess).catch(() => {
+          fallbackCopyText(link, showSuccess);
+        });
+      } else {
+        fallbackCopyText(link, showSuccess);
+      }
+    };
+
+    function fallbackCopyText(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        if (cb) cb();
+      } catch (err) {}
+      document.body.removeChild(ta);
+    }
+
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;

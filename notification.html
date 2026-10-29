@@ -787,6 +787,7 @@
     }
 
     .notification-card {
+      position: relative;
       background: var(--bg-card, #ffffff);
       border-radius: 20px;
       padding: 16px;
@@ -796,6 +797,39 @@
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       gap: 16px;
+    }
+
+    .copy-class-link-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: rgba(0, 113, 227, 0.08);
+      border: 1px solid rgba(0, 113, 227, 0.2);
+      color: var(--brand-primary, #0071e3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13.5px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+      padding: 0;
+    }
+    .copy-class-link-btn:hover {
+      background: var(--brand-primary, #0071e3);
+      color: #ffffff;
+      border-color: var(--brand-primary, #0071e3);
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
+    }
+    .copy-class-link-btn.copied {
+      background: #10b981 !important;
+      color: #ffffff !important;
+      border-color: #10b981 !important;
+      transform: scale(1.05);
     }
 
     .notification-card:hover {
@@ -2495,6 +2529,11 @@
 
           return `
             <div class="notification-card ${isLiveClass ? 'live-class' : ''} ${isHealthcare ? 'healthcare-card' : ''}" id="notice-${uniqueKey}" onclick="${clickHandler}">
+              ${(isLiveClass && notice.link && notice.link.startsWith('http') && !notice.link.includes('pending')) ? `
+                <button type="button" class="copy-class-link-btn" title="Copy Teams Meeting Link" aria-label="Copy Teams Meeting Link" onclick="event.stopPropagation(); window.copyClassLink('${escAttr(notice.link)}', this);">
+                  <i class="far fa-copy"></i>
+                </button>
+              ` : ''}
               <div class="icon-box" style="background: ${iconBg}; color: ${iconColor};">
                 <i class="${iconClass}"></i>
                 ${newBadge}
@@ -3085,6 +3124,45 @@
 
     // Login + Notice Form Handlers wrapped in DOMContentLoaded so modal HTML is ready
     document.addEventListener('DOMContentLoaded', function() {
+
+    
+    // ── COPY CLASS LINK TO CLIPBOARD ──
+    window.copyClassLink = function(link, btn) {
+      if (!link) return;
+      const showSuccess = () => {
+        if (!btn) return;
+        const oldHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check" style="color: #ffffff;"></i>';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = oldHtml;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(showSuccess).catch(() => {
+          fallbackCopyText(link, showSuccess);
+        });
+      } else {
+        fallbackCopyText(link, showSuccess);
+      }
+    };
+
+    function fallbackCopyText(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        if (cb) cb();
+      } catch (err) {}
+      document.body.removeChild(ta);
+    }
 
     window.formatNoticeDescription = function(text) {
         if (!text) return 'New MBA notification found.';
