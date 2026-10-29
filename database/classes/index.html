@@ -1307,7 +1307,8 @@
             const grid = document.getElementById('liveSessionsGrid');
             const isAdmin = !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-            let sessions = appData.liveSessions || [];
+            const now = Date.now();
+            let sessions = (appData.liveSessions || []).filter(s => !s.expiryTime || now < s.expiryTime);
             if (filter !== 'all') {
                 sessions = sessions.filter(s => s.semesters.includes(filter) || s.semesters.includes('all'));
             }
@@ -1378,12 +1379,12 @@
 
         async function fetchSemClasses(sem) {
             try {
-                // Cache-buster parameter (_t) ensures Cloudflare Edge Cache never serves stale data
-                const res = await solmatesAPI.request(`/sol/live-classes/${sem}?_t=${Date.now()}`);
+                const res = await solmatesAPI.getSOLContent('live-classes', sem);
                 if (res && res.success && Array.isArray(res.data)) return res;
             } catch (e) {
                 console.warn(`Retry fetching sem ${sem} after error:`, e);
             }
+            // Retry once on failure
             try {
                 const retryRes = await solmatesAPI.getSOLContent('live-classes', sem);
                 if (retryRes && retryRes.success && Array.isArray(retryRes.data)) return retryRes;
@@ -1399,7 +1400,8 @@
                     if (cached) {
                         const parsed = JSON.parse(cached);
                         if (parsed && Array.isArray(parsed) && parsed.length > 0) {
-                            appData.liveSessions = parsed;
+                            const now = Date.now();
+                            appData.liveSessions = parsed.filter(s => !s.expiryTime || now < s.expiryTime);
                             updateLiveSessionsDisplay(currentActiveTab);
                         }
                     }
@@ -1755,7 +1757,21 @@
                 const isExpired = now >= expiry;
 
                 if (isExpired) {
-                    el.innerHTML = `<div class="status-badge ended" style="background: rgba(107, 114, 128, 0.15); color: #6b7280; border: 1px solid rgba(107, 114, 128, 0.3); font-weight: 600;"><i class="fas fa-check-circle"></i> ENDED</div>`;
+                    // Hide and remove the card as soon as class ends
+                    const card = el.closest('.live-session-card');
+                    if (card) {
+                        card.style.transition = 'all 0.4s ease';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            card.remove();
+                            const remaining = document.querySelectorAll('.live-sessions-grid .live-session-card');
+                            if (remaining.length === 0) {
+                                const grid = document.getElementById('liveSessionsGrid');
+                                if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; padding: 60px; color: var(--text-lighter);">No live classes for today.</div>`;
+                            }
+                        }, 400);
+                    }
                     return;
                 }
 
@@ -1805,7 +1821,8 @@
         function getPlatformIcon(p) { return { 'google-meet': 'fab fa-google', 'zoom': 'fas fa-video', 'microsoft-teams': 'fab fa-microsoft' }[p] || 'fas fa-video'; }
 
         function updateTabCounts() {
-            const active = appData.liveSessions || [];
+            const now = Date.now();
+            const active = (appData.liveSessions || []).filter(s => !s.expiryTime || now < s.expiryTime);
             const countAll = active.length;
             const count1 = active.filter(s => s.semesters && (s.semesters.includes('1') || s.semesters.includes('all'))).length;
             const count2 = active.filter(s => s.semesters && (s.semesters.includes('2') || s.semesters.includes('all'))).length;
