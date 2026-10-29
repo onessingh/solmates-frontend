@@ -43,8 +43,8 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <script>
-      // [v127.1] Nuclear Auto-Update
-      const APP_VERSION = '127.1';
+      // [v127.2] Nuclear Auto-Update
+      const APP_VERSION = '127.2';
       const lastVersion = localStorage.getItem('app_version_classes');
       if (lastVersion !== APP_VERSION) {
         localStorage.setItem('app_version_classes', APP_VERSION);
@@ -1610,6 +1610,19 @@
             let cleaned = finalWords.join(' ').trim();
             cleaned = cleaned.replace(/\s*[:\-]\s*$/, '').trim(); 
 
+            // Specialization formatting (e.g. FINANCE: ..., OB/HRM: ..., MARKETING: ...)
+            let formattedSubject = '';
+            const specRegex = /^(?:MBA\s+)?\b(FINANCE|MARKETING|OB\/HRM|OB-HRM|HRM|OPERATIONS|IT|CORE)\b\s*[:\-]?\s*(.*)/i;
+            const specMatch = cleaned.match(specRegex);
+            if (specMatch) {
+                let spec = specMatch[1].toUpperCase();
+                if (spec === 'OB-HRM') spec = 'OB/HRM';
+                let rest = specMatch[2].replace(/^[:\s\-]+/, '').trim();
+                formattedSubject = `${spec}: ${toTitleCase(rest)}`;
+            } else {
+                formattedSubject = toTitleCase(cleaned);
+            }
+
             // Calculate Expiry
             let refObj = new Date(refDate);
             if (isNaN(refObj.getTime())) refObj = new Date();
@@ -1628,12 +1641,12 @@
             const rawTime = tMatch ? tMatch[1] : "";
 
             const displaySubject = (semester && semester !== "0" && semester !== "all") 
-                ? (isHealthcare ? `MBA (Healthcare) Sem ${semester}: ${cleaned}` : `MBA Sem ${semester}: ${cleaned}`)
-                : cleaned;
+                ? (isHealthcare ? `MBA (Healthcare) Sem ${semester}: ${formattedSubject}` : `MBA Sem ${semester}: ${formattedSubject}`)
+                : formattedSubject;
 
             return {
                 subject: displaySubject,
-                rawSubject: toTitleCase(cleaned),
+                rawSubject: formattedSubject,
                 date: dMatch ? dMatch[1] : "",
                 time: rawTime,
                 hasRange: rawTime.includes('-') || !!rangeMatch,
