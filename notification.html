@@ -2497,9 +2497,6 @@
           const normalize = (t) => String(t || '').replace(/\[\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\]/g, '').replace(/\(\s*\d{4}-\d{2}-\d{2}T.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\(\d{1,2}\s*:\s*\d{2}.*?\)/gi, '').replace(/\s+/g, ' ').trim();
           const itemLink = (notice.link || '').trim();
           const uniqueKey = (itemLink && itemLink !== "#pending" && itemLink !== "#") ? itemLink : `title-${normalize(notice.title)}`;
-          if (window._noticeMap) {
-            window._noticeMap.set(uniqueKey, { ...notice, cleanSubject: info.rawSubject || displaySubject, displayTime: displayTime });
-          }
 
           const dateObj = parseNoticeDate(notice.date, notice.title);
           const hasValidDate = !isNaN(dateObj.getTime());
@@ -2519,6 +2516,10 @@
           
           const displaySubject = info.subject;
           const displayDate = info.date || notice.date;
+
+          if (window._noticeMap) {
+            window._noticeMap.set(uniqueKey, { ...notice, cleanSubject: info.rawSubject || displaySubject, displayTime: displayTime });
+          }
 
           const formatMobileDate = (dObj, rawStr) => {
             if (dObj instanceof Date && !isNaN(dObj.getTime())) {
