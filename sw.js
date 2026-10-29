@@ -140,6 +140,7 @@ self.addEventListener("push", event => {
         icon: payload.icon || (payload.notification && payload.notification.icon) || '/android-chrome-192x192.png',
         badge: payload.badge || '/favicon-32x32.png',
         data: { url: targetUrl },
+        tag: title, // Deduplicate identical notifications on device
         vibrate: [200, 100, 200],
         requireInteraction: false
     };
