@@ -43,8 +43,8 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
     <script>
-      // [v126.4] Nuclear Auto-Update
-      const APP_VERSION = '126.4';
+      // [v127.0] Nuclear Auto-Update
+      const APP_VERSION = '127.0';
       const lastVersion = localStorage.getItem('app_version_classes');
       if (lastVersion !== APP_VERSION) {
         localStorage.setItem('app_version_classes', APP_VERSION);
@@ -341,11 +341,61 @@
             border-left: 4px solid #2563eb;
         }
 
+        .copy-session-link-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bg-body, #f8fafc);
+            border: 1px solid var(--border-color, #e2e8f0);
+            color: var(--text-muted, #64748b);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .copy-session-link-btn:hover {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+            transform: scale(1.08);
+        }
+
+        .copy-session-link-btn.copied {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border-color: #10b981 !important;
+            color: #10b981 !important;
+        }
+
+        .tab-count-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.12);
+            color: var(--brand-primary, #2563eb);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .tab-btn.active .tab-count-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
         .session-header {
             display: flex;
             align-items: center;
             gap: 16px;
             margin-bottom: 16px;
+            padding-right: 36px;
         }
 
         .session-icon {
@@ -1278,6 +1328,10 @@
 
                 return `
                 <div class="live-session-card ${s.isHealthcare ? 'healthcare-card' : 'general-card'}" onclick="${!isPending ? `joinSession('${s.url.replace(/'/g, "\\'").replace(/"/g, '\\"')}')` : ''}">
+                    ${!isPending ? `
+                    <button type="button" class="copy-session-link-btn" title="Copy Teams Meeting Link" onclick="copySessionLink('${s.url.replace(/'/g, "\\'").replace(/"/g, '\\"')}', event)">
+                        <i class="far fa-copy"></i>
+                    </button>` : ''}
                     <div id="status-${s.id}"></div>
                     <div class="session-header">
                         <div class="session-icon" style="${iconColorStyle}"><i class="${sessionIcon}"></i></div>
@@ -1304,6 +1358,7 @@
                 </div>`;
             }).join('');
             updateCountdowns();
+            updateTabCounts();
         }
 
         function parseNormalizedDate(dateStr) {
@@ -1339,7 +1394,9 @@
             }
 
             try {
-                const results = await Promise.all(['1', '2', '3', '4', '0'].map(sem => solmatesAPI.getSOLContent('live-classes', sem)));
+                const sems = ['1', '2', '3', '4', '0'];
+                const settled = await Promise.allSettled(sems.map(sem => solmatesAPI.getSOLContent('live-classes', sem)));
+                const results = settled.map(r => r.status === 'fulfilled' ? r.value : null);
                 const sessionMap = new Map();
                 window.seenClassIds = new Set(); // Key: displayTitle + displayDate
                 const todayStr = new Date().toLocaleDateString('en-CA');
@@ -1697,6 +1754,84 @@
         }
 
         function getPlatformIcon(p) { return { 'google-meet': 'fab fa-google', 'zoom': 'fas fa-video', 'microsoft-teams': 'fab fa-microsoft' }[p] || 'fas fa-video'; }
+
+        function updateTabCounts() {
+            const now = Date.now();
+            const active = (appData.liveSessions || []).filter(s => !s.expiryTime || now < s.expiryTime);
+            const countAll = active.length;
+            const count1 = active.filter(s => s.semesters && (s.semesters.includes('1') || s.semesters.includes('all'))).length;
+            const count2 = active.filter(s => s.semesters && (s.semesters.includes('2') || s.semesters.includes('all'))).length;
+            const count3 = active.filter(s => s.semesters && (s.semesters.includes('3') || s.semesters.includes('all'))).length;
+            const count4 = active.filter(s => s.semesters && (s.semesters.includes('4') || s.semesters.includes('all'))).length;
+
+            const setBadge = (semKey, count) => {
+                const btn = document.querySelector(`.tab-btn[onclick*="switchTab('${semKey}')"]`);
+                if (!btn) return;
+                let badge = btn.querySelector('.tab-count-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'tab-count-badge';
+                    btn.appendChild(badge);
+                }
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'inline-block' : 'none';
+            };
+
+            setBadge('all', countAll);
+            setBadge('1', count1);
+            setBadge('2', count2);
+            setBadge('3', count3);
+            setBadge('4', count4);
+        }
+
+        function copySessionLink(url, e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            if (!url || url === '#' || url === '#pending') {
+                showNotification('Link not available yet', 'error');
+                return;
+            }
+            const btn = e && e.currentTarget ? e.currentTarget : null;
+            const originalHtml = btn ? btn.innerHTML : '';
+
+            const onSuccess = () => {
+                showNotification('Teams link copied to clipboard! 📋', 'success');
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i>';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(onSuccess).catch(() => {
+                    fallbackCopyText(url, onSuccess);
+                });
+            } else {
+                fallbackCopyText(url, onSuccess);
+            }
+        }
+
+        function fallbackCopyText(text, cb) {
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (cb) cb();
+            } catch (err) {
+                showNotification('Failed to copy link', 'error');
+            }
+        }
 
         function joinSession(url, e) {
             if (e) e.stopPropagation();
