@@ -599,39 +599,43 @@
       for (const page of pages) {
         const { width, height } = page.getSize();
 
-        // 1. Center Diagonal Watermark (Subtle & Unintrusive, 42 deg angle)
+        // 1. Center Diagonal Watermark (Mathematically centered, clear & readable)
         const centerText = 'SOLMATES - solmates.in';
-        const textSize = Math.min(Math.max(width * 0.05, 20), 32);
+        const textSize = Math.min(Math.max(width * 0.065, 28), 44);
         const textWidth = fontBold.widthOfTextAtSize(centerText, textSize);
+        const angle = 45;
+        const angleRad = angle * Math.PI / 180;
+        const centerX = (width / 2) - (textWidth / 2) * Math.cos(angleRad);
+        const centerY = (height / 2) - (textWidth / 2) * Math.sin(angleRad);
 
         page.drawText(centerText, {
-          x: (width - textWidth) / 2,
-          y: height / 2,
+          x: centerX,
+          y: centerY,
           size: textSize,
           font: fontBold,
-          color: PDFLib.rgb(0.68, 0.68, 0.70),
-          opacity: 0.18,
-          rotate: PDFLib.degrees(42),
+          color: PDFLib.rgb(0.32, 0.32, 0.38),
+          opacity: 0.28,
+          rotate: PDFLib.degrees(angle),
         });
 
-        // 2. Top Header Watermark
+        // 2. Top Header Watermark (Crisp & visible)
         page.drawText('SOLMATES EDUCATION | solmates.in', {
           x: 20,
-          y: height - 16,
-          size: 7.5,
+          y: height - 18,
+          size: 8.5,
           font: fontRegular,
-          color: PDFLib.rgb(0.50, 0.50, 0.50),
-          opacity: 0.45,
+          color: PDFLib.rgb(0.28, 0.28, 0.28),
+          opacity: 0.65,
         });
 
-        // 3. Bottom Footer Watermark
+        // 3. Bottom Footer Watermark (Crisp & visible)
         page.drawText('Downloaded from Solmates (solmates.in) | For Personal Student Use Only', {
           x: 20,
           y: 12,
-          size: 7.5,
+          size: 8.5,
           font: fontRegular,
-          color: PDFLib.rgb(0.50, 0.50, 0.50),
-          opacity: 0.45,
+          color: PDFLib.rgb(0.28, 0.28, 0.28),
+          opacity: 0.65,
         });
       }
 
