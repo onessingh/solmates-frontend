@@ -39,6 +39,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v900">
   <title>PDF Viewer | SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <style>
 
     :root {
@@ -525,74 +526,9 @@
       }
     }
 
-    function handleDownload() {
-      const params = new URLSearchParams(window.location.search);
-      const rawUrl = params.get('file');
-      const title = params.get('title') || 'Document';
-      if (!rawUrl) return;
-
-      const btn = document.getElementById('dlBtn');
-      if (btn) {
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Preparing...</span>';
-        btn.style.pointerEvents = 'none';
-      }
-
-      const modalTitle = document.getElementById('dlModalTitle');
-      if (modalTitle) modalTitle.textContent = title;
-
-      const iconEl = document.getElementById('dlModalIcon');
-      const lowerUrl = rawUrl.toLowerCase();
-      const lowerTitle = title.toLowerCase();
-      if (iconEl) {
-        if (lowerUrl.includes('.ppt') || lowerTitle.includes('.ppt') || lowerUrl.includes('presentation')) {
-          iconEl.innerHTML = '<i class="fas fa-file-powerpoint" style="color:#f97316;"></i>';
-        } else {
-          iconEl.innerHTML = '<i class="fas fa-file-pdf" style="color:#38bdf8;"></i>';
-        }
-      }
-
-      const statusEl = document.getElementById('dlModalStatus');
-      if (statusEl) {
-        statusEl.innerHTML = '<span>Your download will start in</span><span class="dl-modal-timer" id="dlModalTimer">5</span>';
-      }
-
-      const overlay = document.getElementById('downloadModalOverlay');
-      if (overlay) overlay.classList.add('open');
-
-      const adIns = document.getElementById('dlPopupAd');
-      if (adIns && !adIns.getAttribute('data-adsbygoogle-status') && !adIns.__adPushed) {
-        adIns.__adPushed = true;
-        try {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (e) {}
-      }
-
-      let timeLeft = 5;
-      if (dlTimerInterval) clearInterval(dlTimerInterval);
-      dlTimerInterval = setInterval(() => {
-        timeLeft--;
-        const tEl = document.getElementById('dlModalTimer');
-        if (tEl) tEl.textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(dlTimerInterval);
-          const sEl = document.getElementById('dlModalStatus');
-          if (sEl) {
-            sEl.innerHTML = '<div style="color:#22c55e; font-weight:700; font-size:15px; margin:4px 0;"><i class="fas fa-check-circle"></i> Download Started!</div>';
-          }
-          
-          executeDownload(rawUrl, title);
-
-          // Auto-close modal after 1.5 seconds so user smoothly returns to reading
-          dlModalCloseTimeout = setTimeout(() => {
-            closeDownloadModal();
-          }, 1500);
-        }
-      }, 1000);
-    }
-
-    function executeDownload(rawUrl, title) {
-      const lowerUrl = rawUrl.toLowerCase();
-      const lowerTitle = title.toLowerCase();
+    function executeDirectDownload(rawUrl, title) {
+      const lowerUrl = (rawUrl || '').toLowerCase();
+      const lowerTitle = (title || '').toLowerCase();
 
       let isSlides = false;
       let downloadUrl = rawUrl;
@@ -616,7 +552,6 @@
         }
       }
 
-      // Use hidden iframe to trigger download cleanly without navigating page away
       try {
         let dlIframe = document.getElementById('hiddenDownloadIframe');
         if (!dlIframe) {
@@ -636,6 +571,182 @@
       }
 
       showToast(isSlides ? "PowerPoint Download Started!" : "PDF Download Started!", "success", 5000);
+    }
+
+    // ── CLIENT-SIDE PDF WATERMARKER (0% Backend Load, 100% Browser Execution) ──
+    async function prepareWatermarkedPdf(rawUrl, title) {
+      if (typeof PDFLib === 'undefined') {
+        throw new Error('PDFLib not loaded');
+      }
+
+      let fetchUrl = rawUrl;
+      const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/id=([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        fetchUrl = `/api/sol/pdf-proxy?id=${driveMatch[1]}`;
+      }
+
+      const res = await fetch(fetchUrl);
+      if (!res.ok) throw new Error('Fetch status: ' + res.status);
+      const pdfBytes = await res.arrayBuffer();
+
+      const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      const pages = pdfDoc.getPages();
+      const fontBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+      const fontRegular = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+      for (const page of pages) {
+        const { width, height } = page.getSize();
+
+        // 1. Center Diagonal Watermark (Subtle & Unintrusive, 42 deg angle)
+        const centerText = 'SOLMATES • solmates.in';
+        const textSize = Math.min(Math.max(width * 0.05, 20), 32);
+        const textWidth = fontBold.widthOfTextAtSize(centerText, textSize);
+
+        page.drawText(centerText, {
+          x: (width - textWidth) / 2,
+          y: height / 2,
+          size: textSize,
+          font: fontBold,
+          color: PDFLib.rgb(0.68, 0.68, 0.70),
+          opacity: 0.16,
+          rotate: PDFLib.degrees(42),
+        });
+
+        // 2. Top Header Watermark
+        page.drawText('SOLMATES EDUCATION • solmates.in', {
+          x: 20,
+          y: height - 16,
+          size: 7.5,
+          font: fontRegular,
+          color: PDFLib.rgb(0.55, 0.55, 0.55),
+          opacity: 0.4,
+        });
+
+        // 3. Bottom Footer Watermark
+        page.drawText('Downloaded from Solmates (solmates.in) • For Personal Student Use Only', {
+          x: 20,
+          y: 12,
+          size: 7.5,
+          font: fontRegular,
+          color: PDFLib.rgb(0.55, 0.55, 0.55),
+          opacity: 0.4,
+        });
+      }
+
+      const modifiedBytes = await pdfDoc.save();
+      return new Blob([modifiedBytes], { type: 'application/pdf' });
+    }
+
+    let preparedWatermarkPromise = null;
+
+    function handleDownload() {
+      const params = new URLSearchParams(window.location.search);
+      const rawUrl = params.get('file');
+      const title = params.get('title') || 'Document';
+      const category = (params.get('category') || '').toLowerCase();
+      if (!rawUrl) return;
+
+      const lowerUrl = rawUrl.toLowerCase();
+      const lowerTitle = title.toLowerCase();
+
+      // Check if file is Slides or Ebook/Book (Books are never watermarked as requested)
+      const isSlides = lowerUrl.includes('.ppt') || lowerTitle.includes('.ppt') || lowerUrl.includes('presentation');
+      const isEbookOrBook = category.includes('book') || 
+                            category.includes('ebook') || 
+                            lowerTitle.includes('[book]') || 
+                            lowerTitle.includes('(book)') || 
+                            lowerTitle.includes('e-book') || 
+                            lowerTitle.includes('textbook');
+
+      const shouldWatermark = !isSlides && !isEbookOrBook;
+
+      const btn = document.getElementById('dlBtn');
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Preparing...</span>';
+        btn.style.pointerEvents = 'none';
+      }
+
+      const modalTitle = document.getElementById('dlModalTitle');
+      if (modalTitle) modalTitle.textContent = title;
+
+      const iconEl = document.getElementById('dlModalIcon');
+      if (iconEl) {
+        if (isSlides) {
+          iconEl.innerHTML = '<i class="fas fa-file-powerpoint" style="color:#f97316;"></i>';
+        } else {
+          iconEl.innerHTML = '<i class="fas fa-file-pdf" style="color:#38bdf8;"></i>';
+        }
+      }
+
+      const statusEl = document.getElementById('dlModalStatus');
+      if (statusEl) {
+        statusEl.innerHTML = '<span>Your download will start in</span><span class="dl-modal-timer" id="dlModalTimer">5</span>';
+      }
+
+      const overlay = document.getElementById('downloadModalOverlay');
+      if (overlay) overlay.classList.add('open');
+
+      const adIns = document.getElementById('dlPopupAd');
+      if (adIns && !adIns.getAttribute('data-adsbygoogle-status') && !adIns.__adPushed) {
+        adIns.__adPushed = true;
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {}
+      }
+
+      // Pre-process watermark in background DURING the 5-second countdown!
+      if (shouldWatermark) {
+        preparedWatermarkPromise = prepareWatermarkedPdf(rawUrl, title).catch(err => {
+          console.warn('Pre-watermark error:', err);
+          return null; // Graceful fallback
+        });
+      } else {
+        preparedWatermarkPromise = null;
+      }
+
+      let timeLeft = 5;
+      if (dlTimerInterval) clearInterval(dlTimerInterval);
+      dlTimerInterval = setInterval(async () => {
+        timeLeft--;
+        const tEl = document.getElementById('dlModalTimer');
+        if (tEl) tEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(dlTimerInterval);
+          const sEl = document.getElementById('dlModalStatus');
+          if (sEl) {
+            sEl.innerHTML = '<div style="color:#22c55e; font-weight:700; font-size:15px; margin:4px 0;"><i class="fas fa-check-circle"></i> Download Started!</div>';
+          }
+          
+          if (shouldWatermark && preparedWatermarkPromise) {
+            try {
+              const blob = await preparedWatermarkPromise;
+              if (blob) {
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                const cleanFileName = (title.replace(/[^a-z0-9_\-\s]/gi, '').trim() || 'Document') + '.pdf';
+                a.download = cleanFileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+                showToast("Watermarked PDF Downloaded Successfully! 📄", "success", 4000);
+              } else {
+                executeDirectDownload(rawUrl, title);
+              }
+            } catch (e) {
+              executeDirectDownload(rawUrl, title);
+            }
+          } else {
+            executeDirectDownload(rawUrl, title);
+          }
+
+          // Auto-close modal after 1.5 seconds so user smoothly returns to reading
+          dlModalCloseTimeout = setTimeout(() => {
+            closeDownloadModal();
+          }, 1500);
+        }
+      }, 1000);
     }
 
     function init() {
