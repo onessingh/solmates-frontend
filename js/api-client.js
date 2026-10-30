@@ -229,8 +229,7 @@ class SolmatesAPI {
     };
 
     if (isGet) {
-      // Normal edge caching allowed for all students, revalidate with edge
-      config.cache = 'no-cache';
+      // Normal edge caching allowed for all students
 
       if (options.force || (this.adminToken && !options.skipAuth)) {
         url += (url.includes('?') ? '&' : '?') + 'admin_force=true&_a=' + Date.now();
