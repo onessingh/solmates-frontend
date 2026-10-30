@@ -10249,7 +10249,7 @@
 
         const _nt = setTimeout(() => _nc.abort(), 8000);
 
-        const res = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all`, { signal: _nc.signal }).then(res => res.json()).catch(() => ({ success: false }));
+        const res = await fetch(`${window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api'}/sol/notifications/all?_t=${Date.now()}`, { cache: 'no-cache', signal: _nc.signal }).then(res => res.json()).catch(() => ({ success: false }));
 
         clearTimeout(_nt);
 

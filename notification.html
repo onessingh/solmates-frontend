@@ -1882,7 +1882,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v906';
+    const NOTIF_APP_CACHE_VER = 'v907';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -1924,9 +1924,11 @@
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 25000);
             const primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
+            const cacheBustQuery = `_t=${Date.now()}`;
             let response;
             try {
-              response = await fetch(`${primaryUrl}/sol/notifications/all`, { 
+              response = await fetch(`${primaryUrl}/sol/notifications/all?${cacheBustQuery}`, { 
+                cache: 'no-cache',
                 signal: _fc.signal
               });
               if (response && response.status === 503) {
@@ -1935,7 +1937,8 @@
             } catch (err) {
               console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via secondary endpoint...', err);
               const secondaryUrl = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
-              response = await fetch(`${secondaryUrl}/sol/notifications/all`, { 
+              response = await fetch(`${secondaryUrl}/sol/notifications/all?${cacheBustQuery}`, { 
+                cache: 'no-cache',
                 signal: _fc.signal
               });
             }
