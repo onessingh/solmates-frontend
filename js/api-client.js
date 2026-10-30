@@ -229,7 +229,10 @@ class SolmatesAPI {
     };
 
     if (isGet) {
-      // Normal edge caching allowed for all students
+      // Force all browser requests to revalidate with Cloudflare Edge instead of caching on device disk
+      config.cache = 'no-cache';
+      headers['Cache-Control'] = 'no-cache';
+      headers['Pragma'] = 'no-cache';
 
       if (options.force || (this.adminToken && !options.skipAuth)) {
         url += (url.includes('?') ? '&' : '?') + 'admin_force=true&_a=' + Date.now();
