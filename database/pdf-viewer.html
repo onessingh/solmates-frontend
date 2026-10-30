@@ -39,7 +39,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v900">
   <title>PDF Viewer | SOLMATES</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <!-- jsPDF for canvas-based PDF watermarking (works with any PDF type including scanned) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
 
     :root {
@@ -573,75 +574,110 @@
       showToast(isSlides ? "PowerPoint Download Started!" : "PDF Download Started!", "success", 5000);
     }
 
-    // ── CLIENT-SIDE PDF WATERMARKER (0% Backend Load, 100% Browser Execution) ──
+    // ── CLIENT-SIDE PDF WATERMARKER via Canvas (0% Backend Load) ──
+    // Uses PDF.js to render each page onto canvas, draws watermark, then jsPDF to output.
+    // This approach works with ALL PDF types including scanned/image-based PDFs.
     async function prepareWatermarkedPdf(rawUrl, title) {
-      if (typeof PDFLib === 'undefined') {
-        throw new Error('PDFLib not loaded');
-      }
+      const jsPDFLib = window.jspdf && window.jspdf.jsPDF;
+      if (!jsPDFLib) throw new Error('jsPDF not loaded');
+      if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js not loaded');
 
+      // Resolve Google Drive ID -> proxy URL
       let fetchUrl = rawUrl;
       const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/id=([a-zA-Z0-9_-]+)/);
       if (driveMatch && driveMatch[1]) {
         fetchUrl = `/api/sol/pdf-proxy?id=${driveMatch[1]}`;
       }
 
+      // Fetch PDF bytes via proxy
       const res = await fetch(fetchUrl);
-      if (!res.ok) throw new Error('Fetch status: ' + res.status);
+      if (!res.ok) throw new Error('Fetch failed: ' + res.status);
       const pdfBytes = await res.arrayBuffer();
 
-      // Load source PDF (read-only)
-      const srcDoc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      // Load with PDF.js (handles ALL compression types perfectly)
+      const loadingTask = pdfjsLib.getDocument({ data: pdfBytes });
+      const pdfDoc = await loadingTask.promise;
+      const totalPages = pdfDoc.numPages;
 
-      // Create a brand-new doc and COPY pages intact (preserves binary JPEG/image streams)
-      const newDoc = await PDFLib.PDFDocument.create();
-      const pageIndices = srcDoc.getPageIndices();
-      const copiedPages = await newDoc.copyPages(srcDoc, pageIndices);
+      // We'll determine orientation from the first page
+      const firstPage = await pdfDoc.getPage(1);
+      const firstVp = firstPage.getViewport({ scale: 1 });
+      const isLandscape = firstVp.width > firstVp.height;
 
-      const fontBold = await newDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
-      const fontRegular = await newDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      // Create jsPDF doc
+      const doc = new jsPDFLib({
+        orientation: isLandscape ? 'landscape' : 'portrait',
+        unit: 'pt',
+        format: 'a4',
+        compress: true
+      });
+      doc.deletePage(1); // remove the blank first page jsPDF creates
 
-      for (const page of copiedPages) {
-        newDoc.addPage(page);  // add to new doc first, then draw watermark on it
-        const { width, height } = page.getSize();
+      // Watermark text
+      const wmCenter  = 'SOLMATES • solmates.in';
+      const wmHeader  = 'SOLMATES EDUCATION • solmates.in';
+      const wmFooter  = 'Downloaded from Solmates (solmates.in) • For Personal Student Use Only';
 
-        // 1. Center Diagonal Watermark (Subtle & Unintrusive, 42 deg angle)
-        const centerText = 'SOLMATES • solmates.in';
-        const textSize = Math.min(Math.max(width * 0.05, 20), 32);
-        const textWidth = fontBold.widthOfTextAtSize(centerText, textSize);
+      const SCALE = 1.5; // render quality: higher = sharper but slower
 
-        page.drawText(centerText, {
-          x: (width - textWidth) / 2,
-          y: height / 2,
-          size: textSize,
-          font: fontBold,
-          color: PDFLib.rgb(0.68, 0.68, 0.70),
-          opacity: 0.16,
-          rotate: PDFLib.degrees(42),
-        });
+      for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+        const page = await pdfDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: SCALE });
 
-        // 2. Top Header Watermark
-        page.drawText('SOLMATES EDUCATION • solmates.in', {
-          x: 20,
-          y: height - 16,
-          size: 7.5,
-          font: fontRegular,
-          color: PDFLib.rgb(0.55, 0.55, 0.55),
-          opacity: 0.4,
-        });
+        // Render page to offscreen canvas
+        const canvas = document.createElement('canvas');
+        canvas.width  = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
 
-        // 3. Bottom Footer Watermark
-        page.drawText('Downloaded from Solmates (solmates.in) • For Personal Student Use Only', {
-          x: 20,
-          y: 12,
-          size: 7.5,
-          font: fontRegular,
-          color: PDFLib.rgb(0.55, 0.55, 0.55),
-          opacity: 0.4,
-        });
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        // ── Draw watermarks on the canvas ──
+        const W = canvas.width;
+        const H = canvas.height;
+
+        // 1. Center diagonal watermark
+        ctx.save();
+        ctx.globalAlpha = 0.13;
+        ctx.font = `bold ${Math.min(Math.max(W * 0.04, 28), 52)}px Arial`;
+        ctx.fillStyle = '#7c7c8a';
+        ctx.translate(W / 2, H / 2);
+        ctx.rotate(-42 * Math.PI / 180);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(wmCenter, 0, 0);
+        ctx.restore();
+
+        // 2. Header (top-left, small)
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        ctx.font = `11px Arial`;
+        ctx.fillStyle = '#555';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(wmHeader, 18, 10);
+        ctx.restore();
+
+        // 3. Footer (bottom-left, small)
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        ctx.font = `11px Arial`;
+        ctx.fillStyle = '#555';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(wmFooter, 18, H - 8);
+        ctx.restore();
+
+        // Add page to jsPDF (fit to A4)
+        const imgData = canvas.toDataURL('image/jpeg', 0.82);
+        const pgWidth  = isLandscape ? 841.89 : 595.28;
+        const pgHeight = isLandscape ? 595.28 : 841.89;
+        doc.addPage([pgWidth, pgHeight]);
+        doc.addImage(imgData, 'JPEG', 0, 0, pgWidth, pgHeight, undefined, 'FAST');
       }
 
-      const modifiedBytes = await newDoc.save();
-      return new Blob([modifiedBytes], { type: 'application/pdf' });
+      const pdfOutput = doc.output('arraybuffer');
+      return new Blob([pdfOutput], { type: 'application/pdf' });
     }
 
     let preparedWatermarkPromise = null;
