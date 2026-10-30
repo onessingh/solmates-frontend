@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v900_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v867_force_wipe_all_caches_r1';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
@@ -60,7 +60,7 @@
             if ('caches' in window) {
                 caches.keys().then(keys => {
                     keys.forEach(k => {
-                        if (k !== 'solmates-cache-v900') caches.delete(k);
+                        if (k !== 'solmates-cache-v867') caches.delete(k);
                     });
                 }).catch(() => {});
             }
@@ -175,7 +175,7 @@
             try {
                 const apiBase = window.PRODUCTION_API_URL || 
                                 (window.SOL && window.SOL.getApiBase ? window.SOL.getApiBase() : 
-                                (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://solmates.in/api'));
+                                (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api'));
 
                 const startTime = Date.now();
                 const headers = {};
@@ -275,8 +275,10 @@
         triggerInitialPrefetch();
     }
 
-    /* ========== SOLMATES UNIVERSAL AD LIFECYCLE ========== */
-    function initAdBannerLifecycle() {
+
+/* ========== SOLMATES UNIVERSAL AD LIFECYCLE ========== */
+(function() {
+    function initSolAdBanner() {
         const banners = document.querySelectorAll('.sol-ad-banner');
         if (!banners.length) return;
 
@@ -284,7 +286,6 @@
             const ins = banner.querySelector('ins.adsbygoogle');
             if (!ins) return;
 
-            // Only push if no inline script has already pushed and not yet processed
             if (!ins.getAttribute('data-adsbygoogle-status') && !ins.__adPushed) {
                 const nextScript = ins.nextElementSibling;
                 const hasInlineScript = nextScript && nextScript.tagName === 'SCRIPT' && nextScript.textContent.includes('adsbygoogle');
@@ -299,17 +300,16 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAdBannerLifecycle);
+        document.addEventListener('DOMContentLoaded', initSolAdBanner);
     } else {
-        initAdBannerLifecycle();
+        initSolAdBanner();
     }
 
-    // Restore ads if page is restored from bfcache on browser Back/Forward
     window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
-            initAdBannerLifecycle();
+            initSolAdBanner();
         }
     });
+})();
 
 })(window);
-

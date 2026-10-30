@@ -1241,9 +1241,7 @@ window.solmatesPromptNickname = function() {
             const ins = banner.querySelector('ins.adsbygoogle');
             if (!ins) return;
 
-            // Only push if no inline script has already pushed and not yet processed
             if (!ins.getAttribute('data-adsbygoogle-status') && !ins.__adPushed) {
-                // Check if there is an inline script right below it
                 const nextScript = ins.nextElementSibling;
                 const hasInlineScript = nextScript && nextScript.tagName === 'SCRIPT' && nextScript.textContent.includes('adsbygoogle');
                 if (!hasInlineScript) {
@@ -1262,7 +1260,6 @@ window.solmatesPromptNickname = function() {
         initSolAdBanner();
     }
 
-    // Restore ads if page is restored from bfcache on browser Back/Forward
     window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
             initSolAdBanner();
