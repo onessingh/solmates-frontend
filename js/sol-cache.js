@@ -44,7 +44,7 @@
     }
 
     // Automatic Purge of Old Cache Snapshots (v867)
-    const SNAPSHOT_CACHE_VER = 'v867_force_wipe_all_caches_r1';
+    const SNAPSHOT_CACHE_VER = 'v909_force_wipe_all_caches_r2';
     if (localStorage.getItem('_sol_snapshot_ver') !== SNAPSHOT_CACHE_VER) {
         try {
             Object.keys(localStorage).forEach(k => {
