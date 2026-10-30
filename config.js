@@ -77,7 +77,7 @@
   window.safeStorage = window.localStorage;
   window.safeSessionStorage = window.sessionStorage;
 })();
-window.SOL_APP_VERSION = '133.0';
+window.SOL_APP_VERSION = '134.0';
 
 // Completely hide dark mode from printers
 window.addEventListener('beforeprint', function() {
@@ -204,7 +204,7 @@ window.addEventListener('afterprint', function() {
 
 // Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
 // Production backend URLs — Cloudflare Verified Custom Domains
-window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
+window.BACKEND_PRIMARY_URL = 'https://solmates.in';
 window.BACKEND_SECONDARY_URL = 'https://api-backup.solmates.in';
 
 // Active Backend Selection — Always use Cloudflare Proxied Domain for Edge Caching (HIT)
