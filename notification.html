@@ -1882,7 +1882,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v907';
+    const NOTIF_APP_CACHE_VER = 'v908';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -1896,13 +1896,14 @@
         purgeNotificationCaches();
       }
 
+      const isAdmin = !!(localStorage.getItem('solmates_admin_logged_in') === 'true' || localStorage.getItem('solmates_admin_token'));
       const cached = safeJSONParse(localStorage.getItem(cacheKey), null);
       const hasCachedItems = Array.isArray(cached) && cached.length > 0;
       const now = Date.now();
       const isApp = (window.isWebView && window.isWebView()) || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || (document.referrer && document.referrer.includes('android-app://')) || !!localStorage.getItem('solmates_fcm_token');
-      const needsFetch = forceRefresh || isApp || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
+      const needsFetch = forceRefresh || isAdmin || isApp || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
 
-      if (hasCachedItems && !forceRefresh) {
+      if (hasCachedItems && !forceRefresh && !isAdmin) {
         console.log(`[NOTIFICATIONS] Sem ${semester}: Loading ${cached.length} items from cache...`);
         renderNotices(cached, semester);
         if (!needsFetch) {
@@ -1924,10 +1925,21 @@
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 25000);
             const primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
+            const fetchHeaders = {
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache'
+            };
+            const adminTok = localStorage.getItem('solmates_admin_token');
+            if (adminTok) {
+              fetchHeaders['Authorization'] = `Bearer ${adminTok}`;
+              fetchHeaders['X-Admin-Force'] = 'true';
+            }
             let response;
             try {
               response = await fetch(`${primaryUrl}/sol/notifications/all`, { 
-                signal: _fc.signal
+                signal: _fc.signal,
+                cache: 'no-cache',
+                headers: fetchHeaders
               });
               if (response && response.status === 503) {
                 throw new Error('HTTP 503');
@@ -1936,7 +1948,9 @@
               console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via secondary endpoint...', err);
               const secondaryUrl = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
               response = await fetch(`${secondaryUrl}/sol/notifications/all`, { 
-                signal: _fc.signal
+                signal: _fc.signal,
+                cache: 'no-cache',
+                headers: fetchHeaders
               });
             }
             clearTimeout(_ft);
@@ -3510,15 +3524,22 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
       if (!confirm('Bhai, pakka delete karna hai?')) return;
       try {
         const res = await solmatesAPI.deleteSOLItem('notifications', semester, id);
-        if (res && res.success !== false) {
+        purgeNotificationCaches();
+        const card = document.getElementById(`notice-${id}`) || document.querySelector(`.notification-card[data-id="${id}"]`);
+        if (card) card.remove();
+        alert('Notification deleted!');
+        fetchNotifications(semester, true);
+      } catch (err) {
+        if (err.status === 404 || (err.message && (err.message.includes('not found') || err.message.includes('404')))) {
+          // Notice was already deleted from server/database! Clean it from DOM and local cache!
           purgeNotificationCaches();
           const card = document.getElementById(`notice-${id}`) || document.querySelector(`.notification-card[data-id="${id}"]`);
           if (card) card.remove();
-          alert('Notification deleted!');
+          alert('Notification server se already deleted hai. Local screen aur cache se hata diya gaya!');
           fetchNotifications(semester, true);
+        } else {
+          alert('Error deleting: ' + err.message);
         }
-      } catch (err) {
-        alert('Error deleting: ' + err.message);
       }
     }
 
@@ -3774,7 +3795,7 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v904';
+        const swUrl = '/sw.js?v=v908';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
