@@ -589,12 +589,19 @@
       if (!res.ok) throw new Error('Fetch status: ' + res.status);
       const pdfBytes = await res.arrayBuffer();
 
-      const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-      const pages = pdfDoc.getPages();
-      const fontBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
-      const fontRegular = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      // Load source PDF (read-only)
+      const srcDoc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
 
-      for (const page of pages) {
+      // Create a brand-new doc and COPY pages intact (preserves binary JPEG/image streams)
+      const newDoc = await PDFLib.PDFDocument.create();
+      const pageIndices = srcDoc.getPageIndices();
+      const copiedPages = await newDoc.copyPages(srcDoc, pageIndices);
+
+      const fontBold = await newDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+      const fontRegular = await newDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+      for (const page of copiedPages) {
+        newDoc.addPage(page);  // add to new doc first, then draw watermark on it
         const { width, height } = page.getSize();
 
         // 1. Center Diagonal Watermark (Subtle & Unintrusive, 42 deg angle)
@@ -633,7 +640,7 @@
         });
       }
 
-      const modifiedBytes = await pdfDoc.save();
+      const modifiedBytes = await newDoc.save();
       return new Blob([modifiedBytes], { type: 'application/pdf' });
     }
 
