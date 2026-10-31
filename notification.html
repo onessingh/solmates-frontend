@@ -3180,7 +3180,7 @@
       if (!item) return '';
       let t = item.teacher || '';
       if (!t && item.description) {
-        const m = item.description.match(/(?:Teacher:\s*|\(Teacher:\s*)([^.)]+)/i);
+        const m = item.description.match(/(?:Teacher:\s*|\(Teacher:\s*)([^)]+?)(?:\s*\.\s*Time:|\s*\)|$)/i);
         if (m) {
           t = m[1].replace(/\.\s*Time:.*$/i, '').trim();
         }
@@ -3188,6 +3188,9 @@
       if (t) {
         t = t.replace(/^[A-Z0-9]+\s*[-–—]\s*/i, '').trim();
         t = t.split(/\s+/).map(w => {
+          // Handle 'Dr.Name' (no space after Dr.) e.g. 'Dr.Aakash'
+          const drNameMatch = w.match(/^(dr)\.(.+)/i);
+          if (drNameMatch) return 'Dr.' + drNameMatch[2].charAt(0).toUpperCase() + drNameMatch[2].slice(1).toLowerCase();
           if (/^dr\.?$/i.test(w)) return 'Dr.';
           if (w.length <= 1) return w.toUpperCase();
           return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
