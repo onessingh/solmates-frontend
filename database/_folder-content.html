@@ -1736,8 +1736,8 @@
               else itemsOrder.push({ id, order: index });
             });
 
-            if (foldersOrder.length > 0) await window.solmatesAPI.reorderBulkSOL('folder', foldersOrder, SEMESTER);
-            if (itemsOrder.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemsOrder, SEMESTER);
+            if (foldersOrder.length > 0) await window.solmatesAPI.reorderBulkSOL('folder', foldersOrder, SEMESTER, CATEGORY, FOLDER_ID);
+            if (itemsOrder.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemsOrder, SEMESTER, CATEGORY, FOLDER_ID);
 
             if (window.solmatesAPI && window.solmatesAPI._cacheClear) {
               window.solmatesAPI._cacheClear('');

@@ -966,8 +966,8 @@
             const btn = document.getElementById('btnReorder');
             const original = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            if (folderIds.length > 0) await window.solmatesAPI.reorderBulkSOL('folders', folderIds, semester);
-            if (itemIds.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemIds, semester);
+            if (folderIds.length > 0) await window.solmatesAPI.reorderBulkSOL('folders', folderIds, semester, CATEGORY, (typeof currentFolderId !== 'undefined' ? currentFolderId : null));
+            if (itemIds.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemIds, semester, CATEGORY, (typeof currentFolderId !== 'undefined' ? currentFolderId : null));
             btn.innerHTML = original;
           } catch(e) { alert('Failed to save: ' + e.message); }
         }

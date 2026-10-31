@@ -656,12 +656,12 @@ class SolmatesAPI {
     });
   }
 
-  async reorderBulkSOL(type, ids, semester = 'all') {
+  async reorderBulkSOL(type, ids, semester = 'all', category = null, folderId = null) {
     // [v88.9.x] Aggressive Cache Invalidation: Clear ALL SOL-related data!
     this._cacheClear(''); // Pass empty string to clear all 'solcache_*' keys
     return await this.request('/sol/reorder-bulk', {
       method: 'POST',
-      body: JSON.stringify({ type, items: ids, semester }),
+      body: JSON.stringify({ type, items: ids, semester, category, folderId }),
     });
   }
 
