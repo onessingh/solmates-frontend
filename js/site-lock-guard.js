@@ -1,5 +1,5 @@
 /**
- * SOLMATES SITE-WIDE SECTION LOCK GUARD v3.0
+ * SOLMATES SITE-WIDE SECTION LOCK GUARD v4.0
  * Comprehensive locking system for:
  * 1. SOL Database (/database)
  * 2. Tools (/tools)
@@ -90,6 +90,90 @@
     } catch (e) {}
   })();
 
+  // INJECT GLOBAL SCOPED STYLES (Protects lock buttons from card styling inheritance)
+  function ensureLockGlobalStyles() {
+    if (document.getElementById('siteLockGlobalStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'siteLockGlobalStyles';
+    style.textContent = `
+      /* Admin Card Lock / Unlock Button (Database-identical purple circle) */
+      .site-card-lock-btn {
+        position: absolute !important;
+        bottom: 10px !important;
+        right: 10px !important;
+        z-index: 25 !important;
+        background: #4f46e5 !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 30px !important;
+        height: 30px !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4) !important;
+        transition: transform 0.15s, background 0.15s !important;
+        text-decoration: none !important;
+      }
+      .site-card-lock-btn.is-unlocked-state {
+        background: #4f46e5 !important;
+      }
+      .site-card-lock-btn.is-locked-state {
+        background: #10b981 !important;
+      }
+      /* Prevent parent .main-option-card i rules (40px navy) from destroying this icon */
+      .site-card-lock-btn i {
+        font-size: 12px !important;
+        color: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        line-height: 1 !important;
+        width: auto !important;
+        height: auto !important;
+      }
+      /* Center Lock Overlay on Locked Cards (Exact Database Style) */
+      .site-lock-card-overlay {
+        position: absolute !important;
+        inset: 0 !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-radius: inherit !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 10 !important;
+        pointer-events: none !important;
+      }
+      html.dark .site-lock-card-overlay {
+        background: rgba(0, 0, 0, 0.2) !important;
+      }
+      .site-lock-card-overlay i.site-lock-center-icon {
+        font-size: 14px !important;
+        color: #fbbf24 !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+        width: 32px !important;
+        height: 32px !important;
+        line-height: 32px !important;
+        text-align: center !important;
+        border-radius: 50% !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+        display: inline-block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      /* Mobile responsiveness: HIDE navbar button on phones to prevent header overlap */
+      @media (max-width: 768px) {
+        #adminSiteLocksBtn {
+          display: none !important;
+        }
+      }
+    `;
+    (document.head || document.documentElement).appendChild(style);
+  }
+
   // Render Full-Screen Lock Screen for Students inside a locked page
   function renderLockOverlay(section) {
     if (document.getElementById('siteLockOverlay')) return;
@@ -132,7 +216,7 @@
           display: flex; align-items: center; justify-content: center;
           margin: 0 auto 18px; font-size: 22px;
           box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-        "><i class="fas fa-lock"></i></div>
+        "><i class="fas fa-lock" style="font-size:22px!important;color:#fbbf24!important;margin:0!important;"></i></div>
         <h2 style="
           margin: 0 0 10px; font-size: 1.35rem; font-weight: 800;
           color: ${isDark ? '#f8fafc' : '#0f172a'};
@@ -191,7 +275,7 @@
     }
   }
 
-  // Server API: Fetch lock folders from category 'recorded-class', semester 0
+  // Server API: Fetch lock folders from category 'recorded-class', semester 0 (standard caching, no timestamp)
   async function fetchServerLocks() {
     let folders = [];
     try {
@@ -200,7 +284,7 @@
         folders = (res && res.data) ? res.data : (Array.isArray(res) ? res : []);
       } else {
         const apiUrl = getBaseApiUrl();
-        const res = await fetch(`${apiUrl}/sol/folders/recorded-class/0?all=true&_t=${Date.now()}`);
+        const res = await fetch(`${apiUrl}/sol/folders/recorded-class/0?all=true`);
         if (res.ok) {
           const json = await res.json();
           folders = (json && json.data) ? json.data : (Array.isArray(json) ? json : []);
@@ -280,6 +364,7 @@
 
   // Apply visual lock indicators to navbar links and home cards (Database style)
   function applyLocksToDom(locksMap, foldersList) {
+    ensureLockGlobalStyles();
     const isAdmin = isSiteAdmin();
 
     SITE_SECTIONS.forEach(function (sec) {
@@ -302,22 +387,14 @@
             if (title) title.style.opacity = '0.5';
             const desc = el.querySelector('p, .desc');
             if (desc) desc.style.opacity = '0.5';
-            const mainIcon = el.querySelector('.main-icon, i');
+            const mainIcon = el.querySelector('.main-icon, i:not(.site-lock-center-icon)');
             if (mainIcon) mainIcon.style.opacity = '0.5';
 
             let overlay = el.querySelector('.site-lock-card-overlay');
             if (!overlay) {
               overlay = document.createElement('div');
               overlay.className = 'site-lock-card-overlay';
-              // Database style: subtle translucent overlay with centered amber lock on dark round circle
-              overlay.style.cssText = [
-                'position: absolute', 'inset: 0',
-                'background: rgba(255, 255, 255, 0.2)',
-                'border-radius: 12px', 'display: flex', 'align-items: center',
-                'justify-content: center', 'z-index: 10',
-                'pointer-events: none'
-              ].join(';');
-              overlay.innerHTML = '<i class="fas fa-lock" style="font-size: 14px; color: #fbbf24; background: rgba(15, 23, 42, 0.85); width: 32px; height: 32px; line-height: 32px; text-align: center; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: inline-block;"></i>';
+              overlay.innerHTML = '<i class="fas fa-lock site-lock-center-icon"></i>';
               el.appendChild(overlay);
             }
             overlay.style.display = 'flex';
@@ -327,7 +404,7 @@
               const badge = document.createElement('span');
               badge.className = 'nav-lock-badge';
               badge.style.cssText = 'margin-left: 6px; font-size: 11px; color: #fbbf24; vertical-align: middle;';
-              badge.innerHTML = '<i class="fas fa-lock"></i>';
+              badge.innerHTML = '<i class="fas fa-lock" style="font-size:11px!important;color:#fbbf24!important;margin:0!important;"></i>';
               el.appendChild(badge);
             }
           }
@@ -337,7 +414,7 @@
           if (title) title.style.opacity = '';
           const desc = el.querySelector('p, .desc');
           if (desc) desc.style.opacity = '';
-          const mainIcon = el.querySelector('.main-icon, i');
+          const mainIcon = el.querySelector('.main-icon, i:not(.site-lock-center-icon)');
           if (mainIcon) mainIcon.style.opacity = '';
 
           const overlay = el.querySelector('.site-lock-card-overlay');
@@ -346,19 +423,12 @@
           if (navBadge) navBadge.remove();
         }
 
-        // Admin Lock / Unlock Button on Homepage Cards (Exactly like database .sec-lock-btn)
+        // Admin Lock / Unlock Button on Homepage Cards (Exact database .sec-lock-btn purple round button)
         if (isAdmin && isCard) {
           let btn = el.querySelector('.site-card-lock-btn');
           if (!btn) {
             btn = document.createElement('button');
             btn.className = 'site-card-lock-btn';
-            btn.style.cssText = [
-              'position: absolute', 'bottom: 10px', 'right: 10px', 'z-index: 22',
-              'background: #4f46e5', 'color: white', 'border: none',
-              'border-radius: 50%', 'width: 28px', 'height: 28px',
-              'cursor: pointer', 'display: flex', 'align-items: center', 'justify-content: center',
-              'font-size: 12px', 'box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3)', 'transition: transform 0.15s'
-            ].join(';');
             el.appendChild(btn);
 
             btn.addEventListener('click', async function (e) {
@@ -381,9 +451,9 @@
           if (folderId) btn.setAttribute('data-fid', folderId);
           else btn.removeAttribute('data-fid');
 
+          btn.className = isLocked ? 'site-card-lock-btn is-locked-state' : 'site-card-lock-btn is-unlocked-state';
           btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
           btn.title = isLocked ? `Unlock ${sec.name}` : `Lock ${sec.name}`;
-          btn.style.background = isLocked ? '#10b981' : '#4f46e5';
         }
       });
     });
@@ -425,7 +495,7 @@
           display: flex; align-items: center; justify-content: center;
           margin: 0 auto 14px; font-size: 20px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        "><i class="fas fa-lock"></i></div>
+        "><i class="fas fa-lock" style="font-size:20px!important;color:#fbbf24!important;margin:0!important;"></i></div>
         <h3 style="margin: 0 0 8px; font-size: 1.2rem; font-weight: 800; color: ${isDark ? '#f8fafc' : '#0f172a'};">Section Locked</h3>
         <p style="margin: 0 0 20px; font-size: 0.9rem; color: ${isDark ? '#94a3b8' : '#64748b'}; line-height: 1.5;">This section is temporarily locked for maintenance. Content will be available soon!</p>
         <button id="closeSiteLockPopup" style="
@@ -492,41 +562,51 @@
       }
     }
 
-    // 3. If on Homepage and Admin, setup central "Admin Site Locks Manager"
+    // 3. Setup central "Admin Site Locks Manager"
     if (isAdmin) {
       setupAdminSiteLocksManager(freshLocks, folders);
     }
   }
 
-  // Admin Central Site Locks Manager Modal (Available on Home Page / Navbar)
+  // Admin Central Site Locks Manager Modal (Available on Desktop Navbar & Mobile Drawer)
   function setupAdminSiteLocksManager(locksMap, folders) {
+    // 1. Desktop Nav Button (Hidden on phones via CSS @media max-width: 768px)
     let triggerBtn = document.getElementById('adminSiteLocksBtn');
     if (!triggerBtn) {
-      const navRight = document.querySelector('.top-nav .nav-right') || document.querySelector('.top-nav') || document.querySelector('.nav-right');
-      triggerBtn = document.createElement('button');
-      triggerBtn.id = 'adminSiteLocksBtn';
-      triggerBtn.className = 'admin-locks-btn';
-      triggerBtn.addEventListener('click', openSiteLocksManagerModal);
-
+      const navRight = document.querySelector('.top-nav .nav-right') || document.querySelector('.nav-right');
       if (navRight) {
+        triggerBtn = document.createElement('button');
+        triggerBtn.id = 'adminSiteLocksBtn';
+        triggerBtn.className = 'admin-locks-btn';
         triggerBtn.style.cssText = [
           'background: #4f46e5', 'color: white', 'border: none', 'padding: 6px 14px',
           'border-radius: 20px', 'font-size: 12px', 'font-weight: 700', 'cursor: pointer',
-          'display: inline-flex', 'align-items: center', 'gap: 6px', 'margin-right: 10px',
+          'display: inline-flex', 'align-items: center', 'gap: 6px', 'margin-right: 8px',
           'box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3)', 'transition: transform 0.2s'
         ].join(';');
-        triggerBtn.innerHTML = '<i class="fas fa-lock"></i> Site Locks';
+        triggerBtn.innerHTML = '<i class="fas fa-lock" style="font-size:11px!important;color:white!important;margin:0!important;"></i> Site Locks';
+        triggerBtn.addEventListener('click', openSiteLocksManagerModal);
         navRight.insertBefore(triggerBtn, navRight.firstChild);
-      } else {
-        triggerBtn.style.cssText = [
-          'position: fixed', 'bottom: 20px', 'left: 20px', 'z-index: 99998',
-          'background: #4f46e5', 'color: white', 'border: none', 'padding: 8px 16px',
-          'border-radius: 24px', 'font-size: 12px', 'font-weight: 700', 'cursor: pointer',
-          'display: inline-flex', 'align-items: center', 'gap: 6px',
-          'box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4)', 'transition: transform 0.2s'
-        ].join(';');
-        triggerBtn.innerHTML = '<i class="fas fa-lock"></i> Site Locks';
-        document.body.appendChild(triggerBtn);
+      }
+    }
+
+    // 2. Mobile Drawer Menu Link (Cleanly placed inside the mobile hamburger menu, no navbar overlap)
+    let mobileDrawerLink = document.getElementById('adminMobileSiteLocksLink');
+    if (!mobileDrawerLink) {
+      const mobileNav = document.querySelector('.mobile-nav-overlay') || document.querySelector('.mobile-menu');
+      if (mobileNav) {
+        mobileDrawerLink = document.createElement('a');
+        mobileDrawerLink.id = 'adminMobileSiteLocksLink';
+        mobileDrawerLink.href = 'javascript:void(0)';
+        mobileDrawerLink.style.cssText = 'color: #4f46e5; font-weight: 700;';
+        mobileDrawerLink.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px;color:#4f46e5;"></i> Site Locks Manager';
+        mobileDrawerLink.addEventListener('click', function () {
+          if (typeof window.toggleMobileMenu === 'function') {
+            window.toggleMobileMenu();
+          }
+          openSiteLocksManagerModal();
+        });
+        mobileNav.appendChild(mobileDrawerLink);
       }
     }
 
