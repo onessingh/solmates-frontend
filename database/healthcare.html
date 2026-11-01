@@ -705,7 +705,132 @@
       }
 
     /* dark mode moved */
-    </style>
+    
+    /* Reorder / Organize Mode */
+    .btn-organize {
+      background: #059669;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .btn-organize:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(5,150,105,0.3);
+    }
+    .btn-organize.active {
+      background: #f59e0b !important;
+      color: white !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.5) !important;
+      animation: pulse-yellow-hc 2s infinite;
+    }
+    @keyframes pulse-yellow-hc {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    .reorder-mode-active .categories-grid {
+      background: rgba(5, 150, 105, 0.04);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+      border: 2px dashed #f59e0b;
+    }
+    .reorder-mode-active .category-card { 
+      cursor: move !important;
+      opacity: 0.95;
+      background: var(--bg-card);
+      border: 2px dashed #059669 !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      position: relative;
+    }
+    .reorder-mode-active .category-card:hover {
+      border-color: #f59e0b !important;
+    }
+    .reorder-mode-active .sec-lock-btn,
+    .reorder-mode-active .admin-edit-btn,
+    .reorder-mode-active .admin-lock-btn {
+      display: none !important;
+    }
+
+    /* Move up/down buttons on each card */
+    .sec-order-controls {
+      display: none;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      gap: 6px;
+      z-index: 25;
+    }
+    .reorder-mode-active .sec-order-controls {
+      display: flex !important;
+    }
+    .sec-order-btn {
+      background: #059669;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .sec-order-btn:hover {
+      background: #047857;
+      transform: scale(1.1);
+    }
+    .sec-drag-badge {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #f59e0b;
+      color: white;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: grab;
+      z-index: 25;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      align-items: center;
+      gap: 5px;
+    }
+    .reorder-mode-active .sec-drag-badge {
+      display: flex !important;
+    }
+
+    .sortable-ghost {
+      opacity: 0.3;
+      background: #cbd5e1 !important;
+      transform: scale(0.95);
+      border: 2px dashed #64748b !important;
+    }
+    .sortable-drag { 
+      opacity: 1 !important;
+      cursor: grabbing !important; 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+      z-index: 9999 !important;
+    }
+  </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="/config.js?v=v911"></script>
   <script src="/js/uptime-helper.js?v=v911"></script>
@@ -849,7 +974,8 @@
 
 
     
-  </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</head>
 
 <body>
 
@@ -985,53 +1111,58 @@
       <div class="database-header">
         <h1 id="db-title" style="color: #059669;"><i class="fas fa-heartbeat" style="color: #ef4444;"></i> MBA in Healthcare</h1>
         <p>Your exclusive resource hub for Healthcare notes, PYQs, classes, and materials.</p>
+        <div id="adminOrganizeBar" style="display:none; margin-top: 15px;">
+          <button class="btn-organize" id="btnReorder" onclick="toggleReorderMode()">
+            <i class="fas fa-arrows-alt"></i> Organize Sections
+          </button>
+        </div>
       </div>
 
       <!-- Categories -->
-      <div class="categories-grid">
-          <a href="/database/view?category=hc-elearning" class="category-card">
+      <div class="categories-grid" id="hcCategoriesGrid">
+          <a href="/database/view?category=hc-elearning" class="category-card" data-sec-id="hc-elearning">
             <div class="category-info">
               <h2>E-Books</h2>
               <p>Official study material and recommended e-books.</p>
             </div>
             <div class="category-icon"><i class="fas fa-laptop"></i></div>
           </a>
-          <a href="/database/view?category=hc-recorded-class" class="category-card">
+          <a href="/database/view?category=hc-recorded-class" class="category-card" data-sec-id="hc-recorded-class">
             <div class="category-info">
               <h2>Recorded Classes</h2>
               <p>Access previous live sessions and class recordings for Healthcare.</p>
             </div>
             <div class="category-icon"><i class="fas fa-play-circle"></i></div>
           </a>
-          <a href="/database/view?category=hc-notes" class="category-card">
+          <a href="/database/view?category=hc-notes" class="category-card" data-sec-id="hc-notes">
             <div class="category-info">
               <h2>Notes</h2>
               <p>Comprehensive subject-wise study notes for Healthcare.</p>
             </div>
             <div class="category-icon"><i class="fas fa-file-alt"></i></div>
           </a>
-          <a href="/database/view?category=hc-pyqs" class="category-card">
+          <a href="/database/view?category=hc-pyqs" class="category-card" data-sec-id="hc-pyqs">
             <div class="category-info">
               <h2>PYQs</h2>
               <p>Previous year question papers with solutions.</p>
             </div>
             <div class="category-icon"><i class="fas fa-history"></i></div>
           </a>
-          <a href="/database/view?category=hc-oneshot" class="category-card">
+          <a href="/database/view?category=hc-oneshot" class="category-card" data-sec-id="hc-oneshot">
             <div class="category-info">
               <h2>One-Shot Notes</h2>
               <p>Quick summary notes and revision materials.</p>
             </div>
             <div class="category-icon"><i class="fas fa-bolt"></i></div>
           </a>
-          <a href="/database/youtube-browse.html?category=hc-youtube" class="category-card">
+          <a href="/database/youtube-browse.html?category=hc-youtube" class="category-card" data-sec-id="hc-youtube">
             <div class="category-info">
               <h2>YouTube Videos</h2>
               <p>Curated playlists and educational videos.</p>
             </div>
             <div class="category-icon"><i class="fab fa-youtube"></i></div>
           </a>
-          <a href="/database/view?category=hc-professor" class="category-card">
+          <a href="/database/view?category=hc-professor" class="category-card" data-sec-id="hc-professor">
             <div class="category-info">
               <h2>Class Materials</h2>
               <p>PPTs, handouts, and materials shared by professors.</p>
@@ -1058,6 +1189,26 @@
       </script>
     </div>
 
+  
+        <script>
+          // Instant section order application from localStorage
+          (function() {
+            try {
+              const cachedOrder = JSON.parse(localStorage.getItem('solmates_hc_section_order') || '[]');
+              if (Array.isArray(cachedOrder) && cachedOrder.length > 0) {
+                document.addEventListener('DOMContentLoaded', function() {
+                  const grid = document.querySelector('.categories-grid');
+                  if (grid) {
+                    cachedOrder.forEach(function(id) {
+                      const el = grid.querySelector('[data-sec-id="' + id + '"]');
+                      if (el) grid.appendChild(el);
+                    });
+                  }
+                });
+              }
+            } catch(e) {}
+          })();
+        </script>
   <footer class="footer">
     <div class="social">
       <div class="whatsapp-container">
@@ -1214,6 +1365,9 @@
         const kCard = document.getElementById('adminKnowledgeCard');
         if (kCard) kCard.style.display = 'block';
 
+        const organizeBar = document.getElementById('adminOrganizeBar');
+        if (organizeBar) organizeBar.style.display = 'block';
+
         addAdminFeatures();
       }
     }
@@ -1302,6 +1456,19 @@ async function initHcSectionLocks() {
   } catch(e) {
     console.warn('HC lock init failed:', e.message);
     return;
+  }
+
+  // Check section order folder from server
+  const orderFolder = lockFolders.find(function(f) { return (f.name||'').startsWith('__HC_SECTION_ORDER__:'); });
+  if (orderFolder) {
+    try {
+      const orderStr = orderFolder.name.replace('__HC_SECTION_ORDER__:', '').trim();
+      const orderIds = orderStr.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+      if (orderIds.length > 0) {
+        applySectionOrder(orderIds);
+        localStorage.setItem('solmates_hc_section_order', JSON.stringify(orderIds));
+      }
+    } catch(e) {}
   }
 
   document.querySelectorAll('.category-card[href]').forEach(function(card) {
@@ -1393,6 +1560,144 @@ async function initHcSectionLocks() {
     applyState();
   });
 }
+
+
+// ===== HEALTHCARE SECTION REORDER / ORGANIZE LOGIC =====
+let isReorderMode = false;
+let sortableInstance = null;
+
+function applySectionOrder(orderIds) {
+  const grid = document.querySelector('.categories-grid');
+  if (!grid || !Array.isArray(orderIds) || orderIds.length === 0) return;
+  orderIds.forEach(function(id) {
+    const card = grid.querySelector('[data-sec-id="' + id + '"]');
+    if (card) grid.appendChild(card);
+  });
+}
+
+function toggleReorderMode() {
+  isReorderMode = !isReorderMode;
+  const btn = document.getElementById('btnReorder');
+  const grid = document.querySelector('.categories-grid');
+  if (!btn || !grid) return;
+
+  if (isReorderMode) {
+    btn.classList.add('active');
+    btn.innerHTML = '<i class="fas fa-check"></i> Done (Save Order)';
+    document.body.classList.add('reorder-mode-active');
+    setupReorderControls();
+    initSortable();
+  } else {
+    btn.classList.remove('active');
+    btn.innerHTML = '<i class="fas fa-check-double"></i> Saved!';
+    document.body.classList.remove('reorder-mode-active');
+    if (sortableInstance) {
+      sortableInstance.destroy();
+      sortableInstance = null;
+    }
+    saveSectionOrder();
+    setTimeout(function() {
+      btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize Sections';
+    }, 1200);
+  }
+}
+
+function initSortable() {
+  const grid = document.querySelector('.categories-grid');
+  if (!grid || typeof Sortable === 'undefined') return;
+  if (sortableInstance) sortableInstance.destroy();
+  sortableInstance = Sortable.create(grid, {
+    animation: 200,
+    ghostClass: 'sortable-ghost',
+    dragClass: 'sortable-drag',
+    forceFallback: true,
+    onStart: function() { if (navigator.vibrate) navigator.vibrate(50); },
+    onEnd: function() {
+      saveSectionOrder();
+    }
+  });
+}
+
+function setupReorderControls() {
+  const grid = document.querySelector('.categories-grid');
+  if (!grid) return;
+  grid.querySelectorAll('.category-card[data-sec-id]').forEach(function(card) {
+    if (!card.querySelector('.sec-order-controls')) {
+      const ctrl = document.createElement('div');
+      ctrl.className = 'sec-order-controls';
+      ctrl.innerHTML = '<button type="button" class="sec-order-btn sec-move-up" title="Move Up"><i class="fas fa-arrow-up"></i></button><button type="button" class="sec-order-btn sec-move-down" title="Move Down"><i class="fas fa-arrow-down"></i></button>';
+      ctrl.querySelector('.sec-move-up').addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        moveCard(card, 'up');
+      });
+      ctrl.querySelector('.sec-move-down').addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        moveCard(card, 'down');
+      });
+      card.appendChild(ctrl);
+    }
+    if (!card.querySelector('.sec-drag-badge')) {
+      const badge = document.createElement('div');
+      badge.className = 'sec-drag-badge';
+      badge.innerHTML = '<i class="fas fa-grip-vertical"></i> Drag';
+      card.appendChild(badge);
+    }
+  });
+}
+
+function moveCard(card, direction) {
+  const grid = card.parentElement;
+  if (!grid) return;
+  if (direction === 'up') {
+    const prev = card.previousElementSibling;
+    if (prev && prev.classList.contains('category-card')) {
+      grid.insertBefore(card, prev);
+      saveSectionOrder();
+    }
+  } else if (direction === 'down') {
+    const next = card.nextElementSibling;
+    if (next && next.classList.contains('category-card')) {
+      grid.insertBefore(next, card);
+      saveSectionOrder();
+    }
+  }
+}
+
+async function saveSectionOrder() {
+  const grid = document.querySelector('.categories-grid');
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll('.category-card[data-sec-id]'));
+  const orderIds = cards.map(function(c) { return c.getAttribute('data-sec-id'); }).filter(Boolean);
+  if (orderIds.length === 0) return;
+
+  localStorage.setItem('solmates_hc_section_order', JSON.stringify(orderIds));
+
+  if (!window.solmatesAPI || !window.solmatesAPI.isAdminLoggedIn()) return;
+  try {
+    const res = await window.solmatesAPI.getSOLFolders('hc-recorded-class', 0, null, true);
+    const folders = (res && res.data) ? res.data : [];
+    const existing = folders.find(function(f) { return (f.name || '').startsWith('__HC_SECTION_ORDER__:'); });
+    const folderName = '__HC_SECTION_ORDER__:' + orderIds.join(',');
+    if (existing) {
+      await window.solmatesAPI.updateSOLFolder(existing.id, { name: folderName });
+    } else {
+      await window.solmatesAPI.addSOLFolder({ name: folderName, category: 'hc-recorded-class', semester: 0 });
+    }
+    if (window.solmatesAPI._cacheClear) window.solmatesAPI._cacheClear('');
+  } catch(e) {
+    console.warn('Failed to save HC section order to server:', e);
+  }
+}
+
+// Block navigation when reordering is active (Capture phase)
+document.addEventListener('click', function(e) {
+  if (!isReorderMode) return;
+  const card = e.target.closest('.category-card');
+  if (card && !e.target.closest('.sec-order-btn') && !e.target.closest('.sec-drag-badge')) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
 
 initHcSectionLocks();
 </script>

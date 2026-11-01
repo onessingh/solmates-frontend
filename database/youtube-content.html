@@ -1545,7 +1545,7 @@
     <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
       SOLMATES
     </div>
-    <a href="/database" class="database-btn">
+    <a href="/database" class="database-btn" id="dbNavBtn">
       <i class="fas fa-database"></i> Database
     </a>
   </header>
@@ -1759,7 +1759,8 @@
       const newUrl = `/database/youtube-content?semester=${SEMESTER}` +
                      (FOLDER_ID ? `&folderId=${FOLDER_ID}` : '') +
                      `&name=${encodeURIComponent(FOLDER_NAME)}` +
-                     (PARENT_NAME ? `&parentName=${encodeURIComponent(PARENT_NAME)}` : '');
+                     (PARENT_NAME ? `&parentName=${encodeURIComponent(PARENT_NAME)}` : '') +
+                     (CATEGORY && CATEGORY !== 'youtube' ? `&category=${encodeURIComponent(CATEGORY)}` : '');
 
       history.pushState({ semester: SEMESTER, folderId: FOLDER_ID, name: FOLDER_NAME, parentName: PARENT_NAME }, '', newUrl);
 
@@ -1827,12 +1828,18 @@
     // -- Breadcrumb ----------------------------------------------------------
     function buildBreadcrumb() {
       const bc = document.getElementById('breadcrumb');
+      const isHC = CATEGORY === 'hc-youtube';
+      const homeLink = isHC ? '/database/healthcare' : '/database';
+      const homeIcon = isHC ? 'fas fa-heartbeat' : 'fas fa-home';
+      const homeLabel = isHC ? 'Healthcare' : 'Database';
+      const ytBrowseBase = isHC ? '/database/youtube-browse?category=hc-youtube' : '/database/youtube-browse';
+      const ytSemBase = isHC ? `/database/youtube-browse?category=hc-youtube&semester=${SEMESTER}` : `/database/youtube-browse?semester=${SEMESTER}`;
       let html = `
-      <a href="/database" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item home"><i class="fas fa-home"></i> Database</a>
+      <a href="${homeLink}" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item home"><i class="${homeIcon}"></i> ${homeLabel}</a>
       <i class="fas fa-chevron-right bc-sep"></i>
-      <a href="/database/youtube-browse" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
+      <a href="${ytBrowseBase}" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item"><i class="fab fa-youtube"></i> YouTube</a>
       <i class="fas fa-chevron-right bc-sep"></i>
-      <a href="/database/youtube-browse?semester=${SEMESTER}" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item"><i class="fas fa-layer-group"></i> Sem ${SEMESTER}</a>
+      <a href="${ytSemBase}" onclick="event.preventDefault(); smoothRedirect(this.href);" class="bc-item"><i class="fas fa-layer-group"></i> Sem ${SEMESTER}</a>
     `;
 
       if (PARENT_NAME) {
@@ -1858,6 +1865,13 @@
     // -- Init ----------------------------------------------------------------
     async function init() {
       isNavigating = false;
+      if (CATEGORY === 'hc-youtube') {
+        const dbNav = document.getElementById('dbNavBtn');
+        if (dbNav) {
+          dbNav.href = '/database/healthcare';
+          dbNav.innerHTML = '<i class="fas fa-heartbeat"></i> Healthcare';
+        }
+      }
 
       // ?? WAIT for API status to be fully determined
       let retry = 0;

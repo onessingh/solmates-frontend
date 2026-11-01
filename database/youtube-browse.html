@@ -1236,7 +1236,7 @@
     <div class="nav-logo" onclick="window.location.href='/'" style="cursor: pointer;">
       SOLMATES
     </div>
-    <a href="/database" class="database-btn">
+    <a href="/database" class="database-btn" id="dbNavBtn">
       <i class="fas fa-database"></i> Database
     </a>
   </header>
@@ -1591,7 +1591,7 @@
       let subjects = [...rootFoldersOnly];
 
       // Only inject hardcoded fallback syllabus subjects if NO folders exist in database for this semester
-      if (subjects.length === 0 && SEMESTER_SUBJECTS[sem]) {
+      if (CATEGORY === 'youtube' && subjects.length === 0 && SEMESTER_SUBJECTS[sem]) {
         SEMESTER_SUBJECTS[sem].forEach(name => {
           subjects.push({ id: null, name, _virtual: true });
         });
