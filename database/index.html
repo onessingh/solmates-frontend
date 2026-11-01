@@ -2146,42 +2146,40 @@ function closeAwProof() { document.getElementById('awProofOverlay').style.displa
 
 async function loadAwareness() {
   var section = document.getElementById('awarenessFullSection') || document.getElementById('awarenessSection');
+  if (!section) return;
   var addBtn = document.getElementById('addAwarenessBtn');
   var list = document.getElementById('awList');
   var token = localStorage.getItem('solmates_admin_token');
   var isAdmin = !!token || !!(window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn());
 
-  if (isAdmin) {
-    section.style.display = 'block';
-    addBtn.style.display = 'inline-block';
-    list.innerHTML = '<p style="color:#64748b;font-size:14px;padding:10px 0;">Loading alerts...</p>';
-  }
-
   try {
     var apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
     var response = await fetch(apiUrl + '/sol/notifications/all');
     if (!response.ok) {
-      if (isAdmin) list.innerHTML = '<p style="color:#ef4444;font-size:13px;padding:10px 0;">Could not load alerts. Add a new one to start.</p>';
+      section.style.display = 'none';
       return;
     }
     var data = await response.json();
     var alerts = [];
     if (Array.isArray(data)) {
-      alerts = data.filter(function(n){ return n.folderId === 'AWARENESS'; });
-    } else if (typeof data === 'object') {
+      alerts = data.filter(function(n){ return n && n.folderId === 'AWARENESS'; });
+    } else if (typeof data === 'object' && data) {
       Object.values(data).forEach(function(semNotices){
         if (Array.isArray(semNotices)) {
-          semNotices.forEach(function(n){ if (n.folderId === 'AWARENESS') alerts.push(n); });
+          semNotices.forEach(function(n){ if (n && n.folderId === 'AWARENESS') alerts.push(n); });
         }
       });
     }
-    alerts.reverse();
-    if (!isAdmin && alerts.length === 0) { section.style.display = 'none'; return; }
-    if (!isAdmin) section.style.display = 'block';
-    if (alerts.length === 0) {
-      list.innerHTML = '<p style="color:#64748b;font-size:14px;padding:10px 0;">No alerts currently active. Community is safe.</p>';
+
+    if (!alerts || alerts.length === 0) {
+      section.style.display = 'none';
       return;
     }
+
+    alerts.reverse();
+    section.style.display = 'block';
+    if (isAdmin && addBtn) addBtn.style.display = 'inline-block';
+
     var html = '';
     for (var i = 0; i < alerts.length; i++) {
       var alert = alerts[i];
@@ -2189,10 +2187,10 @@ async function loadAwareness() {
       var removeBtn = isAdmin ? '<button class="aware-btn" style="margin-top:8px;" onclick="deleteAw(\'' + (alert.id || alert._id) + '\', this)">Remove</button>' : '';
       html += '<div class="awareness-card"><div class="aware-card-head"><div class="aware-avatar">' + initial + '</div><div class="aware-info"><h4>' + (alert.title || '') + '</h4><p>' + (alert.date || '') + '</p></div></div><p class="aware-desc">' + (alert.description || '') + '</p><button class="aware-btn" onclick="openAwProof(\'' + (alert.link || '') + '\')">View Proof</button>' + removeBtn + '</div>';
     }
-    list.innerHTML = html;
+    if (list) list.innerHTML = html;
   } catch(err) {
     console.error('Error loading awareness:', err);
-    if (isAdmin) list.innerHTML = '<p style="color:#ef4444;font-size:13px;padding:10px 0;">Error: ' + err.message + '</p>';
+    section.style.display = 'none';
   }
 }
 window.loadAwareness = loadAwareness;
