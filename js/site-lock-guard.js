@@ -1,5 +1,5 @@
 /**
- * SOLMATES SITE-WIDE SECTION LOCK GUARD v2.0
+ * SOLMATES SITE-WIDE SECTION LOCK GUARD v3.0
  * Comprehensive locking system for:
  * 1. SOL Database (/database)
  * 2. Tools (/tools)
@@ -26,13 +26,27 @@
     { key: 'privacy-policy', name: 'Privacy & Terms',     icon: 'fas fa-shield-alt',   lockKey: '__SITE_PRIVACY_LOCKED__',  path: '/privacy-policy', sel: 'a[href*="/privacy-policy"]' }
   ];
 
+  // Helper: Extract clean Admin Token
+  function getAdminToken() {
+    let t = localStorage.getItem('solmates_admin_token') || localStorage.getItem('adminToken') || '';
+    if (t) {
+      t = t.trim();
+      if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+        t = t.slice(1, -1).trim();
+      }
+      t = t.replace(/^Bearer\s+/i, '').trim();
+    }
+    return t || null;
+  }
+
   // Helper: Detect Admin Login
   function isSiteAdmin() {
     try {
       if (window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function') {
         if (window.solmatesAPI.isAdminLoggedIn()) return true;
       }
-      return !!localStorage.getItem('solmates_admin_token');
+      if (localStorage.getItem('solmates_admin_logged_in') === 'true') return true;
+      return !!getAdminToken();
     } catch (e) {
       return false;
     }
@@ -50,6 +64,13 @@
       }
     }
     return null;
+  }
+
+  // Helper: Get Base API URL
+  function getBaseApiUrl() {
+    if (window.PRODUCTION_API_URL) return window.PRODUCTION_API_URL;
+    if (window.BACKEND_PRIMARY_URL) return window.BACKEND_PRIMARY_URL + '/api';
+    return 'https://api.solmates.in/api';
   }
 
   // STEP 1: ZERO-MILLISECOND EARLY BLOCKER (Runs immediately in <head>)
@@ -88,43 +109,43 @@
     overlay.style.cssText = [
       'position: fixed', 'inset: 0', 'z-index: 999999',
       'display: flex', 'align-items: center', 'justify-content: center',
-      `background: ${isDark ? 'rgba(10,10,10,0.92)' : 'rgba(245,245,247,0.95)'}`,
-      'backdrop-filter: blur(6px)', '-webkit-backdrop-filter: blur(6px)',
+      `background: ${isDark ? 'rgba(15,23,42,0.96)' : 'rgba(248,250,252,0.96)'}`,
+      'backdrop-filter: blur(8px)', '-webkit-backdrop-filter: blur(8px)',
       'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
       'padding: 20px', 'box-sizing: border-box'
     ].join(';');
 
     overlay.innerHTML = `
       <div style="
-        background: ${isDark ? '#18181b' : '#ffffff'};
-        border: 1px solid ${isDark ? '#27272a' : '#e4e4e7'};
-        border-radius: 24px;
-        padding: 42px 30px;
+        background: ${isDark ? '#1e293b' : '#ffffff'};
+        border: 1px solid ${isDark ? '#334155' : '#e2e8f0'};
+        border-radius: 20px;
+        padding: 44px 28px;
         text-align: center;
         max-width: 400px;
         width: 100%;
-        box-shadow: 0 20px 40px ${isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.08)'};
+        box-shadow: 0 20px 45px ${isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)'};
       ">
         <div style="
-          width: 62px; height: 62px; border-radius: 50%;
-          background: #000000; color: #ffffff;
+          width: 56px; height: 56px; border-radius: 50%;
+          background: rgba(15, 23, 42, 0.85); color: #fbbf24;
           display: flex; align-items: center; justify-content: center;
-          margin: 0 auto 20px; font-size: 24px;
-          box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+          margin: 0 auto 18px; font-size: 22px;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.2);
         "><i class="fas fa-lock"></i></div>
         <h2 style="
-          margin: 0 0 10px; font-size: 1.4rem; font-weight: 800;
-          color: ${isDark ? '#fafafa' : '#09090b'};
+          margin: 0 0 10px; font-size: 1.35rem; font-weight: 800;
+          color: ${isDark ? '#f8fafc' : '#0f172a'};
         ">${section.name}</h2>
         <p style="
           margin: 0 0 24px; font-size: 0.92rem; line-height: 1.6;
-          color: ${isDark ? '#a1a1aa' : '#71717a'};
+          color: ${isDark ? '#94a3b8' : '#64748b'};
         ">This section is currently locked for maintenance. It will be available soon!</p>
         <a href="/" style="
           display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-          background: #000000; color: #ffffff; padding: 12px 30px; border-radius: 50px;
+          background: #4f46e5; color: #ffffff; padding: 11px 28px; border-radius: 50px;
           text-decoration: none; font-weight: 700; font-size: 0.92rem;
-          box-shadow: 0 4px 14px rgba(0,0,0,0.2); transition: transform 0.15s;
+          box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); transition: transform 0.15s;
         ">← Back to Home</a>
       </div>
     `;
@@ -140,9 +161,9 @@
     badge.id = 'siteLockAdminBadge';
     badge.style.cssText = [
       'position: fixed', 'top: 60px', 'left: 50%', 'transform: translateX(-50%)',
-      'background: #111827', 'color: #ffffff', 'padding: 8px 16px', 'border-radius: 30px',
+      'background: #4f46e5', 'color: #ffffff', 'padding: 7px 16px', 'border-radius: 30px',
       'font-size: 12px', 'font-weight: 700', 'z-index: 999999',
-      'box-shadow: 0 4px 15px rgba(0,0,0,0.3)', 'display: flex', 'align-items: center', 'gap: 10px',
+      'box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35)', 'display: flex', 'align-items: center', 'gap: 10px',
       'font-family: -apple-system, sans-serif'
     ].join(';');
 
@@ -175,14 +196,14 @@
     let folders = [];
     try {
       if (window.solmatesAPI && typeof window.solmatesAPI.getSOLFolders === 'function') {
-        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true);
-        folders = (res && res.data) ? res.data : [];
+        const res = await window.solmatesAPI.getSOLFolders('recorded-class', 0, null, true, true);
+        folders = (res && res.data) ? res.data : (Array.isArray(res) ? res : []);
       } else {
-        const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
-        const res = await fetch(`${apiUrl}/sol/folders/recorded-class/0?all=true`);
+        const apiUrl = getBaseApiUrl();
+        const res = await fetch(`${apiUrl}/sol/folders/recorded-class/0?all=true&_t=${Date.now()}`);
         if (res.ok) {
           const json = await res.json();
-          folders = Array.isArray(json) ? json : (json && json.data ? json.data : []);
+          folders = (json && json.data) ? json.data : (Array.isArray(json) ? json : []);
         }
       }
     } catch (e) {
@@ -194,15 +215,15 @@
 
   // Toggle a section lock (Add or Delete folder in recorded-class 0)
   async function toggleSiteLock(lockKey, shouldLock, folderId) {
-    const token = localStorage.getItem('solmates_admin_token');
-    const apiUrl = window.PRODUCTION_API_URL || 'https://solmates-backend-w27e.onrender.com/api';
+    const token = getAdminToken();
+    const apiUrl = getBaseApiUrl();
 
     try {
       if (shouldLock) {
         if (window.solmatesAPI && typeof window.solmatesAPI.addSOLFolder === 'function') {
           await window.solmatesAPI.addSOLFolder({ name: lockKey, category: 'recorded-class', semester: 0 });
         } else {
-          await fetch(`${apiUrl}/sol/folders`, {
+          const res = await fetch(`${apiUrl}/sol/folders`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -210,22 +231,31 @@
             },
             body: JSON.stringify({ name: lockKey, category: 'recorded-class', semester: 0 })
           });
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `Server returned ${res.status}`);
+          }
         }
       } else {
         let targetId = folderId;
-        if (!targetId) {
-          const folders = await fetchServerLocks();
-          const f = (folders || []).find(it => (it.name || '').includes(lockKey));
-          if (f) targetId = f.id || f._id;
+        const freshFolders = await fetchServerLocks();
+        const found = (freshFolders || []).find(it => (it.name || '').includes(lockKey));
+        if (found) {
+          targetId = found.id || found._id;
         }
+
         if (targetId) {
           if (window.solmatesAPI && typeof window.solmatesAPI.deleteSOLFolder === 'function') {
             await window.solmatesAPI.deleteSOLFolder(targetId);
           } else {
-            await fetch(`${apiUrl}/sol/folders/${targetId}`, {
+            const res = await fetch(`${apiUrl}/sol/folders/${targetId}`, {
               method: 'DELETE',
               headers: { 'Authorization': `Bearer ${token}` }
             });
+            if (!res.ok) {
+              const errData = await res.json().catch(() => ({}));
+              throw new Error(errData.message || `Server returned ${res.status}`);
+            }
           }
         }
       }
@@ -235,7 +265,7 @@
       cached[lockKey] = shouldLock;
       localStorage.setItem('solmates_site_locks', JSON.stringify(cached));
 
-      if (window.solmatesAPI && window.solmatesAPI._cacheClear) {
+      if (window.solmatesAPI && typeof window.solmatesAPI._cacheClear === 'function') {
         window.solmatesAPI._cacheClear('');
       }
 
@@ -248,10 +278,9 @@
     }
   }
 
-  // Apply visual lock indicators to navbar links and home cards
+  // Apply visual lock indicators to navbar links and home cards (Database style)
   function applyLocksToDom(locksMap, foldersList) {
     const isAdmin = isSiteAdmin();
-    const isDark = document.documentElement.classList.contains('dark') || localStorage.getItem('solmates_theme') === 'dark';
 
     SITE_SECTIONS.forEach(function (sec) {
       const isLocked = !!locksMap[sec.lockKey];
@@ -267,66 +296,94 @@
           el.classList.add('site-section-locked');
           if (isCard) {
             el.style.position = 'relative';
+
+            // Database style: subtle card opacity
+            const title = el.querySelector('h3, h2, .title');
+            if (title) title.style.opacity = '0.5';
+            const desc = el.querySelector('p, .desc');
+            if (desc) desc.style.opacity = '0.5';
+            const mainIcon = el.querySelector('.main-icon, i');
+            if (mainIcon) mainIcon.style.opacity = '0.5';
+
             let overlay = el.querySelector('.site-lock-card-overlay');
             if (!overlay) {
               overlay = document.createElement('div');
               overlay.className = 'site-lock-card-overlay';
+              // Database style: subtle translucent overlay with centered amber lock on dark round circle
               overlay.style.cssText = [
                 'position: absolute', 'inset: 0',
-                isDark ? 'background: rgba(0, 0, 0, 0.35)' : 'background: rgba(255, 255, 255, 0.35)',
-                'border-radius: inherit', 'display: flex', 'align-items: center',
+                'background: rgba(255, 255, 255, 0.2)',
+                'border-radius: 12px', 'display: flex', 'align-items: center',
                 'justify-content: center', 'z-index: 10',
-                'backdrop-filter: blur(1.5px)', '-webkit-backdrop-filter: blur(1.5px)',
                 'pointer-events: none'
               ].join(';');
-              overlay.innerHTML = '<div style="background: #000000; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);"><i class="fas fa-lock"></i></div>';
+              overlay.innerHTML = '<i class="fas fa-lock" style="font-size: 14px; color: #fbbf24; background: rgba(15, 23, 42, 0.85); width: 32px; height: 32px; line-height: 32px; text-align: center; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: inline-block;"></i>';
               el.appendChild(overlay);
             }
             overlay.style.display = 'flex';
           } else {
-            // Navbar or inline link: subtle black lock badge
+            // Navbar or inline link: subtle amber lock icon (matching database style)
             if (!el.querySelector('.nav-lock-badge')) {
               const badge = document.createElement('span');
               badge.className = 'nav-lock-badge';
-              badge.style.cssText = `margin-left: 6px; font-size: 11px; color: ${isDark ? '#ffffff' : '#000000'}; vertical-align: middle;`;
+              badge.style.cssText = 'margin-left: 6px; font-size: 11px; color: #fbbf24; vertical-align: middle;';
               badge.innerHTML = '<i class="fas fa-lock"></i>';
               el.appendChild(badge);
             }
           }
         } else {
           el.classList.remove('site-section-locked');
+          const title = el.querySelector('h3, h2, .title');
+          if (title) title.style.opacity = '';
+          const desc = el.querySelector('p, .desc');
+          if (desc) desc.style.opacity = '';
+          const mainIcon = el.querySelector('.main-icon, i');
+          if (mainIcon) mainIcon.style.opacity = '';
+
           const overlay = el.querySelector('.site-lock-card-overlay');
           if (overlay) overlay.style.display = 'none';
           const navBadge = el.querySelector('.nav-lock-badge');
           if (navBadge) navBadge.remove();
         }
 
-        // Admin Lock / Unlock Button on Homepage Cards
+        // Admin Lock / Unlock Button on Homepage Cards (Exactly like database .sec-lock-btn)
         if (isAdmin && isCard) {
           let btn = el.querySelector('.site-card-lock-btn');
           if (!btn) {
             btn = document.createElement('button');
             btn.className = 'site-card-lock-btn';
             btn.style.cssText = [
-              'position: absolute', 'bottom: 12px', 'right: 12px', 'z-index: 20',
-              'width: 32px', 'height: 32px', 'border-radius: 50%', 'border: none',
+              'position: absolute', 'bottom: 10px', 'right: 10px', 'z-index: 22',
+              'background: #4f46e5', 'color: white', 'border: none',
+              'border-radius: 50%', 'width: 28px', 'height: 28px',
               'cursor: pointer', 'display: flex', 'align-items: center', 'justify-content: center',
-              'font-size: 13px', 'color: white', 'transition: transform 0.2s', 'box-shadow: 0 2px 8px rgba(0,0,0,0.2)'
+              'font-size: 12px', 'box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3)', 'transition: transform 0.15s'
             ].join(';');
             el.appendChild(btn);
 
             btn.addEventListener('click', async function (e) {
               e.preventDefault();
               e.stopPropagation();
+              const key = btn.getAttribute('data-key');
+              const isCurLocked = btn.getAttribute('data-locked') === '1';
+              const fid = btn.getAttribute('data-fid') || null;
+
               btn.disabled = true;
               btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-              await toggleSiteLock(sec.lockKey, !isLocked, folderId);
+              await toggleSiteLock(key, !isCurLocked, fid);
               btn.disabled = false;
             });
           }
-          btn.style.background = isLocked ? '#10b981' : '#000000';
+
+          // Always dynamically update dataset on EVERY render
+          btn.setAttribute('data-key', sec.lockKey);
+          btn.setAttribute('data-locked', isLocked ? '1' : '0');
+          if (folderId) btn.setAttribute('data-fid', folderId);
+          else btn.removeAttribute('data-fid');
+
           btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
           btn.title = isLocked ? `Unlock ${sec.name}` : `Lock ${sec.name}`;
+          btn.style.background = isLocked ? '#10b981' : '#4f46e5';
         }
       });
     });
@@ -351,30 +408,30 @@
     modal.style.cssText = [
       'position: fixed', 'inset: 0', 'z-index: 999999', 'display: flex',
       'align-items: center', 'justify-content: center',
-      'background: rgba(0,0,0,0.45)', 'backdrop-filter: blur(3px)',
+      'background: rgba(0,0,0,0.5)', 'backdrop-filter: blur(3px)',
       'padding: 20px', 'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
     ].join(';');
 
     modal.innerHTML = `
       <div style="
-        background: ${isDark ? '#18181b' : '#ffffff'};
+        background: ${isDark ? '#1e293b' : '#ffffff'};
         border-radius: 20px; padding: 32px 24px; text-align: center;
         max-width: 350px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        border: 1px solid ${isDark ? '#27272a' : '#e4e4e7'};
+        border: 1px solid ${isDark ? '#334155' : '#e2e8f0'};
       ">
         <div style="
           width: 50px; height: 50px; border-radius: 50%;
-          background: #000000; color: #ffffff;
+          background: rgba(15, 23, 42, 0.85); color: #fbbf24;
           display: flex; align-items: center; justify-content: center;
           margin: 0 auto 14px; font-size: 20px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         "><i class="fas fa-lock"></i></div>
-        <h3 style="margin: 0 0 8px; font-size: 1.2rem; font-weight: 800; color: ${isDark ? '#fafafa' : '#09090b'};">Section Locked</h3>
-        <p style="margin: 0 0 20px; font-size: 0.9rem; color: ${isDark ? '#a1a1aa' : '#71717a'}; line-height: 1.5;">This section is temporarily locked for maintenance. Content will be available soon!</p>
+        <h3 style="margin: 0 0 8px; font-size: 1.2rem; font-weight: 800; color: ${isDark ? '#f8fafc' : '#0f172a'};">Section Locked</h3>
+        <p style="margin: 0 0 20px; font-size: 0.9rem; color: ${isDark ? '#94a3b8' : '#64748b'}; line-height: 1.5;">This section is temporarily locked for maintenance. Content will be available soon!</p>
         <button id="closeSiteLockPopup" style="
-          background: #000000; color: white; border: none; padding: 10px 24px;
+          background: #4f46e5; color: white; border: none; padding: 10px 24px;
           border-radius: 30px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         ">Understood</button>
       </div>
     `;
@@ -453,20 +510,20 @@
 
       if (navRight) {
         triggerBtn.style.cssText = [
-          'background: #000000', 'color: white', 'border: none', 'padding: 6px 14px',
+          'background: #4f46e5', 'color: white', 'border: none', 'padding: 6px 14px',
           'border-radius: 20px', 'font-size: 12px', 'font-weight: 700', 'cursor: pointer',
           'display: inline-flex', 'align-items: center', 'gap: 6px', 'margin-right: 10px',
-          'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25)', 'transition: transform 0.2s'
+          'box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3)', 'transition: transform 0.2s'
         ].join(';');
         triggerBtn.innerHTML = '<i class="fas fa-lock"></i> Site Locks';
         navRight.insertBefore(triggerBtn, navRight.firstChild);
       } else {
         triggerBtn.style.cssText = [
           'position: fixed', 'bottom: 20px', 'left: 20px', 'z-index: 99998',
-          'background: #000000', 'color: white', 'border: none', 'padding: 8px 16px',
+          'background: #4f46e5', 'color: white', 'border: none', 'padding: 8px 16px',
           'border-radius: 24px', 'font-size: 12px', 'font-weight: 700', 'cursor: pointer',
           'display: inline-flex', 'align-items: center', 'gap: 6px',
-          'box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35)', 'transition: transform 0.2s'
+          'box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4)', 'transition: transform 0.2s'
         ].join(';');
         triggerBtn.innerHTML = '<i class="fas fa-lock"></i> Site Locks';
         document.body.appendChild(triggerBtn);
@@ -531,8 +588,8 @@
           <div style="display: flex; align-items: center; gap: 12px;">
             <div style="
               width: 36px; height: 36px; border-radius: 10px;
-              background: ${isLocked ? '#000000' : 'rgba(16,185,129,0.15)'};
-              color: ${isLocked ? '#ffffff' : '#10b981'};
+              background: ${isLocked ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)'};
+              color: ${isLocked ? '#ef4444' : '#10b981'};
               display: flex; align-items: center; justify-content: center; font-size: 16px;
             "><i class="${sec.icon}"></i></div>
             <div>
@@ -543,7 +600,7 @@
             </div>
           </div>
           <button class="site-toggle-lock-btn" data-key="${sec.lockKey}" data-locked="${isLocked ? '1' : '0'}" data-fid="${folderId}" style="
-            background: ${isLocked ? '#10b981' : '#000000'};
+            background: ${isLocked ? '#10b981' : '#4f46e5'};
             color: white; border: none; padding: 6px 14px; border-radius: 20px;
             font-size: 12px; font-weight: 700; cursor: pointer; transition: transform 0.15s;
           ">
@@ -563,7 +620,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
           <div>
             <h3 style="margin: 0; font-size: 1.2rem; color: ${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 800;">
-              <i class="fas fa-shield-alt" style="color: #000000;"></i> Site Sections Lock Manager
+              <i class="fas fa-shield-alt" style="color: #4f46e5;"></i> Site Sections Lock Manager
             </h3>
             <p style="margin: 2px 0 0; font-size: 12px; color: ${isDark ? '#94a3b8' : '#64748b'};">
               Lock any page site-wide with 1 click (Admin bypass remains active)
@@ -580,7 +637,7 @@
 
         <div style="margin-top: 16px; text-align: right;">
           <button onclick="document.getElementById('siteLocksManagerModal').style.display='none'" style="
-            background: #000000; color: white; border: none; padding: 8px 20px;
+            background: #4f46e5; color: white; border: none; padding: 8px 20px;
             border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer;
           ">Done</button>
         </div>
