@@ -1,5 +1,5 @@
 /**
- * SOLMATES SITE-WIDE SECTION LOCK GUARD v1.0
+ * SOLMATES SITE-WIDE SECTION LOCK GUARD v2.0
  * Comprehensive locking system for:
  * 1. SOL Database (/database)
  * 2. Tools (/tools)
@@ -40,19 +40,19 @@
 
   // Helper: Match current URL against site sections
   function getCurrentSection() {
-    const p = window.location.pathname.toLowerCase();
+    const p = (window.location.pathname || '').toLowerCase();
     // Do not guard homepage
     if (p === '/' || p === '/index.html' || p === '') return null;
     for (let i = 0; i < SITE_SECTIONS.length; i++) {
       const s = SITE_SECTIONS[i];
-      if (p === s.path || p.startsWith(s.path + '/') || p.startsWith(s.path + '.')) {
+      if (p === s.path || p.startsWith(s.path + '/') || p.startsWith(s.path + '.') || p.startsWith(s.path + '?')) {
         return s;
       }
     }
     return null;
   }
 
-  // STEP 1: ZERO-MILLISECOND EARLY BLOCKER (Runs in <head>)
+  // STEP 1: ZERO-MILLISECOND EARLY BLOCKER (Runs immediately in <head>)
   (function earlyCheck() {
     try {
       const curSection = getCurrentSection();
@@ -63,66 +63,74 @@
       if (cached[curSection.lockKey]) {
         const style = document.createElement('style');
         style.id = 'siteLockEarlyStyle';
-        style.textContent = 'body > *:not(#siteLockOverlay):not(#siteLockEarlyStyle) { display: none !important; }';
-        document.head.appendChild(style);
+        style.textContent = 'body > *:not(#siteLockOverlay):not(#siteLockEarlyStyle):not(#siteLockBlockerStyle) { display: none !important; }';
+        (document.head || document.documentElement).appendChild(style);
       }
     } catch (e) {}
   })();
 
-  // Render Lock Overlay for Non-Admins inside a locked page
+  // Render Full-Screen Lock Screen for Students inside a locked page
   function renderLockOverlay(section) {
     if (document.getElementById('siteLockOverlay')) return;
     const isDark = document.documentElement.classList.contains('dark') || localStorage.getItem('solmates_theme') === 'dark';
+
+    // Hide any other body content cleanly
+    let blocker = document.getElementById('siteLockBlockerStyle');
+    if (!blocker) {
+      blocker = document.createElement('style');
+      blocker.id = 'siteLockBlockerStyle';
+      blocker.textContent = 'body > *:not(#siteLockOverlay):not(#siteLockEarlyStyle):not(#siteLockBlockerStyle):not(#siteLockAdminBadge) { display: none !important; }';
+      (document.head || document.documentElement).appendChild(blocker);
+    }
 
     const overlay = document.createElement('div');
     overlay.id = 'siteLockOverlay';
     overlay.style.cssText = [
       'position: fixed', 'inset: 0', 'z-index: 999999',
       'display: flex', 'align-items: center', 'justify-content: center',
-      `background: ${isDark ? 'rgba(15,23,42,0.98)' : 'rgba(248,250,252,0.98)'}`,
-      'backdrop-filter: blur(12px)', '-webkit-backdrop-filter: blur(12px)',
+      `background: ${isDark ? 'rgba(10,10,10,0.92)' : 'rgba(245,245,247,0.95)'}`,
+      'backdrop-filter: blur(6px)', '-webkit-backdrop-filter: blur(6px)',
       'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
       'padding: 20px', 'box-sizing: border-box'
     ].join(';');
 
     overlay.innerHTML = `
       <div style="
-        background: ${isDark ? '#1e293b' : '#ffffff'};
-        border: 1px solid ${isDark ? '#334155' : '#e2e8f0'};
+        background: ${isDark ? '#18181b' : '#ffffff'};
+        border: 1px solid ${isDark ? '#27272a' : '#e4e4e7'};
         border-radius: 24px;
-        padding: 44px 32px;
+        padding: 42px 30px;
         text-align: center;
-        max-width: 420px;
+        max-width: 400px;
         width: 100%;
-        box-shadow: 0 25px 60px ${isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.12)'};
+        box-shadow: 0 20px 40px ${isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.08)'};
       ">
         <div style="
-          width: 80px; height: 80px; border-radius: 50%;
-          background: linear-gradient(135deg, #f59e0b, #ef4444);
+          width: 62px; height: 62px; border-radius: 50%;
+          background: #000000; color: #ffffff;
           display: flex; align-items: center; justify-content: center;
-          margin: 0 auto 20px; font-size: 2.2rem; color: white;
-          box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
-        ">🔒</div>
+          margin: 0 auto 20px; font-size: 24px;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+        "><i class="fas fa-lock"></i></div>
         <h2 style="
-          margin: 0 0 10px; font-size: 1.5rem; font-weight: 800;
-          color: ${isDark ? '#f8fafc' : '#0f172a'};
+          margin: 0 0 10px; font-size: 1.4rem; font-weight: 800;
+          color: ${isDark ? '#fafafa' : '#09090b'};
         ">${section.name}</h2>
         <p style="
-          margin: 0 0 24px; font-size: 0.95rem; line-height: 1.6;
-          color: ${isDark ? '#94a3b8' : '#64748b'};
+          margin: 0 0 24px; font-size: 0.92rem; line-height: 1.6;
+          color: ${isDark ? '#a1a1aa' : '#71717a'};
         ">This section is currently locked for maintenance. It will be available soon!</p>
         <a href="/" style="
           display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-          background: linear-gradient(135deg, #0f2b46, #1e3a5f);
-          color: white; padding: 13px 32px; border-radius: 50px;
-          text-decoration: none; font-weight: 700; font-size: 0.95rem;
-          box-shadow: 0 6px 20px rgba(15,43,70,0.3);
+          background: #000000; color: #ffffff; padding: 12px 30px; border-radius: 50px;
+          text-decoration: none; font-weight: 700; font-size: 0.92rem;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.2); transition: transform 0.15s;
         ">← Back to Home</a>
       </div>
     `;
 
-    document.body.appendChild(overlay);
-    document.body.style.overflow = 'hidden';
+    (document.body || document.documentElement).appendChild(overlay);
+    if (document.body) document.body.style.overflow = 'hidden';
   }
 
   // Render Admin Bypass Notification Pill inside a locked page
@@ -131,22 +139,22 @@
     const badge = document.createElement('div');
     badge.id = 'siteLockAdminBadge';
     badge.style.cssText = [
-      'position: fixed', 'top: 70px', 'left: 50%', 'transform: translateX(-50%)',
-      'background: #ef4444', 'color: white', 'padding: 8px 16px', 'border-radius: 30px',
+      'position: fixed', 'top: 60px', 'left: 50%', 'transform: translateX(-50%)',
+      'background: #111827', 'color: #ffffff', 'padding: 8px 16px', 'border-radius: 30px',
       'font-size: 12px', 'font-weight: 700', 'z-index: 999999',
-      'box-shadow: 0 4px 15px rgba(0,0,0,0.25)', 'display: flex', 'align-items: center', 'gap: 10px',
+      'box-shadow: 0 4px 15px rgba(0,0,0,0.3)', 'display: flex', 'align-items: center', 'gap: 10px',
       'font-family: -apple-system, sans-serif'
     ].join(';');
 
     badge.innerHTML = `
       <span>🔒 ${section.name} is Locked (Admin Bypass Active)</span>
       <button id="siteLockQuickUnlockBtn" style="
-        background: white; color: #ef4444; border: none; padding: 3px 10px;
+        background: #10b981; color: white; border: none; padding: 4px 12px;
         border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer;
       ">Unlock Now</button>
     `;
 
-    document.body.appendChild(badge);
+    (document.body || document.documentElement).appendChild(badge);
     const btn = document.getElementById('siteLockQuickUnlockBtn');
     if (btn) {
       btn.addEventListener('click', async function () {
@@ -156,6 +164,8 @@
         badge.remove();
         const earlyStyle = document.getElementById('siteLockEarlyStyle');
         if (earlyStyle) earlyStyle.remove();
+        const blocker = document.getElementById('siteLockBlockerStyle');
+        if (blocker) blocker.remove();
       });
     }
   }
@@ -202,7 +212,6 @@
           });
         }
       } else {
-        // Unlock: find folder id if not passed
         let targetId = folderId;
         if (!targetId) {
           const folders = await fetchServerLocks();
@@ -242,6 +251,7 @@
   // Apply visual lock indicators to navbar links and home cards
   function applyLocksToDom(locksMap, foldersList) {
     const isAdmin = isSiteAdmin();
+    const isDark = document.documentElement.classList.contains('dark') || localStorage.getItem('solmates_theme') === 'dark';
 
     SITE_SECTIONS.forEach(function (sec) {
       const isLocked = !!locksMap[sec.lockKey];
@@ -262,20 +272,23 @@
               overlay = document.createElement('div');
               overlay.className = 'site-lock-card-overlay';
               overlay.style.cssText = [
-                'position: absolute', 'inset: 0', 'background: rgba(15, 23, 42, 0.45)',
+                'position: absolute', 'inset: 0',
+                isDark ? 'background: rgba(0, 0, 0, 0.35)' : 'background: rgba(255, 255, 255, 0.35)',
                 'border-radius: inherit', 'display: flex', 'align-items: center',
-                'justify-content: center', 'z-index: 10', 'backdrop-filter: blur(2px)'
+                'justify-content: center', 'z-index: 10',
+                'backdrop-filter: blur(1.5px)', '-webkit-backdrop-filter: blur(1.5px)',
+                'pointer-events: none'
               ].join(';');
-              overlay.innerHTML = '<div style="background: rgba(15,23,42,0.85); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fbbf24; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"><i class="fas fa-lock"></i></div>';
+              overlay.innerHTML = '<div style="background: #000000; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);"><i class="fas fa-lock"></i></div>';
               el.appendChild(overlay);
             }
             overlay.style.display = 'flex';
           } else {
-            // Navbar or inline link: add small lock icon if not already added
+            // Navbar or inline link: subtle black lock badge
             if (!el.querySelector('.nav-lock-badge')) {
               const badge = document.createElement('span');
               badge.className = 'nav-lock-badge';
-              badge.style.cssText = 'margin-left: 6px; font-size: 11px; color: #fbbf24; vertical-align: middle;';
+              badge.style.cssText = `margin-left: 6px; font-size: 11px; color: ${isDark ? '#ffffff' : '#000000'}; vertical-align: middle;`;
               badge.innerHTML = '<i class="fas fa-lock"></i>';
               el.appendChild(badge);
             }
@@ -311,7 +324,7 @@
               btn.disabled = false;
             });
           }
-          btn.style.background = isLocked ? '#10b981' : '#4f46e5';
+          btn.style.background = isLocked ? '#10b981' : '#000000';
           btn.innerHTML = isLocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>';
           btn.title = isLocked ? `Unlock ${sec.name}` : `Lock ${sec.name}`;
         }
@@ -338,22 +351,30 @@
     modal.style.cssText = [
       'position: fixed', 'inset: 0', 'z-index: 999999', 'display: flex',
       'align-items: center', 'justify-content: center',
-      'background: rgba(0,0,0,0.6)', 'backdrop-filter: blur(4px)',
-      'padding: 20px', 'font-family: -apple-system, sans-serif'
+      'background: rgba(0,0,0,0.45)', 'backdrop-filter: blur(3px)',
+      'padding: 20px', 'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
     ].join(';');
 
     modal.innerHTML = `
       <div style="
-        background: ${isDark ? '#1e293b' : '#ffffff'};
+        background: ${isDark ? '#18181b' : '#ffffff'};
         border-radius: 20px; padding: 32px 24px; text-align: center;
-        max-width: 360px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        max-width: 350px; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        border: 1px solid ${isDark ? '#27272a' : '#e4e4e7'};
       ">
-        <div style="font-size: 2.5rem; margin-bottom: 12px; color: #f59e0b;">🔒</div>
-        <h3 style="margin: 0 0 8px; font-size: 1.25rem; font-weight: 700; color: ${isDark ? '#f8fafc' : '#0f172a'};">Section Locked</h3>
-        <p style="margin: 0 0 20px; font-size: 0.9rem; color: ${isDark ? '#94a3b8' : '#64748b'}; line-height: 1.5;">This section is temporarily locked for maintenance. Content will be available soon!</p>
+        <div style="
+          width: 50px; height: 50px; border-radius: 50%;
+          background: #000000; color: #ffffff;
+          display: flex; align-items: center; justify-content: center;
+          margin: 0 auto 14px; font-size: 20px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        "><i class="fas fa-lock"></i></div>
+        <h3 style="margin: 0 0 8px; font-size: 1.2rem; font-weight: 800; color: ${isDark ? '#fafafa' : '#09090b'};">Section Locked</h3>
+        <p style="margin: 0 0 20px; font-size: 0.9rem; color: ${isDark ? '#a1a1aa' : '#71717a'}; line-height: 1.5;">This section is temporarily locked for maintenance. Content will be available soon!</p>
         <button id="closeSiteLockPopup" style="
-          background: #0f2b46; color: white; border: none; padding: 10px 24px;
+          background: #000000; color: white; border: none; padding: 10px 24px;
           border-radius: 30px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         ">Understood</button>
       </div>
     `;
@@ -408,7 +429,9 @@
         if (ov) ov.remove();
         const earlyStyle = document.getElementById('siteLockEarlyStyle');
         if (earlyStyle) earlyStyle.remove();
-        document.body.style.overflow = '';
+        const blocker = document.getElementById('siteLockBlockerStyle');
+        if (blocker) blocker.remove();
+        if (document.body) document.body.style.overflow = '';
       }
     }
 
@@ -420,7 +443,6 @@
 
   // Admin Central Site Locks Manager Modal (Available on Home Page / Navbar)
   function setupAdminSiteLocksManager(locksMap, folders) {
-    // Only inject trigger button if not present
     let triggerBtn = document.getElementById('adminSiteLocksBtn');
     if (!triggerBtn) {
       const navRight = document.querySelector('.top-nav .nav-right') || document.querySelector('.top-nav') || document.querySelector('.nav-right');
@@ -431,20 +453,20 @@
 
       if (navRight) {
         triggerBtn.style.cssText = [
-          'background: #4f46e5', 'color: white', 'border: none', 'padding: 6px 14px',
+          'background: #000000', 'color: white', 'border: none', 'padding: 6px 14px',
           'border-radius: 20px', 'font-size: 12px', 'font-weight: 700', 'cursor: pointer',
           'display: inline-flex', 'align-items: center', 'gap: 6px', 'margin-right: 10px',
-          'box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3)', 'transition: transform 0.2s'
+          'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25)', 'transition: transform 0.2s'
         ].join(';');
         triggerBtn.innerHTML = '<i class="fas fa-lock"></i> Site Locks';
         navRight.insertBefore(triggerBtn, navRight.firstChild);
       } else {
         triggerBtn.style.cssText = [
           'position: fixed', 'bottom: 20px', 'left: 20px', 'z-index: 99998',
-          'background: #4f46e5', 'color: white', 'border: none', 'padding: 8px 16px',
+          'background: #000000', 'color: white', 'border: none', 'padding: 8px 16px',
           'border-radius: 24px', 'font-size: 12px', 'font-weight: 700', 'cursor: pointer',
           'display: inline-flex', 'align-items: center', 'gap: 6px',
-          'box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4)', 'transition: transform 0.2s'
+          'box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35)', 'transition: transform 0.2s'
         ].join(';');
         triggerBtn.innerHTML = '<i class="fas fa-lock"></i> Site Locks';
         document.body.appendChild(triggerBtn);
@@ -466,8 +488,8 @@
       modal.style.cssText = [
         'position: fixed', 'inset: 0', 'z-index: 1000000', 'display: flex',
         'align-items: center', 'justify-content: center',
-        'background: rgba(0,0,0,0.6)', 'backdrop-filter: blur(6px)',
-        'padding: 15px', 'font-family: -apple-system, sans-serif'
+        'background: rgba(0,0,0,0.6)', 'backdrop-filter: blur(4px)',
+        'padding: 15px', 'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
       ].join(';');
       document.body.appendChild(modal);
       modal.addEventListener('click', (ev) => { if (ev.target === modal) modal.style.display = 'none'; });
@@ -509,8 +531,8 @@
           <div style="display: flex; align-items: center; gap: 12px;">
             <div style="
               width: 36px; height: 36px; border-radius: 10px;
-              background: ${isLocked ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)'};
-              color: ${isLocked ? '#ef4444' : '#10b981'};
+              background: ${isLocked ? '#000000' : 'rgba(16,185,129,0.15)'};
+              color: ${isLocked ? '#ffffff' : '#10b981'};
               display: flex; align-items: center; justify-content: center; font-size: 16px;
             "><i class="${sec.icon}"></i></div>
             <div>
@@ -521,7 +543,7 @@
             </div>
           </div>
           <button class="site-toggle-lock-btn" data-key="${sec.lockKey}" data-locked="${isLocked ? '1' : '0'}" data-fid="${folderId}" style="
-            background: ${isLocked ? '#10b981' : '#ef4444'};
+            background: ${isLocked ? '#10b981' : '#000000'};
             color: white; border: none; padding: 6px 14px; border-radius: 20px;
             font-size: 12px; font-weight: 700; cursor: pointer; transition: transform 0.15s;
           ">
@@ -541,7 +563,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
           <div>
             <h3 style="margin: 0; font-size: 1.2rem; color: ${isDark ? '#f8fafc' : '#0f172a'}; font-weight: 800;">
-              <i class="fas fa-shield-alt" style="color: #4f46e5;"></i> Site Sections Lock Manager
+              <i class="fas fa-shield-alt" style="color: #000000;"></i> Site Sections Lock Manager
             </h3>
             <p style="margin: 2px 0 0; font-size: 12px; color: ${isDark ? '#94a3b8' : '#64748b'};">
               Lock any page site-wide with 1 click (Admin bypass remains active)
@@ -558,7 +580,7 @@
 
         <div style="margin-top: 16px; text-align: right;">
           <button onclick="document.getElementById('siteLocksManagerModal').style.display='none'" style="
-            background: #0f2b46; color: white; border: none; padding: 8px 20px;
+            background: #000000; color: white; border: none; padding: 8px 20px;
             border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer;
           ">Done</button>
         </div>
