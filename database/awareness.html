@@ -1140,7 +1140,7 @@ async function loadAlerts() {
   var grid = document.getElementById('alertsGrid');
   var countEl = document.getElementById('alertCount');
   try {
-    var primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
+    var primaryUrl = window.PRODUCTION_API_URL || 'https://api.solmates.in/api';
     var res;
     try {
       res = await fetch(primaryUrl + '/sol/notifications/all');
