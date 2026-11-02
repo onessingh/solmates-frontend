@@ -48,7 +48,7 @@
     (function() {
       const currentVersion = '135.0'; 
       const savedVersion = localStorage.getItem('sol_app_version');
-      if (savedVersion !== currentVersion) {
+      if (savedVersion && savedVersion !== currentVersion) {
         localStorage.setItem('sol_app_version', currentVersion);
         try {
           if (window.caches && caches.keys) {
@@ -820,22 +820,34 @@
         return;
       }
       const grid = document.getElementById('grid');
-      grid.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+      if (!grid.querySelector('.card')) {
+        grid.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+      }
       try {
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
-        // Deep-link Lock Protection
+        // Parallel fetch for subfolders, items, and lock hierarchy
+        const promises = [
+          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
+        ];
         if (folderId && !isAdmin) {
-          const allFoldersRes = await window.solmatesAPI.getSOLFolders(CATEGORY, semester, null, false, true);
+          promises.push(window.solmatesAPI.getSOLFolders(CATEGORY, semester, null, false, true));
+        }
+
+        const [fRes, iRes, allFoldersRes] = await Promise.all(promises);
+
+        // Deep-link Lock Protection
+        if (folderId && !isAdmin && allFoldersRes && allFoldersRes.data) {
           const allFolders = allFoldersRes.data || [];
           let curr = folderId;
           let isLockedHierarchy = false;
           while (curr) {
-            const f = allFolders.find(fd => fd.id === curr);
+            const f = allFolders.find(fd => (fd.id === curr || fd._id === curr));
             if (!f) break;
             if (f.isLocked || (f.name && f.name.includes('[LOCKED]'))) { isLockedHierarchy = true; break; }
             curr = f.parentId;
-            if (curr === f.id) break;
+            if (curr === f.id || curr === f._id) break;
           }
           if (isLockedHierarchy) {
             grid.innerHTML = '<div class="empty"><i class="fas fa-lock" style="font-size:2rem;color:#f59e0b;margin-bottom:10px;"></i><br><strong>This folder is locked by the Administrator.</strong></div>';
@@ -843,10 +855,6 @@
           }
         }
 
-        const [fRes, iRes] = await Promise.all([
-          window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
-          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
-        ]);
         renderGrid(fRes.data || [], iRes.data || []);
       } catch (e) {
         console.error("loadContent error:", e);
