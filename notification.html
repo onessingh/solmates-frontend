@@ -10,6 +10,8 @@
   gtag('js', new Date());
 
   gtag('config', 'G-Q6GVS9XX1M');
+  window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
+  window.PRODUCTION_API_URL = 'https://api.solmates.in/api';
 </script>
 
 <script>
@@ -1882,7 +1884,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v913';
+    const NOTIF_APP_CACHE_VER = 'v914';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -1921,7 +1923,7 @@
             // 25s timeout for mobile networks
             const _fc = new AbortController();
             const _ft = setTimeout(() => _fc.abort(), 25000);
-            const primaryUrl = window.PRODUCTION_API_URL || 'https://solmates.in/api';
+            const primaryUrl = window.PRODUCTION_API_URL || 'https://api.solmates.in/api';
             const fetchHeaders = {
               'Cache-Control': 'no-cache',
               'Pragma': 'no-cache'
