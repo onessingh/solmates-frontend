@@ -1882,7 +1882,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v909';
+    const NOTIF_APP_CACHE_VER = 'v913';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -1936,7 +1936,7 @@
             }
             let response;
             try {
-              response = await fetch(`${primaryUrl}/sol/notifications/all`, { 
+              response = await fetch(`${primaryUrl}/sol/notifications/all?version=${NOTIF_APP_CACHE_VER}`, { 
                 signal: _fc.signal,
                 cache: 'no-cache',
                 headers: fetchHeaders
@@ -1947,7 +1947,7 @@
             } catch (err) {
               console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via secondary endpoint...', err);
               const secondaryUrl = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
-              response = await fetch(`${secondaryUrl}/sol/notifications/all`, { 
+              response = await fetch(`${secondaryUrl}/sol/notifications/all?version=${NOTIF_APP_CACHE_VER}`, { 
                 signal: _fc.signal,
                 cache: 'no-cache',
                 headers: fetchHeaders
@@ -2474,7 +2474,12 @@
         if (isMeritList(n)) meritNotices.push(n);
         else nonMeritNotices.push(n);
       });
-      const finalNotices = nonMeritNotices.concat(meritNotices);
+      // Drop merit lists, prospectuses, and expired 01/11 timetables completely
+      const finalNotices = nonMeritNotices.filter(n => {
+        const t = (n.title || '').toLowerCase();
+        if (t.includes('prospectus') || t.includes('01/11/26')) return false;
+        return true;
+      });
 
       const seenIds = safeJSONParse(localStorage.getItem('seen_sol_notifications'), []);
 
