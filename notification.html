@@ -1906,10 +1906,7 @@
       if (hasCachedItems && !forceRefresh && !isAdmin) {
         console.log(`[NOTIFICATIONS] Sem ${semester}: Loading ${cached.length} items from cache...`);
         renderNotices(cached, semester);
-        if (!needsFetch) {
-          console.log(`[NOTIFICATIONS] Sem ${semester}: Recently updated. Skipping API hit.`);
-          return;
-        }
+        // SWR Mode: Always proceed with Cloudflare KV background fetch
       }
 
       // Show spinner if we have no cached items or on forceRefresh
@@ -1936,7 +1933,7 @@
             }
             let response;
             try {
-              response = await fetch(`${primaryUrl}/sol/notifications/all?version=${NOTIF_APP_CACHE_VER}`, { 
+              response = await fetch(`${primaryUrl}/sol/notifications/all`, { 
                 signal: _fc.signal,
                 cache: 'no-cache',
                 headers: fetchHeaders
@@ -1947,7 +1944,7 @@
             } catch (err) {
               console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via secondary endpoint...', err);
               const secondaryUrl = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
-              response = await fetch(`${secondaryUrl}/sol/notifications/all?version=${NOTIF_APP_CACHE_VER}`, { 
+              response = await fetch(`${secondaryUrl}/sol/notifications/all`, { 
                 signal: _fc.signal,
                 cache: 'no-cache',
                 headers: fetchHeaders
