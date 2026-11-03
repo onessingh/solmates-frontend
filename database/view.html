@@ -1214,20 +1214,34 @@
     window.onpopstate = function(event) {
       if (isNavigating) return;
       showFolderSpinner();
-      if (event.state) {
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlSem = parseInt(urlParams.get('semester'));
+      const urlFolderId = urlParams.get('folderId');
+
+      if (event.state && event.state.semester) {
         navStack = event.state.stack || [];
         folderId = event.state.folderId || null;
-        semester = event.state.semester || null;
-        
-        if (!semester) {
-          renderSemesters(true); // true = don't push state
-        } else {
-          document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${semester}`;
-          updateBreadcrumb();
-          loadContent();
+        semester = event.state.semester;
+      } else if (!isNaN(urlSem) && urlSem >= 1 && urlSem <= 4) {
+        // Fallback to URL parameters (prevents Google AdSense #google_vignette close from resetting screen)
+        semester = urlSem;
+        folderId = urlFolderId || null;
+        if (!navStack || navStack.length === 0) {
+          navStack = [{ name: `Semester ${semester}`, folderId: null }];
         }
       } else {
-        renderSemesters(true);
+        semester = null;
+        folderId = null;
+        navStack = [];
+      }
+
+      if (!semester) {
+        renderSemesters(true); // true = don't push state
+      } else {
+        document.getElementById('pageDesc').innerText = `${CAT_LABELS[CATEGORY]} • Semester ${semester}`;
+        updateBreadcrumb();
+        loadContent();
       }
     };
 
