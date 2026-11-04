@@ -60,7 +60,8 @@
           localStorage.removeItem('solmates_mba_locks_cache');
           sessionStorage.clear();
         } catch(e){}
-        window.location.reload(true);
+      } else if (!savedVersion) {
+        localStorage.setItem('sol_app_version', currentVersion);
       }
     })();
   </script>

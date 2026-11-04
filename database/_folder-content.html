@@ -44,6 +44,28 @@
   <script src="/js/sol-cache.js?v=v915"></script>
   <script src="/js/prefetch-helper.js?v=v915"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+  <script>
+    // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
+    (function() {
+      const currentVersion = '138.0'; 
+      const savedVersion = localStorage.getItem('sol_app_version');
+      if (savedVersion && savedVersion !== currentVersion) {
+        localStorage.setItem('sol_app_version', currentVersion);
+        try {
+          if (window.caches && caches.keys) {
+            caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+          }
+          localStorage.removeItem('_sol_all_content_data');
+          localStorage.removeItem('_sol_all_content_etag');
+          localStorage.removeItem('_sol_last_fetch_timestamp');
+          localStorage.removeItem('solmates_mba_locks_cache');
+          sessionStorage.clear();
+        } catch(e){}
+      } else if (!savedVersion) {
+        localStorage.setItem('sol_app_version', currentVersion);
+      }
+    })();
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <style>
 
@@ -711,16 +733,273 @@
       display: none !important;
     }
 
-    .empty {
-      grid-column: 1/-1;
-      text-align: center;
-      padding: 40px;
-      color: #94a3b8;
-      font-size: 14px;
+    .empty { grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-lighter); font-size: 14px; width: 100%; border: none; background: transparent; }
+
+    /* ══════════════════════════════════════════════════════════════
+       DYNAMIC 3D LOADERS (Concept 1: Folder Open | Concept 2: Book Flip)
+       ══════════════════════════════════════════════════════════════ */
+    .sol-loader-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+      min-height: 240px;
       width: 100%;
-      border: none;
-      background: transparent;
+      grid-column: 1 / -1;
+      animation: loaderContainerFadeIn 0.2s ease-out;
     }
+    @keyframes loaderContainerFadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ─── CONCEPT 1: 3D OPENING FOLDER (Section to Folders) ─── */
+    .sol-folder-anim {
+      position: relative;
+      width: 78px;
+      height: 58px;
+      perspective: 350px;
+      margin-bottom: 6px;
+    }
+    .folder-back {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 6px 14px 10px 10px;
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+    }
+    .folder-back::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: 0;
+      width: 32px;
+      height: 10px;
+      background: #d97706;
+      border-radius: 5px 5px 0 0;
+    }
+    .folder-paper {
+      position: absolute;
+      left: 9px;
+      width: 60px;
+      height: 42px;
+      background: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      bottom: 6px;
+      z-index: 2;
+    }
+    .folder-paper::before,
+    .folder-paper::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      height: 2px;
+      background: #e2e8f0;
+      border-radius: 2px;
+    }
+    .folder-paper::before { top: 10px; }
+    .folder-paper::after { top: 17px; width: 65%; }
+
+    .paper-1 {
+      animation: paperRise1 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .paper-2 {
+      width: 54px;
+      left: 12px;
+      background: #f8fafc;
+      animation: paperRise2 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes paperRise1 {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-16px) rotate(-3deg); }
+    }
+    @keyframes paperRise2 {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
+    }
+    .folder-front {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 46px;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      border-radius: 0 0 10px 10px;
+      transform-origin: bottom center;
+      z-index: 3;
+      animation: folderFlap 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    @keyframes folderFlap {
+      0%, 100% { transform: rotateX(0deg); }
+      50% { transform: rotateX(-52deg); }
+    }
+    .folder-shadow {
+      position: absolute;
+      bottom: -9px;
+      left: 6px;
+      right: 6px;
+      height: 7px;
+      background: rgba(15, 23, 42, 0.1);
+      border-radius: 50%;
+      filter: blur(3px);
+      animation: shadowPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes shadowPulse {
+      0%, 100% { transform: scaleX(1); opacity: 0.6; }
+      50% { transform: scaleX(1.15); opacity: 0.3; }
+    }
+
+    /* ─── CONCEPT 2: SMOOTH FLIPPING BOOK (Folders to Materials / Items) ─── */
+    .sol-book-anim {
+      position: relative;
+      width: 76px;
+      height: 52px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+    .book-cover {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-radius: 4px 8px 8px 4px;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.22);
+    }
+    .book-cover::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.18);
+    }
+    .book-page-static {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      width: 33px;
+      background: #ffffff;
+      box-shadow: inset 0 0 2px rgba(0,0,0,0.06);
+    }
+    .book-page-static.left {
+      left: 4px;
+      border-radius: 3px 0 0 3px;
+    }
+    .book-page-static.right {
+      right: 4px;
+      border-radius: 0 3px 3px 0;
+    }
+    .book-page-static::before,
+    .book-page-static::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      height: 2px;
+      background: #e2e8f0;
+      border-radius: 1px;
+    }
+    .book-page-static::before { top: 12px; }
+    .book-page-static::after { top: 20px; width: 60%; }
+
+    .book-leaf {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      right: 4px;
+      width: 33px;
+      background: #ffffff;
+      border-radius: 0 3px 3px 0;
+      transform-origin: left center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .book-leaf::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 6px;
+      right: 6px;
+      height: 2px;
+      background: #e2e8f0;
+    }
+    .leaf-1 {
+      animation: flipPage1 1.2s ease-in-out infinite;
+    }
+    .leaf-2 {
+      animation: flipPage2 1.2s ease-in-out infinite;
+    }
+    @keyframes flipPage1 {
+      0% { transform: scaleX(1); opacity: 1; }
+      50% { transform: scaleX(0); opacity: 0.85; background: #f8fafc; }
+      100% { transform: scaleX(-1) translateX(33px); opacity: 0; }
+    }
+    @keyframes flipPage2 {
+      0%, 25% { transform: scaleX(1); opacity: 1; }
+      75% { transform: scaleX(0); opacity: 0.85; background: #f8fafc; }
+      100% { transform: scaleX(-1) translateX(33px); opacity: 0; }
+    }
+    .book-shadow {
+      position: absolute;
+      bottom: -8px;
+      left: 8px;
+      right: 8px;
+      height: 6px;
+      background: rgba(15, 23, 42, 0.12);
+      border-radius: 50%;
+      filter: blur(3px);
+    }
+
+    /* ─── LOADER TEXT & DOTS ─── */
+    .sol-loader-text {
+      margin-top: 15px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sol-loader-dots {
+      display: inline-flex;
+      gap: 2px;
+    }
+    .sol-loader-dots span {
+      animation: dotPulse 1.4s infinite;
+      opacity: 0;
+    }
+    .sol-loader-dots span:nth-child(1) { animation-delay: 0s; }
+    .sol-loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .sol-loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dotPulse {
+      0% { opacity: 0; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-2px); }
+      100% { opacity: 0; transform: translateY(0); }
+    }
+
+    /* ─── CLEAN, SMOOTH CARD ENTRANCE ─── */
+    @keyframes cardEntrance {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card, .subject-card {
+      animation: cardEntrance 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+    }
+    .card.card-tap-feedback, .subject-card.card-tap-feedback {
+      transform: scale(0.96) !important;
+      opacity: 0.8 !important;
+      transition: transform 0.1s ease, opacity 0.1s ease !important;
+    }
+
 
     #grid {
       display: grid;
@@ -925,6 +1204,14 @@
 <style id="solmates-dark-style" media="not all">
 
       :root {
+
+        /* Dark Mode Overrides for 3D Loaders */
+        .sol-folder-anim .folder-paper { background: #1e293b !important; box-shadow: 0 2px 6px rgba(0,0,0,0.4) !important; }
+        .sol-folder-anim .folder-paper::before, .sol-folder-anim .folder-paper::after { background: #334155 !important; }
+        .sol-book-anim .book-page-static, .sol-book-anim .book-leaf { background: #1e293b !important; }
+        .sol-book-anim .book-page-static::before, .sol-book-anim .book-page-static::after, .sol-book-anim .book-leaf::before { background: #334155 !important; }
+        .sol-loader-text { color: #94a3b8 !important; }
+
         --bg-body: #0f172a;
         --text-main: #f8fafc;
         --text-muted: #94a3b8;
@@ -1303,7 +1590,17 @@
     </div>
 
     <div class="grid" id="grid">
-      <div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+      <div class="sol-loader-container concept-book">
+        <div class="sol-book-anim">
+          <div class="book-cover"></div>
+          <div class="book-page-static left"></div>
+          <div class="book-page-static right"></div>
+          <div class="book-leaf leaf-2"></div>
+          <div class="book-leaf leaf-1"></div>
+          <div class="book-shadow"></div>
+        </div>
+        <div class="sol-loader-text">Opening Materials<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
+      </div>
     </div>
   </div>
 
@@ -1541,6 +1838,45 @@
       loadContent();
     }
 
+        function showSolLoader(type) {
+      const grid = document.getElementById('grid');
+      if (!grid) return;
+      const animType = type || (folderId ? 'book' : 'folder');
+      if (animType === 'folder') {
+        grid.innerHTML = `
+          <div class="sol-loader-container concept-folder">
+            <div class="sol-folder-anim">
+              <div class="folder-back"></div>
+              <div class="folder-paper paper-2"></div>
+              <div class="folder-paper paper-1"></div>
+              <div class="folder-front"></div>
+              <div class="folder-shadow"></div>
+            </div>
+            <div class="sol-loader-text">
+              Opening Folders<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = `
+          <div class="sol-loader-container concept-book">
+            <div class="sol-book-anim">
+              <div class="book-cover"></div>
+              <div class="book-page-static left"></div>
+              <div class="book-page-static right"></div>
+              <div class="book-leaf leaf-2"></div>
+              <div class="book-leaf leaf-1"></div>
+              <div class="book-shadow"></div>
+            </div>
+            <div class="sol-loader-text">
+              Opening Materials<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+          </div>
+        `;
+      }
+    }
+    const showFolderSpinner = showSolLoader;
+
     async function loadContent() {
       if (isReorderMode) return;
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
@@ -1557,16 +1893,17 @@
         renderGridSafe(cFolders?.data || [], cItems?.data || [], isAdmin, true);
       } else {
         // Only show text if absolutely no cache exists
-        document.getElementById('grid').innerHTML = '<div class="empty">Loading...</div>';
+        showSolLoader('book');
       }
 
       try {
-        // Step 2: Background Refresh (Silent)
+        // Step 2: Fetch fresh content (serves from edge cache, instant)
         const [fRes, iRes] = await Promise.all([
           window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
           isEBook
             ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false).catch(() => null)
-            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
+            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
+          new Promise(r => setTimeout(r, 450))
         ]);
 
         if (fRes?.data || iRes?.data) {
@@ -1990,7 +2327,7 @@
         const viewer = (l.endsWith('.pdf') || l.endsWith('.ppt') || l.endsWith('.pptx') || l.includes('docs.google.com/presentation') || (l.includes('drive.google.com') && !l.includes('VIDEO') && !l.includes('MP4'))) 
           ? 'pdf-viewer' 
           : 'player';
-        window.location.href = `/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&semester=`;
+        window.location.href = `/database/${viewer}?file=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&semester=${encodeURIComponent(SEMESTER||'')}&category=${encodeURIComponent(CATEGORY||'')}`;
       } else {
         window.open(link, '_blank');
       }
@@ -2025,9 +2362,13 @@
     })();
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-    window.addEventListener('pageshow', () => {
+    window.addEventListener('pageshow', (event) => {
       isNavigating = false;
-      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating'));
+      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
+      const grid = document.getElementById('grid');
+      if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
+        loadContent();
+      }
     });
   </script>
 

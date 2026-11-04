@@ -47,9 +47,9 @@
   <script>
     // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
-      const currentVersion = '136.0'; 
+      const currentVersion = '138.0'; 
       const savedVersion = localStorage.getItem('sol_app_version');
-      if (savedVersion !== currentVersion) {
+      if (savedVersion && savedVersion !== currentVersion) {
         localStorage.setItem('sol_app_version', currentVersion);
         try {
           if (window.caches && caches.keys) {
@@ -61,7 +61,8 @@
           localStorage.removeItem('solmates_mba_locks_cache');
           sessionStorage.clear();
         } catch(e){}
-        window.location.reload(true);
+      } else if (!savedVersion) {
+        localStorage.setItem('sol_app_version', currentVersion);
       }
     })();
   </script>
