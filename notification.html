@@ -1883,7 +1883,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v915';
+    const NOTIF_APP_CACHE_VER = 'v916';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -1905,7 +1905,7 @@
       const needsFetch = forceRefresh || isAdmin || isApp || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
 
       const hasRenderedCards = list && list.querySelectorAll('.notification-card').length > 0;
-      if (hasCachedItems && !forceRefresh && !isAdmin && !hasRenderedCards) {
+      if (hasCachedItems && !forceRefresh && !hasRenderedCards) {
         console.log(`[NOTIFICATIONS] Sem ${semester}: Loading ${cached.length} items from cache...`);
         renderNotices(cached, semester);
       }
@@ -1928,13 +1928,14 @@
               'Pragma': 'no-cache'
             };
             const adminTok = localStorage.getItem('solmates_admin_token');
-            if (adminTok) {
+            if (adminTok && forceRefresh) {
               fetchHeaders['Authorization'] = `Bearer ${adminTok}`;
               fetchHeaders['X-Admin-Force'] = 'true';
             }
+            const queryParams = (adminTok && forceRefresh) ? `?admin_force=true&_ts=${Date.now()}` : '';
             let response;
             try {
-              response = await fetch(`${primaryUrl}/sol/notifications/all`, { 
+              response = await fetch(`${primaryUrl}/sol/notifications/all${queryParams}`, { 
                 signal: _fc.signal,
                 cache: 'no-cache',
                 headers: fetchHeaders
@@ -1945,7 +1946,7 @@
             } catch (err) {
               console.warn('[NOTIFICATIONS] Primary endpoint failed/503. Retrying via secondary endpoint...', err);
               const secondaryUrl = window.BACKEND_SECONDARY_URL ? `${window.BACKEND_SECONDARY_URL}/api` : primaryUrl;
-              response = await fetch(`${secondaryUrl}/sol/notifications/all`, { 
+              response = await fetch(`${secondaryUrl}/sol/notifications/all${queryParams}`, { 
                 signal: _fc.signal,
                 cache: 'no-cache',
                 headers: fetchHeaders
