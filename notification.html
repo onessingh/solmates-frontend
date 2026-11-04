@@ -84,15 +84,14 @@
   <!-- socket.io loaded dynamically -->
   <script src="/js/api-client.js?v=v911" defer></script>
   <script src="/js/webview-fix.js?v=v911" defer></script>
-  <script src="/js/sol-cache.js?v=v911" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
         if (!_store) return;
-        window.SOL_APP_VERSION = '135.0';
-        const currentVersion = '135.0';
+        window.SOL_APP_VERSION = '136.0';
+        const currentVersion = '136.0';
         const savedVersion = _store.getItem('sol_app_version');
 
         // Always purge cached notices on startup if version updated or if cache was empty
@@ -1884,7 +1883,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v914';
+    const NOTIF_APP_CACHE_VER = 'v915';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -1905,10 +1904,10 @@
       const isApp = (window.isWebView && window.isWebView()) || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || (document.referrer && document.referrer.includes('android-app://')) || !!localStorage.getItem('solmates_fcm_token');
       const needsFetch = forceRefresh || isAdmin || isApp || (now - lastAllFetchTime > ALL_FETCH_COOLDOWN);
 
-      if (hasCachedItems && !forceRefresh && !isAdmin) {
+      const hasRenderedCards = list && list.querySelectorAll('.notification-card').length > 0;
+      if (hasCachedItems && !forceRefresh && !isAdmin && !hasRenderedCards) {
         console.log(`[NOTIFICATIONS] Sem ${semester}: Loading ${cached.length} items from cache...`);
         renderNotices(cached, semester);
-        // SWR Mode: Always proceed with Cloudflare KV background fetch
       }
 
       // Show spinner if we have no cached items or on forceRefresh
@@ -2010,10 +2009,12 @@
           });
         });
 
-        // Save to cache for all semesters
+        // Save to cache for all semesters (protect existing cache if grouped is empty)
         Object.keys(grouped).forEach(sem => {
-          localStorage.setItem(`cached_notices_sem${sem}`, JSON.stringify(grouped[sem]));
-          localStorage.setItem(`cached_notices_sem${sem}_time`, Date.now().toString());
+          if (grouped[sem] && grouped[sem].length > 0) {
+            localStorage.setItem(`cached_notices_sem${sem}`, JSON.stringify(grouped[sem]));
+            localStorage.setItem(`cached_notices_sem${sem}_time`, Date.now().toString());
+          }
         });
 
         // Render current semester
@@ -2826,8 +2827,10 @@
           purgeNotificationCaches();
           fetchNotifications(currentSemester, true);
         };
-        window.addEventListener('sol:cache_invalidated', window.loadNotifications);
-        window.addEventListener('sol:content-updated', window.loadNotifications);
+        window.addEventListener('sol:cache_invalidated', (e) => {
+          if (e && e.detail && e.detail.category && !['notifications', 'live-classes'].includes(e.detail.category)) return;
+          window.loadNotifications();
+        });
 
         socket.on('connect', () => console.log('[REALTIME] Connected to status stream'));
 
