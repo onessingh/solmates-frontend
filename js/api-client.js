@@ -244,7 +244,18 @@ class SolmatesAPI {
       const response = await fetch(url, config);
       clearTimeout(timeoutId);
 
-      const data = await response.json();
+      let data;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json().catch(() => ({}));
+      } else {
+        const text = await response.text();
+        try {
+          data = JSON.parse(text);
+        } catch (_) {
+          data = { error: text || `HTTP ${response.status}` };
+        }
+      }
 
       if (!response.ok) {
         let errorMsg = data.error || 'API request failed';
