@@ -1239,7 +1239,8 @@
                 if (!window.solmatesAPI) throw new Error('API not available');
                 const [fRes, iRes] = await Promise.all([
                     window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false),
-                    window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false)
+                    window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false),
+                    new Promise(r => setTimeout(r, 320))
                 ]);
                 window.isRefreshing = false;
                 const freshFolders = fRes?.data || [];
@@ -1470,7 +1471,11 @@
         // Reset navigation lock when page is shown (handles Back button BFCache)
         window.addEventListener('pageshow', (event) => {
             isNavigating = false;
-            document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating'));
+            document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
+            const grid = document.getElementById('grid');
+            if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
+                init();
+            }
         });
 
         window.loadSubjects = init;

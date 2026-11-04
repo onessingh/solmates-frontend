@@ -1587,7 +1587,8 @@
           window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
           isEBook
             ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false).catch(() => null)
-            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
+            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
+          new Promise(r => setTimeout(r, 320))
         ]);
 
         if (fRes?.data || iRes?.data) {
@@ -2046,9 +2047,13 @@
     })();
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-    window.addEventListener('pageshow', () => {
+    window.addEventListener('pageshow', (event) => {
       isNavigating = false;
-      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating'));
+      document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
+      const grid = document.getElementById('grid');
+      if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
+        loadContent();
+      }
     });
   </script>
 

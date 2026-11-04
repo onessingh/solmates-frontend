@@ -242,6 +242,23 @@
       100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
     }
 
+    
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-lighter);
+      font-size: 15px;
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .loading i {
+      font-size: 20px;
+      color: var(--accent, #3b82f6);
+    }
+
     .empty { text-align: center; padding: 60px 20px; color: var(--text-lighter); font-size: 15px; grid-column: 1/-1; }
 
     /* ══════════════════════════════════════════════════════════════
@@ -958,16 +975,7 @@
     </div>
 
     <div class="grid" id="grid">
-      <div class="sol-loader-container concept-folder">
-        <div class="sol-folder-anim">
-          <div class="folder-back"></div>
-          <div class="folder-paper paper-2"></div>
-          <div class="folder-paper paper-1"></div>
-          <div class="folder-front"></div>
-          <div class="folder-shadow"></div>
-        </div>
-        <div class="sol-loader-text">Opening Folders<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
-      </div>
+      <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
     </div>
   </div>
 
@@ -1104,10 +1112,18 @@
       else { if (typeof renderSemesters === 'function') renderSemesters(true); }
     });
 
-        function showSolLoader(type) {
+            function showSolLoader(type) {
       const grid = document.getElementById('grid');
       if (!grid) return;
       const animType = type || (folderId ? 'book' : 'folder');
+      if (animType === 'simple' || animType === 'semester') {
+        grid.innerHTML = `
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading...
+          </div>
+        `;
+        return;
+      }
       if (animType === 'folder') {
         grid.innerHTML = `
           <div class="sol-loader-container concept-folder">
@@ -1157,13 +1173,17 @@
         // Parallel fetch for subfolders, items, and lock hierarchy
         const promises = [
           window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
-          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false),
+          new Promise(resolve => setTimeout(resolve, 320))
         ];
         if (folderId && !isAdmin) {
           promises.push(window.solmatesAPI.getSOLFolders(CATEGORY, semester, null, false, true));
         }
 
-        const [fRes, iRes, allFoldersRes] = await Promise.all(promises);
+        const results = await Promise.all(promises);
+        const fRes = results[0];
+        const iRes = results[1];
+        const allFoldersRes = folderId && !isAdmin ? results[3] : null;
 
         // Deep-link Lock Protection
         if (folderId && !isAdmin && allFoldersRes && allFoldersRes.data) {
@@ -1531,6 +1551,16 @@
       card.addEventListener('touchmove', onTouchMove, { passive: true });
     }
 
+    window.addEventListener('pageshow', (event) => {
+      isNavigating = false;
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
+      const grid = document.getElementById('grid');
+      if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
+        if (!semester) renderSemesters(true);
+        else loadContent();
+      }
+    });
+
     window.onpopstate = function(event) {
       if (isNavigating) return;
       showFolderSpinner();
@@ -1574,6 +1604,8 @@
       document.getElementById('pageDesc').innerText = 'Select a semester to continue';
       document.getElementById('breadcrumb').style.display = 'none';
       const grid = document.getElementById('grid');
+      showSolLoader('simple');
+      await new Promise(r => setTimeout(r, 150));
       grid.innerHTML = '';
       const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b'];
       const ordinal = ['1st', '2nd', '3rd', '4th'];
