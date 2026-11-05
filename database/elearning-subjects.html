@@ -1705,7 +1705,7 @@
             function showSolLoader(type) {
       const grid = document.getElementById('grid');
       if (!grid) return;
-      const animType = type || 'folder';
+      const animType = type || getAnimType();
       const expectedClass = animType === 'folder' ? 'concept-folder' : 'concept-book';
       const curLoader = grid.querySelector('.sol-loader-container');
       if (curLoader && curLoader.classList.contains(expectedClass)) {
@@ -1786,7 +1786,8 @@
                 }
             }
 
-            if (isAdmin) { const bar = document.getElementById('adminBar'); if (bar) { bar.style.opacity = '0'; bar.classList.add('visible'); } }
+            if (isAdmin) { const bar = document.getElementById('adminBar'); if (bar) { bar.style.opacity = '1'; bar.classList.add('visible'); } }
+            updateOtherUISettings(); // Show from localStorage immediately (no delay)
 
             _initInProgress = true;
             try {
@@ -1809,9 +1810,7 @@
                 const configFolder = freshFolders.find(f => f.name.includes('__ROOT_CONFIG__'));
                 if (configFolder) {
                     otherVisible = !configFolder.name.includes('[HIDE_OTHER]');
-                    updateOtherUISettings();
-                    const bar = document.getElementById('adminBar');
-                    if (bar) bar.style.transition = 'opacity 0.25s ease', bar.style.opacity = '1';
+                    updateOtherUISettings(); // Update if server state differs from localStorage
                 }
 
                 const renderKey = `${currentTab}_${SEMESTER}_${freshFolders.length}_${freshItems.length}_` +
