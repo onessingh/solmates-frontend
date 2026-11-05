@@ -609,7 +609,8 @@
 
         res.data.forEach(item => {
           try {
-            allVisibleIds.push(item.id);
+            const effId = item.id || (item.data && (item.data.id || item.data._id)) || item._id;
+            allVisibleIds.push(effId);
             const card = createBinCard(item);
             grid.appendChild(card);
           } catch(cardErr) {
@@ -642,38 +643,39 @@
     }
 
     function createBinCard(item) {
-      const card = document.createElement('div');
-      card.className = 'bin-item-card';
-      card.id = `card-${item.id}`;
+      const card = document.createElement("div");
+      const effectiveId = item.id || (item.data && (item.data.id || item.data._id)) || item._id;
+      card.className = "bin-item-card";
+      card.id = `card-${effectiveId}`;
       
-      const isFolder = item.type === 'folder';
-      const d = (item.data && typeof item.data === 'object') ? item.data : item;
-      const rawTitle = d.title || d.name || d.subject || item.title || item.name || 'Untitled Item';
+      const isFolder = item.type === "folder";
+      const d = (item.data && typeof item.data === "object") ? item.data : item;
+      const rawTitle = d.title || d.name || d.subject || item.title || item.name || "Untitled Item";
       const title = escapeHTML(rawTitle);
       const sem = item.semester || d.semester;
-      const semester = (!sem || sem === 'all' || sem === '0') ? 'All Semesters' : `Semester ${escapeHTML(sem)}`;
-      const deletedStr = item.deletedAt ? getTimeAgo(item.deletedAt) : 'Recently';
-      const safeId = escapeHTML(item.id);
-      const safeCategory = escapeHTML(item.category || 'Item');
+      const semester = (!sem || sem === "all" || sem === "0") ? "All Semesters" : `Semester ${escapeHTML(sem)}`;
+      const deletedStr = item.deletedAt ? formatDeletedTime(item.deletedAt) : "Recently";
+      const safeId = escapeHTML(effectiveId);
+      const safeCategory = escapeHTML(item.category || "Item");
 
       card.innerHTML = `
         <div class="item-checkbox-wrap">
-          <input type="checkbox" class="card-checkbox" value="${item.id}" onchange="toggleSelectItem('${item.id}', this.checked)">
+          <input type="checkbox" class="card-checkbox" value="${safeId}" onchange="toggleSelectItem('${safeId}', this.checked)">
         </div>
         <div class="bin-item-meta">
-          <span class="bin-badge ${isFolder ? 'badge-folder' : 'badge-item'}">${isFolder ? 'Folder' : (item.category || 'Item')}</span>
-          <span>Deleted ${deletedStr}</span>
+          <span class="bin-badge ${isFolder ? "badge-folder" : "badge-item"}">${isFolder ? "Folder" : (item.category || "Item")}</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;"><i class="far fa-clock"></i> Deleted ${deletedStr}</span>
         </div>
         <div class="bin-item-title">${title}</div>
         <div class="bin-item-details">
           <i class="fas fa-layer-group"></i> ${semester} <br>
-          <span style="font-size: 11px; opacity: 0.7;">ID: ${item.id}</span>
+          <span style="font-size: 11px; opacity: 0.7;">ID: ${safeId}</span>
         </div>
         <div class="bin-actions">
-          <button class="action-btn btn-restore" onclick="restoreFromBin('${item.id}')">
+          <button class="action-btn btn-restore" onclick="restoreFromBin('${safeId}')">
             <i class="fas fa-undo"></i> Restore
           </button>
-          <button class="action-btn btn-delete" onclick="permanentDelete('${item.id}')">
+          <button class="action-btn btn-delete" onclick="permanentDelete('${safeId}')">
             <i class="fas fa-times"></i> Clear
           </button>
         </div>
@@ -681,9 +683,25 @@
       return card;
     }
 
-    function getTimeAgo(dateStr) {
-      const diff = Math.floor((new Date() - new Date(dateStr)) / (1000 * 60 * 60 * 24));
-      return diff === 0 ? 'Today' : `${diff}d ago`;
+    function formatDeletedTime(dateStr) {
+      if (!dateStr) return "Recently";
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return "Recently";
+
+      const now = new Date();
+      const diffDays = Math.floor((now - d) / (1000 * 60 * 60 * 24));
+      const relStr = diffDays === 0 ? "Today" : (diffDays === 1 ? "1d ago" : `${diffDays}d ago`);
+
+      let hours = d.getHours();
+      const minutes = d.getMinutes().toString().padStart(2, "0");
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+      const timeStr = `${hours}:${minutes} ${ampm}`;
+
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      const dateStrFormatted = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+      return `${relStr} (${dateStrFormatted}, ${timeStr})`;
     }
 
     function toggleSelectItem(id, checked) {
