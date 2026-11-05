@@ -171,7 +171,11 @@ iframe[name^="aswift_"] {
 div.google-auto-placed:not([style*="position: fixed"]):not(#google-vignette):not([data-google-vignette]),
 .hero + .google-auto-placed,
 .hero-section + .google-auto-placed,
-ins.adsbygoogle[data-ad-format="autorelaxed"] {
+ins.adsbygoogle[data-ad-format="autorelaxed"],
+.viewer-container ~ .google-auto-placed,
+.viewer-container .google-auto-placed,
+body:has(.viewer-container) > .google-auto-placed,
+body:has(.viewer-container) > ins.adsbygoogle:not([data-anchor-status]):not([style*="position: fixed"]) {
   display: none !important;
   height: 0 !important;
   min-height: 0 !important;
