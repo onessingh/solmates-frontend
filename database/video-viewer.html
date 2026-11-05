@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -44,17 +44,17 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v911">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
-  <script src="/config.js?v=v911"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v912">
+  <script src="/js/site-lock-guard.js?v=v912"></script>
+  <script src="/config.js?v=v912"></script>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
     <title>Video Viewer - SOLMATES</title>
     <script>
       // Immediately prevent Android OS App Link interception on phones with installed APK
@@ -250,7 +250,7 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Bottom blockers are ALWAYS solid black — NEVER transparent! */
+        /* Bottom blockers are ALWAYS solid black â€” NEVER transparent! */
         #ytBottomBarBlocker,
         #ytBottomLeftShield,
         #ytBottomRightShield {
@@ -648,8 +648,8 @@
            Fullscreen & Landscape Rules:
            - Desktop: 100% height iframe + solid 52px Solmates bottom bar (covers YouTube logo & link 100%)
            - Mobile Fullscreen / Landscape: Middle is 100% OPEN (zero notes cut off),
-             Left Pod (solid black, covers 🔗 link) has 10s Rewind & 10s Forward,
-             Right Pod (solid black, covers ▶ YouTube logo) has Play/Pause & Exit Fullscreen
+             Left Pod (solid black, covers ðŸ”— link) has 10s Rewind & 10s Forward,
+             Right Pod (solid black, covers â–¶ YouTube logo) has Play/Pause & Exit Fullscreen
            ============================================================ */
 
         /* Fullscreen Container: Expands to 100vw x 100vh */
@@ -1116,7 +1116,7 @@
             text-align: center;
         }
 
-        /* ─── SATELLITE LECTURE BROADCAST LOADER (RECORDED CLASSES ONLY) ─── */
+        /* â”€â”€â”€ SATELLITE LECTURE BROADCAST LOADER (RECORDED CLASSES ONLY) â”€â”€â”€ */
         .broadcast-loader-box {
             display: flex;
             flex-direction: column;
@@ -1597,7 +1597,7 @@
                 <iframe id="videoFrame" src="about:blank" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
                 
                 <!-- Surgical YouTube Blockers (Optimized for Gestures) -->
-                <!-- 1. Top-Left Channel Avatar, Subscriber Count & Title Link Shield (Solid Black, leaves Settings Gear ⚙️ 100% open) -->
+                <!-- 1. Top-Left Channel Avatar, Subscriber Count & Title Link Shield (Solid Black, leaves Settings Gear âš™ï¸ 100% open) -->
                 <div id="ytTopShield" class="yt-blocker" 
                     onclick="event.stopPropagation(); event.preventDefault(); return false;"></div>
 
@@ -2193,7 +2193,7 @@
             const category = (params.get('category') || '').toLowerCase();
             const isRecordedClass = category.includes('recorded');
 
-            // 🛑 Strict Guard: ONLY show animation for Recorded Class folders; YouTube is instant with NO animation!
+            // ðŸ›‘ Strict Guard: ONLY show animation for Recorded Class folders; YouTube is instant with NO animation!
             if (!isRecordedClass && loading) {
                 loading.style.display = 'none';
             }

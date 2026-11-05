@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -26,16 +26,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v911">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v912">
+  <script src="/js/site-lock-guard.js?v=v912"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
   <title>Contact Us & Feedback | SOLMATES</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -952,10 +952,10 @@
           });
       };
 
-      const hasInvalidChars = (text) => /[*#¥€¢%×@₹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
+      const hasInvalidChars = (text) => /[*#Â¥â‚¬Â¢%Ã—@â‚¹&]/.test(text || '') || ((text || '').match(/x/gi) || []).length >= 3;
 
       if (hasInvalidChars(formData.get('name')) || hasInvalidChars(formData.get('message'))) {
-          alert('Special characters like * # ¥ € ¢ % × @ ₹ & are not allowed in the form.');
+          alert('Special characters like * # Â¥ â‚¬ Â¢ % Ã— @ â‚¹ & are not allowed in the form.');
           return;
       }
 
@@ -967,15 +967,15 @@
       btn.classList.add('loading');
       btn.disabled = true;
 
-      const starsDisplay = "⭐".repeat(parseInt(rating));
+      const starsDisplay = "â­".repeat(parseInt(rating));
 
       try {
-      const text = `📝 *New Website Feedback*\n\n` +
-                   `⭐ *Rating:* ${rating}/5 ${starsDisplay}\n` +
-                   `📂 *Type:* ${formData.get('feedbackType')}\n` +
-                   `📍 *Page:* ${formData.get('pageUrl')}\n` +
-                   `👤 *User:* ${formData.get('userName') || 'Anonymous'}\n\n` +
-                   `💬 *Message:*\n${formData.get('message')}`;
+      const text = `ðŸ“ *New Website Feedback*\n\n` +
+                   `â­ *Rating:* ${rating}/5 ${starsDisplay}\n` +
+                   `ðŸ“‚ *Type:* ${formData.get('feedbackType')}\n` +
+                   `ðŸ“ *Page:* ${formData.get('pageUrl')}\n` +
+                   `ðŸ‘¤ *User:* ${formData.get('userName') || 'Anonymous'}\n\n` +
+                   `ðŸ’¬ *Message:*\n${formData.get('message')}`;
 
       // 1. Send text message
       const textResponse = await fetch(`https://api.telegram.org/bot${FEEDBACK_BOT_TOKEN}/sendMessage`, {
@@ -1012,7 +1012,7 @@
 
       } catch (error) {
         console.error(error);
-        alert('❌ Error sending feedback. Please try again later.');
+        alert('âŒ Error sending feedback. Please try again later.');
       } finally {
         btn.classList.remove('loading');
         btn.disabled = false;

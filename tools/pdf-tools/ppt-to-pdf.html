@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -24,16 +24,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v911">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v912">
+  <script src="/js/site-lock-guard.js?v=v912"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
   <title>PowerPoint to PDF - Smart PDF Solutions | Solmates</title>
   <meta name="description" content="Convert PowerPoint (PPTX) presentations to PDF 100% free and in-browser. Zero upload, 100% private, instant high-fidelity slide conversion.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,8 +45,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="/tools/pdf-tools/common.css">
-  <script src="/js/webview-fix.js?v=v911"></script>
-  <script src="/js/sol-cache.js?v=v911"></script>
+  <script src="/js/webview-fix.js?v=v912"></script>
+  <script src="/js/sol-cache.js?v=v912"></script>
 
 <style>
     .header-bar {
@@ -297,7 +297,7 @@
       </button>
       <p id="fileName" style="margin-top: 14px; font-weight: 600; color: #ea580c;"></p>
       <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted, #64748b);">
-        🔒 <strong>100% Client-Side Privacy:</strong> Slides are parsed and converted right on your device.
+        ðŸ”’ <strong>100% Client-Side Privacy:</strong> Slides are parsed and converted right on your device.
       </div>
     </div>
 
@@ -313,7 +313,7 @@
     <div id="previewSection" style="display: none; margin-top: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700;"><span id="slideCount">0</span> Slides Detected</h3>
-        <span style="font-size: 0.85rem; color: #ea580c; font-weight: 600;">✓ Ready to Convert</span>
+        <span style="font-size: 0.85rem; color: #ea580c; font-weight: 600;">âœ“ Ready to Convert</span>
       </div>
       <div id="slidePreviewGrid" class="slide-preview-grid"></div>
 
@@ -669,10 +669,10 @@
 
     if (textSnippets.length > 0) {
       const title = textSnippets[0];
-      const rest = textSnippets.slice(1, 3).join('<br>• ');
+      const rest = textSnippets.slice(1, 3).join('<br>â€¢ ');
       body.innerHTML = `
         <div style="font-weight: 700; color: #0f2b46; font-size: 11px; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${title}</div>
-        <div style="color: #64748b; font-size: 9px; line-height: 1.3; overflow: hidden; max-height: 48px;">${rest ? '• ' + rest : ''}</div>
+        <div style="color: #64748b; font-size: 9px; line-height: 1.3; overflow: hidden; max-height: 48px;">${rest ? 'â€¢ ' + rest : ''}</div>
       `;
     } else {
       body.innerHTML = `<div style="text-align: center; color: #94a3b8; font-size: 11px;">[Visual Content / Media]</div>`;

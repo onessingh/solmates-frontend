@@ -1,4 +1,4 @@
-<!-- SOLMATES LIVE CLASSES PORTAL (v89.0) -->
+﻿<!-- SOLMATES LIVE CLASSES PORTAL (v89.0) -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,16 +27,16 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v911">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v912">
+  <script src="/js/site-lock-guard.js?v=v912"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
     <title>DU SOL MBA Live Classes | Join Online MBA Sessions - SOLMATES</title>
     
     
@@ -55,9 +55,9 @@
         }
       }
     </script>
-    <script src="/config.js?v=v911" defer></script>
-    <script src="/js/sol-cache.js?v=v911" defer></script>
-    <script src="/js/api-client.js?v=v911" defer></script>
+    <script src="/config.js?v=v912" defer></script>
+    <script src="/js/sol-cache.js?v=v912" defer></script>
+    <script src="/js/api-client.js?v=v912" defer></script>
     <!-- socket.io loaded dynamically -->
     <style>
 
@@ -1251,7 +1251,7 @@
     </div>
 
     <footer class="footer">
-        <p>2026 SOLMATES • A STUDENT COMMUNITY</p>
+        <p>2026 SOLMATES â€¢ A STUDENT COMMUNITY</p>
     </footer>
 
     <script>
@@ -1324,8 +1324,8 @@
                 const sessionIcon = s.isHealthcare ? 'fas fa-heartbeat' : 'fas fa-graduation-cap';
                 const iconColorStyle = s.isHealthcare ? 'color: #10b981; background: rgba(16, 185, 129, 0.12);' : 'color: #2563eb; background: rgba(37, 99, 235, 0.12);';
                 const badgeHtml = s.isHealthcare
-                    ? `<span class="semester-badge" style="background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 600;"><i class="fas fa-heartbeat"></i> MBA Healthcare • ${s.semesters.includes('all') ? 'All Sems' : 'Sem ' + s.semesters.join(', ')}</span>`
-                    : `<span class="semester-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-weight: 600;"><i class="fas fa-graduation-cap"></i> MBA • ${s.semesters.includes('all') ? 'All Sems' : 'Sem ' + s.semesters.join(', ')}</span>`;
+                    ? `<span class="semester-badge" style="background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 600;"><i class="fas fa-heartbeat"></i> MBA Healthcare â€¢ ${s.semesters.includes('all') ? 'All Sems' : 'Sem ' + s.semesters.join(', ')}</span>`
+                    : `<span class="semester-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-weight: 600;"><i class="fas fa-graduation-cap"></i> MBA â€¢ ${s.semesters.includes('all') ? 'All Sems' : 'Sem ' + s.semesters.join(', ')}</span>`;
 
                 return `
                 <div class="live-session-card ${s.isHealthcare ? 'healthcare-card' : 'general-card'}" onclick="${!isPending ? `joinSession('${s.url.replace(/'/g, "\\'").replace(/"/g, '\\"')}')` : ''}">
@@ -1468,7 +1468,7 @@
                                 const d = baseDate.getDate();
 
                                 const combined = `${finalTime || ''} ${item.class_time || ''} ${meta.time || ''} ${item.title || ''}`;
-                                const rMatch = combined.match(/[-–—]\s*(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)/);
+                                const rMatch = combined.match(/[-â€“â€”]\s*(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)/);
                                 if (rMatch && rMatch[1]) {
                                     const endPart = rMatch[1].trim();
                                     const tMatch = endPart.match(/(\d{1,2}):(\d{2})\s*([APap][Mm])?/);
@@ -1883,7 +1883,7 @@
                 }
             }
             if (t) {
-                t = t.replace(/^[A-Z0-9]+\s*[-–—]\s*/i, '').trim();
+                t = t.replace(/^[A-Z0-9]+\s*[-â€“â€”]\s*/i, '').trim();
                 t = t.split(/\s+/).map(w => {
                     // Handle 'Dr.Name' (no space after Dr.) e.g. 'Dr.Aakash'
                 const drNameMatch = w.match(/^(dr)\.(.+)/i);
@@ -1896,9 +1896,9 @@
             return t;
         }
 
-        function formatTimeRange(timeStr, separator = '–') {
+        function formatTimeRange(timeStr, separator = 'â€“') {
             if (!timeStr) return '';
-            const parts = timeStr.split(/[-–—]|to/i).map(s => s.trim());
+            const parts = timeStr.split(/[-â€“â€”]|to/i).map(s => s.trim());
             if (parts.length === 2) {
                 const parsePart = (p) => {
                     const m = p.match(/(\d{1,2}):(\d{2})\s*([APap][Mm])?/);
@@ -1940,27 +1940,27 @@
             const url = s.url || '';
 
             if (sem === '3') {
-                const timeWithDash = formatTimeRange(s.displayTime, '–');
+                const timeWithDash = formatTimeRange(s.displayTime, 'â€“');
                 const headerTitle = isHealthcare 
-                    ? '*📢 MBA (HEALTHCARE) SEMESTER III – ONLINE CLASS TODAY 📚*' 
-                    : '*📢 MBA SEMESTER III – ONLINE CLASS TODAY 📚*';
+                    ? '*ðŸ“¢ MBA (HEALTHCARE) SEMESTER III â€“ ONLINE CLASS TODAY ðŸ“š*' 
+                    : '*ðŸ“¢ MBA SEMESTER III â€“ ONLINE CLASS TODAY ðŸ“š*';
                 const recCategory = isHealthcare ? 'hc-recorded-class' : 'recorded-class';
                 return `${headerTitle}
 
-📅 *${dayNum} ${monthName} – ${weekday}*
+ðŸ“… *${dayNum} ${monthName} â€“ ${weekday}*
 
-🕖 *${timeWithDash}*
+ðŸ•– *${timeWithDash}*
 
-📚 *Subject:* ${cleanSubject}
+ðŸ“š *Subject:* ${cleanSubject}
 
-🔗 *Join Class – Microsoft Teams:*
-👉 [ ${url} ]
+ðŸ”— *Join Class â€“ Microsoft Teams:*
+ðŸ‘‰ [ ${url} ]
 
-📌 You can also join the class through the *SOLMATES Classes Page.*
+ðŸ“Œ You can also join the class through the *SOLMATES Classes Page.*
 [ https://solmates.in/database/classes ]
  *Please join the class on time.*
 
-📌*Recorded Lectures*
+ðŸ“Œ*Recorded Lectures*
 [ https://solmates.in/database/view?category=${recCategory}&semester=3 ]`;
             }
 
@@ -1968,30 +1968,30 @@
             const timeWithTo = formatTimeRange(s.displayTime, 'to');
             const recCategory = isHealthcare ? 'hc-recorded-class' : 'recorded-class';
             const headerPrefix = isHealthcare 
-                ? `*📍MBA IN HEALTHCARE Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`
-                : `*📍MBA Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`;
+                ? `*ðŸ“MBA IN HEALTHCARE Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`
+                : `*ðŸ“MBA Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`;
 
             let msg = `${headerPrefix}
 
-*🗓Date:- ${dd}/${mm}/${year}*
-*⏰Class Time:- ${timeWithTo}*
+*ðŸ—“Date:- ${dd}/${mm}/${year}*
+*â°Class Time:- ${timeWithTo}*
 
-*🔗Class Link⤵️:-*
+*ðŸ”—Class Linkâ¤µï¸:-*
 ${url}
 
 *Just Tap On the Above Link,Open through Microsoft Teams App then Join The Class* 
 
-📌𝐎𝐧𝐥𝐢𝐧𝐞 𝐂𝐥𝐚𝐬𝐬 & 𝐒𝐜𝐡𝐞𝐝𝐮𝐥𝐞 𝐋𝐢𝐧𝐤:-
+ðŸ“ŒðŽð§ð¥ð¢ð§ðž ð‚ð¥ðšð¬ð¬ & ð’ðœð¡ðžðð®ð¥ðž ð‹ð¢ð§ð¤:-
 https://solmates.in/database/classes
 
-📌 𝐑𝐞𝐜𝐨𝐫𝐝𝐞𝐝 𝐋𝐞𝐜𝐭𝐮𝐫𝐞𝐬
+ðŸ“Œ ð‘ðžðœð¨ð«ððžð ð‹ðžðœð­ð®ð«ðžð¬
 https://solmates.in/database/view?category=${recCategory}&semester=1`;
 
             if (!isHealthcare) {
-                msg += `\n\n📌𝐅𝐢𝐫𝐬𝐭 𝐒𝐞𝐦 𝐍𝐨𝐭𝐞𝐬 𝐆𝐨𝐨𝐠𝐥𝐞 𝐃𝐫𝐢𝐯𝐞 𝐋𝐢𝐧𝐤:-\nhttps://drive.google.com/drive/folders/1lC5PyhNvtpQt4xT8CEjW6rI_tWvF7zTQ`;
+                msg += `\n\nðŸ“Œð…ð¢ð«ð¬ð­ ð’ðžð¦ ðð¨ð­ðžð¬ ð†ð¨ð¨ð ð¥ðž ðƒð«ð¢ð¯ðž ð‹ð¢ð§ð¤:-\nhttps://drive.google.com/drive/folders/1lC5PyhNvtpQt4xT8CEjW6rI_tWvF7zTQ`;
             }
 
-            msg += `\n\n📌𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐆𝐫𝐨𝐮𝐩 𝐋𝐢𝐧𝐤\nhttps://t.me/ducdoemba2026\n*[For Sem-1 Recorded Lectures]*`;
+            msg += `\n\nðŸ“Œð“ðžð¥ðžð ð«ðšð¦ ð†ð«ð¨ð®ð© ð‹ð¢ð§ð¤\nhttps://t.me/ducdoemba2026\n*[For Sem-1 Recorded Lectures]*`;
 
             return msg;
         }
@@ -2011,7 +2011,7 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
             const originalHtml = btn ? btn.innerHTML : '';
 
             const onSuccess = () => {
-                showNotification('Class announcement copied to clipboard! 📋', 'success');
+                showNotification('Class announcement copied to clipboard! ðŸ“‹', 'success');
                 if (btn) {
                     btn.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i>';
                     btn.classList.add('copied');

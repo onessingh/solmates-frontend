@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -26,14 +26,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
   <title>GST Invoice Calculator | SOLMATES Tools</title>
   <link rel="stylesheet" href="/css/global-lockdown.css">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
+  <script src="/js/site-lock-guard.js?v=v912"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
 
@@ -306,7 +306,7 @@
       </div>
 
       <div class="form-group">
-        <label>Amount (₹)</label>
+        <label>Amount (â‚¹)</label>
         <div class="input-icon-wrapper">
           <i class="fas fa-rupee-sign"></i>
           <input type="number" id="in-amount" class="form-control" placeholder="0.00" oninput="calculateGST()" value="10000">
@@ -338,7 +338,7 @@
         <div class="bill-body">
           <div class="bill-row">
             <span class="label">Net Amount (Base Price)</span>
-            <span class="value" id="out-net">₹0.00</span>
+            <span class="value" id="out-net">â‚¹0.00</span>
           </div>
           
           <div class="divider"></div>
@@ -347,15 +347,15 @@
           <div id="tax-breakdown-container">
             <div class="bill-row tax-row" id="row-cgst">
               <span class="label">CGST (9%)</span>
-              <span class="value" id="out-cgst">₹0.00</span>
+              <span class="value" id="out-cgst">â‚¹0.00</span>
             </div>
             <div class="bill-row tax-row" id="row-sgst">
               <span class="label">SGST (9%)</span>
-              <span class="value" id="out-sgst">₹0.00</span>
+              <span class="value" id="out-sgst">â‚¹0.00</span>
             </div>
             <div class="bill-row tax-row" id="row-igst" style="display:none;">
               <span class="label">IGST (18%)</span>
-              <span class="value" id="out-igst">₹0.00</span>
+              <span class="value" id="out-igst">â‚¹0.00</span>
             </div>
           </div>
           
@@ -363,12 +363,12 @@
 
           <div class="bill-row">
             <span class="label">Total Tax Amount</span>
-            <span class="value" style="color: var(--danger);" id="out-tax">₹0.00</span>
+            <span class="value" style="color: var(--danger);" id="out-tax">â‚¹0.00</span>
           </div>
           
           <div class="bill-total">
             <span class="label">Gross Total</span>
-            <span class="value" id="out-gross">₹0.00</span>
+            <span class="value" id="out-gross">â‚¹0.00</span>
           </div>
         </div>
       </div>

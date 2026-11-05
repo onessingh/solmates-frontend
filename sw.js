@@ -1,9 +1,9 @@
-/**
- * SOLMATES Service Worker (v911 - Instant Notification Sync & Zero Stale HTML)
+﻿/**
+ * SOLMATES Service Worker (v912 - Instant Notification Sync & Zero Stale HTML)
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v911';
+const CACHE_NAME = 'solmates-cache-v912';
 
 const STATIC_ASSETS = [
     '/android-chrome-192x192.png',
@@ -39,10 +39,10 @@ self.addEventListener("fetch", event => {
 
     const url = new URL(event.request.url);
 
-    // Bypass API calls — let browser HTTP ETag & Cloudflare handle 304 / 200 validation natively
+    // Bypass API calls â€” let browser HTTP ETag & Cloudflare handle 304 / 200 validation natively
     if (url.pathname.includes("/api/")) return;
 
-    // Bypass ads.txt and robots.txt – always direct network fetch for web crawlers & ad verification bots
+    // Bypass ads.txt and robots.txt â€“ always direct network fetch for web crawlers & ad verification bots
     if (url.pathname === "/ads.txt" || url.pathname.endsWith("/ads.txt") || url.pathname === "/robots.txt") return;
 
     const isHTML = event.request.destination === "document"

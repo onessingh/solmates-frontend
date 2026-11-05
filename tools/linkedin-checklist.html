@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -26,14 +26,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
   <title>LinkedIn Optimization Suite | SOLMATES Tools</title>
   <link rel="stylesheet" href="/css/global-lockdown.css">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
+  <script src="/js/site-lock-guard.js?v=v912"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
@@ -377,10 +377,10 @@
   </div>
 
   <div class="tabs-nav">
-    <button class="tab-btn active" onclick="switchTab('sandbox', this)">📱 Sandbox Preview</button>
-    <button class="tab-btn" onclick="switchTab('checklist', this)">✅ Profile Checklist</button>
-    <button class="tab-btn" onclick="switchTab('banner', this)">🖼️ Banner Maker</button>
-    <button class="tab-btn" onclick="switchTab('ai', this)">✍️ AI Writer</button>
+    <button class="tab-btn active" onclick="switchTab('sandbox', this)">ðŸ“± Sandbox Preview</button>
+    <button class="tab-btn" onclick="switchTab('checklist', this)">âœ… Profile Checklist</button>
+    <button class="tab-btn" onclick="switchTab('banner', this)">ðŸ–¼ï¸ Banner Maker</button>
+    <button class="tab-btn" onclick="switchTab('ai', this)">âœï¸ AI Writer</button>
   </div>
 
   <div class="container">
@@ -422,8 +422,8 @@
         <div id="banner-canvas">
           <div class="b-title" id="bv-name">Shivarn Singh</div>
           <div class="b-subtitle" id="bv-role">Full Stack Developer & AI Enthusiast</div>
-          <div class="b-skills" id="bv-skills">REACT • NODE.JS • PYTHON • UI/UX</div>
-          <div class="b-contact" id="bv-contact">📍 New Delhi, India</div>
+          <div class="b-skills" id="bv-skills">REACT â€¢ NODE.JS â€¢ PYTHON â€¢ UI/UX</div>
+          <div class="b-contact" id="bv-contact">ðŸ“ New Delhi, India</div>
         </div>
       </div>
 
@@ -447,12 +447,12 @@
           <input type="text" class="form-control" id="b-role" placeholder="e.g. Software Engineer & Designer" oninput="updateBanner()">
         </div>
         <div class="form-group">
-          <label>Key Skills (Separated by • or |)</label>
-          <input type="text" class="form-control" id="b-skills" placeholder="e.g. REACT • NODE.JS • PYTHON" oninput="updateBanner()">
+          <label>Key Skills (Separated by â€¢ or |)</label>
+          <input type="text" class="form-control" id="b-skills" placeholder="e.g. REACT â€¢ NODE.JS â€¢ PYTHON" oninput="updateBanner()">
         </div>
         <div class="form-group">
           <label>Location / Website / Email</label>
-          <input type="text" class="form-control" id="b-contact" placeholder="e.g. 📍 New York | johndoe.com" oninput="updateBanner()">
+          <input type="text" class="form-control" id="b-contact" placeholder="e.g. ðŸ“ New York | johndoe.com" oninput="updateBanner()">
         </div>
 
         <button class="btn-main" onclick="downloadBanner()"><i class="fas fa-download"></i> Download High-Res Banner (1584x396)</button>
@@ -575,12 +575,12 @@
 
     // --- CHECKLIST LOGIC ---
     const data = [
-      { id: 'photo', title: 'Profile Photo & Banner', icon: '📸', color: '#e8f4fd', iconColor: '#0077b5', items: [{ id: 'p1', title: 'Professional profile photo', desc: 'Clear face, good lighting, formal attire. Profiles with photos get 21x more views.', priority: 'high' },{ id: 'p2', title: 'Custom background banner', desc: 'Use a 1584x396px banner showing your field, city, or brand. Free tools: Canva.', priority: 'high' },{ id: 'p3', title: 'Profile photo frame (Open to Work / Hiring)', desc: 'Enable the green "Open to Work" frame in profile settings.', priority: 'med' }] },
-      { id: 'headline', title: 'Headline & About', icon: '✍️', color: '#fff3e0', iconColor: '#ff9f0a', items: [{ id: 'h1', title: 'Keyword-rich headline', desc: 'Avoid just "Student at XYZ". Use: MBA Student | Marketing | Analytics | Open to Opportunities.', priority: 'high' },{ id: 'h2', title: 'About section (2200 chars)', desc: 'Tell your story: who you are, what you do, key achievements, and CTA.', priority: 'high' },{ id: 'h3', title: 'About section has keywords', desc: 'Include role keywords like "data analysis", "marketing strategy", etc.', priority: 'high' }] },
-      { id: 'experience', title: 'Experience & Education', icon: '💼', color: '#f0faf3', iconColor: '#34c759', items: [{ id: 'e1', title: 'All jobs/internships added', desc: 'Include every relevant experience. Even short internships matter.', priority: 'high' },{ id: 'e2', title: 'Bullet points with impact', desc: 'Don\'t just list duties. Use: "Increased sales by 15% through..." format.', priority: 'high' },{ id: 'e3', title: 'Education section complete', desc: 'Add your degree, institution, year, and relevant coursework/grade.', priority: 'high' }] },
-      { id: 'skills', title: 'Skills & Endorsements', icon: '🏆', color: '#f5f0ff', iconColor: '#7c3aed', items: [{ id: 's1', title: 'At least 10 skills added', desc: 'Add all relevant skills. LinkedIn promotes profiles with more verified skills.', priority: 'high' },{ id: 's2', title: 'Top 3 skills pinned', desc: 'Pin your 3 most recruiter-relevant skills at the top.', priority: 'high' }] },
-      { id: 'network', title: 'Network & Connections', icon: '🌐', color: '#fff0f5', iconColor: '#ff375f', items: [{ id: 'n1', title: '500+ connections', desc: 'Profiles with 500+ connections rank significantly higher.', priority: 'high' },{ id: 'n2', title: 'Personalized requests', desc: 'Always send a note when connecting. "Hi [name], I saw your work..."', priority: 'med' }] },
-      { id: 'content', title: 'Activity & Content', icon: '📣', color: '#e8f8f5', iconColor: '#00b894', items: [{ id: 'c1', title: 'Post at least once a week', desc: 'Share learnings, industry insights, or project updates.', priority: 'med' },{ id: 'c2', title: 'Featured section added', desc: 'Pin your best post, a project, or portfolio link in the Featured section.', priority: 'low' }] }
+      { id: 'photo', title: 'Profile Photo & Banner', icon: 'ðŸ“¸', color: '#e8f4fd', iconColor: '#0077b5', items: [{ id: 'p1', title: 'Professional profile photo', desc: 'Clear face, good lighting, formal attire. Profiles with photos get 21x more views.', priority: 'high' },{ id: 'p2', title: 'Custom background banner', desc: 'Use a 1584x396px banner showing your field, city, or brand. Free tools: Canva.', priority: 'high' },{ id: 'p3', title: 'Profile photo frame (Open to Work / Hiring)', desc: 'Enable the green "Open to Work" frame in profile settings.', priority: 'med' }] },
+      { id: 'headline', title: 'Headline & About', icon: 'âœï¸', color: '#fff3e0', iconColor: '#ff9f0a', items: [{ id: 'h1', title: 'Keyword-rich headline', desc: 'Avoid just "Student at XYZ". Use: MBA Student | Marketing | Analytics | Open to Opportunities.', priority: 'high' },{ id: 'h2', title: 'About section (2200 chars)', desc: 'Tell your story: who you are, what you do, key achievements, and CTA.', priority: 'high' },{ id: 'h3', title: 'About section has keywords', desc: 'Include role keywords like "data analysis", "marketing strategy", etc.', priority: 'high' }] },
+      { id: 'experience', title: 'Experience & Education', icon: 'ðŸ’¼', color: '#f0faf3', iconColor: '#34c759', items: [{ id: 'e1', title: 'All jobs/internships added', desc: 'Include every relevant experience. Even short internships matter.', priority: 'high' },{ id: 'e2', title: 'Bullet points with impact', desc: 'Don\'t just list duties. Use: "Increased sales by 15% through..." format.', priority: 'high' },{ id: 'e3', title: 'Education section complete', desc: 'Add your degree, institution, year, and relevant coursework/grade.', priority: 'high' }] },
+      { id: 'skills', title: 'Skills & Endorsements', icon: 'ðŸ†', color: '#f5f0ff', iconColor: '#7c3aed', items: [{ id: 's1', title: 'At least 10 skills added', desc: 'Add all relevant skills. LinkedIn promotes profiles with more verified skills.', priority: 'high' },{ id: 's2', title: 'Top 3 skills pinned', desc: 'Pin your 3 most recruiter-relevant skills at the top.', priority: 'high' }] },
+      { id: 'network', title: 'Network & Connections', icon: 'ðŸŒ', color: '#fff0f5', iconColor: '#ff375f', items: [{ id: 'n1', title: '500+ connections', desc: 'Profiles with 500+ connections rank significantly higher.', priority: 'high' },{ id: 'n2', title: 'Personalized requests', desc: 'Always send a note when connecting. "Hi [name], I saw your work..."', priority: 'med' }] },
+      { id: 'content', title: 'Activity & Content', icon: 'ðŸ“£', color: '#e8f8f5', iconColor: '#00b894', items: [{ id: 'c1', title: 'Post at least once a week', desc: 'Share learnings, industry insights, or project updates.', priority: 'med' },{ id: 'c2', title: 'Featured section added', desc: 'Pin your best post, a project, or portfolio link in the Featured section.', priority: 'low' }] }
     ];
 
     let checked = JSON.parse(localStorage.getItem('li_checklist') || '{}');
@@ -592,7 +592,7 @@
       document.getElementById('scoreTotal').textContent = '/' + total;
       document.getElementById('progressFill').style.width = pct + '%';
       
-      let label = pct === 100 ? '🏆 All Star' : pct >= 80 ? '🔥 Expert' : pct >= 50 ? '⚡ Advanced' : '🌱 Beginner';
+      let label = pct === 100 ? 'ðŸ† All Star' : pct >= 80 ? 'ðŸ”¥ Expert' : pct >= 50 ? 'âš¡ Advanced' : 'ðŸŒ± Beginner';
       document.getElementById('scoreBadge').textContent = label;
       localStorage.setItem('li_checklist', JSON.stringify(checked));
     }
@@ -636,7 +636,7 @@
     function updateBanner() {
       document.getElementById('bv-name').textContent = document.getElementById('b-name').value || 'Your Name';
       document.getElementById('bv-role').textContent = document.getElementById('b-role').value || 'Your Profession';
-      document.getElementById('bv-skills').textContent = document.getElementById('b-skills').value || 'SKILL 1 • SKILL 2';
+      document.getElementById('bv-skills').textContent = document.getElementById('b-skills').value || 'SKILL 1 â€¢ SKILL 2';
       document.getElementById('bv-contact').textContent = document.getElementById('b-contact').value;
     }
     function setBannerTheme(btn, theme, colorValue) {
@@ -740,8 +740,8 @@
         </div>`;
       } else {
         const posts = [
-          `🚀 Exciting Update!\n\nI just finished an amazing project involving ${skills} and I couldn't be happier with the results. As a ${role}, continuous learning is my biggest driver.\n\nWhat are you guys learning this week? Drop it in the comments below! 👇\n\n#${role.replace(/\s+/g,'')} #Learning #Growth`,
-          `💡 A quick thought on ${skills}:\n\nIf you want to excel as a ${role}, mastering these basics is crucial. I spent the last few weeks diving deep into this and it completely changed my perspective.\n\nAlways stay curious! ✨\n\n#Tech #Development #Career`,
+          `ðŸš€ Exciting Update!\n\nI just finished an amazing project involving ${skills} and I couldn't be happier with the results. As a ${role}, continuous learning is my biggest driver.\n\nWhat are you guys learning this week? Drop it in the comments below! ðŸ‘‡\n\n#${role.replace(/\s+/g,'')} #Learning #Growth`,
+          `ðŸ’¡ A quick thought on ${skills}:\n\nIf you want to excel as a ${role}, mastering these basics is crucial. I spent the last few weeks diving deep into this and it completely changed my perspective.\n\nAlways stay curious! âœ¨\n\n#Tech #Development #Career`,
         ];
         posts.forEach((p, i) => {
           html += `<div class="ai-card">

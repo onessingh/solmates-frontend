@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -26,14 +26,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v911" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v911">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v911">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v911">
+  <link rel="icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v912" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
   <title>AI Excuse Generator | Complete Communication Assistant</title>
   <link rel="stylesheet" href="/css/global-lockdown.css">
-  <script src="/js/site-lock-guard.js?v=v911"></script>
+  <script src="/js/site-lock-guard.js?v=v912"></script>
   <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { darkMode: 'class' }</script>
   <script>
@@ -322,7 +322,7 @@ Please accept this note as formal notification of my absence.`;
                     const data = await res.json();
                     
                     if (data.success && data.message) {
-                        if (/as an ai language model|i cannot fulfill|i cannot generate|i cannot translate|i am programmed to|against my safety guidelines|i['’]m sorry,? but i can['’]t help with that|i can['’]t assist with that|i cannot assist with that/i.test(data.message)) {
+                        if (/as an ai language model|i cannot fulfill|i cannot generate|i cannot translate|i am programmed to|against my safety guidelines|i['â€™]m sorry,? but i can['â€™]t help with that|i can['â€™]t assist with that|i cannot assist with that/i.test(data.message)) {
                             throw new Error('AI Refusal detected, falling back to local fallback');
                         }
                         resultText = data.message;
@@ -364,8 +364,8 @@ Please accept this note as formal notification of my absence.`;
             ` + finalOptions.map((opt, i) => `
                 <div class="mb-4 p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
                     <div class="flex items-center justify-between mb-2">
-                        <div class="font-bold text-sm text-indigo-600 dark:text-indigo-400">✉️ Option ${i+1}</div>
-                        <button type="button" onclick="var txt=this.parentElement.parentElement.querySelector('.result-opt-text-${i}'); navigator.clipboard.writeText(txt ? txt.innerText : ''); showToast('✓ Option ${i+1} Copied!');" class="text-xs font-semibold px-3 py-1.5 rounded-md bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors">📋 Copy</button>
+                        <div class="font-bold text-sm text-indigo-600 dark:text-indigo-400">âœ‰ï¸ Option ${i+1}</div>
+                        <button type="button" onclick="var txt=this.parentElement.parentElement.querySelector('.result-opt-text-${i}'); navigator.clipboard.writeText(txt ? txt.innerText : ''); showToast('âœ“ Option ${i+1} Copied!');" class="text-xs font-semibold px-3 py-1.5 rounded-md bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors">ðŸ“‹ Copy</button>
                     </div>
                     <div class="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300 result-opt-text-${i}">${opt}</div>
                 </div>
