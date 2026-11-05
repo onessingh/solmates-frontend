@@ -1364,7 +1364,7 @@
                 <div class="book-shadow"></div>
               </div>
             <div class="sol-loader-text">
-              Opening Materials<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span>
+              ${(typeof CATEGORY !== 'undefined' && CATEGORY && CATEGORY.includes('elearning')) ? 'Preparing E-Book' : 'Opening Materials'}<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span>
             </div>
           </div>
         `;

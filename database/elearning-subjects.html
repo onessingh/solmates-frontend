@@ -1538,9 +1538,35 @@
         </div>
 
         <div id="adminBar" class="admin-bar">
-            <button class="btn-create btn-visibility" onclick="toggleOtherVisibility()">
-                <i class="fas fa-eye-slash" id="toggleIcon"></i> Hide Others
-            </button>
+          <script>
+            (function() {
+              try {
+                var tok = localStorage.getItem('solmates_admin_token');
+                if (tok && tok !== 'null' && tok !== 'undefined') {
+                  document.getElementById('adminBar').classList.add('visible');
+                }
+                var vis = localStorage.getItem('elearning_other_visible_root') !== 'false';
+                var tabs = document.querySelectorAll('.tabs .tab-btn');
+                if (tabs && tabs.length > 1 && !vis) tabs[1].classList.add('hidden');
+              } catch(e) {}
+            })();
+          </script>
+          <button class="btn-create btn-visibility" onclick="toggleOtherVisibility()">
+            <i class="fas fa-eye-slash" id="toggleIcon"></i> <span id="toggleText">Hide Other Books</span>
+          </button>
+          <script>
+            (function() {
+              try {
+                var vis = localStorage.getItem('elearning_other_visible_root') !== 'false';
+                if (!vis) {
+                  var icon = document.getElementById('toggleIcon');
+                  var txt = document.getElementById('toggleText');
+                  if (icon) icon.className = 'fas fa-eye';
+                  if (txt) txt.textContent = 'Show Other Books';
+                }
+              } catch(e) {}
+            })();
+          </script>
             <button class="btn-create btn-subject" onclick="openModal('createModal', 'subject')">
                 <i class="fas fa-book-medical"></i> New Subject
             </button>
@@ -1789,7 +1815,6 @@
             if (isAdmin) { const bar = document.getElementById('adminBar'); if (bar) { bar.style.opacity = '1'; bar.classList.add('visible'); } }
             updateOtherUISettings(); // Show from localStorage immediately (no delay)
 
-            _initInProgress = true;
             try {
                 if (!window.solmatesAPI) throw new Error('API not available');
                 const minDuration = silent ? 0 : 550;

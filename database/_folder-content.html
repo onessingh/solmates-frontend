@@ -1748,10 +1748,41 @@
 
     <!-- FIX 2: Admin bar is now OUTSIDE page-header, as a sibling (matches elearning-subjects) -->
     <div id="adminBar" class="admin-bar">
+      <script>
+        (function() {
+          try {
+            var tok = localStorage.getItem('solmates_admin_token');
+            if (tok && tok !== 'null' && tok !== 'undefined') {
+              var bar = document.getElementById('adminBar');
+              if (bar) bar.classList.add('visible');
+            }
+          } catch(e) {}
+        })();
+      </script>
       <button class="btn-create btn-visibility" id="btnToggleOther" onclick="toggleOtherVisibility()"
         style="display:none">
-        <i class="fas fa-eye-slash"></i> Hide Others
+        <i class="fas fa-eye-slash"></i> Hide Other Books
       </button>
+      <script>
+        (function() {
+          try {
+            var p = new URLSearchParams(window.location.search);
+            var cat = (p.get('category') || '').toLowerCase();
+            var fid = p.get('folderId') || '';
+            var isEBook = cat.includes('elearning');
+            var tok = localStorage.getItem('solmates_admin_token');
+            var isAdmin = tok && tok !== 'null' && tok !== 'undefined';
+            if (isEBook && isAdmin) {
+              var btn = document.getElementById('btnToggleOther');
+              var vis = localStorage.getItem('elearning_other_visible_' + fid) !== 'false';
+              if (btn) {
+                btn.style.display = 'inline-flex';
+                btn.innerHTML = vis ? '<i class="fas fa-eye-slash"></i> Hide Other Books' : '<i class="fas fa-eye"></i> Show Other Books';
+              }
+            }
+          } catch(e) {}
+        })();
+      </script>
       <button class="btn-create btn-subject" id="btnNewFolderSubject" onclick="openModal('folderModal', 'subject')"
         style="display:none">
         <i class="fas fa-book-medical"></i> New Subject
@@ -1774,6 +1805,23 @@
     </div>
 
     <div id="elearningTabs" class="tabs">
+      <script>
+        (function() {
+          try {
+            var p = new URLSearchParams(window.location.search);
+            var cat = (p.get('category') || '').toLowerCase();
+            var fid = p.get('folderId') || '';
+            var isEBook = cat.includes('elearning');
+            if (isEBook) {
+              var tabs = document.getElementById('elearningTabs');
+              if (tabs) tabs.classList.add('visible');
+              var vis = localStorage.getItem('elearning_other_visible_' + fid) !== 'false';
+              var tabOther = document.getElementById('tabOther');
+              if (tabOther && !vis) tabOther.classList.add('hidden');
+            }
+          } catch(e) {}
+        })();
+      </script>
       <button class="tab-btn active" id="tabSol" onclick="switchTab('sol')">SOL Books</button>
       <button class="tab-btn" id="tabOther" onclick="switchTab('other')">Other Books</button>
     </div>
