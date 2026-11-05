@@ -1738,12 +1738,58 @@
   </header>
 
   <!-- Breadcrumb built by JS -->
-  <div class="breadcrumb" id="breadcrumb"></div>
+  <div class="breadcrumb" id="breadcrumb">
+    <script>
+      (function() {
+        try {
+          var p = new URLSearchParams(window.location.search);
+          var cat = (p.get('category') || 'elearning').toLowerCase();
+          var s = p.get('semester') || '1';
+          var fname = p.get('name') || '';
+          var isEBook = cat.includes('elearning');
+          var bc = document.getElementById('breadcrumb');
+          if (bc && isEBook) {
+            var catLabel = cat.startsWith('hc') ? 'Healthcare E-Books' : 'E-Books';
+            var semLink = '/database/elearning-subjects.html?category=' + encodeURIComponent(cat) + '&semester=' + encodeURIComponent(s);
+            bc.innerHTML = '<a href="/database" style="color:inherit;text-decoration:none;"><i class="fas fa-home"></i></a>' +
+              '<i class="fas fa-chevron-right" style="margin:0 8px;font-size:9px;color:#94a3b8;"></i>' +
+              '<span onclick="window.location.href=\'' + semLink + '\'">' + catLabel + '</span>' +
+              '<i class="fas fa-chevron-right" style="margin:0 8px;font-size:9px;color:#94a3b8;"></i>' +
+              '<span onclick="window.location.href=\'' + semLink + '\'">Semester ' + s + '</span>' +
+              (fname ? '<i class="fas fa-chevron-right" style="margin:0 8px;font-size:9px;color:#94a3b8;"></i><span class="current">' + fname + '</span>' : '');
+          }
+        } catch(e) {}
+      })();
+    </script>
+  </div>
 
   <div class="container">
     <div class="page-header">
       <h1 id="pageTitle">Folder</h1>
       <p id="pageSub"></p>
+      <script>
+        (function() {
+          try {
+            var p = new URLSearchParams(window.location.search);
+            var fname = p.get('name') || '';
+            var cat = (p.get('category') || 'elearning').toLowerCase();
+            var s = p.get('semester') || '1';
+            var isEBook = cat.includes('elearning');
+            var t = document.getElementById('pageTitle');
+            if (t && fname) {
+              var icon = isEBook ? 'fa-book' : 'fa-play-circle';
+              var dt = fname;
+              if (cat.startsWith('hc-')) dt = 'Healthcare ' + dt;
+              t.innerHTML = '<i class="fas ' + icon + '" style="color:var(--accent)"></i> ' + dt;
+            }
+            var sub = document.getElementById('pageSub');
+            if (sub && s) {
+              var ordinals = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th' };
+              sub.innerText = (ordinals[s] || s) + ' Semester • ' + (isEBook ? 'Select a unit to access materials' : 'Materials');
+            }
+          } catch(e) {}
+        })();
+      </script>
     </div>
 
     <!-- FIX 2: Admin bar is now OUTSIDE page-header, as a sibling (matches elearning-subjects) -->
@@ -1940,15 +1986,9 @@
     function smoothBack(targetUrl) {
       if (isNavigating) return;
       isNavigating = true;
-      const isHC = (CATEGORY || '').includes('hc');
-      const s = parseInt(SEMESTER, 10);
-      const isBook = isHC || (s === 1 || s === 2);
-      showSolLoader(isBook ? 'book' : 'folder');
-      setTimeout(() => {
-        if (targetUrl) window.location.href = targetUrl;
-        else if (window.history.length > 1) window.history.back();
-        else window.location.href = isEBook ? `/database/elearning-subjects.html?category=${CATEGORY}&semester=${SEMESTER}` : `/database/view?category=${CATEGORY}&semester=${SEMESTER}`;
-      }, 50);
+      if (targetUrl) window.location.href = targetUrl;
+      else if (window.history.length > 1) window.history.back();
+      else window.location.href = isEBook ? `/database/elearning-subjects.html?category=${CATEGORY}&semester=${SEMESTER}` : `/database/view?category=${CATEGORY}&semester=${SEMESTER}`;
     }
 
     // -- Breadcrumb ------------------------------------------------------------

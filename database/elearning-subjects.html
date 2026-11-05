@@ -1937,9 +1937,7 @@
                         isNavigating = true; 
                         card.classList.add('navigating');
                         const parentLabel = (CATEGORY === 'hc-elearning' ? 'Healthcare E-Books' : 'E-Books');
-                        setTimeout(() => {
-                            window.location.href = `/database/folder-content.html?category=${encodeURIComponent(CATEGORY)}&semester=${encodeURIComponent(SEMESTER)}&folderId=${encodeURIComponent(subject.id)}&name=${encodeURIComponent(cleanName)}&parentName=${encodeURIComponent(parentLabel)}`;
-                        }, 50);
+                        window.location.href = `/database/folder-content.html?category=${encodeURIComponent(CATEGORY)}&semester=${encodeURIComponent(SEMESTER)}&folderId=${encodeURIComponent(subject.id)}&name=${encodeURIComponent(cleanName)}&parentName=${encodeURIComponent(parentLabel)}`;
                     };
                     grid.appendChild(card);
                 } catch (err) { console.error('Subject render err:', err); }
