@@ -1817,7 +1817,7 @@
 
             try {
                 if (!window.solmatesAPI) throw new Error('API not available');
-                const minDuration = silent ? 0 : 550;
+                const minDuration = 0;
                 const promises = [
                     window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false),
                     window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false)

@@ -1301,7 +1301,7 @@
         showSolLoader(isBook ? 'book' : 'folder');
         setTimeout(() => {
           window.location.href = `/database/elearning-subjects.html?category=${CATEGORY}&semester=${s}`;
-        }, 50);
+        }, 200);
         return;
       }
       if (CATEGORY.includes('youtube')) { window.location.href = `/database/youtube-browse.html?category=${CATEGORY}&semester=${s}`; return; }
