@@ -1060,7 +1060,7 @@ window.addConnectionStatusDot = function (socket) {
     try {
       if (typeof window.refreshSubjects === 'function') window.refreshSubjects();
       else if (typeof window.loadSubjects === 'function') window.loadSubjects();
-      if (typeof window.loadContent === 'function') window.loadContent();
+      if (typeof window.loadContent === 'function') window.loadContent(true);
       if (typeof window.loadData === 'function') window.loadData();
       if (typeof window.loadNotifications === 'function') window.loadNotifications();
       if (typeof window.loadDataFromAPI === 'function') window.loadDataFromAPI();

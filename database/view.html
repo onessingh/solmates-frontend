@@ -166,7 +166,8 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .card {
-      animation: folderFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      animation: folderFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
       will-change: transform, opacity;
       background: var(--bg-card); border-radius: 12px; padding: 18px 20px;
       border: 1px solid var(--border-color); cursor: pointer; text-align: center;
@@ -1111,12 +1112,11 @@
 
     window.addEventListener('sol:cache_invalidated', () => {
       if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-      if (semester) { if (typeof loadContent === 'function') loadContent(); }
+      if (semester) { if (typeof loadContent === 'function') loadContent(true); }
       else { if (typeof renderSemesters === 'function') renderSemesters(true); }
     });
     window.addEventListener('sol:content-updated', () => {
-      if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-      if (semester) { if (typeof loadContent === 'function') loadContent(); }
+      if (semester) { if (typeof loadContent === 'function') loadContent(true); }
       else { if (typeof renderSemesters === 'function') renderSemesters(true); }
     });
 
@@ -1124,6 +1124,11 @@
       const grid = document.getElementById('grid');
       if (!grid) return;
       const animType = type || (folderId ? 'book' : 'folder');
+      const expectedClass = animType === 'folder' ? 'concept-folder' : 'concept-book';
+      const curLoader = grid.querySelector('.sol-loader-container');
+      if (curLoader && curLoader.classList.contains(expectedClass)) {
+        return; // Loader is already running smoothly, don't restart/glitch
+      }
       if (animType === 'folder') {
         grid.innerHTML = `
           <div class="sol-loader-container concept-folder">
@@ -1159,24 +1164,29 @@
     }
     const showFolderSpinner = showSolLoader;
 
-    async function loadContent() {
+    let _lastRenderedKey = '';
+    async function loadContent(silent = false) {
       if (isReorderMode) return;
       if (!semester) {
         renderSemesters(true);
         return;
       }
       const grid = document.getElementById('grid');
-      showSolLoader(folderId ? 'book' : 'folder');
+      if (!silent) {
+        showSolLoader(folderId ? 'book' : 'folder');
+      }
       try {
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
-        // Pacing: 550ms for semester->folders so user perceives the folder opening; 450ms for folder->materials
-        const minAnimDuration = folderId ? 450 : 550;
+        // Pacing: 550ms for semester->folders; 450ms for folder->materials (0ms if silent background sync)
+        const minAnimDuration = silent ? 0 : (folderId ? 450 : 550);
         const promises = [
           window.solmatesAPI.getSOLFolders(CATEGORY, semester, folderId, false),
-          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false),
-          new Promise(resolve => setTimeout(resolve, minAnimDuration))
+          window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
         ];
+        if (minAnimDuration > 0) {
+          promises.push(new Promise(resolve => setTimeout(resolve, minAnimDuration)));
+        }
         if (folderId && !isAdmin) {
           promises.push(window.solmatesAPI.getSOLFolders(CATEGORY, semester, null, false, true));
         }
@@ -1184,7 +1194,7 @@
         const results = await Promise.all(promises);
         const fRes = results[0];
         const iRes = results[1];
-        const allFoldersRes = (folderId && !isAdmin) ? results[3] : null;
+        const allFoldersRes = (folderId && !isAdmin) ? (minAnimDuration > 0 ? results[3] : results[2]) : null;
 
         // Deep-link Lock Protection
         if (folderId && !isAdmin && allFoldersRes && allFoldersRes.data) {
@@ -1204,10 +1214,25 @@
           }
         }
 
-        renderGrid(fRes.data || [], iRes.data || []);
+        const folders = fRes?.data || [];
+        const items = iRes?.data || [];
+
+        // Fingerprint comparison: if silent and content identical, skip DOM redraw completely
+        const renderKey = `${folderId || 'root'}_${folders.length}_${items.length}_` + 
+          folders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
+          items.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
+
+        if (silent && _lastRenderedKey === renderKey) {
+          return;
+        }
+        _lastRenderedKey = renderKey;
+
+        renderGrid(folders, items);
       } catch (e) {
-        console.error("loadContent error:", e);
-        grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
+        if (!silent) {
+          console.error("loadContent error:", e);
+          grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
+        }
       }
     }
     window.loadContent = loadContent;
@@ -1225,7 +1250,7 @@
         const fId = f.id || f._id;
         const isLocked = f.isLocked || (f.name || '').includes('[LOCKED]');
         const card = mkCard('folder', isLocked ? '<i class="fas fa-lock main-icon"></i>' : '<i class="fas fa-folder main-icon"></i>', f.name, fId);
-        card.style.animationDelay = (idx * 0.035) + 's';
+        card.style.animationDelay = (Math.min(idx, 8) * 0.02) + 's';
         
         if (isHidden) card.style.opacity = '0.5';
 
@@ -1266,7 +1291,7 @@
 
         const card = mkCard('file', '<i class="fas fa-file-lines main-icon"></i>', title, item.id);
         const staggerIndex = folders.length + idx;
-        card.style.animationDelay = (staggerIndex * 0.03) + 's';
+        card.style.animationDelay = (Math.min(staggerIndex, 10) * 0.02) + 's';
         
         if (isHidden) card.style.opacity = '0.5';
 

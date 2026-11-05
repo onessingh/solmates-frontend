@@ -1841,7 +1841,12 @@
         function showSolLoader(type) {
       const grid = document.getElementById('grid');
       if (!grid) return;
-      const animType = type || (folderId ? 'book' : 'folder');
+      const animType = type || (FOLDER_ID ? 'book' : 'folder');
+      const expectedClass = animType === 'folder' ? 'concept-folder' : 'concept-book';
+      const curLoader = grid.querySelector('.sol-loader-container');
+      if (curLoader && curLoader.classList.contains(expectedClass)) {
+        return; // Already active, don't restart
+      }
       if (animType === 'folder') {
         grid.innerHTML = `
           <div class="sol-loader-container concept-folder">
@@ -1877,38 +1882,45 @@
     }
     const showFolderSpinner = showSolLoader;
 
-    async function loadContent() {
+    let _lastFcRenderKey = '';
+    async function loadContent(silent = false) {
       if (isReorderMode) return;
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
 
-      // Use shared cache keys like elearning-subjects for instant switching
       const fKey = `folders_${CATEGORY}_${SEMESTER}_${FOLDER_ID || 'root'}`;
       const iKey = isEBook ? `content_${CATEGORY}_${SEMESTER}_all` : `content_${CATEGORY}_${SEMESTER}_${FOLDER_ID}`;
 
-      // Step 1: Instant Cache Render (Solid)
-      const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(fKey) : null;
-      const cItems = window.solmatesAPI ? window.solmatesAPI.getCache(iKey) : null;
-
-      if (cFolders || cItems) {
-        renderGridSafe(cFolders?.data || [], cItems?.data || [], isAdmin, true);
-      } else {
-        // Only show text if absolutely no cache exists
+      const grid = document.getElementById('grid');
+      if (!silent) {
         showSolLoader('book');
       }
 
       try {
-        // Step 2: Fetch fresh content (serves from edge cache, instant)
-        const [fRes, iRes] = await Promise.all([
+        const minDuration = silent ? 0 : 450;
+        const promises = [
           window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
           isEBook
             ? window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false).catch(() => null)
-            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
-          new Promise(r => setTimeout(r, 450))
-        ]);
-
-        if (fRes?.data || iRes?.data) {
-          renderGridSafe(fRes?.data || [], iRes?.data || [], isAdmin);
+            : window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null)
+        ];
+        if (minDuration > 0) {
+          promises.push(new Promise(r => setTimeout(r, minDuration)));
         }
+
+        const [fRes, iRes] = await Promise.all(promises);
+        const folders = fRes?.data || [];
+        const items = iRes?.data || [];
+
+        const renderKey = `${FOLDER_ID || 'root'}_${folders.length}_${items.length}_` +
+          folders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
+          items.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
+
+        if (silent && _lastFcRenderKey === renderKey) {
+          return;
+        }
+        _lastFcRenderKey = renderKey;
+
+        renderGridSafe(folders, items, isAdmin);
       } catch (err) {
         console.warn('Refresh fail:', err);
       } finally {
@@ -2352,11 +2364,10 @@
         });
         window.addEventListener('sol:cache_invalidated', () => {
           if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-          loadContent();
+          loadContent(true);
         });
         window.addEventListener('sol:content-updated', () => {
-          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-          loadContent();
+          loadContent(true);
         });
       } catch (e) { }
     })();
