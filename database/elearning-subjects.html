@@ -1774,14 +1774,19 @@
             const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
             const urlTab = p.get('tab');
             if (urlTab === 'other' || urlTab === 'sol') currentTab = urlTab;
-            updateOtherUISettings();
+            // updateOtherUISettings called AFTER data fetch to avoid button flash
 
             const grid = document.getElementById('grid');
-            if (!silent && !_cachedFolders && (!grid || !grid.children.length)) {
-                showSolLoader(getAnimType());
+            if (!silent && !_cachedFolders) {
+                const existing = grid && grid.querySelector('.sol-loader-container');
+                const want = getAnimType() === 'book' ? 'concept-book' : 'concept-folder';
+                // Only inject loader if none is present OR if it's the wrong type
+                if (!existing || !existing.classList.contains(want)) {
+                    showSolLoader(getAnimType());
+                }
             }
 
-            if (isAdmin) document.getElementById('adminBar').classList.add('visible');
+            if (isAdmin) { const bar = document.getElementById('adminBar'); if (bar) { bar.style.opacity = '0'; bar.classList.add('visible'); } }
 
             _initInProgress = true;
             try {
@@ -1805,6 +1810,8 @@
                 if (configFolder) {
                     otherVisible = !configFolder.name.includes('[HIDE_OTHER]');
                     updateOtherUISettings();
+                    const bar = document.getElementById('adminBar');
+                    if (bar) bar.style.transition = 'opacity 0.25s ease', bar.style.opacity = '1';
                 }
 
                 const renderKey = `${currentTab}_${SEMESTER}_${freshFolders.length}_${freshItems.length}_` +
