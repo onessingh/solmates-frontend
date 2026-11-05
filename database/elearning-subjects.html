@@ -435,8 +435,8 @@
         }
 
         .subject-card.navigating {
-            transform: scale(0.98);
-            opacity: 0.7;
+            transform: scale(0.97);
+            transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
             pointer-events: none;
             border-color: var(--accent);
         }
@@ -1364,17 +1364,23 @@
         </div>
 
         <div class="grid" id="grid">
-      <div class="sol-loader-container concept-folder">
-        <div class="sol-folder-anim">
-          <div class="folder-back"></div>
-          <div class="folder-paper paper-2"></div>
-          <div class="folder-paper paper-1"></div>
-          <div class="folder-front"></div>
-          <div class="folder-shadow"></div>
+          <script>
+            (function() {
+              try {
+                var p = new URLSearchParams(window.location.search);
+                var cat = (p.get('category') || 'elearning').toLowerCase();
+                var s = parseInt(p.get('semester') || '1', 10);
+                var isHc = cat.includes('hc');
+                var isBook = isHc || (s === 1 || s === 2);
+                if (isBook) {
+                  document.write('<div class="sol-loader-container concept-book"><div class="sol-book-anim"><div class="book-cover"></div><div class="book-page-static left"></div><div class="book-page-static right"></div><div class="book-leaf leaf-2"></div><div class="book-leaf leaf-1"></div><div class="book-shadow"></div></div><div class="sol-loader-text">Opening Materials<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div></div>');
+                } else {
+                  document.write('<div class="sol-loader-container concept-folder"><div class="sol-folder-anim"><div class="folder-back"></div><div class="folder-paper paper-2"></div><div class="folder-paper paper-1"></div><div class="folder-front"></div><div class="folder-shadow"></div></div><div class="sol-loader-text">Opening Folders<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div></div>');
+                }
+              } catch(e) {}
+            })();
+          </script>
         </div>
-        <div class="sol-loader-text">Opening Folders<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
-      </div>
-    </div>
     </div>
 
     <!-- Modals -->
@@ -1405,9 +1411,22 @@
         const fromParam = p.get('category');
         
         const CATEGORY = fromParam || 'elearning';
+        function getAnimType() {
+            const isHC = (CATEGORY || '').includes('hc');
+            const s = parseInt(SEMESTER, 10);
+            if (isHC) return 'book'; // All 4 semesters of HC -> Opening Materials
+            if (s === 1 || s === 2) return 'book'; // Sem 1 and 2 of general elearning -> Opening Materials
+            return 'folder'; // Sem 3 and 4 of general elearning -> Opening Folders
+        }
+
         const bLinkDef = document.getElementById('bc-ebooks-link');
         if (bLinkDef && CATEGORY !== 'hc-elearning') {
-            bLinkDef.onclick = () => window.location='/database/view?category=elearning';
+            bLinkDef.onclick = () => {
+                if (isNavigating) return;
+                isNavigating = true;
+                showSolLoader(getAnimType());
+                setTimeout(() => { window.location = '/database/view?category=elearning'; }, 60);
+            };
         }
 
         // Update title for Healthcare
@@ -1418,7 +1437,12 @@
             const bLink = document.getElementById('bc-ebooks-link');
             if (bLink) {
                 bLink.textContent = 'Healthcare E-Books';
-                bLink.onclick = () => window.location='/database/view?category=hc-elearning';
+                bLink.onclick = () => {
+                if (isNavigating) return;
+                isNavigating = true;
+                showSolLoader('book');
+                setTimeout(() => { window.location = '/database/view?category=hc-elearning'; }, 60);
+            };
             }
         }
         let currentTab = 'sol';
@@ -1561,7 +1585,7 @@
 
             const grid = document.getElementById('grid');
             if (!silent && !_cachedFolders && (!grid || !grid.children.length)) {
-                showSolLoader('folder');
+                showSolLoader(getAnimType());
             }
 
             if (isAdmin) document.getElementById('adminBar').classList.add('visible');
@@ -1622,7 +1646,7 @@
             grid.innerHTML = '';
             if (subjects.length === 0) {
                 if (window.isRefreshing) {
-                    showSolLoader('folder');
+                    showSolLoader(getAnimType());
                 } else {
                     grid.innerHTML = `
   <div style="text-align:center; padding:60px 20px; color:#94a3b8;">
@@ -1686,10 +1710,12 @@
                     card.onclick = (e) => {
                         if (isNavigating || isReorderMode || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('a')) return;
                         if (!isGeneric && bookLink) { openViewer(bookLink, cleanName); return; }
-                        isNavigating = true; card.classList.add('navigating');
+                        isNavigating = true; 
+                        card.classList.add('navigating');
+                        const parentLabel = (CATEGORY === 'hc-elearning' ? 'Healthcare E-Books' : 'E-Books');
                         setTimeout(() => {
-                            window.location.href = `/database/folder-content.html?category=${CATEGORY}&semester=${SEMESTER}&folderId=${subject.id}&name=${encodeURIComponent(cleanName)}&parentName=' + (CATEGORY === 'hc-elearning' ? 'Healthcare E-Books' : 'E-Books') + '`;
-                        }, 150);
+                            window.location.href = `/database/folder-content.html?category=${encodeURIComponent(CATEGORY)}&semester=${encodeURIComponent(SEMESTER)}&folderId=${encodeURIComponent(subject.id)}&name=${encodeURIComponent(cleanName)}&parentName=${encodeURIComponent(parentLabel)}`;
+                        }, 50);
                     };
                     grid.appendChild(card);
                 } catch (err) { console.error('Subject render err:', err); }

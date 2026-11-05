@@ -1101,7 +1101,16 @@
 
     async function onSemesterClick(s) {
       if (isNavigating) return;
-      if (CATEGORY.includes('elearning')) { window.location.href = `/database/elearning-subjects.html?category=${CATEGORY}&semester=${s}`; return; }
+      if (CATEGORY.includes('elearning')) {
+        isNavigating = true;
+        const isHC = CATEGORY.includes('hc');
+        const isBook = isHC || (s === 1 || s === 2);
+        showSolLoader(isBook ? 'book' : 'folder');
+        setTimeout(() => {
+          window.location.href = `/database/elearning-subjects.html?category=${CATEGORY}&semester=${s}`;
+        }, 50);
+        return;
+      }
       if (CATEGORY.includes('youtube')) { window.location.href = `/database/youtube-browse.html?category=${CATEGORY}&semester=${s}`; return; }
       semester = s; navStack = [{ name: `Semester ${s}`, folderId: null }];
       history.pushState({ stack: [...navStack], folderId: null, semester: s }, "", window.location.pathname + `?category=${CATEGORY}&semester=${s}`);

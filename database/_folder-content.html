@@ -1671,6 +1671,21 @@
     let otherVisible = true;
 
     const ordinals = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th', 5: '5th', 6: '6th' };
+    // Pre-paint title & breadcrumbs instantly from URL parameters
+    try {
+      const _pTitle = document.getElementById('pageTitle');
+      if (_pTitle && FOLDER_NAME) {
+        const _icon = isEBook ? 'fa-book' : 'fa-play-circle';
+        let _dt = FOLDER_NAME;
+        if (CATEGORY.startsWith('hc-')) _dt = 'Healthcare ' + _dt;
+        _pTitle.innerHTML = `<i class="fas ${_icon}" style="color:var(--accent)"></i> ${_dt}`;
+        const _pSub = document.getElementById('pageSub');
+        if (_pSub) {
+          const _lbl = isEBook ? (CATEGORY.startsWith('hc-') ? 'Healthcare E-Books' : 'E-Books') : 'Video Lessons';
+          _pSub.innerText = `${_lbl} • ${ordinals[SEMESTER] || SEMESTER} Semester`;
+        }
+      }
+    } catch(e) {}
     const CAT_LABELS = {
       'live-classes': 'Live Classes', 'notes': 'Study Notes',
       'pyqs': 'Previous Year Papers', 'oneshot': 'One-Shot Revision',
@@ -1678,23 +1693,39 @@
       'professor': 'Class Materials'
     };
 
+    function smoothBack(targetUrl) {
+      if (isNavigating) return;
+      isNavigating = true;
+      const isHC = (CATEGORY || '').includes('hc');
+      const s = parseInt(SEMESTER, 10);
+      const isBook = isHC || (s === 1 || s === 2);
+      showSolLoader(isBook ? 'book' : 'folder');
+      setTimeout(() => {
+        if (targetUrl) window.location.href = targetUrl;
+        else if (window.history.length > 1) window.history.back();
+        else window.location.href = isEBook ? `/database/elearning-subjects.html?category=${CATEGORY}&semester=${SEMESTER}` : `/database/view?category=${CATEGORY}&semester=${SEMESTER}`;
+      }, 50);
+    }
+
     // -- Breadcrumb ------------------------------------------------------------
     function buildBreadcrumb() {
       const bc = document.getElementById('breadcrumb');
       if (!bc) return;
       const cat = CAT_LABELS[CATEGORY] || CATEGORY;
       const catLink = CATEGORY === 'live-classes' ? `/database/classes` : `/database/view?category=${CATEGORY}`;
-      const semLink = `/database/view?category=${CATEGORY}&semester=${SEMESTER}`;
+      const semLink = isEBook 
+        ? `/database/elearning-subjects.html?category=${CATEGORY}&semester=${SEMESTER}`
+        : `/database/view?category=${CATEGORY}&semester=${SEMESTER}`;
       const esc = s => s ? s.replace(/"/g, '&quot;') : '';
 
       bc.innerHTML = `
-      <span onclick="window.location='/database'">Database</span>
+      <span onclick="smoothBack('/database')">Database</span>
       <i class="fas fa-chevron-right"></i>
-      <span onclick="window.location='${catLink}'">${cat}</span>
+      <span onclick="smoothBack('${catLink}')">${cat}</span>
       <i class="fas fa-chevron-right"></i>
-      <span onclick="window.location='${semLink}'">Semester ${SEMESTER}</span>
+      <span onclick="smoothBack('${semLink}')">Semester ${SEMESTER}</span>
       <i class="fas fa-chevron-right"></i>
-      ${PARENT_NAME ? `<span onclick="history.back()" title="${esc(PARENT_NAME)}">${PARENT_NAME}</span><i class="fas fa-chevron-right"></i>` : ''}
+      ${PARENT_NAME ? `<span onclick="smoothBack()" title="${esc(PARENT_NAME)}">${PARENT_NAME}</span><i class="fas fa-chevron-right"></i>` : ''}
       <span class="current" title="${esc(FOLDER_NAME)}">${FOLDER_NAME}</span>
     `;
     }
