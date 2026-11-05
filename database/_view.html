@@ -975,16 +975,18 @@
     </div>
 
     <div class="grid" id="grid">
-      <div class="sol-loader-container concept-folder">
-        <div class="sol-folder-anim">
-          <div class="folder-back"></div>
-          <div class="folder-paper paper-2"></div>
-          <div class="folder-paper paper-1"></div>
-          <div class="folder-front"></div>
-          <div class="folder-shadow"></div>
-        </div>
-        <div class="sol-loader-text">Opening Folders<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
-      </div>
+      <script>
+        (function() {
+          const sp = new URLSearchParams(window.location.search);
+          const s = sp.get('semester');
+          if (s) {
+            const fid = sp.get('folderId');
+            const anim = fid ? 'concept-book' : 'concept-folder';
+            const txt = fid ? 'Opening Materials' : 'Opening Folders';
+            document.write('<div class="sol-loader-container ' + anim + '"><div class="sol-' + (fid ? 'book' : 'folder') + '-anim"><div class="' + (fid ? 'book-cover' : 'folder-back') + '"></div><div class="' + (fid ? 'book-page-static left' : 'folder-paper paper-2') + '"></div><div class="' + (fid ? 'book-page-static right' : 'folder-paper paper-1') + '"></div><div class="' + (fid ? 'book-leaf leaf-2' : 'folder-front') + '"></div><div class="' + (fid ? 'book-leaf leaf-1' : 'folder-shadow') + '"></div>' + (fid ? '<div class="book-shadow"></div>' : '') + '</div><div class="sol-loader-text">' + txt + '<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div></div>');
+          }
+        })();
+      </script>
     </div>
   </div>
 
@@ -1165,6 +1167,7 @@
     const showFolderSpinner = showSolLoader;
 
     let _lastRenderedKey = '';
+    let _loadContentInProgress = false;
     async function loadContent(silent = false) {
       if (isReorderMode) return;
       if (!semester) {
@@ -1172,9 +1175,12 @@
         return;
       }
       const grid = document.getElementById('grid');
+      if (_loadContentInProgress && !silent) return;
+
       if (!silent) {
         showSolLoader(folderId ? 'book' : 'folder');
       }
+      _loadContentInProgress = true;
       try {
         const isAdmin = window.solmatesAPI.isAdminLoggedIn();
         
@@ -1217,22 +1223,26 @@
         const folders = fRes?.data || [];
         const items = iRes?.data || [];
 
-        // Fingerprint comparison: if silent and content identical, skip DOM redraw completely
+        // Fingerprint comparison: if content is already rendered in grid with matching key, skip DOM redraw completely!
         const renderKey = `${folderId || 'root'}_${folders.length}_${items.length}_` + 
           folders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
           items.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
 
-        if (silent && _lastRenderedKey === renderKey) {
+        if (_lastRenderedKey === renderKey && grid && grid.getAttribute('data-rendered-key') === renderKey) {
           return;
         }
         _lastRenderedKey = renderKey;
 
         renderGrid(folders, items);
+        if (grid) grid.setAttribute('data-rendered-key', renderKey);
       } catch (e) {
         if (!silent) {
           console.error("loadContent error:", e);
           grid.innerHTML = '<div class="empty"><i class="fas fa-folder-open" style="font-size:2rem;color:#9ca3af;margin-bottom:10px;"></i><br><strong>Admin has not added anything here yet.</strong></div>';
         }
+      } finally {
+        _loadContentInProgress = false;
+        isNavigating = false;
       }
     }
     window.loadContent = loadContent;
@@ -1581,9 +1591,9 @@
       isNavigating = false;
       document.querySelectorAll('.card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
       const grid = document.getElementById('grid');
-      if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
+      if (event.persisted) {
         if (!semester) renderSemesters(true);
-        else loadContent();
+        else loadContent(true);
       }
     });
 
@@ -1628,6 +1638,11 @@
       document.getElementById('pageDesc').innerText = 'Select a semester to continue';
       document.getElementById('breadcrumb').style.display = 'none';
       const grid = document.getElementById('grid');
+      if (grid && grid.querySelectorAll('.card.sem').length === 4) {
+        _lastRenderedKey = 'semesters';
+        return;
+      }
+      _lastRenderedKey = 'semesters';
       grid.innerHTML = '';
       const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b'];
       const ordinal = ['1st', '2nd', '3rd', '4th'];
@@ -1640,6 +1655,7 @@
         card.onclick = () => { card.classList.add('card-tap-feedback'); onSemesterClick(s); };
         grid.appendChild(card);
       }
+      if (grid) grid.setAttribute('data-rendered-key', 'semesters');
     }
 
     init();

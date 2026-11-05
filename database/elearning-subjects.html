@@ -1432,12 +1432,23 @@
         document.getElementById('pageDesc').innerText = `${ordinals[SEMESTER] || SEMESTER} Semester • Select a subject to access its E-Book`;
 
         function switchTab(tab) {
-            if (isNavigating) return;
+            if (isNavigating || currentTab === tab) return;
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.innerText.toLowerCase().includes(tab));
             });
-            init();
+            const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+            if (_cachedFolders && _cachedItems) {
+                const renderKey = `${currentTab}_${SEMESTER}_${_cachedFolders.length}_${_cachedItems.length}_` +
+                    _cachedFolders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
+                    _cachedItems.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
+                _lastRenderKey = renderKey;
+                renderGridSafe(_cachedFolders, _cachedItems, isAdmin);
+                const grid = document.getElementById('grid');
+                if (grid) grid.setAttribute('data-rendered-key', renderKey);
+            } else {
+                init();
+            }
         }
 
         function updateOtherUISettings() {
@@ -1481,7 +1492,12 @@
             function showSolLoader(type) {
       const grid = document.getElementById('grid');
       if (!grid) return;
-      const animType = type || (folderId ? 'book' : 'folder');
+      const animType = type || 'folder';
+      const expectedClass = animType === 'folder' ? 'concept-folder' : 'concept-book';
+      const curLoader = grid.querySelector('.sol-loader-container');
+      if (curLoader && curLoader.classList.contains(expectedClass)) {
+        return; // Loader is already running smoothly, don't restart/glitch
+      }
       if (animType === 'folder') {
         grid.innerHTML = `
           <div class="sol-loader-container concept-folder">
@@ -1517,8 +1533,14 @@
     }
     const showFolderSpinner = showSolLoader;
 
-        async function init() {
+        let _lastRenderKey = '';
+        let _initInProgress = false;
+        let _cachedFolders = null;
+        let _cachedItems = null;
+
+        async function init(silent = false) {
             if (isReorderMode) return;
+            if (_initInProgress && !silent) return;
 
             if (!window.solmatesAPI) {
                 let retries = 10;
@@ -1527,7 +1549,7 @@
                 }
                 if (!window.solmatesAPI) {
                     document.getElementById('grid').innerHTML =
-                        '<div class="loading" style="color:#ef4444">?? API failed to load. Check your connection.</div>';
+                        '<div class="loading" style="color:#ef4444">⚠️ API failed to load. Check your connection.</div>';
                     return;
                 }
             }
@@ -1537,44 +1559,58 @@
             if (urlTab === 'other' || urlTab === 'sol') currentTab = urlTab;
             updateOtherUISettings();
 
-            const fKey = `folders_${CATEGORY}_${SEMESTER}_root`;
-            const iKey = `content_${CATEGORY}_${SEMESTER}_all`;
-            const cFolders = window.solmatesAPI ? window.solmatesAPI.getCache(fKey) : null;
-            const cItems = window.solmatesAPI ? window.solmatesAPI.getCache(iKey) : null;
-
-            window.isRefreshing = true;
-
-            if (cFolders || cItems) {
-                renderGridSafe(cFolders?.data || [], cItems?.data || [], isAdmin);
-            } else {
+            const grid = document.getElementById('grid');
+            if (!silent && !_cachedFolders && (!grid || !grid.children.length)) {
                 showSolLoader('folder');
             }
 
             if (isAdmin) document.getElementById('adminBar').classList.add('visible');
 
+            _initInProgress = true;
             try {
                 if (!window.solmatesAPI) throw new Error('API not available');
-                const [fRes, iRes] = await Promise.all([
+                const minDuration = silent ? 0 : 550;
+                const promises = [
                     window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, null, false),
-                    window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false),
-                    new Promise(r => setTimeout(r, 550))
-                ]);
-                window.isRefreshing = false;
+                    window.solmatesAPI.getSOLContent(CATEGORY, SEMESTER, 'all', false)
+                ];
+                if (minDuration > 0) {
+                    promises.push(new Promise(r => setTimeout(r, minDuration)));
+                }
+
+                const [fRes, iRes] = await Promise.all(promises);
                 const freshFolders = fRes?.data || [];
                 const freshItems = iRes?.data || [];
+                _cachedFolders = freshFolders;
+                _cachedItems = freshItems;
+
                 const configFolder = freshFolders.find(f => f.name.includes('__ROOT_CONFIG__'));
                 if (configFolder) {
                     otherVisible = !configFolder.name.includes('[HIDE_OTHER]');
                     updateOtherUISettings();
                 }
-                renderGridSafe(freshFolders, freshItems, isAdmin);
-            } catch (e) {
-                window.isRefreshing = false;
-                console.warn('Refresh failed:', e.message);
-                if (!cFolders && !cItems) {
-                    document.getElementById('grid').innerHTML = '<div class="loading" style="color:#ef4444">Failed to load subjects.</div>';
+
+                const renderKey = `${currentTab}_${SEMESTER}_${freshFolders.length}_${freshItems.length}_` +
+                    freshFolders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
+                    freshItems.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
+
+                // 🛑 SOLID FINGERPRINT GUARD: If same content is already on DOM, don't wipe & re-render!
+                if (_lastRenderKey === renderKey && grid && grid.getAttribute('data-rendered-key') === renderKey) {
+                    return;
                 }
-            } finally { window.isRefreshing = false; isNavigating = false; }
+                _lastRenderKey = renderKey;
+
+                renderGridSafe(freshFolders, freshItems, isAdmin);
+                if (grid) grid.setAttribute('data-rendered-key', renderKey);
+            } catch (e) {
+                console.warn('Refresh failed:', e.message);
+                if (grid && (!grid.children.length || grid.querySelector('.sol-loader-container'))) {
+                    grid.innerHTML = '<div class="loading" style="color:#ef4444">Failed to load subjects.</div>';
+                }
+            } finally {
+                _initInProgress = false;
+                isNavigating = false;
+            }
         }
 
         function renderGridSafe(folders, allItems, isAdmin) {
@@ -1789,20 +1825,18 @@
         window.addEventListener('pageshow', (event) => {
             isNavigating = false;
             document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
-            const grid = document.getElementById('grid');
-            if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
-                init();
+            if (event.persisted) {
+                init(true);
             }
         });
 
-        window.loadSubjects = init;
+        window.loadSubjects = (silent = false) => init(silent === true);
         window.addEventListener('sol:cache_invalidated', () => {
           if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-          init();
+          init(true);
         });
         window.addEventListener('sol:content-updated', () => {
-          if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-          init();
+          init(true);
         });
 
         init();

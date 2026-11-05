@@ -1883,17 +1883,21 @@
     const showFolderSpinner = showSolLoader;
 
     let _lastFcRenderKey = '';
+    let _fcLoadInProgress = false;
+    let _cachedFolders = null;
+    let _cachedItems = null;
+
     async function loadContent(silent = false) {
       if (isReorderMode) return;
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
-
-      const fKey = `folders_${CATEGORY}_${SEMESTER}_${FOLDER_ID || 'root'}`;
-      const iKey = isEBook ? `content_${CATEGORY}_${SEMESTER}_all` : `content_${CATEGORY}_${SEMESTER}_${FOLDER_ID}`;
-
       const grid = document.getElementById('grid');
+
+      if (_fcLoadInProgress && !silent) return;
+
       if (!silent) {
         showSolLoader('book');
       }
+      _fcLoadInProgress = true;
 
       try {
         const minDuration = silent ? 0 : 450;
@@ -1910,20 +1914,24 @@
         const [fRes, iRes] = await Promise.all(promises);
         const folders = fRes?.data || [];
         const items = iRes?.data || [];
+        _cachedFolders = folders;
+        _cachedItems = items;
 
-        const renderKey = `${FOLDER_ID || 'root'}_${folders.length}_${items.length}_` +
+        const renderKey = `${currentTab}_${FOLDER_ID || 'root'}_${folders.length}_${items.length}_` +
           folders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
           items.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
 
-        if (silent && _lastFcRenderKey === renderKey) {
+        if (_lastFcRenderKey === renderKey && grid && grid.getAttribute('data-rendered-key') === renderKey) {
           return;
         }
         _lastFcRenderKey = renderKey;
 
         renderGridSafe(folders, items, isAdmin);
+        if (grid) grid.setAttribute('data-rendered-key', renderKey);
       } catch (err) {
         console.warn('Refresh fail:', err);
       } finally {
+        _fcLoadInProgress = false;
         isNavigating = false;
       }
     }
@@ -2213,11 +2221,25 @@
     }
 
     function switchTab(tab) {
-      if (isNavigating) return;
+      if (isNavigating || currentTab === tab) return;
       currentTab = tab;
-      document.getElementById('tabSol').classList.toggle('active', tab === 'sol');
-      document.getElementById('tabOther').classList.toggle('active', tab === 'other');
-      loadContent();
+      const tabSol = document.getElementById('tabSol');
+      const tabOther = document.getElementById('tabOther');
+      if (tabSol) tabSol.classList.toggle('active', tab === 'sol');
+      if (tabOther) tabOther.classList.toggle('active', tab === 'other');
+
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      if (_cachedFolders && _cachedItems) {
+        const renderKey = `${currentTab}_${FOLDER_ID || 'root'}_${_cachedFolders.length}_${_cachedItems.length}_` +
+          _cachedFolders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
+          _cachedItems.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
+        _lastFcRenderKey = renderKey;
+        renderGridSafe(_cachedFolders, _cachedItems, isAdmin);
+        const grid = document.getElementById('grid');
+        if (grid) grid.setAttribute('data-rendered-key', renderKey);
+      } else {
+        loadContent();
+      }
     }
 
     async function toggleOtherVisibility() {
@@ -2359,7 +2381,7 @@
         sock.on('sol:updated', (d) => {
           if (!d || d.category === CATEGORY || d.category === 'folders') {
             if (window.solmatesAPI) window.solmatesAPI._cacheClear('');
-            loadContent();
+            loadContent(true);
           }
         });
         window.addEventListener('sol:cache_invalidated', () => {
@@ -2376,9 +2398,8 @@
     window.addEventListener('pageshow', (event) => {
       isNavigating = false;
       document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('navigating', 'card-tap-feedback'));
-      const grid = document.getElementById('grid');
-      if (event.persisted || !grid || grid.querySelector('.sol-loader-container') || grid.children.length === 0) {
-        loadContent();
+      if (event.persisted) {
+        loadContent(true);
       }
     });
   </script>

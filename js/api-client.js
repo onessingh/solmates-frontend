@@ -1059,7 +1059,7 @@ window.addConnectionStatusDot = function (socket) {
   const triggerPageRefresh = () => {
     try {
       if (typeof window.refreshSubjects === 'function') window.refreshSubjects();
-      else if (typeof window.loadSubjects === 'function') window.loadSubjects();
+      else if (typeof window.loadSubjects === 'function') window.loadSubjects(true);
       if (typeof window.loadContent === 'function') window.loadContent(true);
       if (typeof window.loadData === 'function') window.loadData();
       if (typeof window.loadNotifications === 'function') window.loadNotifications();
