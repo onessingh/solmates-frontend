@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -543,7 +543,7 @@
     const analyst = data.analyst || '';
     const date = data.date ? new Date(data.date).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) : '';
     document.getElementById('phBiz').textContent = biz;
-    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' â€¢ ');
+    document.getElementById('phMeta').textContent = [analyst, date].filter(Boolean).join(' • ');
     window.print();
   }
 

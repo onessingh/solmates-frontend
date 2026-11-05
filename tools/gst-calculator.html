@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -306,7 +306,7 @@
       </div>
 
       <div class="form-group">
-        <label>Amount (â‚¹)</label>
+        <label>Amount (₹)</label>
         <div class="input-icon-wrapper">
           <i class="fas fa-rupee-sign"></i>
           <input type="number" id="in-amount" class="form-control" placeholder="0.00" oninput="calculateGST()" value="10000">
@@ -338,7 +338,7 @@
         <div class="bill-body">
           <div class="bill-row">
             <span class="label">Net Amount (Base Price)</span>
-            <span class="value" id="out-net">â‚¹0.00</span>
+            <span class="value" id="out-net">₹0.00</span>
           </div>
           
           <div class="divider"></div>
@@ -347,15 +347,15 @@
           <div id="tax-breakdown-container">
             <div class="bill-row tax-row" id="row-cgst">
               <span class="label">CGST (9%)</span>
-              <span class="value" id="out-cgst">â‚¹0.00</span>
+              <span class="value" id="out-cgst">₹0.00</span>
             </div>
             <div class="bill-row tax-row" id="row-sgst">
               <span class="label">SGST (9%)</span>
-              <span class="value" id="out-sgst">â‚¹0.00</span>
+              <span class="value" id="out-sgst">₹0.00</span>
             </div>
             <div class="bill-row tax-row" id="row-igst" style="display:none;">
               <span class="label">IGST (18%)</span>
-              <span class="value" id="out-igst">â‚¹0.00</span>
+              <span class="value" id="out-igst">₹0.00</span>
             </div>
           </div>
           
@@ -363,12 +363,12 @@
 
           <div class="bill-row">
             <span class="label">Total Tax Amount</span>
-            <span class="value" style="color: var(--danger);" id="out-tax">â‚¹0.00</span>
+            <span class="value" style="color: var(--danger);" id="out-tax">₹0.00</span>
           </div>
           
           <div class="bill-total">
             <span class="label">Gross Total</span>
-            <span class="value" id="out-gross">â‚¹0.00</span>
+            <span class="value" id="out-gross">₹0.00</span>
           </div>
         </div>
       </div>

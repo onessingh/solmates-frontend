@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <script src="/js/site-lock-guard.js?v=v912"></script>
@@ -218,7 +218,7 @@
     <div class="player-wrapper">
         <!-- Top Shield -->
         <div class="solmates-top-shield">
-            <span class="solmates-badge">ðŸŽ“ Solmates</span>
+            <span class="solmates-badge">🎓 Solmates</span>
             <span id="pipTitle" class="lecture-title">Class Lecture</span>
             
             <div style="margin-left:auto; display:flex; align-items:center; gap:8px; flex-shrink:0;">
@@ -247,13 +247,13 @@
         <!-- Bottom Shield with Solmates Controls -->
         <div class="solmates-bottom-shield">
             <button id="pipRewindBtn" class="ctrl-btn" title="Rewind 10 seconds">
-                âª 10s
+                ⏪ 10s
             </button>
             <button id="pipPlayPauseBtn" class="play-pause-btn" title="Play / Pause">
-                â¸
+                ⏸
             </button>
             <button id="pipForwardBtn" class="ctrl-btn" title="Forward 10 seconds">
-                10s â©
+                10s ⏩
             </button>
             <button id="fsBtn" onclick="toggleFullscreen()" class="fs-btn" title="Fullscreen">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -344,11 +344,11 @@
             if (isPlaying) {
                 sendYtCommand('pauseVideo');
                 isPlaying = false;
-                playPauseBtn.innerText = 'â–¶';
+                playPauseBtn.innerText = '▶';
             } else {
                 sendYtCommand('playVideo');
                 isPlaying = true;
-                playPauseBtn.innerText = 'â¸';
+                playPauseBtn.innerText = '⏸';
             }
         };
 
@@ -377,10 +377,10 @@
                     if (typeof data.info.playerState !== 'undefined') {
                         if (data.info.playerState === 1) { // Playing
                             isPlaying = true;
-                            playPauseBtn.innerText = 'â¸';
+                            playPauseBtn.innerText = '⏸';
                         } else if (data.info.playerState === 2) { // Paused
                             isPlaying = false;
-                            playPauseBtn.innerText = 'â–¶';
+                            playPauseBtn.innerText = '▶';
                         }
                     }
                 }

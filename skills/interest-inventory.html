@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -710,7 +710,7 @@ Output ONLY a valid JSON array, nothing else:
       let retries = 2;
       while (retries >= 0) {
         try {
-          const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} â†’ Answer: ${a.selected}`).join('\n');
+          const answersText = userAnswers.map((a, i) => `Q${i+1}: ${a.q} → Answer: ${a.selected}`).join('\n');
           const prompt = `You are a career counselor. Based on these interest inventory responses:
 ${answersText}
 
@@ -754,14 +754,14 @@ Do NOT use ** asterisks.`;
         const resHtml = `
           <div class="mcq-card" style="border: 2px solid var(--success); margin-top: 30px; animation: fadeIn 0.5s; background: var(--card);">
             <div style="text-align:center; padding-bottom:15px; border-bottom: 1px solid var(--border); margin-bottom:15px;">
-              <div style="font-size:2.5rem; margin-bottom:8px;">ðŸŽ¯</div>
+              <div style="font-size:2.5rem; margin-bottom:8px;">🎯</div>
               <div style="font-size:2rem; font-weight:800; color:var(--accent); letter-spacing:4px; margin-bottom:5px;">${hollandCode}</div>
               <p style="color:var(--light); font-size:0.9rem;">${codeFullName || 'Your Interest Profile'}</p>
             </div>
             ${traitChips.length ? `<div style="text-align:center; margin-bottom:18px;">${traitChips}</div>` : ''}
             ${careerSummaryEng ? `<div style="font-size:1rem; color:var(--text); line-height:1.7; margin-bottom:12px;">${careerSummaryEng}</div>` : ''}
             ${careerSummaryHin ? `<div style="font-size:0.95rem; color:var(--light); line-height:1.7; border-top:1px solid var(--border); padding-top:12px; margin-bottom:15px;">${careerSummaryHin}</div>` : ''}
-            ${careerPills.length ? `<div style="border-top:1px solid var(--border);padding-top:12px;"><strong style="color:var(--primary);display:block;margin-bottom:8px;">ðŸ’¼ Top Career Matches:</strong><div style="display:flex;flex-wrap:wrap;">${careerPills}</div></div>` : ''}
+            ${careerPills.length ? `<div style="border-top:1px solid var(--border);padding-top:12px;"><strong style="color:var(--primary);display:block;margin-bottom:8px;">💼 Top Career Matches:</strong><div style="display:flex;flex-wrap:wrap;">${careerPills}</div></div>` : ''}
           </div>
         `;
         container.insertAdjacentHTML('beforeend', resHtml);

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -340,7 +340,7 @@ const RATIOS = {
     {
       name: 'Cash Ratio',
       formula: 'Cash & Equivalents / Current Liabilities',
-      desc: 'Most conservative liquidity ratio â€¢ only cash counts. Ideal: 0.5â€¢1',
+      desc: 'Most conservative liquidity ratio • only cash counts. Ideal: 0.5•1',
       inputs: [{id:'cash', label:'Cash & Equivalents (?)'}, {id:'cl', label:'Current Liabilities (?)'}],
       calc: (v) => v.cash / v.cl,
       fmt: (r) => r.toFixed(2),
@@ -350,7 +350,7 @@ const RATIOS = {
   profitability: [
     {
       name: 'Gross Profit Margin',
-      formula: '(Revenue - COGS) â€¢ Revenue â€¢ 100',
+      formula: '(Revenue - COGS) • Revenue • 100',
       desc: 'Profitability after direct production costs. Ideal: Industry-specific',
       inputs: [{id:'rev', label:'Revenue (?)'}, {id:'cogs', label:'Cost of Goods Sold (?)'}],
       calc: (v) => ((v.rev - v.cogs) / v.rev) * 100,
@@ -359,7 +359,7 @@ const RATIOS = {
     },
     {
       name: 'Net Profit Margin',
-      formula: 'Net Profit â€¢ Revenue â€¢ 100',
+      formula: 'Net Profit • Revenue • 100',
       desc: 'Percentage of revenue that becomes profit after all expenses.',
       inputs: [{id:'np', label:'Net Profit (?)'}, {id:'rev', label:'Revenue (?)'}],
       calc: (v) => (v.np / v.rev) * 100,
@@ -368,7 +368,7 @@ const RATIOS = {
     },
     {
       name: 'Return on Investment (ROI)',
-      formula: '(Net Gain â€¢ Cost of Investment) â€¢ 100',
+      formula: '(Net Gain • Cost of Investment) • 100',
       desc: 'Measures efficiency of an investment. Higher is better.',
       inputs: [{id:'gain', label:'Net Gain / Profit (?)'}, {id:'cost', label:'Cost of Investment (?)'}],
       calc: (v) => (v.gain / v.cost) * 100,
@@ -377,7 +377,7 @@ const RATIOS = {
     },
     {
       name: 'Return on Equity (ROE)',
-      formula: 'Net Income â€¢ Shareholders\' Equity â€¢ 100',
+      formula: 'Net Income • Shareholders\' Equity • 100',
       desc: 'How effectively the company generates profit from shareholders\' equity.',
       inputs: [{id:'ni', label:'Net Income (?)'}, {id:'eq', label:"Shareholders' Equity (?)"}],
       calc: (v) => (v.ni / v.eq) * 100,
@@ -386,7 +386,7 @@ const RATIOS = {
     },
     {
       name: 'Return on Assets (ROA)',
-      formula: 'Net Income â€¢ Total Assets â€¢ 100',
+      formula: 'Net Income • Total Assets • 100',
       desc: 'How profitably a company uses its assets to generate earnings.',
       inputs: [{id:'ni', label:'Net Income (?)'}, {id:'ta', label:'Total Assets (?)'}],
       calc: (v) => (v.ni / v.ta) * 100,
@@ -395,7 +395,7 @@ const RATIOS = {
     },
     {
       name: 'EBITDA Margin',
-      formula: 'EBITDA â€¢ Revenue â€¢ 100',
+      formula: 'EBITDA • Revenue • 100',
       desc: 'Operating profitability before non-cash and financing charges.',
       inputs: [{id:'ebitda', label:'EBITDA (?)'}, {id:'rev', label:'Revenue (?)'}],
       calc: (v) => (v.ebitda / v.rev) * 100,
@@ -406,25 +406,25 @@ const RATIOS = {
   leverage: [
     {
       name: 'Debt-to-Equity (D/E) Ratio',
-      formula: 'Total Debt â€¢ Shareholders\' Equity',
+      formula: 'Total Debt • Shareholders\' Equity',
       desc: 'Measures financial leverage. Lower D/E = less risky. Ideal: < 1',
       inputs: [{id:'debt', label:'Total Debt (?)'}, {id:'eq', label:"Shareholders' Equity (?)"}],
       calc: (v) => v.debt / v.eq,
       fmt: (r) => r.toFixed(2),
-      interp: (r) => r <= 0.5 ? ['good','? Low leverage. Company is mostly equity-funded â€¢ conservative & stable.'] : r <= 1 ? ['warn','?? Moderate leverage. Manageable debt load.'] : r <= 2 ? ['warn','?? High leverage. May become risky if earnings drop.'] : ['bad','?? Very high D/E. Potential debt servicing difficulties.']
+      interp: (r) => r <= 0.5 ? ['good','? Low leverage. Company is mostly equity-funded • conservative & stable.'] : r <= 1 ? ['warn','?? Moderate leverage. Manageable debt load.'] : r <= 2 ? ['warn','?? High leverage. May become risky if earnings drop.'] : ['bad','?? Very high D/E. Potential debt servicing difficulties.']
     },
     {
       name: 'Debt-to-Assets Ratio',
-      formula: 'Total Debt â€¢ Total Assets',
+      formula: 'Total Debt • Total Assets',
       desc: 'Proportion of assets financed by debt. Ideal: < 0.5',
       inputs: [{id:'debt', label:'Total Debt (?)'}, {id:'ta', label:'Total Assets (?)'}],
       calc: (v) => v.debt / v.ta,
       fmt: (r) => r.toFixed(2),
-      interp: (r) => r <= 0.3 ? ['good','? Healthy. Most assets are equity-funded.'] : r <= 0.5 ? ['warn','?? Moderate. Watch debt growth against asset growth.'] : ['bad','?? High ratio. More than half of assets funded by debt â€¢ risky.']
+      interp: (r) => r <= 0.3 ? ['good','? Healthy. Most assets are equity-funded.'] : r <= 0.5 ? ['warn','?? Moderate. Watch debt growth against asset growth.'] : ['bad','?? High ratio. More than half of assets funded by debt • risky.']
     },
     {
       name: 'Interest Coverage Ratio',
-      formula: 'EBIT â€¢ Interest Expense',
+      formula: 'EBIT • Interest Expense',
       desc: 'Ability to pay interest on outstanding debt. Ideal: > 3',
       inputs: [{id:'ebit', label:'EBIT (?)'}, {id:'int', label:'Interest Expense (?)'}],
       calc: (v) => v.ebit / v.int,
@@ -435,7 +435,7 @@ const RATIOS = {
   efficiency: [
     {
       name: 'Asset Turnover Ratio',
-      formula: 'Net Revenue â€¢ Average Total Assets',
+      formula: 'Net Revenue • Average Total Assets',
       desc: 'Efficiency of using assets to generate revenue. Higher is better.',
       inputs: [{id:'rev', label:'Net Revenue (?)'}, {id:'ta', label:'Average Total Assets (?)'}],
       calc: (v) => v.rev / v.ta,
@@ -444,7 +444,7 @@ const RATIOS = {
     },
     {
       name: 'Inventory Turnover Ratio',
-      formula: 'COGS â€¢ Average Inventory',
+      formula: 'COGS • Average Inventory',
       desc: 'How many times inventory is sold/replaced in a period. Higher = efficient.',
       inputs: [{id:'cogs', label:'COGS (?)'}, {id:'inv', label:'Average Inventory (?)'}],
       calc: (v) => v.cogs / v.inv,
@@ -453,7 +453,7 @@ const RATIOS = {
     },
     {
       name: 'Receivables Turnover Ratio',
-      formula: 'Net Credit Sales â€¢ Average Accounts Receivable',
+      formula: 'Net Credit Sales • Average Accounts Receivable',
       desc: 'How efficiently the company collects its credit sales.',
       inputs: [{id:'sales', label:'Net Credit Sales (?)'}, {id:'ar', label:'Avg Accounts Receivable (?)'}],
       calc: (v) => v.sales / v.ar,
@@ -462,18 +462,18 @@ const RATIOS = {
     },
     {
       name: 'Days Sales Outstanding (DSO)',
-      formula: '(Accounts Receivable â€¢ Net Sales) â€¢ 365',
+      formula: '(Accounts Receivable • Net Sales) • 365',
       desc: 'Average days to collect payment after a sale. Lower = better.',
       inputs: [{id:'ar', label:'Accounts Receivable (?)'}, {id:'sales', label:'Net Sales (?)'}],
       calc: (v) => (v.ar / v.sales) * 365,
       fmt: (r) => r.toFixed(1) + ' days',
-      interp: (r) => r <= 30 ? ['good','? Excellent. Payments collected very quickly.'] : r <= 60 ? ['warn','?? Acceptable. Monitor to prevent late payments from rising.'] : ['bad','?? High DSO. Customers are slow to pay â€¢ cash flow risk.']
+      interp: (r) => r <= 30 ? ['good','? Excellent. Payments collected very quickly.'] : r <= 60 ? ['warn','?? Acceptable. Monitor to prevent late payments from rising.'] : ['bad','?? High DSO. Customers are slow to pay • cash flow risk.']
     },
   ],
   market: [
     {
       name: 'Earnings Per Share (EPS)',
-      formula: 'Net Income â€¢ Total Shares Outstanding',
+      formula: 'Net Income • Total Shares Outstanding',
       desc: 'Profit allocated to each outstanding share. Higher is better.',
       inputs: [{id:'ni', label:'Net Income (?)'}, {id:'shares', label:'Total Shares Outstanding'}],
       calc: (v) => v.ni / v.shares,
@@ -482,16 +482,16 @@ const RATIOS = {
     },
     {
       name: 'Price-to-Earnings (P/E) Ratio',
-      formula: 'Market Price per Share â€¢ EPS',
+      formula: 'Market Price per Share • EPS',
       desc: 'Valuation multiple. Higher P/E = investors expect higher growth.',
       inputs: [{id:'price', label:'Market Price per Share (?)'}, {id:'eps', label:'EPS (?)'}],
       calc: (v) => v.price / v.eps,
       fmt: (r) => r.toFixed(2) + 'x',
-      interp: (r) => r <= 15 ? ['warn','?? Low P/E. May be undervalued or low growth expected.'] : r <= 30 ? ['good','? Typical market range. Fair valuation.'] : ['warn','?? High P/E. Market expects strong future growth â€¢ risky if not delivered.']
+      interp: (r) => r <= 15 ? ['warn','?? Low P/E. May be undervalued or low growth expected.'] : r <= 30 ? ['good','? Typical market range. Fair valuation.'] : ['warn','?? High P/E. Market expects strong future growth • risky if not delivered.']
     },
     {
       name: 'Dividend Yield',
-      formula: 'Annual Dividend per Share â€¢ Market Price per Share â€¢ 100',
+      formula: 'Annual Dividend per Share • Market Price per Share • 100',
       desc: 'Return from dividends relative to share price.',
       inputs: [{id:'div', label:'Annual Dividend per Share (?)'}, {id:'price', label:'Market Price per Share (?)'}],
       calc: (v) => (v.div / v.price) * 100,
@@ -500,7 +500,7 @@ const RATIOS = {
     },
     {
       name: 'Book Value per Share',
-      formula: "Shareholders' Equity â€¢ Total Shares Outstanding",
+      formula: "Shareholders' Equity • Total Shares Outstanding",
       desc: 'Net asset value per share. Compare with market price for valuation.',
       inputs: [{id:'eq', label:"Shareholders' Equity (?)"}, {id:'shares', label:'Total Shares Outstanding'}],
       calc: (v) => v.eq / v.shares,
@@ -617,7 +617,7 @@ function runLocalParser(text) {
     let detected = { S: null, K: null, T: null, v: null, r: null, q: null, type: null };
     const digitPat = '([\\d.,]*\\d[\\d.,]*)';
 
-    // Stock price patterns â€” most specific first
+    // Stock price patterns — most specific first
     const sP = new RegExp(
         '(?:market price of (?:a|the) (?:share|stock|equity|underlying)|' +
         'underlying security(?:\\s+is)?\\s+(?:quoted|priced|valued|trading) at|' +
@@ -634,7 +634,7 @@ function runLocalParser(text) {
     let sM = text.match(sP);
     if(sM) { let v = parseFloat(sM[1].replace(/,/g, '')); if(!isNaN(v)) detected.S = v; }
 
-    // Strike price patterns â€” most specific first
+    // Strike price patterns — most specific first
     const kP = new RegExp(
         '(?:contractual exercise(?:\\s+level| price)|' +
         'exercise(?:\\s+level|\\s+price)(?:\\s+of(?:\\s+the)?(?:\\s+option)?)?|' +
@@ -644,7 +644,7 @@ function runLocalParser(text) {
     let kM = text.match(kP);
     if(kM) { let v = parseFloat(kM[1].replace(/,/g, '')); if(!isNaN(v)) detected.K = v; }
 
-    // Time to expiry â€” numeric first, then written-out
+    // Time to expiry — numeric first, then written-out
     const tDayP = new RegExp(digitPat + '\\s*(?:trading\\s+)?days?(?:\\s+to\\s+expiry|\\s+remaining|\\s+until|\\s+left|\\s+before)?', 'i');
     const tMonP = new RegExp(digitPat + '\\s*months?', 'i');
     const tYrP  = new RegExp(digitPat + '\\s*years?', 'i');
@@ -743,7 +743,7 @@ async function parseBSQuestion() {
     let missing = getMissingFields(detected);
 
     if(missing.length === 0) {
-        // Local parser got everything â€” no AI needed
+        // Local parser got everything — no AI needed
         applyDetectedToUI(detected, false);
         return;
     }
@@ -817,7 +817,7 @@ function solveBlackScholes() {
     const res = calcGreeksAndPrices(S, K, T, v, r, q, type);
     
     let resultHTML = `
-      <div class="res-main">â‚¹ ${res.price.toFixed(2)}</div>
+      <div class="res-main">₹ ${res.price.toFixed(2)}</div>
       <div class="res-label">Option Price</div>
       
       <div style="margin-top: 15px; text-align: left; background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid var(--border);">
@@ -825,7 +825,7 @@ function solveBlackScholes() {
         <div class="bs-step-row"><span>Stock Price (S)</span><span>${S}</span></div>
         <div class="bs-step-row"><span>Strike Price (K)</span><span>${K}</span></div>
         <div class="bs-step-row"><span>Time to Expiry (T)</span><span>${res.T.toFixed(5)} years</span></div>
-        <div class="bs-step-row"><span>Volatility (Ïƒ)</span><span>${(res.v * 100).toFixed(2)}%</span></div>
+        <div class="bs-step-row"><span>Volatility (σ)</span><span>${(res.v * 100).toFixed(2)}%</span></div>
         <div class="bs-step-row"><span>Risk-Free Rate (r)</span><span>${(res.r * 100).toFixed(2)}%</span></div>
         <div class="bs-step-row"><span>Dividend Yield (q)</span><span>${(res.q * 100).toFixed(2)}%</span></div>
         <div class="bs-step-row"><span>Option Type</span><span style="text-transform: capitalize;">${type}</span></div>
@@ -864,14 +864,14 @@ function solveBlackScholes() {
          <summary style="cursor: pointer; color: var(--accent); font-weight: 600;">Show Calculation Steps</summary>
          <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text); padding: 10px; background: rgba(0,0,0,0.03); border-radius: 8px;">
             <p><strong>Step 1:</strong> Convert days into years<br/>T = ${T_days} / 365 = ${res.T.toFixed(5)}</p>
-            <p style="margin-top:8px;"><strong>Step 2:</strong> Convert percentages<br/>Ïƒ = ${v_pct}% = ${res.v}<br/>r = ${r_pct}% = ${res.r}<br/>q = ${q_pct}% = ${res.q}</p>
-            <p style="margin-top:8px;"><strong>Step 3:</strong> Calculate d1<br/>d1 = [ln(${S}/${K}) + (${res.r} - ${res.q} + ${res.v}Â²/2) * ${res.T.toFixed(5)}] / (${res.v} * âˆš${res.T.toFixed(5)}) = ${res.d1.toFixed(4)}</p>
-            <p style="margin-top:8px;"><strong>Step 4:</strong> Calculate d2<br/>d2 = ${res.d1.toFixed(4)} - ${res.v} * âˆš${res.T.toFixed(5)} = ${res.d2.toFixed(4)}</p>
+            <p style="margin-top:8px;"><strong>Step 2:</strong> Convert percentages<br/>σ = ${v_pct}% = ${res.v}<br/>r = ${r_pct}% = ${res.r}<br/>q = ${q_pct}% = ${res.q}</p>
+            <p style="margin-top:8px;"><strong>Step 3:</strong> Calculate d1<br/>d1 = [ln(${S}/${K}) + (${res.r} - ${res.q} + ${res.v}²/2) * ${res.T.toFixed(5)}] / (${res.v} * √${res.T.toFixed(5)}) = ${res.d1.toFixed(4)}</p>
+            <p style="margin-top:8px;"><strong>Step 4:</strong> Calculate d2<br/>d2 = ${res.d1.toFixed(4)} - ${res.v} * √${res.T.toFixed(5)} = ${res.d2.toFixed(4)}</p>
             <p style="margin-top:8px;"><strong>Step 5:</strong> Calculate N(d1) and N(d2)<br/>N(d1) = ${res.Nd1.toFixed(6)}<br/>N(d2) = ${res.Nd2.toFixed(6)}</p>
             ${type === 'put' ? `<p style="margin-top:8px;"><strong>Step 5b:</strong> Calculate N(-d1) and N(-d2)<br/>N(-d1) = 1 - N(d1) = ${res.N_d1.toFixed(6)}<br/>N(-d2) = 1 - N(d2) = ${res.N_d2.toFixed(6)}</p>` : ''}
             <p style="margin-top:8px;"><strong>Step 6:</strong> Apply ${type} formula<br/>
             ${type === 'call' ? `C = ${S} * e^(-${res.q}*${res.T.toFixed(5)}) * ${res.Nd1.toFixed(6)} - ${K} * e^(-${res.r}*${res.T.toFixed(5)}) * ${res.Nd2.toFixed(6)}` : `P = ${K} * e^(-${res.r}*${res.T.toFixed(5)}) * ${res.N_d2.toFixed(6)} - ${S} * e^(-${res.q}*${res.T.toFixed(5)}) * ${res.N_d1.toFixed(6)}`}</p>
-            <p style="margin-top:8px;"><strong>Step 7:</strong> Final Option Price = â‚¹ ${res.price.toFixed(2)}</p>
+            <p style="margin-top:8px;"><strong>Step 7:</strong> Final Option Price = ₹ ${res.price.toFixed(2)}</p>
          </div>
       </details>
     `;
@@ -898,7 +898,7 @@ function renderRatios() {
     <div id="bs-parser-section" style="display:none; margin-bottom: 20px;">
       <div class="inp-group">
         <label>Paste your Black-Scholes question</label>
-        <textarea id="bs-question-text" class="rc-inp" rows="5" placeholder="Example: A stock is currently trading at â‚¹500. The strike price is â‚¹520, expiry is 30 days, volatility is 25%, risk-free rate is 6% and dividend yield is 1%. Calculate the European call option value using Black-Scholes model." style="resize: vertical;"></textarea>
+        <textarea id="bs-question-text" class="rc-inp" rows="5" placeholder="Example: A stock is currently trading at ₹500. The strike price is ₹520, expiry is 30 days, volatility is 25%, risk-free rate is 6% and dividend yield is 1%. Calculate the European call option value using Black-Scholes model." style="resize: vertical;"></textarea>
       </div>
       <button id="bs-detect-btn" class="btn-calc" style="margin-top: 10px;" onclick="parseBSQuestion()">
          Detect Values
@@ -919,7 +919,7 @@ function renderRatios() {
          <div class="inp-group"><label>Current Stock Price (S)</label><input type="number" id="bs_S" class="rc-inp" placeholder="0"></div>
          <div class="inp-group"><label>Strike Price (K)</label><input type="number" id="bs_K" class="rc-inp" placeholder="0"></div>
          <div class="inp-group"><label>Days to Expiry</label><input type="number" id="bs_T" class="rc-inp" placeholder="0"></div>
-         <div class="inp-group"><label>Volatility (Ïƒ) %</label><input type="number" id="bs_v" class="rc-inp" placeholder="0"></div>
+         <div class="inp-group"><label>Volatility (σ) %</label><input type="number" id="bs_v" class="rc-inp" placeholder="0"></div>
          <div class="inp-group"><label>Risk-Free Rate (r) %</label><input type="number" id="bs_r" class="rc-inp" placeholder="0"></div>
          <div class="inp-group"><label>Dividend Yield (q) % (Optional)</label><input type="number" id="bs_q" class="rc-inp" placeholder="0"></div>
        </div>

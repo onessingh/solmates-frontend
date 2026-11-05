@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -607,7 +607,7 @@ Note: "correct" must be an integer index (0-3) corresponding to the correct opti
             let parsed = safeParseJSON(cleanText);
             if (parsed && typeof parsed.error === 'string') {
                 // The AI itself declined the request (persona/system-prompt restriction),
-                // not a JSON formatting problem â€” surface this distinctly.
+                // not a JSON formatting problem — surface this distinctly.
                 throw new Error("AI declined the request: " + parsed.error.substring(0, 150));
             }
             if (parsed && parsed.questions) parsed = parsed.questions; // Handle wrapped objects

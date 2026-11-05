@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -399,7 +399,7 @@ Input to translate: "${input}"`;
           let rawText = data.message || data.response || "I am currently reviewing this matter and will circle back with a comprehensive update shortly.";
           
           // Check if the AI refused the prompt due to strict filters (trigger dictionary fallback instead)
-          if (/as an ai language model|i cannot fulfill|i cannot generate|i cannot translate|i am programmed to|against my safety guidelines|i['â€™]m sorry,? but i can['â€™]t help with that|i can['â€™]t assist with that|i cannot assist with that/i.test(rawText)) {
+          if (/as an ai language model|i cannot fulfill|i cannot generate|i cannot translate|i am programmed to|against my safety guidelines|i['’]m sorry,? but i can['’]t help with that|i can['’]t assist with that|i cannot assist with that/i.test(rawText)) {
               throw new Error("AI Refusal detected, falling back to local dictionary");
           }
           

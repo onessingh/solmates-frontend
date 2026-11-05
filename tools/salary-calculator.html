@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -388,7 +388,7 @@
       <div class="toggle-group">
         <div class="toggle-label">
           Deduct Professional Tax
-          <span class="toggle-desc">Avg â‚¹200/month (Depends on state)</span>
+          <span class="toggle-desc">Avg ₹200/month (Depends on state)</span>
         </div>
         <label class="switch">
           <input type="checkbox" id="ptToggle" checked>
@@ -466,8 +466,8 @@
         
         <div class="highlight-card">
           <div class="highlight-title">Estimated Monthly Savings</div>
-          <div class="highlight-value" id="monthlySavings">â‚¹0</div>
-          <div class="highlight-sub" id="monthlyNetSub">In-Hand Salary: â‚¹0</div>
+          <div class="highlight-value" id="monthlySavings">₹0</div>
+          <div class="highlight-sub" id="monthlyNetSub">In-Hand Salary: ₹0</div>
         </div>
         
         <div class="chart-bar">
@@ -484,11 +484,11 @@
         <div class="breakdown-grid" style="margin-top: 15px;">
           <div class="b-card gross">
             <div class="b-title">Monthly Gross</div>
-            <div class="b-value" id="monthlyGross">â‚¹0</div>
+            <div class="b-value" id="monthlyGross">₹0</div>
           </div>
           <div class="b-card deduction">
             <div class="b-title">Total Outflow</div>
-            <div class="b-value" id="monthlyOutflow">â‚¹0</div>
+            <div class="b-value" id="monthlyOutflow">₹0</div>
             <div style="font-size:0.75rem; color:#888; margin-top:3px;">(Taxes + Expenses)</div>
           </div>
         </div>
@@ -505,38 +505,38 @@
             <tbody>
               <tr>
                 <td>Fixed Gross Salary</td>
-                <td class="text-right" id="tGrossM">â‚¹0</td>
-                <td class="text-right" id="tGrossY">â‚¹0</td>
+                <td class="text-right" id="tGrossM">₹0</td>
+                <td class="text-right" id="tGrossY">₹0</td>
               </tr>
               <tr class="row-deduction">
                 <td>Provident Fund (EPF)</td>
-                <td class="text-right" id="tEpfM">-â‚¹0</td>
-                <td class="text-right" id="tEpfY">-â‚¹0</td>
+                <td class="text-right" id="tEpfM">-₹0</td>
+                <td class="text-right" id="tEpfY">-₹0</td>
               </tr>
               <tr class="row-deduction">
                 <td>Professional Tax (PT)</td>
-                <td class="text-right" id="tPtM">-â‚¹0</td>
-                <td class="text-right" id="tPtY">-â‚¹0</td>
+                <td class="text-right" id="tPtM">-₹0</td>
+                <td class="text-right" id="tPtY">-₹0</td>
               </tr>
               <tr class="row-deduction">
                 <td>Est. Income Tax (TDS) <br><small style="color:#888;">*Old regime approx.</small></td>
-                <td class="text-right" id="tTaxM">-â‚¹0</td>
-                <td class="text-right" id="tTaxY">-â‚¹0</td>
+                <td class="text-right" id="tTaxM">-₹0</td>
+                <td class="text-right" id="tTaxY">-₹0</td>
               </tr>
               <tr class="row-net" style="background: rgba(0, 113, 227, 0.05); color: var(--primary);">
                 <td>Net Take-Home Salary</td>
-                <td class="text-right" id="tNetM">â‚¹0</td>
-                <td class="text-right" id="tNetY">â‚¹0</td>
+                <td class="text-right" id="tNetM">₹0</td>
+                <td class="text-right" id="tNetY">₹0</td>
               </tr>
               <tr class="row-deduction" style="color: var(--info);">
                 <td>Total Living Expenses</td>
-                <td class="text-right" id="tExpM">-â‚¹0</td>
-                <td class="text-right" id="tExpY">-â‚¹0</td>
+                <td class="text-right" id="tExpM">-₹0</td>
+                <td class="text-right" id="tExpY">-₹0</td>
               </tr>
               <tr class="row-net" style="font-size: 1.05rem;">
                 <td>Final Savings (Remaining)</td>
-                <td class="text-right" id="tSavM">â‚¹0</td>
-                <td class="text-right" id="tSavY">â‚¹0</td>
+                <td class="text-right" id="tSavM">₹0</td>
+                <td class="text-right" id="tSavY">₹0</td>
               </tr>
             </tbody>
           </table>
@@ -549,7 +549,7 @@
 
   <script>
     function formatCurrency(num) {
-      return 'â‚¹' + Math.round(num).toLocaleString('en-IN');
+      return '₹' + Math.round(num).toLocaleString('en-IN');
     }
 
     function calculateTax(taxableIncome, useNewRegime) {
@@ -630,7 +630,7 @@
       let grossMonthly = grossYearly / 12;
 
       // Deductions
-      let ptYearly = deductPt ? 2400 : 0; // â‚¹200 * 12
+      let ptYearly = deductPt ? 2400 : 0; // ₹200 * 12
       let ptMonthly = ptYearly / 12;
 
       let epfMonthly = epfYearly / 12;

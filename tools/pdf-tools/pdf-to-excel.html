@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -34,7 +34,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v912">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v912">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v912">
-  <title>PDF to Excel Converter â€” Free Client-Side Table Extraction | SOLMATES</title>
+  <title>PDF to Excel Converter — Free Client-Side Table Extraction | SOLMATES</title>
   <meta name="description" content="Convert PDF tables and documents into editable Excel (.xlsx) spreadsheets 100% free and client-side. Zero upload, 100% private and instant conversion.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -244,7 +244,7 @@
           <input type="file" id="fileInput" accept=".pdf" style="display: none;">
           <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="background: #10b981; border: none; padding: 10px 24px; border-radius: 10px; color: white; font-weight: 700; cursor: pointer;">Select PDF File</button>
           <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted, #64748b);">
-            ðŸ”’ <strong>100% Client-Side Privacy:</strong> Your PDF file never leaves your device.
+            🔒 <strong>100% Client-Side Privacy:</strong> Your PDF file never leaves your device.
           </div>
         </div>
       </div>
@@ -279,17 +279,17 @@
         </div>
 
         <button id="convertBtn" onclick="processPDFToExcel()" class="btn btn-primary" style="width: 100%; background: #10b981; border: none; padding: 12px; border-radius: 10px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer;">
-          ðŸš€ Convert PDF to Excel (.xlsx)
+          🚀 Convert PDF to Excel (.xlsx)
         </button>
 
         <!-- Preview & Download Container -->
         <div id="resultBox" style="display: none; margin-top: 20px;">
           <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
             <div style="color: #10b981; font-weight: 600; font-size: 0.9rem;">
-              âœ… PDF successfully converted to Excel!
+              ✅ PDF successfully converted to Excel!
             </div>
             <button id="downloadBtn" onclick="downloadExcel()" style="background: #16a34a; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;">
-              ðŸ“¥ Download .XLSX Excel File
+              📥 Download .XLSX Excel File
             </button>
           </div>
 
@@ -422,7 +422,7 @@
       }
     }
 
-    // â”€â”€ Table Extraction Algorithm â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Table Extraction Algorithm ──────────────────────────────────────────
     // Groups text items by vertical Y coordinates (rows) and horizontal X coordinates (columns)
     function extractTableFromTextItems(items) {
       if (!items || items.length === 0) return [];

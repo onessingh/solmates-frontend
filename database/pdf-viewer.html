@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -215,7 +215,7 @@
       color: #f8fafc !important;
     }
 
-    /* â”€â”€â”€ THE PAPER SHUFFLE LOADER (SOLMATES PDF VIEWER) â”€â”€â”€ */
+    /* ─── THE PAPER SHUFFLE LOADER (SOLMATES PDF VIEWER) ─── */
     .paper-shuffle-loader {
       display: flex;
       flex-direction: column;
@@ -872,7 +872,7 @@
       let fetchUrl = rawUrl;
       const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/id=([a-zA-Z0-9_-]+)/);
       if (driveMatch && driveMatch[1]) {
-        // api.solmates.in proxy â€” CF caches for 30 days, Render hit only on FIRST request per file
+        // api.solmates.in proxy — CF caches for 30 days, Render hit only on FIRST request per file
         fetchUrl = `https://api.solmates.in/api/pdf-stream-proxy?id=${driveMatch[1]}`;
       }
 
@@ -1026,7 +1026,7 @@
                 a.click();
                 document.body.removeChild(a);
                 setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
-                showToast("Watermarked PDF Downloaded Successfully! ðŸ“„", "success", 4000);
+                showToast("Watermarked PDF Downloaded Successfully! 📄", "success", 4000);
               } else {
                 executeDirectDownload(rawUrl, title);
               }

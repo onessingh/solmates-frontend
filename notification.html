@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -85,7 +85,7 @@
   <script src="/js/api-client.js?v=v912" defer></script>
   <script src="/js/webview-fix.js?v=v912" defer></script>
   <script>
-    // [v816.6] NUCLEAR AUTO-UPDATE â€¢ ASYNC + LOOP-GUARD FIX
+    // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
       try {
         var _store = (typeof safeStorage !== 'undefined') ? safeStorage : window.localStorage;
@@ -1694,7 +1694,7 @@
         <div style="background:#fff;border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:80vh;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
             <h3 style="margin:0;font-size:1rem;font-weight:700;color:#1a1a2e;line-height:1.4;flex:1;">${title}</h3>
-            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">Ã—</button>
+            <button onclick="document.getElementById('notice-detail-modal').remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;margin-left:12px;padding:0;line-height:1;">×</button>
           </div>
           ${date ? `<p style="margin:0 0 12px;font-size:0.8rem;color:#888;"><b>Date:</b> ${date}</p>` : ''}
           <p style="margin:0;font-size:0.9rem;color:#444;line-height:1.6;">${description}</p>
@@ -2174,7 +2174,7 @@
         }
 
         if (isLive && !expiryTime && finalTime) {
-            const m = finalTime.match(/[-â€“â€”]\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
+            const m = finalTime.match(/[-–—]\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?/i);
             if (m) {
                 let parts = m[1].split(':');
                 let hh = parseInt(parts[0], 10);
@@ -2535,7 +2535,7 @@
           
           let displayTime = (notice.class_time || '').trim();
           if (!displayTime && notice.description) {
-            const descMatch = notice.description.match(/at\s+(\d{1,2}:\d{2}\s*(?:AM|PM)\s*[-â€“â€”]\s*\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+            const descMatch = notice.description.match(/at\s+(\d{1,2}:\d{2}\s*(?:AM|PM)\s*[-–—]\s*\d{1,2}:\d{2}\s*(?:AM|PM))/i);
             if (descMatch) displayTime = descMatch[1];
           }
           const info = extractTitleParts(notice.title, notice.semester, isLiveClass, notice.scheduledAt, notice.date);
@@ -2560,7 +2560,7 @@
             return rawStr;
           };
           const formattedDisplayDate = (displayDate && displayDate !== 'None') ? formatMobileDate(dateObj, displayDate) : '';
-          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">ðŸ“… ${formattedDisplayDate}</span>` : '';
+          const dateHtml = formattedDisplayDate ? `<span class="no-select-meta notice-date-badge">📅 ${formattedDisplayDate}</span>` : '';
           const timeHtml = displayTime ? `<span class="no-select-meta"><b class="no-select-meta">Schedule:</b> ${displayTime}</span>` : '';
           
           let linkHtml = '';
@@ -2595,7 +2595,7 @@
               </div>
               <div class="content-box" style="overflow: hidden; max-width: 100%;">
                 ${notice.isPinned ? `<div class="live-indicator" style="background: rgba(255,152,0,0.1); color: #ff9800; border-color: rgba(255,152,0,0.2); margin-bottom: 6px;"><i class="fas fa-thumbtack" style="font-size: 10px; margin-right: 4px;"></i> PINNED</div>` : ''}
-                  ${isLiveClass ? `<div class="live-indicator" style="${isHealthcare ? 'background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.3);' : ''}"><span class="pulse-dot" style="${isHealthcare ? 'background: #10b981;' : ''}"></span> LIVE CLASS ${isHealthcare ? 'â€¢ HEALTHCARE' : 'â€¢ GENERAL MBA'}</div>` : ''}
+                  ${isLiveClass ? `<div class="live-indicator" style="${isHealthcare ? 'background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.3);' : ''}"><span class="pulse-dot" style="${isHealthcare ? 'background: #10b981;' : ''}"></span> LIVE CLASS ${isHealthcare ? '• HEALTHCARE' : '• GENERAL MBA'}</div>` : ''}
                 <h3 class="subject-text" translate="no" style="word-break: break-word;">${formattedSubject}</h3>
                 
                 ${(!isLiveClass && (notice.description || finalImageUrl)) ? `
@@ -3183,7 +3183,7 @@
     document.addEventListener('DOMContentLoaded', function() {
 
     
-    // â”€â”€ COPY CLASS ANNOUNCEMENT TO CLIPBOARD â”€â”€
+    // ── COPY CLASS ANNOUNCEMENT TO CLIPBOARD ──
     function extractTeacherFromNotice(item) {
       if (!item) return '';
       let t = item.teacher || '';
@@ -3194,7 +3194,7 @@
         }
       }
       if (t) {
-        t = t.replace(/^[A-Z0-9]+\s*[-â€“â€”]\s*/i, '').trim();
+        t = t.replace(/^[A-Z0-9]+\s*[-–—]\s*/i, '').trim();
         t = t.split(/\s+/).map(w => {
           // Handle 'Dr.Name' (no space after Dr.) e.g. 'Dr.Aakash'
           const drNameMatch = w.match(/^(dr)\.(.+)/i);
@@ -3207,9 +3207,9 @@
       return t;
     }
 
-    function formatTimeRangeNotice(timeStr, separator = 'â€“') {
+    function formatTimeRangeNotice(timeStr, separator = '–') {
       if (!timeStr) return '';
-      const parts = timeStr.split(/[-â€“â€”]|to/i).map(s => s.trim());
+      const parts = timeStr.split(/[-–—]|to/i).map(s => s.trim());
       if (parts.length === 2) {
         const parsePart = (p) => {
           const m = p.match(/(\d{1,2}):(\d{2})\s*([APap][Mm])?/);
@@ -3252,27 +3252,27 @@
       const displayTime = n.displayTime || n.class_time || '07:00 PM - 09:00 PM';
 
       if (sem === '3') {
-        const timeWithDash = formatTimeRangeNotice(displayTime, 'â€“');
+        const timeWithDash = formatTimeRangeNotice(displayTime, '–');
         const headerTitle = isHealthcare 
-          ? '*ðŸ“¢ MBA (HEALTHCARE) SEMESTER III â€“ ONLINE CLASS TODAY ðŸ“š*' 
-          : '*ðŸ“¢ MBA SEMESTER III â€“ ONLINE CLASS TODAY ðŸ“š*';
+          ? '*📢 MBA (HEALTHCARE) SEMESTER III – ONLINE CLASS TODAY 📚*' 
+          : '*📢 MBA SEMESTER III – ONLINE CLASS TODAY 📚*';
         const recCategory = isHealthcare ? 'hc-recorded-class' : 'recorded-class';
         return `${headerTitle}
 
-ðŸ“… *${dayNum} ${monthName} â€“ ${weekday}*
+📅 *${dayNum} ${monthName} – ${weekday}*
 
-ðŸ•– *${timeWithDash}*
+🕖 *${timeWithDash}*
 
-ðŸ“š *Subject:* ${cleanSubject}
+📚 *Subject:* ${cleanSubject}
 
-ðŸ”— *Join Class â€“ Microsoft Teams:*
-ðŸ‘‰ [ ${url} ]
+🔗 *Join Class – Microsoft Teams:*
+👉 [ ${url} ]
 
-ðŸ“Œ You can also join the class through the *SOLMATES Classes Page.*
+📌 You can also join the class through the *SOLMATES Classes Page.*
 [ https://solmates.in/database/classes ]
  *Please join the class on time.*
 
-ðŸ“Œ*Recorded Lectures*
+📌*Recorded Lectures*
 [ https://solmates.in/database/view?category=${recCategory}&semester=3 ]`;
       }
 
@@ -3280,30 +3280,30 @@
       const timeWithTo = formatTimeRangeNotice(displayTime, 'to');
       const recCategory = isHealthcare ? 'hc-recorded-class' : 'recorded-class';
       const headerPrefix = isHealthcare 
-        ? `*ðŸ“MBA IN HEALTHCARE Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`
-        : `*ðŸ“MBA Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`;
+        ? `*📍MBA IN HEALTHCARE Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`
+        : `*📍MBA Semester 1st (${year}) ${cleanSubject} Online Class${teacherSuffix}*`;
 
       let msg = `${headerPrefix}
 
-*ðŸ—“Date:- ${dd}/${mm}/${year}*
-*â°Class Time:- ${timeWithTo}*
+*🗓Date:- ${dd}/${mm}/${year}*
+*⏰Class Time:- ${timeWithTo}*
 
-*ðŸ”—Class Linkâ¤µï¸:-*
+*🔗Class Link⤵️:-*
 ${url}
 
 *Just Tap On the Above Link,Open through Microsoft Teams App then Join The Class* 
 
-ðŸ“ŒðŽð§ð¥ð¢ð§ðž ð‚ð¥ðšð¬ð¬ & ð’ðœð¡ðžðð®ð¥ðž ð‹ð¢ð§ð¤:-
+📌𝐎𝐧𝐥𝐢𝐧𝐞 𝐂𝐥𝐚𝐬𝐬 & 𝐒𝐜𝐡𝐞𝐝𝐮𝐥𝐞 𝐋𝐢𝐧𝐤:-
 https://solmates.in/database/classes
 
-ðŸ“Œ ð‘ðžðœð¨ð«ððžð ð‹ðžðœð­ð®ð«ðžð¬
+📌 𝐑𝐞𝐜𝐨𝐫𝐝𝐞𝐝 𝐋𝐞𝐜𝐭𝐮𝐫𝐞𝐬
 https://solmates.in/database/view?category=${recCategory}&semester=1`;
 
       if (!isHealthcare) {
-        msg += `\n\nðŸ“Œð…ð¢ð«ð¬ð­ ð’ðžð¦ ðð¨ð­ðžð¬ ð†ð¨ð¨ð ð¥ðž ðƒð«ð¢ð¯ðž ð‹ð¢ð§ð¤:-\nhttps://drive.google.com/drive/folders/1lC5PyhNvtpQt4xT8CEjW6rI_tWvF7zTQ`;
+        msg += `\n\n📌𝐅𝐢𝐫𝐬𝐭 𝐒𝐞𝐦 𝐍𝐨𝐭𝐞𝐬 𝐆𝐨𝐨𝐠𝐥𝐞 𝐃𝐫𝐢𝐯𝐞 𝐋𝐢𝐧𝐤:-\nhttps://drive.google.com/drive/folders/1lC5PyhNvtpQt4xT8CEjW6rI_tWvF7zTQ`;
       }
 
-      msg += `\n\nðŸ“Œð“ðžð¥ðžð ð«ðšð¦ ð†ð«ð¨ð®ð© ð‹ð¢ð§ð¤\nhttps://t.me/ducdoemba2026\n*[For Sem-1 Recorded Lectures]*`;
+      msg += `\n\n📌𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐆𝐫𝐨𝐮𝐩 𝐋𝐢𝐧𝐤\nhttps://t.me/ducdoemba2026\n*[For Sem-1 Recorded Lectures]*`;
 
       return msg;
     }
@@ -3322,7 +3322,7 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
         btn.innerHTML = '<i class="fas fa-check" style="color: #ffffff;"></i>';
         btn.classList.add('copied');
         if (typeof showToast === 'function') {
-          showToast('Class announcement copied to clipboard! ðŸ“‹', 'success');
+          showToast('Class announcement copied to clipboard! 📋', 'success');
         }
         setTimeout(() => {
           btn.innerHTML = oldHtml;

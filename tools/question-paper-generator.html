@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -609,7 +609,7 @@ For subjective: set options to null. Provide full model answer in "answer" field
             let parsed = safeParseJSON(resText);
             if (parsed && typeof parsed.error === 'string') {
                 // The AI itself declined the request (persona/system-prompt restriction),
-                // not a JSON formatting problem â€” surface this distinctly so it isn't
+                // not a JSON formatting problem — surface this distinctly so it isn't
                 // confused with a malformed response on retry.
                 throw new Error("AI declined the request: " + parsed.error.substring(0, 150));
             }
