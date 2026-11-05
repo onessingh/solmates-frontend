@@ -724,50 +724,69 @@
       50% { transform: scaleX(1.15); opacity: 0.3; }
     }
 
-    /* ─── CONCEPT 2: SMOOTH FLIPPING BOOK (Folders to Materials / Items) ─── */
+        /* ═══════════════════════════════════════════════════════
+       CONCEPT 3: ORIGAMI BOOK UNFOLD (Creative & Ultra-Smooth)
+       ═══════════════════════════════════════════════════════ */
     .sol-book-anim {
       position: relative;
-      width: 76px;
-      height: 52px;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 6px;
+      width: 86px;
+      height: 56px;
+      perspective: 800px;
+      transform-style: preserve-3d;
+      margin-bottom: 10px;
     }
-    .book-cover {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      border-radius: 4px 8px 8px 4px;
-      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.22);
-    }
-    .book-cover::after {
-      content: '';
+
+    /* Center Origami Spine / Crease */
+    .book-spine {
       position: absolute;
       left: 50%;
+      top: 2px;
+      bottom: 2px;
+      width: 3px;
+      transform: translateX(-50%) translateZ(2px);
+      background: linear-gradient(to right, #1d4ed8, #3b82f6, #1e40af);
+      border-radius: 2px;
+      z-index: 20;
+      box-shadow: 0 0 4px rgba(0,0,0,0.25);
+    }
+
+    /* Book Base Covers */
+    .book-cover-base {
+      position: absolute;
       top: 0;
       bottom: 0;
-      width: 2px;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.18);
+      width: 42px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.35);
     }
-    .book-page-static {
+    .book-cover-base.right {
+      left: 43px;
+      border-radius: 0 6px 6px 0;
+      z-index: 1;
+    }
+    .book-cover-base.left {
+      right: 43px;
+      border-radius: 6px 0 0 6px;
+      transform-origin: right center;
+      transform-style: preserve-3d;
+      z-index: 2;
+      animation: origamiCoverUnfold 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    /* Static Right Page Bed */
+    .book-page-bed-right {
       position: absolute;
       top: 3px;
       bottom: 3px;
-      width: 33px;
+      left: 43px;
+      width: 38px;
       background: #ffffff;
-      box-shadow: inset 0 0 2px rgba(0,0,0,0.06);
+      border-radius: 0 4px 4px 0;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.06);
+      z-index: 3;
     }
-    .book-page-static.left {
-      left: 4px;
-      border-radius: 3px 0 0 3px;
-    }
-    .book-page-static.right {
-      right: 4px;
-      border-radius: 0 3px 3px 0;
-    }
-    .book-page-static::before,
-    .book-page-static::after {
+    .book-page-bed-right::before,
+    .book-page-bed-right::after {
       content: '';
       position: absolute;
       left: 6px;
@@ -776,19 +795,45 @@
       background: #e2e8f0;
       border-radius: 1px;
     }
-    .book-page-static::before { top: 12px; }
-    .book-page-static::after { top: 20px; width: 60%; }
+    .book-page-bed-right::before { top: 12px; }
+    .book-page-bed-right::after { top: 22px; width: 60%; }
 
+    /* Left Inner Page Bed attached to left cover */
+    .book-page-bed-left {
+      position: absolute;
+      inset: 3px;
+      background: #ffffff;
+      border-radius: 4px 0 0 4px;
+      backface-visibility: hidden;
+      transform: rotateY(0deg) translateZ(1px);
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.06);
+    }
+    .book-page-bed-left::before,
+    .book-page-bed-left::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      height: 2px;
+      background: #e2e8f0;
+      border-radius: 1px;
+    }
+    .book-page-bed-left::before { top: 12px; }
+    .book-page-bed-left::after { top: 22px; width: 60%; }
+
+    /* Fan-out Leaves (Origami Fanning) */
     .book-leaf {
       position: absolute;
       top: 3px;
       bottom: 3px;
-      right: 4px;
-      width: 33px;
+      left: 43px;
+      width: 38px;
       background: #ffffff;
-      border-radius: 0 3px 3px 0;
+      border-radius: 0 4px 4px 0;
       transform-origin: left center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+      backface-visibility: visible;
+      transform-style: preserve-3d;
     }
     .book-leaf::before {
       content: '';
@@ -798,33 +843,165 @@
       right: 6px;
       height: 2px;
       background: #e2e8f0;
+      border-radius: 1px;
     }
+    .book-leaf::after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 6px;
+      width: 55%;
+      height: 2px;
+      background: #f1f5f9;
+      border-radius: 1px;
+    }
+
+    /* Leaves animation with staggered fan-out and gentle flutter */
     .leaf-1 {
-      animation: flipPage1 1.2s ease-in-out infinite;
+      z-index: 12;
+      animation: origamiFanLeaf1 2.5s cubic-bezier(0.34, 1.1, 0.64, 1) infinite;
     }
     .leaf-2 {
-      animation: flipPage2 1.2s ease-in-out infinite;
+      z-index: 11;
+      animation: origamiFanLeaf2 2.5s cubic-bezier(0.34, 1.1, 0.64, 1) infinite;
     }
-    @keyframes flipPage1 {
-      0% { transform: scaleX(1); opacity: 1; }
-      50% { transform: scaleX(0); opacity: 0.85; background: #f8fafc; }
-      100% { transform: scaleX(-1) translateX(33px); opacity: 0; }
+    .leaf-3 {
+      z-index: 10;
+      animation: origamiFanLeaf3 2.5s cubic-bezier(0.34, 1.1, 0.64, 1) infinite;
     }
-    @keyframes flipPage2 {
-      0%, 25% { transform: scaleX(1); opacity: 1; }
-      75% { transform: scaleX(0); opacity: 0.85; background: #f8fafc; }
-      100% { transform: scaleX(-1) translateX(33px); opacity: 0; }
+
+    @keyframes origamiCoverUnfold {
+      0% {
+        transform: rotateY(180deg);
+      }
+      32% {
+        transform: rotateY(0deg);
+      }
+      55% {
+        transform: rotateY(-4deg) translateY(-1px);
+      }
+      72% {
+        transform: rotateY(0deg);
+      }
+      88% {
+        transform: rotateY(155deg);
+      }
+      100% {
+        transform: rotateY(180deg);
+      }
     }
+
+    @keyframes origamiFanLeaf1 {
+      0%, 6% {
+        transform: rotateY(0deg);
+        opacity: 0;
+      }
+      18% {
+        opacity: 1;
+      }
+      36% {
+        transform: rotateY(135deg);
+      }
+      55% {
+        transform: rotateY(142deg);
+      }
+      72% {
+        transform: rotateY(135deg);
+      }
+      86% {
+        transform: rotateY(15deg);
+      }
+      100% {
+        transform: rotateY(0deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes origamiFanLeaf2 {
+      0%, 10% {
+        transform: rotateY(0deg);
+        opacity: 0;
+      }
+      22% {
+        opacity: 1;
+      }
+      40% {
+        transform: rotateY(90deg);
+      }
+      58% {
+        transform: rotateY(82deg);
+      }
+      74% {
+        transform: rotateY(90deg);
+      }
+      88% {
+        transform: rotateY(10deg);
+      }
+      100% {
+        transform: rotateY(0deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes origamiFanLeaf3 {
+      0%, 14% {
+        transform: rotateY(0deg);
+        opacity: 0;
+      }
+      26% {
+        opacity: 1;
+      }
+      44% {
+        transform: rotateY(45deg);
+      }
+      60% {
+        transform: rotateY(52deg);
+      }
+      76% {
+        transform: rotateY(45deg);
+      }
+      90% {
+        transform: rotateY(5deg);
+      }
+      100% {
+        transform: rotateY(0deg);
+        opacity: 0;
+      }
+    }
+
+    /* Dynamic breathing shadow that expands as origami unfolds */
     .book-shadow {
       position: absolute;
-      bottom: -8px;
-      left: 8px;
-      right: 8px;
-      height: 6px;
-      background: rgba(15, 23, 42, 0.12);
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 7px;
+      background: rgba(15, 23, 42, 0.4);
       border-radius: 50%;
-      filter: blur(3px);
+      filter: blur(4px);
+      animation: origamiShadowBreath 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
+
+    @keyframes origamiShadowBreath {
+      0% {
+        width: 38px;
+        opacity: 0.35;
+        transform: translateX(-50%) scale(0.85);
+      }
+      32%, 72% {
+        width: 86px;
+        opacity: 0.7;
+        transform: translateX(-50%) scale(1);
+      }
+      88%, 100% {
+        width: 38px;
+        opacity: 0.35;
+        transform: translateX(-50%) scale(0.85);
+      }
+    }
+
+
 
     /* ─── LOADER TEXT & DOTS ─── */
     .sol-loader-text {
@@ -988,8 +1165,20 @@
         /* Dark Mode Overrides for 3D Loaders */
         .sol-folder-anim .folder-paper { background: #1e293b !important; box-shadow: 0 2px 6px rgba(0,0,0,0.4) !important; }
         .sol-folder-anim .folder-paper::before, .sol-folder-anim .folder-paper::after { background: #334155 !important; }
-        .sol-book-anim .book-page-static, .sol-book-anim .book-leaf { background: #1e293b !important; }
-        .sol-book-anim .book-page-static::before, .sol-book-anim .book-page-static::after, .sol-book-anim .book-leaf::before { background: #334155 !important; }
+                .sol-book-anim .book-page-bed-right,
+        .sol-book-anim .book-page-bed-left,
+        .sol-book-anim .book-leaf {
+          background: #1e293b !important;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sol-book-anim .book-page-bed-right::before,
+        .sol-book-anim .book-page-bed-right::after,
+        .sol-book-anim .book-page-bed-left::before,
+        .sol-book-anim .book-page-bed-left::after,
+        .sol-book-anim .book-leaf::before,
+        .sol-book-anim .book-leaf::after {
+          background: #334155 !important;
+        }
         .sol-loader-text { color: #94a3b8 !important; }
 
         --bg-body: #0f172a;
@@ -1373,7 +1562,7 @@
                 var isHc = cat.includes('hc');
                 var isBook = isHc || (s === 1 || s === 2);
                 if (isBook) {
-                  document.write('<div class="sol-loader-container concept-book"><div class="sol-book-anim"><div class="book-cover"></div><div class="book-page-static left"></div><div class="book-page-static right"></div><div class="book-leaf leaf-2"></div><div class="book-leaf leaf-1"></div><div class="book-shadow"></div></div><div class="sol-loader-text">Opening Materials<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div></div>');
+                  document.write('<div class="sol-loader-container concept-book"><div class="sol-book-anim"><div class="book-cover-base right"></div><div class="book-cover-base left"><div class="book-page-bed-left"></div></div><div class="book-page-bed-right"></div><div class="book-leaf leaf-1"></div><div class="book-leaf leaf-2"></div><div class="book-leaf leaf-3"></div><div class="book-spine"></div><div class="book-shadow"></div></div><div class="sol-loader-text">Preparing E-Book<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div></div>');
                 } else {
                   document.write('<div class="sol-loader-container concept-folder"><div class="sol-folder-anim"><div class="folder-back"></div><div class="folder-paper paper-2"></div><div class="folder-paper paper-1"></div><div class="folder-front"></div><div class="folder-shadow"></div></div><div class="sol-loader-text">Opening Folders<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span></div></div>');
                 }
@@ -1414,8 +1603,8 @@
         function getAnimType() {
             const isHC = (CATEGORY || '').includes('hc');
             const s = parseInt(SEMESTER, 10);
-            if (isHC) return 'book'; // All 4 semesters of HC -> Opening Materials
-            if (s === 1 || s === 2) return 'book'; // Sem 1 and 2 of general elearning -> Opening Materials
+            if (isHC) return 'book'; // All 4 semesters of HC -> Preparing E-Book
+            if (s === 1 || s === 2) return 'book'; // Sem 1 and 2 of general elearning -> Preparing E-Book
             return 'folder'; // Sem 3 and 4 of general elearning -> Opening Folders
         }
 
@@ -1541,15 +1730,19 @@
         grid.innerHTML = `
           <div class="sol-loader-container concept-book">
             <div class="sol-book-anim">
-              <div class="book-cover"></div>
-              <div class="book-page-static left"></div>
-              <div class="book-page-static right"></div>
-              <div class="book-leaf leaf-2"></div>
-              <div class="book-leaf leaf-1"></div>
-              <div class="book-shadow"></div>
-            </div>
+                <div class="book-cover-base right"></div>
+                <div class="book-cover-base left">
+                  <div class="book-page-bed-left"></div>
+                </div>
+                <div class="book-page-bed-right"></div>
+                <div class="book-leaf leaf-1"></div>
+                <div class="book-leaf leaf-2"></div>
+                <div class="book-leaf leaf-3"></div>
+                <div class="book-spine"></div>
+                <div class="book-shadow"></div>
+              </div>
             <div class="sol-loader-text">
-              Opening Materials<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span>
+              Preparing E-Book<span class="sol-loader-dots"><span>.</span><span>.</span><span>.</span></span>
             </div>
           </div>
         `;
