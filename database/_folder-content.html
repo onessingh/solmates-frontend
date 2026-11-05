@@ -2184,7 +2184,7 @@
       _fcLoadInProgress = true;
 
       try {
-        const minDuration = 0;
+        const minDuration = 400;
         const promises = [
           window.solmatesAPI.getSOLFolders(CATEGORY, SEMESTER, FOLDER_ID, false).catch(() => null),
           isEBook

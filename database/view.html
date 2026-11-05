@@ -1296,12 +1296,7 @@
       if (isNavigating) return;
       if (CATEGORY.includes('elearning')) {
         isNavigating = true;
-        const isHC = CATEGORY.includes('hc');
-        const isBook = isHC || (s === 1 || s === 2);
-        showSolLoader(isBook ? 'book' : 'folder');
-        setTimeout(() => {
-          window.location.href = `/database/elearning-subjects.html?category=${CATEGORY}&semester=${s}`;
-        }, 200);
+        window.location.href = `/database/elearning-subjects.html?category=${CATEGORY}&semester=${s}`;
         return;
       }
       if (CATEGORY.includes('youtube')) { window.location.href = `/database/youtube-browse.html?category=${CATEGORY}&semester=${s}`; return; }
