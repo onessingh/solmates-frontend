@@ -115,6 +115,28 @@ a, button, .btn, .back-btn {
     padding: 15mm !important;
     box-sizing: border-box !important;
   }
+
+  /* ── Hide ALL AdSense / Google Ad elements on print ── */
+  ins.adsbygoogle,
+  .google-auto-placed,
+  .sol-ad-banner,
+  div[id^="google_ads_iframe"],
+  iframe[id^="aswift_"],
+  iframe[name^="aswift_"],
+  div[id^="aswift_"],
+  #google-vignette,
+  [data-google-vignette],
+  ins.adsbygoogle[data-anchor-status],
+  ins.adsbygoogle[data-anchor-shown],
+  ins.adsbygoogle[data-vignette-loaded],
+  body > .google-auto-placed,
+  div.adsbygoogle-noablate {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+  }
 }
 
 /* ========== ADSENSE PROTECTION: PREVENT AUTO ADS FROM BREAKING CARDS & OVERLAYS ========== */
