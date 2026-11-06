@@ -787,13 +787,40 @@
 
   var hiddenEls = [];
 
+  /* Apply display:none using setProperty so !important actually works in JS */
+  function forceHide(el) {
+    el.style.setProperty('display',    'none',     'important');
+    el.style.setProperty('visibility', 'hidden',   'important');
+    el.style.setProperty('height',     '0',        'important');
+    el.style.setProperty('max-height', '0',        'important');
+    el.style.setProperty('overflow',   'hidden',   'important');
+    el.style.setProperty('position',   'absolute', 'important');
+    el.style.setProperty('left',       '-99999px', 'important');
+    el.style.setProperty('top',        '-99999px', 'important');
+  }
+
   function hideAds() {
     hiddenEls = [];
     try {
       var els = document.querySelectorAll(AD_SELECTORS);
       els.forEach(function (el) {
+        /* Save current inline style to restore later */
         hiddenEls.push({ el: el, prev: el.style.cssText });
-        el.style.cssText += '; display:none!important; visibility:hidden!important; height:0!important; max-height:0!important; position:absolute!important; left:-99999px!important; top:-99999px!important;';
+        forceHide(el);
+
+        /* Also walk UP the DOM tree and hide the nearest fixed/sticky ancestor
+           (the outer wrapper "patti" Google renders for anchor ads) */
+        var parent = el.parentElement;
+        var maxWalk = 6; // don't walk too far up
+        while (parent && maxWalk-- > 0) {
+          var cs = window.getComputedStyle(parent);
+          if (cs.position === 'fixed' || cs.position === 'sticky') {
+            hiddenEls.push({ el: parent, prev: parent.style.cssText });
+            forceHide(parent);
+            break;
+          }
+          parent = parent.parentElement;
+        }
       });
     } catch (e) {}
   }
