@@ -116,11 +116,14 @@ a, button, .btn, .back-btn {
     box-sizing: border-box !important;
   }
 
-  /* ── Hide ALL AdSense / Google Ad elements on print ── */
+  /* ── Hide ALL AdSense / Google Ad elements on print (incl. anchor/sticky ads) ── */
   ins.adsbygoogle,
+  ins[data-anchor-shown],
+  ins[data-anchor-status],
   .google-auto-placed,
   .sol-ad-banner,
   div[id^="google_ads_iframe"],
+  div[id^="google_ads_"],
   iframe[id^="aswift_"],
   iframe[name^="aswift_"],
   div[id^="aswift_"],
@@ -130,12 +133,17 @@ a, button, .btn, .back-btn {
   ins.adsbygoogle[data-anchor-shown],
   ins.adsbygoogle[data-vignette-loaded],
   body > .google-auto-placed,
-  div.adsbygoogle-noablate {
+  div.adsbygoogle-noablate,
+  div[id*="google_ads"],
+  div[class*="adsbygoogle"] {
     display: none !important;
     height: 0 !important;
     max-height: 0 !important;
     overflow: hidden !important;
     visibility: hidden !important;
+    position: absolute !important;
+    left: -99999px !important;
+    top: -99999px !important;
   }
 }
 
