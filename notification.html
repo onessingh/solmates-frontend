@@ -58,11 +58,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v920" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v920" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v920">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v920">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v920">
+  <link rel="icon" href="/favicon.ico?v=v921" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v921" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v921">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v921">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v921">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -79,11 +79,11 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v920">
-  <script src="/config.js?v=v920" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v921">
+  <script src="/config.js?v=v921" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v920" defer></script>
-  <script src="/js/webview-fix.js?v=v920" defer></script>
+  <script src="/js/api-client.js?v=v921" defer></script>
+  <script src="/js/webview-fix.js?v=v921" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -1916,7 +1916,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v920';
+    const NOTIF_APP_CACHE_VER = 'v921';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -2739,7 +2739,17 @@
         { key: 'exam',      icon: '<i class="fas fa-file-alt"></i>',     label: 'Exam'      },
         { key: 'notice',    icon: '<i class="fas fa-bullhorn"></i>',     label: 'Notices'   },
       ];
-      var activeTabs = TAB_DEFS; // Always show all tabs
+      // Dynamic sort: 'All' stays first; tabs with notifications (> 0) come first sorted by count descending; 0-count tabs are pushed to the end
+      var activeTabs = TAB_DEFS.slice().sort(function(a, b) {
+        if (a.key === 'all') return -1;
+        if (b.key === 'all') return 1;
+        var countA = counts[a.key] || 0;
+        var countB = counts[b.key] || 0;
+        if (countA > 0 && countB === 0) return -1;
+        if (countB > 0 && countA === 0) return 1;
+        if (countB !== countA) return countB - countA;
+        return 0;
+      });
       var existing = list.querySelector('.notif-filter-bar');
       if (existing) existing.remove();
       // (all tabs always shown)
@@ -2769,6 +2779,8 @@
       });
       var oldVA = list.querySelector('.notif-view-all-btn');
       if (oldVA) oldVA.remove();
+      var oldEmpty = list.querySelector('.notif-filter-empty');
+      if (oldEmpty) oldEmpty.remove();
       var allCards = Array.from(list.querySelectorAll('.notification-card'));
       var matchedCards = allCards.filter(function(c) {
         return filterKey === 'all' || (c.dataset.notifType || 'notice') === filterKey;
@@ -2782,6 +2794,13 @@
       matchedCards.forEach(function(c, i) {
         c.style.display = i < NOTIF_VIEW_LIMIT ? '' : 'none';
       });
+      if (matchedCards.length === 0) {
+        var emptyMsg = document.createElement('div');
+        emptyMsg.className = 'notif-filter-empty';
+        emptyMsg.style.cssText = 'text-align: center; padding: 26px 16px; color: var(--text-muted); font-size: 13px;';
+        emptyMsg.innerHTML = '<i class="far fa-folder-open" style="font-size: 22px; margin-bottom: 6px; display: block; opacity: 0.5;"></i>No ' + (filterKey === 'all' ? '' : filterKey) + ' notifications found';
+        list.appendChild(emptyMsg);
+      }
       var hiddenCount = Math.max(0, matchedCards.length - NOTIF_VIEW_LIMIT);
       if (hiddenCount > 0) {
         var va = document.createElement('button');
@@ -3926,7 +3945,7 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v920';
+        const swUrl = '/sw.js?v=v921';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
