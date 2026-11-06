@@ -58,11 +58,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v919" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v919" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v919">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v919">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v919">
+  <link rel="icon" href="/favicon.ico?v=v920" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v920" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v920">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v920">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v920">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -79,11 +79,11 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v919">
-  <script src="/config.js?v=v919" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v920">
+  <script src="/config.js?v=v920" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v919" defer></script>
-  <script src="/js/webview-fix.js?v=v919" defer></script>
+  <script src="/js/api-client.js?v=v920" defer></script>
+  <script src="/js/webview-fix.js?v=v920" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -1916,7 +1916,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v919';
+    const NOTIF_APP_CACHE_VER = 'v920';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -2739,10 +2739,10 @@
         { key: 'exam',      icon: '<i class="fas fa-file-alt"></i>',     label: 'Exam'      },
         { key: 'notice',    icon: '<i class="fas fa-bullhorn"></i>',     label: 'Notices'   },
       ];
-      var activeTabs = TAB_DEFS.filter(function(t) { return t.key === 'all' || counts[t.key] > 0; });
+      var activeTabs = TAB_DEFS; // Always show all tabs
       var existing = list.querySelector('.notif-filter-bar');
       if (existing) existing.remove();
-      if (activeTabs.length <= 1) return;
+      // (all tabs always shown)
       var bar = document.createElement('div');
       bar.className = 'notif-filter-bar';
       bar.setAttribute('data-sem', semester);
@@ -3926,7 +3926,7 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v919';
+        const swUrl = '/sw.js?v=v920';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
