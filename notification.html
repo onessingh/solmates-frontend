@@ -58,11 +58,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v916" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v916" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v916">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v916">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v916">
+  <link rel="icon" href="/favicon.ico?v=v917" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v917" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v917">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v917">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v917">
   <title>DU SOL Results & Exam Notifications | SOLMATES Updates</title>
   
   
@@ -79,11 +79,11 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v916">
-  <script src="/config.js?v=v916" defer></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v917">
+  <script src="/config.js?v=v917" defer></script>
   <!-- socket.io loaded dynamically -->
-  <script src="/js/api-client.js?v=v916" defer></script>
-  <script src="/js/webview-fix.js?v=v916" defer></script>
+  <script src="/js/api-client.js?v=v917" defer></script>
+  <script src="/js/webview-fix.js?v=v917" defer></script>
   <script>
     // [v816.6] NUCLEAR AUTO-UPDATE • ASYNC + LOOP-GUARD FIX
     (async function() {
@@ -764,7 +764,37 @@
       to { transform: translateY(16px) scale(0.97); opacity: 0; }
     }
 
-    /* ========== Notification List ========== */
+    /* ========== Filter Tabs (All / Live / Timetable / Exam / Notices) ========== */
+    .notif-filter-bar {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; padding: 0 2px;
+    }
+    .notif-filter-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 13px; border-radius: 20px;
+      border: 1.5px solid var(--border-color, #e2e8f0);
+      background: var(--bg-card, #fff); color: var(--text-muted, #64748b);
+      font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.18s; white-space: nowrap;
+    }
+    .notif-filter-btn.active {
+      background: var(--brand-primary, #0071e3); color: #fff; border-color: var(--brand-primary, #0071e3);
+    }
+    .notif-filter-btn .fcount {
+      background: rgba(255,255,255,0.25); border-radius: 10px; padding: 1px 6px; font-size: 11px;
+    }
+    .notif-filter-btn:not(.active) .fcount {
+      background: var(--bg-secondary, #f1f5f9); color: var(--text-muted, #64748b);
+    }
+    .notif-view-all-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px; margin-top: 10px; border-radius: 14px;
+      border: 1.5px dashed var(--border-color, #e2e8f0);
+      background: transparent; color: var(--brand-primary, #0071e3);
+      font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.18s;
+    }
+    .notif-view-all-btn:hover {
+      background: rgba(0,113,227,0.06); border-color: var(--brand-primary, #0071e3);
+    }
+/* ========== Notification List ========== */
     .notification-list {
       display: none;
       animation: fadeIn 0.4s ease;
@@ -1883,7 +1913,7 @@
       }
     }
 
-    const NOTIF_APP_CACHE_VER = 'v916';
+    const NOTIF_APP_CACHE_VER = 'v917';
     if (localStorage.getItem('sol_notif_cache_ver') !== NOTIF_APP_CACHE_VER) {
       purgeNotificationCaches();
       localStorage.setItem('sol_notif_cache_ver', NOTIF_APP_CACHE_VER);
@@ -2499,6 +2529,15 @@
           const isHealthcare = /mbaexh|health\s*(?:care|sector)|\bhca\b/i.test(`${notice.title || ''} ${notice.description || ''}`);
 
           const isTimetable = String(notice.title).includes('[Timetable]');
+          const isExam = (() => {
+            const t = (notice.title || '').toLowerCase();
+            const d = (notice.description || '').toLowerCase();
+            return !isLiveClass && !isTimetable && (
+              t.includes('exam') || t.includes('datesheet') || t.includes('date sheet') ||
+              t.includes('result') || t.includes('admit card') || t.includes('hall ticket') ||
+              d.includes('exam') || d.includes('datesheet')
+            );
+          })();
           const btnText = isLiveClass ? 'Join Class <i class="fas fa-video"></i>' :
             (isTimetable ? 'View Timetable <i class="fas fa-file-pdf"></i>' : 'View Details <i class="fas fa-arrow-right"></i>');
           const btnClass = isLiveClass ? 'view-btn join-btn' : 'view-btn';
@@ -2583,7 +2622,7 @@
           }
 
           return `
-            <div class="notification-card ${isLiveClass ? 'live-class' : ''} ${isHealthcare ? 'healthcare-card' : ''}" id="notice-${uniqueKey}" onclick="${clickHandler}">
+            <div class="notification-card ${isLiveClass ? 'live-class' : ''} ${isHealthcare ? 'healthcare-card' : ''}" id="notice-${uniqueKey}" data-notif-type="${isLiveClass ? 'live' : isTimetable ? 'timetable' : isExam ? 'exam' : 'notice'}" onclick="${clickHandler}">
               ${(isLiveClass && notice.link && notice.link.startsWith('http') && !notice.link.includes('pending')) ? `
                 <button type="button" class="copy-class-link-btn" title="Copy Teams Meeting Link" aria-label="Copy Teams Meeting Link" onclick="event.stopPropagation(); window.copyClassLink('${escAttr(uniqueKey)}', this);">
                   <i class="far fa-copy"></i>
@@ -2650,6 +2689,7 @@
             </div>`;
         }).join('');
         updateAuthUI();
+        _injectFilterTabs(list, semester);
 
         // v816.8: IMMEDIATELY mark as seen for Home Page badge sync
         finalNotices.forEach(notice => {
@@ -2675,6 +2715,83 @@
         list.innerHTML = `<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No new notifications for ${semLabel}</p></div>`;
       }
     }
+
+
+    // ── FILTER TABS ENGINE ─────────────────────────────────────────────────
+    var _semFilterState = {};
+    var NOTIF_VIEW_LIMIT = 5;
+
+    function _injectFilterTabs(list, semester) {
+      var cards = Array.from(list.querySelectorAll('.notification-card'));
+      if (cards.length === 0) return;
+      var counts = { all: cards.length, live: 0, timetable: 0, exam: 0, notice: 0 };
+      cards.forEach(function(c) {
+        var t = c.dataset.notifType || 'notice';
+        if (counts[t] !== undefined) counts[t]++;
+      });
+      var TAB_DEFS = [
+        { key: 'all',       icon: '🔔', label: 'All'          },
+        { key: 'live',      icon: '📺', label: 'Live Classes'  },
+        { key: 'timetable', icon: '📅', label: 'Timetable'    },
+        { key: 'exam',      icon: '📋', label: 'Exam'         },
+        { key: 'notice',    icon: '📝', label: 'Notices'      },
+      ];
+      var activeTabs = TAB_DEFS.filter(function(t) { return t.key === 'all' || counts[t.key] > 0; });
+      var existing = list.querySelector('.notif-filter-bar');
+      if (existing) existing.remove();
+      if (activeTabs.length <= 1) return;
+      var bar = document.createElement('div');
+      bar.className = 'notif-filter-bar';
+      bar.setAttribute('data-sem', semester);
+      var currentFilter = _semFilterState[semester] || 'all';
+      activeTabs.forEach(function(tab) {
+        var btn = document.createElement('button');
+        btn.className = 'notif-filter-btn' + (currentFilter === tab.key ? ' active' : '');
+        btn.dataset.filter = tab.key;
+        var countVal = tab.key === 'all' ? counts.all : counts[tab.key];
+        btn.innerHTML = tab.icon + ' ' + tab.label + '<span class="fcount">' + countVal + '</span>';
+        btn.addEventListener('click', (function(key) {
+          return function() { _applyFilter(list, semester, key); };
+        })(tab.key));
+        bar.appendChild(btn);
+      });
+      list.insertBefore(bar, list.firstChild);
+      _applyFilter(list, semester, currentFilter);
+    }
+
+    function _applyFilter(list, semester, filterKey) {
+      _semFilterState[semester] = filterKey;
+      list.querySelectorAll('.notif-filter-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.filter === filterKey);
+      });
+      var oldVA = list.querySelector('.notif-view-all-btn');
+      if (oldVA) oldVA.remove();
+      var allCards = Array.from(list.querySelectorAll('.notification-card'));
+      var matchedCards = allCards.filter(function(c) {
+        return filterKey === 'all' || (c.dataset.notifType || 'notice') === filterKey;
+      });
+      // Hide cards not matching filter
+      allCards.forEach(function(c) {
+        var matches = filterKey === 'all' || (c.dataset.notifType || 'notice') === filterKey;
+        c.style.display = matches ? '' : 'none';
+      });
+      // Apply view limit on matched cards
+      matchedCards.forEach(function(c, i) {
+        c.style.display = i < NOTIF_VIEW_LIMIT ? '' : 'none';
+      });
+      var hiddenCount = Math.max(0, matchedCards.length - NOTIF_VIEW_LIMIT);
+      if (hiddenCount > 0) {
+        var va = document.createElement('button');
+        va.className = 'notif-view-all-btn';
+        va.innerHTML = '<i class="fas fa-chevron-down"></i> View all ' + matchedCards.length + ' notifications';
+        va.addEventListener('click', function() {
+          matchedCards.forEach(function(c) { c.style.display = ''; });
+          va.remove();
+        });
+        list.appendChild(va);
+      }
+    }
+    // ── END FILTER TABS ENGINE ─────────────────────────────────────────────
 
     function showTab(sem) {
       currentSemester = sem;
@@ -3806,7 +3923,7 @@ https://solmates.in/database/view?category=${recCategory}&semester=1`;
       updateNotifyUI(); 
       if (!('serviceWorker' in navigator)) return;
       try {
-        const swUrl = '/sw.js?v=v916';
+        const swUrl = '/sw.js?v=v917';
         const registration = await navigator.serviceWorker.register(swUrl);
         registration.update();
         
