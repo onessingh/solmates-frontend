@@ -764,3 +764,47 @@
     toggleLock: toggleSiteLock
   };
 })();
+
+/* ========== PRINT: Hide AdSense Anchor/Fixed Ads via JS ========== */
+(function () {
+  'use strict';
+
+  var AD_SELECTORS = [
+    'ins.adsbygoogle',
+    'ins[data-anchor-shown]',
+    'ins[data-anchor-status]',
+    '.google-auto-placed',
+    '.sol-ad-banner',
+    'div[id*="google_ads"]',
+    'div[id^="aswift_"]',
+    'iframe[id^="aswift_"]',
+    'iframe[name^="aswift_"]',
+    '#google-vignette',
+    '[data-google-vignette]',
+    'div.adsbygoogle-noablate',
+    'div[class*="adsbygoogle"]'
+  ].join(',');
+
+  var hiddenEls = [];
+
+  function hideAds() {
+    hiddenEls = [];
+    try {
+      var els = document.querySelectorAll(AD_SELECTORS);
+      els.forEach(function (el) {
+        hiddenEls.push({ el: el, prev: el.style.cssText });
+        el.style.cssText += '; display:none!important; visibility:hidden!important; height:0!important; max-height:0!important; position:absolute!important; left:-99999px!important; top:-99999px!important;';
+      });
+    } catch (e) {}
+  }
+
+  function showAds() {
+    hiddenEls.forEach(function (item) {
+      try { item.el.style.cssText = item.prev; } catch (e) {}
+    });
+    hiddenEls = [];
+  }
+
+  window.addEventListener('beforeprint', hideAds);
+  window.addEventListener('afterprint', showAds);
+})();
