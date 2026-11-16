@@ -40,7 +40,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="/config.js?v=v928"></script>
   <script src="/js/uptime-helper.js?v=v928"></script>
-  <script src="/js/api-client.js?v=v928"></script>
+  <script src="/js/api-client.js?v=v930"></script>
   <script src="/js/sol-cache.js?v=v928"></script>
   <script src="/js/prefetch-helper.js?v=v928"></script>
   <script>
@@ -750,7 +750,101 @@
       --brand-accent: #c0962d;
       }
 
-    /* PYQ Analyzer Modal Styles */
+    /* PYQ Analyzer Modal & Banner Styles */
+    .pyq-banner-card {
+      display: flex;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(99,102,241,0.08));
+      border: 1.5px solid rgba(37,99,235,0.25);
+      border-radius: 16px;
+      padding: 14px 18px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 4px 15px rgba(37,99,235,0.06);
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .pyq-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+    .pyq-banner-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+      flex-shrink: 0;
+    }
+    .pyq-banner-info {
+      min-width: 0;
+      flex: 1;
+    }
+    .pyq-banner-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      word-break: break-word;
+    }
+    .pyq-banner-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .pyq-banner-right {
+      flex-shrink: 0;
+    }
+    .pyq-banner-btn {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .pyq-banner-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37,99,235,0.35);
+    }
+    @media (max-width: 640px) {
+      .pyq-banner-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+        gap: 12px;
+      }
+      .pyq-banner-left {
+        width: 100%;
+      }
+      .pyq-banner-right {
+        width: 100%;
+      }
+      .pyq-banner-btn {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 14px;
+      }
+    }
+
     #pyqAnalyzerModal .modal-box { max-width: 680px; width: 92%; max-height: 85vh; display: flex; flex-direction: column; padding: 24px 22px; }
     .pyq-mode-card { border: 2px solid var(--border-color); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
     .pyq-mode-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.03); }
@@ -1172,19 +1266,19 @@
     <div class="breadcrumb" id="breadcrumb"></div>
 
     <!-- PYQ Analyzer Action Bar (Visible only inside PYQ subject folders) -->
-    <div id="pyqAnalyzerBar" style="display:none; margin-bottom: 20px; background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(99,102,241,0.08)); border: 1.5px solid rgba(37,99,235,0.25); border-radius: 16px; padding: 14px 20px; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(37,99,235,0.06);">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, #2563eb, #4f46e5); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 4px 10px rgba(37,99,235,0.3); flex-shrink:0;">
+    <div id="pyqAnalyzerBar" class="pyq-banner-card" style="display:none;">
+      <div class="pyq-banner-left">
+        <div class="pyq-banner-icon">
           <i class="fas fa-brain"></i>
         </div>
-        <div>
-          <div id="pyqBarTitle" style="font-weight:700; font-size:15px; color:var(--text-main); margin-bottom:2px;">Analyse PYQs</div>
-          <div style="font-size:12px; color:var(--text-muted);">AI Past Papers Weightage, Repeated Questions & Core Trends</div>
+        <div class="pyq-banner-info">
+          <div id="pyqBarTitle" class="pyq-banner-title">Analyse PYQs</div>
+          <div class="pyq-banner-subtitle">AI Past Papers Weightage, Repeated Questions & Core Trends</div>
         </div>
       </div>
-      <div style="display:flex; gap:10px; align-items:center;">
-        <button id="btnOpenPyqAnalyzer" class="btn" onclick="openPyqAnalyzerModal()" style="background:linear-gradient(135deg, #2563eb, #4f46e5); color:#fff; border:none; padding:10px 18px; border-radius:12px; font-weight:700; font-size:13px; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(37,99,235,0.3); cursor:pointer;">
-          <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse Subject PYQs</span>
+      <div class="pyq-banner-right">
+        <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="openPyqAnalyzerModal()">
+          <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse PYQs</span>
         </button>
       </div>
     </div>
@@ -1368,19 +1462,19 @@
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:16px;">
           <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
             <div id="pyqStatMarks" style="font-size:18px; font-weight:800; color:#2563eb;">70</div>
-            <div style="font-size:11px; color:var(--text-muted);">Max Marks</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Max Marks</div>
           </div>
           <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
-            <div id="pyqStatCompulsory" style="font-size:13px; font-weight:800; color:#10b981; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Q1 (20M)</div>
-            <div style="font-size:11px; color:var(--text-muted);">Compulsory Q</div>
+            <div id="pyqStatCompulsory" style="font-size:14px; font-weight:800; color:#10b981; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">3 Hours</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Time Allowed</div>
           </div>
           <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
-            <div id="pyqStatPractical" style="font-size:13px; font-weight:800; color:#8b5cf6;">Application</div>
-            <div style="font-size:11px; color:var(--text-muted);">Question Format</div>
+            <div id="pyqStatPractical" style="font-size:14px; font-weight:800; color:#8b5cf6;">28 Marks (40%)</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Passing Marks</div>
           </div>
           <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
-            <div id="pyqStatYears" style="font-size:13px; font-weight:800; color:#f59e0b;">4 Years</div>
-            <div style="font-size:11px; color:var(--text-muted);">Papers Analyzed</div>
+            <div id="pyqStatYears" style="font-size:14px; font-weight:800; color:#f59e0b;">4 Years</div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Papers Analyzed</div>
           </div>
         </div>
 
@@ -1802,8 +1896,8 @@
         bar.style.display = 'flex';
         const titleEl = document.getElementById('pyqBarTitle');
         const btnTextEl = document.getElementById('btnPyqAnalyzeText');
-        if (titleEl) titleEl.innerText = `Analyse ${subjectName} PYQs`;
-        if (btnTextEl) btnTextEl.innerText = `Analyse ${subjectName} PYQs`;
+        if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
+        if (btnTextEl) btnTextEl.innerText = `Analyse PYQs`;
       } else {
         bar.style.display = 'none';
       }
@@ -1866,7 +1960,7 @@
 
     // Direct bulletproof fetch helpers to bypass any stale script caching
     async function _fetchPyqAnalysisAPI(sem, fId) {
-      if (window.solmatesAPI && typeof window.solmatesAPI.getPyqAnalysis === 'function') {
+      if (window.solmatesAPI && typeof window.solmatesAPI.getPyqAnalysis === 'function' && !window.solmatesAPI._isPolyfilled) {
         try {
           return await window.solmatesAPI.getPyqAnalysis(sem, fId);
         } catch (e) {
@@ -1881,7 +1975,7 @@
     }
 
     async function _generatePyqAnalysisAPI(sem, fId, payload = {}) {
-      if (window.solmatesAPI && typeof window.solmatesAPI.generatePyqAnalysis === 'function') {
+      if (window.solmatesAPI && typeof window.solmatesAPI.generatePyqAnalysis === 'function' && !window.solmatesAPI._isPolyfilled) {
         try {
           return await window.solmatesAPI.generatePyqAnalysis(sem, fId, payload);
         } catch (e) {
@@ -1905,9 +1999,11 @@
     // Polyfill window.solmatesAPI if methods missing
     if (window.solmatesAPI) {
       if (typeof window.solmatesAPI.getPyqAnalysis !== 'function') {
+        window.solmatesAPI._isPolyfilled = true;
         window.solmatesAPI.getPyqAnalysis = (s, f) => _fetchPyqAnalysisAPI(s, f);
       }
       if (typeof window.solmatesAPI.generatePyqAnalysis !== 'function') {
+        window.solmatesAPI._isPolyfilled = true;
         window.solmatesAPI.generatePyqAnalysis = (s, f, p) => _generatePyqAnalysisAPI(s, f, p);
       }
     }
@@ -1998,9 +2094,9 @@
 
       // Meta & Overview Stats
       const struct = data.examStructure || {};
-      document.getElementById('pyqStatMarks').innerText = struct.maxMarks || struct.totalMarks || '75';
-      document.getElementById('pyqStatCompulsory').innerText = struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : (struct.questionPattern ? 'Standard' : 'Q1 (20M)');
-      document.getElementById('pyqStatPractical').innerText = struct.theoryVsPractical ? struct.theoryVsPractical.split(',')[0].trim() : (struct.overallDifficulty || 'Analytical');
+      document.getElementById('pyqStatMarks').innerText = '70';
+      document.getElementById('pyqStatCompulsory').innerText = '3 Hours';
+      document.getElementById('pyqStatPractical').innerText = '28 Marks (40%)';
       
       const allYears = data.analyzedYears || [];
       const activeYears = (yearsFilter === 'all') ? allYears : yearsFilter;

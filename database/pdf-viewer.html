@@ -1168,46 +1168,192 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: #f1f5f9;
+      background: #f8fafc;
       color: #1e293b;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
     }
     .doc-container {
-      max-width: 900px;
-      margin: 20px auto;
+      max-width: 860px;
+      margin: 24px auto;
       background: #ffffff;
-      padding: 36px 40px 60px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      padding: 40px 48px;
+      border-radius: 16px;
+      box-shadow: 0 4px 25px rgba(15, 23, 42, 0.06);
       border: 1px solid #e2e8f0;
       box-sizing: border-box;
     }
-    .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 25px; }
-    .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; background: #e0e7ff; color: #2563eb; }
-    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 25px; }
-    .stat-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center; background: #f8fafc; }
-    .stat-val { font-size: 20px; font-weight: 800; color: #2563eb; }
-    .stat-lbl { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-top: 4px; }
-    .section-title { font-size: 17px; font-weight: 800; margin: 28px 0 14px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
-    .card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 14px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .progress-bar-bg { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin: 8px 0 10px; }
-    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); }
-    ul { margin: 6px 0 0 20px; padding: 0; }
-    li { margin-bottom: 6px; font-size: 13px; color: #334155; }
-    @media (max-width: 600px) {
+    .header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
+      background: #f8fafc;
+      transition: all 0.2s ease;
+    }
+    .stat-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e293b;
+      line-height: 1.2;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 6px;
+    }
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 32px 0 16px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+    }
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+    .progress-bar-bg {
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 10px 0 12px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #10b981);
+      border-radius: 4px;
+    }
+    .topic-card {
+      border: 1px solid #fed7aa;
+      border-left: 4px solid #f97316;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      background: #fffbf7;
+    }
+    .topic-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #f97316;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      margin-right: 8px;
+    }
+    .approach-box {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #1e40af;
+      background: #eff6ff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-left: 3px solid #3b82f6;
+      line-height: 1.5;
+    }
+    .q-box {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    .tag-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 6px;
+      background: #e2e8f0;
+      color: #475569;
+    }
+    .tag-pill.blue { background: #dbeafe; color: #1d4ed8; }
+    .tag-pill.green { background: #dcfce7; color: #15803d; }
+    .tag-pill.orange { background: #ffedd5; color: #c2410c; }
+    ul.tips-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    ul.tips-list li {
+      display: flex;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    ul.tips-list li i {
+      color: #10b981;
+      font-size: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 680px) {
       .doc-container {
         margin: 0;
-        padding: 20px 16px 40px;
+        padding: 24px 18px 40px;
         border-radius: 0;
         border: none;
         box-shadow: none;
+      }
+      .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
       }
     }
     @media print {
       body { background: #fff !important; }
       .doc-container { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; max-width: 100% !important; }
       .no-print { display: none !important; }
+      .card, .topic-card { break-inside: avoid; }
     }
   </style>
 </head>
@@ -1223,58 +1369,94 @@
   </div>
 
   <div class="header">
-    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#2563eb; margin-bottom:4px;">
-      SOLMATES Academic AI Intelligence • DU SOL MBA
+    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#2563eb; margin-bottom:4px;">
+      DU SOL • MASTER OF BUSINESS ADMINISTRATION (MBA)
     </div>
-    <h1 style="margin:0 0 6px 0; font-size:24px; color:#0f172a;">${data.subjectName} — PYQ Examination Analysis</h1>
-    <div style="font-size:13px; color:#64748b;">
-      Semester ${semester} • Exam Papers Analyzed: <strong>${activeYears.join(', ')}</strong>
+    <h1 style="margin:0 0 6px 0; font-size:24px; color:#0f172a; font-weight:800;">${data.subjectName}</h1>
+    <div style="font-size:13.5px; color:#64748b;">
+      Comprehensive Examination Analysis • Semester ${semester} • Exam Papers: <strong>${activeYears.join(', ')}</strong>
     </div>
   </div>
 
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-val">${struct.maxMarks || struct.totalMarks || 75}</div><div class="stat-lbl">Max Marks</div></div>
-    <div class="stat-card"><div class="stat-val">${struct.timeAllowed || struct.examDuration || '3 Hrs'}</div><div class="stat-lbl">Time Allowed</div></div>
-    <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#10b981;">${struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : (struct.questionPattern ? 'Standard' : 'Q1')}</div><div class="stat-lbl">Compulsory Q</div></div>
-    <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#8b5cf6;">${activeYears.length} Years</div><div class="stat-lbl">Active Papers</div></div>
+    <div class="stat-card">
+      <div class="stat-val">70</div>
+      <div class="stat-lbl">Max Marks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">3 Hours</div>
+      <div class="stat-lbl">Time Allowed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:#10b981;">28 Marks</div>
+      <div class="stat-lbl">Passing (40%)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:#6366f1;">${activeYears.length} Years</div>
+      <div class="stat-lbl">Active Papers</div>
+    </div>
   </div>
 
-  <div class="section-title">🔥 Must-Study Guaranteed Topics</div>
-  ${(data.mustStudyTopics || []).map(t => `
-    <div class="card" style="border-left: 4px solid #ef4444;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <strong style="font-size:14px; color:#0f172a;">${t.topic}</strong>
-        <span class="badge" style="background:#fef2f2; color:#ef4444;">${t.frequency || 'Guaranteed'} (${t.probabilityScore ? t.probabilityScore + '%' : (t.marks || 15) + ' Marks'})</span>
+  <div class="section-title">🔥 Must-Study Guaranteed Topics (14 Marks Each)</div>
+  ${(data.mustStudyTopics || []).map((t, idx) => `
+    <div class="topic-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px;">
+        <div style="display:flex; align-items:center;">
+          <span class="topic-num">${idx + 1}</span>
+          <strong style="font-size:15px; color:#0f172a;">${t.topic}</strong>
+        </div>
+        <div style="display:flex; gap:6px; flex-shrink:0;">
+          <span class="badge" style="background:#fee2e2; color:#b91c1c;">${t.frequency || 'Guaranteed'}</span>
+          <span class="badge" style="background:#fef3c7; color:#92400e;">14 Marks</span>
+        </div>
       </div>
-      <div style="font-size:13px; color:#64748b;">${t.reason}</div>
-      ${t.recommendedApproach ? `<div style="margin-top:6px; font-size:12px; color:#2563eb; background:#f0f7ff; padding:6px 10px; border-radius:6px;"><strong>Approach:</strong> ${t.recommendedApproach}</div>` : ''}
+      <div style="font-size:13.5px; color:#475569; margin-left:32px; line-height:1.5;">${t.reason}</div>
+      ${t.recommendedApproach ? `
+        <div class="approach-box" style="margin-left:32px;">
+          <strong style="color:#1d4ed8;">Recommended Exam Approach:</strong> ${t.recommendedApproach}
+        </div>
+      ` : ''}
     </div>
   `).join('')}
 
-  <div class="section-title">📚 Official E-Book Chapter Weightage & Trend</div>
+  <div class="section-title">📚 Unit & Chapter Weightage (Scoring Distribution)</div>
   ${chapters.map(ch => {
     const pct = ch.weightagePercent || ch.weightagePercentage || 15;
     return `
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-weight:700; font-size:14px; color:#0f172a;">Chapter ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
-        <span class="badge">${pct}% Marks (${ch.priority || ch.frequencyLevel || 'High Scoring'})</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div>
+          <span style="font-weight:800; font-size:15px; color:#0f172a;">Unit ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
+          <div style="font-size:12.5px; color:#64748b; margin-top:2px;">Trend: <strong>${ch.frequency || ch.summary || 'Repeated in 100% papers'}</strong></div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <span class="badge">${pct}% Weightage</span>
+          <span class="badge" style="background:#f0fdf4; color:#15803d;">${ch.priority || ch.frequencyLevel || 'High Scoring'}</span>
+        </div>
       </div>
-      <div style="font-size:12px; color:#64748b; margin-top:4px;">Frequency: ${ch.frequency || ch.summary || 'Regularly asked'}</div>
-      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${Math.min(100, pct * 2.5)}%;"></div></div>
+      
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" style="width:${Math.min(100, pct * 2.5)}%;"></div>
+      </div>
+
       ${ch.keyTopics && ch.keyTopics.length ? `
-        <div style="font-size:12px; margin-top:6px;">
-          <strong>Key Topics:</strong>
-          <ul>${ch.keyTopics.map(t => `<li>${t}</li>`).join('')}</ul>
+        <div style="margin-top:10px; font-size:13px;">
+          <span style="font-weight:700; color:#334155;">Key Tested Concepts:</span>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+            ${ch.keyTopics.map(t => `<span class="tag-pill blue">${t}</span>`).join('')}
+          </div>
         </div>
       ` : ''}
+
       ${ch.relevantQs && ch.relevantQs.length ? `
-        <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0; font-size:12px;">
-          <strong>Sample Exam Questions:</strong>
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid #f1f5f9;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; margin-bottom:6px;">
+            Sample Examination Questions (14 Marks)
+          </div>
           ${ch.relevantQs.map(q => `
-            <div style="margin-top:4px; padding:6px 10px; background:#f8fafc; border-radius:6px; color:#1e293b;">
-              <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}]</span> ${q.text || q.question}
-              ${q.marks ? `<span style="float:right; font-weight:700; color:#10b981;">${q.marks}M</span>` : ''}
+            <div class="q-box">
+              <span class="tag-pill orange">[${q.year || 'Past Paper'} • 14 Marks]</span>
+              <span>${q.text || q.question}</span>
             </div>
           `).join('')}
         </div>
@@ -1283,25 +1465,32 @@
   `;}).join('')}
 
   <div class="section-title">📅 Yearly Examination Breakdown</div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
   ${yearKeys.map(y => {
     const yi = yearly[y];
     return `
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <strong style="color:#2563eb; font-size:14px;">Year ${y} Examination Paper</strong>
-          <span class="badge">${yi.difficulty || yi.paperDifficulty || 'Standard'}</span>
+      <div class="card" style="margin-bottom:0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="color:#1d4ed8; font-size:15px;">Year ${y} Examination</strong>
+          <span class="badge" style="background:#eff6ff; color:#2563eb;">${yi.difficulty || yi.paperDifficulty || 'Standard'}</span>
         </div>
-        ${yi.focusAreas ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Focus Areas:</strong> ${yi.focusAreas}</div>` : ''}
-        ${yi.compulsory ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
-        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:13px; color:#64748b;"><strong>Core Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
-        ${yi.coreHighlights ? `<div style="font-size:12px; color:#10b981; margin-top:4px;"><strong>Highlights:</strong> ${yi.coreHighlights}</div>` : ''}
+        ${yi.focusAreas ? `<div style="font-size:13px; margin-bottom:6px; color:#334155;"><strong>Primary Focus:</strong> ${yi.focusAreas}</div>` : ''}
+        ${yi.compulsory ? `<div style="font-size:12.5px; margin-bottom:6px; color:#475569;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
+        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:12.5px; color:#64748b;"><strong>Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
+        ${yi.coreHighlights ? `<div style="font-size:12px; color:#059669; margin-top:8px; font-weight:600;">✓ ${yi.coreHighlights}</div>` : ''}
       </div>
     `;
   }).join('')}
+  </div>
 
-  <div class="section-title">💡 High-Score Exam Strategy Tips</div>
-  <ul>
-    ${tips.map(tip => `<li>${tip}</li>`).join('')}
+  <div class="section-title">💡 48-Hour High-Score Exam Strategy Tips</div>
+  <ul class="tips-list">
+    ${tips.map(tip => `
+      <li>
+        <span style="color:#10b981; font-weight:800; font-size:16px; line-height:1;">✓</span>
+        <div>${tip}</div>
+      </li>
+    `).join('')}
   </ul>
 </div>
 </body>
