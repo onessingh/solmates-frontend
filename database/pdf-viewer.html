@@ -10,8 +10,7 @@
 
   gtag('config', 'G-Q6GVS9XX1M');
 </script>
-  <!-- Google AdSense Auto Ads (Vignette & Interstitial Support) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
+
 
 <script>
 // OS-based theme-color for TWA status bar
@@ -660,7 +659,6 @@
     <meta name="twitter:image" content="/preview.png">
     <link rel="manifest" href="/manifest.json">
     <!-- [AUTO-SEO-END] -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8498686057506423" crossorigin="anonymous"></script>
 
 <script>
 // --- STRICT ANTI-SCRAPING MODULE ---
@@ -981,14 +979,6 @@
 
       const overlay = document.getElementById('downloadModalOverlay');
       if (overlay) overlay.classList.add('open');
-
-      const adIns = document.getElementById('dlPopupAd');
-      if (adIns && !adIns.getAttribute('data-adsbygoogle-status') && !adIns.__adPushed) {
-        adIns.__adPushed = true;
-        try {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (e) {}
-      }
 
       // Pre-process watermark in background DURING the 5-second countdown!
       if (shouldWatermark) {
@@ -1368,17 +1358,6 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
       <span class="dl-modal-timer" id="dlModalTimer">5</span>
     </div>
 
-    <!-- Clean In-Popup Ad Container -->
-    <div class="sol-ad-banner" style="margin: 10px 0 4px 0; padding: 6px 0 !important; background: #0b1120 !important; border-radius: 12px; overflow: hidden !important;">
-      <div class="ad-label" style="font-size: 10px; color: #64748b; margin-bottom: 4px;">ADVERTISEMENT</div>
-      <ins class="adsbygoogle"
-           id="dlPopupAd"
-           style="display:block"
-           data-ad-client="ca-pub-8498686057506423"
-           data-ad-slot="8194517845"
-           data-ad-format="auto"
-           data-full-width-responsive="false"></ins>
-    </div>
   </div>
 </div>
 </body>
