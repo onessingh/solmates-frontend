@@ -1452,8 +1452,8 @@
             <i class="fas fa-arrow-left"></i> Change Options
           </button>
           <div style="display:flex; gap:8px;">
-            <button class="btn" onclick="openPyqInPdfViewer()" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:8px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;">
-              <i class="fas fa-file-pdf"></i> Open Content in PDF Viewer
+            <button class="btn" onclick="openPyqInPdfViewer()" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:8px 18px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+              <i class="fas fa-external-link-alt"></i> Open
             </button>
           </div>
         </div>
@@ -1866,27 +1866,71 @@
     let _currentPyqMode = 'auto';
     let _pyqAvailableYears = [];
 
-    function updatePyqAnalyzerBar() {
+    function getCurrentSubjectInfo() {
+      const isPyqCat = (CATEGORY || '').toLowerCase().includes('pyq');
+      if (!isPyqCat || !semester || !folderId || !navStack || navStack.length < 2) return null;
+
+      const currentFolder = navStack[navStack.length - 1];
+      if (!currentFolder) return null;
+      const currentName = (currentFolder.name || '').trim();
+
+      // Check if current folder is a grouping / specialization folder (e.g. Core, Finance, Marketing, HR, Electives)
+      const isGroupFolder = /^(core|finance|marketing|human resource|hr|operations|it|analytics|specialisation|specialization|elective|electives)$/i.test(currentName);
+      if (isGroupFolder) return null;
+
+      const cleanSubjectName = currentName.replace(/\[.*?\]/g, '').trim() || 'Subject';
+      return {
+        subjectName: cleanSubjectName,
+        folderId: currentFolder.folderId || folderId
+      };
+    }
+
+    async function updatePyqAnalyzerBar() {
       const bar = document.getElementById('pyqAnalyzerBar');
       if (!bar) return;
-      const isPyqCat = (CATEGORY || '').toLowerCase().includes('pyq');
-      const isInsideSubject = isPyqCat && semester && folderId && navStack && navStack.length >= 2;
-      if (isInsideSubject) {
-        const subjectName = (navStack[1] && navStack[1].name) ? navStack[1].name.replace(/\[.*?\]/g, '').trim() : 'Subject';
-        bar.style.display = 'flex';
-        const titleEl = document.getElementById('pyqBarTitle');
-        const btnTextEl = document.getElementById('btnPyqAnalyzeText');
-        if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
-        if (btnTextEl) btnTextEl.innerText = `Analyse PYQs`;
-      } else {
+
+      const subjInfo = getCurrentSubjectInfo();
+      if (!subjInfo) {
         bar.style.display = 'none';
+        return;
+      }
+
+      const { subjectName, folderId: curFid } = subjInfo;
+      const titleEl = document.getElementById('pyqBarTitle');
+      const btnTextEl = document.getElementById('btnPyqAnalyzeText');
+      if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
+      if (btnTextEl) btnTextEl.innerText = `Analyse PYQs`;
+
+      const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' 
+        ? window.solmatesAPI.isAdminLoggedIn() 
+        : !!localStorage.getItem('admin_token');
+
+      if (isAdmin) {
+        bar.style.display = 'flex';
+      } else {
+        // Normal user: ONLY display button if analysis exists in database
+        bar.style.display = 'none';
+        try {
+          const res = await _fetchPyqAnalysisAPI(semester, curFid);
+          if (res && res.data) {
+            _currentPyqAnalysis = res.data;
+            bar.style.display = 'flex';
+          } else {
+            bar.style.display = 'none';
+          }
+        } catch (e) {
+          bar.style.display = 'none';
+        }
       }
     }
 
     async function openPyqAnalyzerModal() {
       const modal = document.getElementById('pyqAnalyzerModal');
       if (!modal) return;
-      const subjectName = (navStack[1] && navStack[1].name) ? navStack[1].name.replace(/\[.*?\]/g, '').trim() : 'Subject';
+      const subjInfo = getCurrentSubjectInfo();
+      const subjectName = subjInfo ? subjInfo.subjectName : 'Subject';
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
       document.getElementById('pyqModalSubjectTitle').innerText = `✨ Analyse PYQs — ${subjectName}`;
       document.getElementById('pyqStepSelection').style.display = 'block';
       document.getElementById('pyqStepReport').style.display = 'none';
@@ -1929,7 +1973,7 @@
 
       // Pre-fetch analysis silently in background
       try {
-        const res = await _fetchPyqAnalysisAPI(semester, folderId);
+        const res = await _fetchPyqAnalysisAPI(semester, curFolderId);
         if (res && res.data) {
           _currentPyqAnalysis = res.data;
         }
@@ -2022,10 +2066,13 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Analysis...';
       btn.disabled = true;
 
+      const subjInfo = getCurrentSubjectInfo();
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
       try {
         let analysis = _currentPyqAnalysis;
         if (!analysis) {
-          const res = await _fetchPyqAnalysisAPI(semester, folderId);
+          const res = await _fetchPyqAnalysisAPI(semester, curFolderId);
           if (res && res.data) {
             analysis = res.data;
             _currentPyqAnalysis = analysis;
@@ -2035,7 +2082,7 @@
         if (!analysis) {
           // If not yet generated, automatically trigger generation on the fly
           btn.innerHTML = '<i class="fas fa-magic fa-spin"></i> Analyzing with AI...';
-          const genRes = await _generatePyqAnalysisAPI(semester, folderId, { selectedYears: 'all' });
+          const genRes = await _generatePyqAnalysisAPI(semester, curFolderId, { selectedYears: 'all' });
           if (genRes && genRes.data) {
             analysis = genRes.data;
             _currentPyqAnalysis = analysis;
@@ -2205,8 +2252,11 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing with AI...';
       btn.disabled = true;
 
+      const subjInfo = getCurrentSubjectInfo();
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
       try {
-        const res = await _generatePyqAnalysisAPI(semester, folderId, { selectedYears: 'all' });
+        const res = await _generatePyqAnalysisAPI(semester, curFolderId, { selectedYears: 'all' });
         if (res && res.data) {
           _currentPyqAnalysis = res.data;
           alert("AI Analysis synced and saved successfully!");
@@ -2224,11 +2274,13 @@
 
     function openPyqInPdfViewer() {
       if (!_currentPyqAnalysis) return;
-      const subjectName = (navStack[1] && navStack[1].name) ? navStack[1].name.replace(/\[.*?\]/g, '').trim() : 'Subject';
+      const subjInfo = getCurrentSubjectInfo();
+      const subjectName = subjInfo ? subjInfo.subjectName : ((navStack && navStack.length) ? navStack[navStack.length - 1].name.replace(/\[.*?\]/g, '').trim() : 'Subject');
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
       const activeYears = (_currentPyqMode === 'manual') 
         ? Array.from(document.querySelectorAll('input[name="pyqYear"]:checked')).map(cb => cb.value)
         : (_currentPyqAnalysis.analyzedYears || []);
-      const url = `/database/pdf-viewer?type=analysis&semester=${semester}&folderId=${folderId}&years=${encodeURIComponent(activeYears.join(','))}&title=${encodeURIComponent(subjectName + ' - PYQ Analysis')}&category=${encodeURIComponent(CATEGORY||'')}`;
+      const url = `/database/pdf-viewer?type=analysis&semester=${semester}&folderId=${curFolderId}&years=${encodeURIComponent(activeYears.join(','))}&title=${encodeURIComponent(subjectName + ' - PYQ Analysis')}&category=${encodeURIComponent(CATEGORY||'')}`;
       window.location.href = url;
     }
 
