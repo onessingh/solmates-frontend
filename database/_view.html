@@ -38,11 +38,11 @@
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v926"></script>
-  <script src="/js/uptime-helper.js?v=v926"></script>
-  <script src="/js/api-client.js?v=v926"></script>
-  <script src="/js/sol-cache.js?v=v926"></script>
-  <script src="/js/prefetch-helper.js?v=v926"></script>
+  <script src="/config.js?v=v928"></script>
+  <script src="/js/uptime-helper.js?v=v928"></script>
+  <script src="/js/api-client.js?v=v928"></script>
+  <script src="/js/sol-cache.js?v=v928"></script>
+  <script src="/js/prefetch-helper.js?v=v928"></script>
   <script>
     // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
@@ -1846,7 +1846,7 @@
       }
 
       // Check Admin visibility
-      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' ? window.solmatesAPI.isAdminLoggedIn() : !!localStorage.getItem('admin_token');
       const adminBox = document.getElementById('pyqAdminControls');
       if (adminBox) adminBox.style.display = isAdmin ? 'block' : 'none';
 
@@ -1855,12 +1855,60 @@
 
       // Pre-fetch analysis silently in background
       try {
-        const res = await window.solmatesAPI.getPyqAnalysis(semester, folderId);
+        const res = await _fetchPyqAnalysisAPI(semester, folderId);
         if (res && res.data) {
           _currentPyqAnalysis = res.data;
         }
       } catch (e) {
         console.warn('Pre-fetch pyq analysis error:', e);
+      }
+    }
+
+    // Direct bulletproof fetch helpers to bypass any stale script caching
+    async function _fetchPyqAnalysisAPI(sem, fId) {
+      if (window.solmatesAPI && typeof window.solmatesAPI.getPyqAnalysis === 'function') {
+        try {
+          return await window.solmatesAPI.getPyqAnalysis(sem, fId);
+        } catch (e) {
+          console.warn('solmatesAPI.getPyqAnalysis threw, falling back to direct fetch:', e);
+        }
+      }
+      const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
+                      window.PRODUCTION_API_URL ||
+                      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`);
+      return await r.json();
+    }
+
+    async function _generatePyqAnalysisAPI(sem, fId, payload = {}) {
+      if (window.solmatesAPI && typeof window.solmatesAPI.generatePyqAnalysis === 'function') {
+        try {
+          return await window.solmatesAPI.generatePyqAnalysis(sem, fId, payload);
+        } catch (e) {
+          console.warn('solmatesAPI.generatePyqAnalysis threw, falling back to direct fetch:', e);
+        }
+      }
+      const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
+                      window.PRODUCTION_API_URL ||
+                      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
+      const headers = { 'Content-Type': 'application/json' };
+      const token = (window.solmatesAPI && window.solmatesAPI.token) || localStorage.getItem('token') || localStorage.getItem('admin_token');
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+      return await r.json();
+    }
+
+    // Polyfill window.solmatesAPI if methods missing
+    if (window.solmatesAPI) {
+      if (typeof window.solmatesAPI.getPyqAnalysis !== 'function') {
+        window.solmatesAPI.getPyqAnalysis = (s, f) => _fetchPyqAnalysisAPI(s, f);
+      }
+      if (typeof window.solmatesAPI.generatePyqAnalysis !== 'function') {
+        window.solmatesAPI.generatePyqAnalysis = (s, f, p) => _generatePyqAnalysisAPI(s, f, p);
       }
     }
 
@@ -1901,7 +1949,7 @@
       try {
         let analysis = _currentPyqAnalysis;
         if (!analysis) {
-          const res = await window.solmatesAPI.getPyqAnalysis(semester, folderId);
+          const res = await _fetchPyqAnalysisAPI(semester, folderId);
           if (res && res.data) {
             analysis = res.data;
             _currentPyqAnalysis = analysis;
@@ -1909,19 +1957,14 @@
         }
 
         if (!analysis) {
-          // If admin, auto-prompt to sync
-          const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
-          if (isAdmin) {
-            btn.innerHTML = origText;
-            btn.disabled = false;
-            if (confirm("Analysis not yet generated for this subject. Would you like to generate it now using AI?")) {
-              adminSyncPyqAnalysis();
-            }
-            return;
+          // If not yet generated, automatically trigger generation on the fly
+          btn.innerHTML = '<i class="fas fa-magic fa-spin"></i> Analyzing with AI...';
+          const genRes = await _generatePyqAnalysisAPI(semester, folderId, { selectedYears: 'all' });
+          if (genRes && genRes.data) {
+            analysis = genRes.data;
+            _currentPyqAnalysis = analysis;
           } else {
-            alert("Analysis is being prepared for this subject. Please check back soon!");
-            btn.innerHTML = origText;
-            btn.disabled = false;
+            alert(genRes?.error || "Analysis is being prepared for this subject. Please check back in a few seconds!");
             return;
           }
         }
@@ -1955,9 +1998,9 @@
 
       // Meta & Overview Stats
       const struct = data.examStructure || {};
-      document.getElementById('pyqStatMarks').innerText = struct.maxMarks || '70';
-      document.getElementById('pyqStatCompulsory').innerText = struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : 'Q1 (20M)';
-      document.getElementById('pyqStatPractical').innerText = struct.theoryVsPractical ? struct.theoryVsPractical.split(',')[0].trim() : 'Application';
+      document.getElementById('pyqStatMarks').innerText = struct.maxMarks || struct.totalMarks || '75';
+      document.getElementById('pyqStatCompulsory').innerText = struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : (struct.questionPattern ? 'Standard' : 'Q1 (20M)');
+      document.getElementById('pyqStatPractical').innerText = struct.theoryVsPractical ? struct.theoryVsPractical.split(',')[0].trim() : (struct.overallDifficulty || 'Analytical');
       
       const allYears = data.analyzedYears || [];
       const activeYears = (yearsFilter === 'all') ? allYears : yearsFilter;
@@ -1971,23 +2014,24 @@
       });
 
       chaptersContainer.innerHTML = chapters.map(ch => {
+        const pct = ch.weightagePercent || ch.weightagePercentage || 15;
         let badgeClass = 'med';
-        if ((ch.priority || '').toLowerCase().includes('must') || ch.weightagePercent >= 25) badgeClass = 'fire';
-        else if ((ch.priority || '').toLowerCase().includes('high') || ch.weightagePercent >= 15) badgeClass = 'high';
+        if ((ch.priority || '').toLowerCase().includes('must') || (ch.frequencyLevel || '').toLowerCase().includes('guaranteed') || pct >= 22) badgeClass = 'fire';
+        else if ((ch.priority || '').toLowerCase().includes('high') || pct >= 15) badgeClass = 'high';
 
         return `
           <div class="pyq-chapter-card">
             <div class="pyq-chapter-head">
               <div style="font-weight:700; font-size:14px; color:var(--text-main);">
-                Chapter ${ch.chapterNumber || ''}: ${ch.chapterName}
+                Chapter ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}
               </div>
-              <span class="pyq-badge ${badgeClass}">${ch.priority || 'Standard'} • ${ch.weightagePercent || 15}% Marks</span>
+              <span class="pyq-badge ${badgeClass}">${ch.priority || ch.frequencyLevel || 'High Scoring'} • ${pct}% Marks</span>
             </div>
             <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">
-              <strong>Frequency:</strong> ${ch.frequency || 'Regularly asked'}
+              <strong>Frequency:</strong> ${ch.frequency || ch.summary || 'Regularly asked'}
             </div>
             <div class="pyq-progress-bg">
-              <div class="pyq-progress-bar" style="width: ${Math.min(100, (ch.weightagePercent || 15) * 2.5)}%;"></div>
+              <div class="pyq-progress-bar" style="width: ${Math.min(100, pct * 2.5)}%;"></div>
             </div>
             ${ch.keyTopics && ch.keyTopics.length ? `
               <div style="font-size:12px; margin-bottom:8px;">
@@ -2002,7 +2046,7 @@
                 <strong>Sample Questions in Exam:</strong>
                 ${ch.relevantQs.map(q => `
                   <div style="margin-top:4px; padding:6px 10px; background:var(--bg-body); border-radius:8px; color:var(--text-main);">
-                    <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}]</span> ${q.text}
+                    <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}]</span> ${q.text || q.question}
                     ${q.marks ? `<span style="float:right; font-weight:700; color:#10b981;">${q.marks} Marks</span>` : ''}
                   </div>
                 `).join('')}
@@ -2019,11 +2063,16 @@
         <div class="pyq-chapter-card" style="border-left: 4px solid #ef4444;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
             <span style="font-weight:700; font-size:14px; color:var(--text-main);">🔥 ${mt.topic}</span>
-            <span class="pyq-badge fire">${mt.frequency || 'Guaranteed'} (${mt.marks || 20} Marks)</span>
+            <span class="pyq-badge fire">${mt.frequency || 'Guaranteed'} (${mt.probabilityScore ? mt.probabilityScore + '%' : (mt.marks || 15) + ' Marks'})</span>
           </div>
           <div style="font-size:13px; color:var(--text-muted); line-height:1.4;">
             ${mt.reason}
           </div>
+          ${mt.recommendedApproach ? `
+            <div style="margin-top:6px; font-size:12px; color:#2563eb; background:rgba(37,99,235,0.06); padding:6px 10px; border-radius:6px;">
+              <strong>Exam Approach:</strong> ${mt.recommendedApproach}
+            </div>
+          ` : ''}
         </div>
       `).join('') : '<p style="text-align:center; color:var(--text-muted);">No core repeated topics specified.</p>';
 
@@ -2038,22 +2087,24 @@
           <div class="pyq-chapter-card">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
               <span style="font-weight:700; font-size:15px; color:#2563eb;">📅 Year ${y} Examination Paper</span>
-              <span class="pyq-badge med">${yInfo.difficulty || 'Standard'}</span>
+              <span class="pyq-badge med">${yInfo.difficulty || yInfo.paperDifficulty || 'Standard'}</span>
             </div>
-            <div style="font-size:13px; margin-bottom:6px;">
-              <strong>Compulsory Section:</strong> ${yInfo.compulsory || 'Q1 (20 Marks)'}
-            </div>
-            <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">
-              <strong>Main Topics Tested:</strong> ${(yInfo.mainTopics || []).join(', ')}
-            </div>
-            ${yInfo.pattern ? `<div style="font-size:12px; color:#10b981;"><strong>Format:</strong> ${yInfo.pattern}</div>` : ''}
+            ${yInfo.focusAreas ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Focus Areas:</strong> ${yInfo.focusAreas}</div>` : ''}
+            ${yInfo.compulsory ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Compulsory Section:</strong> ${yInfo.compulsory}</div>` : ''}
+            ${yInfo.mainTopics && yInfo.mainTopics.length ? `<div style="font-size:13px; color:var(--text-muted); margin-bottom:6px;"><strong>Main Topics Tested:</strong> ${yInfo.mainTopics.join(', ')}</div>` : ''}
+            ${yInfo.coreHighlights ? `<div style="font-size:12px; color:#10b981; margin-top:4px;"><strong>Highlights:</strong> ${yInfo.coreHighlights}</div>` : ''}
           </div>
         `;
       }).join('') : '<p style="text-align:center; color:var(--text-muted);">No yearly breakdown available for chosen years.</p>';
 
       // Tab 4: Strategy Tips
       const strategyContainer = document.getElementById('pyqTabStrategy');
-      const tips = data.strategyTips || [];
+      const tips = data.strategyTips || [
+        data.examStrategy?.passingBlueprint,
+        data.examStrategy?.scoringSecret,
+        data.examStrategy?.timeManagement
+      ].filter(Boolean);
+
       strategyContainer.innerHTML = tips.length ? `
         <div class="pyq-chapter-card" style="background:rgba(37,99,235,0.04); border-color:rgba(37,99,235,0.2);">
           <div style="font-weight:700; font-size:14px; color:#2563eb; margin-bottom:10px;">
@@ -2086,7 +2137,7 @@
       btn.disabled = true;
 
       try {
-        const res = await window.solmatesAPI.generatePyqAnalysis(semester, folderId, { selectedYears: 'all' });
+        const res = await _generatePyqAnalysisAPI(semester, folderId, { selectedYears: 'all' });
         if (res && res.data) {
           _currentPyqAnalysis = res.data;
           alert("AI Analysis synced and saved successfully!");

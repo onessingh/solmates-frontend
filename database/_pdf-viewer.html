@@ -991,9 +991,13 @@
       if (blocker) blocker.style.display = 'none';
 
       try {
-        const apiBase = window.PRODUCTION_API_URL || 
+        const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
+                        window.PRODUCTION_API_URL || 
                         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-        const res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}`);
+        let res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}`);
+        if (!res.ok && apiBase.includes('api.solmates.in')) {
+          res = await fetch(`https://solmates.in/api/sol/pyq-analyzer/${semester}/${folderId}`);
+        }
         const json = await res.json();
         const data = json?.data;
         if (!data) throw new Error('Analysis report not found.');
@@ -1008,6 +1012,11 @@
 
         const yearly = data.yearlyBreakdown || {};
         const yearKeys = Object.keys(yearly).filter(y => (!selectedYears || activeYears.includes(y)));
+        const tips = data.strategyTips || [
+          data.examStrategy?.passingBlueprint,
+          data.examStrategy?.scoringSecret,
+          data.examStrategy?.timeManagement
+        ].filter(Boolean);
 
         const reportHtml = `<!DOCTYPE html>
 <html>
@@ -1044,9 +1053,9 @@
   </div>
 
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-val">${struct.maxMarks || 70}</div><div class="stat-lbl">Max Marks</div></div>
-    <div class="stat-card"><div class="stat-val">${struct.timeAllowed || '3 Hrs'}</div><div class="stat-lbl">Time Allowed</div></div>
-    <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#10b981;">${struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : 'Q1'}</div><div class="stat-lbl">Compulsory Q</div></div>
+    <div class="stat-card"><div class="stat-val">${struct.maxMarks || struct.totalMarks || 75}</div><div class="stat-lbl">Max Marks</div></div>
+    <div class="stat-card"><div class="stat-val">${struct.timeAllowed || struct.examDuration || '3 Hrs'}</div><div class="stat-lbl">Time Allowed</div></div>
+    <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#10b981;">${struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : (struct.questionPattern ? 'Standard' : 'Q1')}</div><div class="stat-lbl">Compulsory Q</div></div>
     <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#8b5cf6;">${activeYears.length} Years</div><div class="stat-lbl">Active Papers</div></div>
   </div>
 
@@ -1055,9 +1064,10 @@
     <div class="card" style="border-left: 4px solid #ef4444;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
         <strong style="font-size:14px; color:#0f172a;">${t.topic}</strong>
-        <span class="badge" style="background:#fef2f2; color:#ef4444;">${t.frequency || 'Guaranteed'} (${t.marks || 20} Marks)</span>
+        <span class="badge" style="background:#fef2f2; color:#ef4444;">${t.frequency || 'Guaranteed'} (${t.probabilityScore ? t.probabilityScore + '%' : (t.marks || 15) + ' Marks'})</span>
       </div>
       <div style="font-size:13px; color:#64748b;">${t.reason}</div>
+      ${t.recommendedApproach ? `<div style="margin-top:6px; font-size:12px; color:#2563eb; background:#f0f7ff; padding:6px 10px; border-radius:6px;"><strong>Approach:</strong> ${t.recommendedApproach}</div>` : ''}
     </div>
   `).join('')}
 
@@ -1065,10 +1075,10 @@
   ${chapters.map(ch => `
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-weight:700; font-size:14px; color:#0f172a;">Chapter ${ch.chapterNumber}: ${ch.chapterName}</span>
-        <span class="badge">${ch.weightagePercent}% Marks (${ch.priority})</span>
+        <span style="font-weight:700; font-size:14px; color:#0f172a;">Chapter ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
+        <span class="badge">${ch.weightagePercent || ch.weightagePercentage || 15}% Marks (${ch.priority || ch.frequencyLevel || 'High Scoring'})</span>
       </div>
-      <div style="font-size:12px; color:#64748b; margin-top:4px;">Frequency: ${ch.frequency}</div>
+      <div style="font-size:12px; color:#64748b; margin-top:4px;">Frequency: ${ch.frequency || ch.summary || 'Regularly asked'}</div>
       <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${Math.min(100, ch.weightagePercent * 2.5)}%;"></div></div>
       ${ch.keyTopics && ch.keyTopics.length ? `
         <div style="font-size:12px; margin-top:6px;">
@@ -1081,7 +1091,7 @@
           <strong>Sample Exam Questions:</strong>
           ${ch.relevantQs.map(q => `
             <div style="margin-top:4px; padding:6px 10px; background:#f8fafc; border-radius:6px; color:#1e293b;">
-              <span style="font-weight:700; color:#2563eb;">[${q.year}]</span> ${q.text}
+              <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}]</span> ${q.text || q.question}
               ${q.marks ? `<span style="float:right; font-weight:700; color:#10b981;">${q.marks}M</span>` : ''}
             </div>
           `).join('')}
@@ -1097,17 +1107,19 @@
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <strong style="color:#2563eb; font-size:14px;">Year ${y} Examination Paper</strong>
-          <span class="badge">${yi.difficulty || 'Standard'}</span>
+          <span class="badge">${yi.difficulty || yi.paperDifficulty || 'Standard'}</span>
         </div>
-        <div style="font-size:13px; margin-bottom:4px;"><strong>Compulsory:</strong> ${yi.compulsory || 'Q1'}</div>
-        <div style="font-size:13px; color:#64748b;"><strong>Core Topics:</strong> ${(yi.mainTopics || []).join(', ')}</div>
+        ${yi.focusAreas ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Focus Areas:</strong> ${yi.focusAreas}</div>` : ''}
+        ${yi.compulsory ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
+        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:13px; color:#64748b;"><strong>Core Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
+        ${yi.coreHighlights ? `<div style="font-size:12px; color:#10b981; margin-top:4px;"><strong>Highlights:</strong> ${yi.coreHighlights}</div>` : ''}
       </div>
     `;
   }).join('')}
 
   <div class="section-title">💡 High-Score Exam Strategy Tips</div>
   <ul>
-    ${(data.strategyTips || []).map(tip => `<li>${tip}</li>`).join('')}
+    ${tips.map(tip => `<li>${tip}</li>`).join('')}
   </ul>
 </body>
 </html>`;
