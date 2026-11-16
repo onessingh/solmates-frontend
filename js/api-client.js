@@ -676,6 +676,18 @@ class SolmatesAPI {
     });
   }
 
+  // ========== PYQ INTELLIGENT ANALYZER ==========
+  async getPyqAnalysis(semester, folderId) {
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
+  }
+
+  async generatePyqAnalysis(semester, folderId, payload = {}) {
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }, 180000); // 3 minutes timeout for AI analysis
+  }
+
   // ========== CHATBOT ==========
   async sendChatMessage(message, history = []) {
     return await this.request('/chatbot', {

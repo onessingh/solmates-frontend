@@ -798,6 +798,14 @@
 
     async function handleDownload() {
       const params = new URLSearchParams(window.location.search);
+      if (params.get('type') === 'analysis') {
+        const frame = document.getElementById('pdfFrame');
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.focus();
+          frame.contentWindow.print();
+        }
+        return;
+      }
       const rawUrl = params.get('file');
       const title = params.get('title') || 'Document';
       
@@ -925,12 +933,17 @@
 
     function init() {
       const params = new URLSearchParams(window.location.search);
-      const rawUrl = params.get('file');
       const title = params.get('title') || 'Document View';
       
       document.getElementById('fileTitle').innerText = title;
       document.title = title + ' | SOLMATES';
 
+      if (params.get('type') === 'analysis') {
+        loadPyqAnalysisView(params);
+        return;
+      }
+
+      const rawUrl = params.get('file');
       if (!rawUrl) {
         showError('No file link provided.');
         return;
@@ -964,6 +977,146 @@
       }, 8000);
 
       frame.src = finalUrl;
+    }
+
+    async function loadPyqAnalysisView(params) {
+      const semester = params.get('semester');
+      const folderId = params.get('folderId');
+      const yearsParam = params.get('years') || 'all';
+      const selectedYears = yearsParam === 'all' ? null : yearsParam.split(',').map(y => y.trim());
+      const title = params.get('title') || 'PYQ Analysis';
+      const frame = document.getElementById('pdfFrame');
+
+      const blocker = document.getElementById('iframeBlocker');
+      if (blocker) blocker.style.display = 'none';
+
+      try {
+        const apiBase = window.PRODUCTION_API_URL || 
+                        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
+        const res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}`);
+        const json = await res.json();
+        const data = json?.data;
+        if (!data) throw new Error('Analysis report not found.');
+
+        const activeYears = selectedYears && selectedYears.length ? selectedYears : (data.analyzedYears || []);
+        const struct = data.examStructure || {};
+        
+        const chapters = (data.chapters || []).map(ch => {
+          const relevantQs = (ch.sampleQuestions || []).filter(q => (!selectedYears || !q.year || activeYears.includes(String(q.year))));
+          return { ...ch, relevantQs };
+        });
+
+        const yearly = data.yearlyBreakdown || {};
+        const yearKeys = Object.keys(yearly).filter(y => (!selectedYears || activeYears.includes(y)));
+
+        const reportHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; background: #fff; padding: 30px; line-height: 1.6; max-width: 900px; margin: 0 auto; }
+    .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 25px; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; background: #e0e7ff; color: #2563eb; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 25px; }
+    .stat-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center; background: #f8fafc; }
+    .stat-val { font-size: 20px; font-weight: 800; color: #2563eb; }
+    .stat-lbl { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+    .section-title { font-size: 17px; font-weight: 800; margin: 28px 0 14px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
+    .card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 14px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .progress-bar-bg { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin: 8px 0 10px; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); }
+    ul { margin: 6px 0 0 20px; padding: 0; }
+    li { margin-bottom: 6px; font-size: 13px; color: #334155; }
+    @media print { body { padding: 10px; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#2563eb; margin-bottom:4px;">
+      SOLMATES Academic AI Intelligence • DU SOL MBA
+    </div>
+    <h1 style="margin:0 0 6px 0; font-size:24px; color:#0f172a;">${data.subjectName} — PYQ Examination Analysis</h1>
+    <div style="font-size:13px; color:#64748b;">
+      Semester ${semester} • Exam Papers Analyzed: <strong>${activeYears.join(', ')}</strong>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val">${struct.maxMarks || 70}</div><div class="stat-lbl">Max Marks</div></div>
+    <div class="stat-card"><div class="stat-val">${struct.timeAllowed || '3 Hrs'}</div><div class="stat-lbl">Time Allowed</div></div>
+    <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#10b981;">${struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : 'Q1'}</div><div class="stat-lbl">Compulsory Q</div></div>
+    <div class="stat-card"><div class="stat-val" style="font-size:14px; color:#8b5cf6;">${activeYears.length} Years</div><div class="stat-lbl">Active Papers</div></div>
+  </div>
+
+  <div class="section-title">🔥 Must-Study Guaranteed Topics</div>
+  ${(data.mustStudyTopics || []).map(t => `
+    <div class="card" style="border-left: 4px solid #ef4444;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong style="font-size:14px; color:#0f172a;">${t.topic}</strong>
+        <span class="badge" style="background:#fef2f2; color:#ef4444;">${t.frequency || 'Guaranteed'} (${t.marks || 20} Marks)</span>
+      </div>
+      <div style="font-size:13px; color:#64748b;">${t.reason}</div>
+    </div>
+  `).join('')}
+
+  <div class="section-title">📚 Official E-Book Chapter Weightage & Trend</div>
+  ${chapters.map(ch => `
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-weight:700; font-size:14px; color:#0f172a;">Chapter ${ch.chapterNumber}: ${ch.chapterName}</span>
+        <span class="badge">${ch.weightagePercent}% Marks (${ch.priority})</span>
+      </div>
+      <div style="font-size:12px; color:#64748b; margin-top:4px;">Frequency: ${ch.frequency}</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${Math.min(100, ch.weightagePercent * 2.5)}%;"></div></div>
+      ${ch.keyTopics && ch.keyTopics.length ? `
+        <div style="font-size:12px; margin-top:6px;">
+          <strong>Key Topics:</strong>
+          <ul>${ch.keyTopics.map(t => `<li>${t}</li>`).join('')}</ul>
+        </div>
+      ` : ''}
+      ${ch.relevantQs && ch.relevantQs.length ? `
+        <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0; font-size:12px;">
+          <strong>Sample Exam Questions:</strong>
+          ${ch.relevantQs.map(q => `
+            <div style="margin-top:4px; padding:6px 10px; background:#f8fafc; border-radius:6px; color:#1e293b;">
+              <span style="font-weight:700; color:#2563eb;">[${q.year}]</span> ${q.text}
+              ${q.marks ? `<span style="float:right; font-weight:700; color:#10b981;">${q.marks}M</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('')}
+
+  <div class="section-title">📅 Yearly Examination Breakdown</div>
+  ${yearKeys.map(y => {
+    const yi = yearly[y];
+    return `
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="color:#2563eb; font-size:14px;">Year ${y} Examination Paper</strong>
+          <span class="badge">${yi.difficulty || 'Standard'}</span>
+        </div>
+        <div style="font-size:13px; margin-bottom:4px;"><strong>Compulsory:</strong> ${yi.compulsory || 'Q1'}</div>
+        <div style="font-size:13px; color:#64748b;"><strong>Core Topics:</strong> ${(yi.mainTopics || []).join(', ')}</div>
+      </div>
+    `;
+  }).join('')}
+
+  <div class="section-title">💡 High-Score Exam Strategy Tips</div>
+  <ul>
+    ${(data.strategyTips || []).map(tip => `<li>${tip}</li>`).join('')}
+  </ul>
+</body>
+</html>`;
+
+        frame.srcdoc = reportHtml;
+        document.getElementById('loading').style.display = 'none';
+      } catch (e) {
+        showError('Could not load analysis report: ' + e.message);
+      }
     }
 
 

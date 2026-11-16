@@ -750,6 +750,26 @@
       --brand-accent: #c0962d;
       }
 
+    /* PYQ Analyzer Modal Styles */
+    #pyqAnalyzerModal .modal-box { max-width: 680px; width: 92%; max-height: 85vh; display: flex; flex-direction: column; padding: 24px 22px; }
+    .pyq-mode-card { border: 2px solid var(--border-color); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .pyq-mode-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.03); }
+    .pyq-mode-card.active { border-color: #2563eb; background: rgba(37, 99, 235, 0.06); }
+    .pyq-radio-icon { font-size: 18px; color: #2563eb; margin-top: 2px; }
+    .pyq-tabs-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .pyq-tab { background: none; border: none; padding: 8px 14px; font-weight: 600; font-size: 13px; color: var(--text-muted); cursor: pointer; border-radius: 8px; white-space: nowrap; transition: all 0.2s; }
+    .pyq-tab.active { background: #2563eb; color: #fff; }
+    .pyq-tab-content { display: none; }
+    .pyq-tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+    .pyq-chapter-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: var(--bg-card); }
+    .pyq-chapter-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .pyq-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+    .pyq-badge.fire { background: #fef2f2; color: #ef4444; }
+    .pyq-badge.high { background: #fffbeb; color: #f59e0b; }
+    .pyq-badge.med { background: #eff6ff; color: #2563eb; }
+    .pyq-progress-bg { height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin: 6px 0 10px; }
+    .pyq-progress-bar { height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 3px; }
+
     /* dark mode moved */
     </style>
 
@@ -1151,6 +1171,24 @@
 
     <div class="breadcrumb" id="breadcrumb"></div>
 
+    <!-- PYQ Analyzer Action Bar (Visible only inside PYQ subject folders) -->
+    <div id="pyqAnalyzerBar" style="display:none; margin-bottom: 20px; background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(99,102,241,0.08)); border: 1.5px solid rgba(37,99,235,0.25); border-radius: 16px; padding: 14px 20px; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(37,99,235,0.06);">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, #2563eb, #4f46e5); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 4px 10px rgba(37,99,235,0.3); flex-shrink:0;">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div>
+          <div id="pyqBarTitle" style="font-weight:700; font-size:15px; color:var(--text-main); margin-bottom:2px;">Analyse PYQs</div>
+          <div style="font-size:12px; color:var(--text-muted);">AI Past Papers Weightage, Repeated Questions & Core Trends</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button id="btnOpenPyqAnalyzer" class="btn" onclick="openPyqAnalyzerModal()" style="background:linear-gradient(135deg, #2563eb, #4f46e5); color:#fff; border:none; padding:10px 18px; border-radius:12px; font-weight:700; font-size:13px; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(37,99,235,0.3); cursor:pointer;">
+          <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse Subject PYQs</span>
+        </button>
+      </div>
+    </div>
+
     <div id="adminBar" class="admin-bar">
       <button class="btn btn-folder" onclick="openModal('folderModal')">
         <i class="fas fa-folder-plus"></i> New Folder
@@ -1236,6 +1274,135 @@
       <div class="modal-actions">
         <button class="btn btn-arrange" onclick="submitMove()" style="flex:1;">Move</button>
         <button class="btn btn-cancel" onclick="closeModal('moveModal')" style="flex:1;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PYQ Intelligent Analyzer Modal -->
+  <div class="modal-overlay" id="pyqAnalyzerModal">
+    <div class="modal-box" style="max-width: 680px; width: 92%; max-height: 88vh; display: flex; flex-direction: column; padding: 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
+        <h2 id="pyqModalSubjectTitle" style="font-size: 18px; margin: 0; color: var(--text-main); font-weight: 700; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-brain" style="color: #2563eb;"></i> Analyse Subject PYQs
+        </h2>
+        <button class="modal-close-btn" onclick="closePyqModal()" style="background:none; border:none; font-size:20px; color:var(--text-muted); cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- STEP 1: Mode & Year Selection -->
+      <div id="pyqStepSelection" style="overflow-y:auto; flex:1; padding-right:4px;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+          Select how you want to analyze the past examination question papers:
+        </p>
+
+        <!-- Mode Card 1: Automatically All Years -->
+        <div class="pyq-mode-card active" id="modeCardAuto" onclick="selectPyqMode('auto')">
+          <div class="pyq-radio-icon"><i class="fas fa-check-circle" id="radioAutoIcon"></i></div>
+          <div style="flex:1;">
+            <div style="font-weight:700; font-size:14px; color:var(--text-main); margin-bottom:2px;">
+              ⚡ Automatically Analyse All Years (Recommended)
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+              Analyzes all available examination papers combined to uncover recurring core questions, high-scoring chapters, and upcoming exam trends.
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Card 2: Manually Select Years -->
+        <div class="pyq-mode-card" id="modeCardManual" onclick="selectPyqMode('manual')">
+          <div class="pyq-radio-icon"><i class="far fa-circle" id="radioManualIcon"></i></div>
+          <div style="flex:1;">
+            <div style="font-weight:700; font-size:14px; color:var(--text-main); margin-bottom:2px;">
+              🎯 Manually Select Specific Years
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+              Pick specific years (e.g. only 2024 & 2023) to analyze trends across custom examination sessions.
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Year Checkboxes (Visible when Manual Mode is active) -->
+        <div id="pyqManualYearsBox" style="display:none; margin: 12px 0 16px; padding: 14px; background: rgba(37,99,235,0.03); border: 1px dashed rgba(37,99,235,0.3); border-radius: 12px;">
+          <div style="font-weight:700; font-size:13px; margin-bottom:8px; color:var(--text-main);">
+            Select Examination Years:
+          </div>
+          <div id="pyqYearCheckboxes" style="display:flex; gap:10px; flex-wrap:wrap;">
+            <!-- Rendered dynamically from current folder cards -->
+          </div>
+        </div>
+
+        <!-- Admin Control Box (Only for Admins) -->
+        <div id="pyqAdminControls" style="display:none; margin-top:16px; padding:12px 14px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div>
+              <div style="font-weight:700; font-size:13px; color:#d97706;"><i class="fas fa-shield-alt"></i> Administrator Sync</div>
+              <div style="font-size:11px; color:var(--text-muted);">Re-scan papers and update analysis report via AI</div>
+            </div>
+            <button id="btnAdminSyncPyq" class="btn" onclick="adminSyncPyqAnalysis()" style="background:#d97706; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">
+              <i class="fas fa-sync-alt"></i> Sync with AI
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+          <button class="btn btn-cancel" onclick="closePyqModal()">Cancel</button>
+          <button class="btn" id="btnSubmitPyqAnalysis" onclick="startPyqAnalysis()" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); color:#fff; border:none; padding:10px 20px; border-radius:12px; font-weight:700; cursor:pointer;">
+            <i class="fas fa-play"></i> Start Analysis
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Report & View in PDF Viewer -->
+      <div id="pyqStepReport" style="display:none; overflow-y:auto; flex:1; padding-right:4px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+          <button class="btn btn-cancel" onclick="backToPyqSelection()" style="padding:6px 12px; font-size:12px;">
+            <i class="fas fa-arrow-left"></i> Change Options
+          </button>
+          <div style="display:flex; gap:8px;">
+            <button class="btn" onclick="openPyqInPdfViewer()" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:8px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer;">
+              <i class="fas fa-file-pdf"></i> Open Content in PDF Viewer
+            </button>
+          </div>
+        </div>
+
+        <!-- Meta Summary Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:16px;">
+          <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
+            <div id="pyqStatMarks" style="font-size:18px; font-weight:800; color:#2563eb;">70</div>
+            <div style="font-size:11px; color:var(--text-muted);">Max Marks</div>
+          </div>
+          <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
+            <div id="pyqStatCompulsory" style="font-size:13px; font-weight:800; color:#10b981; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Q1 (20M)</div>
+            <div style="font-size:11px; color:var(--text-muted);">Compulsory Q</div>
+          </div>
+          <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
+            <div id="pyqStatPractical" style="font-size:13px; font-weight:800; color:#8b5cf6;">Application</div>
+            <div style="font-size:11px; color:var(--text-muted);">Question Format</div>
+          </div>
+          <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:center;">
+            <div id="pyqStatYears" style="font-size:13px; font-weight:800; color:#f59e0b;">4 Years</div>
+            <div style="font-size:11px; color:var(--text-muted);">Papers Analyzed</div>
+          </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="pyq-tabs-nav">
+          <button class="pyq-tab active" onclick="switchPyqTab('chapters', this)">📚 Chapter Weightage</button>
+          <button class="pyq-tab" onclick="switchPyqTab('mustStudy', this)">🔥 Must-Study Topics</button>
+          <button class="pyq-tab" onclick="switchPyqTab('yearly', this)">📅 Yearly Breakdown</button>
+          <button class="pyq-tab" onclick="switchPyqTab('strategy', this)">💡 Exam Strategy</button>
+        </div>
+
+        <!-- Tab 1: Chapters -->
+        <div class="pyq-tab-content active" id="pyqTabChapters"></div>
+
+        <!-- Tab 2: Must-Study -->
+        <div class="pyq-tab-content" id="pyqTabMustStudy"></div>
+
+        <!-- Tab 3: Yearly Breakdown -->
+        <div class="pyq-tab-content" id="pyqTabYearly"></div>
+
+        <!-- Tab 4: Strategy Tips -->
+        <div class="pyq-tab-content" id="pyqTabStrategy"></div>
       </div>
     </div>
   </div>
@@ -1617,6 +1784,332 @@
         else span.className = 'current';
         bc.appendChild(span);
       });
+      updatePyqAnalyzerBar();
+    }
+
+    // ==================== PYQ INTELLIGENT ANALYZER LOGIC ====================
+    let _currentPyqAnalysis = null;
+    let _currentPyqMode = 'auto';
+    let _pyqAvailableYears = [];
+
+    function updatePyqAnalyzerBar() {
+      const bar = document.getElementById('pyqAnalyzerBar');
+      if (!bar) return;
+      const isPyqCat = (CATEGORY || '').toLowerCase().includes('pyq');
+      const isInsideSubject = isPyqCat && semester && folderId && navStack && navStack.length >= 2;
+      if (isInsideSubject) {
+        const subjectName = (navStack[1] && navStack[1].name) ? navStack[1].name.replace(/\[.*?\]/g, '').trim() : 'Subject';
+        bar.style.display = 'flex';
+        const titleEl = document.getElementById('pyqBarTitle');
+        const btnTextEl = document.getElementById('btnPyqAnalyzeText');
+        if (titleEl) titleEl.innerText = `Analyse ${subjectName} PYQs`;
+        if (btnTextEl) btnTextEl.innerText = `Analyse ${subjectName} PYQs`;
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+
+    async function openPyqAnalyzerModal() {
+      const modal = document.getElementById('pyqAnalyzerModal');
+      if (!modal) return;
+      const subjectName = (navStack[1] && navStack[1].name) ? navStack[1].name.replace(/\[.*?\]/g, '').trim() : 'Subject';
+      document.getElementById('pyqModalSubjectTitle').innerText = `✨ Analyse PYQs — ${subjectName}`;
+      document.getElementById('pyqStepSelection').style.display = 'block';
+      document.getElementById('pyqStepReport').style.display = 'none';
+
+      // Detect available years from subfolders / cards on page
+      _pyqAvailableYears = [];
+      const grid = document.getElementById('grid');
+      if (grid) {
+        grid.querySelectorAll('.card').forEach(c => {
+          const title = (c.querySelector('h3')?.innerText || '').trim();
+          const ym = title.match(/\b(201\d|202\d|203\d)\b/);
+          if (ym && !_pyqAvailableYears.includes(ym[1])) {
+            _pyqAvailableYears.push(ym[1]);
+          }
+        });
+      }
+      if (_pyqAvailableYears.length === 0) {
+        _pyqAvailableYears = ['2023', '2024', '2025', '2026'];
+      }
+      _pyqAvailableYears.sort((a,b) => b.localeCompare(a));
+
+      // Build year checkboxes
+      const cbContainer = document.getElementById('pyqYearCheckboxes');
+      if (cbContainer) {
+        cbContainer.innerHTML = _pyqAvailableYears.map(yr => `
+          <label style="display:flex; align-items:center; gap:6px; background:var(--bg-card); padding:6px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+            <input type="checkbox" name="pyqYear" value="${yr}" checked style="accent-color:#2563eb; width:16px; height:16px;">
+            ${yr} Paper
+          </label>
+        `).join('');
+      }
+
+      // Check Admin visibility
+      const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+      const adminBox = document.getElementById('pyqAdminControls');
+      if (adminBox) adminBox.style.display = isAdmin ? 'block' : 'none';
+
+      selectPyqMode('auto');
+      modal.classList.add('open');
+
+      // Pre-fetch analysis silently in background
+      try {
+        const res = await window.solmatesAPI.getPyqAnalysis(semester, folderId);
+        if (res && res.data) {
+          _currentPyqAnalysis = res.data;
+        }
+      } catch (e) {
+        console.warn('Pre-fetch pyq analysis error:', e);
+      }
+    }
+
+    function closePyqModal() {
+      const modal = document.getElementById('pyqAnalyzerModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function selectPyqMode(mode) {
+      _currentPyqMode = mode;
+      const cardAuto = document.getElementById('modeCardAuto');
+      const cardManual = document.getElementById('modeCardManual');
+      const iconAuto = document.getElementById('radioAutoIcon');
+      const iconManual = document.getElementById('radioManualIcon');
+      const manualBox = document.getElementById('pyqManualYearsBox');
+
+      if (mode === 'auto') {
+        cardAuto.classList.add('active');
+        cardManual.classList.remove('active');
+        iconAuto.className = 'fas fa-check-circle';
+        iconManual.className = 'far fa-circle';
+        if (manualBox) manualBox.style.display = 'none';
+      } else {
+        cardManual.classList.add('active');
+        cardAuto.classList.remove('active');
+        iconManual.className = 'fas fa-check-circle';
+        iconAuto.className = 'far fa-circle';
+        if (manualBox) manualBox.style.display = 'block';
+      }
+    }
+
+    async function startPyqAnalysis() {
+      const btn = document.getElementById('btnSubmitPyqAnalysis');
+      const origText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Analysis...';
+      btn.disabled = true;
+
+      try {
+        let analysis = _currentPyqAnalysis;
+        if (!analysis) {
+          const res = await window.solmatesAPI.getPyqAnalysis(semester, folderId);
+          if (res && res.data) {
+            analysis = res.data;
+            _currentPyqAnalysis = analysis;
+          }
+        }
+
+        if (!analysis) {
+          // If admin, auto-prompt to sync
+          const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
+          if (isAdmin) {
+            btn.innerHTML = origText;
+            btn.disabled = false;
+            if (confirm("Analysis not yet generated for this subject. Would you like to generate it now using AI?")) {
+              adminSyncPyqAnalysis();
+            }
+            return;
+          } else {
+            alert("Analysis is being prepared for this subject. Please check back soon!");
+            btn.innerHTML = origText;
+            btn.disabled = false;
+            return;
+          }
+        }
+
+        // Determine years to filter
+        let yearsToFilter = 'all';
+        if (_currentPyqMode === 'manual') {
+          const checked = Array.from(document.querySelectorAll('input[name="pyqYear"]:checked')).map(cb => cb.value);
+          if (checked.length === 0) {
+            alert("Please select at least one examination year.");
+            btn.innerHTML = origText;
+            btn.disabled = false;
+            return;
+          }
+          yearsToFilter = checked;
+        }
+
+        renderPyqAnalysisReport(analysis, yearsToFilter);
+      } catch (err) {
+        alert("Failed to load analysis: " + err.message);
+      } finally {
+        btn.innerHTML = origText;
+        btn.disabled = false;
+      }
+    }
+
+    function renderPyqAnalysisReport(data, yearsFilter) {
+      if (!data) return;
+      document.getElementById('pyqStepSelection').style.display = 'none';
+      document.getElementById('pyqStepReport').style.display = 'block';
+
+      // Meta & Overview Stats
+      const struct = data.examStructure || {};
+      document.getElementById('pyqStatMarks').innerText = struct.maxMarks || '70';
+      document.getElementById('pyqStatCompulsory').innerText = struct.compulsory ? struct.compulsory.split(' ')[0] + ' ' + (struct.compulsory.split(' ')[1]||'') : 'Q1 (20M)';
+      document.getElementById('pyqStatPractical').innerText = struct.theoryVsPractical ? struct.theoryVsPractical.split(',')[0].trim() : 'Application';
+      
+      const allYears = data.analyzedYears || [];
+      const activeYears = (yearsFilter === 'all') ? allYears : yearsFilter;
+      document.getElementById('pyqStatYears').innerText = activeYears.length + ' Years (' + activeYears.join(', ') + ')';
+
+      // Tab 1: Chapters & Weightage
+      const chaptersContainer = document.getElementById('pyqTabChapters');
+      const chapters = (data.chapters || []).map(ch => {
+        const relevantQs = (ch.sampleQuestions || []).filter(q => (yearsFilter === 'all' || !q.year || activeYears.includes(String(q.year))));
+        return { ...ch, relevantQs };
+      });
+
+      chaptersContainer.innerHTML = chapters.map(ch => {
+        let badgeClass = 'med';
+        if ((ch.priority || '').toLowerCase().includes('must') || ch.weightagePercent >= 25) badgeClass = 'fire';
+        else if ((ch.priority || '').toLowerCase().includes('high') || ch.weightagePercent >= 15) badgeClass = 'high';
+
+        return `
+          <div class="pyq-chapter-card">
+            <div class="pyq-chapter-head">
+              <div style="font-weight:700; font-size:14px; color:var(--text-main);">
+                Chapter ${ch.chapterNumber || ''}: ${ch.chapterName}
+              </div>
+              <span class="pyq-badge ${badgeClass}">${ch.priority || 'Standard'} • ${ch.weightagePercent || 15}% Marks</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">
+              <strong>Frequency:</strong> ${ch.frequency || 'Regularly asked'}
+            </div>
+            <div class="pyq-progress-bg">
+              <div class="pyq-progress-bar" style="width: ${Math.min(100, (ch.weightagePercent || 15) * 2.5)}%;"></div>
+            </div>
+            ${ch.keyTopics && ch.keyTopics.length ? `
+              <div style="font-size:12px; margin-bottom:8px;">
+                <strong>Key Topics:</strong>
+                <ul style="margin:4px 0 0 16px; padding:0; color:var(--text-muted);">
+                  ${ch.keyTopics.map(t => `<li>${t}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
+            ${ch.relevantQs && ch.relevantQs.length ? `
+              <div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color); font-size:12px;">
+                <strong>Sample Questions in Exam:</strong>
+                ${ch.relevantQs.map(q => `
+                  <div style="margin-top:4px; padding:6px 10px; background:var(--bg-body); border-radius:8px; color:var(--text-main);">
+                    <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}]</span> ${q.text}
+                    ${q.marks ? `<span style="float:right; font-weight:700; color:#10b981;">${q.marks} Marks</span>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Tab 2: Must-Study Topics
+      const mustStudyContainer = document.getElementById('pyqTabMustStudy');
+      const mustTopics = data.mustStudyTopics || [];
+      mustStudyContainer.innerHTML = mustTopics.length ? mustTopics.map(mt => `
+        <div class="pyq-chapter-card" style="border-left: 4px solid #ef4444;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+            <span style="font-weight:700; font-size:14px; color:var(--text-main);">🔥 ${mt.topic}</span>
+            <span class="pyq-badge fire">${mt.frequency || 'Guaranteed'} (${mt.marks || 20} Marks)</span>
+          </div>
+          <div style="font-size:13px; color:var(--text-muted); line-height:1.4;">
+            ${mt.reason}
+          </div>
+        </div>
+      `).join('') : '<p style="text-align:center; color:var(--text-muted);">No core repeated topics specified.</p>';
+
+      // Tab 3: Yearly Breakdown
+      const yearlyContainer = document.getElementById('pyqTabYearly');
+      const yearlyData = data.yearlyBreakdown || {};
+      const yearKeys = Object.keys(yearlyData).filter(y => (yearsFilter === 'all' || activeYears.includes(y)));
+      
+      yearlyContainer.innerHTML = yearKeys.length ? yearKeys.map(y => {
+        const yInfo = yearlyData[y];
+        return `
+          <div class="pyq-chapter-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-weight:700; font-size:15px; color:#2563eb;">📅 Year ${y} Examination Paper</span>
+              <span class="pyq-badge med">${yInfo.difficulty || 'Standard'}</span>
+            </div>
+            <div style="font-size:13px; margin-bottom:6px;">
+              <strong>Compulsory Section:</strong> ${yInfo.compulsory || 'Q1 (20 Marks)'}
+            </div>
+            <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px;">
+              <strong>Main Topics Tested:</strong> ${(yInfo.mainTopics || []).join(', ')}
+            </div>
+            ${yInfo.pattern ? `<div style="font-size:12px; color:#10b981;"><strong>Format:</strong> ${yInfo.pattern}</div>` : ''}
+          </div>
+        `;
+      }).join('') : '<p style="text-align:center; color:var(--text-muted);">No yearly breakdown available for chosen years.</p>';
+
+      // Tab 4: Strategy Tips
+      const strategyContainer = document.getElementById('pyqTabStrategy');
+      const tips = data.strategyTips || [];
+      strategyContainer.innerHTML = tips.length ? `
+        <div class="pyq-chapter-card" style="background:rgba(37,99,235,0.04); border-color:rgba(37,99,235,0.2);">
+          <div style="font-weight:700; font-size:14px; color:#2563eb; margin-bottom:10px;">
+            💡 High-Score Exam Strategy for ${data.subjectName}
+          </div>
+          <ul style="margin:0 0 0 18px; padding:0; line-height:1.6; font-size:13px; color:var(--text-main);">
+            ${tips.map(tip => `<li style="margin-bottom:8px;">${tip}</li>`).join('')}
+          </ul>
+        </div>
+      ` : '<p style="text-align:center; color:var(--text-muted);">No strategy tips available.</p>';
+    }
+
+    function switchPyqTab(tabName, btn) {
+      document.querySelectorAll('.pyq-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.pyq-tab-content').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const target = document.getElementById('pyqTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
+      if (target) target.classList.add('active');
+    }
+
+    function backToPyqSelection() {
+      document.getElementById('pyqStepReport').style.display = 'none';
+      document.getElementById('pyqStepSelection').style.display = 'block';
+    }
+
+    async function adminSyncPyqAnalysis() {
+      const btn = document.getElementById('btnAdminSyncPyq');
+      const origText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing with AI...';
+      btn.disabled = true;
+
+      try {
+        const res = await window.solmatesAPI.generatePyqAnalysis(semester, folderId, { selectedYears: 'all' });
+        if (res && res.data) {
+          _currentPyqAnalysis = res.data;
+          alert("AI Analysis synced and saved successfully!");
+          renderPyqAnalysisReport(res.data, 'all');
+        } else {
+          throw new Error(res?.error || 'Failed to generate');
+        }
+      } catch (e) {
+        alert("Sync error: " + e.message);
+      } finally {
+        btn.innerHTML = origText;
+        btn.disabled = false;
+      }
+    }
+
+    function openPyqInPdfViewer() {
+      if (!_currentPyqAnalysis) return;
+      const subjectName = (navStack[1] && navStack[1].name) ? navStack[1].name.replace(/\[.*?\]/g, '').trim() : 'Subject';
+      const activeYears = (_currentPyqMode === 'manual') 
+        ? Array.from(document.querySelectorAll('input[name="pyqYear"]:checked')).map(cb => cb.value)
+        : (_currentPyqAnalysis.analyzedYears || []);
+      const url = `/database/pdf-viewer?type=analysis&semester=${semester}&folderId=${folderId}&years=${encodeURIComponent(activeYears.join(','))}&title=${encodeURIComponent(subjectName + ' - PYQ Analysis')}&category=${encodeURIComponent(CATEGORY||'')}`;
+      window.location.href = url;
     }
 
     async function createFolder() {
