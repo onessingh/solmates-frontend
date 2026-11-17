@@ -234,9 +234,8 @@ class SolmatesAPI {
       headers['Cache-Control'] = 'no-cache';
       headers['Pragma'] = 'no-cache';
 
-      if (options.force || (this.adminToken && !options.skipAuth)) {
+      if (options.force) {
         url += (url.includes('?') ? '&' : '?') + 'admin_force=true';
-      // _a=Date.now() REMOVED: it creates unique URLs per request, defeating CF edge cache for all users.
       }
     }
 
