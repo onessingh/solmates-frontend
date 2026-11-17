@@ -1052,6 +1052,23 @@
                   font-weight: 600 !important;
                   white-space: nowrap !important;
                 }
+                #printExportWrapper .topic-card-head,
+                #printExportWrapper .card-head,
+                #printExportWrapper .yearly-card-head {
+                  display: flex !important;
+                  justify-content: space-between !important;
+                  align-items: flex-start !important;
+                }
+                #printExportWrapper .topic-card-title,
+                #printExportWrapper .card-title-block {
+                  flex: 1 !important;
+                }
+                #printExportWrapper .topic-badges,
+                #printExportWrapper .card-badges {
+                  display: flex !important;
+                  gap: 6px !important;
+                  flex-shrink: 0 !important;
+                }
               </style>
               ${docHtml}
             `;
@@ -1390,7 +1407,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       line-height: 1.6;
-      word-break: break-word;
+      word-break: normal;
       overflow-wrap: break-word;
     }
     .doc-container {
@@ -1542,6 +1559,45 @@
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 14px;
     }
+    .topic-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .topic-card-title {
+      display: flex;
+      align-items: flex-start;
+      min-width: 0;
+      flex: 1;
+      gap: 8px;
+    }
+    .topic-badges {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .card-title-block {
+      min-width: 0;
+      flex: 1;
+    }
+    .yearly-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
     @media (max-width: 680px) {
       html, body {
         padding: 6px 4px 30px !important;
@@ -1565,28 +1621,47 @@
         margin: 20px 0 10px !important;
       }
       .card, .topic-card {
-        padding: 12px 10px !important;
-        margin-bottom: 10px !important;
+        padding: 14px 12px !important;
+        margin-bottom: 12px !important;
         border-radius: 10px !important;
       }
+      .topic-card-head, .card-head, .yearly-card-head {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+      }
+      .topic-card-title, .card-title-block {
+        width: 100% !important;
+      }
+      .topic-badges, .card-badges {
+        width: 100% !important;
+        margin-top: 2px !important;
+        margin-bottom: 4px !important;
+      }
       .topic-card .topic-num {
-        width: 20px !important;
-        height: 20px !important;
-        font-size: 11px !important;
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 11.5px !important;
         margin-right: 6px !important;
+        flex-shrink: 0 !important;
       }
       .topic-card strong {
-        font-size: 13.5px !important;
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+        display: inline !important;
       }
       .topic-reason {
         margin-left: 0 !important;
-        margin-top: 6px !important;
+        margin-top: 8px !important;
+        font-size: 13px !important;
+        line-height: 1.5 !important;
       }
       .approach-box, .q-box {
-        font-size: 12px !important;
-        padding: 8px 10px !important;
+        font-size: 12.5px !important;
+        padding: 10px 12px !important;
         margin-left: 0 !important;
         margin-top: 8px !important;
+        line-height: 1.5 !important;
       }
       .yearly-grid {
         grid-template-columns: 1fr !important;
@@ -1623,12 +1698,12 @@
   <div class="section-title"><span>🔥</span> <span>Must-Study Guaranteed Topics</span></div>
   ${(mustStudy || []).map((t, idx) => `
     <div class="topic-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;">
-        <div style="display:flex; align-items:center; min-width:0; flex:1;">
+      <div class="topic-card-head">
+        <div class="topic-card-title">
           <span class="topic-num">${idx + 1}</span>
-          <strong style="font-size:14.5px; color:#0f172a;">${t.topic}</strong>
+          <strong style="font-size:14.5px; color:#0f172a; line-height:1.4;">${t.topic}</strong>
         </div>
-        <div style="display:flex; gap:6px; flex-shrink:0;">
+        <div class="topic-badges">
           <span class="badge" style="background:#fee2e2; color:#b91c1c;">${t.frequency || 'Guaranteed'}</span>
           <span class="badge" style="background:#fef3c7; color:#92400e;">${t.marks ? t.marks + ' Marks' : '14 Marks'}</span>
         </div>
@@ -1647,12 +1722,12 @@
     const pct = ch.weightagePercent || ch.weightagePercentage || 15;
     return `
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
-        <div style="min-width:0; flex:1;">
-          <span style="font-weight:800; font-size:14.5px; color:#0f172a; display:block;">Unit ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
-          <div style="font-size:12px; color:#64748b; margin-top:2px;">Trend: <strong>${ch.frequency || ch.summary || 'Repeated in 100% papers'}</strong></div>
+      <div class="card-head">
+        <div class="card-title-block">
+          <span style="font-weight:800; font-size:14.5px; color:#0f172a; display:block; line-height:1.4;">Unit ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
+          <div style="font-size:12px; color:#64748b; margin-top:3px;">Trend: <strong>${ch.frequency || ch.summary || 'Repeated in 100% papers'}</strong></div>
         </div>
-        <div style="display:flex; gap:6px; flex-shrink:0;">
+        <div class="topic-badges card-badges">
           <span class="badge">${pct}% Weightage</span>
           <span class="badge" style="background:#f0fdf4; color:#15803d;">${ch.priority || ch.frequencyLevel || 'High Scoring'}</span>
         </div>
@@ -1697,13 +1772,13 @@
     const yi = yearly[y];
     return `
       <div class="card" style="margin-bottom:0;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div class="yearly-card-head">
           <strong style="color:#1d4ed8; font-size:14.5px;">Year ${y} Examination</strong>
           <span class="badge" style="background:#eff6ff; color:#2563eb;">${yi.difficulty || yi.paperDifficulty || 'Standard'}</span>
         </div>
-        ${yi.focusAreas ? `<div style="font-size:12.5px; margin-bottom:6px; color:#334155;"><strong>Primary Focus:</strong> ${yi.focusAreas}</div>` : ''}
-        ${yi.compulsory ? `<div style="font-size:12px; margin-bottom:6px; color:#475569;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
-        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:12px; color:#64748b;"><strong>Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
+        ${yi.focusAreas ? `<div style="font-size:12.5px; margin-bottom:6px; color:#334155; line-height:1.4;"><strong>Primary Focus:</strong> ${yi.focusAreas}</div>` : ''}
+        ${yi.compulsory ? `<div style="font-size:12.5px; margin-bottom:6px; color:#475569; line-height:1.4;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
+        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:12px; color:#64748b; line-height:1.4;"><strong>Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
         ${yi.coreHighlights ? `<div style="font-size:11.5px; color:#059669; margin-top:8px; font-weight:600;">✓ ${yi.coreHighlights}</div>` : ''}
       </div>
     `;

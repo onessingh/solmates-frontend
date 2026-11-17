@@ -872,6 +872,15 @@
       .pyq-mode-grid {
         grid-template-columns: 1fr !important;
       }
+      .pyq-head-flex, .pyq-chapter-head {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+      }
+      .pyq-head-flex .pyq-badge, .pyq-chapter-head .pyq-badge {
+        align-self: flex-start !important;
+        margin-top: 2px !important;
+      }
     }
 
     #pyqAnalyzerModal .modal-box { max-width: 680px; width: 92%; max-height: 85vh; display: flex; flex-direction: column; padding: 24px 22px; }
@@ -2585,9 +2594,9 @@
       const mustTopics = data.mustStudyTopics || [];
       mustStudyContainer.innerHTML = mustTopics.length ? mustTopics.map(mt => `
         <div class="pyq-chapter-card" style="border-left: 4px solid #ef4444;">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
-            <span style="font-weight:700; font-size:14px; color:var(--text-main);">🔥 ${mt.topic}</span>
-            <span class="pyq-badge fire">${mt.frequency || 'Guaranteed'} (${mt.probabilityScore ? mt.probabilityScore + '%' : (mt.marks || 15) + ' Marks'})</span>
+          <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:6px;">
+            <span style="font-weight:700; font-size:14px; color:var(--text-main); line-height:1.4;">🔥 ${mt.topic}</span>
+            <span class="pyq-badge fire" style="flex-shrink:0;">${mt.frequency || 'Guaranteed'} (${mt.probabilityScore ? mt.probabilityScore + '%' : (mt.marks || 15) + ' Marks'})</span>
           </div>
           <div style="font-size:13px; color:var(--text-muted); line-height:1.4;">
             ${mt.reason}
@@ -2609,9 +2618,9 @@
         const yInfo = yearlyData[y];
         return `
           <div class="pyq-chapter-card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-weight:700; font-size:15px; color:#2563eb;">📅 Year ${y} Examination Paper</span>
-              <span class="pyq-badge med">${yInfo.difficulty || yInfo.paperDifficulty || 'Standard'}</span>
+            <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:8px;">
+              <span style="font-weight:700; font-size:15px; color:#2563eb; line-height:1.4;">📅 Year ${y} Examination Paper</span>
+              <span class="pyq-badge med" style="flex-shrink:0;">${yInfo.difficulty || yInfo.paperDifficulty || 'Standard'}</span>
             </div>
             ${yInfo.focusAreas ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Focus Areas:</strong> ${yInfo.focusAreas}</div>` : ''}
             ${yInfo.compulsory ? `<div style="font-size:13px; margin-bottom:4px;"><strong>Compulsory Section:</strong> ${yInfo.compulsory}</div>` : ''}
