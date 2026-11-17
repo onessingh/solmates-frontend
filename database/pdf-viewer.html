@@ -987,32 +987,63 @@
         const overlay = document.getElementById('downloadModalOverlay');
         if (overlay) overlay.classList.add('open');
 
-        // Render complete PDF across all chapters with dynamic canvas scaling to prevent browser height limits
+        // Render complete PDF across all chapters without any cut-off
         (async () => {
+          let exportWrapper = null;
           try {
             if (typeof html2pdf === 'undefined') {
               throw new Error('html2pdf library not loaded');
             }
 
-            // Measure actual content height
-            const fullDocHeight = Math.max(
-              docElem.scrollHeight || 0,
-              docElem.offsetHeight || 0,
-              frame?.contentDocument?.body?.scrollHeight || 0,
-              frame?.contentDocument?.documentElement?.scrollHeight || 0,
-              3500
-            );
+            const frameDoc = frame?.contentDocument;
+            if (!frameDoc) throw new Error('Document content not ready');
 
-            // Chrome/WebKit canvas dimension limit is 16,384px.
-            // Dynamically calculate renderScale so canvas height never exceeds 13,500px,
-            // guaranteeing that all 9+ units, sample questions, and yearly breakdowns render fully with zero cutoff.
-            let renderScale = 1.5;
-            if (fullDocHeight * renderScale > 13500) {
-              renderScale = Math.max(1.0, Math.floor((13500 / fullDocHeight) * 100) / 100);
-            }
+            // 1. Extract all styles and the document container into a self-contained export node
+            const styleTags = Array.from(frameDoc.querySelectorAll('style, link[rel="stylesheet"]')).map(s => s.outerHTML).join('\n');
+            const docHtml = frameDoc.querySelector('.doc-container')?.outerHTML || '';
+
+            exportWrapper = document.createElement('div');
+            exportWrapper.id = 'printExportWrapper';
+            // 720px exactly matches A4 190mm printable width at 96 DPI, preventing any right-edge cut-off
+            exportWrapper.style.width = '720px';
+            exportWrapper.style.maxWidth = '720px';
+            exportWrapper.style.margin = '0';
+            exportWrapper.style.padding = '0';
+            exportWrapper.style.background = '#ffffff';
+            exportWrapper.style.position = 'fixed';
+            exportWrapper.style.left = '-9999px';
+            exportWrapper.style.top = '0';
+            exportWrapper.innerHTML = `
+              ${styleTags}
+              <style>
+                #printExportWrapper .doc-container {
+                  width: 720px !important;
+                  max-width: 720px !important;
+                  margin: 0 !important;
+                  padding: 24px 28px !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                  box-sizing: border-box !important;
+                }
+                #printExportWrapper .yearly-grid {
+                  grid-template-columns: 1fr 1fr !important;
+                  gap: 12px !important;
+                }
+                #printExportWrapper .card,
+                #printExportWrapper .topic-card,
+                #printExportWrapper .approach-box,
+                #printExportWrapper .q-box {
+                  box-sizing: border-box !important;
+                  max-width: 100% !important;
+                }
+              </style>
+              ${docHtml}
+            `;
+
+            document.body.appendChild(exportWrapper);
 
             const opt = {
-              margin: [10, 10, 10, 10],
+              margin: [8, 8, 8, 8],
               filename: cleanFileName,
               image: { type: 'jpeg', quality: 0.98 },
               enableLinks: false,
@@ -1021,43 +1052,17 @@
                 avoid: ['.topic-card', '.approach-box', '.q-box', '.section-title', 'ul.tips-list li']
               },
               html2canvas: {
-                scale: renderScale,
+                scale: 1.5,
                 useCORS: true,
                 letterRendering: true,
                 logging: false,
                 scrollY: 0,
-                scrollX: 0,
-                windowWidth: 1000,
-                onclone: (clonedDoc) => {
-                  const frame = document.getElementById('pdfFrame');
-                  if (frame && frame.contentDocument) {
-                    frame.contentDocument.querySelectorAll('style, link[rel="stylesheet"]').forEach(s => {
-                      clonedDoc.head.appendChild(s.cloneNode(true));
-                    });
-                  }
-                  const container = clonedDoc.querySelector('.doc-container');
-                  if (container) {
-                    container.style.height = 'auto';
-                    container.style.maxHeight = 'none';
-                    container.style.overflow = 'visible';
-                    container.style.width = '1000px';
-                    container.style.maxWidth = '1000px';
-                  }
-                  if (clonedDoc.body) {
-                    clonedDoc.body.style.height = 'auto';
-                    clonedDoc.body.style.maxHeight = 'none';
-                    clonedDoc.body.style.overflow = 'visible';
-                  }
-                  if (clonedDoc.documentElement) {
-                    clonedDoc.documentElement.style.height = 'auto';
-                    clonedDoc.documentElement.style.overflow = 'visible';
-                  }
-                }
+                scrollX: 0
               },
               jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            const rawBlob = await html2pdf().set(opt).from(docElem).outputPdf('blob');
+            const rawBlob = await html2pdf().set(opt).from(exportWrapper).outputPdf('blob');
             const rawBuffer = await rawBlob.arrayBuffer();
             const watermarkedBlob = await applySolmatesWatermark(rawBuffer);
 
@@ -1085,6 +1090,9 @@
             }
             showToast("Failed to generate PDF. Please try again.", "error", 4000);
           } finally {
+            if (exportWrapper && document.body.contains(exportWrapper)) {
+              document.body.removeChild(exportWrapper);
+            }
             if (btn) {
               btn.innerHTML = origBtnHtml;
               btn.style.pointerEvents = 'auto';
