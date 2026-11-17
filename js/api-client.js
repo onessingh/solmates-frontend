@@ -678,7 +678,7 @@ class SolmatesAPI {
 
   // ========== PYQ INTELLIGENT ANALYZER ==========
   async getPyqAnalysis(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}?admin_force=true&_v=${Date.now()}`);
   }
 
   async generatePyqAnalysis(semester, folderId, payload = {}) {
@@ -689,7 +689,7 @@ class SolmatesAPI {
   }
 
   async getSubjectPyqItems(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items`);
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items?admin_force=true&_v=${Date.now()}`);
   }
 
   // ========== CHATBOT ==========
@@ -980,24 +980,6 @@ class SolmatesAPI {
     return await this.request(`/admin/recycle-bin/${id}`, {
       method: 'DELETE'
     });
-  }
-
-  // =====================================================
-  // PYQ Analyzer Methods
-  // =====================================================
-  async getPyqAnalysis(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
-  }
-
-  async getSubjectPyqItems(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items`);
-  }
-
-  async generatePyqAnalysis(semester, folderId, payload = {}) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    }, 120000);
   }
 }
 

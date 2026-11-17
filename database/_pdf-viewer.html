@@ -11,6 +11,7 @@
   gtag('config', 'G-Q6GVS9XX1M');
 </script>
 
+
 <script>
 // OS-based theme-color for TWA status bar
 (function(){
@@ -807,7 +808,91 @@
       }
     }
 
+    let dlTimerInterval = null;
+    let dlModalCloseTimeout = null;
+
+    function closeDownloadModal() {
+      if (dlTimerInterval) clearInterval(dlTimerInterval);
+      if (dlModalCloseTimeout) clearTimeout(dlModalCloseTimeout);
+      const overlay = document.getElementById('downloadModalOverlay');
+      if (overlay) overlay.classList.remove('open');
+      const btn = document.getElementById('dlBtn');
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-download" style="font-size: 14px;"></i> <span>Download</span>';
+        btn.style.pointerEvents = 'auto';
+      }
+    }
+
+    function executeDirectDownload(rawUrl, title) {
+      const lowerUrl = (rawUrl || '').toLowerCase();
+      const lowerTitle = (title || '').toLowerCase();
+
+      let isSlides = false;
+      let downloadUrl = rawUrl;
+
+      if (lowerUrl.includes('docs.google.com/presentation/d/')) {
+        isSlides = true;
+        const pptMatch = rawUrl.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
+        if (pptMatch && pptMatch[1]) {
+          downloadUrl = `https://docs.google.com/presentation/d/${pptMatch[1]}/export/pptx`;
+        }
+      } else if (lowerUrl.includes('drive.google.com') && (lowerUrl.includes('.ppt') || lowerUrl.includes('.pptx') || lowerTitle.includes('.ppt') || lowerTitle.includes('.pptx'))) {
+        isSlides = true;
+        const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (driveMatch && driveMatch[1]) {
+          downloadUrl = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+        }
+      } else if (lowerUrl.includes('drive.google.com')) {
+        const fileId = rawUrl.match(/[-\w]{25,}/);
+        if (fileId) {
+          downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+        }
+      }
+
+      try {
+        let dlIframe = document.getElementById('hiddenDownloadIframe');
+        if (!dlIframe) {
+          dlIframe = document.createElement('iframe');
+          dlIframe.id = 'hiddenDownloadIframe';
+          dlIframe.style.display = 'none';
+          document.body.appendChild(dlIframe);
+        }
+        dlIframe.src = downloadUrl;
+      } catch (e) {
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      showToast(isSlides ? "PowerPoint Download Started!" : "PDF Download Started!", "success", 5000);
+    }
+
+    // -- CLIENT-SIDE PDF WATERMARKER (0% Backend Load, 100% Browser Execution) --
+    async function prepareWatermarkedPdf(rawUrl, title) {
+      if (typeof PDFLib === 'undefined') {
+        throw new Error('PDFLib not loaded');
+      }
+
+      // Resolve Google Drive file ID -> binary stream proxy (avoids CORS & zero text corruption)
+      let fetchUrl = rawUrl;
+      const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/id=([a-zA-Z0-9_-]+)/);
+      if (driveMatch && driveMatch[1]) {
+        // api.solmates.in proxy — CF caches for 30 days, Render hit only on FIRST request per file
+        fetchUrl = `https://api.solmates.in/api/pdf-stream-proxy?id=${driveMatch[1]}`;
+      }
+
+      const res = await fetch(fetchUrl);
+      if (!res.ok) throw new Error('Fetch status: ' + res.status);
+      const pdfBytes = await res.arrayBuffer();
+
+      return await applySolmatesWatermark(pdfBytes);
+    }
+
     async function applySolmatesWatermark(pdfBytes) {
+      // Load PDF directly into pdf-lib (binary-safe)
       const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
       const pages = pdfDoc.getPages();
       const fontBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
@@ -815,6 +900,8 @@
 
       for (const page of pages) {
         const { width, height } = page.getSize();
+
+        // 1. Center Diagonal Watermark (Mathematically centered, clear & readable)
         const centerText = 'SOLMATES - solmates.in';
         const textSize = Math.min(Math.max(width * 0.065, 28), 44);
         const textWidth = fontBold.widthOfTextAtSize(centerText, textSize);
@@ -833,6 +920,7 @@
           rotate: PDFLib.degrees(angle),
         });
 
+        // 2. Top Header Watermark (Crisp & visible)
         page.drawText('SOLMATES EDUCATION | solmates.in', {
           x: 20,
           y: height - 18,
@@ -842,6 +930,7 @@
           opacity: 0.65,
         });
 
+        // 3. Bottom Footer Watermark (Crisp & visible)
         page.drawText('Downloaded from Solmates (solmates.in) | For Personal Student Use Only', {
           x: 20,
           y: 12,
@@ -856,7 +945,9 @@
       return new Blob([modifiedBytes], { type: 'application/pdf' });
     }
 
-    async function handleDownload() {
+    let preparedWatermarkPromise = null;
+
+    function handleDownload() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('type') === 'analysis') {
         const frame = document.getElementById('pdfFrame');
@@ -873,10 +964,11 @@
           btn.style.pointerEvents = 'none';
         }
 
-        const modalFileName = document.getElementById('dlModalFileName');
-        if (modalFileName) {
-          modalFileName.textContent = cleanFileName;
-        }
+        const modalTitle = document.getElementById('dlModalTitle');
+        if (modalTitle) modalTitle.textContent = title;
+
+        const iconEl = document.getElementById('dlModalIcon');
+        if (iconEl) iconEl.innerHTML = '<i class="fas fa-file-pdf" style="color:#38bdf8;"></i>';
 
         const statusEl = document.getElementById('dlModalStatus');
         if (statusEl) {
@@ -983,127 +1075,102 @@
       }
       const rawUrl = params.get('file');
       const title = params.get('title') || 'Document';
-      
+      const category = (params.get('category') || '').toLowerCase();
       if (!rawUrl) return;
-
-      const btn = document.getElementById('dlBtn');
-      const original = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Downloading...</span>';
-      btn.style.pointerEvents = 'none';
-
-      // Detect extension based on rawUrl and title
-      let isSlides = false;
-      let extension = 'pdf';
-      let downloadUrl = '';
 
       const lowerUrl = rawUrl.toLowerCase();
       const lowerTitle = title.toLowerCase();
 
-      if (lowerUrl.includes('docs.google.com/presentation/d/')) {
-        isSlides = true;
-        extension = 'pptx';
-        const pptMatch = rawUrl.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
-        if (pptMatch && pptMatch[1]) {
-          downloadUrl = `https://docs.google.com/presentation/d/${pptMatch[1]}/export/pptx`;
-        }
-      } else if (lowerUrl.includes('drive.google.com') && (lowerUrl.includes('.ppt') || lowerUrl.includes('.pptx') || lowerTitle.includes('.ppt') || lowerTitle.includes('.pptx'))) {
-        isSlides = true;
-        extension = lowerUrl.includes('.ppt') ? 'ppt' : 'pptx';
-        if (lowerTitle.includes('.pptx')) extension = 'pptx';
-        else if (lowerTitle.includes('.ppt')) extension = 'ppt';
+      // Check if file is Slides or Ebook/Book (Books are never watermarked as requested)
+      const isSlides = lowerUrl.includes('.ppt') || lowerTitle.includes('.ppt') || lowerUrl.includes('presentation');
+      const isEbookOrBook = category.includes('book') || 
+                            category.includes('ebook') || 
+                            lowerTitle.includes('[book]') || 
+                            lowerTitle.includes('(book)') || 
+                            lowerTitle.includes('e-book') || 
+                            lowerTitle.includes('textbook');
 
-        const driveMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (driveMatch && driveMatch[1]) {
-          downloadUrl = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
-        }
-      } else if (lowerUrl.endsWith('.ppt') || lowerUrl.endsWith('.pptx')) {
-        isSlides = true;
-        extension = lowerUrl.endsWith('.ppt') ? 'ppt' : 'pptx';
-        downloadUrl = rawUrl;
+      const shouldWatermark = !isSlides && !isEbookOrBook;
+
+      const btn = document.getElementById('dlBtn');
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Preparing...</span>';
+        btn.style.pointerEvents = 'none';
       }
 
-      if (isSlides) {
-        const loadingToast = showToast("Downloading PowerPoint...", "downloading", 0);
-        
-        // Direct anchor download for PowerPoint to bypass CORS limitations gracefully
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        // Removed target='_blank' to prevent the screen from flashing black on mobile during download
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        setTimeout(() => {
-          btn.innerHTML = original;
-          btn.style.pointerEvents = 'auto';
-          loadingToast.remove();
-          showToast("PowerPoint Downloaded!", "success", 6000);
-        }, 1500);
-        return;
+      const modalTitle = document.getElementById('dlModalTitle');
+      if (modalTitle) modalTitle.textContent = title;
+
+      const iconEl = document.getElementById('dlModalIcon');
+      if (iconEl) {
+        if (isSlides) {
+          iconEl.innerHTML = '<i class="fas fa-file-powerpoint" style="color:#f97316;"></i>';
+        } else {
+          iconEl.innerHTML = '<i class="fas fa-file-pdf" style="color:#38bdf8;"></i>';
+        }
       }
 
-      const loadingToast = showToast("Downloading PDF...", "downloading", 0);
+      const statusEl = document.getElementById('dlModalStatus');
+      if (statusEl) {
+        statusEl.innerHTML = '<span>Your download will start in</span><span class="dl-modal-timer" id="dlModalTimer">5</span>';
+      }
 
-      try {
-        let directUrl = rawUrl;
-        if (rawUrl.includes('drive.google.com')) {
-          const fileId = rawUrl.match(/[-\w]{25,}/);
-          if (fileId) directUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
-        }
-        
-        // 100% CLIENT-SIDE: Try direct browser fetch & blob download (0 Render Backend Bandwidth)
-        const response = await fetch(directUrl);
-        if (!response.ok) throw new Error("Client fetch failed");
+      const overlay = document.getElementById('downloadModalOverlay');
+      if (overlay) overlay.classList.add('open');
 
-        const blob = await response.blob();
-        const bUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = bUrl;
-        a.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(bUrl);
-        
-        loadingToast.remove();
-        
-        const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
-
-        showToast("PDF Downloaded!", "success", 6000, {
-          text: "OPEN WITH DRIVE",
-          url: driveUrl
+      // Pre-process watermark in background DURING the 5-second countdown!
+      if (shouldWatermark) {
+        preparedWatermarkPromise = prepareWatermarkedPdf(rawUrl, title).catch(err => {
+          console.warn('Pre-watermark error:', err);
+          return null; // Graceful fallback
         });
-
-      } catch (err) {
-        console.warn("Direct fetch restricted, triggering direct browser download link", err);
-        loadingToast.remove();
-        
-        let downloadLink = rawUrl;
-        if (rawUrl.includes('drive.google.com')) {
-          const fileId = rawUrl.match(/[-\w]{25,}/);
-          if (fileId) downloadLink = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
-        }
-
-        // Direct anchor download without opening blank tabs or touching backend
-        const fallbackA = document.createElement('a');
-        fallbackA.href = downloadLink;
-        fallbackA.download = `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`;
-        document.body.appendChild(fallbackA);
-        fallbackA.click();
-        document.body.removeChild(fallbackA);
-        
-        const driveUrl = rawUrl.includes('drive.google.com') ? rawUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}`;
-        showToast("PDF Download Started!", "success", 6000, {
-          text: "OPEN WITH DRIVE",
-          url: driveUrl
-        });
-      } finally {
-        setTimeout(() => {
-          btn.innerHTML = original;
-          btn.style.pointerEvents = 'auto';
-        }, 3000);
+      } else {
+        preparedWatermarkPromise = null;
       }
+
+      let timeLeft = 5;
+      if (dlTimerInterval) clearInterval(dlTimerInterval);
+      dlTimerInterval = setInterval(async () => {
+        timeLeft--;
+        const tEl = document.getElementById('dlModalTimer');
+        if (tEl) tEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(dlTimerInterval);
+          const sEl = document.getElementById('dlModalStatus');
+          if (sEl) {
+            sEl.innerHTML = '<div style="color:#22c55e; font-weight:700; font-size:15px; margin:4px 0;"><i class="fas fa-check-circle"></i> Download Started!</div>';
+          }
+          
+          if (shouldWatermark && preparedWatermarkPromise) {
+            try {
+              const blob = await preparedWatermarkPromise;
+              if (blob) {
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                const cleanFileName = (title.replace(/[^a-z0-9_\-\s]/gi, '').trim() || 'Document') + '.pdf';
+                a.download = cleanFileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+                showToast("Watermarked PDF Downloaded Successfully! 📄", "success", 4000);
+              } else {
+                executeDirectDownload(rawUrl, title);
+              }
+            } catch (e) {
+              executeDirectDownload(rawUrl, title);
+            }
+          } else {
+            executeDirectDownload(rawUrl, title);
+          }
+
+          // Auto-close modal after 1.5 seconds so user smoothly returns to reading
+          dlModalCloseTimeout = setTimeout(() => {
+            closeDownloadModal();
+          }, 1500);
+        }
+      }, 1000);
     }
 
     function init() {
@@ -1190,9 +1257,9 @@
         const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                         window.PRODUCTION_API_URL || 
                         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-        let res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}`);
+        let res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}?admin_force=true&_v=${Date.now()}`);
         if (!res.ok && apiBase.includes('api.solmates.in')) {
-          res = await fetch(`https://solmates.in/api/sol/pyq-analyzer/${semester}/${folderId}`);
+          res = await fetch(`https://solmates.in/api/sol/pyq-analyzer/${semester}/${folderId}?admin_force=true&_v=${Date.now()}`);
         }
         const json = await res.json();
         let data = json?.data || {};
@@ -1226,7 +1293,7 @@
           const relevantQs = (ch.sampleQuestions || []).filter(q => (!selectedYears || !q.year || activeYears.includes(String(q.year)))).map(q => ({
             ...q,
             text: cleanStr(q.text || q.question || ''),
-            marks: (q.marks === 15 || q.marks === '15' || q.marks === 75 || q.marks === '75' || !q.marks) ? 14 : q.marks
+            marks: (q.marks === 15 || q.marks === '15' || q.marks === 75 || q.marks === '75' || !q.marks) ? 12.5 : q.marks
           }));
           return { 
             ...ch, 
@@ -1240,7 +1307,7 @@
           topic: cleanStr(t.topic || ''),
           reason: cleanStr(t.reason || ''),
           recommendedApproach: cleanStr(t.recommendedApproach || ''),
-          marks: (t.marks === 15 || t.marks === 20 || t.marks === 75 || !t.marks) ? 14 : t.marks
+          marks: (t.marks === 15 || t.marks === 75 || !t.marks) ? (t.topic?.includes('Cash Flow') ? 20 : 12.5) : t.marks
         }));
 
         const yearly = data.yearlyBreakdown || {};
@@ -1724,6 +1791,130 @@ html[data-solmates-theme=dark] #queryModal, body.dark-mode #queryModal { --qbg: 
 
     
 
+
+<!-- ===== DOWNLOAD POPUP MODAL ===== -->
+<style>
+#downloadModalOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10002;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+@media (max-width: 480px) {
+  #downloadModalOverlay {
+    padding: 8px;
+  }
+}
+#downloadModalOverlay.open {
+  display: flex;
+  animation: dlFadeIn 0.25s ease;
+}
+@keyframes dlFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+#downloadModal {
+  box-sizing: border-box;
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 24px 16px 20px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@media (max-width: 480px) {
+  #downloadModal {
+    padding: 20px 8px 16px;
+    border-radius: 16px;
+    max-width: 350px;
+  }
+}
+#downloadModalOverlay.open #downloadModal {
+  transform: scale(1);
+}
+#dlCloseBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+#dlCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+.dl-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.dl-modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 8px;
+  padding: 0 10px;
+  color: #f8fafc;
+  word-break: break-word;
+}
+.dl-modal-status {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0 14px 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
+.dl-modal-timer {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+  display: block;
+  margin-top: 2px;
+}
+</style>
+
+<div id="downloadModalOverlay">
+  <div id="downloadModal">
+    <button id="dlCloseBtn" onclick="closeDownloadModal()">&#x2715;</button>
+    <div class="dl-modal-icon" id="dlModalIcon">
+      <i class="fas fa-file-pdf"></i>
+    </div>
+    <div class="dl-modal-title" id="dlModalTitle">Document</div>
+    <div class="dl-modal-status" id="dlModalStatus">
+      <span>Your download will start in</span>
+      <span class="dl-modal-timer" id="dlModalTimer">5</span>
+    </div>
+
+  </div>
+</div>
 </body>
 </html>
 

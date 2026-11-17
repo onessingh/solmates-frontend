@@ -1257,9 +1257,9 @@
         const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                         window.PRODUCTION_API_URL || 
                         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-        let res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}`);
+        let res = await fetch(`${apiBase}/sol/pyq-analyzer/${semester}/${folderId}?admin_force=true&_v=${Date.now()}`);
         if (!res.ok && apiBase.includes('api.solmates.in')) {
-          res = await fetch(`https://solmates.in/api/sol/pyq-analyzer/${semester}/${folderId}`);
+          res = await fetch(`https://solmates.in/api/sol/pyq-analyzer/${semester}/${folderId}?admin_force=true&_v=${Date.now()}`);
         }
         const json = await res.json();
         let data = json?.data || {};
@@ -1293,7 +1293,7 @@
           const relevantQs = (ch.sampleQuestions || []).filter(q => (!selectedYears || !q.year || activeYears.includes(String(q.year)))).map(q => ({
             ...q,
             text: cleanStr(q.text || q.question || ''),
-            marks: (q.marks === 15 || q.marks === '15' || q.marks === 75 || q.marks === '75' || !q.marks) ? 14 : q.marks
+            marks: (q.marks === 15 || q.marks === '15' || q.marks === 75 || q.marks === '75' || !q.marks) ? 12.5 : q.marks
           }));
           return { 
             ...ch, 
@@ -1307,7 +1307,7 @@
           topic: cleanStr(t.topic || ''),
           reason: cleanStr(t.reason || ''),
           recommendedApproach: cleanStr(t.recommendedApproach || ''),
-          marks: (t.marks === 15 || t.marks === 20 || t.marks === 75 || !t.marks) ? 14 : t.marks
+          marks: (t.marks === 15 || t.marks === 75 || !t.marks) ? (t.topic?.includes('Cash Flow') ? 20 : 12.5) : t.marks
         }));
 
         const yearly = data.yearlyBreakdown || {};

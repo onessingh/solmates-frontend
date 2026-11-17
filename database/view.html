@@ -1975,7 +1975,7 @@
           if (subtitleEl) subtitleEl.innerText = `AI Past Papers Weightage, Repeated Questions & Core Trends (${yrs})`;
           if (rightContainer) {
             rightContainer.innerHTML = `
-              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="openPyqAnalyzerModal('view')">
+              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="viewDirectPyqAnalysis()">
                 <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse PYQs</span>
               </button>
             `;
@@ -2322,7 +2322,7 @@
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`);
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}?admin_force=true&_v=${Date.now()}`);
       return await r.json();
     }
 
