@@ -688,6 +688,10 @@ class SolmatesAPI {
     }, 180000); // 3 minutes timeout for AI analysis
   }
 
+  async getSubjectPyqItems(semester, folderId) {
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items`);
+  }
+
   // ========== CHATBOT ==========
   async sendChatMessage(message, history = []) {
     return await this.request('/chatbot', {

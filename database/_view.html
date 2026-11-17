@@ -40,7 +40,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="/config.js?v=v928"></script>
   <script src="/js/uptime-helper.js?v=v928"></script>
-  <script src="/js/api-client.js?v=v930"></script>
+  <script src="/js/api-client.js?v=v931"></script>
   <script src="/js/sol-cache.js?v=v928"></script>
   <script src="/js/prefetch-helper.js?v=v928"></script>
   <script>
@@ -1382,6 +1382,9 @@
         <button class="modal-close-btn" onclick="closePyqModal()" style="background:none; border:none; font-size:20px; color:var(--text-muted); cursor:pointer;">&times;</button>
       </div>
 
+      <!-- ADMIN STEP: Item & Book Selection -->
+      <div id="pyqAdminItemStep" style="display:none; overflow-y:auto; flex:1; padding-right:4px;"></div>
+
       <!-- STEP 1: Mode & Year Selection -->
       <div id="pyqStepSelection" style="overflow-y:auto; flex:1; padding-right:4px;">
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
@@ -1896,46 +1899,309 @@
       }
 
       const { subjectName, folderId: curFid } = subjInfo;
-      const titleEl = document.getElementById('pyqBarTitle');
-      const btnTextEl = document.getElementById('btnPyqAnalyzeText');
-      if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
-      if (btnTextEl) btnTextEl.innerText = `Analyse PYQs`;
-
       const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' 
         ? window.solmatesAPI.isAdminLoggedIn() 
         : !!localStorage.getItem('admin_token');
 
+      let analysisData = null;
+      try {
+        const res = await _fetchPyqAnalysisAPI(semester, curFid);
+        if (res && res.data) {
+          analysisData = res.data;
+          _currentPyqAnalysis = analysisData;
+        }
+      } catch (e) {
+        console.warn('Status check failed:', e);
+      }
+
+      const hasAnalysis = Boolean(analysisData && (analysisData.analyzedYears || analysisData.chapters));
+
       if (isAdmin) {
         bar.style.display = 'flex';
-      } else {
-        // Normal user: ONLY display button if analysis exists in database
-        bar.style.display = 'none';
-        try {
-          const res = await _fetchPyqAnalysisAPI(semester, curFid);
-          if (res && res.data) {
-            _currentPyqAnalysis = res.data;
-            bar.style.display = 'flex';
-          } else {
-            bar.style.display = 'none';
+        const titleEl = document.getElementById('pyqBarTitle');
+        const subtitleEl = document.querySelector('.pyq-banner-subtitle');
+        const rightContainer = document.querySelector('.pyq-banner-right');
+        
+        if (hasAnalysis) {
+          const yrs = (analysisData.analyzedYears || []).join(', ') || 'All Years';
+          if (titleEl) {
+            titleEl.innerHTML = `<span style="display:inline-flex; align-items:center; gap:6px; color:#10b981; font-weight:800; font-size:14px;"><i class="fas fa-check-circle"></i> LIVE & ANALYSED (${yrs})</span>`;
           }
-        } catch (e) {
+          if (subtitleEl) {
+            subtitleEl.innerHTML = `Subject: <strong>${subjectName}</strong> • Past examination trends & scoring patterns live`;
+          }
+          if (rightContainer) {
+            rightContainer.innerHTML = `
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="pyq-banner-btn" onclick="viewDirectPyqAnalysis()" style="background:linear-gradient(135deg, #10b981, #059669); border:none; padding:7px 14px; border-radius:10px; font-size:12.5px; font-weight:700; color:#fff; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="fas fa-file-alt"></i> View Analysis
+                </button>
+                <button class="pyq-banner-btn" onclick="openAdminPyqModal()" style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:7px 12px; border-radius:10px; font-size:12px; font-weight:600; color:#fff; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="fas fa-cog"></i> Re-generate / Items
+                </button>
+              </div>
+            `;
+          }
+        } else {
+          if (titleEl) {
+            titleEl.innerHTML = `<span style="display:inline-flex; align-items:center; gap:6px; color:#f59e0b; font-weight:800; font-size:14px;"><i class="fas fa-exclamation-triangle"></i> NOT ANALYSED YET</span>`;
+          }
+          if (subtitleEl) {
+            subtitleEl.innerHTML = `Subject: <strong>${subjectName}</strong> • Select examination papers below to generate AI analysis`;
+          }
+          if (rightContainer) {
+            rightContainer.innerHTML = `
+              <button class="pyq-banner-btn" onclick="openAdminPyqModal()" style="background:linear-gradient(135deg, #f59e0b, #d97706); border:none; padding:8px 16px; border-radius:10px; font-size:12.5px; font-weight:700; color:#fff; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-magic"></i> Select Items & Generate
+              </button>
+            `;
+          }
+        }
+      } else {
+        if (hasAnalysis) {
+          bar.style.display = 'flex';
+          const titleEl = document.getElementById('pyqBarTitle');
+          const subtitleEl = document.querySelector('.pyq-banner-subtitle');
+          const rightContainer = document.querySelector('.pyq-banner-right');
+          const yrs = (analysisData.analyzedYears || []).join(', ') || 'Past Years';
+
+          if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
+          if (subtitleEl) subtitleEl.innerText = `AI Past Papers Weightage, Repeated Questions & Core Trends (${yrs})`;
+          if (rightContainer) {
+            rightContainer.innerHTML = `
+              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="openPyqAnalyzerModal('view')">
+                <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse PYQs</span>
+              </button>
+            `;
+          }
+        } else {
           bar.style.display = 'none';
         }
       }
     }
 
-    async function openPyqAnalyzerModal() {
+    async function openAdminPyqModal() {
       const modal = document.getElementById('pyqAnalyzerModal');
       if (!modal) return;
       const subjInfo = getCurrentSubjectInfo();
       const subjectName = subjInfo ? subjInfo.subjectName : 'Subject';
       const curFolderId = subjInfo ? subjInfo.folderId : folderId;
 
-      document.getElementById('pyqModalSubjectTitle').innerText = `✨ Analyse PYQs — ${subjectName}`;
+      document.getElementById('pyqModalSubjectTitle').innerHTML = `<i class="fas fa-cog" style="color:#2563eb;"></i> Configure PYQ Analysis — ${subjectName}`;
+      document.getElementById('pyqStepSelection').style.display = 'none';
+      document.getElementById('pyqStepReport').style.display = 'none';
+      
+      const adminStep = document.getElementById('pyqAdminItemStep');
+      if (adminStep) {
+        adminStep.style.display = 'block';
+        adminStep.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">Loading examination items & reference materials...</p></div>`;
+      }
+      modal.classList.add('open');
+
+      try {
+        const res = await _fetchPyqItemsAPI(semester, curFolderId);
+        if (!res || !res.success) throw new Error(res?.error || 'Failed to fetch items');
+
+        const items = res.items || [];
+        const books = res.books || [];
+        const hasAnalysis = res.hasAnalysis;
+        const analyzedYears = res.analyzedYears || [];
+
+        const grouped = {};
+        for (const item of items) {
+          const grp = item.year || item.folderName || 'General Papers';
+          if (!grouped[grp]) grouped[grp] = [];
+          grouped[grp].push(item);
+        }
+        const sortedGroups = Object.keys(grouped).sort((a,b) => b.localeCompare(a));
+
+        let html = `
+          <div style="margin-bottom:14px; padding:10px 14px; border-radius:10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background:${hasAnalysis ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)'}; border:1px solid ${hasAnalysis ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'};">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <i class="fas ${hasAnalysis ? 'fa-check-circle' : 'fa-exclamation-triangle'}" style="color:${hasAnalysis ? '#10b981' : '#f59e0b'}; font-size:16px;"></i>
+              <div>
+                <strong style="color:${hasAnalysis ? '#059669' : '#d97706'}; font-size:13px;">${hasAnalysis ? 'Live & Analysed' : 'Not Analysed Yet'}</strong>
+                <div style="font-size:11.5px; color:var(--text-muted);">${hasAnalysis ? 'Currently covers: ' + analyzedYears.join(', ') : 'Select question papers below to create the initial AI analysis.'}</div>
+              </div>
+            </div>
+            ${hasAnalysis ? `
+              <button onclick="viewDirectPyqAnalysis()" style="background:#10b981; color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+                <i class="fas fa-eye"></i> View Current
+              </button>
+            ` : ''}
+          </div>
+
+          <div style="font-size:13px; font-weight:700; color:var(--text-main); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>Select Examination Question Papers:</span>
+            <div style="font-size:11.5px; font-weight:600;">
+              <a href="javascript:void(0)" onclick="toggleAllAdminItems(true)" style="color:#2563eb; text-decoration:none; margin-right:8px;">Select All QP</a>
+              <a href="javascript:void(0)" onclick="toggleAllAdminItems(false)" style="color:var(--text-muted); text-decoration:none;">Clear All</a>
+            </div>
+          </div>
+          <p style="font-size:11.5px; color:var(--text-muted); margin:0 0 10px 0;">
+            Answer keys / solutions are automatically unchecked to prevent mixing answers into question pattern detection.
+          </p>
+
+          <div style="max-height:280px; overflow-y:auto; border:1px solid var(--border-color); border-radius:10px; padding:10px; background:var(--bg-main); margin-bottom:14px;">
+        `;
+
+        if (sortedGroups.length === 0) {
+          html += `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:13px;">No items found in this subject folder.</div>`;
+        } else {
+          for (const grp of sortedGroups) {
+            html += `
+              <div style="font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); padding:6px 4px 4px; margin-top:4px; border-bottom:1px dashed var(--border-color);">
+                📁 Year / Group: ${grp}
+              </div>
+            `;
+            for (const item of grouped[grp]) {
+              const isAns = item.isAnswerKey;
+              html += `
+                <label style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 6px; border-radius:8px; cursor:pointer; transition:background 0.15s; margin-bottom:2px;" onmouseover="this.style.background='var(--bg-card)'" onmouseout="this.style.background='transparent'">
+                  <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+                    <input type="checkbox" name="selectedPyqItem" value="${item.id}" data-is-answer="${isAns}" ${item.defaultSelected ? 'checked' : ''} style="width:16px; height:16px; accent-color:#2563eb; flex-shrink:0;">
+                    <span style="font-size:12.5px; font-weight:600; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${item.title}">
+                      ${item.title}
+                    </span>
+                  </div>
+                  <div style="flex-shrink:0;">
+                    ${isAns 
+                      ? `<span style="background:#fef2f2; color:#dc2626; border:1px solid #fecaca; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:4px;">⚠️ Answer Key</span>`
+                      : `<span style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:4px;">📄 Question Paper</span>`
+                    }
+                  </div>
+                </label>
+              `;
+            }
+          }
+        }
+
+        html += `</div>`;
+
+        if (books.length > 0) {
+          html += `
+            <div style="font-size:13px; font-weight:700; color:var(--text-main); margin-bottom:6px;">
+              Include Official SOL Syllabus / Study Material: <span style="font-size:11px; font-weight:500; color:var(--text-muted);">(Optional for chapter unit mapping)</span>
+            </div>
+            <div style="max-height:120px; overflow-y:auto; border:1px solid var(--border-color); border-radius:10px; padding:8px 10px; background:var(--bg-main); margin-bottom:14px;">
+          `;
+          for (const bk of books) {
+            html += `
+              <label style="display:flex; align-items:center; gap:8px; padding:5px 4px; font-size:12.5px; color:var(--text-main); cursor:pointer;">
+                <input type="checkbox" name="selectedPyqBook" value="${bk.id}" style="width:15px; height:15px; accent-color:#10b981;">
+                <i class="fas fa-book" style="color:#10b981; font-size:12px;"></i>
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${bk.title}</span>
+              </label>
+            `;
+          }
+          html += `</div>`;
+        }
+
+        html += `
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
+            <button class="btn btn-cancel" onclick="closePyqModal()">Cancel</button>
+            <button class="btn" id="btnSubmitAdminAnalysis" onclick="startAdminPyqAnalysis()" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); color:#fff; border:none; padding:10px 20px; border-radius:12px; font-weight:700; cursor:pointer;">
+              <i class="fas fa-play"></i> ${hasAnalysis ? 'Re-generate Analysis' : 'Start AI Analysis'}
+            </button>
+          </div>
+        `;
+
+        if (adminStep) adminStep.innerHTML = html;
+      } catch (err) {
+        if (adminStep) {
+          adminStep.innerHTML = `
+            <div style="padding:20px; text-align:center; color:#ef4444;">
+              <p>Failed to load items: ${err.message}</p>
+              <button class="btn btn-cancel" onclick="closePyqModal()">Close</button>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function toggleAllAdminItems(checkState) {
+      document.querySelectorAll('input[name="selectedPyqItem"]').forEach(cb => {
+        if (checkState) {
+          const isAns = cb.getAttribute('data-is-answer') === 'true';
+          cb.checked = !isAns;
+        } else {
+          cb.checked = false;
+        }
+      });
+    }
+
+    async function startAdminPyqAnalysis() {
+      const selectedItemCheckboxes = Array.from(document.querySelectorAll('input[name="selectedPyqItem"]:checked'));
+      const selectedItemIds = selectedItemCheckboxes.map(cb => cb.value);
+      const selectedBookIds = Array.from(document.querySelectorAll('input[name="selectedPyqBook"]:checked')).map(cb => cb.value);
+
+      if (selectedItemIds.length === 0) {
+        alert("Please select at least 1 question paper to analyze.");
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitAdminAnalysis');
+      const origText = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-magic fa-spin"></i> Analyzing with AI...';
+        btn.disabled = true;
+      }
+
+      const subjInfo = getCurrentSubjectInfo();
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
+      try {
+        const res = await _generatePyqAnalysisAPI(semester, curFolderId, { selectedItemIds, selectedBookIds });
+        if (res && res.data) {
+          _currentPyqAnalysis = res.data;
+          alert("✓ AI Analysis generated successfully!");
+          updatePyqAnalyzerBar();
+          const adminStep = document.getElementById('pyqAdminItemStep');
+          if (adminStep) adminStep.style.display = 'none';
+          renderPyqAnalysisReport(res.data, 'all');
+        } else {
+          throw new Error(res?.error || 'Analysis generation failed.');
+        }
+      } catch (err) {
+        alert("Generation Error: " + err.message);
+      } finally {
+        if (btn) {
+          btn.innerHTML = origText;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    function viewDirectPyqAnalysis() {
+      if (_currentPyqAnalysis) {
+        const adminStep = document.getElementById('pyqAdminItemStep');
+        if (adminStep) adminStep.style.display = 'none';
+        const modal = document.getElementById('pyqAnalyzerModal');
+        if (modal) modal.classList.add('open');
+        renderPyqAnalysisReport(_currentPyqAnalysis, 'all');
+      } else {
+        openPyqAnalyzerModal('view');
+      }
+    }
+
+    async function openPyqAnalyzerModal(mode) {
+      const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' ? window.solmatesAPI.isAdminLoggedIn() : !!localStorage.getItem('admin_token');
+      if (isAdmin && mode !== 'view') {
+        return openAdminPyqModal();
+      }
+
+      const modal = document.getElementById('pyqAnalyzerModal');
+      if (!modal) return;
+      const subjInfo = getCurrentSubjectInfo();
+      const subjectName = subjInfo ? subjInfo.subjectName : 'Subject';
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
+      document.getElementById('pyqModalSubjectTitle').innerHTML = `<i class="fas fa-brain" style="color: #2563eb;"></i> Analyse PYQs — ${subjectName}`;
+      const adminStep = document.getElementById('pyqAdminItemStep');
+      if (adminStep) adminStep.style.display = 'none';
       document.getElementById('pyqStepSelection').style.display = 'block';
       document.getElementById('pyqStepReport').style.display = 'none';
 
-      // Detect available years from subfolders / cards on page
       _pyqAvailableYears = [];
       const grid = document.getElementById('grid');
       if (grid) {
@@ -1952,7 +2218,6 @@
       }
       _pyqAvailableYears.sort((a,b) => b.localeCompare(a));
 
-      // Build year checkboxes
       const cbContainer = document.getElementById('pyqYearCheckboxes');
       if (cbContainer) {
         cbContainer.innerHTML = _pyqAvailableYears.map(yr => `
@@ -1963,15 +2228,12 @@
         `).join('');
       }
 
-      // Check Admin visibility
-      const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' ? window.solmatesAPI.isAdminLoggedIn() : !!localStorage.getItem('admin_token');
       const adminBox = document.getElementById('pyqAdminControls');
       if (adminBox) adminBox.style.display = isAdmin ? 'block' : 'none';
 
       selectPyqMode('auto');
       modal.classList.add('open');
 
-      // Pre-fetch analysis silently in background
       try {
         const res = await _fetchPyqAnalysisAPI(semester, curFolderId);
         if (res && res.data) {
@@ -1982,7 +2244,14 @@
       }
     }
 
-    // Direct bulletproof fetch helpers to bypass any stale script caching
+    async function _fetchPyqItemsAPI(sem, fId) {
+      const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
+                      window.PRODUCTION_API_URL ||
+                      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items`);
+      return await r.json();
+    }
+
     async function _fetchPyqAnalysisAPI(sem, fId) {
       if (window.solmatesAPI && typeof window.solmatesAPI.getPyqAnalysis === 'function' && !window.solmatesAPI._isPolyfilled) {
         try {

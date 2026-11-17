@@ -878,7 +878,24 @@
             margin: [10, 10, 10, 10],
             filename: cleanFileName,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false },
+            pagebreak: {
+              mode: ['avoid-all', 'css', 'legacy'],
+              avoid: ['.card', '.topic-card', '.approach-box', '.q-box', '.section-title', 'ul.tips-list li']
+            },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              letterRendering: true,
+              logging: false,
+              onclone: (clonedDoc) => {
+                const frame = document.getElementById('pdfFrame');
+                if (frame && frame.contentDocument) {
+                  frame.contentDocument.querySelectorAll('style, link[rel="stylesheet"]').forEach(s => {
+                    clonedDoc.head.appendChild(s.cloneNode(true));
+                  });
+                }
+              }
+            },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
           };
           const rawBlob = await html2pdf().set(opt).from(docElem).outputPdf('blob');
@@ -1352,7 +1369,14 @@
       body { background: #fff !important; }
       .doc-container { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; max-width: 100% !important; }
       .no-print { display: none !important; }
-      .card, .topic-card { break-inside: avoid; }
+      .card, .topic-card, .approach-box, .q-box, .section-title, ul.tips-list li {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+    .card, .topic-card, .approach-box, .q-box, .section-title, ul.tips-list li {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
     }
   </style>
 </head>
