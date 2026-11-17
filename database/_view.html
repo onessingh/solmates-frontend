@@ -1404,26 +1404,32 @@
           </div>
         </div>
 
-        <!-- Mode Card 2: Manually Select Years -->
+        <!-- Mode Card 2: Manually Select Question Papers -->
         <div class="pyq-mode-card" id="modeCardManual" onclick="selectPyqMode('manual')">
           <div class="pyq-radio-icon"><i class="far fa-circle" id="radioManualIcon"></i></div>
           <div style="flex:1;">
             <div style="font-weight:700; font-size:14px; color:var(--text-main); margin-bottom:2px;">
-              🎯 Manually Select Specific Years
+              🎯 Manually Select Specific Question Papers
             </div>
             <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-              Pick specific years (e.g. only 2024 & 2023) to analyze trends across custom examination sessions.
+              Pick specific papers by name (e.g. only 2024 or 2023 papers) to analyze trends across custom examination sessions.
             </div>
           </div>
         </div>
 
-        <!-- Dynamic Year Checkboxes (Visible when Manual Mode is active) -->
+        <!-- Dynamic Paper Checkboxes (Visible when Manual Mode is active) -->
         <div id="pyqManualYearsBox" style="display:none; margin: 12px 0 16px; padding: 14px; background: rgba(37,99,235,0.03); border: 1px dashed rgba(37,99,235,0.3); border-radius: 12px;">
-          <div style="font-weight:700; font-size:13px; margin-bottom:8px; color:var(--text-main);">
-            Select Examination Years:
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:700; font-size:13px; color:var(--text-main);">
+              Select Question Papers (<span id="pyqStudentPaperCount">0</span> Papers):
+            </span>
+            <div style="font-size:11.5px; font-weight:600;">
+              <a href="javascript:void(0)" onclick="toggleAllStudentPapers(true)" style="color:#2563eb; text-decoration:none; margin-right:8px;">Select All</a>
+              <a href="javascript:void(0)" onclick="toggleAllStudentPapers(false)" style="color:var(--text-muted); text-decoration:none;">Clear All</a>
+            </div>
           </div>
-          <div id="pyqYearCheckboxes" style="display:flex; gap:10px; flex-wrap:wrap;">
-            <!-- Rendered dynamically from current folder cards -->
+          <div id="pyqYearCheckboxes" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:2px;">
+            <!-- Rendered dynamically with full item title and year badge -->
           </div>
         </div>
 
@@ -2080,17 +2086,23 @@
 
         if (books.length > 0) {
           html += `
-            <div style="font-size:13px; font-weight:700; color:var(--text-main); margin-bottom:6px;">
-              Include Official SOL Syllabus / Study Material: <span style="font-size:11px; font-weight:500; color:var(--text-muted);">(Optional for chapter unit mapping)</span>
+            <div style="font-size:13px; font-weight:700; color:var(--text-main); margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span>Official DU SOL Study Material / Books (${books.length}):</span>
+              <span style="font-size:11px; font-weight:500; color:var(--text-muted);">(Used for syllabus & chapter unit mapping)</span>
             </div>
-            <div style="max-height:120px; overflow-y:auto; border:1px solid var(--border-color); border-radius:10px; padding:8px 10px; background:var(--bg-main); margin-bottom:14px;">
+            <div style="max-height:130px; overflow-y:auto; border:1px solid var(--border-color); border-radius:10px; padding:8px 10px; background:var(--bg-main); margin-bottom:14px;">
           `;
           for (const bk of books) {
             html += `
-              <label style="display:flex; align-items:center; gap:8px; padding:5px 4px; font-size:12.5px; color:var(--text-main); cursor:pointer;">
-                <input type="checkbox" name="selectedPyqBook" value="${bk.id}" style="width:15px; height:15px; accent-color:#10b981;">
-                <i class="fas fa-book" style="color:#10b981; font-size:12px;"></i>
-                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${bk.title}</span>
+              <label style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 6px; border-radius:6px; font-size:12.5px; color:var(--text-main); cursor:pointer;" onmouseover="this.style.background='var(--bg-card)'" onmouseout="this.style.background='transparent'">
+                <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+                  <input type="checkbox" name="selectedPyqBook" value="${bk.id}" style="width:16px; height:16px; accent-color:#10b981; flex-shrink:0;">
+                  <i class="fas fa-book" style="color:#10b981; font-size:13px; flex-shrink:0;"></i>
+                  <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;" title="${bk.title}">
+                    ${bk.title}
+                  </span>
+                </div>
+                ${bk.folderName ? `<span style="font-size:10.5px; color:var(--text-muted); background:var(--border-color); padding:2px 6px; border-radius:4px; flex-shrink:0;">${bk.folderName}</span>` : ''}
               </label>
             `;
           }
@@ -2202,30 +2214,10 @@
       document.getElementById('pyqStepSelection').style.display = 'block';
       document.getElementById('pyqStepReport').style.display = 'none';
 
-      _pyqAvailableYears = [];
-      const grid = document.getElementById('grid');
-      if (grid) {
-        grid.querySelectorAll('.card').forEach(c => {
-          const title = (c.querySelector('h3')?.innerText || '').trim();
-          const ym = title.match(/\b(201\d|202\d|203\d)\b/);
-          if (ym && !_pyqAvailableYears.includes(ym[1])) {
-            _pyqAvailableYears.push(ym[1]);
-          }
-        });
-      }
-      if (_pyqAvailableYears.length === 0) {
-        _pyqAvailableYears = ['2023', '2024', '2025', '2026'];
-      }
-      _pyqAvailableYears.sort((a,b) => b.localeCompare(a));
-
       const cbContainer = document.getElementById('pyqYearCheckboxes');
+      const countEl = document.getElementById('pyqStudentPaperCount');
       if (cbContainer) {
-        cbContainer.innerHTML = _pyqAvailableYears.map(yr => `
-          <label style="display:flex; align-items:center; gap:6px; background:var(--bg-card); padding:6px 12px; border:1px solid var(--border-color); border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
-            <input type="checkbox" name="pyqYear" value="${yr}" checked style="accent-color:#2563eb; width:16px; height:16px;">
-            ${yr} Paper
-          </label>
-        `).join('');
+        cbContainer.innerHTML = `<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:12px;"><i class="fas fa-spinner fa-spin"></i> Loading question papers...</div>`;
       }
 
       const adminBox = document.getElementById('pyqAdminControls');
@@ -2235,13 +2227,48 @@
       modal.classList.add('open');
 
       try {
-        const res = await _fetchPyqAnalysisAPI(semester, curFolderId);
-        if (res && res.data) {
-          _currentPyqAnalysis = res.data;
+        const [analysisRes, itemRes] = await Promise.allSettled([
+          _fetchPyqAnalysisAPI(semester, curFolderId),
+          _fetchPyqItemsAPI(semester, curFolderId)
+        ]);
+
+        if (analysisRes.status === 'fulfilled' && analysisRes.value && analysisRes.value.data) {
+          _currentPyqAnalysis = analysisRes.value.data;
+        }
+
+        const items = (itemRes.status === 'fulfilled' && itemRes.value && itemRes.value.items) ? itemRes.value.items : [];
+        const qpItems = items.filter(it => !it.isAnswerKey);
+
+        if (countEl) countEl.innerText = qpItems.length;
+
+        if (cbContainer) {
+          if (qpItems.length === 0) {
+            cbContainer.innerHTML = `<div style="color:var(--text-muted); font-size:12px; padding:6px;">No question papers found.</div>`;
+          } else {
+            cbContainer.innerHTML = qpItems.map(item => `
+              <label style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--bg-card); padding:8px 10px; border:1px solid var(--border-color); border-radius:8px; cursor:pointer;" onmouseover="this.style.borderColor='#2563eb'" onmouseout="this.style.borderColor='var(--border-color)'">
+                <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+                  <input type="checkbox" name="studentPyqItem" value="${item.id}" data-year="${item.year}" checked style="accent-color:#2563eb; width:16px; height:16px; flex-shrink:0;">
+                  <span style="font-size:12.5px; font-weight:600; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${item.title}">
+                    ${item.title}
+                  </span>
+                </div>
+                <span style="background:#eff6ff; color:#2563eb; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; flex-shrink:0;">
+                  ${item.year} Paper
+                </span>
+              </label>
+            `).join('');
+          }
         }
       } catch (e) {
-        console.warn('Pre-fetch pyq analysis error:', e);
+        console.warn('Error loading student PYQ items:', e);
       }
+    }
+
+    function toggleAllStudentPapers(checkState) {
+      document.querySelectorAll('input[name="studentPyqItem"]').forEach(cb => {
+        cb.checked = checkState;
+      });
     }
 
     async function _fetchPyqItemsAPI(sem, fId) {
@@ -2364,14 +2391,18 @@
         // Determine years to filter
         let yearsToFilter = 'all';
         if (_currentPyqMode === 'manual') {
-          const checked = Array.from(document.querySelectorAll('input[name="pyqYear"]:checked')).map(cb => cb.value);
+          const checked = Array.from(document.querySelectorAll('input[name="studentPyqItem"]:checked'));
           if (checked.length === 0) {
-            alert("Please select at least one examination year.");
+            alert("Please select at least one question paper.");
             btn.innerHTML = origText;
             btn.disabled = false;
             return;
           }
-          yearsToFilter = checked;
+          const selectedYears = Array.from(new Set(checked.map(cb => cb.getAttribute('data-year')).filter(Boolean)));
+          yearsToFilter = selectedYears.length ? selectedYears : 'all';
+          _selectedStudentYears = selectedYears;
+        } else {
+          _selectedStudentYears = null;
         }
 
         renderPyqAnalysisReport(analysis, yearsToFilter);
@@ -2546,8 +2577,8 @@
       const subjInfo = getCurrentSubjectInfo();
       const subjectName = subjInfo ? subjInfo.subjectName : ((navStack && navStack.length) ? navStack[navStack.length - 1].name.replace(/\[.*?\]/g, '').trim() : 'Subject');
       const curFolderId = subjInfo ? subjInfo.folderId : folderId;
-      const activeYears = (_currentPyqMode === 'manual') 
-        ? Array.from(document.querySelectorAll('input[name="pyqYear"]:checked')).map(cb => cb.value)
+      const activeYears = (_currentPyqMode === 'manual' && _selectedStudentYears && _selectedStudentYears.length) 
+        ? _selectedStudentYears
         : (_currentPyqAnalysis.analyzedYears || []);
       const url = `/database/pdf-viewer?type=analysis&semester=${semester}&folderId=${curFolderId}&years=${encodeURIComponent(activeYears.join(','))}&title=${encodeURIComponent(subjectName + ' - PYQ Analysis')}&category=${encodeURIComponent(CATEGORY||'')}`;
       window.location.href = url;
