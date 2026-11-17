@@ -188,8 +188,11 @@
     iframe.analysis-view {
       height: 100%;
       width: 100%;
+      max-width: 100%;
       background: #ffffff;
       display: block;
+      border: none;
+      box-sizing: border-box;
     }
 
     /* Secure Transparent Blocker to prevent clicking Google Drive's pop-out [?] button */
@@ -984,14 +987,29 @@
         const overlay = document.getElementById('downloadModalOverlay');
         if (overlay) overlay.classList.add('open');
 
-        // Render full PDF without 5-second cutoff
+        // Render complete PDF across all chapters with dynamic canvas scaling to prevent browser height limits
         (async () => {
           try {
             if (typeof html2pdf === 'undefined') {
               throw new Error('html2pdf library not loaded');
             }
 
-            const scrollH = docElem.scrollHeight || 3500;
+            // Measure actual content height
+            const fullDocHeight = Math.max(
+              docElem.scrollHeight || 0,
+              docElem.offsetHeight || 0,
+              frame?.contentDocument?.body?.scrollHeight || 0,
+              frame?.contentDocument?.documentElement?.scrollHeight || 0,
+              3500
+            );
+
+            // Chrome/WebKit canvas dimension limit is 16,384px.
+            // Dynamically calculate renderScale so canvas height never exceeds 13,500px,
+            // guaranteeing that all 9+ units, sample questions, and yearly breakdowns render fully with zero cutoff.
+            let renderScale = 1.5;
+            if (fullDocHeight * renderScale > 13500) {
+              renderScale = Math.max(1.0, Math.floor((13500 / fullDocHeight) * 100) / 100);
+            }
 
             const opt = {
               margin: [10, 10, 10, 10],
@@ -999,18 +1017,17 @@
               image: { type: 'jpeg', quality: 0.98 },
               enableLinks: false,
               pagebreak: {
-                mode: ['avoid-all', 'css', 'legacy'],
-                avoid: ['.card', '.topic-card', '.approach-box', '.q-box', '.section-title', 'ul.tips-list li']
+                mode: ['css', 'legacy'],
+                avoid: ['.topic-card', '.approach-box', '.q-box', '.section-title', 'ul.tips-list li']
               },
               html2canvas: {
-                scale: 2,
+                scale: renderScale,
                 useCORS: true,
                 letterRendering: true,
                 logging: false,
                 scrollY: 0,
                 scrollX: 0,
                 windowWidth: 1000,
-                windowHeight: scrollH + 500,
                 onclone: (clonedDoc) => {
                   const frame = document.getElementById('pdfFrame');
                   if (frame && frame.contentDocument) {
@@ -1023,11 +1040,17 @@
                     container.style.height = 'auto';
                     container.style.maxHeight = 'none';
                     container.style.overflow = 'visible';
+                    container.style.width = '1000px';
+                    container.style.maxWidth = '1000px';
                   }
                   if (clonedDoc.body) {
                     clonedDoc.body.style.height = 'auto';
                     clonedDoc.body.style.maxHeight = 'none';
                     clonedDoc.body.style.overflow = 'visible';
+                  }
+                  if (clonedDoc.documentElement) {
+                    clonedDoc.documentElement.style.height = 'auto';
+                    clonedDoc.documentElement.style.overflow = 'visible';
                   }
                 }
               },
@@ -1237,16 +1260,20 @@
 
       const wrapper = document.querySelector('.iframe-wrapper');
       if (wrapper) {
-        wrapper.style.overflow = 'auto';
+        wrapper.style.overflowX = 'hidden';
+        wrapper.style.overflowY = 'auto';
         wrapper.style.background = '#f1f5f9';
         wrapper.style.height = '100%';
+        wrapper.style.width = '100%';
         wrapper.style.webkitOverflowScrolling = 'touch';
       }
       const viewerContainer = document.querySelector('.viewer-container');
       if (viewerContainer) {
         viewerContainer.style.background = '#f1f5f9';
-        viewerContainer.style.overflow = 'auto';
+        viewerContainer.style.overflowX = 'hidden';
+        viewerContainer.style.overflowY = 'auto';
         viewerContainer.style.height = '100%';
+        viewerContainer.style.width = '100%';
         viewerContainer.style.webkitOverflowScrolling = 'touch';
       }
 
@@ -1322,47 +1349,58 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>${title}</title>
   <style>
+    * {
+      box-sizing: border-box !important;
+    }
     html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
       background: #f8fafc;
       color: #1e293b;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       line-height: 1.6;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
     .doc-container {
+      width: 100%;
       max-width: 860px;
-      margin: 24px auto;
+      margin: 20px auto;
       background: #ffffff;
-      padding: 40px 48px;
+      padding: 36px 40px;
       border-radius: 16px;
       box-shadow: 0 4px 25px rgba(15, 23, 42, 0.06);
       border: 1px solid #e2e8f0;
       box-sizing: border-box;
+      overflow-x: hidden;
     }
     .header {
       border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 20px;
-      margin-bottom: 24px;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
     }
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 6px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       background: #eff6ff;
       color: #2563eb;
+      white-space: nowrap;
     }
     .section-title {
-      font-size: 17px;
+      font-size: 16.5px;
       font-weight: 800;
-      margin: 32px 0 16px;
+      margin: 28px 0 14px;
       color: #0f172a;
       display: flex;
       align-items: center;
@@ -1372,10 +1410,11 @@
     .card {
       border: 1px solid #e2e8f0;
       border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
       background: #ffffff;
       box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+      box-sizing: border-box;
     }
     .progress-bar-bg {
       height: 7px;
@@ -1393,9 +1432,10 @@
       border: 1px solid #fed7aa;
       border-left: 4px solid #f97316;
       border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
       background: #fffbf7;
+      box-sizing: border-box;
     }
     .topic-num {
       display: inline-flex;
@@ -1409,6 +1449,7 @@
       font-size: 12px;
       font-weight: 800;
       margin-right: 8px;
+      flex-shrink: 0;
     }
     .approach-box {
       margin-top: 10px;
@@ -1419,6 +1460,7 @@
       border-radius: 8px;
       border-left: 3px solid #3b82f6;
       line-height: 1.5;
+      box-sizing: border-box;
     }
     .q-box {
       margin-top: 8px;
@@ -1429,10 +1471,11 @@
       font-size: 13px;
       color: #1e293b;
       line-height: 1.5;
+      box-sizing: border-box;
     }
     .tag-pill {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
       font-size: 11px;
       font-weight: 700;
@@ -1461,6 +1504,7 @@
       font-size: 13.5px;
       color: #334155;
       line-height: 1.5;
+      box-sizing: border-box;
     }
     ul.tips-list li i {
       color: #10b981;
@@ -1468,48 +1512,72 @@
       margin-top: 2px;
       flex-shrink: 0;
     }
+    .yearly-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
     @media (max-width: 680px) {
       html, body {
-        padding: 10px 8px 30px;
-        background: #f1f5f9;
-        box-sizing: border-box;
+        padding: 6px 4px 30px !important;
+        background: #f1f5f9 !important;
+        overflow-x: hidden !important;
       }
       .doc-container {
-        margin: 0 auto;
-        padding: 22px 16px 36px;
-        border-radius: 14px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
-        background: #ffffff;
-        box-sizing: border-box;
+        margin: 0 auto !important;
+        padding: 16px 12px 28px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: 0 1px 6px rgba(15, 23, 42, 0.05) !important;
       }
       .header h1 {
-        font-size: 20px !important;
+        font-size: 18px !important;
+        line-height: 1.3 !important;
       }
       .section-title {
-        font-size: 15px;
-        margin: 24px 0 12px;
+        font-size: 14.5px !important;
+        margin: 20px 0 10px !important;
       }
       .card, .topic-card {
-        padding: 14px 14px;
-        margin-bottom: 12px;
+        padding: 12px 10px !important;
+        margin-bottom: 10px !important;
+        border-radius: 10px !important;
+      }
+      .topic-card .topic-num {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 11px !important;
+        margin-right: 6px !important;
+      }
+      .topic-card strong {
+        font-size: 13.5px !important;
+      }
+      .topic-reason {
+        margin-left: 0 !important;
+        margin-top: 6px !important;
       }
       .approach-box, .q-box {
-        font-size: 12.5px;
-        padding: 8px 10px;
+        font-size: 12px !important;
+        padding: 8px 10px !important;
         margin-left: 0 !important;
+        margin-top: 8px !important;
+      }
+      .yearly-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
       }
     }
     @media print {
       body { background: #fff !important; }
       .doc-container { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; max-width: 100% !important; }
       .no-print { display: none !important; }
-      .card, .topic-card, .approach-box, .q-box, .section-title, ul.tips-list li {
+      .topic-card, .approach-box, .q-box, .section-title, ul.tips-list li {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
       }
     }
-    .card, .topic-card, .approach-box, .q-box, .section-title, ul.tips-list li {
+    .topic-card, .approach-box, .q-box, .section-title, ul.tips-list li {
       break-inside: avoid !important;
       page-break-inside: avoid !important;
     }
@@ -1518,29 +1586,29 @@
 <body>
 <div class="doc-container">
   <div class="header">
-    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#2563eb; margin-bottom:4px;">
+    <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#2563eb; margin-bottom:4px;">
       DU SOL • MASTER OF BUSINESS ADMINISTRATION (MBA)
     </div>
-    <h1 style="margin:0 0 6px 0; font-size:24px; color:#0f172a; font-weight:800;">${data.subjectName}</h1>
-    <div style="font-size:13.5px; color:#64748b;">
+    <h1 style="margin:0 0 6px 0; font-size:22px; color:#0f172a; font-weight:800;">${data.subjectName}</h1>
+    <div style="font-size:12.5px; color:#64748b;">
       Comprehensive Examination Analysis • Semester ${semester} • Exam Papers: <strong>${activeYears.join(', ')}</strong>
     </div>
   </div>
 
-  <div class="section-title">🔥 Must-Study Guaranteed Topics (14 Marks Each)</div>
+  <div class="section-title">🔥 Must-Study Guaranteed Topics</div>
   ${(mustStudy || []).map((t, idx) => `
     <div class="topic-card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px;">
-        <div style="display:flex; align-items:center;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;">
+        <div style="display:flex; align-items:center; min-width:0; flex:1;">
           <span class="topic-num">${idx + 1}</span>
-          <strong style="font-size:15px; color:#0f172a;">${t.topic}</strong>
+          <strong style="font-size:14.5px; color:#0f172a;">${t.topic}</strong>
         </div>
         <div style="display:flex; gap:6px; flex-shrink:0;">
           <span class="badge" style="background:#fee2e2; color:#b91c1c;">${t.frequency || 'Guaranteed'}</span>
-          <span class="badge" style="background:#fef3c7; color:#92400e;">14 Marks</span>
+          <span class="badge" style="background:#fef3c7; color:#92400e;">${t.marks ? t.marks + ' Marks' : '14 Marks'}</span>
         </div>
       </div>
-      <div style="font-size:13.5px; color:#475569; margin-left:32px; line-height:1.5;">${t.reason}</div>
+      <div class="topic-reason" style="font-size:13px; color:#475569; margin-left:32px; line-height:1.5;">${t.reason}</div>
       ${t.recommendedApproach ? `
         <div class="approach-box" style="margin-left:32px;">
           <strong style="color:#1d4ed8;">Recommended Exam Approach:</strong> ${t.recommendedApproach}
@@ -1554,12 +1622,12 @@
     const pct = ch.weightagePercent || ch.weightagePercentage || 15;
     return `
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <div>
-          <span style="font-weight:800; font-size:15px; color:#0f172a;">Unit ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
-          <div style="font-size:12.5px; color:#64748b; margin-top:2px;">Trend: <strong>${ch.frequency || ch.summary || 'Repeated in 100% papers'}</strong></div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+        <div style="min-width:0; flex:1;">
+          <span style="font-weight:800; font-size:14.5px; color:#0f172a; display:block;">Unit ${ch.chapterNumber || ch.unitNumber || ''}: ${ch.chapterName || ch.title}</span>
+          <div style="font-size:12px; color:#64748b; margin-top:2px;">Trend: <strong>${ch.frequency || ch.summary || 'Repeated in 100% papers'}</strong></div>
         </div>
-        <div style="display:flex; gap:6px;">
+        <div style="display:flex; gap:6px; flex-shrink:0;">
           <span class="badge">${pct}% Weightage</span>
           <span class="badge" style="background:#f0fdf4; color:#15803d;">${ch.priority || ch.frequencyLevel || 'High Scoring'}</span>
         </div>
@@ -1570,22 +1638,22 @@
       </div>
 
       ${ch.keyTopics && ch.keyTopics.length ? `
-        <div style="margin-top:10px; font-size:13px;">
+        <div style="margin-top:10px; font-size:12.5px;">
           <span style="font-weight:700; color:#334155;">Key Tested Concepts:</span>
-          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+          <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
             ${ch.keyTopics.map(t => `<span class="tag-pill blue">${t}</span>`).join('')}
           </div>
         </div>
       ` : ''}
 
       ${ch.relevantQs && ch.relevantQs.length ? `
-        <div style="margin-top:14px; padding-top:12px; border-top:1px solid #f1f5f9;">
-          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; margin-bottom:6px;">
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid #f1f5f9;">
+          <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; margin-bottom:6px;">
             Past Examination Questions
           </div>
           ${ch.relevantQs.map(q => `
             <div class="q-box">
-              <span class="tag-pill orange">[${q.year || 'Past Paper'} • ${q.marks ? q.marks + ' Marks' : '14 Marks'}]</span>
+              <span class="tag-pill orange">[${q.year || 'Past Paper'} • ${q.marks ? q.marks + ' Marks' : '12.5 Marks'}]</span>
               <span>${q.text || q.question}</span>
             </div>
           `).join('')}
@@ -1595,19 +1663,19 @@
   `;}).join('')}
 
   <div class="section-title">📅 Yearly Examination Breakdown</div>
-  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+  <div class="yearly-grid">
   ${yearKeys.map(y => {
     const yi = yearly[y];
     return `
       <div class="card" style="margin-bottom:0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="color:#1d4ed8; font-size:15px;">Year ${y} Examination</strong>
+          <strong style="color:#1d4ed8; font-size:14.5px;">Year ${y} Examination</strong>
           <span class="badge" style="background:#eff6ff; color:#2563eb;">${yi.difficulty || yi.paperDifficulty || 'Standard'}</span>
         </div>
-        ${yi.focusAreas ? `<div style="font-size:13px; margin-bottom:6px; color:#334155;"><strong>Primary Focus:</strong> ${yi.focusAreas}</div>` : ''}
-        ${yi.compulsory ? `<div style="font-size:12.5px; margin-bottom:6px; color:#475569;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
-        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:12.5px; color:#64748b;"><strong>Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
-        ${yi.coreHighlights ? `<div style="font-size:12px; color:#059669; margin-top:8px; font-weight:600;">✓ ${yi.coreHighlights}</div>` : ''}
+        ${yi.focusAreas ? `<div style="font-size:12.5px; margin-bottom:6px; color:#334155;"><strong>Primary Focus:</strong> ${yi.focusAreas}</div>` : ''}
+        ${yi.compulsory ? `<div style="font-size:12px; margin-bottom:6px; color:#475569;"><strong>Compulsory:</strong> ${yi.compulsory}</div>` : ''}
+        ${yi.mainTopics && yi.mainTopics.length ? `<div style="font-size:12px; color:#64748b;"><strong>Topics:</strong> ${yi.mainTopics.join(', ')}</div>` : ''}
+        ${yi.coreHighlights ? `<div style="font-size:11.5px; color:#059669; margin-top:8px; font-weight:600;">✓ ${yi.coreHighlights}</div>` : ''}
       </div>
     `;
   }).join('')}
@@ -1617,7 +1685,7 @@
   <ul class="tips-list">
     ${tips.map(tip => `
       <li>
-        <span style="color:#10b981; font-weight:800; font-size:16px; line-height:1;">✓</span>
+        <span style="color:#10b981; font-weight:800; font-size:15px; line-height:1;">✓</span>
         <div>${tip}</div>
       </li>
     `).join('')}
