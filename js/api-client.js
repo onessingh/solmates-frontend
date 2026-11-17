@@ -981,6 +981,24 @@ class SolmatesAPI {
       method: 'DELETE'
     });
   }
+
+  // =====================================================
+  // PYQ Analyzer Methods
+  // =====================================================
+  async getPyqAnalysis(semester, folderId) {
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
+  }
+
+  async getSubjectPyqItems(semester, folderId) {
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items`);
+  }
+
+  async generatePyqAnalysis(semester, folderId, payload = {}) {
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }, 120000);
+  }
 }
 
 // =====================================================

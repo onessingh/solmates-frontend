@@ -2271,11 +2271,38 @@
       });
     }
 
+    function getAdminAuthToken() {
+      let t = (window.solmatesAPI && (window.solmatesAPI.adminToken || window.solmatesAPI.token)) ||
+              localStorage.getItem('solmates_admin_token') ||
+              localStorage.getItem('adminToken') ||
+              localStorage.getItem('solmates_token') ||
+              localStorage.getItem('token') ||
+              localStorage.getItem('admin_token') || '';
+      if (t) {
+        t = String(t).trim();
+        if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+          t = t.slice(1, -1).trim();
+        }
+        t = t.replace(/^Bearer\s+/i, '').trim();
+      }
+      return t;
+    }
+
     async function _fetchPyqItemsAPI(sem, fId) {
+      if (window.solmatesAPI && typeof window.solmatesAPI.getSubjectPyqItems === 'function') {
+        try {
+          return await window.solmatesAPI.getSubjectPyqItems(sem, fId);
+        } catch (e) {
+          console.warn('solmatesAPI.getSubjectPyqItems failed, falling back:', e);
+        }
+      }
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items`);
+      const headers = {};
+      const token = getAdminAuthToken();
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items`, { headers });
       return await r.json();
     }
 
@@ -2285,11 +2312,11 @@
       if (VERIFIED_REAL_ANALYSES[String(fId)]) {
         return { success: true, data: { ...VERIFIED_REAL_ANALYSES[String(fId)] } };
       }
-      if (window.solmatesAPI && typeof window.solmatesAPI.getPyqAnalysis === 'function' && !window.solmatesAPI._isPolyfilled) {
+      if (window.solmatesAPI && typeof window.solmatesAPI.getPyqAnalysis === 'function') {
         try {
           return await window.solmatesAPI.getPyqAnalysis(sem, fId);
         } catch (e) {
-          console.warn('solmatesAPI.getPyqAnalysis threw, falling back to direct fetch:', e);
+          console.warn('solmatesAPI.getPyqAnalysis failed, falling back:', e);
         }
       }
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
@@ -2300,19 +2327,22 @@
     }
 
     async function _generatePyqAnalysisAPI(sem, fId, payload = {}) {
-      if (window.solmatesAPI && typeof window.solmatesAPI.generatePyqAnalysis === 'function' && !window.solmatesAPI._isPolyfilled) {
+      if (window.solmatesAPI && typeof window.solmatesAPI.generatePyqAnalysis === 'function') {
         try {
           return await window.solmatesAPI.generatePyqAnalysis(sem, fId, payload);
         } catch (e) {
-          console.warn('solmatesAPI.generatePyqAnalysis threw, falling back to direct fetch:', e);
+          console.warn('solmatesAPI.generatePyqAnalysis failed, falling back to direct fetch:', e);
         }
       }
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
       const headers = { 'Content-Type': 'application/json' };
-      const token = (window.solmatesAPI && window.solmatesAPI.token) || localStorage.getItem('token') || localStorage.getItem('admin_token');
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const token = getAdminAuthToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        if (!payload.token) payload.token = token;
+      }
       const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`, {
         method: 'POST',
         headers,
