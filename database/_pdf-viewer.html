@@ -867,59 +867,118 @@
         const cleanFileName = (title.replace(/[^a-z0-9_\-\s]/gi, '').trim() || 'Document') + '.pdf';
 
         const btn = document.getElementById('dlBtn');
-        const origBtn = btn ? btn.innerHTML : '';
+        const origBtnHtml = btn ? btn.innerHTML : '';
         if (btn) {
           btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Preparing...</span>';
           btn.style.pointerEvents = 'none';
         }
 
-        try {
-          const opt = {
-            margin: [10, 10, 10, 10],
-            filename: cleanFileName,
-            image: { type: 'jpeg', quality: 0.98 },
-            pagebreak: {
-              mode: ['avoid-all', 'css', 'legacy'],
-              avoid: ['.card', '.topic-card', '.approach-box', '.q-box', '.section-title', 'ul.tips-list li']
-            },
-            html2canvas: {
-              scale: 2,
-              useCORS: true,
-              letterRendering: true,
-              logging: false,
-              onclone: (clonedDoc) => {
-                const frame = document.getElementById('pdfFrame');
-                if (frame && frame.contentDocument) {
-                  frame.contentDocument.querySelectorAll('style, link[rel="stylesheet"]').forEach(s => {
-                    clonedDoc.head.appendChild(s.cloneNode(true));
-                  });
-                }
-              }
-            },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-          };
-          const rawBlob = await html2pdf().set(opt).from(docElem).outputPdf('blob');
-          const rawBuf = await rawBlob.arrayBuffer();
-          const watermarkedBlob = await applySolmatesWatermark(rawBuf);
-
-          const blobUrl = URL.createObjectURL(watermarkedBlob);
-          const a = document.createElement('a');
-          a.href = blobUrl;
-          a.download = cleanFileName;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
-          showToast("Watermarked PDF Downloaded Successfully! 📄", "success", 4000);
-        } catch (err) {
-          console.error('Download error:', err);
-          showToast("Failed to generate PDF.", "error", 4000);
-        } finally {
-          if (btn) {
-            btn.innerHTML = origBtn;
-            btn.style.pointerEvents = 'auto';
-          }
+        const modalFileName = document.getElementById('dlModalFileName');
+        if (modalFileName) {
+          modalFileName.textContent = cleanFileName;
         }
+
+        const statusEl = document.getElementById('dlModalStatus');
+        if (statusEl) {
+          statusEl.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0;">
+              <i class="fas fa-circle-notch fa-spin fa-2x" style="color:#2563eb;"></i>
+              <span style="font-size:14px; font-weight:700; color:#1e293b;">Generating Complete PDF...</span>
+              <span style="font-size:12px; color:#64748b;">Compiling all chapters, questions and watermark</span>
+            </div>
+          `;
+        }
+
+        const overlay = document.getElementById('downloadModalOverlay');
+        if (overlay) overlay.classList.add('open');
+
+        // Render full PDF without 5-second cutoff
+        (async () => {
+          try {
+            if (typeof html2pdf === 'undefined') {
+              throw new Error('html2pdf library not loaded');
+            }
+
+            const scrollH = docElem.scrollHeight || 3500;
+
+            const opt = {
+              margin: [10, 10, 10, 10],
+              filename: cleanFileName,
+              image: { type: 'jpeg', quality: 0.98 },
+              enableLinks: false,
+              pagebreak: {
+                mode: ['avoid-all', 'css', 'legacy'],
+                avoid: ['.card', '.topic-card', '.approach-box', '.q-box', '.section-title', 'ul.tips-list li']
+              },
+              html2canvas: {
+                scale: 2,
+                useCORS: true,
+                letterRendering: true,
+                logging: false,
+                scrollY: 0,
+                scrollX: 0,
+                windowWidth: 1000,
+                windowHeight: scrollH + 500,
+                onclone: (clonedDoc) => {
+                  const frame = document.getElementById('pdfFrame');
+                  if (frame && frame.contentDocument) {
+                    frame.contentDocument.querySelectorAll('style, link[rel="stylesheet"]').forEach(s => {
+                      clonedDoc.head.appendChild(s.cloneNode(true));
+                    });
+                  }
+                  const container = clonedDoc.querySelector('.doc-container');
+                  if (container) {
+                    container.style.height = 'auto';
+                    container.style.maxHeight = 'none';
+                    container.style.overflow = 'visible';
+                  }
+                  if (clonedDoc.body) {
+                    clonedDoc.body.style.height = 'auto';
+                    clonedDoc.body.style.maxHeight = 'none';
+                    clonedDoc.body.style.overflow = 'visible';
+                  }
+                }
+              },
+              jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            const rawBlob = await html2pdf().set(opt).from(docElem).outputPdf('blob');
+            const rawBuffer = await rawBlob.arrayBuffer();
+            const watermarkedBlob = await applySolmatesWatermark(rawBuffer);
+
+            if (statusEl) {
+              statusEl.innerHTML = '<div style="color:#22c55e; font-weight:700; font-size:15px; margin:8px 0;"><i class="fas fa-check-circle"></i> Download Complete!</div>';
+            }
+
+            if (watermarkedBlob) {
+              const blobUrl = URL.createObjectURL(watermarkedBlob);
+              const a = document.createElement('a');
+              a.href = blobUrl;
+              a.download = cleanFileName;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+              showToast("Watermarked PDF Downloaded Successfully! 📄", "success", 4000);
+            } else {
+              showToast("Failed to generate PDF.", "error", 4000);
+            }
+          } catch (e) {
+            console.error('Analysis PDF render failed:', e);
+            if (statusEl) {
+              statusEl.innerHTML = `<div style="color:#ef4444; font-weight:700; font-size:13px; margin:8px 0;">Generation failed: ${e.message}</div>`;
+            }
+            showToast("Failed to generate PDF. Please try again.", "error", 4000);
+          } finally {
+            if (btn) {
+              btn.innerHTML = origBtnHtml;
+              btn.style.pointerEvents = 'auto';
+            }
+            dlModalCloseTimeout = setTimeout(() => {
+              closeDownloadModal();
+            }, 1200);
+          }
+        })();
         return;
       }
       const rawUrl = params.get('file');
@@ -1139,21 +1198,46 @@
         const data = json?.data;
         if (!data) throw new Error('Analysis report not found.');
 
+        const cleanStr = (s) => {
+          if (!s || typeof s !== 'string') return s;
+          return s
+            .replace(/35\+\s*marks\s*out\s*of\s*75/gi, '28+ marks out of 70 (Passing Guarantee)')
+            .replace(/out\s*of\s*75/gi, 'out of 70')
+            .replace(/\b75\s*marks\b/gi, '70 marks')
+            .replace(/\b15-mark\b/gi, '14-mark')
+            .replace(/\b15\s*marks\b/gi, '14 marks');
+        };
+
         const activeYears = selectedYears && selectedYears.length ? selectedYears : (data.analyzedYears || []);
-        const struct = data.examStructure || {};
         
         const chapters = (data.chapters || []).map(ch => {
-          const relevantQs = (ch.sampleQuestions || []).filter(q => (!selectedYears || !q.year || activeYears.includes(String(q.year))));
-          return { ...ch, relevantQs };
+          const relevantQs = (ch.sampleQuestions || []).filter(q => (!selectedYears || !q.year || activeYears.includes(String(q.year)))).map(q => ({
+            ...q,
+            text: cleanStr(q.text || q.question || ''),
+            marks: (q.marks === 15 || q.marks === '15' || q.marks === 75 || q.marks === '75' || !q.marks) ? 14 : q.marks
+          }));
+          return { 
+            ...ch, 
+            summary: cleanStr(ch.summary || ''),
+            relevantQs 
+          };
         });
+
+        const mustStudy = (data.mustStudyTopics || []).map(t => ({
+          ...t,
+          topic: cleanStr(t.topic || ''),
+          reason: cleanStr(t.reason || ''),
+          recommendedApproach: cleanStr(t.recommendedApproach || ''),
+          marks: (t.marks === 15 || t.marks === 20 || t.marks === 75 || !t.marks) ? 14 : t.marks
+        }));
 
         const yearly = data.yearlyBreakdown || {};
         const yearKeys = Object.keys(yearly).filter(y => (!selectedYears || activeYears.includes(y)));
-        const tips = data.strategyTips || [
+        const tips = (data.strategyTips || [
           data.examStrategy?.passingBlueprint,
           data.examStrategy?.scoringSecret,
           data.examStrategy?.timeManagement
-        ].filter(Boolean);
+        ]).filter(Boolean).map(cleanStr);
 
         const reportHtml = `<!DOCTYPE html>
 <html>
@@ -1195,34 +1279,6 @@
       font-weight: 700;
       background: #eff6ff;
       color: #2563eb;
-    }
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-    .stat-card {
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 16px 12px;
-      text-align: center;
-      background: #f8fafc;
-      transition: all 0.2s ease;
-    }
-    .stat-val {
-      font-size: 22px;
-      font-weight: 800;
-      color: #1e293b;
-      line-height: 1.2;
-    }
-    .stat-lbl {
-      font-size: 11px;
-      color: #64748b;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-top: 6px;
     }
     .section-title {
       font-size: 17px;
@@ -1393,7 +1449,7 @@
   </div>
 
   <div class="section-title">🔥 Must-Study Guaranteed Topics (14 Marks Each)</div>
-  ${(data.mustStudyTopics || []).map((t, idx) => `
+  ${(mustStudy || []).map((t, idx) => `
     <div class="topic-card">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px;">
         <div style="display:flex; align-items:center;">
