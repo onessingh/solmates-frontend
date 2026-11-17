@@ -2366,7 +2366,8 @@
       const headers = {};
       const token = getAdminAuthToken();
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items?admin_force=true&_v=${Date.now()}`, { headers });
+      const itemsUrl = token ? `${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items?admin_force=true` : `${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items`;
+      const r = await fetch(itemsUrl, { headers });
       return await r.json();
     }
 
@@ -2386,7 +2387,7 @@
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}?admin_force=true&_v=${Date.now()}`);
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`);
       return await r.json();
     }
 
@@ -2563,12 +2564,16 @@
             ${ch.relevantQs && ch.relevantQs.length ? `
               <div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color); font-size:12px;">
                 <strong>Past Examination Questions:</strong>
-                ${ch.relevantQs.map(q => `
+                ${ch.relevantQs.map(q => {
+                  const qNum = q.qNumber || q.questionNumber || (q.text && q.text.match(/^(?:Q(?:uestion)?\.?\s*(\d+[a-z]?|\([a-z]\)))/i)?.[0]) || '';
+                  const cleanText = q.text ? q.text.replace(/^(?:Q(?:uestion)?\.?\s*\d+[a-z]?[\s:.-]*)/i, '') : (q.question || '');
+                  return `
                   <div style="margin-top:4px; padding:6px 10px; background:var(--bg-body); border-radius:8px; color:var(--text-main);">
-                    <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}]</span> ${q.text || q.question}
+                    <span style="font-weight:700; color:#2563eb;">[${q.year || 'Past Paper'}${qNum ? ' • ' + qNum : ''}]</span> ${cleanText}
                     ${q.marks ? `<span style="float:right; font-weight:700; color:#10b981;">${q.marks} Marks</span>` : ''}
                   </div>
-                `).join('')}
+                  `;
+                }).join('')}
               </div>
             ` : ''}
           </div>

@@ -678,7 +678,7 @@ class SolmatesAPI {
 
   // ========== PYQ INTELLIGENT ANALYZER ==========
   async getPyqAnalysis(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}?admin_force=true&_v=${Date.now()}`);
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
   }
 
   async generatePyqAnalysis(semester, folderId, payload = {}) {
@@ -689,7 +689,7 @@ class SolmatesAPI {
   }
 
   async getSubjectPyqItems(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items?admin_force=true&_v=${Date.now()}`);
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}/items`);
   }
 
   // ========== CHATBOT ==========
