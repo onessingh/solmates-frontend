@@ -1013,6 +1013,14 @@
             exportWrapper.innerHTML = `
               ${styleTags}
               <style>
+                #printExportWrapper,
+                #printExportWrapper * {
+                  letter-spacing: 0 !important;
+                  word-spacing: normal !important;
+                  word-break: normal !important;
+                  overflow-wrap: normal !important;
+                  font-family: "Segoe UI", Roboto, Arial, sans-serif !important;
+                }
                 #printExportWrapper .doc-container {
                   width: 720px !important;
                   max-width: 720px !important;
@@ -1033,6 +1041,17 @@
                   box-sizing: border-box !important;
                   max-width: 100% !important;
                 }
+                #printExportWrapper .section-title {
+                  letter-spacing: 0 !important;
+                  font-size: 16px !important;
+                  font-weight: 700 !important;
+                  gap: 8px !important;
+                }
+                #printExportWrapper .badge {
+                  letter-spacing: 0 !important;
+                  font-weight: 600 !important;
+                  white-space: nowrap !important;
+                }
               </style>
               ${docHtml}
             `;
@@ -1051,7 +1070,7 @@
               html2canvas: {
                 scale: 1.5,
                 useCORS: true,
-                letterRendering: true,
+                letterRendering: false,
                 logging: false,
                 scrollY: 0,
                 scrollX: 0
@@ -1403,14 +1422,15 @@
       white-space: nowrap;
     }
     .section-title {
-      font-size: 16.5px;
-      font-weight: 800;
+      font-size: 16px;
+      font-weight: 700;
       margin: 28px 0 14px;
       color: #0f172a;
       display: flex;
       align-items: center;
       gap: 8px;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
+      word-spacing: normal;
     }
     .card {
       border: 1px solid #e2e8f0;
@@ -1591,7 +1611,7 @@
 <body>
 <div class="doc-container">
   <div class="header">
-    <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#2563eb; margin-bottom:4px;">
+    <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0; color:#2563eb; margin-bottom:4px;">
       DU SOL • MASTER OF BUSINESS ADMINISTRATION (MBA)
     </div>
     <h1 style="margin:0 0 6px 0; font-size:22px; color:#0f172a; font-weight:800;">${data.subjectName}</h1>
@@ -1600,7 +1620,7 @@
     </div>
   </div>
 
-  <div class="section-title">🔥 Must-Study Guaranteed Topics</div>
+  <div class="section-title"><span>🔥</span> <span>Must-Study Guaranteed Topics</span></div>
   ${(mustStudy || []).map((t, idx) => `
     <div class="topic-card">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;">
@@ -1622,7 +1642,7 @@
     </div>
   `).join('')}
 
-  <div class="section-title">📚 Unit & Chapter Weightage (Scoring Distribution)</div>
+  <div class="section-title"><span>📚</span> <span>Unit & Chapter Weightage (Scoring Distribution)</span></div>
   ${chapters.map(ch => {
     const pct = ch.weightagePercent || ch.weightagePercentage || 15;
     return `
@@ -1653,7 +1673,7 @@
 
       ${ch.relevantQs && ch.relevantQs.length ? `
         <div style="margin-top:12px; padding-top:10px; border-top:1px solid #f1f5f9;">
-          <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; margin-bottom:6px;">
+          <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0; color:#64748b; margin-bottom:6px;">
             Past Examination Questions
           </div>
           ${ch.relevantQs.map(q => `
@@ -1667,7 +1687,7 @@
     </div>
   `;}).join('')}
 
-  <div class="section-title">📅 Yearly Examination Breakdown</div>
+  <div class="section-title"><span>📅</span> <span>Yearly Examination Breakdown</span></div>
   <div class="yearly-grid">
   ${yearKeys.map(y => {
     const yi = yearly[y];
@@ -1686,7 +1706,7 @@
   }).join('')}
   </div>
 
-  <div class="section-title">💡 48-Hour High-Score Exam Strategy Tips</div>
+  <div class="section-title"><span>💡</span> <span>48-Hour High-Score Exam Strategy Tips</span></div>
   <ul class="tips-list">
     ${tips.map(tip => `
       <li>
