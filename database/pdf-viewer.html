@@ -1569,11 +1569,11 @@
       ${ch.relevantQs && ch.relevantQs.length ? `
         <div style="margin-top:14px; padding-top:12px; border-top:1px solid #f1f5f9;">
           <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#64748b; margin-bottom:6px;">
-            Sample Examination Questions (14 Marks)
+            Past Examination Questions
           </div>
           ${ch.relevantQs.map(q => `
             <div class="q-box">
-              <span class="tag-pill orange">[${q.year || 'Past Paper'} • 14 Marks]</span>
+              <span class="tag-pill orange">[${q.year || 'Past Paper'} • ${q.marks ? q.marks + ' Marks' : '14 Marks'}]</span>
               <span>${q.text || q.question}</span>
             </div>
           `).join('')}
