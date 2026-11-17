@@ -1899,21 +1899,37 @@
 
     function getCurrentSubjectInfo() {
       const isPyqCat = (CATEGORY || '').toLowerCase().includes('pyq');
-      if (!isPyqCat || !semester || !folderId || !navStack || navStack.length < 2) return null;
+      if (!isPyqCat) return null;
 
-      const currentFolder = navStack[navStack.length - 1];
-      if (!currentFolder) return null;
-      const currentName = (currentFolder.name || '').trim();
+      const params = new URLSearchParams(window.location.search);
+      const urlFolderId = params.get('folderId') || folderId;
+      const urlName = params.get('name');
 
-      // Check if current folder is a grouping / specialization folder (e.g. Core, Finance, Marketing, HR, Electives)
-      const isGroupFolder = /^(core|finance|marketing|human resource|hr|operations|it|analytics|specialisation|specialization|elective|electives)$/i.test(currentName);
-      if (isGroupFolder) return null;
+      if (navStack && navStack.length >= 1) {
+        // Look from the top of the stack downwards for a valid subject folder
+        for (let i = navStack.length - 1; i >= 0; i--) {
+          const item = navStack[i];
+          if (!item) continue;
+          const name = (item.name || '').trim();
+          if (!name || /^semester/i.test(name)) continue;
+          const isGroupFolder = /^(core|finance|marketing|human resource|hr|operations|it|analytics|specialisation|specialization|elective|electives)$/i.test(name);
+          if (isGroupFolder) continue;
 
-      const cleanSubjectName = currentName.replace(/\[.*?\]/g, '').trim() || 'Subject';
-      return {
-        subjectName: cleanSubjectName,
-        folderId: currentFolder.folderId || folderId
-      };
+          return {
+            subjectName: name.replace(/\[.*?\]/g, '').trim() || 'Subject',
+            folderId: item.folderId || urlFolderId || folderId
+          };
+        }
+      }
+
+      if (urlFolderId) {
+        return {
+          subjectName: (urlName || 'Subject').replace(/\[.*?\]/g, '').trim(),
+          folderId: urlFolderId
+        };
+      }
+
+      return null;
     }
 
     async function updatePyqAnalyzerBar() {
@@ -2218,49 +2234,35 @@
       }
     }
 
-    async function openPyqAnalyzerModal(mode) {
-      const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' ? window.solmatesAPI.isAdminLoggedIn() : !!localStorage.getItem('admin_token');
-      if (isAdmin && mode !== 'view') {
-        return openAdminPyqModal();
-      }
-
-      const modal = document.getElementById('pyqAnalyzerModal');
-      if (!modal) return;
+    async function ensureStudentPyqItemsLoaded() {
       const subjInfo = getCurrentSubjectInfo();
       const subjectName = subjInfo ? subjInfo.subjectName : 'Subject';
       const curFolderId = subjInfo ? subjInfo.folderId : folderId;
 
-      document.getElementById('pyqModalSubjectTitle').innerHTML = `<i class="fas fa-brain" style="color: #2563eb;"></i> Analyse PYQs — ${subjectName}`;
-      const adminStep = document.getElementById('pyqAdminItemStep');
-      if (adminStep) adminStep.style.display = 'none';
-      document.getElementById('pyqStepSelection').style.display = 'block';
-      document.getElementById('pyqStepReport').style.display = 'none';
+      const titleEl = document.getElementById('pyqModalSubjectTitle');
+      if (titleEl) {
+        titleEl.innerHTML = `<i class="fas fa-brain" style="color: #2563eb;"></i> Analyse PYQs — ${subjectName}`;
+      }
 
       const cbContainer = document.getElementById('pyqYearCheckboxes');
       const countEl = document.getElementById('pyqStudentPaperCount');
+
+      if (cbContainer && cbContainer.querySelectorAll('input[name="studentPyqItem"]').length > 0) {
+        return;
+      }
+
       if (cbContainer) {
         cbContainer.innerHTML = `<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:12px;"><i class="fas fa-spinner fa-spin"></i> Loading question papers...</div>`;
       }
 
-      const adminBox = document.getElementById('pyqAdminControls');
-      if (adminBox) adminBox.style.display = isAdmin ? 'block' : 'none';
-
-      selectPyqMode('auto');
-      modal.classList.add('open');
-
       try {
-        const [analysisRes, itemRes] = await Promise.allSettled([
-          _fetchPyqAnalysisAPI(semester, curFolderId),
-          _fetchPyqItemsAPI(semester, curFolderId)
-        ]);
-
-        if (analysisRes.status === 'fulfilled' && analysisRes.value && analysisRes.value.data) {
-          _currentPyqAnalysis = analysisRes.value.data;
+        let items = [];
+        const res = await _fetchPyqItemsAPI(semester, curFolderId);
+        if (res && res.items && Array.isArray(res.items)) {
+          items = res.items;
         }
 
-        const items = (itemRes.status === 'fulfilled' && itemRes.value && itemRes.value.items) ? itemRes.value.items : [];
         const qpItems = items.filter(it => !it.isAnswerKey);
-
         if (countEl) countEl.innerText = qpItems.length;
 
         if (cbContainer) {
@@ -2282,8 +2284,52 @@
             `).join('');
           }
         }
-      } catch (e) {
-        console.warn('Error loading student PYQ items:', e);
+      } catch (err) {
+        console.warn('ensureStudentPyqItemsLoaded error:', err);
+        if (cbContainer) {
+          cbContainer.innerHTML = `<div style="color:var(--text-muted); font-size:12px; padding:6px;">Failed to load question papers. Please try again.</div>`;
+        }
+      }
+    }
+
+    async function openPyqAnalyzerModal(mode) {
+      const isAdmin = window.solmatesAPI && typeof window.solmatesAPI.isAdminLoggedIn === 'function' ? window.solmatesAPI.isAdminLoggedIn() : !!localStorage.getItem('admin_token');
+      if (isAdmin && mode !== 'view') {
+        return openAdminPyqModal();
+      }
+
+      const modal = document.getElementById('pyqAnalyzerModal');
+      if (!modal) return;
+      const subjInfo = getCurrentSubjectInfo();
+      const subjectName = subjInfo ? subjInfo.subjectName : 'Subject';
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
+      const titleEl = document.getElementById('pyqModalSubjectTitle');
+      if (titleEl) {
+        titleEl.innerHTML = `<i class="fas fa-brain" style="color: #2563eb;"></i> Analyse PYQs — ${subjectName}`;
+      }
+      const adminStep = document.getElementById('pyqAdminItemStep');
+      if (adminStep) adminStep.style.display = 'none';
+      document.getElementById('pyqStepSelection').style.display = 'block';
+      document.getElementById('pyqStepReport').style.display = 'none';
+
+      const adminBox = document.getElementById('pyqAdminControls');
+      if (adminBox) adminBox.style.display = isAdmin ? 'block' : 'none';
+
+      selectPyqMode('auto');
+      modal.classList.add('open');
+
+      ensureStudentPyqItemsLoaded();
+
+      if (!_currentPyqAnalysis) {
+        try {
+          const analysisRes = await _fetchPyqAnalysisAPI(semester, curFolderId);
+          if (analysisRes && analysisRes.data) {
+            _currentPyqAnalysis = analysisRes.data;
+          }
+        } catch (e) {
+          console.warn('Analysis fetch error:', e);
+        }
       }
     }
 
@@ -2324,7 +2370,7 @@
       const headers = {};
       const token = getAdminAuthToken();
       if (token) headers['Authorization'] = `Bearer ${token}`;
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items`, { headers });
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}/items?admin_force=true&_v=${Date.now()}`, { headers });
       return await r.json();
     }
 
@@ -2410,6 +2456,7 @@
         iconManual.className = 'fas fa-check-circle';
         iconAuto.className = 'far fa-circle';
         if (manualBox) manualBox.style.display = 'block';
+        ensureStudentPyqItemsLoaded();
       }
     }
 
@@ -2604,6 +2651,7 @@
     function backToPyqSelection() {
       document.getElementById('pyqStepReport').style.display = 'none';
       document.getElementById('pyqStepSelection').style.display = 'block';
+      ensureStudentPyqItemsLoaded();
     }
 
     async function adminSyncPyqAnalysis() {

@@ -1007,12 +1007,9 @@
             // 720px exactly matches A4 190mm printable width at 96 DPI, preventing any right-edge cut-off
             exportWrapper.style.width = '720px';
             exportWrapper.style.maxWidth = '720px';
-            exportWrapper.style.margin = '0';
+            exportWrapper.style.margin = '0 auto';
             exportWrapper.style.padding = '0';
             exportWrapper.style.background = '#ffffff';
-            exportWrapper.style.position = 'fixed';
-            exportWrapper.style.left = '-9999px';
-            exportWrapper.style.top = '0';
             exportWrapper.innerHTML = `
               ${styleTags}
               <style>
