@@ -1353,7 +1353,7 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="folderModal">
+  <div class="modal-overlay" id="folderModal" onclick="if(event.target===this) closeModal('folderModal');">
     <div class="modal-box">
       <h2><i class="fas fa-folder-plus"></i> New Folder</h2>
       <div class="field">
@@ -1367,7 +1367,7 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="linkModal">
+  <div class="modal-overlay" id="linkModal" onclick="if(event.target===this) closeModal('linkModal');">
     <div class="modal-box">
       <h2><i class="fas fa-link"></i> Add Link</h2>
       <div class="field">
@@ -1385,7 +1385,7 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="moveModal">
+  <div class="modal-overlay" id="moveModal" onclick="if(event.target===this) closeModal('moveModal');">
     <div class="modal-box">
       <h2><i class="fas fa-arrows-alt"></i> Move Item</h2>
       <div class="field">
@@ -1411,7 +1411,7 @@
   </div>
 
   <!-- PYQ Intelligent Analyzer Modal -->
-  <div class="modal-overlay" id="pyqAnalyzerModal">
+  <div class="modal-overlay" id="pyqAnalyzerModal" onclick="if(event.target===this) closePyqModal();">
     <div class="modal-box" style="max-width: 680px; width: 92%; max-height: 88vh; display: flex; flex-direction: column; padding: 22px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
         <h2 id="pyqModalSubjectTitle" style="font-size: 18px; margin: 0; color: var(--text-main); font-weight: 700; display:flex; align-items:center; gap:8px;">
@@ -1596,9 +1596,22 @@
       else { if (typeof renderSemesters === 'function') renderSemesters(true); }
     });
 
-                function showSolLoader(type) {
+    function showSolLoader(type) {
       const grid = document.getElementById('grid');
       if (!grid) return;
+      if (grid) grid.removeAttribute('data-rendered-key');
+      _lastRenderedKey = '';
+
+      // Watchdog: loader can never remain permanently stuck
+      clearTimeout(window._loaderSafetyTimer);
+      window._loaderSafetyTimer = setTimeout(() => {
+        const g = document.getElementById('grid');
+        if (g && g.querySelector('.sol-loader-container')) {
+          console.warn('[SOL] Watchdog: Loader stuck detected, forcing content render');
+          if (typeof loadContent === 'function') loadContent(true);
+        }
+      }, 3500);
+
       const animType = type || (folderId ? 'book' : 'folder');
       const expectedClass = animType === 'folder' ? 'concept-folder' : 'concept-book';
       const curLoader = grid.querySelector('.sol-loader-container');
@@ -1706,7 +1719,7 @@
           folders.map(f => (f.id || f._id) + (f.name || '')).join('|') + '_' +
           items.map(it => (it.id || it._id) + (it.title || it.subject || '')).join('|');
 
-        if (_lastRenderedKey === renderKey && grid && grid.getAttribute('data-rendered-key') === renderKey) {
+        if (_lastRenderedKey === renderKey && grid && grid.getAttribute('data-rendered-key') === renderKey && !grid.querySelector('.sol-loader-container')) {
           return;
         }
         _lastRenderedKey = renderKey;
@@ -1726,6 +1739,7 @@
     window.loadContent = loadContent;
 
     function renderGrid(folders, items) {
+      clearTimeout(window._loaderSafetyTimer);
       const isAdmin = window.solmatesAPI.isAdminLoggedIn();
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
@@ -2029,6 +2043,14 @@
       }
     }
 
+    let _activeModalHistoryId = null;
+    function pushModalHistory(modalId) {
+      _activeModalHistoryId = modalId;
+      try {
+        history.pushState({ isModal: true, modalId: modalId, stack: [...navStack], folderId, semester }, '', window.location.href);
+      } catch(e) {}
+    }
+
     async function openAdminPyqModal() {
       const modal = document.getElementById('pyqAnalyzerModal');
       if (!modal) return;
@@ -2046,6 +2068,7 @@
         adminStep.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">Loading examination items & reference materials...</p></div>`;
       }
       modal.classList.add('open');
+      pushModalHistory('pyqAnalyzerModal');
 
       try {
         const res = await _fetchPyqItemsAPI(semester, curFolderId);
@@ -2228,7 +2251,10 @@
         const adminStep = document.getElementById('pyqAdminItemStep');
         if (adminStep) adminStep.style.display = 'none';
         const modal = document.getElementById('pyqAnalyzerModal');
-        if (modal) modal.classList.add('open');
+        if (modal) {
+          modal.classList.add('open');
+          pushModalHistory('pyqAnalyzerModal');
+        }
         renderPyqAnalysisReport(_currentPyqAnalysis, 'all');
       } else {
         openPyqAnalyzerModal('view');
@@ -2319,6 +2345,7 @@
 
       selectPyqMode('auto');
       modal.classList.add('open');
+      pushModalHistory('pyqAnalyzerModal');
 
       ensureStudentPyqItemsLoaded();
 
@@ -2433,9 +2460,17 @@
       }
     }
 
-    function closePyqModal() {
+    function closePyqModal(fromPopState = false) {
       const modal = document.getElementById('pyqAnalyzerModal');
       if (modal) modal.classList.remove('open');
+      if (!fromPopState && _activeModalHistoryId === 'pyqAnalyzerModal') {
+        _activeModalHistoryId = null;
+        if (history.state && history.state.isModal) {
+          try { history.back(); } catch (e) {}
+        }
+      } else if (fromPopState) {
+        _activeModalHistoryId = null;
+      }
     }
 
     function selectPyqMode(mode) {
@@ -2731,8 +2766,25 @@
       editingItemId = item.id; document.getElementById('linkTitle').value = item.title || item.subject;
       document.getElementById('linkUrl').value = item.link || item.pdf || item.videoUrl || item.url; openModal('linkModal');
     }
-    function openModal(id) { document.getElementById(id).classList.add('open'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    function openModal(id) { 
+      const m = document.getElementById(id);
+      if (m) {
+        m.classList.add('open');
+        pushModalHistory(id);
+      }
+    }
+    function closeModal(id, fromPopState = false) { 
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('open');
+      if (!fromPopState && _activeModalHistoryId === id) {
+        _activeModalHistoryId = null;
+        if (history.state && history.state.isModal) {
+          try { history.back(); } catch (e) {}
+        }
+      } else if (fromPopState) {
+        _activeModalHistoryId = null;
+      }
+    }
     function deleteFolder(id) { if (confirm('Delete?')) window.solmatesAPI.deleteSOLFolder(id).then(() => window.location.reload()); }
     function deleteItem(id) { if (confirm('Delete?')) window.solmatesAPI.deleteSOLItem(CATEGORY, semester, id).then(() => window.location.reload()); }
     function editFolderName(id, old) { const n = prompt('New name:', old); if (n) window.solmatesAPI.updateSOLFolder(id, { name: n }).then(() => window.location.reload()); }
@@ -2879,9 +2931,33 @@
 
     window.onpopstate = function(event) {
       isNavigating = false;
+
+      // 1. Intercept modal closing on back button (Phone hardware back or browser back)
+      const pyqModal = document.getElementById('pyqAnalyzerModal');
+      const openGenericModal = document.querySelector('.modal-overlay.open:not(#pyqAnalyzerModal)');
+      const queryModal = document.getElementById('queryModalOverlay');
+
+      if (pyqModal && pyqModal.classList.contains('open')) {
+        closePyqModal(true);
+        return; // Intercepted: modal closed, do NOT navigate background folders!
+      }
+      if (openGenericModal) {
+        closeModal(openGenericModal.id, true);
+        return; // Intercepted: modal closed!
+      }
+      if (queryModal && queryModal.classList.contains('open')) {
+        if (typeof closeQueryModal === 'function') closeQueryModal();
+        else queryModal.classList.remove('open');
+        return;
+      }
+
+      // 2. Folder Navigation Handling
       const urlParams = new URLSearchParams(window.location.search);
       const urlSem = parseInt(urlParams.get('semester'));
       const urlFolderId = urlParams.get('folderId');
+
+      const prevSemester = semester;
+      const prevFolderId = folderId;
 
       if (event.state && event.state.semester) {
         navStack = event.state.stack || [];
@@ -2897,6 +2973,15 @@
         semester = null;
         folderId = null;
         navStack = [];
+      }
+
+      // 3. AdSense Vignette / Hash dismissal or same-view popstate protection:
+      // If we are still in the exact same semester and folder, and content is already rendered, do NOT wipe screen with loader!
+      const grid = document.getElementById('grid');
+      const hasRenderedContent = grid && grid.querySelector('.card') && !grid.querySelector('.sol-loader-container');
+      if (hasRenderedContent && semester === prevSemester && folderId === prevFolderId) {
+        loadContent(true); // silent background check, no loader wipe
+        return;
       }
 
       if (!semester) {
