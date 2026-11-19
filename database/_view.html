@@ -1836,6 +1836,79 @@
       initSortable();
     }
 
+    let _reorderDebounceTimer = null;
+    let _isSavingReorder = false;
+    let _hasPendingReorderSave = false;
+
+    async function executeSaveReorder() {
+      if (_isSavingReorder) {
+        _hasPendingReorderSave = true;
+        return;
+      }
+      _isSavingReorder = true;
+      _hasPendingReorderSave = false;
+
+      const grid = document.getElementById('grid');
+      if (!grid) {
+        _isSavingReorder = false;
+        return;
+      }
+
+      const cards = Array.from(grid.querySelectorAll('.card'));
+      const folderOrders = [];
+      const itemOrders = [];
+
+      cards.forEach((card, index) => {
+        const id = card.getAttribute('data-id');
+        const type = card.getAttribute('data-type');
+        if (!id) return;
+        if (type === 'folder') {
+          folderOrders.push({ id, order: index });
+        } else {
+          itemOrders.push({ id, order: index });
+        }
+      });
+
+      const btn = document.getElementById('btnReorder');
+      if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        const curFid = (typeof folderId !== 'undefined' && folderId) ? folderId : null;
+        if (folderOrders.length > 0) {
+          await window.solmatesAPI.reorderBulkSOL('folders', folderOrders, semester, CATEGORY, curFid);
+        }
+        if (itemOrders.length > 0) {
+          await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemOrders, semester, CATEGORY, curFid);
+        }
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;"></i> Saved!';
+          setTimeout(() => {
+            if (btn) btn.innerHTML = isReorderMode ? '<i class="fas fa-check"></i> Done' : '<i class="fas fa-arrows-alt"></i> Organize';
+          }, 1200);
+        }
+      } catch (err) {
+        console.error('Reorder save failed:', err);
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i> Save Error';
+          setTimeout(() => {
+            if (btn) btn.innerHTML = isReorderMode ? '<i class="fas fa-check"></i> Done' : '<i class="fas fa-arrows-alt"></i> Organize';
+          }, 2000);
+        }
+      } finally {
+        _isSavingReorder = false;
+        if (_hasPendingReorderSave) {
+          executeSaveReorder();
+        }
+      }
+    }
+
+    function scheduleReorderSave(delayMs = 800) {
+      if (_reorderDebounceTimer) clearTimeout(_reorderDebounceTimer);
+      _reorderDebounceTimer = setTimeout(() => {
+        executeSaveReorder();
+      }, delayMs);
+    }
+
     function initSortable() {
       const isAdmin = window.solmatesAPI.isAdminLoggedIn();
       if (!isAdmin || typeof Sortable === 'undefined') return;
@@ -1848,32 +1921,34 @@
         dragClass: 'sortable-drag',
         forceFallback: true,
         onStart: () => { if (navigator.vibrate) navigator.vibrate(50); },
-        onEnd: async () => {
-          const cards = Array.from(grid.querySelectorAll('.card'));
-          const folderIds = cards.filter(c => c.getAttribute('data-type') === 'folder').map(c => c.getAttribute('data-id'));
-          const itemIds = cards.filter(c => c.getAttribute('data-type') === 'file').map(c => c.getAttribute('data-id'));
-          
-          try {
-            const btn = document.getElementById('btnReorder');
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            if (folderIds.length > 0) await window.solmatesAPI.reorderBulkSOL('folders', folderIds, semester, CATEGORY, (typeof currentFolderId !== 'undefined' ? currentFolderId : null));
-            if (itemIds.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemIds, semester, CATEGORY, (typeof currentFolderId !== 'undefined' ? currentFolderId : null));
-            btn.innerHTML = original;
-          } catch(e) { alert('Failed to save: ' + e.message); }
+        onEnd: () => {
+          scheduleReorderSave(800);
         }
       });
     }
 
-    function toggleReorderMode() {
-      isReorderMode = !isReorderMode;
-      const btn = document.getElementById('btnReorder');
+    async function toggleReorderMode() {
       if (isReorderMode) {
-        btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-check"></i> Done';
-        document.body.classList.add('reorder-mode-active');
-      } else {
-        btn.classList.remove('active'); btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize';
+        if (_reorderDebounceTimer) {
+          clearTimeout(_reorderDebounceTimer);
+          _reorderDebounceTimer = null;
+        }
+        await executeSaveReorder();
+        isReorderMode = false;
+        const btn = document.getElementById('btnReorder');
+        if (btn) {
+          btn.classList.remove('active');
+          btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize';
+        }
         document.body.classList.remove('reorder-mode-active');
+      } else {
+        isReorderMode = true;
+        const btn = document.getElementById('btnReorder');
+        if (btn) {
+          btn.classList.add('active');
+          btn.innerHTML = '<i class="fas fa-check"></i> Done';
+        }
+        document.body.classList.add('reorder-mode-active');
       }
       initSortable();
     }

@@ -2386,6 +2386,75 @@
       if (isAdmin) initSortable();
     }
 
+    let _fcReorderDebounceTimer = null;
+    let _fcIsSavingReorder = false;
+    let _fcHasPendingReorderSave = false;
+
+    async function executeSaveReorderFC() {
+      if (_fcIsSavingReorder) {
+        _fcHasPendingReorderSave = true;
+        return;
+      }
+      _fcIsSavingReorder = true;
+      _fcHasPendingReorderSave = false;
+
+      const grid = document.getElementById('grid');
+      if (!grid) {
+        _fcIsSavingReorder = false;
+        return;
+      }
+
+      const cards = Array.from(grid.querySelectorAll('.subject-card'));
+      const foldersOrder = [];
+      const itemsOrder = [];
+
+      cards.forEach((card, index) => {
+        const id = card.getAttribute('data-id');
+        const type = card.getAttribute('data-type');
+        if (!id) return;
+        if (type === 'folder') foldersOrder.push({ id, order: index });
+        else itemsOrder.push({ id, order: index });
+      });
+
+      const btn = document.getElementById('btnReorder');
+      if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        if (foldersOrder.length > 0) await window.solmatesAPI.reorderBulkSOL('folder', foldersOrder, SEMESTER, CATEGORY, FOLDER_ID);
+        if (itemsOrder.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemsOrder, SEMESTER, CATEGORY, FOLDER_ID);
+
+        if (window.solmatesAPI && window.solmatesAPI._cacheClear) {
+          window.solmatesAPI._cacheClear('');
+        }
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;"></i> Saved!';
+          setTimeout(() => {
+            if (btn) btn.innerHTML = isReorderMode ? '<i class="fas fa-check"></i> Done' : '<i class="fas fa-arrows-alt"></i> Organize';
+          }, 1200);
+        }
+      } catch (err) {
+        console.error('Reorder save failed:', err);
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i> Save Error';
+          setTimeout(() => {
+            if (btn) btn.innerHTML = isReorderMode ? '<i class="fas fa-check"></i> Done' : '<i class="fas fa-arrows-alt"></i> Organize';
+          }, 2000);
+        }
+      } finally {
+        _fcIsSavingReorder = false;
+        if (_fcHasPendingReorderSave) {
+          executeSaveReorderFC();
+        }
+      }
+    }
+
+    function scheduleReorderSaveFC(delayMs = 800) {
+      if (_fcReorderDebounceTimer) clearTimeout(_fcReorderDebounceTimer);
+      _fcReorderDebounceTimer = setTimeout(() => {
+        executeSaveReorderFC();
+      }, delayMs);
+    }
+
     function initSortable() {
       const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
       if (!isAdmin || typeof Sortable === 'undefined') return;
@@ -2400,53 +2469,36 @@
         fallbackOnBody: true,
         touchStartThreshold: 5,
         onStart: function () { if (navigator.vibrate) navigator.vibrate(50); },
-        onEnd: async function () {
-          try {
-            const btn = document.getElementById('btnReorder');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-            const grid = document.getElementById('grid');
-            const cards = Array.from(grid.querySelectorAll('.subject-card'));
-            const foldersOrder = [];
-            const itemsOrder = [];
-
-            cards.forEach((card, index) => {
-              const id = card.getAttribute('data-id');
-              const type = card.getAttribute('data-type');
-              if (type === 'folder') foldersOrder.push({ id, order: index });
-              else itemsOrder.push({ id, order: index });
-            });
-
-            if (foldersOrder.length > 0) await window.solmatesAPI.reorderBulkSOL('folder', foldersOrder, SEMESTER, CATEGORY, FOLDER_ID);
-            if (itemsOrder.length > 0) await window.solmatesAPI.reorderBulkSOL(CATEGORY, itemsOrder, SEMESTER, CATEGORY, FOLDER_ID);
-
-            if (window.solmatesAPI && window.solmatesAPI._cacheClear) {
-              window.solmatesAPI._cacheClear('');
-            }
-            btn.innerHTML = originalText;
-          } catch (err) {
-            alert('Sort failed: ' + err.message);
-            init(); // Revert on failure
-          }
+        onEnd: function () {
+          scheduleReorderSaveFC(800);
         }
       });
     }
 
-    // FIX 4: toggleReorderMode now adds class to body (same as elearning-subjects)
-    function toggleReorderMode() {
-      isReorderMode = !isReorderMode;
-      const btn = document.getElementById('btnReorder');
+    async function toggleReorderMode() {
       const container = document.body;
 
       if (isReorderMode) {
-        btn.classList.add('active');
-        btn.innerHTML = '<i class="fas fa-check"></i> Done';
-        container.classList.add('reorder-mode-active');
-      } else {
-        btn.classList.remove('active');
-        btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize';
+        if (_fcReorderDebounceTimer) {
+          clearTimeout(_fcReorderDebounceTimer);
+          _fcReorderDebounceTimer = null;
+        }
+        await executeSaveReorderFC();
+        isReorderMode = false;
+        const btn = document.getElementById('btnReorder');
+        if (btn) {
+          btn.classList.remove('active');
+          btn.innerHTML = '<i class="fas fa-arrows-alt"></i> Organize';
+        }
         container.classList.remove('reorder-mode-active');
+      } else {
+        isReorderMode = true;
+        const btn = document.getElementById('btnReorder');
+        if (btn) {
+          btn.classList.add('active');
+          btn.innerHTML = '<i class="fas fa-check"></i> Done';
+        }
+        container.classList.add('reorder-mode-active');
       }
 
       initSortable();
