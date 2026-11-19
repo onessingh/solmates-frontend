@@ -2002,7 +2002,15 @@
         });
 
         try {
-          const res = await window.solmatesAPI.searchYouTubeContent(q);
+          if (!window._ytSearchClientCache) window._ytSearchClientCache = new Map();
+          const cacheKey = q.toLowerCase();
+          let res = window._ytSearchClientCache.get(cacheKey);
+          if (!res) {
+            res = await window.solmatesAPI.searchYouTubeContent(q);
+            if (res && res.success) {
+              window._ytSearchClientCache.set(cacheKey, res);
+            }
+          }
           const isAdmin = window.solmatesAPI && window.solmatesAPI.isAdminLoggedIn();
           
           document.getElementById('pageTitle').innerText = "Search Results";
