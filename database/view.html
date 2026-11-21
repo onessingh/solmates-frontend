@@ -25,24 +25,24 @@
   <meta name="supported-color-schemes" content="only light">
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v932">
-  <script src="/js/site-lock-guard.js?v=v932"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v933">
+  <script src="/js/site-lock-guard.js?v=v933"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v932" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v932" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v932">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v932">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v932">
+  <link rel="icon" href="/favicon.ico?v=v933" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v933" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v933">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v933">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v933">
   <title>MBA Study Material, PYQs & Lecture PPTs | SOLMATES</title>
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v932"></script>
-  <script src="/js/uptime-helper.js?v=v932"></script>
-  <script src="/js/api-client.js?v=v932"></script>
-  <script src="/js/sol-cache.js?v=v932"></script>
-  <script src="/js/prefetch-helper.js?v=v932"></script>
+  <script src="/config.js?v=v933"></script>
+  <script src="/js/uptime-helper.js?v=v933"></script>
+  <script src="/js/api-client.js?v=v933"></script>
+  <script src="/js/sol-cache.js?v=v933"></script>
+  <script src="/js/prefetch-helper.js?v=v933"></script>
   <script>
     // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
@@ -960,6 +960,23 @@
       color: #b45309;
       box-shadow: 0 4px 14px rgba(245, 158, 11, 0.15);
     }
+    .admin-item-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 4px;
+      padding: 3px 9px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #1d4ed8;
+      letter-spacing: 0.2px;
+      line-height: 1.4;
+      pointer-events: none;
+      user-select: none;
+    }
 
     /* dark mode moved */
     </style>
@@ -1051,6 +1068,11 @@
         }
         .ppt-year-divider-line {
           background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.7), rgba(245, 158, 11, 0.2)) !important;
+        }
+        .admin-item-date-badge {
+          background: rgba(30, 58, 138, 0.4) !important;
+          border-color: rgba(96, 165, 250, 0.3) !important;
+          color: #93c5fd !important;
         }
         .ppt-year-pill {
           background: #1e293b !important;
@@ -1929,6 +1951,21 @@
           hd.onclick = e => { e.stopPropagation(); toggleHide('item', item); };
 
           card.appendChild(edit); card.appendChild(del); card.appendChild(mv); card.appendChild(hd);
+
+          // Admin-only Date Badge (Shown exclusively on items for Admin)
+          const rawCreated = item.created_at || item.createdAt || (item._id && item._id.length === 24 ? new Date(parseInt(item._id.substring(0, 8), 16) * 1000) : null);
+          if (rawCreated) {
+            const d = new Date(rawCreated);
+            if (!isNaN(d.getTime())) {
+              const dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+              const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+              const dateBadge = document.createElement('div');
+              dateBadge.className = 'admin-item-date-badge';
+              dateBadge.title = `Added: ${dateStr} at ${timeStr}`;
+              dateBadge.innerHTML = `<i class="far fa-calendar-alt"></i> Added: ${dateStr}`;
+              card.appendChild(dateBadge);
+            }
+          }
         }
         return card;
       }
