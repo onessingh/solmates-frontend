@@ -202,19 +202,115 @@ window.addEventListener('afterprint', function() {
 // - Heroku: 'https://solmates-api.herokuapp.com/api'
 // - Railway: 'https://solmates-backend.up.railway.app/api'
 
-// Production backend URL â€” Render deployment (must match backend CORS FRONTEND_URL)
 // Production backend URLs — Cloudflare Verified Custom Domains
 window.BACKEND_PRIMARY_URL = 'https://api.solmates.in';
 window.BACKEND_SECONDARY_URL = 'https://api-backup.solmates.in';
 
-// Active Backend Selection — Always use Cloudflare Proxied Domain for Edge Caching (HIT)
-window.PRODUCTION_API_URL = window.BACKEND_PRIMARY_URL + '/api';
-window.RENDER_BACKEND_URL = window.BACKEND_PRIMARY_URL;
+// Smart Active Backend Resolution
+(function() {
+  function getActiveBackend() {
+    try {
+      const saved = sessionStorage.getItem('solmates_active_backend');
+      if (saved && (saved === window.BACKEND_SECONDARY_URL || saved === window.BACKEND_PRIMARY_URL)) {
+        return saved;
+      }
+    } catch(e) {}
+    return window.BACKEND_PRIMARY_URL;
+  }
 
-try {
-  localStorage.removeItem('solmates_live_check_status');
-  localStorage.setItem('solmates_active_backend', window.BACKEND_PRIMARY_URL);
-} catch(e) {}
+  function setActiveBackend(backendUrl) {
+    try {
+      sessionStorage.setItem('solmates_active_backend', backendUrl);
+    } catch(e) {}
+    window.RENDER_BACKEND_URL = backendUrl;
+    window.PRODUCTION_API_URL = backendUrl + '/api';
+    if (window.solmatesAPI) {
+      window.solmatesAPI.baseURL = backendUrl + '/api';
+    }
+  }
+
+  const initialActive = getActiveBackend();
+  window.PRODUCTION_API_URL = initialActive + '/api';
+  window.RENDER_BACKEND_URL = initialActive;
+
+  // Background recovery probe: If currently on backup backend, check if primary is back up every 3 minutes
+  if (initialActive === window.BACKEND_SECONDARY_URL) {
+    setTimeout(async function probePrimaryRecovery() {
+      try {
+        const probeRes = await fetch(`${window.BACKEND_PRIMARY_URL}/api/live?_probe=${Date.now()}`, { cache: 'no-store' });
+        if (probeRes.ok) {
+          console.log('[Solmates Recovery] Primary backend is healthy again. Resuming primary backend.');
+          setActiveBackend(window.BACKEND_PRIMARY_URL);
+          return;
+        }
+      } catch(e) {}
+      setTimeout(probePrimaryRecovery, 180000);
+    }, 180000);
+  }
+
+  // Global Transparent Fetch Interceptor for Instant Failover (Primary -> Secondary)
+  if (typeof window.fetch === 'function') {
+    const origFetch = window.fetch;
+    window.fetch = async function(resource, init) {
+      let urlStr = '';
+      if (typeof resource === 'string') {
+        urlStr = resource;
+      } else if (resource && resource.url) {
+        urlStr = resource.url;
+      }
+
+      const isApiCall = urlStr.startsWith('/api/') || 
+                         urlStr.includes('api.solmates.in') || 
+                         urlStr.includes('api-backup.solmates.in');
+
+      if (!isApiCall) {
+        return origFetch.apply(this, arguments);
+      }
+
+      const currentActive = getActiveBackend();
+
+      // If already on backup, route relative or primary calls directly to backup
+      let targetUrl = urlStr;
+      if (targetUrl.startsWith('/api/')) {
+        targetUrl = `${currentActive}${targetUrl}`;
+      } else if (currentActive === window.BACKEND_SECONDARY_URL && targetUrl.includes(window.BACKEND_PRIMARY_URL)) {
+        targetUrl = targetUrl.replace(window.BACKEND_PRIMARY_URL, window.BACKEND_SECONDARY_URL);
+      }
+
+      const makeRequest = (u) => {
+        if (typeof resource === 'string') {
+          return origFetch.call(this, u, init);
+        } else {
+          return origFetch.call(this, new Request(u, init || resource));
+        }
+      };
+
+      try {
+        const response = await makeRequest(targetUrl);
+
+        // Check if primary backend failed (502, 503, 504, 521-524)
+        const isBackendSuspendedOrDown = [502, 503, 504, 520, 521, 522, 523, 524].includes(response.status);
+        if (isBackendSuspendedOrDown && targetUrl.includes(window.BACKEND_PRIMARY_URL) && window.BACKEND_SECONDARY_URL) {
+          console.warn(`[Solmates Auto-Failover] Primary returned HTTP ${response.status}. Switching to backup: ${window.BACKEND_SECONDARY_URL}`);
+          setActiveBackend(window.BACKEND_SECONDARY_URL);
+          const fallbackUrl = targetUrl.replace(window.BACKEND_PRIMARY_URL, window.BACKEND_SECONDARY_URL);
+          return await makeRequest(fallbackUrl);
+        }
+
+        return response;
+      } catch (networkErr) {
+        // Network timeout / connection drop
+        if (targetUrl.includes(window.BACKEND_PRIMARY_URL) && window.BACKEND_SECONDARY_URL) {
+          console.warn(`[Solmates Auto-Failover] Primary network error (${networkErr.message}). Switching to backup: ${window.BACKEND_SECONDARY_URL}`);
+          setActiveBackend(window.BACKEND_SECONDARY_URL);
+          const fallbackUrl = targetUrl.replace(window.BACKEND_PRIMARY_URL, window.BACKEND_SECONDARY_URL);
+          return await makeRequest(fallbackUrl);
+        }
+        throw networkErr;
+      }
+    };
+  }
+})();
 
 // For local development, comment out the line above and api-client.js
 // will auto-detect localhost:3000 automatically.

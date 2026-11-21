@@ -25,24 +25,24 @@
   <meta name="supported-color-schemes" content="only light">
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v939">
-  <script src="/js/site-lock-guard.js?v=v939"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v940">
+  <script src="/js/site-lock-guard.js?v=v940"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v939" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v939" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v939">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v939">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v939">
+  <link rel="icon" href="/favicon.ico?v=v940" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v940" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v940">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v940">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v940">
   <title>MBA Study Material, PYQs & Lecture PPTs | SOLMATES</title>
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v939"></script>
-  <script src="/js/uptime-helper.js?v=v939"></script>
-  <script src="/js/api-client.js?v=v939"></script>
-  <script src="/js/sol-cache.js?v=v939"></script>
-  <script src="/js/prefetch-helper.js?v=v939"></script>
+  <script src="/config.js?v=v940"></script>
+  <script src="/js/uptime-helper.js?v=v940"></script>
+  <script src="/js/api-client.js?v=v940"></script>
+  <script src="/js/sol-cache.js?v=v940"></script>
+  <script src="/js/prefetch-helper.js?v=v940"></script>
   <script>
     // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
@@ -1855,7 +1855,8 @@
 
       try {
         const token = localStorage.getItem('solmates_token') || localStorage.getItem('admin_token') || localStorage.getItem('solmates_admin_token');
-        const res = await fetch('/api/sol/settings', {
+        const settingsUrl = (window.PRODUCTION_API_URL || '/api') + '/sol/settings';
+        const res = await fetch(settingsUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -2071,8 +2072,9 @@
           window.solmatesAPI.getSOLContent(CATEGORY, semester, folderId, false)
         ];
         if (CATEGORY === 'professor') {
+          const settingsGetUrl = (window.PRODUCTION_API_URL || '/api') + '/sol/settings';
           promises.push(
-            fetch('/api/sol/settings')
+            fetch(settingsGetUrl)
               .then(r => r.ok ? r.json() : null)
               .then(s => {
                 if (s && s.activeAcademicYear) {

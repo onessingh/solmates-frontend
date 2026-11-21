@@ -257,6 +257,32 @@ class SolmatesAPI {
       }
 
       if (!response.ok) {
+        // [Auto-Failover] If primary backend fails (502, 503, 504, 520-524), switch to backup and retry
+        const isBackendDown = [502, 503, 504, 520, 521, 522, 523, 524].includes(response.status);
+        if (isBackendDown && window.BACKEND_SECONDARY_URL && !url.includes(window.BACKEND_SECONDARY_URL)) {
+          console.warn(`[Solmates API] Primary backend returned ${response.status}. Switching to backup: ${window.BACKEND_SECONDARY_URL}`);
+          this.baseURL = `${window.BACKEND_SECONDARY_URL}/api`;
+          window.PRODUCTION_API_URL = this.baseURL;
+          window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+          try { sessionStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL); } catch(_) {}
+          let retryUrl = `${this.baseURL}${endpoint}`;
+          if (isGet && options.force) {
+            retryUrl += (retryUrl.includes('?') ? '&' : '?') + 'admin_force=true';
+          }
+          const retryRes = await fetch(retryUrl, { ...config, signal: undefined });
+          let retryData;
+          const retryType = retryRes.headers.get('content-type') || '';
+          if (retryType.includes('application/json')) {
+            retryData = await retryRes.json().catch(() => ({}));
+          } else {
+            const txt = await retryRes.text();
+            try { retryData = JSON.parse(txt); } catch (_) { retryData = { error: txt || `HTTP ${retryRes.status}` }; }
+          }
+          if (retryRes.ok) return retryData;
+          data = retryData;
+          response = retryRes;
+        }
+
         let errorMsg = data.error || 'API request failed';
         if (data.details) {
           if (Array.isArray(data.details)) {
@@ -300,6 +326,33 @@ class SolmatesAPI {
       return data;
     } catch (error) {
       clearTimeout(timeoutId);
+      // [Auto-Failover] Network error / timeout on primary backend
+      if (window.BACKEND_SECONDARY_URL && !url.includes(window.BACKEND_SECONDARY_URL)) {
+        console.warn(`[Solmates API] Primary backend error (${error.message}). Retrying on backup: ${window.BACKEND_SECONDARY_URL}`);
+        this.baseURL = `${window.BACKEND_SECONDARY_URL}/api`;
+        window.PRODUCTION_API_URL = this.baseURL;
+        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+        try { sessionStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL); } catch(_) {}
+        let retryUrl = `${this.baseURL}${endpoint}`;
+        if (isGet && options.force) {
+          retryUrl += (retryUrl.includes('?') ? '&' : '?') + 'admin_force=true';
+        }
+        try {
+          const retryRes = await fetch(retryUrl, { ...config, signal: undefined });
+          let retryData;
+          const retryType = retryRes.headers.get('content-type') || '';
+          if (retryType.includes('application/json')) {
+            retryData = await retryRes.json().catch(() => ({}));
+          } else {
+            const txt = await retryRes.text();
+            try { retryData = JSON.parse(txt); } catch (_) { retryData = { error: txt || `HTTP ${retryRes.status}` }; }
+          }
+          if (retryRes.ok) return retryData;
+          throw new Error(retryData.error || `HTTP ${retryRes.status}`);
+        } catch (retryErr) {
+          throw retryErr;
+        }
+      }
       if (error.name === 'AbortError') {
         throw new Error('Request timeout - please try again');
       }
@@ -313,11 +366,12 @@ class SolmatesAPI {
       throw new Error('API not configured. Please check configuration.');
     }
 
-    const baseURL = this.baseURL.replace('/api', '') ||
-      (window.PRODUCTION_API_URL || '').replace(/\/api\/?$/, '') ||
-      'http://localhost:3000';
+    const getTargetUrl = (base) => {
+      const clean = (base || '').replace(/\/api\/?$/, '') || 'http://localhost:3000';
+      return `${clean}/api${endpoint}`;
+    };
 
-    const url = `${baseURL}/api${endpoint}`;
+    let url = getTargetUrl(this.baseURL || window.PRODUCTION_API_URL);
     const token = localStorage.getItem('solmates_admin_token');
     const headers = {};
 
@@ -326,11 +380,26 @@ class SolmatesAPI {
     }
 
     try {
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         method: options.method || 'POST',
         headers,
         body: formData
       });
+
+      const isBackendDown = [502, 503, 504, 520, 521, 522, 523, 524].includes(response.status);
+      if (isBackendDown && window.BACKEND_SECONDARY_URL && !url.includes(window.BACKEND_SECONDARY_URL)) {
+        console.warn(`[Solmates Upload] Primary backend returned ${response.status}. Switching upload to backup: ${window.BACKEND_SECONDARY_URL}`);
+        this.baseURL = `${window.BACKEND_SECONDARY_URL}/api`;
+        window.PRODUCTION_API_URL = this.baseURL;
+        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+        try { sessionStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL); } catch(_) {}
+        url = getTargetUrl(this.baseURL);
+        response = await fetch(url, {
+          method: options.method || 'POST',
+          headers,
+          body: formData
+        });
+      }
 
       const data = await response.json();
 
@@ -345,6 +414,26 @@ class SolmatesAPI {
 
       return data;
     } catch (error) {
+      if (window.BACKEND_SECONDARY_URL && !url.includes(window.BACKEND_SECONDARY_URL)) {
+        console.warn(`[Solmates Upload] Primary backend error (${error.message}). Retrying upload on backup: ${window.BACKEND_SECONDARY_URL}`);
+        this.baseURL = `${window.BACKEND_SECONDARY_URL}/api`;
+        window.PRODUCTION_API_URL = this.baseURL;
+        window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
+        try { sessionStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL); } catch(_) {}
+        try {
+          const backupUrl = getTargetUrl(this.baseURL);
+          const retryRes = await fetch(backupUrl, {
+            method: options.method || 'POST',
+            headers,
+            body: formData
+          });
+          const retryData = await retryRes.json();
+          if (!retryRes.ok) throw new Error(retryData.error || 'Upload failed');
+          return retryData;
+        } catch (retryErr) {
+          throw retryErr;
+        }
+      }
       console.error('Upload error:', error);
       throw error;
     }
