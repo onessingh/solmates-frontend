@@ -28,15 +28,15 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v930">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v931">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v930" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v930" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v930">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v930">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v930">
+  <link rel="icon" href="/favicon.ico?v=v931" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v931" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v931">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v931">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v931">
   <title>Manage Professor Content - Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -225,37 +225,69 @@
       border-color: #4f46e5;
     }
 
-    .year-selector {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
+    .form-select-styled, .form-input-styled {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+      background: var(--bg-card);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      outline: none;
     }
 
-    .year-checkbox-pill {
+    .form-select-styled:focus, .form-input-styled:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Lecture PPT Year Divider */
+    .ppt-year-divider {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 36px 0 16px 0;
+      width: 100%;
+      user-select: none;
+    }
+
+    .ppt-year-divider-line {
+      flex: 1;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.65), rgba(99, 102, 241, 0.1));
+      border-radius: 4px;
+    }
+
+    .ppt-year-divider-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      font-size: 0.85rem;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-
-    .year-checkbox-pill input[type="checkbox"] {
-      margin: 0;
-      cursor: pointer;
-    }
-
-    .year-checkbox-pill:has(input:checked) {
-      background: rgba(99, 102, 241, 0.12);
-      border-color: #6366f1;
+      gap: 10px;
+      padding: 10px 22px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+      border: 2px solid rgba(99, 102, 241, 0.5);
+      border-radius: 30px;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: #4f46e5;
-      font-weight: 600;
+      letter-spacing: 0.4px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+      white-space: nowrap;
+    }
+
+    .ppt-year-divider-badge.current-batch {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #059669;
+    }
+
+    .ppt-year-divider-badge.previous-batch {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15));
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #d97706;
     }
 
     .item-meta {
@@ -440,7 +472,7 @@
 
     /* dark mode moved */
     </style>
-  <script src="/js/sol-cache.js?v=v930"></script>
+  <script src="/js/sol-cache.js?v=v931"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -457,6 +489,31 @@
         --hero-bg: linear-gradient(to bottom, #0f172a, #1e293b);
         --brand-primary: #f8fafc;
         --brand-accent: #c0962d;
+      }
+
+      .form-select-styled, .form-input-styled {
+        background: #1e293b !important;
+        border-color: #475569 !important;
+        color: #f8fafc !important;
+      }
+      .ppt-year-divider-line {
+        background: linear-gradient(90deg, rgba(129, 140, 248, 0.1), rgba(129, 140, 248, 0.65), rgba(129, 140, 248, 0.1)) !important;
+      }
+      .ppt-year-divider-badge {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3)) !important;
+        border-color: rgba(129, 140, 248, 0.6) !important;
+        color: #c7d2fe !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+      }
+      .ppt-year-divider-badge.current-batch {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3)) !important;
+        border-color: rgba(52, 211, 153, 0.6) !important;
+        color: #6ee7b7 !important;
+      }
+      .ppt-year-divider-badge.previous-batch {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(239, 68, 68, 0.3)) !important;
+        border-color: rgba(251, 191, 36, 0.6) !important;
+        color: #fcd34d !important;
       }
     
 </style>
@@ -610,30 +667,17 @@
         </div>
 
         <div class="form-group">
-          <label><i class="fas fa-calendar-alt"></i> Batch / Applicable Years *</label>
-          <div class="year-selector" id="addYearSelector">
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="years" value="2026" checked>
-              <span>2026 (Current)</span>
-            </label>
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="years" value="2025">
-              <span>2025 (Previous)</span>
-            </label>
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="years" value="2024">
-              <span>2024</span>
-            </label>
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="years" value="2027">
-              <span>2027</span>
-            </label>
+          <label for="addBatchSelect"><i class="fas fa-calendar-alt"></i> Batch / Academic Year *</label>
+          <select id="addBatchSelect" class="form-select-styled" onchange="onBatchDropdownChange(this, 'addCustomBatchWrap', 'addCustomBatchInput')">
+            <option value="2026">Batch 2026 (Latest / Current)</option>
+            <option value="2025">Batch 2025 (Previous Year)</option>
+            <option value="2026,2025">Both (2025 & 2026 Batches)</option>
+            <option value="__custom__">+ Add Custom Year / Batch...</option>
+          </select>
+          <div id="addCustomBatchWrap" style="display: none; margin-top: 8px;">
+            <input type="text" id="addCustomBatchInput" placeholder="Enter year e.g. 2027 (or 2024, 2025)" class="form-input-styled">
+            <small style="color: var(--text-lighter); font-size: 0.8rem; display: block; margin-top: 4px;">Enter year (e.g. 2027) or multiple comma-separated years.</small>
           </div>
-          <div style="margin-top: 6px; display: flex; gap: 8px;">
-            <input type="text" id="addCustomYear" placeholder="Add custom year (e.g. 2028)" style="font-size: 0.85rem; padding: 6px 10px; flex: 1;">
-            <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="addCustomYearPill('addYearSelector', 'addCustomYear')">+ Add</button>
-          </div>
-          <small style="color: var(--text-lighter); font-size: 0.78rem;">Select one or multiple years. If both are selected, it appears in both batches without duplicate files.</small>
         </div>
 
         <div class="form-group">
@@ -683,30 +727,17 @@
           <input type="text" id="editLink" name="editLink" required placeholder="https://drive.google.com/...">
         </div>
         <div class="form-group">
-          <label><i class="fas fa-calendar-alt"></i> Batch / Applicable Years *</label>
-          <div class="year-selector" id="editYearSelector">
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="editYears" value="2026">
-              <span>2026 (Current)</span>
-            </label>
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="editYears" value="2025">
-              <span>2025 (Previous)</span>
-            </label>
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="editYears" value="2024">
-              <span>2024</span>
-            </label>
-            <label class="year-checkbox-pill">
-              <input type="checkbox" name="editYears" value="2027">
-              <span>2027</span>
-            </label>
+          <label for="editBatchSelect"><i class="fas fa-calendar-alt"></i> Batch / Academic Year *</label>
+          <select id="editBatchSelect" class="form-select-styled" onchange="onBatchDropdownChange(this, 'editCustomBatchWrap', 'editCustomBatchInput')">
+            <option value="2026">Batch 2026 (Latest / Current)</option>
+            <option value="2025">Batch 2025 (Previous Year)</option>
+            <option value="2026,2025">Both (2025 & 2026 Batches)</option>
+            <option value="__custom__">+ Add Custom Year / Batch...</option>
+          </select>
+          <div id="editCustomBatchWrap" style="display: none; margin-top: 8px;">
+            <input type="text" id="editCustomBatchInput" placeholder="Enter year e.g. 2027 (or 2024, 2025)" class="form-input-styled">
+            <small style="color: var(--text-lighter); font-size: 0.8rem; display: block; margin-top: 4px;">Enter year (e.g. 2027) or multiple comma-separated years.</small>
           </div>
-          <div style="margin-top: 6px; display: flex; gap: 8px;">
-            <input type="text" id="editCustomYear" placeholder="Add custom year (e.g. 2028)" style="font-size: 0.85rem; padding: 6px 10px; flex: 1;">
-            <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="addCustomYearPill('editYearSelector', 'editCustomYear', 'editYears')">+ Add</button>
-          </div>
-          <small style="color: var(--text-lighter); font-size: 0.78rem;">Select one or multiple years. If both are selected, it appears in both batches without duplicate files.</small>
         </div>
         <div class="form-group">
           <label for="editDescription">Description (Optional)</label>
@@ -724,9 +755,9 @@
   </div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="/config.js?v=v930"></script>
-  <script src="/js/uptime-helper.js?v=v930"></script>
-  <script src="/js/api-client.js?v=v930"></script>
+  <script src="/config.js?v=v931"></script>
+  <script src="/js/uptime-helper.js?v=v931"></script>
+  <script src="/js/api-client.js?v=v931"></script>
   <script>
     const CONTENT_TYPE = 'professor';
 
@@ -777,14 +808,20 @@
         const container = document.getElementById('content-list');
         container.innerHTML = '';
 
-        response.data.forEach(item => {
-          const itemYears = (Array.isArray(item.years) && item.years.length > 0)
-            ? item.years.map(String)
-            : (item.year ? [String(item.year)] : (item.title && item.title.includes('2025') ? ['2025'] : ['2026']));
-          const has2026 = itemYears.includes('2026');
-          const has2025 = itemYears.includes('2025');
-          const hasBoth = has2026 && has2025;
+        const getItemYears = (it) => {
+          if (Array.isArray(it.years) && it.years.length > 0) return it.years.map(String);
+          if (it.year) return [String(it.year)];
+          if (it.title && it.title.includes('2025')) return ['2025'];
+          return ['2026'];
+        };
 
+        const allYearsSet = new Set();
+        response.data.forEach(it => {
+          getItemYears(it).forEach(y => allYearsSet.add(y));
+        });
+        const sortedYears = Array.from(allYearsSet).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+        function createContentItemCard(item, itemYears) {
           const div = document.createElement('div');
           div.className = 'content-item';
           div.dataset.id = item.id;
@@ -794,6 +831,13 @@
           div.dataset.url = item.url || item.pdf || item.link || '';
           div.dataset.description = item.description || '';
           div.dataset.years = JSON.stringify(itemYears);
+
+          const has2026 = itemYears.includes('2026');
+          const has2025 = itemYears.includes('2025');
+          const hasBoth = has2026 && has2025;
+
+          const yearBadgeText = hasBoth ? 'Both 2025 & 2026' : `Batch: ${itemYears.join(', ')}`;
+
           div.innerHTML = `
             <div class="item-header">
               <div>
@@ -801,15 +845,15 @@
                 <div class="item-badges">
                   <span class="badge badge-semester">Semester ${item.semester}</span>
                   <span class="badge badge-subject">${escapeHtml(item.subject)}</span>
-                  <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> Batch: ${itemYears.join(', ')}</span>
+                  <span class="badge badge-year"><i class="fas fa-calendar-alt"></i> ${escapeHtml(yearBadgeText)}</span>
                 </div>
               </div>
             </div>
             <div class="quick-year-toggle">
               <span style="font-size:12px;color:var(--text-lighter);font-weight:600;">Quick Batch:</span>
-              <button type="button" class="btn-year-toggle ${has2026 ? 'active' : ''}" onclick="quickToggleYear('${item.id}', '2026', this)">2026</button>
-              <button type="button" class="btn-year-toggle ${has2025 ? 'active' : ''}" onclick="quickToggleYear('${item.id}', '2025', this)">2025</button>
-              <button type="button" class="btn-year-toggle ${hasBoth ? 'active' : ''}" onclick="quickToggleBoth('${item.id}', this)">Both (2025+2026)</button>
+              <button type="button" class="btn-year-toggle ${has2026 && !hasBoth ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026'], this)">2026</button>
+              <button type="button" class="btn-year-toggle ${has2025 && !hasBoth ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2025'], this)">2025</button>
+              <button type="button" class="btn-year-toggle ${hasBoth ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026', '2025'], this)">Both (2025+2026)</button>
             </div>
             ${item.description ? `<div class="item-description">${escapeHtml(item.description)}</div>` : ''}
             <a href="${escapeHtml(item.url || item.pdf || item.link || '')}" target="_blank" class="item-link">
@@ -827,7 +871,30 @@
               </button>
             </div>
           `;
-          container.appendChild(div);
+          return div;
+        }
+
+        // Render grouped by year with thick divider lines
+        sortedYears.forEach((year, yIdx) => {
+          const yearItems = response.data.filter(it => getItemYears(it).includes(year));
+          if (yearItems.length === 0) return;
+
+          const isLatest = (yIdx === 0);
+          const divider = document.createElement('div');
+          divider.className = 'ppt-year-divider';
+          divider.innerHTML = `
+            <div class="ppt-year-divider-line"></div>
+            <div class="ppt-year-divider-badge ${isLatest ? 'current-batch' : 'previous-batch'}">
+              <i class="fas ${isLatest ? 'fa-layer-group' : 'fa-calendar-alt'}"></i> Batch ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : (isLatest ? '(Latest)' : '')}
+            </div>
+            <div class="ppt-year-divider-line"></div>
+          `;
+          container.appendChild(divider);
+
+          yearItems.forEach(item => {
+            const card = createContentItemCard(item, getItemYears(item));
+            container.appendChild(card);
+          });
         });
 
       } catch (error) {
@@ -843,8 +910,7 @@
 
       const formData = new FormData(e.target);
       const url = formData.get('link');
-      const selectedYears = Array.from(document.querySelectorAll('#addYearSelector input[type="checkbox"]:checked')).map(cb => cb.value.trim());
-      const finalYears = selectedYears.length > 0 ? selectedYears : ['2026'];
+      const finalYears = getYearsFromDropdown('addBatchSelect', 'addCustomBatchInput');
       const data = {
         title: formData.get('title'),
         subject: formData.get('subject'),
@@ -900,6 +966,10 @@
     function openAddModal() {
       document.getElementById('addModal').classList.add('active');
       document.body.style.overflow = 'hidden';
+      const addSelect = document.getElementById('addBatchSelect');
+      if (addSelect) addSelect.value = '2026';
+      const wrap = document.getElementById('addCustomBatchWrap');
+      if (wrap) wrap.style.display = 'none';
     }
 
     function closeAddModal() {
@@ -915,67 +985,66 @@
       return div.innerHTML;
     }
 
-    function addCustomYearPill(containerId, inputId, nameAttr = 'years', presetValue = null) {
-      const input = inputId ? document.getElementById(inputId) : null;
-      const year = presetValue || (input ? input.value.trim() : '');
-      if (!year) return;
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      if (container.querySelector(`input[value="${year}"]`)) {
-        if (input) input.value = '';
-        return;
-      }
-      const label = document.createElement('label');
-      label.className = 'year-checkbox-pill';
-      label.innerHTML = `
-        <input type="checkbox" name="${nameAttr}" value="${escapeHtml(year)}" checked>
-        <span>${escapeHtml(year)}</span>
-      `;
-      container.appendChild(label);
-      if (input) input.value = '';
-    }
-
-    async function quickToggleYear(id, targetYear, btn) {
-      const card = btn.closest('.content-item');
-      if (!card) return;
-      let years = JSON.parse(card.dataset.years || '["2026"]');
-      if (years.includes(targetYear)) {
-        years = years.filter(y => y !== targetYear);
-        if (years.length === 0) years = ['2026'];
+    // ========== BATCH DROPDOWN HELPERS ==========
+    function onBatchDropdownChange(selectElem, wrapId, inputId) {
+      const wrap = document.getElementById(wrapId);
+      const input = document.getElementById(inputId);
+      if (selectElem.value === '__custom__') {
+        if (wrap) wrap.style.display = 'block';
+        if (input) input.focus();
       } else {
-        years.push(targetYear);
-      }
-      years.sort().reverse();
-      btn.disabled = true;
-      try {
-        const data = {
-          title: card.dataset.title,
-          subject: card.dataset.subject,
-          url: card.dataset.url,
-          link: card.dataset.url,
-          pdf: card.dataset.url,
-          description: card.dataset.description,
-          years: years,
-          year: years[0]
-        };
-        const semester = card.dataset.semester;
-        const subject = card.dataset.subject;
-        const res = await solmatesAPI.updateContent(CONTENT_TYPE, id, data, semester, subject);
-        if (res && res.success) {
-          card.dataset.years = JSON.stringify(years);
-          await loadContent();
-        }
-      } catch (err) {
-        alert('Failed to update year: ' + err.message);
-      } finally {
-        btn.disabled = false;
+        if (wrap) wrap.style.display = 'none';
       }
     }
 
-    async function quickToggleBoth(id, btn) {
+    function getYearsFromDropdown(selectId, inputId) {
+      const select = document.getElementById(selectId);
+      if (!select) return ['2026'];
+      if (select.value === '__custom__') {
+        const input = document.getElementById(inputId);
+        const val = input ? input.value.trim() : '';
+        if (!val) return ['2026'];
+        const parts = val.split(/[,/&]+/).map(s => s.trim()).filter(Boolean);
+        return parts.length > 0 ? parts : ['2026'];
+      }
+      const parts = select.value.split(',').map(s => s.trim()).filter(Boolean);
+      return parts.length > 0 ? parts : ['2026'];
+    }
+
+    function setYearsInDropdown(years, selectId, wrapId, inputId) {
+      const select = document.getElementById(selectId);
+      const wrap = document.getElementById(wrapId);
+      const input = document.getElementById(inputId);
+      if (!select) return;
+
+      const yArr = Array.isArray(years) ? years.map(String) : [String(years || '2026')];
+      const sortedKey = [...yArr].sort().reverse().join(',');
+
+      if (sortedKey === '2026') {
+        select.value = '2026';
+        if (wrap) wrap.style.display = 'none';
+      } else if (sortedKey === '2025') {
+        select.value = '2025';
+        if (wrap) wrap.style.display = 'none';
+      } else if (sortedKey === '2026,2025') {
+        select.value = '2026,2025';
+        if (wrap) wrap.style.display = 'none';
+      } else {
+        let existingOpt = select.querySelector(`option[value="${sortedKey}"]`);
+        if (!existingOpt) {
+          const opt = document.createElement('option');
+          opt.value = sortedKey;
+          opt.textContent = `Batch ${yArr.join(' & ')}`;
+          select.insertBefore(opt, select.querySelector('option[value="__custom__"]'));
+        }
+        select.value = sortedKey;
+        if (wrap) wrap.style.display = 'none';
+      }
+    }
+
+    async function quickSetYear(id, newYears, btn) {
       const card = btn.closest('.content-item');
       if (!card) return;
-      const years = ['2026', '2025'];
       btn.disabled = true;
       try {
         const data = {
@@ -985,18 +1054,17 @@
           link: card.dataset.url,
           pdf: card.dataset.url,
           description: card.dataset.description,
-          years: years,
-          year: '2026'
+          years: newYears,
+          year: newYears[0]
         };
         const semester = card.dataset.semester;
         const subject = card.dataset.subject;
         const res = await solmatesAPI.updateContent(CONTENT_TYPE, id, data, semester, subject);
         if (res && res.success) {
-          card.dataset.years = JSON.stringify(years);
           await loadContent();
         }
       } catch (err) {
-        alert('Failed to update year: ' + err.message);
+        alert('Failed to update batch: ' + err.message);
       } finally {
         btn.disabled = false;
       }
@@ -1012,15 +1080,7 @@
       document.getElementById('editDescription').value = card.dataset.description;
 
       const currentYears = JSON.parse(card.dataset.years || '["2026"]');
-      currentYears.forEach(y => {
-        let exists = document.querySelector(`#editYearSelector input[value="${y}"]`);
-        if (!exists) {
-          addCustomYearPill('editYearSelector', null, 'editYears', y);
-        }
-      });
-      document.querySelectorAll('#editYearSelector input[type="checkbox"]').forEach(cb => {
-        cb.checked = currentYears.includes(cb.value);
-      });
+      setYearsInDropdown(currentYears, 'editBatchSelect', 'editCustomBatchWrap', 'editCustomBatchInput');
 
       document.getElementById('editModal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -1036,8 +1096,7 @@
       e.preventDefault();
       const id = document.getElementById('editId').value;
       const url = document.getElementById('editLink').value;
-      const selectedYears = Array.from(document.querySelectorAll('#editYearSelector input[type="checkbox"]:checked')).map(cb => cb.value.trim());
-      const finalYears = selectedYears.length > 0 ? selectedYears : ['2026'];
+      const finalYears = getYearsFromDropdown('editBatchSelect', 'editCustomBatchInput');
       const data = {
         title: document.getElementById('editTitle').value,
         subject: document.getElementById('editSubject').value,

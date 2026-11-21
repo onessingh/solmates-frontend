@@ -25,24 +25,24 @@
   <meta name="supported-color-schemes" content="only light">
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v930">
-  <script src="/js/site-lock-guard.js?v=v930"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v931">
+  <script src="/js/site-lock-guard.js?v=v931"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v930" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v930" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v930">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v930">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v930">
+  <link rel="icon" href="/favicon.ico?v=v931" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v931" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v931">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v931">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v931">
   <title>MBA Study Material, PYQs & Lecture PPTs | SOLMATES</title>
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v930"></script>
-  <script src="/js/uptime-helper.js?v=v930"></script>
+  <script src="/config.js?v=v931"></script>
+  <script src="/js/uptime-helper.js?v=v931"></script>
   <script src="/js/api-client.js?v=v931"></script>
-  <script src="/js/sol-cache.js?v=v930"></script>
-  <script src="/js/prefetch-helper.js?v=v930"></script>
+  <script src="/js/sol-cache.js?v=v931"></script>
+  <script src="/js/prefetch-helper.js?v=v931"></script>
   <script>
     // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
@@ -902,65 +902,63 @@
     .pyq-progress-bg { height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin: 6px 0 10px; }
     .pyq-progress-bar { height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 3px; }
 
-    /* Lecture PPT Year Divider & Pills */
+    /* Lecture PPT Year Divider & Dropdown */
+    .form-select-styled {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-sizing: border-box;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .form-select-styled:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
     .ppt-year-divider {
       grid-column: 1 / -1;
       display: flex;
       align-items: center;
       gap: 16px;
-      margin: 32px 0 16px 0;
+      margin: 36px 0 18px 0;
       width: 100%;
       user-select: none;
     }
     .ppt-year-divider-line {
       flex: 1;
-      height: 3px;
-      background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.45), rgba(99, 102, 241, 0.1));
-      border-radius: 2px;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.65), rgba(99, 102, 241, 0.1));
+      border-radius: 4px;
     }
     .ppt-year-divider-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
-      border: 1.5px solid rgba(99, 102, 241, 0.35);
-      border-radius: 24px;
-      font-size: 0.95rem;
-      font-weight: 700;
+      gap: 10px;
+      padding: 10px 22px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+      border: 2px solid rgba(99, 102, 241, 0.5);
+      border-radius: 30px;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: #4f46e5;
-      letter-spacing: 0.3px;
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+      letter-spacing: 0.4px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
       white-space: nowrap;
     }
-    .ppt-year-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
+    .ppt-year-divider-badge.current-batch {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #059669;
     }
-    .ppt-year-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      font-size: 0.85rem;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
-    }
-    .ppt-year-pill input[type="checkbox"] {
-      margin: 0;
-      cursor: pointer;
-    }
-    .ppt-year-pill:has(input:checked) {
-      background: rgba(99, 102, 241, 0.12);
-      border-color: #6366f1;
-      color: #4f46e5;
-      font-weight: 600;
+    .ppt-year-divider-badge.previous-batch {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15));
+      border-color: rgba(245, 158, 11, 0.5);
+      color: #d97706;
     }
 
     /* dark mode moved */
@@ -1460,18 +1458,17 @@
         <input type="text" id="linkUrl" placeholder="https://...">
       </div>
       <div class="field" id="pptYearField" style="display:none;">
-        <label><i class="fas fa-calendar-alt"></i> Batch / Years (Select all applicable)</label>
-        <div class="ppt-year-group" id="pptYearGroup">
-          <label class="ppt-year-pill"><input type="checkbox" value="2026" checked> <span>2026 (Current)</span></label>
-          <label class="ppt-year-pill"><input type="checkbox" value="2025"> <span>2025 (Previous)</span></label>
-          <label class="ppt-year-pill"><input type="checkbox" value="2024"> <span>2024</span></label>
-          <label class="ppt-year-pill"><input type="checkbox" value="2027"> <span>2027</span></label>
+        <label for="viewBatchSelect"><i class="fas fa-calendar-alt"></i> Batch / Academic Year *</label>
+        <select id="viewBatchSelect" class="form-select-styled" onchange="onBatchDropdownChange(this, 'viewCustomBatchWrap', 'viewCustomBatchInput')">
+          <option value="2026">Batch 2026 (Latest / Current)</option>
+          <option value="2025">Batch 2025 (Previous Year)</option>
+          <option value="2026,2025">Both (2025 & 2026 Batches)</option>
+          <option value="__custom__">+ Add Custom Year / Batch...</option>
+        </select>
+        <div id="viewCustomBatchWrap" style="display: none; margin-top: 8px;">
+          <input type="text" id="viewCustomBatchInput" placeholder="Enter year e.g. 2027 (or 2024, 2025)" style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-sizing: border-box; background: var(--bg-card); color: var(--text-main);">
+          <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px;">Enter year (e.g. 2027) or multiple comma-separated years.</small>
         </div>
-        <div style="margin-top: 6px; display: flex; gap: 8px;">
-          <input type="text" id="pptCustomYear" placeholder="Add custom year (e.g. 2028)" style="font-size: 0.85rem; padding: 6px 10px; flex: 1; border: 1px solid #ddd; border-radius: 6px;">
-          <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;" onclick="addPptCustomYear()">+ Add</button>
-        </div>
-        <small style="color: var(--text-muted); font-size: 0.78rem;">Select one or multiple years for this PPT.</small>
       </div>
       <div class="modal-actions">
         <button class="btn btn-primary" id="linkModalSubmit" onclick="addLink()">Add</button>
@@ -1940,7 +1937,9 @@
         });
         const sortedYears = Array.from(allYearsSet).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
 
-        if (sortedYears.length <= 1) {
+        if (sortedYears.length === 0) {
+          // No items
+        } else if (sortedYears.length === 1 && sortedYears[0] === '2026') {
           items.forEach((item, idx) => {
             const card = createItemCard(item, idx, folders.length + idx);
             if (card) grid.appendChild(card);
@@ -1951,12 +1950,13 @@
             const yearItems = items.filter(it => getItemYears(it).includes(year));
             if (yearItems.length === 0) return;
 
-            if (yIdx > 0) {
+            const isLatest = (yIdx === 0 && year === '2026');
+            if (!isLatest) {
               const divider = document.createElement('div');
               divider.className = 'ppt-year-divider';
               divider.innerHTML = `
                 <div class="ppt-year-divider-line"></div>
-                <div class="ppt-year-divider-badge">
+                <div class="ppt-year-divider-badge previous-batch">
                   <i class="fas fa-calendar-alt"></i> Batch ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : ''}
                 </div>
                 <div class="ppt-year-divider-line"></div>
@@ -2967,21 +2967,60 @@
       } catch (e) { alert(e.message); }
     }
 
-    function addPptCustomYear(presetValue = null) {
-      const input = document.getElementById('pptCustomYear');
-      const year = presetValue || (input ? input.value.trim() : '');
-      if (!year) return;
-      const group = document.getElementById('pptYearGroup');
-      if (!group) return;
-      if (group.querySelector(`input[value="${year}"]`)) {
-        if (input) input.value = '';
-        return;
+    function onBatchDropdownChange(selectElem, wrapId, inputId) {
+      const wrap = document.getElementById(wrapId);
+      const input = document.getElementById(inputId);
+      if (selectElem.value === '__custom__') {
+        if (wrap) wrap.style.display = 'block';
+        if (input) input.focus();
+      } else {
+        if (wrap) wrap.style.display = 'none';
       }
-      const label = document.createElement('label');
-      label.className = 'ppt-year-pill';
-      label.innerHTML = `<input type="checkbox" value="${escapeHtml(year)}" checked> <span>${escapeHtml(year)}</span>`;
-      group.appendChild(label);
-      if (input) input.value = '';
+    }
+
+    function getYearsFromDropdown(selectId, inputId) {
+      const select = document.getElementById(selectId);
+      if (!select) return ['2026'];
+      if (select.value === '__custom__') {
+        const input = document.getElementById(inputId);
+        const val = input ? input.value.trim() : '';
+        if (!val) return ['2026'];
+        const parts = val.split(/[,/&]+/).map(s => s.trim()).filter(Boolean);
+        return parts.length > 0 ? parts : ['2026'];
+      }
+      const parts = select.value.split(',').map(s => s.trim()).filter(Boolean);
+      return parts.length > 0 ? parts : ['2026'];
+    }
+
+    function setYearsInDropdown(years, selectId, wrapId, inputId) {
+      const select = document.getElementById(selectId);
+      const wrap = document.getElementById(wrapId);
+      const input = document.getElementById(inputId);
+      if (!select) return;
+
+      const yArr = Array.isArray(years) ? years.map(String) : [String(years || '2026')];
+      const sortedKey = [...yArr].sort().reverse().join(',');
+
+      if (sortedKey === '2026') {
+        select.value = '2026';
+        if (wrap) wrap.style.display = 'none';
+      } else if (sortedKey === '2025') {
+        select.value = '2025';
+        if (wrap) wrap.style.display = 'none';
+      } else if (sortedKey === '2026,2025') {
+        select.value = '2026,2025';
+        if (wrap) wrap.style.display = 'none';
+      } else {
+        let existingOpt = select.querySelector(`option[value="${sortedKey}"]`);
+        if (!existingOpt) {
+          const opt = document.createElement('option');
+          opt.value = sortedKey;
+          opt.textContent = `Batch ${yArr.join(' & ')}`;
+          select.insertBefore(opt, select.querySelector('option[value="__custom__"]'));
+        }
+        select.value = sortedKey;
+        if (wrap) wrap.style.display = 'none';
+      }
     }
 
     function openAddLinkModal() {
@@ -2994,9 +3033,10 @@
       if (pptField) {
         if (CATEGORY === 'professor') {
           pptField.style.display = 'block';
-          document.querySelectorAll('#pptYearGroup input[type="checkbox"]').forEach(cb => {
-            cb.checked = (cb.value === '2026');
-          });
+          const select = document.getElementById('viewBatchSelect');
+          if (select) select.value = '2026';
+          const wrap = document.getElementById('viewCustomBatchWrap');
+          if (wrap) wrap.style.display = 'none';
         } else {
           pptField.style.display = 'none';
         }
@@ -3010,9 +3050,9 @@
       const today = new Date().toISOString().split('T')[0];
       let data = { folderId, title, link: url, pdf: url, date: today, subject: title };
       if (CATEGORY === 'professor') {
-        const checkedYears = Array.from(document.querySelectorAll('#pptYearGroup input[type="checkbox"]:checked')).map(cb => cb.value.trim());
-        data.years = checkedYears.length > 0 ? checkedYears : ['2026'];
-        data.year = data.years[0];
+        const finalYears = getYearsFromDropdown('viewBatchSelect', 'viewCustomBatchInput');
+        data.years = finalYears;
+        data.year = finalYears[0];
       }
       try {
         if (editingItemId) await window.solmatesAPI.updateSOLItem(CATEGORY, semester, editingItemId, data);
@@ -3039,13 +3079,7 @@
           const itemYears = (Array.isArray(item.years) && item.years.length > 0)
             ? item.years.map(String)
             : (item.year ? [String(item.year)] : (item.title && item.title.includes('2025') ? ['2025'] : ['2026']));
-          itemYears.forEach(y => {
-            let exists = document.querySelector(`#pptYearGroup input[value="${y}"]`);
-            if (!exists) addPptCustomYear(y);
-          });
-          document.querySelectorAll('#pptYearGroup input[type="checkbox"]').forEach(cb => {
-            cb.checked = itemYears.includes(cb.value);
-          });
+          setYearsInDropdown(itemYears, 'viewBatchSelect', 'viewCustomBatchWrap', 'viewCustomBatchInput');
         } else {
           pptField.style.display = 'none';
         }
