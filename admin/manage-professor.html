@@ -28,15 +28,15 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v933">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v934">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v933" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v933" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v933">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v933">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v933">
+  <link rel="icon" href="/favicon.ico?v=v934" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v934" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v934">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v934">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v934">
   <title>Manage Professor Content - Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -249,45 +249,91 @@
       grid-column: 1 / -1;
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin: 36px 0 16px 0;
+      gap: 14px;
+      margin: 32px 0 16px 0;
       width: 100%;
       user-select: none;
     }
 
     .ppt-year-divider-line {
       flex: 1;
-      height: 4px;
-      background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.65), rgba(99, 102, 241, 0.1));
-      border-radius: 4px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.8), rgba(245, 158, 11, 0.2));
+      border-radius: 2px;
     }
 
     .ppt-year-divider-badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 22px;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
-      border: 2px solid rgba(99, 102, 241, 0.5);
+      gap: 8px;
+      padding: 8px 18px;
+      background: #fff;
+      border: 1.5px solid #f59e0b;
       border-radius: 30px;
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #4f46e5;
-      letter-spacing: 0.4px;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #b45309;
+      letter-spacing: 0.3px;
+      box-shadow: 0 3px 12px rgba(245, 158, 11, 0.12);
       white-space: nowrap;
     }
 
     .ppt-year-divider-badge.current-batch {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
-      border-color: rgba(16, 185, 129, 0.5);
-      color: #059669;
+      border-color: #10b981;
+      color: #047857;
+      box-shadow: 0 3px 12px rgba(16, 185, 129, 0.12);
     }
 
     .ppt-year-divider-badge.previous-batch {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.15));
-      border-color: rgba(245, 158, 11, 0.5);
-      color: #d97706;
+      border-color: #f59e0b;
+      color: #b45309;
+      box-shadow: 0 3px 12px rgba(245, 158, 11, 0.12);
+    }
+
+    @media (max-width: 640px) {
+      .ppt-year-divider {
+        gap: 10px;
+        margin: 20px 0 12px 0;
+      }
+      .ppt-year-divider-line {
+        height: 1.5px !important;
+        opacity: 0.85;
+      }
+      .ppt-year-divider-badge {
+        font-size: 0.82rem !important;
+        padding: 5px 12px !important;
+        gap: 6px !important;
+        border-width: 1px !important;
+      }
+    }
+
+    /* Multi-year chips */
+    .year-chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn-year-chip {
+      padding: 6px 14px;
+      background: var(--bg-card, #fff);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main, #1e293b);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .btn-year-chip:hover {
+      border-color: #6366f1;
+      color: #4f46e5;
+    }
+    .btn-year-chip.active {
+      background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+      border-color: #4f46e5 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
     }
 
     .item-meta {
@@ -472,7 +518,7 @@
 
     /* dark mode moved */
     </style>
-  <script src="/js/sol-cache.js?v=v933"></script>
+  <script src="/js/sol-cache.js?v=v934"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -497,23 +543,33 @@
         color: #f8fafc !important;
       }
       .ppt-year-divider-line {
-        background: linear-gradient(90deg, rgba(129, 140, 248, 0.1), rgba(129, 140, 248, 0.65), rgba(129, 140, 248, 0.1)) !important;
+        background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.7), rgba(245, 158, 11, 0.2)) !important;
       }
       .ppt-year-divider-badge {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3)) !important;
-        border-color: rgba(129, 140, 248, 0.6) !important;
-        color: #c7d2fe !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+        background: #1e293b !important;
+        border-color: #f59e0b !important;
+        color: #fbbf24 !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
       }
       .ppt-year-divider-badge.current-batch {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3)) !important;
-        border-color: rgba(52, 211, 153, 0.6) !important;
+        background: #1e293b !important;
+        border-color: #10b981 !important;
         color: #6ee7b7 !important;
       }
       .ppt-year-divider-badge.previous-batch {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(239, 68, 68, 0.3)) !important;
-        border-color: rgba(251, 191, 36, 0.6) !important;
+        background: #1e293b !important;
+        border-color: #f59e0b !important;
         color: #fcd34d !important;
+      }
+      .btn-year-chip {
+        background: #1e293b !important;
+        border-color: #475569 !important;
+        color: #e2e8f0 !important;
+      }
+      .btn-year-chip.active {
+        background: linear-gradient(135deg, #6366f1, #818cf8) !important;
+        border-color: #818cf8 !important;
+        color: #ffffff !important;
       }
     
 </style>
@@ -667,16 +723,32 @@
         </div>
 
         <div class="form-group">
-          <label for="addBatchSelect"><i class="fas fa-calendar-alt"></i> Batch / Academic Year *</label>
-          <select id="addBatchSelect" class="form-select-styled" onchange="onBatchDropdownChange(this, 'addCustomBatchWrap', 'addCustomBatchInput')">
-            <option value="2026">Batch 2026 (Latest / Current)</option>
-            <option value="2025">Batch 2025 (Previous Year)</option>
-            <option value="2026,2025">Both (2025 & 2026 Batches)</option>
-            <option value="__custom__">+ Add Custom Year / Batch...</option>
+          <label for="addBatchSelect"><i class="fas fa-calendar-alt"></i> Academic Year(s) *</label>
+          <select id="addBatchSelect" class="form-select-styled" onchange="onYearDropdownChange(this, 'addYearChipsWrap')">
+            <option value="2026">2026 (Latest / Current)</option>
+            <option value="2025">2025 (Previous Year)</option>
+            <option value="2027">2027</option>
+            <option value="2026,2025">Both (2025 & 2026)</option>
+            <option value="2026,2027">Both (2026 & 2027)</option>
+            <option value="2025,2027">Both (2025 & 2027)</option>
+            <option value="__multiple__">✨ Custom / Multiple Years Selection...</option>
           </select>
-          <div id="addCustomBatchWrap" style="display: none; margin-top: 8px;">
-            <input type="text" id="addCustomBatchInput" placeholder="Enter year e.g. 2027 (or 2024, 2025)" class="form-input-styled">
-            <small style="color: var(--text-lighter); font-size: 0.8rem; display: block; margin-top: 4px;">Enter year (e.g. 2027) or multiple comma-separated years.</small>
+          <div id="addYearChipsWrap" style="display: none; margin-top: 10px; padding: 12px; background: rgba(99, 102, 241, 0.05); border: 1.5px dashed #818cf8; border-radius: 10px;">
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+              <span><i class="fas fa-check-double" style="color: #4f46e5;"></i> Click years to select multiple:</span>
+              <span id="addYearSummaryText" style="color: #4f46e5; font-weight: 700;">2026</span>
+            </div>
+            <div class="year-chips-group" id="addYearChips">
+              <button type="button" class="btn-year-chip" data-year="2024" onclick="toggleYearChip(this, 'addBatchSelect', 'addYearSummaryText')">2024</button>
+              <button type="button" class="btn-year-chip" data-year="2025" onclick="toggleYearChip(this, 'addBatchSelect', 'addYearSummaryText')">2025</button>
+              <button type="button" class="btn-year-chip active" data-year="2026" onclick="toggleYearChip(this, 'addBatchSelect', 'addYearSummaryText')">2026</button>
+              <button type="button" class="btn-year-chip" data-year="2027" onclick="toggleYearChip(this, 'addBatchSelect', 'addYearSummaryText')">2027</button>
+              <button type="button" class="btn-year-chip" data-year="2028" onclick="toggleYearChip(this, 'addBatchSelect', 'addYearSummaryText')">2028</button>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <input type="text" id="addCustomYearInput" placeholder="Add other year e.g. 2029" style="flex: 1; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background: var(--bg-card); color: var(--text-main);" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomYearChip('addYearChips', this, 'addBatchSelect', 'addYearSummaryText');}">
+              <button type="button" style="padding: 7px 12px; background: #4f46e5; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="addCustomYearChip('addYearChips', document.getElementById('addCustomYearInput'), 'addBatchSelect', 'addYearSummaryText')">+ Add Year</button>
+            </div>
           </div>
         </div>
 
@@ -727,16 +799,32 @@
           <input type="text" id="editLink" name="editLink" required placeholder="https://drive.google.com/...">
         </div>
         <div class="form-group">
-          <label for="editBatchSelect"><i class="fas fa-calendar-alt"></i> Batch / Academic Year *</label>
-          <select id="editBatchSelect" class="form-select-styled" onchange="onBatchDropdownChange(this, 'editCustomBatchWrap', 'editCustomBatchInput')">
-            <option value="2026">Batch 2026 (Latest / Current)</option>
-            <option value="2025">Batch 2025 (Previous Year)</option>
-            <option value="2026,2025">Both (2025 & 2026 Batches)</option>
-            <option value="__custom__">+ Add Custom Year / Batch...</option>
+          <label for="editBatchSelect"><i class="fas fa-calendar-alt"></i> Academic Year(s) *</label>
+          <select id="editBatchSelect" class="form-select-styled" onchange="onYearDropdownChange(this, 'editYearChipsWrap')">
+            <option value="2026">2026 (Latest / Current)</option>
+            <option value="2025">2025 (Previous Year)</option>
+            <option value="2027">2027</option>
+            <option value="2026,2025">Both (2025 & 2026)</option>
+            <option value="2026,2027">Both (2026 & 2027)</option>
+            <option value="2025,2027">Both (2025 & 2027)</option>
+            <option value="__multiple__">✨ Custom / Multiple Years Selection...</option>
           </select>
-          <div id="editCustomBatchWrap" style="display: none; margin-top: 8px;">
-            <input type="text" id="editCustomBatchInput" placeholder="Enter year e.g. 2027 (or 2024, 2025)" class="form-input-styled">
-            <small style="color: var(--text-lighter); font-size: 0.8rem; display: block; margin-top: 4px;">Enter year (e.g. 2027) or multiple comma-separated years.</small>
+          <div id="editYearChipsWrap" style="display: none; margin-top: 10px; padding: 12px; background: rgba(99, 102, 241, 0.05); border: 1.5px dashed #818cf8; border-radius: 10px;">
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+              <span><i class="fas fa-check-double" style="color: #4f46e5;"></i> Click years to select multiple:</span>
+              <span id="editYearSummaryText" style="color: #4f46e5; font-weight: 700;">2026</span>
+            </div>
+            <div class="year-chips-group" id="editYearChips">
+              <button type="button" class="btn-year-chip" data-year="2024" onclick="toggleYearChip(this, 'editBatchSelect', 'editYearSummaryText')">2024</button>
+              <button type="button" class="btn-year-chip" data-year="2025" onclick="toggleYearChip(this, 'editBatchSelect', 'editYearSummaryText')">2025</button>
+              <button type="button" class="btn-year-chip active" data-year="2026" onclick="toggleYearChip(this, 'editBatchSelect', 'editYearSummaryText')">2026</button>
+              <button type="button" class="btn-year-chip" data-year="2027" onclick="toggleYearChip(this, 'editBatchSelect', 'editYearSummaryText')">2027</button>
+              <button type="button" class="btn-year-chip" data-year="2028" onclick="toggleYearChip(this, 'editBatchSelect', 'editYearSummaryText')">2028</button>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+              <input type="text" id="editCustomYearInput" placeholder="Add other year e.g. 2029" style="flex: 1; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background: var(--bg-card); color: var(--text-main);" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomYearChip('editYearChips', this, 'editBatchSelect', 'editYearSummaryText');}">
+              <button type="button" style="padding: 7px 12px; background: #4f46e5; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="addCustomYearChip('editYearChips', document.getElementById('editCustomYearInput'), 'editBatchSelect', 'editYearSummaryText')">+ Add Year</button>
+            </div>
           </div>
         </div>
         <div class="form-group">
@@ -755,9 +843,9 @@
   </div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="/config.js?v=v933"></script>
-  <script src="/js/uptime-helper.js?v=v933"></script>
-  <script src="/js/api-client.js?v=v933"></script>
+  <script src="/config.js?v=v934"></script>
+  <script src="/js/uptime-helper.js?v=v934"></script>
+  <script src="/js/api-client.js?v=v934"></script>
   <script>
     const CONTENT_TYPE = 'professor';
 
@@ -832,11 +920,14 @@
           div.dataset.description = item.description || '';
           div.dataset.years = JSON.stringify(itemYears);
 
-          const has2026 = itemYears.includes('2026');
-          const has2025 = itemYears.includes('2025');
-          const hasBoth = has2026 && has2025;
+          const is2026 = itemYears.length === 1 && itemYears[0] === '2026';
+          const is2025 = itemYears.length === 1 && itemYears[0] === '2025';
+          const is2027 = itemYears.length === 1 && itemYears[0] === '2027';
+          const is25_26 = itemYears.length === 2 && itemYears.includes('2025') && itemYears.includes('2026');
+          const is26_27 = itemYears.length === 2 && itemYears.includes('2026') && itemYears.includes('2027');
+          const is25_27 = itemYears.length === 2 && itemYears.includes('2025') && itemYears.includes('2027');
 
-          const yearBadgeText = hasBoth ? 'Both 2025 & 2026' : `Batch: ${itemYears.join(', ')}`;
+          const yearBadgeText = itemYears.length > 1 ? itemYears.join(' & ') : `Year: ${itemYears[0] || '2026'}`;
 
           const rawCreated = item.created_at || (item._id && item._id.length === 24 ? new Date(parseInt(item._id.substring(0, 8), 16) * 1000) : null);
           const createdDateObj = rawCreated ? new Date(rawCreated) : null;
@@ -857,10 +948,13 @@
               </div>
             </div>
             <div class="quick-year-toggle">
-              <span style="font-size:12px;color:var(--text-lighter);font-weight:600;">Quick Batch:</span>
-              <button type="button" class="btn-year-toggle ${has2026 && !hasBoth ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026'], this)">2026</button>
-              <button type="button" class="btn-year-toggle ${has2025 && !hasBoth ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2025'], this)">2025</button>
-              <button type="button" class="btn-year-toggle ${hasBoth ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026', '2025'], this)">Both (2025+2026)</button>
+              <span style="font-size:12px;color:var(--text-lighter);font-weight:600;">Quick Year:</span>
+              <button type="button" class="btn-year-toggle ${is2026 ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026'], this)">2026</button>
+              <button type="button" class="btn-year-toggle ${is2025 ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2025'], this)">2025</button>
+              <button type="button" class="btn-year-toggle ${is2027 ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2027'], this)">2027</button>
+              <button type="button" class="btn-year-toggle ${is25_26 ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026', '2025'], this)">2025 & 2026</button>
+              <button type="button" class="btn-year-toggle ${is26_27 ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2026', '2027'], this)">2026 & 2027</button>
+              <button type="button" class="btn-year-toggle ${is25_27 ? 'active' : ''}" onclick="quickSetYear('${item.id}', ['2025', '2027'], this)">2025 & 2027</button>
             </div>
             ${item.description ? `<div class="item-description">${escapeHtml(item.description)}</div>` : ''}
             <a href="${escapeHtml(item.url || item.pdf || item.link || '')}" target="_blank" class="item-link">
@@ -881,7 +975,7 @@
           return div;
         }
 
-        // Render grouped by year with thick divider lines
+        // Render grouped by year with divider lines
         sortedYears.forEach((year, yIdx) => {
           const yearItems = response.data.filter(it => getItemYears(it).includes(year));
           if (yearItems.length === 0) return;
@@ -892,7 +986,7 @@
           divider.innerHTML = `
             <div class="ppt-year-divider-line"></div>
             <div class="ppt-year-divider-badge ${isLatest ? 'current-batch' : 'previous-batch'}">
-              <i class="fas ${isLatest ? 'fa-layer-group' : 'fa-calendar-alt'}"></i> Batch ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : (isLatest ? '(Latest)' : '')}
+              <i class="fas ${isLatest ? 'fa-layer-group' : 'fa-calendar-alt'}"></i> ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : (isLatest ? '(Latest)' : '')}
             </div>
             <div class="ppt-year-divider-line"></div>
           `;
@@ -973,10 +1067,7 @@
     function openAddModal() {
       document.getElementById('addModal').classList.add('active');
       document.body.style.overflow = 'hidden';
-      const addSelect = document.getElementById('addBatchSelect');
-      if (addSelect) addSelect.value = '2026';
-      const wrap = document.getElementById('addCustomBatchWrap');
-      if (wrap) wrap.style.display = 'none';
+      setSelectedYears(['2026'], 'addBatchSelect', 'addYearChipsWrap', 'addYearSummaryText');
     }
 
     function closeAddModal() {
@@ -992,60 +1083,148 @@
       return div.innerHTML;
     }
 
-    // ========== BATCH DROPDOWN HELPERS ==========
-    function onBatchDropdownChange(selectElem, wrapId, inputId) {
+    // ========== MULTI-YEAR DROPDOWN & CHIPS HELPERS ==========
+    function onYearDropdownChange(selectElem, wrapId) {
       const wrap = document.getElementById(wrapId);
-      const input = document.getElementById(inputId);
-      if (selectElem.value === '__custom__') {
-        if (wrap) wrap.style.display = 'block';
-        if (input) input.focus();
+      if (!wrap) return;
+      if (selectElem.value === '__multiple__') {
+        wrap.style.display = 'block';
       } else {
-        if (wrap) wrap.style.display = 'none';
+        wrap.style.display = 'none';
+        const years = selectElem.value ? selectElem.value.split(',').map(s => s.trim()).filter(Boolean) : ['2026'];
+        const group = wrap.querySelector('.year-chips-group');
+        syncChipsWithYears(group, years);
+        const summaryId = selectElem.id === 'addBatchSelect' ? 'addYearSummaryText' : 'editYearSummaryText';
+        const summary = document.getElementById(summaryId);
+        if (summary) summary.textContent = years.join(' & ');
       }
+    }
+
+    function toggleYearChip(btn, selectId, summaryId) {
+      btn.classList.toggle('active');
+      const group = btn.closest('.year-chips-group');
+      const activeBtns = Array.from(group.querySelectorAll('.btn-year-chip.active'));
+      const activeYears = activeBtns.map(b => b.dataset.year || b.textContent.trim()).filter(Boolean);
+      
+      const summaryElem = document.getElementById(summaryId);
+      if (summaryElem) {
+        summaryElem.textContent = activeYears.length > 0 ? activeYears.join(' & ') : 'None selected';
+      }
+
+      const select = document.getElementById(selectId);
+      if (select) {
+        const joined = [...activeYears].sort().join(',');
+        const matchingOpt = Array.from(select.options).find(o => {
+          if (o.value === '__multiple__') return false;
+          return o.value.split(',').sort().join(',') === joined;
+        });
+        if (matchingOpt) {
+          select.value = matchingOpt.value;
+        } else {
+          select.value = '__multiple__';
+        }
+      }
+    }
+
+    function addCustomYearChip(groupId, inputElem, selectId, summaryId) {
+      const val = (inputElem.value || '').trim();
+      if (!val) return;
+      const group = (typeof groupId === 'string') ? document.getElementById(groupId) : groupId;
+      if (!group) return;
+
+      const existingBtn = Array.from(group.querySelectorAll('.btn-year-chip')).find(b => (b.dataset.year || b.textContent.trim()) === val);
+      if (existingBtn) {
+        existingBtn.classList.add('active');
+      } else {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-year-chip active';
+        btn.dataset.year = val;
+        btn.textContent = val;
+        btn.onclick = () => toggleYearChip(btn, selectId, summaryId);
+        group.appendChild(btn);
+      }
+      inputElem.value = '';
+      const summaryElem = document.getElementById(summaryId);
+      const activeBtns = Array.from(group.querySelectorAll('.btn-year-chip.active'));
+      const activeYears = activeBtns.map(b => b.dataset.year || b.textContent.trim());
+      if (summaryElem) summaryElem.textContent = activeYears.join(' & ');
+
+      const select = document.getElementById(selectId);
+      if (select) select.value = '__multiple__';
+    }
+
+    function syncChipsWithYears(group, years) {
+      if (!group) return;
+      const yArr = (Array.isArray(years) ? years : [years]).map(String);
+      yArr.forEach(y => {
+        const existing = Array.from(group.querySelectorAll('.btn-year-chip')).find(b => (b.dataset.year || b.textContent.trim()) === y);
+        if (!existing) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-year-chip';
+          btn.dataset.year = y;
+          btn.textContent = y;
+          const selectId = group.id === 'addYearChips' ? 'addBatchSelect' : 'editBatchSelect';
+          const summaryId = group.id === 'addYearChips' ? 'addYearSummaryText' : 'editYearSummaryText';
+          btn.onclick = function() { toggleYearChip(this, selectId, summaryId); };
+          group.appendChild(btn);
+        }
+      });
+      group.querySelectorAll('.btn-year-chip').forEach(b => {
+        const y = b.dataset.year || b.textContent.trim();
+        b.classList.toggle('active', yArr.includes(y));
+      });
     }
 
     function getYearsFromDropdown(selectId, inputId) {
       const select = document.getElementById(selectId);
-      if (!select) return ['2026'];
-      if (select.value === '__custom__') {
-        const input = document.getElementById(inputId);
-        const val = input ? input.value.trim() : '';
-        if (!val) return ['2026'];
-        const parts = val.split(/[,/&]+/).map(s => s.trim()).filter(Boolean);
-        return parts.length > 0 ? parts : ['2026'];
+      const wrapId = selectId === 'addBatchSelect' ? 'addYearChipsWrap' : 'editYearChipsWrap';
+      const wrap = document.getElementById(wrapId);
+      if (select && select.value !== '__multiple__') {
+        const spl = select.value.split(',').map(s => s.trim()).filter(Boolean);
+        if (spl.length > 0) return spl;
       }
-      const parts = select.value.split(',').map(s => s.trim()).filter(Boolean);
-      return parts.length > 0 ? parts : ['2026'];
+      if (wrap) {
+        const activeBtns = Array.from(wrap.querySelectorAll('.btn-year-chip.active'));
+        const years = activeBtns.map(b => b.dataset.year || b.textContent.trim()).filter(Boolean);
+        if (years.length > 0) return years;
+      }
+      return ['2026'];
     }
 
     function setYearsInDropdown(years, selectId, wrapId, inputId) {
+      const realWrapId = selectId === 'addBatchSelect' ? 'addYearChipsWrap' : 'editYearChipsWrap';
+      const summaryId = selectId === 'addBatchSelect' ? 'addYearSummaryText' : 'editYearSummaryText';
+      setSelectedYears(years, selectId, realWrapId, summaryId);
+    }
+
+    function setSelectedYears(years, selectId, wrapId, summaryId) {
       const select = document.getElementById(selectId);
       const wrap = document.getElementById(wrapId);
-      const input = document.getElementById(inputId);
-      if (!select) return;
+      const summary = document.getElementById(summaryId);
+      const yArr = Array.isArray(years) && years.length > 0 ? years.map(String) : ['2026'];
 
-      const yArr = Array.isArray(years) ? years.map(String) : [String(years || '2026')];
-      const sortedKey = [...yArr].sort().reverse().join(',');
+      if (summary) summary.textContent = yArr.join(' & ');
 
-      if (sortedKey === '2026') {
-        select.value = '2026';
-        if (wrap) wrap.style.display = 'none';
-      } else if (sortedKey === '2025') {
-        select.value = '2025';
-        if (wrap) wrap.style.display = 'none';
-      } else if (sortedKey === '2026,2025') {
-        select.value = '2026,2025';
-        if (wrap) wrap.style.display = 'none';
-      } else {
-        let existingOpt = select.querySelector(`option[value="${sortedKey}"]`);
-        if (!existingOpt) {
-          const opt = document.createElement('option');
-          opt.value = sortedKey;
-          opt.textContent = `Batch ${yArr.join(' & ')}`;
-          select.insertBefore(opt, select.querySelector('option[value="__custom__"]'));
+      if (wrap) {
+        const group = wrap.querySelector('.year-chips-group');
+        syncChipsWithYears(group, yArr);
+      }
+
+      if (select) {
+        const joined = [...yArr].sort().join(',');
+        const matchingOpt = Array.from(select.options).find(o => {
+          if (o.value === '__multiple__') return false;
+          return o.value.split(',').sort().join(',') === joined;
+        });
+        if (matchingOpt) {
+          select.value = matchingOpt.value;
+          if (wrap) wrap.style.display = 'none';
+        } else {
+          select.value = '__multiple__';
+          if (wrap) wrap.style.display = 'block';
         }
-        select.value = sortedKey;
-        if (wrap) wrap.style.display = 'none';
       }
     }
 

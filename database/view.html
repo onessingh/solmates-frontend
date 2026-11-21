@@ -25,24 +25,24 @@
   <meta name="supported-color-schemes" content="only light">
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v933">
-  <script src="/js/site-lock-guard.js?v=v933"></script>
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v934">
+  <script src="/js/site-lock-guard.js?v=v934"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v933" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v933" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v933">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v933">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v933">
+  <link rel="icon" href="/favicon.ico?v=v934" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v934" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v934">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v934">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v934">
   <title>MBA Study Material, PYQs & Lecture PPTs | SOLMATES</title>
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="/config.js?v=v933"></script>
-  <script src="/js/uptime-helper.js?v=v933"></script>
-  <script src="/js/api-client.js?v=v933"></script>
-  <script src="/js/sol-cache.js?v=v933"></script>
-  <script src="/js/prefetch-helper.js?v=v933"></script>
+  <script src="/config.js?v=v934"></script>
+  <script src="/js/uptime-helper.js?v=v934"></script>
+  <script src="/js/api-client.js?v=v934"></script>
+  <script src="/js/sol-cache.js?v=v934"></script>
+  <script src="/js/prefetch-helper.js?v=v934"></script>
   <script>
     // [v126.0] NUCLEAR AUTO-UPDATE SYSTEM
     (function() {
@@ -924,41 +924,86 @@
       grid-column: 1 / -1;
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin: 36px 0 18px 0;
+      gap: 14px;
+      margin: 32px 0 16px 0;
       width: 100%;
       user-select: none;
     }
     .ppt-year-divider-line {
       flex: 1;
-      height: 3px;
+      height: 2px;
       background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.8), rgba(245, 158, 11, 0.2));
-      border-radius: 3px;
+      border-radius: 2px;
     }
     .ppt-year-divider-badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 9px 20px;
+      gap: 8px;
+      padding: 8px 18px;
       background: #fff;
-      border: 2px solid #f59e0b;
+      border: 1.5px solid #f59e0b;
       border-radius: 30px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #b45309;
       letter-spacing: 0.3px;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 3px 12px rgba(245, 158, 11, 0.12);
       white-space: nowrap;
     }
     .ppt-year-divider-badge.current-batch {
       border-color: #10b981;
       color: #047857;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+      box-shadow: 0 3px 12px rgba(16, 185, 129, 0.12);
     }
     .ppt-year-divider-badge.previous-batch {
       border-color: #f59e0b;
       color: #b45309;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 3px 12px rgba(245, 158, 11, 0.12);
+    }
+    @media (max-width: 640px) {
+      .ppt-year-divider {
+        gap: 10px;
+        margin: 20px 0 12px 0;
+      }
+      .ppt-year-divider-line {
+        height: 1.5px !important;
+        opacity: 0.85;
+      }
+      .ppt-year-divider-badge {
+        font-size: 0.82rem !important;
+        padding: 5px 12px !important;
+        gap: 6px !important;
+        border-width: 1px !important;
+      }
+    }
+
+    /* Multi-year chips */
+    .year-chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn-year-chip {
+      padding: 6px 14px;
+      background: var(--bg-card, #fff);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main, #1e293b);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .btn-year-chip:hover {
+      border-color: #6366f1;
+      color: #4f46e5;
+    }
+    .btn-year-chip.active {
+      background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+      border-color: #4f46e5 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
     }
     .admin-item-date-badge {
       display: inline-flex;
@@ -1068,6 +1113,16 @@
         }
         .ppt-year-divider-line {
           background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.7), rgba(245, 158, 11, 0.2)) !important;
+        }
+        .btn-year-chip {
+          background: #1e293b !important;
+          border-color: #475569 !important;
+          color: #e2e8f0 !important;
+        }
+        .btn-year-chip.active {
+          background: linear-gradient(135deg, #6366f1, #818cf8) !important;
+          border-color: #818cf8 !important;
+          color: #ffffff !important;
         }
         .admin-item-date-badge {
           background: rgba(30, 58, 138, 0.4) !important;
@@ -1480,16 +1535,32 @@
         <input type="text" id="linkUrl" placeholder="https://...">
       </div>
       <div class="field" id="pptYearField" style="display:none;">
-        <label for="viewBatchSelect"><i class="fas fa-calendar-alt"></i> Batch / Academic Year *</label>
-        <select id="viewBatchSelect" class="form-select-styled" onchange="onBatchDropdownChange(this, 'viewCustomBatchWrap', 'viewCustomBatchInput')">
-          <option value="2026">Batch 2026 (Latest / Current)</option>
-          <option value="2025">Batch 2025 (Previous Year)</option>
-          <option value="2026,2025">Both (2025 & 2026 Batches)</option>
-          <option value="__custom__">+ Add Custom Year / Batch...</option>
+        <label for="viewBatchSelect"><i class="fas fa-calendar-alt"></i> Academic Year(s) *</label>
+        <select id="viewBatchSelect" class="form-select-styled" onchange="onYearDropdownChange(this, 'viewYearChipsWrap')">
+          <option value="2026">2026 (Latest / Current)</option>
+          <option value="2025">2025 (Previous Year)</option>
+          <option value="2027">2027</option>
+          <option value="2026,2025">Both (2025 & 2026)</option>
+          <option value="2026,2027">Both (2026 & 2027)</option>
+          <option value="2025,2027">Both (2025 & 2027)</option>
+          <option value="__multiple__">✨ Custom / Multiple Years Selection...</option>
         </select>
-        <div id="viewCustomBatchWrap" style="display: none; margin-top: 8px;">
-          <input type="text" id="viewCustomBatchInput" placeholder="Enter year e.g. 2027 (or 2024, 2025)" style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; box-sizing: border-box; background: var(--bg-card); color: var(--text-main);">
-          <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px;">Enter year (e.g. 2027) or multiple comma-separated years.</small>
+        <div id="viewYearChipsWrap" style="display: none; margin-top: 10px; padding: 12px; background: rgba(99, 102, 241, 0.05); border: 1.5px dashed #818cf8; border-radius: 10px;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+            <span><i class="fas fa-check-double" style="color: #4f46e5;"></i> Click years to select multiple:</span>
+            <span id="viewYearSummaryText" style="color: #4f46e5; font-weight: 700;">2026</span>
+          </div>
+          <div class="year-chips-group" id="viewYearChips">
+            <button type="button" class="btn-year-chip" data-year="2024" onclick="toggleYearChip(this, 'viewBatchSelect', 'viewYearSummaryText')">2024</button>
+            <button type="button" class="btn-year-chip" data-year="2025" onclick="toggleYearChip(this, 'viewBatchSelect', 'viewYearSummaryText')">2025</button>
+            <button type="button" class="btn-year-chip active" data-year="2026" onclick="toggleYearChip(this, 'viewBatchSelect', 'viewYearSummaryText')">2026</button>
+            <button type="button" class="btn-year-chip" data-year="2027" onclick="toggleYearChip(this, 'viewBatchSelect', 'viewYearSummaryText')">2027</button>
+            <button type="button" class="btn-year-chip" data-year="2028" onclick="toggleYearChip(this, 'viewBatchSelect', 'viewYearSummaryText')">2028</button>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <input type="text" id="viewCustomYearInput" placeholder="Add other year e.g. 2029" style="flex: 1; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12.5px; background: var(--bg-card); color: var(--text-main);" onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomYearChip('viewYearChips', this, 'viewBatchSelect', 'viewYearSummaryText');}">
+            <button type="button" style="padding: 7px 12px; background: #4f46e5; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="addCustomYearChip('viewYearChips', document.getElementById('viewCustomYearInput'), 'viewBatchSelect', 'viewYearSummaryText')">+ Add Year</button>
+          </div>
         </div>
       </div>
       <div class="modal-actions">
@@ -2004,7 +2075,7 @@
               divider.innerHTML = `
                 <div class="ppt-year-divider-line"></div>
                 <div class="ppt-year-divider-badge previous-batch">
-                  <i class="fas fa-calendar-alt"></i> Batch ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : ''}
+                  <i class="fas fa-calendar-alt"></i> ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : ''}
                 </div>
                 <div class="ppt-year-divider-line"></div>
               `;
@@ -3014,59 +3085,141 @@
       } catch (e) { alert(e.message); }
     }
 
-    function onBatchDropdownChange(selectElem, wrapId, inputId) {
+    function onYearDropdownChange(selectElem, wrapId) {
       const wrap = document.getElementById(wrapId);
-      const input = document.getElementById(inputId);
-      if (selectElem.value === '__custom__') {
-        if (wrap) wrap.style.display = 'block';
-        if (input) input.focus();
+      if (!wrap) return;
+      if (selectElem.value === '__multiple__') {
+        wrap.style.display = 'block';
       } else {
-        if (wrap) wrap.style.display = 'none';
+        wrap.style.display = 'none';
+        const years = selectElem.value ? selectElem.value.split(',').map(s => s.trim()).filter(Boolean) : ['2026'];
+        const group = wrap.querySelector('.year-chips-group');
+        syncChipsWithYears(group, years);
+        const summary = document.getElementById('viewYearSummaryText');
+        if (summary) summary.textContent = years.join(' & ');
       }
+    }
+
+    function toggleYearChip(btn, selectId, summaryId) {
+      btn.classList.toggle('active');
+      const group = btn.closest('.year-chips-group');
+      const activeBtns = Array.from(group.querySelectorAll('.btn-year-chip.active'));
+      const activeYears = activeBtns.map(b => b.dataset.year || b.textContent.trim()).filter(Boolean);
+      
+      const summaryElem = document.getElementById(summaryId);
+      if (summaryElem) {
+        summaryElem.textContent = activeYears.length > 0 ? activeYears.join(' & ') : 'None selected';
+      }
+
+      const select = document.getElementById(selectId);
+      if (select) {
+        const joined = [...activeYears].sort().join(',');
+        const matchingOpt = Array.from(select.options).find(o => {
+          if (o.value === '__multiple__') return false;
+          return o.value.split(',').sort().join(',') === joined;
+        });
+        if (matchingOpt) {
+          select.value = matchingOpt.value;
+        } else {
+          select.value = '__multiple__';
+        }
+      }
+    }
+
+    function addCustomYearChip(groupId, inputElem, selectId, summaryId) {
+      const val = (inputElem.value || '').trim();
+      if (!val) return;
+      const group = (typeof groupId === 'string') ? document.getElementById(groupId) : groupId;
+      if (!group) return;
+
+      const existingBtn = Array.from(group.querySelectorAll('.btn-year-chip')).find(b => (b.dataset.year || b.textContent.trim()) === val);
+      if (existingBtn) {
+        existingBtn.classList.add('active');
+      } else {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-year-chip active';
+        btn.dataset.year = val;
+        btn.textContent = val;
+        btn.onclick = () => toggleYearChip(btn, selectId, summaryId);
+        group.appendChild(btn);
+      }
+      inputElem.value = '';
+      const summaryElem = document.getElementById(summaryId);
+      const activeBtns = Array.from(group.querySelectorAll('.btn-year-chip.active'));
+      const activeYears = activeBtns.map(b => b.dataset.year || b.textContent.trim());
+      if (summaryElem) summaryElem.textContent = activeYears.join(' & ');
+
+      const select = document.getElementById(selectId);
+      if (select) select.value = '__multiple__';
+    }
+
+    function syncChipsWithYears(group, years) {
+      if (!group) return;
+      const yArr = (Array.isArray(years) ? years : [years]).map(String);
+      yArr.forEach(y => {
+        const existing = Array.from(group.querySelectorAll('.btn-year-chip')).find(b => (b.dataset.year || b.textContent.trim()) === y);
+        if (!existing) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-year-chip';
+          btn.dataset.year = y;
+          btn.textContent = y;
+          btn.onclick = function() { toggleYearChip(this, 'viewBatchSelect', 'viewYearSummaryText'); };
+          group.appendChild(btn);
+        }
+      });
+      group.querySelectorAll('.btn-year-chip').forEach(b => {
+        const y = b.dataset.year || b.textContent.trim();
+        b.classList.toggle('active', yArr.includes(y));
+      });
     }
 
     function getYearsFromDropdown(selectId, inputId) {
       const select = document.getElementById(selectId);
-      if (!select) return ['2026'];
-      if (select.value === '__custom__') {
-        const input = document.getElementById(inputId);
-        const val = input ? input.value.trim() : '';
-        if (!val) return ['2026'];
-        const parts = val.split(/[,/&]+/).map(s => s.trim()).filter(Boolean);
-        return parts.length > 0 ? parts : ['2026'];
+      const wrap = document.getElementById('viewYearChipsWrap');
+      if (select && select.value !== '__multiple__') {
+        const spl = select.value.split(',').map(s => s.trim()).filter(Boolean);
+        if (spl.length > 0) return spl;
       }
-      const parts = select.value.split(',').map(s => s.trim()).filter(Boolean);
-      return parts.length > 0 ? parts : ['2026'];
+      if (wrap) {
+        const activeBtns = Array.from(wrap.querySelectorAll('.btn-year-chip.active'));
+        const years = activeBtns.map(b => b.dataset.year || b.textContent.trim()).filter(Boolean);
+        if (years.length > 0) return years;
+      }
+      return ['2026'];
     }
 
     function setYearsInDropdown(years, selectId, wrapId, inputId) {
+      setSelectedYears(years, selectId, 'viewYearChipsWrap', 'viewYearSummaryText');
+    }
+
+    function setSelectedYears(years, selectId, wrapId, summaryId) {
       const select = document.getElementById(selectId);
       const wrap = document.getElementById(wrapId);
-      const input = document.getElementById(inputId);
-      if (!select) return;
+      const summary = document.getElementById(summaryId);
+      const yArr = Array.isArray(years) && years.length > 0 ? years.map(String) : ['2026'];
 
-      const yArr = Array.isArray(years) ? years.map(String) : [String(years || '2026')];
-      const sortedKey = [...yArr].sort().reverse().join(',');
+      if (summary) summary.textContent = yArr.join(' & ');
 
-      if (sortedKey === '2026') {
-        select.value = '2026';
-        if (wrap) wrap.style.display = 'none';
-      } else if (sortedKey === '2025') {
-        select.value = '2025';
-        if (wrap) wrap.style.display = 'none';
-      } else if (sortedKey === '2026,2025') {
-        select.value = '2026,2025';
-        if (wrap) wrap.style.display = 'none';
-      } else {
-        let existingOpt = select.querySelector(`option[value="${sortedKey}"]`);
-        if (!existingOpt) {
-          const opt = document.createElement('option');
-          opt.value = sortedKey;
-          opt.textContent = `Batch ${yArr.join(' & ')}`;
-          select.insertBefore(opt, select.querySelector('option[value="__custom__"]'));
+      if (wrap) {
+        const group = wrap.querySelector('.year-chips-group');
+        syncChipsWithYears(group, yArr);
+      }
+
+      if (select) {
+        const joined = [...yArr].sort().join(',');
+        const matchingOpt = Array.from(select.options).find(o => {
+          if (o.value === '__multiple__') return false;
+          return o.value.split(',').sort().join(',') === joined;
+        });
+        if (matchingOpt) {
+          select.value = matchingOpt.value;
+          if (wrap) wrap.style.display = 'none';
+        } else {
+          select.value = '__multiple__';
+          if (wrap) wrap.style.display = 'block';
         }
-        select.value = sortedKey;
-        if (wrap) wrap.style.display = 'none';
       }
     }
 
@@ -3080,10 +3233,7 @@
       if (pptField) {
         if (CATEGORY === 'professor') {
           pptField.style.display = 'block';
-          const select = document.getElementById('viewBatchSelect');
-          if (select) select.value = '2026';
-          const wrap = document.getElementById('viewCustomBatchWrap');
-          if (wrap) wrap.style.display = 'none';
+          setSelectedYears(['2026'], 'viewBatchSelect', 'viewYearChipsWrap', 'viewYearSummaryText');
         } else {
           pptField.style.display = 'none';
         }
