@@ -980,6 +980,19 @@ class SolmatesAPI {
       method: 'DELETE'
     });
   }
+
+  // ========== SITE SETTINGS METHODS ==========
+  async getSiteSettings() {
+    return await this.request('/sol/settings');
+  }
+
+  async updateSiteSettings(activeAcademicYear) {
+    this._cacheClear('');
+    return await this.request('/sol/settings', {
+      method: 'POST',
+      body: JSON.stringify({ activeAcademicYear })
+    });
+  }
 }
 
 // =====================================================

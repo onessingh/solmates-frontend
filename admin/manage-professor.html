@@ -28,15 +28,15 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v936">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v937">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v936" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v936" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v936">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v936">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v936">
+  <link rel="icon" href="/favicon.ico?v=v937" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v937" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v937">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v937">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v937">
   <title>Manage Professor Content - Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -345,6 +345,124 @@
       box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
     }
 
+    /* Active Academic Year Switcher Banner */
+    .active-year-switch-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.05));
+      border: 1.5px solid rgba(99, 102, 241, 0.3);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.06);
+    }
+    .active-year-info {
+      flex: 1;
+    }
+    .active-year-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .active-year-title i {
+      color: #4f46e5;
+    }
+    .active-year-current {
+      display: inline-block;
+      padding: 2px 10px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    .active-year-desc {
+      font-size: 12.5px;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .active-year-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-year-switch {
+      padding: 8px 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 20px;
+      background: #fff;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-year-switch:hover {
+      border-color: #6366f1;
+      color: #4f46e5;
+    }
+    .btn-year-switch.active {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      border-color: #059669 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+    }
+    .btn-year-switch-custom {
+      padding: 8px 14px;
+      border: 1.5px dashed #94a3b8;
+      border-radius: 20px;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-year-switch-custom:hover {
+      border-color: #6366f1;
+      color: #4f46e5;
+    }
+    @media (max-width: 768px) {
+      .active-year-switch-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 16px;
+        gap: 12px;
+      }
+    }
+    .dark .active-year-switch-card {
+      background: rgba(30, 41, 59, 0.8) !important;
+      border-color: rgba(99, 102, 241, 0.4) !important;
+    }
+    .dark .active-year-title {
+      color: #f1f5f9 !important;
+    }
+    .dark .active-year-desc {
+      color: #94a3b8 !important;
+    }
+    .dark .btn-year-switch {
+      background: #1e293b !important;
+      border-color: #475569 !important;
+      color: #cbd5e1 !important;
+    }
+    .dark .btn-year-switch.active {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      color: #ffffff !important;
+    }
+
     .item-meta {
       color: var(--text-lighter);
       font-size: 14px;
@@ -527,7 +645,7 @@
 
     /* dark mode moved */
     </style>
-  <script src="/js/sol-cache.js?v=v936"></script>
+  <script src="/js/sol-cache.js?v=v937"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -684,6 +802,35 @@
         <button class="btn btn-secondary" onclick="window.location.href='/database'">
           <i class="fas fa-arrow-left"></i> Back to Dashboard
         </button>
+      </div>
+    </div>
+
+    <!-- Global Academic Year Switcher -->
+    <div class="active-year-switch-card">
+      <div class="active-year-info">
+        <div class="active-year-title">
+          <i class="fas fa-graduation-cap"></i> Current Active Year:
+          <span class="active-year-current" id="currentActiveYearDisplay">2026</span>
+        </div>
+        <p class="active-year-desc">
+          Folders me is saal ko automatically <strong>(Latest)</strong> mark kiya jayega. Isse purane sabhi saal automatically <strong>(Previous Year)</strong> me switch ho jayenge.
+        </p>
+      </div>
+      <div class="active-year-actions">
+        <div class="active-year-pills" id="activeYearPills">
+          <button type="button" class="btn-year-switch active" data-year="2026" onclick="switchActiveAcademicYear('2026')">
+            <i class="fas fa-check-circle"></i> 2026 (Active)
+          </button>
+          <button type="button" class="btn-year-switch" data-year="2027" onclick="switchActiveAcademicYear('2027')">
+            2027
+          </button>
+          <button type="button" class="btn-year-switch" data-year="2028" onclick="switchActiveAcademicYear('2028')">
+            2028
+          </button>
+          <button type="button" class="btn-year-switch-custom" onclick="promptCustomActiveYear()">
+            <i class="fas fa-plus"></i> Custom Year...
+          </button>
+        </div>
       </div>
     </div>
 
@@ -855,9 +1002,9 @@
   </div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="/config.js?v=v936"></script>
-  <script src="/js/uptime-helper.js?v=v936"></script>
-  <script src="/js/api-client.js?v=v936"></script>
+  <script src="/config.js?v=v937"></script>
+  <script src="/js/uptime-helper.js?v=v937"></script>
+  <script src="/js/api-client.js?v=v937"></script>
   <script>
     const CONTENT_TYPE = 'professor';
 
@@ -988,7 +1135,7 @@
         }
 
         // Render grouped by year with divider lines
-        const CURRENT_ACTIVE_YEAR = 2026;
+        const CURRENT_ACTIVE_YEAR = parseInt(currentGlobalActiveYear || localStorage.getItem('sol_active_academic_year') || '2026', 10) || 2026;
         const highestYearInFolder = sortedYears.length > 0 ? (parseInt(sortedYears[0], 10) || CURRENT_ACTIVE_YEAR) : CURRENT_ACTIVE_YEAR;
         const latestBenchmark = Math.max(CURRENT_ACTIVE_YEAR, highestYearInFolder);
 
@@ -1333,10 +1480,105 @@
       }
     });
 
+    // ========== ACTIVE ACADEMIC YEAR SWITCHER ==========
+    let currentGlobalActiveYear = '2026';
+
+    async function loadSiteSettings() {
+      try {
+        const res = await fetch('/api/sol/settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.activeAcademicYear) {
+            currentGlobalActiveYear = String(data.activeAcademicYear);
+            localStorage.setItem('sol_active_academic_year', currentGlobalActiveYear);
+          }
+        }
+      } catch (e) {
+        currentGlobalActiveYear = localStorage.getItem('sol_active_academic_year') || '2026';
+      }
+      renderActiveYearSwitcher();
+    }
+
+    function renderActiveYearSwitcher() {
+      const display = document.getElementById('currentActiveYearDisplay');
+      if (display) display.textContent = currentGlobalActiveYear;
+
+      const pills = document.getElementById('activeYearPills');
+      if (!pills) return;
+
+      const existingBtn = pills.querySelector(`.btn-year-switch[data-year="${currentGlobalActiveYear}"]`);
+      if (!existingBtn) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-year-switch';
+        btn.dataset.year = currentGlobalActiveYear;
+        btn.textContent = currentGlobalActiveYear;
+        btn.onclick = () => switchActiveAcademicYear(currentGlobalActiveYear);
+        const customBtn = pills.querySelector('.btn-year-switch-custom');
+        pills.insertBefore(btn, customBtn);
+      }
+
+      pills.querySelectorAll('.btn-year-switch').forEach(b => {
+        const isCurrent = (b.dataset.year === currentGlobalActiveYear);
+        b.classList.toggle('active', isCurrent);
+        b.innerHTML = isCurrent 
+          ? `<i class="fas fa-check-circle"></i> ${b.dataset.year} (Active)`
+          : b.dataset.year;
+      });
+    }
+
+    async function switchActiveAcademicYear(year) {
+      if (!year) return;
+      const targetYear = String(year).trim();
+      if (targetYear === currentGlobalActiveYear) return;
+
+      if (!confirm(`Kya aap Active Academic Year ko "${targetYear}" par switch karna chahte hain?\n\nIsse poori website ke sabhi folders me "${targetYear}" Latest ban jayega aur purane saal Previous Year ban jayenge.`)) {
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('solmates_token') || localStorage.getItem('admin_token') || localStorage.getItem('solmates_admin_token');
+        const res = await fetch('/api/sol/settings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({ activeAcademicYear: targetYear })
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          currentGlobalActiveYear = targetYear;
+          localStorage.setItem('sol_active_academic_year', targetYear);
+          renderActiveYearSwitcher();
+          alert(`✅ Active Academic Year switched to ${targetYear}!\nPoori website ke sabhi folders me updates apply ho gaye.`);
+          loadContent();
+        } else {
+          alert('Failed to update active year: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('Error switching active year:', err);
+        alert('Network error while updating active year: ' + err.message);
+      }
+    }
+
+    function promptCustomActiveYear() {
+      const year = prompt('Naya Active Academic Year enter karein (e.g. 2027 ya 2028):');
+      if (year && year.trim()) {
+        const clean = year.trim();
+        if (/^\d{4}$/.test(clean)) {
+          switchActiveAcademicYear(clean);
+        } else {
+          alert('Kripya 4-digit valid year daalein (jaise 2027).');
+        }
+      }
+    }
+
     // ========== INITIALIZE ==========
     async function init() {
       const isAuth = await checkAuth();
       if (isAuth) {
+        await loadSiteSettings();
         await loadContent();
         initRealtime();
       }
