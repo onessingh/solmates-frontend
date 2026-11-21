@@ -1,9 +1,9 @@
 /**
- * SOLMATES Service Worker (v928 - Instant Notification Sync & Zero Stale HTML)
+ * SOLMATES Service Worker (v929 - Instant Notification Sync & Zero Stale HTML)
  * Handles offline static caching & lets browser HTTP ETags handle API revalidation.
  */
 
-const CACHE_NAME = 'solmates-cache-v928';
+const CACHE_NAME = 'solmates-cache-v929';
 
 const STATIC_ASSETS = [
     '/android-chrome-192x192.png',

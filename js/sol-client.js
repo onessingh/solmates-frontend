@@ -85,7 +85,7 @@
       renderCard: renderElearningCard
     },
     'professor': {
-      label: 'Professor Materials',
+      label: 'Lecture PPTs',
       fields: [
         { key: 'title', label: 'Title', type: 'text', required: true },
         { key: 'subject', label: 'Subject', type: 'text', required: false },
