@@ -28,15 +28,15 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v935">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v936">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v935" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v935" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v935">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v935">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v935">
+  <link rel="icon" href="/favicon.ico?v=v936" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v936" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v936">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v936">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v936">
   <title>Manage Professor Content - Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -527,7 +527,7 @@
 
     /* dark mode moved */
     </style>
-  <script src="/js/sol-cache.js?v=v935"></script>
+  <script src="/js/sol-cache.js?v=v936"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -855,9 +855,9 @@
   </div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="/config.js?v=v935"></script>
-  <script src="/js/uptime-helper.js?v=v935"></script>
-  <script src="/js/api-client.js?v=v935"></script>
+  <script src="/config.js?v=v936"></script>
+  <script src="/js/uptime-helper.js?v=v936"></script>
+  <script src="/js/api-client.js?v=v936"></script>
   <script>
     const CONTENT_TYPE = 'professor';
 
@@ -988,12 +988,17 @@
         }
 
         // Render grouped by year with divider lines
+        const CURRENT_ACTIVE_YEAR = 2026;
+        const highestYearInFolder = sortedYears.length > 0 ? (parseInt(sortedYears[0], 10) || CURRENT_ACTIVE_YEAR) : CURRENT_ACTIVE_YEAR;
+        const latestBenchmark = Math.max(CURRENT_ACTIVE_YEAR, highestYearInFolder);
+
         sortedYears.forEach((year, yIdx) => {
           const yearItems = response.data.filter(it => getItemYears(it).includes(year));
           if (yearItems.length === 0) return;
 
-          const isLatest = (yIdx === 0);
-          const isPrev = (year === '2025' || year === '2024');
+          const yNum = parseInt(year, 10) || 0;
+          const isLatest = (yNum === latestBenchmark);
+          const isPrev = (yNum < latestBenchmark);
           const divider = document.createElement('div');
           divider.className = 'ppt-year-divider';
           divider.innerHTML = `
