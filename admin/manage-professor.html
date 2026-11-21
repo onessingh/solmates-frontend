@@ -28,15 +28,15 @@
   <meta name="color-scheme" content="only light">
   <meta name="supported-color-schemes" content="only light">
   <meta name="google" content="notranslate">
-  <link rel="stylesheet" href="/css/global-lockdown.css?v=v934">
+  <link rel="stylesheet" href="/css/global-lockdown.css?v=v935">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Favicon Icons -->
-  <link rel="icon" href="/favicon.ico?v=v934" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico?v=v934" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v934">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v934">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v934">
+  <link rel="icon" href="/favicon.ico?v=v935" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico?v=v935" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=v935">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=v935">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=v935">
   <title>Manage Professor Content - Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -254,12 +254,21 @@
       width: 100%;
       user-select: none;
     }
+    .ppt-year-divider:first-of-type {
+      margin-top: 10px;
+    }
 
     .ppt-year-divider-line {
       flex: 1;
       height: 2px;
       background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.8), rgba(245, 158, 11, 0.2));
       border-radius: 2px;
+    }
+    .ppt-year-divider-line.current-batch {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.75), rgba(16, 185, 129, 0.15));
+    }
+    .ppt-year-divider-line.previous-batch {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.75), rgba(245, 158, 11, 0.15));
     }
 
     .ppt-year-divider-badge {
@@ -518,7 +527,7 @@
 
     /* dark mode moved */
     </style>
-  <script src="/js/sol-cache.js?v=v934"></script>
+  <script src="/js/sol-cache.js?v=v935"></script>
 
 
 <style id="solmates-dark-style" media="not all">
@@ -544,6 +553,9 @@
       }
       .ppt-year-divider-line {
         background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.7), rgba(245, 158, 11, 0.2)) !important;
+      }
+      .ppt-year-divider-line.current-batch {
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.7), rgba(16, 185, 129, 0.2)) !important;
       }
       .ppt-year-divider-badge {
         background: #1e293b !important;
@@ -843,9 +855,9 @@
   </div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script src="/config.js?v=v934"></script>
-  <script src="/js/uptime-helper.js?v=v934"></script>
-  <script src="/js/api-client.js?v=v934"></script>
+  <script src="/config.js?v=v935"></script>
+  <script src="/js/uptime-helper.js?v=v935"></script>
+  <script src="/js/api-client.js?v=v935"></script>
   <script>
     const CONTENT_TYPE = 'professor';
 
@@ -981,14 +993,15 @@
           if (yearItems.length === 0) return;
 
           const isLatest = (yIdx === 0);
+          const isPrev = (year === '2025' || year === '2024');
           const divider = document.createElement('div');
           divider.className = 'ppt-year-divider';
           divider.innerHTML = `
-            <div class="ppt-year-divider-line"></div>
+            <div class="ppt-year-divider-line ${isLatest ? 'current-batch' : 'previous-batch'}"></div>
             <div class="ppt-year-divider-badge ${isLatest ? 'current-batch' : 'previous-batch'}">
-              <i class="fas ${isLatest ? 'fa-layer-group' : 'fa-calendar-alt'}"></i> ${escapeHtml(year)} ${year === '2025' ? '(Previous Year)' : (isLatest ? '(Latest)' : '')}
+              <i class="fas ${isLatest ? 'fa-layer-group' : 'fa-calendar-alt'}"></i> ${escapeHtml(year)} ${isPrev ? '(Previous Year)' : (isLatest ? '(Latest)' : '')}
             </div>
-            <div class="ppt-year-divider-line"></div>
+            <div class="ppt-year-divider-line ${isLatest ? 'current-batch' : 'previous-batch'}"></div>
           `;
           container.appendChild(divider);
 
