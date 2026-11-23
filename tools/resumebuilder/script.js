@@ -597,13 +597,13 @@
       title: "Projects",
       render: (resume) => {
         const html = (resume.projects || []).map((item) => {
-          const meta = item.tools ? `<p class="resume-meta">${escapeHtml(item.tools)}</p>` : "";
+          const meta = item.tools ? `<p class="resume-meta resume-project-tools">${escapeHtml(item.tools)}</p>` : "";
           const desc = item.description ? `<p>${linkify(escapeHtml(item.description))}</p>` : "";
           const outcome = item.outcome ? `<p><strong>Outcome:</strong> ${linkify(escapeHtml(item.outcome))}</p>` : "";
           return `
-            <article class="resume-item">
-              <div class="resume-item-header">
-                <h3>${escapeHtml(item.title || "")}</h3>
+            <article class="resume-item resume-project-item">
+              <div class="resume-item-header resume-project-header">
+                <h3 class="resume-project-title">${escapeHtml(item.title || "")}</h3>
                 ${meta}
               </div>
               ${desc}
@@ -1484,7 +1484,7 @@ render: (resume) => {
                 <h1 style="font-size:2.6rem;font-weight:900;color:#111;text-transform:uppercase;line-height:1.1;margin-bottom:8px;word-break:break-word;">${escapeHtml(personal.fullName || "")}</h1>
                 ${personal.headline && showHeadline ? `<p style="color:#cfa068;font-weight:400;font-size:1.4rem;text-transform:capitalize;">${escapeHtml(personal.headline)}</p>` : ""}
               </header>
-              <style>.template-forestSidebar .resume-main .resume-section h2{color:#111!important;border-bottom:2px solid #111!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:14px!important;background:none!important;} .template-forestSidebar .resume-main .resume-item-header { display:flex; justify-content: space-between; align-items: baseline; } .template-forestSidebar .resume-main .resume-item-title { font-weight: 700; color:#111; } .template-forestSidebar .resume-main .resume-item-date { background: #111; color: #fff; padding: 2px 8px; font-size: 0.75rem; border-radius: 3px; }</style>
+              <style>.template-forestSidebar .resume-main .resume-section h2{color:#111!important;border-bottom:2px solid #111!important;text-transform:uppercase!important;font-size:0.9rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:14px!important;background:none!important;} .template-forestSidebar .resume-main .resume-item-header { display:flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; } .template-forestSidebar .resume-main .resume-item-header h3 { font-weight: 700; color:#111; flex-shrink: 0; } .template-forestSidebar .resume-main .resume-item-date { background: #111; color: #fff; padding: 2px 8px; font-size: 0.75rem; border-radius: 3px; } .template-forestSidebar .resume-main .resume-project-header { display: block !important; margin-bottom: 6px !important; } .template-forestSidebar .resume-main .resume-project-title { display: block !important; font-size: 1.05rem !important; font-weight: 700 !important; color: #111 !important; margin-bottom: 2px !important; word-break: normal !important; } .template-forestSidebar .resume-main .resume-project-tools { display: block !important; font-size: 0.82rem !important; color: #555 !important; margin-bottom: 6px !important; text-align: left !important; font-weight: 400 !important; }</style>
               ${mainSections}
             </main>
           </div>
@@ -1573,7 +1573,7 @@ render: (resume) => {
           </header>
           <div style="display:flex!important;flex-direction:row!important;position:relative;">
             <main style="flex:1!important;padding:30px 50px 40px!important;box-sizing:border-box;">
-              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'◆'◆'; font-size:1.4rem; }</style>
+              <style>.template-navyOverlap main .resume-section h2{color:#2a3b4c!important;border-bottom:2px solid #2a3b4c!important;text-transform:uppercase!important;font-size:0.95rem!important;letter-spacing:1px!important;padding-bottom:6px!important;margin-bottom:18px!important;background:none!important;display:flex;align-items:center;gap:10px;} .template-navyOverlap main .resume-section h2::before { content:'\\25C6 '; font-size:1.4rem; }</style>
               ${generateSections(leftKeys)}
             </main>
             <aside style="flex:0 0 35%!important;width:35%!important;background:#2a3b4c;color:#e0e6ed;padding:30px 30px 40px!important;box-sizing:border-box;position:relative;">

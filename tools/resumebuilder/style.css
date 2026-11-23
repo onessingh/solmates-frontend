@@ -902,8 +902,27 @@ textarea:focus {
   margin: 0 !important;
 }
 .resume.modernSidebar .resume-sidebar .resume-section ul li::before {
-  content: "â€“ ";
+  content: "\2022\20";
   color: #A0AEC0;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Projects Layout: ensure project title is never squashed or wrapped awkwardly */
+.resume-project-header {
+  margin-bottom: 4px;
+}
+.resume-project-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: inherit;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+}
+.resume-project-tools {
+  font-size: 0.82rem;
+  color: var(--color-muted, #666);
+  font-weight: 400;
 }
 
 /* Template Preview in Gallery */
