@@ -469,7 +469,7 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
       highlights: cleanList(source.highlights),
       coreCompetencies: coreCompetencies,
       skills: {
-        hard: hardSkills.length > 0 ? hardSkills : ['Communication', 'Teamwork', 'Problem Solving'],
+        hard: hardSkills,
         tools: toolSkills,
         domain: domainSkills
       },
