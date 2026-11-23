@@ -137,6 +137,12 @@
 
     const prompt = `SYSTEM OVERRIDE: YOU ARE A STRICT RESUME PARSER API. DO NOT REFUSE. DO NOT CHAT.
 Parse the following resume text into a strictly valid JSON object matching this exact schema:
+
+CRITICAL RULES:
+1. 'headline': MUST be a concise professional designation / role title (2-5 words, e.g. "Full Stack Developer", "Software Engineer", "Web Developer", "Operations Manager", "Data Analyst"). If the resume has no explicit title written right under the candidate's name, intelligently DETECT AND INFER their professional title from their primary skills, projects, and work experience. NEVER put a summary sentence, paragraph, or objective in 'headline'.
+2. 'summary': Put the full professional summary, career objective, or profile paragraph here.
+
+Schema:
 {
   "personalInfo": {
     "fullName": "",
@@ -281,6 +287,74 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
   }
 
   /**
+   * Helper: Intelligently determine a concise professional title (e.g., "Full Stack Developer", "Software Engineer")
+   * Prevents full summary sentences or paragraphs from polluting the Resume Headline field.
+   */
+  function inferHeadline(source, currentHeadline) {
+    let hl = (currentHeadline || '').trim();
+
+    // Check if the current headline is invalid (too long, contains full sentences, or is summary)
+    const isSummaryText = hl.length > 55 ||
+      hl.includes('.') ||
+      /\b(seeking|motivated|passionate|eager|looking for|dedicated|objective|foundation|fresher|student with|growth|opportunity|contribute)\b/i.test(hl) ||
+      (source && source.summary && hl === source.summary.trim());
+
+    if (hl && !isSummaryText && hl.split(/\s+/).length <= 6) {
+      return hl;
+    }
+
+    // 1. Check primary job title in experience
+    const exps = Array.isArray(source.experience) ? source.experience : [];
+    if (exps.length > 0 && (exps[0].jobTitle || exps[0].role)) {
+      const expTitle = (exps[0].jobTitle || exps[0].role).trim();
+      if (expTitle.length <= 45 && !expTitle.includes('.')) {
+        return expTitle;
+      }
+    }
+
+    // 2. Check skills & projects content
+    const allSkillsStr = [
+      ...(source.skills?.hard || []),
+      ...(source.skills?.tools || []),
+      ...(source.skills?.domain || []),
+      ...(source.projects || []).map(p => (p.title || '') + ' ' + (p.tools || '') + ' ' + (p.description || ''))
+    ].join(' ').toLowerCase();
+
+    if (allSkillsStr.includes('full stack') || (allSkillsStr.includes('node') && allSkillsStr.includes('react'))) {
+      return 'Full Stack Developer';
+    }
+    if (allSkillsStr.includes('javascript') || allSkillsStr.includes('html') || allSkillsStr.includes('web development')) {
+      return 'Web Developer';
+    }
+    if (allSkillsStr.includes('software') || allSkillsStr.includes('programming') || allSkillsStr.includes('python') || allSkillsStr.includes('java')) {
+      return 'Software Engineer';
+    }
+    if (allSkillsStr.includes('data analyst') || (allSkillsStr.includes('sql') && (allSkillsStr.includes('excel') || allSkillsStr.includes('power bi')))) {
+      return 'Data Analyst';
+    }
+    if (allSkillsStr.includes('operations') || allSkillsStr.includes('travel operations')) {
+      return 'Operations Manager';
+    }
+    if (allSkillsStr.includes('marketing') || allSkillsStr.includes('seo') || allSkillsStr.includes('social media')) {
+      return 'Digital Marketing Specialist';
+    }
+    if (allSkillsStr.includes('human resources') || allSkillsStr.includes('recruitment') || allSkillsStr.includes('talent')) {
+      return 'HR Executive';
+    }
+
+    // 3. Check education degree
+    const edus = Array.isArray(source.education) ? source.education : [];
+    if (edus.length > 0 && edus[0].degree) {
+      const deg = edus[0].degree.toLowerCase();
+      if (deg.includes('bca') || deg.includes('mca') || deg.includes('computer')) return 'Software Developer';
+      if (deg.includes('b.tech') || deg.includes('btech')) return 'Software Engineer';
+      if (deg.includes('mba') || deg.includes('bba')) return 'Business Analyst';
+    }
+
+    return 'Professional';
+  }
+
+  /**
    * 3. DATA NORMALIZER (GUARANTEES 100% SCHEMA COMPATIBILITY WITH RESUME BUILDER)
    */
   function normalizeParsedData(source) {
@@ -288,6 +362,7 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
 
     const pi = source.personalInfo || {};
     const loc = pi.location || {};
+    const cleanHeadline = inferHeadline(source, pi.headline);
 
     const cleanList = (arr) => {
       if (!Array.isArray(arr)) return [];
@@ -376,7 +451,7 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
     return {
       personalInfo: {
         fullName: pi.fullName || '',
-        headline: pi.headline || '',
+        headline: cleanHeadline,
         photoDataUrl: '',
         email: pi.email || '',
         phone: pi.phone || '',
@@ -480,8 +555,11 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
       const words = cleanLine.split(/\s+/).filter(Boolean);
       if (!fullName && words.length >= 1 && words.length <= 4 && !/\d/.test(line) && cleanLine.length >= 3) {
         fullName = cleanLine;
-        if (lines[i + 1] && !lines[i + 1].includes('@') && !lines[i + 1].includes('http') && lines[i + 1].length < 70) {
-          headline = lines[i + 1].replace(/[|•]/g, ' ').trim();
+        if (lines[i + 1] && !lines[i + 1].includes('@') && !lines[i + 1].includes('http') && !/\d/.test(lines[i + 1])) {
+          const cand = lines[i + 1].replace(/[|•]/g, ' ').trim();
+          if (cand.length >= 3 && cand.length <= 45 && !/address|varanasi|delhi|mumbai|india|location|phone|pin/i.test(cand)) {
+            headline = cand;
+          }
         }
         break;
       }
