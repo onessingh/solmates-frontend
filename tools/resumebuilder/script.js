@@ -3030,6 +3030,18 @@ render: (resume) => {
       getResume: () => state.resume,
       setResume: (newResume) => {
         state.resume = normalizeResume(newResume);
+        if (state.resume.experience?.length) state.sectionEnabled.experience = true;
+        if (state.resume.projects?.length) state.sectionEnabled.projects = true;
+        if (state.resume.education?.length) state.sectionEnabled.education = true;
+        if (state.resume.certifications?.length) state.sectionEnabled.certifications = true;
+        if (state.resume.languages?.length) state.sectionEnabled.languages = true;
+        if (state.resume.awards?.length) state.sectionEnabled.awards = true;
+        if (state.resume.coreCompetencies?.length) state.sectionEnabled.coreCompetencies = true;
+        if (state.resume.personalDetails?.dob || state.resume.personalDetails?.gender || state.resume.personalDetails?.maritalStatus) {
+          state.sectionEnabled.personalDetails = true;
+        }
+        syncFormVisibility();
+        renderSectionManager();
         writeFormState(state.resume);
         updatePreview();
         updateScore();
