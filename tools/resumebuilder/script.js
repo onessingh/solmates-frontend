@@ -3025,6 +3025,21 @@ render: (resume) => {
     // Final assignments for external access / legacy hooks
     window.exportResume = handleExport;
     window.printResume = handleExport;
+    window.solmatesResume = {
+      getState: () => state,
+      getResume: () => state.resume,
+      setResume: (newResume) => {
+        state.resume = normalizeResume(newResume);
+        writeFormState(state.resume);
+        updatePreview();
+        updateScore();
+        updateSummaryHint(state.resume.summary || "");
+        saveState();
+      },
+      writeFormState: writeFormState,
+      updatePreview: updatePreview,
+      saveState: saveState
+    };
   };
 
   document.addEventListener("DOMContentLoaded", init);
