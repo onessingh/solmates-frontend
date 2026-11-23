@@ -1117,15 +1117,31 @@ render: (resume) => {
         `;
       };
 
+      const renderPeHighlights = () => {
+        const highlights = Array.isArray(resume.highlights) ? resume.highlights.filter(Boolean) : [];
+        if (!highlights.length) return "";
+        return `
+          <section class="pe-section pe-section-highlights" data-section="highlights">
+            <h2 class="pe-section-title">Key Highlights</h2>
+            <ul class="pe-other-list">${highlights.map(h => `<li>${linkify(escapeHtml(h))}</li>`).join("")}</ul>
+          </section>
+        `;
+      };
+
       const renderPeInterests = () => {
         const details = resume.personalDetails || {};
-        const hobbies = details.hobbies;
-        if (!hobbies) return "";
+        const items = [];
+        if (details.dob) items.push(`Date of Birth: ${details.dob}`);
+        if (details.gender) items.push(`Gender: ${details.gender}`);
+        if (details.fatherName) items.push(`Father's Name: ${details.fatherName}`);
+        if (details.maritalStatus) items.push(`Marital Status: ${details.maritalStatus}`);
+        if (details.hobbies) items.push(`Hobbies / Interests: ${details.hobbies}`);
+        if (items.length === 0) return "";
         return `
           <section class="pe-section pe-section-interests" data-section="personalDetails">
-            <h2 class="pe-section-title">Interests</h2>
+            <h2 class="pe-section-title">Personal Details & Interests</h2>
             <ul class="pe-other-list">
-              <li>${escapeHtml(hobbies)}</li>
+              ${items.map(it => `<li>${escapeHtml(it)}</li>`).join("")}
             </ul>
           </section>
         `;
@@ -1149,6 +1165,7 @@ render: (resume) => {
       const peSectionMap = {
         summary: renderPeSummary,
         objective: () => resume.summary ? "" : renderPeSummary(),
+        highlights: renderPeHighlights,
         experience: renderPeExperience,
         education: renderPeEducation,
         skills: renderPeSkills,
