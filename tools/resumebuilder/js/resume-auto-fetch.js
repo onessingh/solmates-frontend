@@ -407,11 +407,12 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
       if (Array.isArray(item.bullets) && item.bullets.length > 0) {
         desc = item.bullets.join('\n');
       }
+      const rawTools = item.tools || item.technologies || item.techStack || '';
       return {
         title: item.title || item.name || '',
-        tools: Array.isArray(item.tools) ? item.tools.join(', ') : (item.tools || ''),
+        tools: Array.isArray(rawTools) ? rawTools.join(', ') : rawTools,
         description: desc,
-        outcome: item.outcome || item.link || ''
+        outcome: item.outcome || item.link || item.url || item.website || ''
       };
     }).filter(p => p.title);
 
@@ -728,30 +729,94 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
       if (curEdu && (curEdu.institution || curEdu.degree)) education.push(curEdu);
     }
 
-    // Projects Parsing
+    // Projects Parsing (Smart Dual-Pass: headers + merged description bullets)
     const projects = [];
     if (sections.projects && sections.projects.length > 0) {
       const projLines = sections.projects;
-      let curProj = null;
+      const bulletLines = [];
+      const headerLines = [];
 
-      for (const pl of projLines) {
-        const isBullet = /^[•\-*▪\d.)]+\s*/.test(pl);
-        if (!isBullet && pl.length < 80 && (!curProj || curProj.description)) {
-          if (curProj && curProj.title) projects.push(curProj);
-          curProj = {
-            title: pl.trim(),
-            tools: '',
+      // Pass 1: Merge wrapped bullet lines
+      const mergedLines = [];
+      for (let i = 0; i < projLines.length; i++) {
+        let l = projLines[i].trim();
+        if (!l) continue;
+        if (/^explore all my other websites/i.test(l)) continue;
+
+        const isBullet = /^[•\-*▪\d.)]+\s*/.test(l);
+        const hasUrl = /(https?:\/\/[^\s]+|[a-zA-Z0-9-]+\.(?:in|app|com|org|io|dev|net|netlify\.app)[^\s]*)/i.test(l);
+        const isHeaderCandidate = (l.includes(' - ') || l.includes(' – ') || l.includes(' — ') || l.endsWith('-') || l.endsWith('–') || hasUrl) && !isBullet;
+
+        if (!isBullet && !isHeaderCandidate && mergedLines.length > 0 && !hasUrl) {
+          mergedLines[mergedLines.length - 1] += ' ' + l;
+        } else {
+          mergedLines.push(l);
+        }
+      }
+
+      for (const l of mergedLines) {
+        if (/^[•\-*▪]+\s*/.test(l) && l.length > 30) {
+          bulletLines.push(l.replace(/^[•\-*▪]+\s*/, '').trim());
+        } else {
+          headerLines.push(l);
+        }
+      }
+
+      // Combine dangling header lines (e.g. "Solmates -" followed by "Official MBA Student Website solmates.in")
+      const combinedHeaders = [];
+      for (let i = 0; i < headerLines.length; i++) {
+        let cur = headerLines[i];
+        if (cur.endsWith('-') || cur.endsWith('–') || cur.endsWith(':')) {
+          if (i + 1 < headerLines.length) {
+            cur = cur + ' ' + headerLines[i + 1];
+            i++;
+          }
+        }
+        combinedHeaders.push(cur);
+      }
+
+      // Extract project titles, tools, and outcomes
+      for (const h of combinedHeaders) {
+        const urlMatch = h.match(/(https?:\/\/[^\s]+|[a-zA-Z0-9-]+\.(?:in|app|com|org|io|dev|net|netlify\.app)[^\s]*)/i);
+        const url = urlMatch ? urlMatch[0] : '';
+        let title = h.replace(url, '').trim();
+
+        const parts = title.split(/\s*[-–—:]\s*/).filter(Boolean);
+        let pTitle = parts[0] || title;
+        let pTools = parts.slice(1).join(' - ') || '';
+        pTitle = pTitle.replace(/^[•\-*▪\d.)]+\s*/, '').trim();
+
+        if (pTitle.length >= 2 && pTitle.length < 70) {
+          projects.push({
+            title: pTitle,
+            tools: pTools,
             description: '',
-            outcome: ''
-          };
-        } else if (curProj) {
-          const cleanB = pl.replace(/^[•\-*▪\d.)]+\s*/, '').trim();
-          if (cleanB) {
-            curProj.description = curProj.description ? curProj.description + '\n' + cleanB : cleanB;
+            outcome: url
+          });
+        }
+      }
+
+      // Match bullet lines to project descriptions
+      for (const bullet of bulletLines) {
+        let matched = false;
+        for (const proj of projects) {
+          const cleanTitle = proj.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+          const cleanBullet = bullet.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (cleanTitle.length > 3 && cleanBullet.includes(cleanTitle)) {
+            proj.description = proj.description ? proj.description + '\n' + bullet : bullet;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
+          const emptyProj = projects.find(p => !p.description);
+          if (emptyProj) {
+            emptyProj.description = bullet;
+          } else if (projects.length > 0) {
+            projects[projects.length - 1].description += '\n' + bullet;
           }
         }
       }
-      if (curProj && curProj.title) projects.push(curProj);
     }
 
     // Certifications Parsing

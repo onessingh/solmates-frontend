@@ -174,6 +174,20 @@ function initWizard() {
         if(window.innerWidth < 768) {
             window.scrollTo({ top: tabBuilder.offsetTop - 80, behavior: 'smooth' });
         }
+
+        // Auto-expand projects in Step 6 (Additional) so user directly sees populated projects
+        if (step === 6) {
+            setTimeout(() => {
+                const openAcc = formPanel.querySelector('.accordion-content.open');
+                if (!openAcc) {
+                    const projectsSec = formPanel.querySelector('[data-section-form="projects"]');
+                    if (projectsSec) {
+                        const header = projectsSec.querySelector('.section-header');
+                        if (header) header.click();
+                    }
+                }
+            }, 60);
+        }
     }
     
     if (btnNext) {
