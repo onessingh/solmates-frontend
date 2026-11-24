@@ -234,7 +234,8 @@ class SolmatesAPI {
       headers['Cache-Control'] = 'no-cache';
       headers['Pragma'] = 'no-cache';
 
-      if (options.force) {
+      const isLoggedAdmin = !!(this.adminToken || localStorage.getItem('solmates_admin_token'));
+      if (options.force || isLoggedAdmin) {
         url += (url.includes('?') ? '&' : '?') + 'admin_force=true';
       }
     }
@@ -716,6 +717,9 @@ class SolmatesAPI {
   async toggleSOLFolderLock(id) {
     this._cacheClear('');
     try { localStorage.removeItem('solmates_mba_locks_cache'); } catch(e){}
+    if (window.SOL_CACHE && typeof window.SOL_CACHE.clear === 'function') {
+      window.SOL_CACHE.clear();
+    }
     return await this.request(`/sol/folders/${id}/lock`, {
       method: 'PUT'
     });

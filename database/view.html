@@ -3611,10 +3611,30 @@
         card.classList.add('holding');
         holdTimer = setTimeout(async () => {
           try {
-            await window.solmatesAPI.toggleSOLFolderLock(fId);
-            window.location.reload();
+            card.style.pointerEvents = 'none';
+            card.style.opacity = '0.6';
+            const res = await window.solmatesAPI.toggleSOLFolderLock(fId);
+            const isNowLocked = (res && typeof res.isLocked !== 'undefined') ? res.isLocked : true;
+
+            // 1. Instant DOM Icon & State update
+            const mainIcon = card.querySelector('.main-icon');
+            if (mainIcon) {
+              mainIcon.className = isNowLocked ? 'fas fa-lock main-icon' : 'fas fa-folder main-icon';
+            }
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+
+            // 2. Clear render key and reload fresh content in-place without page reload
+            _lastRenderedKey = '';
+            if (window.solmatesAPI && typeof window.solmatesAPI._cacheClear === 'function') {
+              window.solmatesAPI._cacheClear('');
+            }
+            await loadContent(true);
           } catch (err) {
             alert('Lock failed: ' + err.message);
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+          } finally {
             stopHold();
           }
         }, 800);
