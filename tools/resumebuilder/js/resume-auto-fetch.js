@@ -95,21 +95,27 @@
       if (window.Tesseract) {
         if (onProgress) onProgress('Scanned document detected. Running OCR scan...');
         let ocrText = '';
-        const maxPages = Math.min(pdf.numPages, 3);
+        const maxPages = Math.min(pdf.numPages, 2);
         for (let i = 1; i <= maxPages; i++) {
           if (onProgress) onProgress(`OCR Scanning page ${i} of ${maxPages}...`);
-          const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvas = document.createElement('canvas');
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-          const ctx = canvas.getContext('2d');
-          await page.render({ canvasContext: ctx, viewport }).promise;
+          try {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 1.5 });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport }).promise;
 
-          const { data: { text } } = await window.Tesseract.recognize(canvas, 'eng');
-          ocrText += text + '\n';
+            const ocrPromise = window.Tesseract.recognize(canvas, 'eng');
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OCR Timeout')), 10000));
+            const { data: { text } } = await Promise.race([ocrPromise, timeoutPromise]);
+            ocrText += text + '\n';
+          } catch (ocrErr) {
+            console.warn('[Auto-Fetch OCR] Page OCR skipped:', ocrErr.message);
+          }
         }
-        return ocrText;
+        if (ocrText.trim().length > 20) return ocrText;
       }
 
       return fullText;
@@ -220,44 +226,28 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
 
     let responseText = '';
 
-    // Method A: Use window.solmatesAPI
-    if (window.solmatesAPI && typeof window.solmatesAPI.sendChatMessage === 'function') {
-      try {
-        const res = await window.solmatesAPI.sendChatMessage(prompt);
-        if (res && (res.message || res.reply)) {
-          responseText = res.message || res.reply;
-        } else if (typeof res === 'string') {
-          responseText = res;
-        }
-      } catch (err) {
-        console.warn('[AI Parser] solmatesAPI error, trying direct fetch...', err.message);
-      }
-    }
+    // Fast AI fetch with strict 12-second timeout. If it exceeds 12s, immediately fall back to local parser!
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-    // Method B: Direct fetch across candidate endpoints
-    if (!responseText) {
-      const endpoints = [
-        '/api/chatbot',
-        'https://api.solmates.in/api/chatbot',
-        'https://api-backup.solmates.in/api/chatbot'
-      ];
+    const targetUrl = (window.PRODUCTION_API_URL || 'https://api.solmates.in/api').replace(/\/+$/, '') + '/chatbot';
 
-      for (const endpoint of endpoints) {
-        try {
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: prompt, history: [], skipRag: true })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            responseText = data.message || data.reply || '';
-            if (responseText) break;
-          }
-        } catch (e) {
-          console.warn(`[AI Parser] Endpoint ${endpoint} failed:`, e.message);
-        }
+    try {
+      const res = await fetch(targetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: prompt, history: [], skipRag: true }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        responseText = data.message || data.reply || '';
       }
+    } catch (fetchErr) {
+      clearTimeout(timeoutId);
+      console.warn('[AI Parser] Fast AI timeout / network error, falling back to instant local parser:', fetchErr.message);
+      throw new Error('AI parser timeout');
     }
 
     if (!responseText) {
@@ -281,6 +271,9 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
     if (firstBrace !== -1 && lastBrace !== -1) {
       cleanJson = cleanJson.substring(firstBrace, lastBrace + 1);
     }
+
+    // Sanitize trailing commas before closing braces/brackets
+    cleanJson = cleanJson.replace(/,\s*([\]}])/g, '$1');
 
     const rawParsed = JSON.parse(cleanJson);
     return normalizeParsedData(rawParsed);
@@ -949,6 +942,26 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
         // Step 3: Populate into Resume Builder
         if (window.solmatesResume && typeof window.solmatesResume.setResume === 'function') {
           window.solmatesResume.setResume(parsed);
+
+          // Force-refresh chip containers for skills
+          ['skill-hard', 'skill-tools', 'skill-domain'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.dispatchEvent(new Event('input', { bubbles: true }));
+              el.dispatchEvent(new Event('blur', { bubbles: true }));
+            }
+          });
+
+          // Trigger wizard step refresh so step 1 renders with new values
+          document.dispatchEvent(new CustomEvent('wizardRefresh'));
+
+          // Smoothly scroll to the top of the form panel so user sees populated details
+          const tabBuilder = document.getElementById('tab-builder') || document.querySelector('.form-panel');
+          if (tabBuilder) {
+            tabBuilder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         } else {
           localStorage.setItem('solmates.resume.builder.v2', JSON.stringify({
             resume: parsed,
@@ -963,7 +976,7 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
         setTimeout(() => {
           btn.innerHTML = origHtml;
           btn.disabled = false;
-        }, 3500);
+        }, 4000);
 
         const expCount = (parsed.experience || []).length;
         const eduCount = (parsed.education || []).length;
@@ -980,9 +993,11 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
           `🛠️ Skills: ${skillCount} detected\n\n` +
           `All sections have been populated in the form & updated in the live preview!`;
 
-        if (typeof alert === 'function') {
-          alert(infoMsg);
-        }
+        setTimeout(() => {
+          if (typeof alert === 'function') {
+            alert(infoMsg);
+          }
+        }, 300);
       } catch (err) {
         console.error('[Resume Auto-Fetch Error]', err);
         alert(`⚠️ Could not auto-fetch resume: ${err.message || 'Unknown error'}`);
