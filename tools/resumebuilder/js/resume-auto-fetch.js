@@ -203,8 +203,9 @@
     // 1. Check primary job title in experience
     const exps = Array.isArray(source.experience) ? source.experience : [];
     if (exps.length > 0 && (exps[0].jobTitle || exps[0].role)) {
-      const expTitle = (exps[0].jobTitle || exps[0].role).trim();
-      if (expTitle.length <= 45 && !expTitle.includes('.')) {
+      let expTitle = (exps[0].jobTitle || exps[0].role).trim();
+      expTitle = expTitle.replace(/\s*[-–—]\s*$/, '').trim();
+      if (expTitle.length >= 3 && expTitle.length <= 50 && !expTitle.includes('.')) {
         return expTitle;
       }
     }
@@ -459,7 +460,9 @@
         fullName = cleanLine;
         if (lines[i + 1] && !lines[i + 1].includes('@') && !lines[i + 1].includes('http') && !/\d/.test(lines[i + 1])) {
           const cand = lines[i + 1].replace(/[|•]/g, ' ').trim();
-          if (cand.length >= 3 && cand.length <= 45 && !/address|varanasi|delhi|mumbai|india|location|phone|pin/i.test(cand)) {
+          const candLower = cand.toLowerCase();
+          const isSectionHdr = Object.values(SECTION_KEYWORDS).some(arr => arr.includes(candLower));
+          if (cand.length >= 3 && cand.length <= 45 && !isSectionHdr && !/address|varanasi|delhi|mumbai|india|location|phone|pin/i.test(cand)) {
             headline = cand;
           }
         }
@@ -533,47 +536,49 @@
       const dateRangeRegex = /(?:(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*)?\d{4}|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?)\s*(?:[-–—to]+|\s+to\s+)\s*(?:present|current|(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*)?\d{4})/i;
 
       for (let idx = 0; idx < expLines.length; idx++) {
-        const el = expLines[idx];
-        const isBullet = /^[•\-*▪\d.)]+\s*/.test(el);
+        const el = expLines[idx].trim();
+        const isBullet = /^[•\-*▪\uE000-\uF8FF\d.)]+\s*/.test(el) || el.length > 70;
         const dateMatch = el.match(dateRangeRegex);
 
         if (!isBullet && (dateMatch || (curExp && curExp.bullets.length > 0 && !dateMatch && el.length < 60 && !el.endsWith('.')))) {
-          if (curExp && (curExp.company || curExp.jobTitle)) {
+          if (curExp && curExp.company && (curExp.bullets.length > 0 || curExp.jobTitle)) {
             experience.push(curExp);
+            curExp = null;
           }
-          curExp = {
-            company: el.split(/[,-]/)[0].trim() || el,
-            jobTitle: '',
-            location: '',
-            startDate: '',
-            endDate: '',
-            description: '',
-            bullets: []
-          };
+          if (!curExp) {
+            curExp = {
+              company: '',
+              jobTitle: (idx > 0 && !/^[•\-*▪\d.)]+\s*/.test(expLines[idx - 1])) ? stripBullet(expLines[idx - 1]) : '',
+              location: '',
+              startDate: '',
+              endDate: '',
+              description: '',
+              bullets: []
+            };
+          }
           if (dateMatch) {
-            const parts = dateMatch[0].split(/[-–—to]+/i).map(p => p.trim());
+            const parts = dateMatch[0].split(/\s*[-–—]\s*|\s+to\s+/i).map(p => p.trim());
             curExp.startDate = parts[0] || '';
             curExp.endDate = parts[1] || '';
-            curExp.company = el.replace(dateMatch[0], '').replace(/[()\-–—,]/g, ' ').replace(/\s+/g, ' ').trim();
-            // Check if previous line had the job title
-            if (idx > 0 && !/^[•\-*▪\d.)]+\s*/.test(expLines[idx - 1])) {
-              curExp.jobTitle = expLines[idx - 1].trim();
+            const withoutDate = el.replace(dateMatch[0], '').trim();
+            const compParts = withoutDate.split(/[,|–—]/).map(p => p.trim()).filter(Boolean);
+            curExp.company = compParts[0] || withoutDate;
+            if (compParts.length > 1) {
+              curExp.location = compParts.slice(1).join(', ');
             }
+            if (!curExp.jobTitle && idx > 0 && !/^[•\-*▪\d.)]+\s*/.test(expLines[idx - 1])) {
+              curExp.jobTitle = stripBullet(expLines[idx - 1]);
+            }
+          } else {
+            curExp.company = el.split(/[,-]/)[0].trim() || el;
           }
         } else if (curExp) {
-          if (isBullet) {
-            const cleanBullet = el.replace(/^[•\-*▪\d.)]+\s*/, '').trim();
-            if (cleanBullet) curExp.bullets.push(cleanBullet);
-          } else if (!curExp.jobTitle && el.length < 70) {
-            curExp.jobTitle = el;
-          } else {
-            curExp.bullets.push(el);
-          }
+          const cleanBullet = stripBullet(el);
+          if (cleanBullet) curExp.bullets.push(cleanBullet);
         } else if (!isBullet && el.length < 70) {
-          // Potential Job Title on line 1 before company line
           curExp = {
             company: '',
-            jobTitle: el.trim(),
+            jobTitle: stripBullet(el),
             location: '',
             startDate: '',
             endDate: '',

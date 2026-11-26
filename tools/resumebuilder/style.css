@@ -2237,8 +2237,8 @@ textarea:focus {
 .preview-creative { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
 .preview-social { background: #dbe9f9; border-top: 6px solid #4472c4; }
 
-/* --- MOBILE --- */
-@media (max-width: 600px) {
+/* --- MOBILE (Screen preview only, NEVER print/PDF) --- */
+@media screen and (max-width: 480px) {
   .template-social .resume-header {
     flex-direction: column;
     align-items: flex-start;
@@ -3976,8 +3976,8 @@ html.is-desktop .wizard-nav {
   color: #000000 !important;
 }
 
-/* Mobile Responsiveness for Screen Preview */
-@media (max-width: 600px) {
+/* Mobile Responsiveness for Screen Preview (ONLY on actual narrow mobile screens < 480px, NEVER print/PDF) */
+@media screen and (max-width: 480px) {
   .template-pragmatic {
     padding: 20px 16px !important;
   }

@@ -2540,6 +2540,35 @@ render: (resume) => {
             max-width: 100% !important;
             overflow: visible !important;
         }
+        .template-pragmatic .pe-header {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+            width: 100% !important;
+        }
+        .template-pragmatic .pe-header-left {
+            flex: 1 1 0% !important;
+            text-align: left !important;
+            width: auto !important;
+            max-width: none !important;
+        }
+        .template-pragmatic .pe-header-center {
+            flex: 0 0 auto !important;
+            text-align: center !important;
+            width: auto !important;
+        }
+        .template-pragmatic .pe-header-right {
+            flex: 1 1 0% !important;
+            text-align: right !important;
+            width: auto !important;
+            max-width: none !important;
+        }
+        .template-pragmatic .pe-header-left div,
+        .template-pragmatic .pe-header-right div {
+            white-space: nowrap !important;
+        }
     
       }
     </style>
