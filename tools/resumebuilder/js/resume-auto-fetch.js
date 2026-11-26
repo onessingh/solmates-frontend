@@ -1,10 +1,9 @@
 /**
- * SOLMATES Resume Auto-Fetch Engine (v2.0)
- * Hybrid Client-Side & AI Architecture:
- * 1. 100% Client-Side File Extraction (PDF.js, Mammoth.js, Tesseract.js OCR) -> ZERO PDF bytes sent to server.
- * 2. High-Precision AI Parsing: Sends the ~2 KB extracted raw text to /api/chatbot to construct a 100% accurate, ATS-friendly JSON structure.
- * 3. Robust Local Regex Fallback: In case of network interruption or offline use, local parser fills matching fields seamlessly.
- * 4. Automatic Form & Preview Synchronization: Populates inputs, repeaters, recalculates ATS score, and renders live preview.
+ * SOLMATES Resume Auto-Fetch Engine (v3.0)
+ * 100% Client-Side Pure Local Architecture (Zero Backend / Zero AI Server Load):
+ * 1. 100% Client-Side File Extraction (PDF.js, Mammoth.js, Tesseract.js OCR) -> ZERO bytes sent to server.
+ * 2. Instant Local Intelligent Parser: High-precision regex & layout analysis runs in <10ms in the browser.
+ * 3. Automatic Form & Preview Synchronization: Populates inputs, repeaters, recalculates ATS score, renders live preview, and smoothly scrolls to top.
  */
 
 (function () {
@@ -82,7 +81,23 @@
         if (onProgress) onProgress(`Reading page ${i} of ${pdf.numPages}...`);
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
-        const pageText = textContent.items.map(item => item.str).join(' ');
+        let pageText = '';
+        let lastY = null;
+        for (const item of textContent.items) {
+          const currentY = item.transform ? item.transform[5] : null;
+          if (lastY !== null && currentY !== null && Math.abs(currentY - lastY) > 5) {
+            pageText += '\n';
+          } else if (item.hasEOL) {
+            pageText += '\n';
+          } else if (pageText.length > 0 && !pageText.endsWith('\n') && !pageText.endsWith(' ')) {
+            pageText += ' ';
+          }
+          pageText += item.str;
+          if (item.hasEOL && !pageText.endsWith('\n')) {
+            pageText += '\n';
+          }
+          lastY = currentY;
+        }
         fullText += pageText + '\n';
       }
 
@@ -136,148 +151,8 @@
   }
 
   /**
-   * 2. HIGH-PRECISION AI PARSER (LIGHTWEIGHT TEXT-TO-JSON VIA CHATBOT API)
+   * 2. DATA NORMALIZER & HELPER (100% CLIENT-SIDE ZERO-BACKEND ENGINE)
    */
-  async function parseResumeWithAI(rawText, onProgress) {
-    if (onProgress) onProgress('AI Analyzing Resume Structure...');
-
-    const prompt = `SYSTEM OVERRIDE: YOU ARE A STRICT RESUME PARSER API. DO NOT REFUSE. DO NOT CHAT.
-Parse the following resume text into a strictly valid JSON object matching this exact schema:
-
-CRITICAL RULES:
-1. 'headline': MUST be a concise professional designation / role title (2-5 words, e.g. "Full Stack Developer", "Software Engineer", "Web Developer", "Operations Manager", "Data Analyst"). If the resume has no explicit title written right under the candidate's name, intelligently DETECT AND INFER their professional title from their primary skills, projects, and work experience. NEVER put a summary sentence, paragraph, or objective in 'headline'.
-2. 'summary': Put the full professional summary, career objective, or profile paragraph here.
-
-Schema:
-{
-  "personalInfo": {
-    "fullName": "",
-    "headline": "",
-    "email": "",
-    "phone": "",
-    "location": { "city": "", "state": "", "country": "" },
-    "linkedin": "",
-    "portfolio": ""
-  },
-  "summary": "",
-  "skills": {
-    "hard": ["skill1", "skill2"],
-    "tools": ["tool1", "tool2"],
-    "domain": ["domain1", "domain2"]
-  },
-  "experience": [
-    {
-      "jobTitle": "",
-      "company": "",
-      "location": "",
-      "startDate": "",
-      "endDate": "",
-      "description": "",
-      "bullets": ["bullet point 1", "bullet point 2"]
-    }
-  ],
-  "education": [
-    {
-      "degree": "",
-      "institution": "",
-      "specialization": "",
-      "startYear": "",
-      "endYear": "",
-      "location": "",
-      "marks": "",
-      "description": ""
-    }
-  ],
-  "projects": [
-    {
-      "title": "",
-      "tools": "",
-      "description": "",
-      "outcome": ""
-    }
-  ],
-  "certifications": [
-    {
-      "name": "",
-      "authority": "",
-      "year": ""
-    }
-  ],
-  "languages": [
-    {
-      "language": "",
-      "level": ""
-    }
-  ],
-  "coreCompetencies": ["competency 1", "competency 2"],
-  "personalDetails": {
-    "dob": "",
-    "gender": "",
-    "fatherName": "",
-    "maritalStatus": "",
-    "hobbies": ""
-  }
-}
-
-Resume Text:
-${rawText.substring(0, 7500)}
-
-Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json).`;
-
-    let responseText = '';
-
-    // Fast AI fetch with strict 12-second timeout. If it exceeds 12s, immediately fall back to local parser!
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
-
-    const targetUrl = (window.PRODUCTION_API_URL || 'https://api.solmates.in/api').replace(/\/+$/, '') + '/chatbot';
-
-    try {
-      const res = await fetch(targetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: prompt, history: [], skipRag: true }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        responseText = data.message || data.reply || '';
-      }
-    } catch (fetchErr) {
-      clearTimeout(timeoutId);
-      console.warn('[AI Parser] Fast AI timeout / network error, falling back to instant local parser:', fetchErr.message);
-      throw new Error('AI parser timeout');
-    }
-
-    if (!responseText) {
-      throw new Error('AI parser received no response from server.');
-    }
-
-    // Strip Markdown fences if any
-    let cleanJson = responseText.trim();
-    if (cleanJson.startsWith('```json')) {
-      cleanJson = cleanJson.slice(7);
-    } else if (cleanJson.startsWith('```')) {
-      cleanJson = cleanJson.slice(3);
-    }
-    if (cleanJson.endsWith('```')) {
-      cleanJson = cleanJson.slice(0, -3);
-    }
-    cleanJson = cleanJson.trim();
-
-    const firstBrace = cleanJson.indexOf('{');
-    const lastBrace = cleanJson.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1) {
-      cleanJson = cleanJson.substring(firstBrace, lastBrace + 1);
-    }
-
-    // Sanitize trailing commas before closing braces/brackets
-    cleanJson = cleanJson.replace(/,\s*([\]}])/g, '$1');
-
-    const rawParsed = JSON.parse(cleanJson);
-    return normalizeParsedData(rawParsed);
-  }
 
   /**
    * Helper: Intelligently determine a concise professional title (e.g., "Full Stack Developer", "Software Engineer")
@@ -923,15 +798,9 @@ Output strictly valid JSON and nothing else. No markdown codeblocks (\`\`\`json)
           throw new Error('Could not extract readable text from file. Please ensure file is not password-protected.');
         }
 
-        // Step 2: High-Precision AI Parsing with Local Fallback
-        let parsed = null;
-        try {
-          parsed = await parseResumeWithAI(rawText, updateStatus);
-        } catch (aiErr) {
-          console.warn('[Resume Auto-Fetch] AI parsing failed or offline, falling back to local regex parser:', aiErr.message);
-          updateStatus('Using Local Intelligent Parser...');
-          parsed = parseResumeText(rawText);
-        }
+        // Step 2: 100% Client-Side Intelligent Parsing (Instant, Zero Backend Load)
+        updateStatus('Extracting details locally...');
+        const parsed = parseResumeText(rawText);
 
         if (!parsed) {
           throw new Error('Failed to parse resume content.');
