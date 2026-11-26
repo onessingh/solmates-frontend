@@ -243,6 +243,7 @@
   const escapeHtml = (value) => {
     if (value === null || value === undefined) return "";
     return String(value)
+      .replace(/[\uE000-\uF8FF]/g, "")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")

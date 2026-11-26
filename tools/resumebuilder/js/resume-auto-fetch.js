@@ -32,15 +32,17 @@
 
   const SECTION_KEYWORDS = {
     summary: ['summary', 'professional summary', 'executive summary', 'profile', 'personal profile', 'about me', 'objective', 'career objective'],
-    skills: ['skills', 'core skills', 'technical skills', 'key skills', 'competencies', 'areas of expertise', 'technologies', 'technical proficiency'],
-    coreCompetencies: ['core competencies', 'competencies', 'key strengths', 'strengths'],
+    skills: ['skills', 'core skills', 'technical skills', 'key skills', 'areas of expertise', 'technologies', 'technical proficiency'],
+    coreCompetencies: ['core competencies', 'core competency', 'key strengths', 'strengths', 'competencies'],
     experience: ['experience', 'work experience', 'employment history', 'internships', 'professional experience', 'work history', 'career history', 'relevant experience'],
     education: ['education', 'academic background', 'qualifications', 'academic history', 'educational qualifications', 'academics'],
     projects: ['projects', 'academic projects', 'key projects', 'personal projects', 'notable projects'],
     certifications: ['certifications', 'certificates', 'licenses', 'courses', 'certifications & courses', 'professional certifications'],
     languages: ['languages', 'languages known'],
+    interests: ['interests', 'hobbies', 'hobbies & interests', 'interests & hobbies', 'areas of interest', 'extracurricular', 'extracurricular activities'],
     awards: ['awards', 'achievements', 'honors', 'accomplishments', 'honors & awards'],
-    personalDetails: ['personal details', 'personal profile', 'personal information']
+    personalDetails: ['personal details', 'personal profile', 'personal information', 'additional info', 'personal data'],
+    declaration: ['declaration']
   };
 
   /**
@@ -101,6 +103,8 @@
         fullText += pageText + '\n';
       }
 
+      fullText = sanitizeText(fullText);
+
       // If text is meaningful (> 80 characters), return digital text!
       if (fullText.trim().length > 80) {
         return fullText;
@@ -130,10 +134,10 @@
             console.warn('[Auto-Fetch OCR] Page OCR skipped:', ocrErr.message);
           }
         }
-        if (ocrText.trim().length > 20) return ocrText;
+        if (ocrText.trim().length > 20) return sanitizeText(ocrText);
       }
 
-      return fullText;
+      return sanitizeText(fullText);
     }
 
     // Direct Image Files (.png, .jpg, .jpeg)
@@ -143,16 +147,41 @@
       }
       if (onProgress) onProgress('Scanning image with OCR...');
       const { data: { text } } = await window.Tesseract.recognize(file, 'eng');
-      return text;
+      return sanitizeText(text);
     }
 
     // Fallback
-    return await file.text().catch(() => '');
+    const fallbackText = await file.text().catch(() => '');
+    return sanitizeText(fallbackText);
   }
 
   /**
    * 2. DATA NORMALIZER & HELPER (100% CLIENT-SIDE ZERO-BACKEND ENGINE)
    */
+
+  /**
+   * Sanitize text: removes Unicode Private Use Area (PUA) characters (\uE000-\uF8FF)
+   * which cause browsers like Chrome to render ugly "NO GLYPH" fallback boxes (e.g. \uf0b7 Wingdings bullet).
+   */
+  function sanitizeText(raw) {
+    if (!raw) return '';
+    return String(raw)
+      .replace(/[\uE000-\uF8FF]/g, ' ')
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+  }
+
+  /**
+   * Helper: Strips leading bullet symbols (•, -, *, ▪, etc.), numbering ("1.", "1)"),
+   * PUA missing-glyph characters, and whitespace. Also strips any internal PUA chars.
+   */
+  function stripBullet(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/^[\s\uE000-\uF8FF•*▪\u2022\u25CF\u25AA\u25B6\u25C6\u2023\u2043\u00B7\u2013\u2014\-]+/, '')
+      .replace(/^(?:\(?\d{1,2}\)?[.)]\s*)/, '')
+      .replace(/[\uE000-\uF8FF\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '')
+      .trim();
+  }
 
   /**
    * Helper: Intelligently determine a concise professional title (e.g., "Full Stack Developer", "Software Engineer")
@@ -234,22 +263,22 @@
 
     const cleanList = (arr) => {
       if (!Array.isArray(arr)) return [];
-      return arr.map(v => typeof v === 'string' ? v.trim() : String(v || '')).filter(Boolean);
+      return arr.map(v => stripBullet(v)).filter(Boolean);
     };
 
     // Normalize experience
     const rawExp = Array.isArray(source.experience) ? source.experience : [];
     const experience = rawExp.map(item => {
       const bullets = Array.isArray(item.bullets)
-        ? item.bullets.map(b => String(b).replace(/^[•\-*▪\d.)]+\s*/, '').trim()).filter(Boolean)
-        : (item.description ? item.description.split('\n').map(b => b.trim()).filter(Boolean) : []);
+        ? item.bullets.map(b => stripBullet(b)).filter(Boolean)
+        : (item.description ? item.description.split('\n').map(b => stripBullet(b)).filter(Boolean) : []);
 
       return {
-        jobTitle: item.jobTitle || item.role || item.title || '',
-        company: item.company || item.organization || '',
-        location: item.location || '',
-        startDate: item.startDate || item.startYear || '',
-        endDate: item.endDate || item.endYear || '',
+        jobTitle: stripBullet(item.jobTitle || item.role || item.title || ''),
+        company: stripBullet(item.company || item.organization || ''),
+        location: stripBullet(item.location || ''),
+        startDate: stripBullet(item.startDate || item.startYear || ''),
+        endDate: stripBullet(item.endDate || item.endYear || ''),
         description: item.description || '',
         bullets: bullets
       };
@@ -258,13 +287,13 @@
     // Normalize education
     const rawEdu = Array.isArray(source.education) ? source.education : [];
     const education = rawEdu.map(item => ({
-      degree: item.degree || item.course || item.qualification || '',
-      institution: item.institution || item.school || item.college || item.university || '',
-      specialization: item.specialization || item.field || '',
-      startYear: String(item.startYear || item.startDate || ''),
-      endYear: String(item.endYear || item.endDate || ''),
-      location: item.location || '',
-      marks: item.marks || item.grade || item.percentage || item.cgpa || '',
+      degree: stripBullet(item.degree || item.course || item.qualification || ''),
+      institution: stripBullet(item.institution || item.school || item.college || item.university || ''),
+      specialization: stripBullet(item.specialization || item.field || ''),
+      startYear: stripBullet(String(item.startYear || item.startDate || '')),
+      endYear: stripBullet(String(item.endYear || item.endDate || '')),
+      location: stripBullet(item.location || ''),
+      marks: stripBullet(item.marks || item.grade || item.percentage || item.cgpa || ''),
       description: item.description || ''
     })).filter(edu => edu.institution || edu.degree);
 
@@ -273,12 +302,14 @@
     const projects = rawProj.map(item => {
       let desc = item.description || '';
       if (Array.isArray(item.bullets) && item.bullets.length > 0) {
-        desc = item.bullets.join('\n');
+        desc = item.bullets.map(b => stripBullet(b)).filter(Boolean).join('\n');
+      } else if (desc) {
+        desc = desc.split('\n').map(b => stripBullet(b)).filter(Boolean).join('\n');
       }
       const rawTools = item.tools || item.technologies || item.techStack || '';
       return {
-        title: item.title || item.name || '',
-        tools: Array.isArray(rawTools) ? rawTools.join(', ') : rawTools,
+        title: stripBullet(item.title || item.name || ''),
+        tools: Array.isArray(rawTools) ? rawTools.map(t => stripBullet(t)).filter(Boolean).join(', ') : stripBullet(rawTools),
         description: desc,
         outcome: item.outcome || item.link || item.url || item.website || ''
       };
@@ -287,19 +318,19 @@
     // Normalize certifications
     const rawCert = Array.isArray(source.certifications) ? source.certifications : [];
     const certifications = rawCert.map(item => ({
-      name: item.name || item.title || '',
-      authority: item.authority || item.issuer || item.organization || '',
-      year: String(item.year || item.date || '')
+      name: stripBullet(item.name || item.title || ''),
+      authority: stripBullet(item.authority || item.issuer || item.organization || ''),
+      year: stripBullet(String(item.year || item.date || ''))
     })).filter(c => c.name);
 
     // Normalize languages
     const rawLang = Array.isArray(source.languages) ? source.languages : [];
     const languages = rawLang.map(item => {
       if (typeof item === 'string') {
-        return { language: item.trim(), level: 'Proficient' };
+        return { language: stripBullet(item), level: 'Proficient' };
       }
       return {
-        language: item.language || item.name || '',
+        language: stripBullet(item.language || item.name || ''),
         level: item.level || item.proficiency || 'Proficient'
       };
     }).filter(l => l.language);
@@ -312,22 +343,22 @@
 
     // Normalize core competencies
     const rawComp = Array.isArray(source.coreCompetencies) ? source.coreCompetencies : [];
-    const coreCompetencies = rawComp.map(c => String(c).replace(/^[•\-*▪\d.)]+\s*/, '').trim()).filter(Boolean);
+    const coreCompetencies = rawComp.map(c => stripBullet(c)).filter(Boolean);
 
     // Normalize personal details
     const pd = source.personalDetails || {};
 
     return {
       personalInfo: {
-        fullName: pi.fullName || '',
+        fullName: stripBullet(pi.fullName || ''),
         headline: cleanHeadline,
         photoDataUrl: '',
         email: pi.email || '',
         phone: pi.phone || '',
         location: {
-          city: loc.city || (typeof loc === 'string' ? loc : ''),
-          state: loc.state || '',
-          country: loc.country || 'India'
+          city: stripBullet(loc.city || (typeof loc === 'string' ? loc : '')),
+          state: stripBullet(loc.state || ''),
+          country: stripBullet(loc.country || 'India')
         },
         linkedin: pi.linkedin || '',
         portfolio: pi.portfolio || ''
@@ -357,11 +388,11 @@
         tools: toolSkills
       },
       personalDetails: {
-        dob: pd.dob || '',
-        gender: pd.gender || '',
-        fatherName: pd.fatherName || '',
-        maritalStatus: pd.maritalStatus || '',
-        hobbies: pd.hobbies || ''
+        dob: stripBullet(pd.dob || ''),
+        gender: stripBullet(pd.gender || ''),
+        fatherName: stripBullet(pd.fatherName || ''),
+        maritalStatus: stripBullet(pd.maritalStatus || ''),
+        hobbies: stripBullet(pd.hobbies || '')
       },
       references: []
     };
@@ -372,6 +403,8 @@
    */
   function parseResumeText(rawText) {
     if (!rawText || !rawText.trim()) return null;
+
+    rawText = sanitizeText(rawText);
 
     const lines = rawText
       .split('\n')
@@ -691,12 +724,12 @@
     const certifications = [];
     if (sections.certifications && sections.certifications.length > 0) {
       for (const certLine of sections.certifications) {
-        const clean = certLine.replace(/^[•\-*▪\d.)]+\s*/, '').trim();
+        const clean = stripBullet(certLine);
         if (clean.length > 3) {
           const parts = clean.split(/[-|–]/);
           certifications.push({
-            name: parts[0].trim(),
-            authority: parts[1] ? parts[1].trim() : '',
+            name: stripBullet(parts[0]),
+            authority: parts[1] ? stripBullet(parts[1]) : '',
             year: ''
           });
         }
@@ -707,7 +740,7 @@
     const languages = [];
     if (sections.languages && sections.languages.length > 0) {
       const langText = sections.languages.join(', ');
-      const tokens = langText.split(/[,•|/\n]/).map(t => t.trim().toLowerCase());
+      const tokens = langText.split(/[,•|/\n]/).map(t => stripBullet(t).toLowerCase());
       for (const tok of tokens) {
         if (KNOWN_LANGUAGES.has(tok)) {
           languages.push({
@@ -722,19 +755,36 @@
     const coreCompetencies = [];
     if (sections.coreCompetencies && sections.coreCompetencies.length > 0) {
       for (const comp of sections.coreCompetencies) {
-        const clean = comp.replace(/^[•\-*▪\d.)]+\s*/, '').trim();
-        if (clean.length > 2 && clean.length < 80) coreCompetencies.push(clean);
+        const clean = stripBullet(comp);
+        if (clean.length > 2 && clean.length < 80 && !/^(?:core competencies|competencies|strengths|key strengths|interests|hobbies)$/i.test(clean)) {
+          coreCompetencies.push(clean);
+        }
       }
     }
 
-    // Personal Details
+    // Personal Details & Hobbies/Interests
     const personalDetails = { dob: '', gender: '', fatherName: '', maritalStatus: '', hobbies: '' };
+    if (sections.interests && sections.interests.length > 0) {
+      const hobbyList = sections.interests
+        .map(l => stripBullet(l))
+        .filter(l => l.length > 1 && !/^(?:interests|hobbies|hobbies & interests|areas of interest)$/i.test(l));
+      if (hobbyList.length > 0) {
+        personalDetails.hobbies = hobbyList.join(', ');
+      }
+    }
+
     if (sections.personalDetails && sections.personalDetails.length > 0) {
       const pdText = sections.personalDetails.join('\n');
       const dobM = pdText.match(/date of birth\s*:\s*([^\n]+)/i);
-      if (dobM) personalDetails.dob = dobM[1].trim();
+      if (dobM) personalDetails.dob = stripBullet(dobM[1]);
       const maritalM = pdText.match(/marital status\s*:\s*([^\n]+)/i);
-      if (maritalM) personalDetails.maritalStatus = maritalM[1].trim();
+      if (maritalM) personalDetails.maritalStatus = stripBullet(maritalM[1]);
+      const genderM = pdText.match(/gender\s*:\s*([^\n]+)/i);
+      if (genderM) personalDetails.gender = stripBullet(genderM[1]);
+      const fatherM = pdText.match(/(?:father['’]?s?\s*name)\s*:\s*([^\n]+)/i);
+      if (fatherM) personalDetails.fatherName = stripBullet(fatherM[1]);
+      const hobbiesM = pdText.match(/(?:hobbies|interests)\s*:\s*([^\n]+)/i);
+      if (hobbiesM && !personalDetails.hobbies) personalDetails.hobbies = stripBullet(hobbiesM[1]);
     }
 
     const rawResult = {
