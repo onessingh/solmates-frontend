@@ -1781,25 +1781,32 @@
           </div>
         </div>
 
+        <!-- Header Executive Intelligence Banner -->
+        <div id="pyqReportHeader" style="margin-bottom:14px;"></div>
+
         <!-- Tabs Navigation -->
         <div class="pyq-tabs-nav">
           <button class="pyq-tab active" onclick="switchPyqTab('chapters', this)">📚 Chapter Weightage</button>
-          <button class="pyq-tab" onclick="switchPyqTab('mustStudy', this)">🔥 Must-Study Topics</button>
+          <button class="pyq-tab" onclick="switchPyqTab('predictions', this)">🎯 Predicted Questions</button>
+          <button class="pyq-tab" onclick="switchPyqTab('mustStudy', this)">🔥 High ROI & Topics</button>
+          <button class="pyq-tab" onclick="switchPyqTab('battlePlan', this)">⚡ Battle Plan & Strategy</button>
           <button class="pyq-tab" onclick="switchPyqTab('yearly', this)">📅 Yearly Breakdown</button>
-          <button class="pyq-tab" onclick="switchPyqTab('strategy', this)">💡 Exam Strategy</button>
         </div>
 
         <!-- Tab 1: Chapters -->
         <div class="pyq-tab-content active" id="pyqTabChapters"></div>
 
-        <!-- Tab 2: Must-Study -->
+        <!-- Tab 2: Predicted Questions -->
+        <div class="pyq-tab-content" id="pyqTabPredictions"></div>
+
+        <!-- Tab 3: Must-Study & High ROI -->
         <div class="pyq-tab-content" id="pyqTabMustStudy"></div>
 
-        <!-- Tab 3: Yearly Breakdown -->
-        <div class="pyq-tab-content" id="pyqTabYearly"></div>
+        <!-- Tab 4: Battle Plan & Strategy -->
+        <div class="pyq-tab-content" id="pyqTabBattlePlan"></div>
 
-        <!-- Tab 4: Strategy Tips -->
-        <div class="pyq-tab-content" id="pyqTabStrategy"></div>
+        <!-- Tab 5: Yearly Breakdown -->
+        <div class="pyq-tab-content" id="pyqTabYearly"></div>
       </div>
     </div>
   </div>
@@ -2576,12 +2583,12 @@
           const rightContainer = document.querySelector('.pyq-banner-right');
           const yrs = (analysisData.analyzedYears || []).join(', ') || 'Past Years';
 
-          if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
-          if (subtitleEl) subtitleEl.innerText = `AI Past Papers Weightage, Repeated Questions & Core Trends (${yrs})`;
+          if (titleEl) titleEl.innerText = `${subjectName} — PYQ Intelligence`;
+          if (subtitleEl) subtitleEl.innerText = `Elite Exam Intelligence: Predicted Questions, High-ROI Chapters & 4-Step Battle Plan (${yrs})`;
           if (rightContainer) {
             rightContainer.innerHTML = `
-              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="viewDirectPyqAnalysis()">
-                <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse PYQs</span>
+              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="viewDirectPyqAnalysis()" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); border:none; padding:8px 16px; border-radius:10px; font-size:12.5px; font-weight:700; color:#fff; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-brain"></i> <span id="btnPyqAnalyzeText">View Intelligence Analysis</span>
               </button>
             `;
           }
@@ -2794,18 +2801,46 @@
       }
     }
 
-    function viewDirectPyqAnalysis() {
+    async function viewDirectPyqAnalysis() {
+      const modal = document.getElementById('pyqAnalyzerModal');
+      if (modal) {
+        modal.classList.add('open');
+        pushModalHistory('pyqAnalyzerModal');
+      }
+      const adminStep = document.getElementById('pyqAdminItemStep');
+      if (adminStep) adminStep.style.display = 'none';
+
       if (_currentPyqAnalysis) {
-        const adminStep = document.getElementById('pyqAdminItemStep');
-        if (adminStep) adminStep.style.display = 'none';
-        const modal = document.getElementById('pyqAnalyzerModal');
-        if (modal) {
-          modal.classList.add('open');
-          pushModalHistory('pyqAnalyzerModal');
-        }
         renderPyqAnalysisReport(_currentPyqAnalysis, 'all');
-      } else {
-        openPyqAnalyzerModal('view');
+        return;
+      }
+
+      // Show loader in report container directly
+      document.getElementById('pyqStepSelection').style.display = 'none';
+      const rep = document.getElementById('pyqStepReport');
+      rep.style.display = 'block';
+      const headerContainer = document.getElementById('pyqReportHeader');
+      if (headerContainer) {
+        headerContainer.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x" style="color:#2563eb;"></i><p style="margin-top:12px; font-weight:600;">Loading Elite Exam Intelligence Report...</p></div>';
+      }
+
+      const subjInfo = getCurrentSubjectInfo();
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
+      try {
+        const res = await _fetchPyqAnalysisAPI(semester, curFolderId);
+        if (res && res.data) {
+          _currentPyqAnalysis = res.data;
+          renderPyqAnalysisReport(res.data, 'all');
+        } else {
+          document.getElementById('pyqStepReport').style.display = 'none';
+          document.getElementById('pyqStepSelection').style.display = 'block';
+          ensureStudentPyqItemsLoaded();
+        }
+      } catch (e) {
+        document.getElementById('pyqStepReport').style.display = 'none';
+        document.getElementById('pyqStepSelection').style.display = 'block';
+        ensureStudentPyqItemsLoaded();
       }
     }
 
@@ -2967,7 +3002,7 @@
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`);
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}?_t=${Date.now()}`);
       return await r.json();
     }
 
@@ -3114,6 +3149,36 @@
       const allYears = data.analyzedYears || [];
       const activeYears = (yearsFilter === 'all') ? allYears : yearsFilter;
 
+      // Header Executive Intelligence Banner
+      const headerContainer = document.getElementById('pyqReportHeader');
+      if (headerContainer) {
+        if (data.executiveSummary) {
+          headerContainer.innerHTML = `
+            <div style="background:linear-gradient(135deg, rgba(37,99,235,0.08), rgba(16,185,129,0.06)); border:1px solid rgba(37,99,235,0.25); border-radius:12px; padding:14px 16px; margin-bottom:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                <span style="font-weight:800; font-size:13px; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.5px;">
+                  <i class="fas fa-shield-alt"></i> Elite Examination Intelligence System
+                </span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                  ${data.confidenceScore ? `<span class="pyq-badge" style="background:#ecfdf5; color:#059669; font-weight:700;"><i class="fas fa-check-circle"></i> ${data.confidenceScore}% Confidence</span>` : ''}
+                  <span class="pyq-badge med">${data.examStructure?.maxMarks || 70} Marks • 3 Hrs</span>
+                </div>
+              </div>
+              <div style="font-size:13px; line-height:1.6; color:var(--text-main);">
+                ${data.executiveSummary}
+              </div>
+              ${data.examStructure?.compulsory ? `
+                <div style="margin-top:8px; font-size:12px; color:#b45309; background:#fffbeb; padding:6px 10px; border-radius:6px; border:1px solid #fde68a;">
+                  <strong><i class="fas fa-exclamation-triangle"></i> Compulsory Pattern:</strong> ${data.examStructure.compulsory}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        } else {
+          headerContainer.innerHTML = '';
+        }
+      }
+
       // Tab 1: Chapters & Weightage
       const chaptersContainer = document.getElementById('pyqTabChapters');
       const chapters = (data.chapters || []).map(ch => {
@@ -3168,27 +3233,332 @@
         `;
       }).join('');
 
-      // Tab 2: Must-Study Topics
+      // Tab 2: Predicted Questions
+      const predictionsContainer = document.getElementById('pyqTabPredictions');
+      if (predictionsContainer) {
+        const topQs = data.top30Questions || [];
+        const mPredictions = data.marksWisePredictions || {};
+        let predHtml = '';
+
+        if (topQs.length) {
+          predHtml += `
+            <div style="margin-bottom:14px;">
+              <div style="font-weight:700; font-size:14px; color:#2563eb; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                <i class="fas fa-bullseye"></i> Top Predicted Exam Questions (${topQs.length})
+              </div>
+              ${topQs.map(q => `
+                <div class="pyq-chapter-card" style="border-left:4px solid #3b82f6; margin-bottom:8px;">
+                  <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:4px;">
+                    <div style="font-weight:700; font-size:13px; color:var(--text-main); line-height:1.4;">
+                      <span style="color:#2563eb; margin-right:4px;">#${q.rank || '•'}</span> ${q.question}
+                    </div>
+                    <div style="display:flex; gap:6px; flex-shrink:0;">
+                      <span class="pyq-badge fire">${q.probability || '95%'} Prob</span>
+                      <span class="pyq-badge med">${q.expectedMarks || 14}M</span>
+                    </div>
+                  </div>
+                  <div style="font-size:12px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; margin-top:4px;">
+                    ${q.chapter ? `<span><i class="fas fa-book-open"></i> ${q.chapter}</span>` : ''}
+                    ${q.category ? `<span><i class="fas fa-tag"></i> ${q.category}</span>` : ''}
+                  </div>
+                  ${q.whyExpected ? `
+                    <div style="margin-top:6px; font-size:11px; color:#059669; background:#ecfdf5; padding:4px 8px; border-radius:6px;">
+                      <strong>Why Expected:</strong> ${q.whyExpected}
+                    </div>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Marks-Wise Predictions
+        if (mPredictions.shortQuestions?.length || mPredictions.mediumQuestions?.length || mPredictions.longQuestions?.length || mPredictions.caseStudies?.length) {
+          predHtml += `
+            <div class="pyq-chapter-card" style="background:rgba(37,99,235,0.03); border:1px solid rgba(37,99,235,0.2); margin-top:12px;">
+              <div style="font-weight:700; font-size:14px; color:#1d4ed8; margin-bottom:10px;">
+                <i class="fas fa-layer-group"></i> Marks-Wise Question Predictions
+              </div>
+              ${mPredictions.caseStudies?.length ? `
+                <div style="margin-bottom:10px;">
+                  <div style="font-weight:700; font-size:12px; color:#b45309;"><i class="fas fa-briefcase"></i> Case Studies / Scenario Problems:</div>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main);">
+                    ${mPredictions.caseStudies.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${mPredictions.longQuestions?.length ? `
+                <div style="margin-bottom:10px;">
+                  <div style="font-weight:700; font-size:12px; color:#dc2626;"><i class="fas fa-star"></i> Long & Practical Problems (14-20 Marks):</div>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main);">
+                    ${mPredictions.longQuestions.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${mPredictions.mediumQuestions?.length ? `
+                <div style="margin-bottom:10px;">
+                  <div style="font-weight:700; font-size:12px; color:#2563eb;"><i class="fas fa-pen-alt"></i> Medium Analytical Questions (10-12.5 Marks):</div>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main);">
+                    ${mPredictions.mediumQuestions.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${mPredictions.shortQuestions?.length ? `
+                <div>
+                  <div style="font-weight:700; font-size:12px; color:#059669;"><i class="fas fa-check"></i> Definitions & Short Concepts:</div>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main);">
+                    ${mPredictions.shortQuestions.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        predictionsContainer.innerHTML = predHtml || '<p style="text-align:center; color:var(--text-muted);">No predicted questions available yet.</p>';
+      }
+
+      // Tab 3: Must-Study & High ROI
       const mustStudyContainer = document.getElementById('pyqTabMustStudy');
       const mustTopics = data.mustStudyTopics || [];
-      mustStudyContainer.innerHTML = mustTopics.length ? mustTopics.map(mt => `
-        <div class="pyq-chapter-card" style="border-left: 4px solid #ef4444;">
-          <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:6px;">
-            <span style="font-weight:700; font-size:14px; color:var(--text-main); line-height:1.4;">🔥 ${mt.topic}</span>
-            <span class="pyq-badge fire" style="flex-shrink:0;">${mt.frequency || 'Guaranteed'} (${mt.probabilityScore ? mt.probabilityScore + '%' : (mt.marks || 15) + ' Marks'})</span>
-          </div>
-          <div style="font-size:13px; color:var(--text-muted); line-height:1.4;">
-            ${mt.reason}
-          </div>
-          ${mt.recommendedApproach ? `
-            <div style="margin-top:6px; font-size:12px; color:#2563eb; background:rgba(37,99,235,0.06); padding:6px 10px; border-radius:6px;">
-              <strong>Exam Approach:</strong> ${mt.recommendedApproach}
-            </div>
-          ` : ''}
-        </div>
-      `).join('') : '<p style="text-align:center; color:var(--text-muted);">No core repeated topics specified.</p>';
+      const highRoi = data.highRoiChapters || [];
+      const hiddenTopics = data.hiddenTopics || [];
+      const lowRoi = data.lowRoiChapters || [];
+      let mustHtml = '';
 
-      // Tab 3: Yearly Breakdown
+      // High ROI Chapters Card
+      if (highRoi.length) {
+        mustHtml += `
+          <div style="margin-bottom:14px;">
+            <div style="font-weight:700; font-size:14px; color:#059669; margin-bottom:8px;">
+              <i class="fas fa-gem"></i> High-ROI Chapters (Minimum Effort • Maximum Marks)
+            </div>
+            ${highRoi.map(hr => `
+              <div class="pyq-chapter-card" style="border-left:4px solid #10b981; margin-bottom:8px;">
+                <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:4px;">
+                  <span style="font-weight:700; font-size:14px; color:var(--text-main);">${hr.chapter}</span>
+                  <span class="pyq-badge" style="background:#ecfdf5; color:#059669;">ROI: ${hr.roiScore || 95}/100</span>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">
+                  <strong>Effort:</strong> ${hr.effort} • <strong>Marks Potential:</strong> ${hr.marksPotential}
+                </div>
+                <div style="font-size:12px; color:var(--text-main); line-height:1.4;">${hr.reason}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // Must Study Topics
+      if (mustTopics.length) {
+        mustHtml += `
+          <div style="margin-bottom:14px;">
+            <div style="font-weight:700; font-size:14px; color:#ef4444; margin-bottom:8px;">
+              <i class="fas fa-fire"></i> Guaranteed Repeated Exam Topics
+            </div>
+            ${mustTopics.map(mt => `
+              <div class="pyq-chapter-card" style="border-left: 4px solid #ef4444; margin-bottom:8px;">
+                <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:6px;">
+                  <span style="font-weight:700; font-size:14px; color:var(--text-main); line-height:1.4;">🔥 ${mt.topic}</span>
+                  <span class="pyq-badge fire" style="flex-shrink:0;">${mt.frequency || 'Guaranteed'} (${mt.probabilityScore ? mt.probabilityScore + '%' : (mt.marks || 14) + ' Marks'})</span>
+                </div>
+                <div style="font-size:13px; color:var(--text-muted); line-height:1.4;">
+                  ${mt.reason}
+                </div>
+                ${mt.recommendedApproach ? `
+                  <div style="margin-top:6px; font-size:12px; color:#2563eb; background:rgba(37,99,235,0.06); padding:6px 10px; border-radius:6px;">
+                    <strong>Exam Approach:</strong> ${mt.recommendedApproach}
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // Hidden Topics Detector
+      if (hiddenTopics.length) {
+        mustHtml += `
+          <div style="margin-bottom:14px;">
+            <div style="font-weight:700; font-size:14px; color:#8b5cf6; margin-bottom:8px;">
+              <i class="fas fa-eye"></i> "Hidden Topics" Detector (Examiners Love, Students Miss)
+            </div>
+            ${hiddenTopics.map(ht => `
+              <div class="pyq-chapter-card" style="border-left:4px solid #8b5cf6; margin-bottom:8px;">
+                <div class="pyq-chapter-head pyq-head-flex" style="margin-bottom:4px;">
+                  <span style="font-weight:700; font-size:13px; color:var(--text-main);">${ht.topic}</span>
+                  <span class="pyq-badge" style="background:#f5f3ff; color:#7c3aed;">${ht.appearanceLikelihood || '80%'} Likelihood</span>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">
+                  <strong>Chapter:</strong> ${ht.chapter || 'Core Module'} • <strong>Potential:</strong> ${ht.marksPotential || 14} Marks
+                </div>
+                <div style="font-size:12px; color:var(--text-main); line-height:1.4;">
+                  <strong>Why students miss it:</strong> ${ht.whyMissed}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // Low ROI Chapters to Skip
+      if (lowRoi.length) {
+        mustHtml += `
+          <div style="margin-bottom:8px;">
+            <div style="font-weight:700; font-size:13px; color:#6b7280; margin-bottom:6px;">
+              <i class="fas fa-forward"></i> Low-ROI Chapters (Skip if short on time)
+            </div>
+            ${lowRoi.map(lr => `
+              <div class="pyq-chapter-card" style="border-left:4px solid #9ca3af; padding:8px 12px; margin-bottom:6px;">
+                <div style="font-weight:700; font-size:13px; color:var(--text-main);">${lr.chapter}</div>
+                <div style="font-size:12px; color:var(--text-muted);">${lr.advice} (Effort: ${lr.effort})</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      mustStudyContainer.innerHTML = mustHtml || '<p style="text-align:center; color:var(--text-muted);">No core repeated topics specified.</p>';
+
+      // Tab 4: Battle Plan & Strategy
+      const battlePlanContainer = document.getElementById('pyqTabBattlePlan');
+      if (battlePlanContainer) {
+        const bp = data.battlePlan || {};
+        const tStrat = data.timeStrategies || {};
+        const sTargets = data.scoreTargets || {};
+        const exSec = data.examinerSecrets || {};
+        const tips = data.strategyTips || [];
+        let planHtml = '';
+
+        // 4-Step Battle Plan
+        if (bp.step1FirstStudy || bp.step2SecondStudy || bp.step3ThirdStudy || bp.step4ReviseLast) {
+          planHtml += `
+            <div class="pyq-chapter-card" style="border-top:3px solid #2563eb; margin-bottom:14px;">
+              <div style="font-weight:800; font-size:14px; color:#1d4ed8; margin-bottom:10px;">
+                <i class="fas fa-chess-knight"></i> Final Exam 4-Step Battle Plan
+              </div>
+              ${bp.step1FirstStudy ? `
+                <div style="margin-bottom:8px; padding:6px 10px; background:#eff6ff; border-radius:8px;">
+                  <strong style="color:#2563eb;">Step 1 (First Study Today):</strong>
+                  <div style="font-size:12px; color:var(--text-main); margin-top:2px;">${bp.step1FirstStudy}</div>
+                </div>
+              ` : ''}
+              ${bp.step2SecondStudy ? `
+                <div style="margin-bottom:8px; padding:6px 10px; background:#f0fdf4; border-radius:8px;">
+                  <strong style="color:#16a34a;">Step 2 (Second Tier Scoring Topics):</strong>
+                  <div style="font-size:12px; color:var(--text-main); margin-top:2px;">${bp.step2SecondStudy}</div>
+                </div>
+              ` : ''}
+              ${bp.step3ThirdStudy ? `
+                <div style="margin-bottom:8px; padding:6px 10px; background:#fffbeb; border-radius:8px;">
+                  <strong style="color:#d97706;">Step 3 (Case Studies & Practical):</strong>
+                  <div style="font-size:12px; color:var(--text-main); margin-top:2px;">${bp.step3ThirdStudy}</div>
+                </div>
+              ` : ''}
+              ${bp.step4ReviseLast ? `
+                <div style="padding:6px 10px; background:#fdf2f8; border-radius:8px;">
+                  <strong style="color:#db2777;">Step 4 (Revise Last Before Exam):</strong>
+                  <div style="font-size:12px; color:var(--text-main); margin-top:2px;">${bp.step4ReviseLast}</div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        // Time-based Strategies (24h survival, 3-day sprint, etc.)
+        if (tStrat.survival24Hours?.length || tStrat.plan3Days?.length || tStrat.plan7Days?.length || tStrat.nightBefore?.length) {
+          planHtml += `
+            <div class="pyq-chapter-card" style="margin-bottom:14px;">
+              <div style="font-weight:700; font-size:14px; color:#dc2626; margin-bottom:10px;">
+                <i class="fas fa-stopwatch"></i> Time-Based Survival Roadmaps
+              </div>
+              ${tStrat.survival24Hours?.length ? `
+                <div style="margin-bottom:10px; border-left:3px solid #ef4444; padding-left:10px;">
+                  <strong style="color:#dc2626; font-size:13px;">🚨 24 Hours Emergency Survival Checklist:</strong>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main); line-height:1.5;">
+                    ${tStrat.survival24Hours.map(i => `<li>${i}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${tStrat.plan3Days?.length ? `
+                <div style="margin-bottom:10px; border-left:3px solid #f59e0b; padding-left:10px;">
+                  <strong style="color:#d97706; font-size:13px;">⚡ 3-Day Sprint Plan:</strong>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main); line-height:1.5;">
+                    ${tStrat.plan3Days.map(i => `<li>${i}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${tStrat.plan7Days?.length ? `
+                <div style="margin-bottom:10px; border-left:3px solid #3b82f6; padding-left:10px;">
+                  <strong style="color:#2563eb; font-size:13px;">📅 7-Day Structured Strategy:</strong>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main); line-height:1.5;">
+                    ${tStrat.plan7Days.map(i => `<li>${i}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${tStrat.nightBefore?.length ? `
+                <div style="border-left:3px solid #8b5cf6; padding-left:10px;">
+                  <strong style="color:#7c3aed; font-size:13px;">🌙 Night Before Exam Tactics:</strong>
+                  <ul style="margin:4px 0 0 16px; padding:0; font-size:12px; color:var(--text-main); line-height:1.5;">
+                    ${tStrat.nightBefore.map(i => `<li>${i}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        // Score Targets
+        if (sTargets.passOnly40?.length || sTargets.safeScore60?.length || sTargets.distinction75?.length) {
+          planHtml += `
+            <div class="pyq-chapter-card" style="margin-bottom:14px;">
+              <div style="font-weight:700; font-size:14px; color:#059669; margin-bottom:10px;">
+                <i class="fas fa-crosshairs"></i> Target-Score Study Paths
+              </div>
+              ${sTargets.passOnly40?.length ? `
+                <div style="margin-bottom:8px; font-size:12px;">
+                  <strong style="color:#059669;">🎯 40% Pass Guarantee (28+ Marks):</strong>
+                  <ul style="margin:2px 0 0 16px; padding:0; color:var(--text-muted);">${sTargets.passOnly40.map(i => `<li>${i}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+              ${sTargets.safeScore60?.length ? `
+                <div style="margin-bottom:8px; font-size:12px;">
+                  <strong style="color:#2563eb;">🎯 60% Safe Score (42+ Marks):</strong>
+                  <ul style="margin:2px 0 0 16px; padding:0; color:var(--text-muted);">${sTargets.safeScore60.map(i => `<li>${i}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+              ${sTargets.distinction75?.length ? `
+                <div style="font-size:12px;">
+                  <strong style="color:#7c3aed;">🎯 75%+ Distinction / Top Ranker:</strong>
+                  <ul style="margin:2px 0 0 16px; padding:0; color:var(--text-muted);">${sTargets.distinction75.map(i => `<li>${i}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        // Examiner Secrets & Scoring Tactics
+        if (exSec.psychology || exSec.scoringTactics || tips.length) {
+          planHtml += `
+            <div class="pyq-chapter-card" style="background:rgba(37,99,235,0.04); border-color:rgba(37,99,235,0.2);">
+              <div style="font-weight:700; font-size:14px; color:#2563eb; margin-bottom:8px;">
+                💡 Examiner Psychology & Scoring Secrets
+              </div>
+              ${exSec.psychology ? `<div style="font-size:12px; margin-bottom:6px; color:var(--text-main);"><strong>Examiner Mindset:</strong> ${exSec.psychology}</div>` : ''}
+              ${exSec.scoringTactics ? `<div style="font-size:12px; margin-bottom:6px; color:var(--text-main);"><strong>How to Write for Full Marks:</strong> ${exSec.scoringTactics}</div>` : ''}
+              ${tips.length ? `
+                <ul style="margin:8px 0 0 18px; padding:0; line-height:1.5; font-size:12px; color:var(--text-main);">
+                  ${tips.map(tip => `<li style="margin-bottom:6px;">${tip}</li>`).join('')}
+                </ul>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        battlePlanContainer.innerHTML = planHtml || '<p style="text-align:center; color:var(--text-muted);">No strategy plan available.</p>';
+      }
+
+      // Tab 5: Yearly Breakdown
       const yearlyContainer = document.getElementById('pyqTabYearly');
       const yearlyData = data.yearlyBreakdown || {};
       const yearKeys = Object.keys(yearlyData).filter(y => (yearsFilter === 'all' || activeYears.includes(y))).sort((a, b) => b.localeCompare(a));
@@ -3208,32 +3578,15 @@
           </div>
         `;
       }).join('') : '<p style="text-align:center; color:var(--text-muted);">No yearly breakdown available for chosen years.</p>';
-
-      // Tab 4: Strategy Tips
-      const strategyContainer = document.getElementById('pyqTabStrategy');
-      const tips = data.strategyTips || [
-        data.examStrategy?.passingBlueprint,
-        data.examStrategy?.scoringSecret,
-        data.examStrategy?.timeManagement
-      ].filter(Boolean);
-
-      strategyContainer.innerHTML = tips.length ? `
-        <div class="pyq-chapter-card" style="background:rgba(37,99,235,0.04); border-color:rgba(37,99,235,0.2);">
-          <div style="font-weight:700; font-size:14px; color:#2563eb; margin-bottom:10px;">
-            💡 High-Score Exam Strategy for ${data.subjectName}
-          </div>
-          <ul style="margin:0 0 0 18px; padding:0; line-height:1.6; font-size:13px; color:var(--text-main);">
-            ${tips.map(tip => `<li style="margin-bottom:8px;">${tip}</li>`).join('')}
-          </ul>
-        </div>
-      ` : '<p style="text-align:center; color:var(--text-muted);">No strategy tips available.</p>';
     }
 
     function switchPyqTab(tabName, btn) {
       document.querySelectorAll('.pyq-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.pyq-tab-content').forEach(c => c.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      const target = document.getElementById('pyqTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
+      let targetId = 'pyqTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+      if (tabName === 'strategy') targetId = 'pyqTabBattlePlan';
+      const target = document.getElementById(targetId);
       if (target) target.classList.add('active');
     }
 

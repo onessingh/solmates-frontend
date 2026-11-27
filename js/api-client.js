@@ -770,7 +770,7 @@ class SolmatesAPI {
 
   // ========== PYQ INTELLIGENT ANALYZER ==========
   async getPyqAnalysis(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}?_t=${Date.now()}`, { force: true });
   }
 
   async generatePyqAnalysis(semester, folderId, payload = {}) {

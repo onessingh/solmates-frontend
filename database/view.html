@@ -2583,12 +2583,12 @@
           const rightContainer = document.querySelector('.pyq-banner-right');
           const yrs = (analysisData.analyzedYears || []).join(', ') || 'Past Years';
 
-          if (titleEl) titleEl.innerText = `${subjectName} — PYQ Analysis`;
-          if (subtitleEl) subtitleEl.innerText = `AI Past Papers Weightage, Repeated Questions & Core Trends (${yrs})`;
+          if (titleEl) titleEl.innerText = `${subjectName} — PYQ Intelligence`;
+          if (subtitleEl) subtitleEl.innerText = `Elite Exam Intelligence: Predicted Questions, High-ROI Chapters & 4-Step Battle Plan (${yrs})`;
           if (rightContainer) {
             rightContainer.innerHTML = `
-              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="viewDirectPyqAnalysis()">
-                <i class="fas fa-chart-pie"></i> <span id="btnPyqAnalyzeText">Analyse PYQs</span>
+              <button id="btnOpenPyqAnalyzer" class="pyq-banner-btn" onclick="viewDirectPyqAnalysis()" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); border:none; padding:8px 16px; border-radius:10px; font-size:12.5px; font-weight:700; color:#fff; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-brain"></i> <span id="btnPyqAnalyzeText">View Intelligence Analysis</span>
               </button>
             `;
           }
@@ -2801,18 +2801,46 @@
       }
     }
 
-    function viewDirectPyqAnalysis() {
+    async function viewDirectPyqAnalysis() {
+      const modal = document.getElementById('pyqAnalyzerModal');
+      if (modal) {
+        modal.classList.add('open');
+        pushModalHistory('pyqAnalyzerModal');
+      }
+      const adminStep = document.getElementById('pyqAdminItemStep');
+      if (adminStep) adminStep.style.display = 'none';
+
       if (_currentPyqAnalysis) {
-        const adminStep = document.getElementById('pyqAdminItemStep');
-        if (adminStep) adminStep.style.display = 'none';
-        const modal = document.getElementById('pyqAnalyzerModal');
-        if (modal) {
-          modal.classList.add('open');
-          pushModalHistory('pyqAnalyzerModal');
-        }
         renderPyqAnalysisReport(_currentPyqAnalysis, 'all');
-      } else {
-        openPyqAnalyzerModal('view');
+        return;
+      }
+
+      // Show loader in report container directly
+      document.getElementById('pyqStepSelection').style.display = 'none';
+      const rep = document.getElementById('pyqStepReport');
+      rep.style.display = 'block';
+      const headerContainer = document.getElementById('pyqReportHeader');
+      if (headerContainer) {
+        headerContainer.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x" style="color:#2563eb;"></i><p style="margin-top:12px; font-weight:600;">Loading Elite Exam Intelligence Report...</p></div>';
+      }
+
+      const subjInfo = getCurrentSubjectInfo();
+      const curFolderId = subjInfo ? subjInfo.folderId : folderId;
+
+      try {
+        const res = await _fetchPyqAnalysisAPI(semester, curFolderId);
+        if (res && res.data) {
+          _currentPyqAnalysis = res.data;
+          renderPyqAnalysisReport(res.data, 'all');
+        } else {
+          document.getElementById('pyqStepReport').style.display = 'none';
+          document.getElementById('pyqStepSelection').style.display = 'block';
+          ensureStudentPyqItemsLoaded();
+        }
+      } catch (e) {
+        document.getElementById('pyqStepReport').style.display = 'none';
+        document.getElementById('pyqStepSelection').style.display = 'block';
+        ensureStudentPyqItemsLoaded();
       }
     }
 
@@ -2974,7 +3002,7 @@
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`);
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}?_t=${Date.now()}`);
       return await r.json();
     }
 
