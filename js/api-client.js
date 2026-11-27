@@ -235,7 +235,7 @@ class SolmatesAPI {
       headers['Pragma'] = 'no-cache';
 
       const isLoggedAdmin = !!(this.adminToken || localStorage.getItem('solmates_admin_token'));
-      if (options.force || isLoggedAdmin) {
+      if (options.adminForce || isLoggedAdmin) {
         url += (url.includes('?') ? '&' : '?') + 'admin_force=true';
       }
     }
@@ -267,7 +267,7 @@ class SolmatesAPI {
           window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
           try { sessionStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL); } catch(_) {}
           let retryUrl = `${this.baseURL}${endpoint}`;
-          if (isGet && options.force) {
+          if (isGet && (options.adminForce || isLoggedAdmin)) {
             retryUrl += (retryUrl.includes('?') ? '&' : '?') + 'admin_force=true';
           }
           const retryRes = await fetch(retryUrl, { ...config, signal: undefined });
@@ -335,7 +335,7 @@ class SolmatesAPI {
         window.RENDER_BACKEND_URL = window.BACKEND_SECONDARY_URL;
         try { sessionStorage.setItem('solmates_active_backend', window.BACKEND_SECONDARY_URL); } catch(_) {}
         let retryUrl = `${this.baseURL}${endpoint}`;
-        if (isGet && options.force) {
+        if (isGet && (options.adminForce || isLoggedAdmin)) {
           retryUrl += (retryUrl.includes('?') ? '&' : '?') + 'admin_force=true';
         }
         try {
@@ -770,7 +770,7 @@ class SolmatesAPI {
 
   // ========== PYQ INTELLIGENT ANALYZER ==========
   async getPyqAnalysis(semester, folderId) {
-    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}?_t=${Date.now()}`, { force: true });
+    return await this.request(`/sol/pyq-analyzer/${semester}/${folderId}`);
   }
 
   async generatePyqAnalysis(semester, folderId, payload = {}) {

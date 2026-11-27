@@ -3002,7 +3002,7 @@
       const apiBase = (window.solmatesAPI && window.solmatesAPI.baseUrl) ||
                       window.PRODUCTION_API_URL ||
                       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api' : 'https://api.solmates.in/api');
-      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}?_t=${Date.now()}`);
+      const r = await fetch(`${apiBase}/sol/pyq-analyzer/${sem}/${fId}`);
       return await r.json();
     }
 
